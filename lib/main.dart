@@ -1,0 +1,156 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'main_navigation_screen.dart';
+import 'core/constants/app_colors.dart';
+import 'features/climbing/providers/climbing_providers.dart';
+import 'shared/widgets/sherpi_widget.dart';
+import 'shared/providers/global_sherpi_provider.dart';
+import 'shared/providers/global_user_provider.dart';
+import 'shared/providers/global_point_provider.dart';
+import 'shared/providers/global_user_title_provider.dart';
+import 'shared/providers/global_game_provider.dart';
+import 'features/quests/providers/quest_provider_v2.dart';
+import 'features/meetings/presentation/screens/meeting_detail_screen.dart';
+import 'features/meetings/presentation/screens/meeting_application_screen.dart';
+import 'features/meetings/presentation/screens/meeting_success_screen.dart';
+import 'features/meetings/presentation/screens/meeting_review_screen.dart';
+import 'features/meetings/models/available_meeting_model.dart';
+// ✅ 일일 기록 화면 임포트
+import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
+import 'features/daily_record/presentation/screens/diary_write_edit_screen.dart';
+import 'features/daily_record/presentation/screens/exercise_record_screen.dart';
+import 'features/daily_record/presentation/screens/exercise_selection_screen.dart';
+import 'features/daily_record/presentation/screens/reading_record_screen.dart';
+import 'features/daily_record/presentation/widgets/exercise_analytics_dashboard.dart';
+import 'features/daily_record/presentation/screens/exercise_dashboard_screen.dart';
+
+
+// SharedPreferences Provider 초기화
+final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
+  throw UnimplementedError();
+});
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // SharedPreferences 초기화
+  final sharedPreferences = await SharedPreferences.getInstance();
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+      ],
+      child: MyApp(),
+    ),
+  );
+}
+
+
+
+class MyApp extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // ✅ 앱 시작 시 모든 글로벌 Provider 초기화
+    _initializeGlobalProviders(ref);
+    
+    return MaterialApp(
+      title: 'Sherpa',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        primaryColor: AppColors.primary,
+        scaffoldBackgroundColor: AppColors.background,
+        fontFamily: 'NotoSans',
+      ),
+      // ✅ 전역 셰르피 오버레이를 위한 builder 추가
+      builder: (context, child) {
+
+        return Stack(
+          children: [
+            // 기본 앱 화면
+            child ?? const SizedBox(),
+            // ✅ 전역 셰르피 오버레이 (모든 화면에서 표시)
+            /*
+            Consumer(
+              builder: (context, ref, child) {
+                return GlobalSherpiOverlay();
+              },
+            ),
+        */
+          ],
+        );
+      },
+      // ✅ 라우팅 설정 추가
+      routes: {
+        '/': (context) => MainNavigationScreen(),
+        '/meeting_detail': (context) {
+          final meeting = ModalRoute.of(context)!.settings.arguments as AvailableMeeting;
+          return MeetingDetailScreen(meeting: meeting);
+        },
+        '/meeting_application': (context) {
+          final meeting = ModalRoute.of(context)!.settings.arguments as AvailableMeeting;
+          return MeetingApplicationScreen(meeting: meeting);
+        },
+        '/meeting_success': (context) {
+          final meeting = ModalRoute.of(context)!.settings.arguments as AvailableMeeting;
+          return MeetingSuccessScreen(meeting: meeting);
+        },
+        '/meeting_review': (context) {
+          final meeting = ModalRoute.of(context)!.settings.arguments as AvailableMeeting;
+          return MeetingReviewScreen(meeting: meeting);
+        },
+        // ✅ 일일 기록 화면들 추가
+        '/daily_record': (context) => EnhancedDailyRecordScreen(), // 메인 기록 화면
+        '/diary_record': (context) => DiaryWriteEditScreen(),
+        '/exercise_record': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          return ExerciseRecordScreen(
+            exerciseType: args?['exerciseType'] ?? '러닝',
+            selectedDate: args?['selectedDate'] ?? DateTime.now(),
+          );
+        },
+        '/exercise_selection': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as DateTime?;
+          return ExerciseSelectionScreen(
+            selectedDate: args ?? DateTime.now(),
+          );
+        },
+        '/exercise_analytics': (context) => ExerciseAnalyticsDashboard(),
+        '/exercise_dashboard': (context) => ExerciseDashboardScreen(),
+        '/reading_record': (context) => ReadingRecordScreen(),
+        '/focus_timer': (context) => EnhancedDailyRecordScreen(), // 집중 타이머는 기록 화면에서 접근
+
+      },
+      initialRoute: '/',
+      debugShowCheckedModeBanner: false,
+    );
+  }
+  
+  /// 글로벌 Provider 초기화 메서드
+  void _initializeGlobalProviders(WidgetRef ref) {
+    try {
+      // ✅ 6개 글로벌 Provider 초기화 순서대로
+      
+      // 1. 게임 시스템 초기화 (기초 데이터)
+      ref.read(globalGameProvider);
+      
+      // 2. 사용자 데이터 초기화
+      ref.read(globalUserProvider);
+      
+      // 3. 포인트 시스템 초기화
+      ref.read(globalPointProvider);
+      
+      // 4. 칭호 시스템 초기화
+      ref.read(globalUserTitleProvider);
+      
+      // 5. 퀘스트 시스템 V2 초기화
+      ref.read(questProviderV2);
+      
+      // 6. 셰르피 시스템 초기화 (마지막)
+      ref.read(sherpiProvider);
+      
+    } catch (e) {
+    }
+  }
+}
