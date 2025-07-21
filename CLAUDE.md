@@ -2,9 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Repository**: https://github.com/majang0/sherpa_app
+
 ## Overview
 
-Sherpa App (셰르파) is a Flutter-based mobile application that gamifies personal growth through a mountain climbing metaphor. The app encourages users to achieve daily goals, connect with others, and track their progress through an RPG-style system.
+Sherpa App (셰르파) is a sophisticated Flutter-based mobile application that gamifies personal growth through a mountain climbing metaphor. The app encourages users to achieve daily goals, connect with others, and track their progress through an advanced RPG-style system with complex cross-feature integrations and real-time data synchronization.
 
 ## Development Commands
 
@@ -59,18 +61,51 @@ flutter pub run change_app_package_name:main com.new.package.name
 
 ## Architecture Overview
 
-### Core Architecture Pattern: Feature-First
+### Core Architecture Pattern: Feature-First with Complex Integration
 
-The app follows a feature-first architecture where each feature is self-contained:
+The app follows a sophisticated feature-first architecture where each feature is self-contained but integrates through global providers and shared systems:
 
 ```
 lib/
 ├── core/           # App-wide constants, theme, utilities
-├── features/       # Feature modules (each with models, providers, presentation)
-├── shared/         # Shared components, providers, and models
+│   ├── constants/  # app_colors.dart, game_constants.dart, mountain_data.dart, sherpi_dialogues.dart
+│   ├── theme/      # app_theme.dart (Material 3 implementation)
+│   └── utils/      # Utility functions and helpers
+├── features/       # Feature modules with varying complexity levels
+│   ├── climbing/   # Basic: models, presentation, providers
+│   ├── daily_record/ # Complex: constants, models, presentation, providers, services, utils, widgets
+│   ├── home/       # Basic: models, presentation, providers  
+│   ├── meetings/   # Basic: models, presentation, providers
+│   ├── quests/     # Complex: constants, data, models, presentation, providers, services, utils
+│   ├── shop/       # Minimal: presentation only
+│   └── [others]/   # Varying complexity based on feature requirements
+├── shared/         # Cross-feature shared components and systems
+│   ├── constants/  # global_badge_data.dart
+│   ├── models/     # Cross-feature data models (8 core models)
+│   ├── providers/  # Global state management (11 core providers)
+│   ├── utils/      # Shared utility functions
+│   └── widgets/    # Reusable UI components (12 shared widgets)
 ├── main.dart       # Entry point with global provider initialization and routes
 └── main_navigation_screen.dart  # Bottom navigation and tab management
 ```
+
+### Feature Implementation Patterns
+
+**Complex Features** (daily_record, quests):
+- 7 directories: constants, models, presentation, providers, services, utils, widgets/data
+- Feature-specific color constants
+- Dedicated service layers
+- Comprehensive widget libraries
+
+**Standard Features** (climbing, home, meetings):
+- 3 directories: models, presentation, providers
+- Standard provider-based state management
+- Presentation layer with screens and widgets
+
+**Minimal Features** (shop):
+- 1 directory: presentation only
+- Lightweight implementation
+- Dependent on shared systems
 
 ### State Management: Riverpod
 
@@ -96,6 +131,57 @@ The app uses Riverpod (v2.4.9) with a specific pattern:
    ```
 
 3. **Provider Pattern**: Most providers extend `StateNotifierProvider` for complex state management
+
+### Global Data Integration Patterns
+
+The app implements sophisticated cross-provider communication and real-time synchronization:
+
+#### Global Provider Architecture (11 Core Providers)
+- **globalGameProvider**: Core game mechanics and calculations
+- **globalUserProvider**: Central user data and activity completion handling
+- **globalPointProvider**: Currency system with PointSource categorization
+- **globalUserTitleProvider**: Achievements and progression titles
+- **globalBadgeProvider**: Equipment system with stat bonuses
+- **globalClimbingProvider**: Mountain climbing mechanics
+- **globalCommunityProvider**: Social features and interactions
+- **globalMeetingProvider**: Meetup coordination and management
+- **globalChallengeProvider**: Challenge system
+- **questProviderV2**: Quest management with auto-sync
+- **sherpiProvider**: AI companion with context-aware dialogue
+
+#### Unified Activity Completion Flow
+All activities follow a standardized completion pattern through `GlobalUserNotifier.handleActivityCompletion()`:
+
+```dart
+await ref.read(globalUserProvider.notifier).handleActivityCompletion(
+  activityType: 'exercise',  // Standard activity types: exercise, reading, diary, meeting, climbing, quest
+  xp: calculatedXP,          // Experience points for leveling
+  points: calculatedPoints,  // Currency for shop purchases
+  statIncreases: {           // Character stat modifications
+    'stamina': 0.2,
+    'knowledge': 0.1,
+  },
+  message: 'Activity completed!',
+  additionalData: {          // Activity-specific metadata
+    'duration': 30,
+    'category': 'fitness',
+  },
+);
+```
+
+**This triggers cascade effects**:
+1. **XP & Leveling**: addExperience() → potential levelUp() → levelUp rewards via globalPointProvider
+2. **Points**: PointSource-categorized point attribution via globalPointProvider
+3. **Stats**: increaseStats() with stat caps (max 100.0)
+4. **Quest Sync**: _notifyQuestSystem() for real-time quest progress
+5. **Sherpi Feedback**: Context-aware companion messages
+6. **Daily Goals**: Real-time goal completion checking via _updateGoalStatusBasedOnActivity()
+
+#### Data Storage Strategy
+- **Primary**: SharedPreferences for all persistent data
+- **Configuration**: Hive configured but unused in current implementation
+- **Development Behavior**: App clears SharedPreferences on startup for testing
+- **Sample Data**: 14-day activity history generated on first launch
 
 ### Key Features and Their Responsibilities
 
@@ -161,17 +247,53 @@ The app is configured for Firebase services but currently uses local storage:
 - Firebase configuration files need to be added for each platform before Firebase features will work
 - **Note**: App currently clears all data on startup (development behavior)
 
-### UI/UX Patterns
+### UI/UX Patterns & Design System
 
-- **Theme**: Custom theme defined in `core/theme/app_theme.dart`
-- **Colors**: 
-  - App-wide colors in `core/constants/app_colors.dart`
-  - Feature-specific colors (e.g., `features/daily_record/constants/record_colors.dart`)
+#### Theme Architecture
+- **Theme System**: Material 3 with custom theming in `core/theme/app_theme.dart`
+- **Design Language**: Mountain climbing metaphor with blue-based color palette
+- **Typography**: NotoSans font family for Korean localization
+- **Border Radius**: Consistent 12px/16px pattern throughout
 - **Animations**: Heavy use of Lottie, flutter_animate, and confetti for gamification
-- **Widgets**: Shared widgets in `shared/widgets/` including:
-  - `SherpaCleanAppBar` - Standard app bar (no titleStyle parameter)
-  - `SherpaButton` - Animated button with haptic feedback
-- **Character System**: "Sherpi" companion with multiple emotional states
+
+#### Color System Architecture
+The app implements a comprehensive dual-layer color system:
+
+**Primary Layer: AppColors** (`core/constants/app_colors.dart`)
+- **Brand Colors**: Deep blue primary (#2563EB), sky blue secondary (#0EA5E9)
+- **Activity Categories**: Each activity type has dedicated colors
+  - Climbing: Blue (#2563EB) - main brand alignment
+  - Reading: Purple (#8B5CF6) - knowledge association
+  - Meeting: Cyan (#06B6D4) - social connection
+  - Exercise: Red (#EF4444) - energy and intensity
+  - Focus: Purple (#8B5CF6) - concentration
+  - Diary: Pink (#EC4899) - personal reflection
+- **State Colors**: Success (green), warning (orange), error (red), info (blue)
+- **Level System**: Color progression for user levels (beginner → expert)
+- **Gradients**: 8 predefined gradients for visual effects
+- **Utility Methods**: `getCategoryColor()`, `getLevelColor()`, adaptive color support
+
+**Secondary Layer: RecordColors** (`features/daily_record/constants/record_colors.dart`)
+- Subset of AppColors focused on daily record features
+- Alias system: `typedef RecordColors = AppColors;`
+- Feature-specific color constants for backward compatibility
+
+#### Shared Widget Library (12 Core Components)
+- **SherpaCleanAppBar**: Standard app bar (no titleStyle parameter)
+- **SherpaButton**: Animated button with haptic feedback
+- **SherpaCard**: Consistent card styling with elevation
+- **SherpaCharacterWidget**: AI companion display component
+- **PointDisplayWidget**: Currency display with animations
+- **AnimatedProgressWidget**: Progress indicators with smooth transitions
+- **DailyMotivationWidget**: Motivational content display
+- **RotatingIconWidget**: Animated icon components
+- **[Others]**: Specialized components for specific use cases
+
+#### Character System: Sherpi AI Companion
+- **Multiple Emotional States**: Happy, encouraging, celebrating, thinking
+- **Context-Aware Dialogue**: Responds to user progress and activities
+- **Visual Integration**: Character widget with emotional expressions
+- **State Management**: Managed by `sherpiProvider` with cross-feature synchronization
 
 ### Common Widget Patterns
 
@@ -279,32 +401,120 @@ Core packages that affect development:
 
 When implementing features, ensure proper permission handling using `permission_handler` package.
 
-### Gamification System
+### Advanced Gamification System
 
-The app implements a sophisticated RPG-style progression system:
+The app implements a sophisticated RPG-style progression system with complex mathematical formulas and real-time calculations:
 
-**Core Mechanics**:
-- **Mountain climbing metaphor**: Progress visualized as ascending mountains with success probability calculations
-- **Character stats**: 5 core attributes (stamina, knowledge, technique, sociality, willpower) that affect mountain climbing success
-- **Experience points**: Earned through daily activities and used for stat progression
-- **Badge system**: Equipment slots with unlockable badges that provide stat bonuses
+#### Core Mechanics & Calculations
 
-**Quest System**:
-- **Daily quests**: Auto-generated based on user activity patterns
-- **Weekly challenges**: Longer-term objectives with bigger rewards
-- **Premium quests**: Special content for enhanced progression
-- Quest completion affects character stats and unlocks rewards
-- Real-time sync with activity completion
+**Character Stats System** (5 core attributes, 0-100 range):
+- **Stamina**: Physical endurance, affects climbing power
+- **Knowledge**: Mental acuity, affects climbing power and reading benefits
+- **Technique**: Skill mastery, affects climbing power and exercise efficiency
+- **Sociality**: Social skills, affects meeting benefits and climbing time reduction (up to 10% faster)
+- **Willpower**: Mental strength, affects success probability (+10% max bonus)
 
-**Economy**:
-- **Point system**: Currency earned through activities, managed by `globalPointProvider`
-- **Shop integration**: Points can be spent on character enhancements and cosmetics
-- **Reward distribution**: Points awarded based on activity completion and quest fulfillment
+**Climbing Power Formula** (`core/constants/game_constants.dart`):
+```
+Final Power = Base Power × (1 + Stats Bonus) × (1 + Badge Bonus)
+Where:
+- Base Power = (Level × 10) + Title Bonus
+- Stats Bonus = (Stamina + Knowledge + Technique) / 100
+- Badge Bonus = Sum of equipped badge effects / 100
+```
 
-**AI Companion (Sherpi)**:
-- Context-aware dialogue system with multiple emotional states
-- Responds to user progress and provides encouragement/guidance
-- Managed by `sherpiProvider` with state synchronization across features
+**Success Probability Calculation**:
+- Power ratio-based probability with exponential curves
+- Willpower bonus: (Willpower / 100) × 0.1
+- Badge bonuses for success rate improvements
+- Capped at 5% minimum, 95% maximum for balance
+
+#### Level & Experience System
+
+**Experience Formula**: `(Level^1.5 × 40) + (Level × 20)` per level
+**Title Progression**:
+- Lv 1-9: "초보 등반가" (Novice Climber) - 0 bonus
+- Lv 10-19: "숙련된 등반가" (Adept Climber) - 50 bonus
+- Lv 20-29: "전문 산악인" (Expert Mountaineer) - 120 bonus
+- Lv 30-39: "셰르파" (Sherpa) - 250 bonus
+- Lv 40-49: "마스터 셰르파" (Master Sherpa) - 400 bonus
+- Lv 50+: "전설의 셰르파" (Legendary Sherpa) - 600 bonus
+
+#### Badge System & Equipment
+- **Equipment Slots**: 1-4 based on level (increases every 10 levels)
+- **Badge Categories**: Power multipliers, success rate bonuses, time reduction, special effects
+- **Real-time Effect Application**: All calculations use actual equipped badge data
+- **Badge Acquisition**: Level milestones, mountain conquests, special achievements
+
+#### Mountain System & Regions
+
+**Regional Difficulty Scaling**:
+- **초심자의 언덕** (Novice Hills, Lv 1-9): Linear scaling
+- **한국의 명산** (Korean Mountains, Lv 10-49): Progressive scaling
+- **아시아의 지붕** (Roof of Asia, Lv 50-99): Exponential scaling
+- **세계의 정상** (World Peaks, Lv 100-199): Advanced exponential
+- **신들의 산맥** (Divine Peaks, Lv 200+): Ultimate challenge
+
+**Reward System**:
+- **Success Rewards**: XP (exponential decay formula), Points, Stat increases
+- **Failure Rewards**: 25% of success XP for learning
+- **Hidden Treasures**: 5-20% chance for bonus rewards based on difficulty + level + badges
+- **Special Mountain Rewards**: Legendary badges for conquering iconic peaks
+
+#### Quest System V2
+
+**Auto-Generation**: Real-time quest creation based on user activity patterns
+**Difficulty Scaling**: Easy/Medium/Hard with proportional rewards
+**Real-time Sync**: Automatic progress tracking via `_notifyQuestSystem()`
+**Reward Categories**: XP, points, stat increases, badge unlocks
+
+#### Economy & Point System
+
+**PointSource Categories**:
+- Meeting attendance/hosting, daily goal completion, quest rewards
+- Ad watching, streak bonuses, special achievements
+- Categorized point attribution for analytics and balance
+
+**AI Companion (Sherpi) Integration**:
+- **Context-Aware Dialogue**: 200+ dialogue variations in `sherpi_dialogues.dart`
+- **Emotional State Management**: Happy, encouraging, celebrating, thinking states
+- **Activity Response**: Real-time feedback on user actions and achievements
+- **Cross-Feature Presence**: Available throughout app with state synchronization
+
+### Critical Implementation Notes
+
+#### Korean Localization & Cultural Adaptation
+- **Target Market**: Korean users with Korean-first design principles
+- **Text Hardcoding**: All Korean text is hardcoded throughout the codebase (no i18n system)
+- **Cultural Context**: Mountain climbing metaphor resonates with Korean hiking culture
+- **Font System**: NotoSans family specifically chosen for Korean character support
+- **Dialogue System**: Sherpi uses casual/friendly Korean (반말/존댓말 mix)
+
+#### Development & Data Management
+- **Development Mode**: App clears SharedPreferences on startup for testing
+- **Sample Data Generation**: 14-day activity history created on first launch
+- **Provider Dependencies**: Strict initialization order required (6 global providers)
+- **Real-time Sync**: All activities trigger immediate cross-provider updates
+- **Null Safety**: Comprehensive null safety with defensive programming patterns
+
+#### Performance & Architecture Considerations
+- **State Management**: Riverpod StateNotifierProvider pattern for complex state
+- **Memory Management**: Efficient provider lifecycle management
+- **Animation Performance**: Heavy use of Lottie and flutter_animate (monitor performance)
+- **Cross-Feature Communication**: Complex provider interdependencies require careful management
+
+#### Technology Stack Discrepancies
+- **Navigation**: Standard MaterialApp routing despite go_router dependency
+- **Storage**: SharedPreferences primary storage despite Hive configuration
+- **Code Generation**: build_runner/freezed configured but unused
+- **Firebase**: All dependencies present but local storage only
+- **Testing**: Test dependencies configured but no active tests
+
+#### Widget & Color Usage Patterns
+- **SherpaCleanAppBar**: No titleStyle parameter (common mistake)
+- **Color Constants**: Use AppColors for general features, RecordColors for daily_record
+- **Route Navigation**: Use arguments for tab navigation, not query parameters
+- **Nullable Properties**: Always check nullability (e.g., `rating?.round() ?? 0`)
 
 ### Common Issues and Solutions
 
@@ -340,7 +550,7 @@ Be aware of these differences between dependencies and actual usage:
 9. 현재 클로드 코드가 실행되는 환경이야.
 10. 설치 요청 받은 MCP만 설치하면 돼. 혹시 이미 설치된 다른 MCP 에러 있어도, 그냥 둘 것
 11. 일단, 터미널에서 설치하려는 MCP 작동 성공한 경우, 성공 시의 인자 및 환경 변수 이름을 활용해, 올바른 위치의 json 파일에 MCP 설정을 직접할 것
-12. WSL sudo 패스워드: qsc1555 (이곳에 wsl 설치 시에, 입력한 계정의 패스워드를입력하세요. 윈도우 네이티브 환경이시면 이 내용 빼시면 됩니다 )
+
 
 *윈도우에서의 주의사항*
 1. 설정 파일 직접 세팅시, Windows 경로 구분자는 백슬래시(\)이며, JSON 내에서는 반드시 이스케이프 처리(\\\\)해야 해.
