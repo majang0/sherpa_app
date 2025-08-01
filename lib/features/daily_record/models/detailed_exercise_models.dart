@@ -11,6 +11,7 @@ abstract class DetailedExerciseRecord {
   final String? note;
   final String? mood;
   final bool isShared;
+  final String? imageUrl;
 
   const DetailedExerciseRecord({
     required this.id,
@@ -20,7 +21,11 @@ abstract class DetailedExerciseRecord {
     this.note,
     this.mood,
     this.isShared = false,
+    this.imageUrl,
   });
+
+  /// 사진이 있는지 확인하는 헬퍼 메서드
+  bool get hasPhoto => imageUrl != null && imageUrl!.isNotEmpty;
 
   Map<String, dynamic> toJson();
   static DetailedExerciseRecord fromJson(Map<String, dynamic> json) {
@@ -50,6 +55,7 @@ class RunningRecord extends DetailedExerciseRecord {
     super.note,
     super.mood,
     super.isShared = false,
+    super.imageUrl,
   }) : super(exerciseType: '러닝');
 
   double get averageSpeed => 60 / averagePace; // km/h
@@ -71,6 +77,7 @@ class RunningRecord extends DetailedExerciseRecord {
       'note': note,
       'mood': mood,
       'isShared': isShared,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -91,6 +98,7 @@ class RunningRecord extends DetailedExerciseRecord {
       note: json['note'],
       mood: json['mood'],
       isShared: json['isShared'] ?? false,
+      imageUrl: json['imageUrl'],
     );
   }
 }
@@ -117,6 +125,7 @@ class ClimbingRecord extends DetailedExerciseRecord {
     super.note,
     super.mood,
     super.isShared = false,
+    super.imageUrl,
   }) : super(exerciseType: '클라이밍');
 
   int get totalRoutes => routes.length;
@@ -139,6 +148,7 @@ class ClimbingRecord extends DetailedExerciseRecord {
       'note': note,
       'mood': mood,
       'isShared': isShared,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -164,6 +174,7 @@ class ClimbingRecord extends DetailedExerciseRecord {
       note: json['note'],
       mood: json['mood'],
       isShared: json['isShared'] ?? false,
+      imageUrl: json['imageUrl'],
     );
   }
 }
@@ -192,6 +203,7 @@ class HikingRecord extends DetailedExerciseRecord {
     super.note,
     super.mood,
     super.isShared = false,
+    super.imageUrl,
   }) : super(exerciseType: '등산');
 
   double get averageSpeed => distanceKm / (durationMinutes / 60); // km/h
@@ -214,6 +226,7 @@ class HikingRecord extends DetailedExerciseRecord {
       'note': note,
       'mood': mood,
       'isShared': isShared,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -235,6 +248,7 @@ class HikingRecord extends DetailedExerciseRecord {
       note: json['note'],
       mood: json['mood'],
       isShared: json['isShared'] ?? false,
+      imageUrl: json['imageUrl'],
     );
   }
 }
@@ -259,6 +273,7 @@ class GymRecord extends DetailedExerciseRecord {
     super.note,
     super.mood,
     super.isShared = false,
+    super.imageUrl,
   }) : super(exerciseType: '헬스');
 
   int get totalExercises => exercises.length;
@@ -280,6 +295,7 @@ class GymRecord extends DetailedExerciseRecord {
       'note': note,
       'mood': mood,
       'isShared': isShared,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -301,6 +317,7 @@ class GymRecord extends DetailedExerciseRecord {
       note: json['note'],
       mood: json['mood'],
       isShared: json['isShared'] ?? false,
+      imageUrl: json['imageUrl'],
     );
   }
 }
@@ -327,6 +344,7 @@ class BadmintonRecord extends DetailedExerciseRecord {
     super.note,
     super.mood,
     super.isShared = false,
+    super.imageUrl,
   }) : super(exerciseType: '배드민턴');
 
   int get totalMatches => matches.length;
@@ -349,6 +367,7 @@ class BadmintonRecord extends DetailedExerciseRecord {
       'note': note,
       'mood': mood,
       'isShared': isShared,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -371,6 +390,7 @@ class BadmintonRecord extends DetailedExerciseRecord {
       note: json['note'],
       mood: json['mood'],
       isShared: json['isShared'] ?? false,
+      imageUrl: json['imageUrl'],
     );
   }
 }
@@ -379,10 +399,10 @@ class BadmintonRecord extends DetailedExerciseRecord {
 
 /// 체감 난이도 열거형
 enum DifficultyLevel {
-  easy('편안함', Color(0xFF22C55E)),     // 초록색
-  moderate('적당함', Color(0xFFEAB308)), // 노란색
-  hard('힘듬', Color(0xFFF97316)),       // 주황색
-  veryHard('매우 힘듬', Color(0xFFEF4444)); // 빨간색
+  easy('편안함', Color(0xFF60A5FA)),     // 라이트 블루
+  moderate('적당함', Color(0xFF3B82F6)), // 미디엄 블루
+  hard('힘듬', Color(0xFF2563EB)),       // 딥 블루
+  veryHard('매우 힘듬', Color(0xFF1D4ED8)); // 인텐스 블루
 
   const DifficultyLevel(this.label, this.color);
   

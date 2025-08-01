@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'main_navigation_screen.dart';
 import 'core/constants/app_colors.dart';
 import 'features/climbing/providers/climbing_providers.dart';
@@ -10,20 +11,26 @@ import 'shared/providers/global_user_provider.dart';
 import 'shared/providers/global_point_provider.dart';
 import 'shared/providers/global_user_title_provider.dart';
 import 'shared/providers/global_game_provider.dart';
+import 'shared/providers/global_meeting_provider.dart';
 import 'features/quests/providers/quest_provider_v2.dart';
 import 'features/meetings/presentation/screens/meeting_detail_screen.dart';
 import 'features/meetings/presentation/screens/meeting_application_screen.dart';
 import 'features/meetings/presentation/screens/meeting_success_screen.dart';
 import 'features/meetings/presentation/screens/meeting_review_screen.dart';
+import 'features/meetings/presentation/screens/meeting_create_multi_step_screen.dart';
 import 'features/meetings/models/available_meeting_model.dart';
+import 'shared/models/global_user_model.dart'; // ExerciseLog를 위한 import
 // ✅ 일일 기록 화면 임포트
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
 import 'features/daily_record/presentation/screens/diary_write_edit_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_record_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_selection_screen.dart';
-import 'features/daily_record/presentation/screens/reading_record_screen.dart';
-import 'features/daily_record/presentation/widgets/exercise_analytics_dashboard.dart';
 import 'features/daily_record/presentation/screens/exercise_dashboard_screen.dart';
+import 'features/daily_record/presentation/screens/exercise_detail_screen.dart';
+import 'features/daily_record/presentation/screens/exercise_edit_screen.dart';
+import 'features/daily_record/presentation/screens/reading_record_screen.dart';
+import 'shared/presentation/screens/component_viewer_screen.dart';
+import 'shared/presentation/screens/meeting_list_all_screen.dart';
 
 
 // SharedPreferences Provider 초기화
@@ -57,6 +64,17 @@ class MyApp extends ConsumerWidget {
     
     return MaterialApp(
       title: 'Sherpa',
+      // ✅ 한국어 로케일 및 지역화 설정
+      locale: const Locale('ko', 'KR'),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ko', 'KR'), // 한국어
+        Locale('en', 'US'), // 영어 (fallback)
+      ],
       theme: ThemeData(
         primarySwatch: Colors.blue,
         primaryColor: AppColors.primary,
@@ -100,6 +118,7 @@ class MyApp extends ConsumerWidget {
           final meeting = ModalRoute.of(context)!.settings.arguments as AvailableMeeting;
           return MeetingReviewScreen(meeting: meeting);
         },
+        '/meeting_create': (context) => MeetingCreateMultiStepScreen(),
         // ✅ 일일 기록 화면들 추가
         '/daily_record': (context) => EnhancedDailyRecordScreen(), // 메인 기록 화면
         '/diary_record': (context) => DiaryWriteEditScreen(),
@@ -116,10 +135,25 @@ class MyApp extends ConsumerWidget {
             selectedDate: args ?? DateTime.now(),
           );
         },
-        '/exercise_analytics': (context) => ExerciseAnalyticsDashboard(),
         '/exercise_dashboard': (context) => ExerciseDashboardScreen(),
+        '/exercise_detail': (context) {
+          final exercise = ModalRoute.of(context)!.settings.arguments as ExerciseLog;
+          return ExerciseDetailScreen(exercise: exercise);
+        },
+        '/exercise_edit': (context) {
+          final exercise = ModalRoute.of(context)!.settings.arguments as ExerciseLog;
+          return ExerciseEditScreen(exercise: exercise);
+        },
         '/reading_record': (context) => ReadingRecordScreen(),
         '/focus_timer': (context) => EnhancedDailyRecordScreen(), // 집중 타이머는 기록 화면에서 접근
+        '/component_viewer': (context) => ComponentViewerScreen(),
+        '/meeting_list_all': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          return MeetingListAllScreen(
+            initialCategory: args?['category'],
+            sectionTitle: args?['sectionTitle'],
+          );
+        },
 
       },
       initialRoute: '/',
@@ -130,7 +164,7 @@ class MyApp extends ConsumerWidget {
   /// 글로벌 Provider 초기화 메서드
   void _initializeGlobalProviders(WidgetRef ref) {
     try {
-      // ✅ 6개 글로벌 Provider 초기화 순서대로
+      // ✅ 7개 글로벌 Provider 초기화 순서대로
       
       // 1. 게임 시스템 초기화 (기초 데이터)
       ref.read(globalGameProvider);
@@ -147,7 +181,10 @@ class MyApp extends ConsumerWidget {
       // 5. 퀘스트 시스템 V2 초기화
       ref.read(questProviderV2);
       
-      // 6. 셰르피 시스템 초기화 (마지막)
+      // 6. 모임 시스템 초기화
+      ref.read(globalMeetingProvider);
+      
+      // 7. 셰르피 시스템 초기화 (마지막)
       ref.read(sherpiProvider);
       
     } catch (e) {

@@ -233,7 +233,6 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
 
       return true;
     } catch (e) {
-      print('챌린지 참여 실패: $e');
       ref.read(sherpiProvider.notifier).showInstantMessage(
         context: SherpiContext.encouragement,
         customDialogue: '챌린지 참여 중 오류가 발생했어요. 다시 시도해주세요! 😅',
@@ -325,7 +324,6 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
 
       return true;
     } catch (e) {
-      print('챌린지 완료 처리 실패: $e');
       return false;
     }
   }

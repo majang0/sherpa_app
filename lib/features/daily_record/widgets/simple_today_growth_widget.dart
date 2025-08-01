@@ -86,8 +86,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
     final isAllCompleted = actuallyCompletedCount == totalGoals;
     final canClaimReward = isAllCompleted && !user.dailyRecords.isAllGoalsRewardClaimed;
     
-    // 디버깅용 로그
-    print('🔍 Simple Today Growth Widget - completed: $actuallyCompletedCount/$totalGoals, isAllCompleted: $isAllCompleted, canClaimReward: $canClaimReward, isRewardClaimed: ${user.dailyRecords.isAllGoalsRewardClaimed}');
+    // 디버깅용 로그 (Simple Today Growth Widget - completed: $actuallyCompletedCount/$totalGoals)
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),

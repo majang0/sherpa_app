@@ -62,7 +62,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
       case 2: // 퀘스트 (퀘스트/기록 탭)
         return QuestTabScreen(initialTabIndex: _pendingSubTabIndex);
       case 3: // 모임 (모임/챌린지 탭)
-        return MeetingTabScreen();
+        return MeetingTabScreen(initialTabIndex: _pendingSubTabIndex);
       case 4: // 프로필
         return ProfileScreen();
       default:
@@ -202,75 +202,3 @@ class _QuestTabScreenState extends State<QuestTabScreen> with SingleTickerProvid
   }
 }
 
-// 모임 탭 화면 (모임/챌린지)
-class MeetingTabScreen extends StatefulWidget {
-  @override
-  _MeetingTabScreenState createState() => _MeetingTabScreenState();
-}
-
-class _MeetingTabScreenState extends State<MeetingTabScreen> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          color: Colors.white,
-          child: SafeArea(
-            bottom: false,
-            child: Column(
-              children: [
-                const SherpaCleanAppBar(title: '모임'),
-                Container(
-                  height: 46,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 0.5,
-                      ),
-                    ),
-                  ),
-                  child: TabBar(
-                    controller: _tabController,
-                    labelColor: const Color(0xFF4A90E2),
-                    unselectedLabelColor: Colors.grey,
-                    indicatorColor: const Color(0xFF4A90E2),
-                    indicatorWeight: 3,
-                    tabs: [
-                      Tab(text: '모임'),
-                      Tab(text: '챌린지'),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Expanded(
-          child: TabBarView(
-            controller: _tabController,
-            children: [
-              SocialExplorationScreen(), // 모임 화면
-              ChallengeIndexScreen(), // 챌린지 화면
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}

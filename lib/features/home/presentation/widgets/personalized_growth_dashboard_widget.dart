@@ -592,8 +592,7 @@ class _PersonalizedGrowthDashboardWidgetState
     final totalCount = dailyGoals.length;
     final progress = totalCount > 0 ? completedCount / totalCount : 0.0;
     
-    // 디버깅용 로그
-    print('🔍 Personalized Growth Dashboard - completed: $actualCompletedCount/$totalCount, isRewardClaimed: ${user.dailyRecords.isAllGoalsRewardClaimed}');
+    // 디버깅용 로그 (성장 대시보드 상태 - 완료: $actualCompletedCount/$totalCount)
 
     return Container(
       padding: const EdgeInsets.all(20),

@@ -93,8 +93,8 @@ class RecommendedMeeting {
         return '스터디';
       case MeetingCategory.exercise:
         return '운동';
-      case MeetingCategory.social:        // ✅ 누락된 케이스 추가
-        return '모임';
+      case MeetingCategory.social:
+        return '소셜';
       case MeetingCategory.career:
         return '취업준비';
       case MeetingCategory.hobby:

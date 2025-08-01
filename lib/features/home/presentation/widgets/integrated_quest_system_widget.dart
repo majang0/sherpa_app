@@ -868,7 +868,7 @@ class _IntegratedQuestSystemWidgetState
       );
 
     } catch (e) {
-      print('보상 수령 실패: $e');
+      // 보상 수령 실패
     }
   }
 

@@ -765,6 +765,42 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     _saveUserData();
   }
 
+  /// 운동 기록 수정
+  Future<void> updateExerciseRecord(ExerciseLog updatedLog) async {
+    final currentLogs = state.dailyRecords.exerciseLogs;
+    final updatedLogs = currentLogs.map((log) => 
+      log.id == updatedLog.id ? updatedLog : log
+    ).toList();
+
+    final updatedRecords = state.dailyRecords.copyWith(
+      exerciseLogs: updatedLogs,
+    );
+
+    state = state.copyWith(dailyRecords: updatedRecords);
+    
+    // ✅ 실시간 목표 상태 업데이트
+    _updateGoalStatusBasedOnActivity();
+    
+    _saveUserData();
+  }
+
+  /// 운동 기록 삭제
+  Future<void> deleteExerciseRecord(String exerciseId) async {
+    final currentLogs = state.dailyRecords.exerciseLogs;
+    final updatedLogs = currentLogs.where((log) => log.id != exerciseId).toList();
+
+    final updatedRecords = state.dailyRecords.copyWith(
+      exerciseLogs: updatedLogs,
+    );
+
+    state = state.copyWith(dailyRecords: updatedRecords);
+    
+    // ✅ 실시간 목표 상태 업데이트
+    _updateGoalStatusBasedOnActivity();
+    
+    _saveUserData();
+  }
+
   /// 상세 운동 기록 추가 (새로운 상세 기록 시스템)
   void addDetailedExerciseRecord(detailed.DetailedExerciseRecord record) {
     // 기존 ExerciseLog도 동시에 추가하여 호환성 유지

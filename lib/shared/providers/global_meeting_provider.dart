@@ -72,7 +72,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.exercise,
         type: MeetingType.free,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 1, hours: 6)),
+        dateTime: now.add(const Duration(hours: 18)), // 오늘 저녁
         location: '한강공원 여의도점',
         detailedLocation: '서울 영등포구 여의동로 330 한강공원 여의도점 주차장',
         maxParticipants: 15,
@@ -90,7 +90,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.exercise,
         type: MeetingType.free,
         scope: MeetingScope.university,
-        dateTime: now.add(const Duration(days: 2, hours: 19)),
+        dateTime: now.add(const Duration(hours: 12)), // 오늘 오후
         location: '온라인 (Zoom)',
         detailedLocation: '줌 링크는 참여 확정 후 공유됩니다',
         maxParticipants: 20,
@@ -158,12 +158,12 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         requirements: ['해당 책 읽고 오기', '토론 주제 준비'],
       ),
 
-      // 🎨 취미 모임들
+      // 🏔️ 아웃도어/여행 모임들
       AvailableMeeting(
         id: 'meeting_006',
         title: '사진 동호회 출사',
         description: '서울숲에서 가을 단풍 사진 촬영과 기초 강의를 진행합니다.',
-        category: MeetingCategory.hobby,
+        category: MeetingCategory.outdoor,
         type: MeetingType.free,
         scope: MeetingScope.public,
         dateTime: now.add(const Duration(days: 7, hours: 10)),
@@ -177,12 +177,12 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         requirements: ['카메라(스마트폰 가능)', '편한 신발'],
       ),
 
-      // 🧘‍♀️ 문화 모임들
+      // 💪 운동/스포츠 모임들 (요가)
       AvailableMeeting(
         id: 'meeting_007',
         title: '요가 클래스',
         description: '초급자도 쉽게 따라할 수 있는 힐링 요가 시간입니다.',
-        category: MeetingCategory.culture,
+        category: MeetingCategory.exercise,
         type: MeetingType.free,
         scope: MeetingScope.university,
         dateTime: now.add(const Duration(days: 2, hours: 18)),
@@ -215,6 +215,164 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_008',
         tags: ['창업', '네트워킹', '아이디어', '투자'],
         requirements: ['명함', '간단한 자기소개 준비'],
+      ),
+
+      // 📖 추가 독서 모임 (중간 가격대)
+      AvailableMeeting(
+        id: 'meeting_009',
+        title: '비즈니스 도서 읽기 모임',
+        description: '매주 경영 서적을 읽고 토론하는 모임입니다.',
+        category: MeetingCategory.reading,
+        type: MeetingType.paid,
+        scope: MeetingScope.public,
+        dateTime: now.add(const Duration(days: 6, hours: 15)),
+        location: '강남역 북카페',
+        detailedLocation: '서울 강남구 강남대로 123 비즈센터 3층',
+        maxParticipants: 12,
+        currentParticipants: 8,
+        price: 8000.0, // 1만원 이하 테스트용
+        hostName: '독서리더',
+        hostId: 'host_009',
+        tags: ['독서', '비즈니스', '경영', '토론'],
+        requirements: ['이번 주 지정도서', '노트'],
+      ),
+
+      // 🏔️ 아웃도어 모임 (저가격대)
+      AvailableMeeting(
+        id: 'meeting_010',
+        title: '한강 걷기 모임',
+        description: '건강한 산책과 소통을 위한 한강 걷기 모임입니다.',
+        category: MeetingCategory.outdoor,
+        type: MeetingType.paid,
+        scope: MeetingScope.public,
+        dateTime: now.add(const Duration(hours: 6)), // 오늘 오전
+        location: '여의도 한강공원',
+        detailedLocation: '서울 영등포구 여의동로 330 한강공원 여의도점',
+        maxParticipants: 30,
+        currentParticipants: 22,
+        price: 5000.0, // 1만원 이하 테스트용
+        hostName: '산책매니아',
+        hostId: 'host_010',
+        tags: ['산책', '건강', '소통', '한강'],
+        requirements: ['편한 신발', '물병'],
+      ),
+
+      // 🎭 문화 모임 (고가격대)
+      AvailableMeeting(
+        id: 'meeting_011',
+        title: '뮤지컬 관람 및 토론',
+        description: '뮤지컬 팬텀 단체 관람 후 카페에서 감상 토론을 나눕니다.',
+        category: MeetingCategory.culture,
+        type: MeetingType.paid,
+        scope: MeetingScope.public,
+        dateTime: now.add(const Duration(days: 8, hours: 19)),
+        location: '충무아트센터',
+        detailedLocation: '서울 중구 퇴계로 387 충무아트센터 대극장',
+        maxParticipants: 8,
+        currentParticipants: 5,
+        price: 45000.0, // 1만원 이상 테스트용
+        hostName: '뮤지컬러버',
+        hostId: 'host_011',
+        tags: ['뮤지컬', '문화', '토론', '예술'],
+        requirements: ['뮤지컬 관람료 별도', '토론 참여 의지'],
+      ),
+
+      // 💪 추가 운동 모임 (무료)
+      AvailableMeeting(
+        id: 'meeting_012',
+        title: '주말 축구 모임',
+        description: '매주 토요일 아침 축구를 즐기는 동호회입니다.',
+        category: MeetingCategory.exercise,
+        type: MeetingType.free,
+        scope: MeetingScope.public,
+        dateTime: now.add(const Duration(days: 9, hours: 9)),
+        location: '올림픽공원 축구장',
+        detailedLocation: '서울 송파구 올림픽로 424 올림픽공원 축구장 A코트',
+        maxParticipants: 22,
+        currentParticipants: 18,
+        hostName: '축구대장',
+        hostId: 'host_012',
+        tags: ['축구', '운동', '주말', '동호회'],
+        requirements: ['축구화', '운동복', '개인 물병'],
+      ),
+
+      // 💻 온라인 모임 (스터디)
+      AvailableMeeting(
+        id: 'meeting_016',
+        title: '온라인 코딩 스터디',
+        description: 'Python 기초부터 고급까지 함께 공부하는 온라인 스터디입니다.',
+        category: MeetingCategory.study,
+        type: MeetingType.free,
+        scope: MeetingScope.public,
+        dateTime: now.add(const Duration(days: 3, hours: 20)),
+        location: '온라인',
+        detailedLocation: 'Zoom 링크는 참여 확정 후 공유됩니다',
+        maxParticipants: 15,
+        currentParticipants: 9,
+        hostName: '파이썬마스터',
+        hostId: 'host_016',
+        tags: ['Python', '온라인', '코딩', '프로그래밍'],
+        requirements: ['노트북', '파이썬 설치', '안정적인 인터넷'],
+      ),
+
+      // 📚 추가 스터디 모임 (무료)
+      AvailableMeeting(
+        id: 'meeting_013',
+        title: '토익 스터디 그룹',
+        description: '토익 800점 목표로 함께 공부하는 스터디입니다.',
+        category: MeetingCategory.study,
+        type: MeetingType.free,
+        scope: MeetingScope.university,
+        dateTime: now.add(const Duration(days: 2, hours: 20)),
+        location: '부산대학교 도서관',
+        detailedLocation: '부산 금정구 부산대학로 63번길 2 부산대학교 중앙도서관',
+        maxParticipants: 6,
+        currentParticipants: 4,
+        hostName: '토익마스터',
+        hostId: 'host_013',
+        universityName: '부산대학교',
+        tags: ['토익', '영어', '시험', '스터디'],
+        requirements: ['토익 교재', '노트북'],
+      ),
+
+      // 🤝 추가 네트워킹 모임 (중간가격)
+      AvailableMeeting(
+        id: 'meeting_014',
+        title: '직장인 네트워킹 모임',
+        description: '다양한 업계 직장인들과의 네트워킹 시간입니다.',
+        category: MeetingCategory.networking,
+        type: MeetingType.paid,
+        scope: MeetingScope.public,
+        dateTime: now.add(const Duration(days: 5, hours: 18)),
+        location: '대전 유성구 카페',
+        detailedLocation: '대전 유성구 대학로 123 네트워킹 카페',
+        maxParticipants: 20,
+        currentParticipants: 14,
+        price: 7000.0, // 1만원 이하 테스트용
+        hostName: '네트워킹킹',
+        hostId: 'host_014',
+        tags: ['네트워킹', '직장인', '커리어', '소통'],
+        requirements: ['명함', '자기소개서 준비'],
+      ),
+
+      // 🏔️ 추가 아웃도어 모임 (고가격)
+      AvailableMeeting(
+        id: 'meeting_015',
+        title: '제주도 2박3일 여행',
+        description: '제주도 맛집 투어와 관광명소를 함께 둘러보는 여행입니다.',
+        category: MeetingCategory.outdoor,
+        type: MeetingType.paid,
+        scope: MeetingScope.public,
+        dateTime: now.add(const Duration(days: 21, hours: 8)),
+        location: '제주국제공항',
+        detailedLocation: '제주특별자치도 제주시 공항로 2 제주국제공항 국내선청사',
+        maxParticipants: 8,
+        currentParticipants: 6,
+        price: 180000.0, // 1만원 이상 테스트용
+        hostName: '제주러버',
+        hostId: 'host_015',
+        tags: ['여행', '제주도', '관광', '맛집'],
+        requirements: ['여권 또는 신분증', '편한 신발', '카메라'],
       ),
     ];
 
@@ -313,7 +471,6 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
 
       return true;
     } catch (e) {
-      print('모임 참여 실패: $e');
       ref.read(sherpiProvider.notifier).showInstantMessage(
         context: SherpiContext.encouragement,
         customDialogue: '모임 참여 중 오류가 발생했어요. 다시 시도해주세요! 😅',
@@ -341,7 +498,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
           id: meetingId,
           title: '알 수 없는 모임',
           description: '',
-          category: MeetingCategory.exercise,
+          category: MeetingCategory.all,
           type: MeetingType.free,
           scope: MeetingScope.public,
           dateTime: DateTime.now(),
@@ -417,6 +574,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
   /// 카테고리별 모임 필터링
   List<AvailableMeeting> getMeetingsByCategory(MeetingCategory? category) {
     if (category == null) return state.availableMeetings;
+    // '전체' 카테고리인 경우 모든 모임 반환
+    if (category == MeetingCategory.all) return state.availableMeetings;
     return state.availableMeetings.where((meeting) => meeting.category == category).toList();
   }
 
@@ -446,10 +605,12 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
     final sortedMeetings = List<AvailableMeeting>.from(availableMeetings);
 
     if (stats.stamina >= stats.knowledge && stats.stamina >= stats.technique) {
-      // 체력이 높으면 운동 모임 추천
+      // 체력이 높으면 운동/아웃도어 모임 추천
       sortedMeetings.sort((a, b) {
-        if (a.category == MeetingCategory.exercise && b.category != MeetingCategory.exercise) return -1;
-        if (a.category != MeetingCategory.exercise && b.category == MeetingCategory.exercise) return 1;
+        final aIsActive = a.category == MeetingCategory.exercise || a.category == MeetingCategory.outdoor;
+        final bIsActive = b.category == MeetingCategory.exercise || b.category == MeetingCategory.outdoor;
+        if (aIsActive && !bIsActive) return -1;
+        if (!aIsActive && bIsActive) return 1;
         return 0;
       });
     } else if (stats.knowledge >= stats.technique) {
@@ -462,12 +623,12 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         return 0;
       });
     } else {
-      // 기술이 높으면 취미/문화 모임 추천
+      // 기술이 높으면 문화/네트워킹 모임 추천
       sortedMeetings.sort((a, b) {
-        final aIsHobby = a.category == MeetingCategory.hobby || a.category == MeetingCategory.culture;
-        final bIsHobby = b.category == MeetingCategory.hobby || b.category == MeetingCategory.culture;
-        if (aIsHobby && !bIsHobby) return -1;
-        if (!aIsHobby && bIsHobby) return 1;
+        final aIsSocial = a.category == MeetingCategory.networking || a.category == MeetingCategory.culture;
+        final bIsSocial = b.category == MeetingCategory.networking || b.category == MeetingCategory.culture;
+        if (aIsSocial && !bIsSocial) return -1;
+        if (!aIsSocial && bIsSocial) return 1;
         return 0;
       });
     }
@@ -475,12 +636,12 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
     return sortedMeetings.take(3).toList();
   }
 
-  /// 임박한 모임 (24시간 이내)
+  /// 임박한 모임 (7일 이내)
   List<AvailableMeeting> get upcomingMeetings {
     return state.availableMeetings.where((meeting) =>
       meeting.canJoin &&
-      meeting.timeUntilStart.inHours <= 24 &&
-      meeting.timeUntilStart.inHours > 0
+      meeting.timeUntilStart.inDays <= 7 &&
+      meeting.timeUntilStart.inMinutes > 0 // 과거가 아닌 미래 모임만
     ).toList();
   }
 
@@ -506,8 +667,8 @@ final globalMeetingsByScopeProvider = Provider.family<List<AvailableMeeting>, Me
 
 /// 참여 가능한 모임 Provider
 final globalAvailableMeetingsProvider = Provider<List<AvailableMeeting>>((ref) {
-  final notifier = ref.read(globalMeetingProvider.notifier);
-  return notifier.availableMeetings;
+  final state = ref.watch(globalMeetingProvider);
+  return state.availableMeetings;
 });
 
 /// 인기 모임 Provider
@@ -524,6 +685,12 @@ final globalRecommendedMeetingsProvider = Provider<List<AvailableMeeting>>((ref)
 
 /// 임박한 모임 Provider
 final globalUpcomingMeetingsProvider = Provider<List<AvailableMeeting>>((ref) {
+  final notifier = ref.read(globalMeetingProvider.notifier);
+  return notifier.upcomingMeetings;
+});
+
+/// 놓치면 아쉬운 모임 Provider (임박한 모임과 동일)
+final globalUrgentMeetingsProvider = Provider<List<AvailableMeeting>>((ref) {
   final notifier = ref.read(globalMeetingProvider.notifier);
   return notifier.upcomingMeetings;
 });

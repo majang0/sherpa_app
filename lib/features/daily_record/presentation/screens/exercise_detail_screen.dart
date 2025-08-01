@@ -3,11 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../constants/record_colors.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/providers/global_user_provider.dart';
+import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
+import '../../../../shared/widgets/sherpa_button.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
-import 'exercise_edit_screen.dart';
+import '../../../../shared/utils/calorie_calculator.dart';
 
 class ExerciseDetailScreen extends ConsumerStatefulWidget {
   final ExerciseLog exercise;
@@ -21,247 +24,150 @@ class ExerciseDetailScreen extends ConsumerStatefulWidget {
   ConsumerState<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
 }
 
-class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> 
+class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
-  late AnimationController _slideController;
-  late AnimationController _scaleController;
   late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-  late Animation<double> _scaleAnimation;
-
-  // 현재 표시되는 운동 기록 (수정 후 업데이트됨)
-  late ExerciseLog currentExercise;
-
+  late ExerciseLog _currentExercise;
 
   @override
   void initState() {
     super.initState();
     
-    // 초기 운동 기록 설정
-    currentExercise = widget.exercise;
+    // Initialize current exercise with the provided data
+    _currentExercise = widget.exercise;
     
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _slideController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
-    _scaleController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
     
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
-      CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
-    );
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
-    );
-    
-    _fadeController.forward();
-    Future.delayed(const Duration(milliseconds: 200), () {
-      _slideController.forward();
-    });
-    Future.delayed(const Duration(milliseconds: 400), () {
-      _scaleController.forward();
-    });
-  }
 
-  // 수정된 운동 기록 데이터로 업데이트하는 메서드
-  void _updateExerciseData(ExerciseLog updatedExercise) {
-    if (mounted) {
-      setState(() {
-        currentExercise = updatedExercise;
-      });
-    }
+    _fadeController.forward();
   }
 
   @override
   void dispose() {
     _fadeController.dispose();
-    _slideController.dispose();
-    _scaleController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final exerciseColor = _getExerciseColor(currentExercise.exerciseType);
-    final exerciseEmoji = _getExerciseEmoji(currentExercise.exerciseType);
-    
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
-          ),
-        ),
+      appBar: SherpaCleanAppBar(
+        title: '${_currentExercise.exerciseType} 상세',
+        backgroundColor: const Color(0xFFF8FAFC),
         actions: [
-          Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: IconButton(
-              onPressed: () => _navigateToEdit(),
-              icon: Icon(
-                Icons.edit,
-                color: exerciseColor,
-                size: 20,
-              ),
-            ),
+          IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            onPressed: _editExercise,
+            tooltip: '수정하기',
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            onPressed: _showDeleteDialog,
+            tooltip: '삭제하기',
           ),
         ],
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
-        child: Stack(
-          children: [
-            // 배경 그라데이션
-            Container(
-              height: 280,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    exerciseColor.withOpacity(0.1),
-                    exerciseColor.withOpacity(0.05),
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-            ),
-            
-            // 메인 콘텐츠
-            SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  const SizedBox(height: 120), // AppBar 공간
-                  
-                  // 헤더 섹션
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: _buildHeader(exerciseColor, exerciseEmoji),
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // 운동 정보 섹션
-                  ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: _buildExerciseInfo(exerciseColor),
-                  ),
-                  
-                  const SizedBox(height: 20),
-                  
-                  // 시간 정보 섹션
-                  ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: _buildTimeInfo(exerciseColor),
-                  ),
-                  
-                  const SizedBox(height: 20),
-                  
-                  // 노트 섹션
-                  if (currentExercise.note != null && currentExercise.note!.isNotEmpty)
-                    ScaleTransition(
-                      scale: _scaleAnimation,
-                      child: _buildNoteSection(exerciseColor),
-                    ),
-                  
-                  const SizedBox(height: 32),
-                  
-                  // 액션 버튼들
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: _buildActionButtons(exerciseColor),
-                  ),
-                  
-                  const SizedBox(height: 40),
-                ],
-              ),
-            ),
-          ],
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              
+              // 헤더 섹션 (exercise_record_screen.dart 패턴 사용)
+              _buildHeader().animate().slide(duration: 600.ms, delay: 100.ms),
+              
+              const SizedBox(height: 32),
+              
+              // 운동 통계 카드
+              _buildStatsCard().animate().slide(duration: 600.ms, delay: 200.ms),
+              
+              const SizedBox(height: 20),
+              
+              // 운동 세부 정보 카드
+              _buildDetailsCard().animate().slide(duration: 600.ms, delay: 300.ms),
+              
+              const SizedBox(height: 20),
+              
+              // 성취도 카드
+              _buildAchievementCard().animate().slide(duration: 600.ms, delay: 400.ms),
+              
+              const SizedBox(height: 20),
+              
+              // 사진 카드 (항상 표시)
+              _buildPhotoCard().animate().slide(duration: 600.ms, delay: 500.ms),
+              
+              const SizedBox(height: 20),
+              
+              // 메모 카드 (메모가 있는 경우만)
+              if (_currentExercise.note != null && _currentExercise.note!.isNotEmpty)
+                _buildNotesCard().animate().slide(duration: 600.ms, delay: 600.ms),
+              
+              const SizedBox(height: 20),
+              
+              // 커뮤니티 공유 정보
+              _buildCommunityCard().animate().slide(duration: 600.ms, delay: 700.ms),
+              
+              const SizedBox(height: 20),
+              
+              // 액션 버튼들
+              _buildActionButtons().animate().slide(duration: 600.ms, delay: 800.ms),
+              
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(Color exerciseColor, String exerciseEmoji) {
+  Widget _buildHeader() {
+    final exerciseColor = _getExerciseColor(_currentExercise.exerciseType);
+    final exerciseEmoji = _getExerciseEmoji(_currentExercise.exerciseType);
+    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        color: Colors.white,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            exerciseColor,
+            exerciseColor.withOpacity(0.8),
+          ],
+        ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: exerciseColor.withOpacity(0.2),
+            color: exerciseColor.withOpacity(0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         children: [
-          // 아이콘과 제목
           Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      exerciseColor,
-                      exerciseColor.withOpacity(0.8),
-                    ],
-                  ),
+                  color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: exerciseColor.withOpacity(0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.3),
+                    width: 2,
+                  ),
                 ),
                 child: Text(
                   exerciseEmoji,
@@ -274,20 +180,20 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      currentExercise.exerciseType,
+                      _currentExercise.exerciseType,
                       style: GoogleFonts.notoSans(
-                        fontSize: 24,
+                        fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: exerciseColor,
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _formatDate(currentExercise.date),
+                      _formatDate(_currentExercise.date),
                       style: GoogleFonts.notoSans(
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: Colors.white.withOpacity(0.9),
                       ),
                     ),
                   ],
@@ -296,16 +202,15 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             ],
           ),
           
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           
-          // 요약 정보
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: exerciseColor.withOpacity(0.1),
+              color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: exerciseColor.withOpacity(0.2),
+                color: Colors.white.withOpacity(0.2),
                 width: 1,
               ),
             ),
@@ -313,17 +218,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.fitness_center,
-                  color: exerciseColor,
-                  size: 16,
+                  Icons.info_outline,
+                  color: Colors.white.withOpacity(0.9),
+                  size: 18,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '${currentExercise.durationMinutes}분 운동 • ${_calculateCalories()}kcal 소모',
+                  '운동 상세 정보',
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: exerciseColor,
+                    color: Colors.white.withOpacity(0.9),
                   ),
                 ),
               ],
@@ -334,339 +239,114 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
     );
   }
 
-  Widget _buildExerciseInfo(Color exerciseColor) {
+  Widget _buildStatsCard() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: RecordColors.primary.withOpacity(0.08),
+          width: 1,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: exerciseColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    Icons.info_outline,
-                    color: exerciseColor,
-                    size: 18,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  '운동 정보',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 20),
-            
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: exerciseColor.withOpacity(0.1),
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                children: [
-                  _buildInfoRow('📅', '날짜', _formatDate(currentExercise.date)),
-                  const SizedBox(height: 12),
-                  _buildInfoRow('🏃', '운동 타입', currentExercise.exerciseType),
-                  const SizedBox(height: 12),
-                  _buildInfoRow('💪', '강도', _getExerciseIntensity(currentExercise.exerciseType)),
-                  const SizedBox(height: 12),
-                  _buildInfoRow('⏱️', '운동 시간', '${currentExercise.durationMinutes}분'),
-                ],
-              ),
-            ),
-          ],
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: RecordColors.primary.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildTimeInfo(Color exerciseColor) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: exerciseColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    Icons.timer,
-                    color: exerciseColor,
-                    size: 18,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  '운동 분석',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 20),
-            
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: exerciseColor.withOpacity(0.1),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildStatsInfo('시간', '${(currentExercise.durationMinutes / 60).toStringAsFixed(1)}h'),
-                  Container(
-                    width: 1,
-                    height: 40,
-                    color: exerciseColor.withOpacity(0.2),
-                  ),
-                  _buildStatsInfo('분', '${currentExercise.durationMinutes}min'),
-                  Container(
-                    width: 1,
-                    height: 40,
-                    color: exerciseColor.withOpacity(0.2),
-                  ),
-                  _buildStatsInfo('칼로리', '${_calculateCalories()}kcal'),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNoteSection(Color exerciseColor) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: exerciseColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    Icons.note_alt,
-                    color: exerciseColor,
-                    size: 18,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  '운동 노트',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 20),
-            
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: exerciseColor.withOpacity(0.1),
-                  width: 1,
-                ),
-              ),
-              child: Text(
-                currentExercise.note ?? '',
-                style: GoogleFonts.notoSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
-                  height: 1.5,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButtons(Color exerciseColor) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 수정 버튼
-          Container(
-            width: double.infinity,
-            height: 56,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: exerciseColor.withOpacity(0.4),
-                  blurRadius: 15,
-                  offset: const Offset(0, 8),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: RecordColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            ),
-            child: ElevatedButton(
-              onPressed: () => _navigateToEdit(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: exerciseColor,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                child: Icon(
+                  Icons.analytics_outlined,
+                  color: RecordColors.primary,
+                  size: 20,
                 ),
-                elevation: 0,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Icon(Icons.edit, size: 18),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    '운동 기록 수정',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
+              const SizedBox(width: 12),
+              Text(
+                '운동 통계',
+                style: GoogleFonts.notoSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: RecordColors.textPrimary,
+                ),
               ),
-            ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          
+          // 통계 그리드
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatItem(
+                  '운동 시간',
+                  '${_currentExercise.durationMinutes}분',
+                  Icons.timer_outlined,
+                  RecordColors.primary,
+                ),
+              ),
+              Container(
+                width: 1,
+                height: 60,
+                color: Colors.grey.shade200,
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+              ),
+              Expanded(
+                child: _buildStatItem(
+                  '강도',
+                  _getIntensityLabel(_currentExercise.intensity),
+                  Icons.fitness_center,
+                  RecordColors.primary,
+                ),
+              ),
+            ],
           ),
           
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           
-          // 삭제 버튼
+          // 추가 정보
           Container(
-            width: double.infinity,
-            height: 56,
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.red.withOpacity(0.3),
-                  blurRadius: 15,
-                  offset: const Offset(0, 8),
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calculate_outlined,
+                  color: RecordColors.primary,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '예상 소모 칼로리: ${_calculateCalories()}kcal',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: RecordColors.textPrimary,
+                  ),
                 ),
               ],
-            ),
-            child: ElevatedButton(
-              onPressed: () => _confirmDeleteExercise(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                elevation: 0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Icon(Icons.delete, size: 18),
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    '운동 기록 삭제',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
         ],
@@ -674,48 +354,28 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
     );
   }
 
-  Widget _buildInfoRow(String emoji, String label, String value) {
-    return Row(
-      children: [
-        Text(
-          emoji,
-          style: const TextStyle(fontSize: 16),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          label,
-          style: GoogleFonts.notoSans(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: RecordColors.textSecondary,
-          ),
-        ),
-        const Spacer(),
-        Flexible(
-          child: Text(
-            value,
-            style: GoogleFonts.notoSans(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: RecordColors.textPrimary,
-            ),
-            textAlign: TextAlign.end,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatsInfo(String label, String value) {
+  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
     return Column(
       children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 24,
+          ),
+        ),
+        const SizedBox(height: 12),
         Text(
           value,
           style: GoogleFonts.notoSans(
-            fontSize: 18,
+            fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: _getExerciseColor(currentExercise.exerciseType),
+            color: RecordColors.textPrimary,
           ),
         ),
         const SizedBox(height: 4),
@@ -731,33 +391,784 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
     );
   }
 
-  void _navigateToEdit() async {
-    HapticFeedbackManager.lightImpact();
+  Widget _buildDetailsCard() {
+    final exerciseColor = _getExerciseColor(_currentExercise.exerciseType);
     
-    final result = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ExerciseEditScreen(exercise: currentExercise),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: RecordColors.primary.withOpacity(0.08),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: RecordColors.primary.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: exerciseColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.insights,
+                  color: exerciseColor,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '운동 요약',
+                style: GoogleFonts.notoSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: RecordColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          
+          // 사용자 친화적 운동 정보
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  exerciseColor.withOpacity(0.1),
+                  exerciseColor.withOpacity(0.05),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: exerciseColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        _getExerciseEmoji(_currentExercise.exerciseType),
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _currentExercise.exerciseType,
+                            style: GoogleFonts.notoSans(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                              color: exerciseColor,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${_currentExercise.durationMinutes}분 동안 운동했어요',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: RecordColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                
+                const SizedBox(height: 20),
+                
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.local_fire_department,
+                              color: const Color(0xFFEF4444),
+                              size: 24,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              '${_calculateCalories()}kcal',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w800,
+                                color: const Color(0xFFEF4444),
+                              ),
+                            ),
+                            Text(
+                              '소모 칼로리',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: RecordColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              _getIntensityIcon(_currentExercise.intensity),
+                              color: _getIntensityColor(_currentExercise.intensity),
+                              size: 24,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              _getIntensityLabel(_currentExercise.intensity),
+                              style: GoogleFonts.notoSans(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                color: _getIntensityColor(_currentExercise.intensity),
+                              ),
+                            ),
+                            Text(
+                              '운동 강도',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: RecordColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                
+                const SizedBox(height: 16),
+                
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.schedule,
+                        color: RecordColors.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        _formatDateTime(_currentExercise.date),
+                        style: GoogleFonts.notoSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: RecordColors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: RecordColors.textSecondary,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value,
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: RecordColors.textPrimary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAchievementCard() {
+    // Note: Since ExerciseLog doesn't have achievement score yet, we'll show a placeholder
+    // In production, this would come from the actual exercise data
+    final achievementScore = 7.0; // Default score for display
     
-    // 수정 후 돌아왔을 때 데이터 업데이트
-    if (result == true) {
-      // 글로벌 상태에서 최신 데이터 가져오기
-      final user = ref.read(globalUserProvider);
-      final updatedExercise = user.dailyRecords.exerciseLogs
-          .where((log) => log.id == currentExercise.id)
-          .firstOrNull;
-      
-      if (updatedExercise != null) {
-        _updateExerciseData(updatedExercise);
-      }
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: RecordColors.primary.withOpacity(0.08),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: RecordColors.primary.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: RecordColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.emoji_events_outlined,
+                  color: RecordColors.primary,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '운동 성취도',
+                style: GoogleFonts.notoSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: RecordColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          
+          // Achievement score display
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  RecordColors.primary.withOpacity(0.05),
+                  RecordColors.primary.withOpacity(0.02),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: RecordColors.primary.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: RecordColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '💪',
+                        style: const TextStyle(fontSize: 28),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${achievementScore.toInt()}/10',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 36,
+                            fontWeight: FontWeight.w800,
+                            color: RecordColors.primary,
+                          ),
+                        ),
+                        Text(
+                          _getAchievementLabel(achievementScore),
+                          style: GoogleFonts.notoSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: RecordColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                // Visual progress bar
+                Container(
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: RecordColors.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: FractionallySizedBox(
+                    alignment: Alignment.centerLeft,
+                    widthFactor: achievementScore / 10,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: RecordColors.primary,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPhotoCard() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: RecordColors.primary.withOpacity(0.08),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: RecordColors.primary.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: RecordColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.photo_camera,
+                  color: RecordColors.primary,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '운동 사진',
+                style: GoogleFonts.notoSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: RecordColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: _currentExercise.hasPhoto
+                ? (_currentExercise.imageUrl!.startsWith('http')
+                    ? Image.network(
+                        _currentExercise.imageUrl!,
+                        width: double.infinity,
+                        height: 200,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            width: double.infinity,
+                            height: 200,
+                            color: Colors.grey.shade100,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.broken_image,
+                                  size: 48,
+                                  color: Colors.grey.shade400,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '사진을 불러올 수 없습니다',
+                                  style: GoogleFonts.notoSans(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      )
+                    : Container(
+                        width: double.infinity,
+                        height: 200,
+                        color: Colors.grey.shade100,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.photo,
+                              size: 48,
+                              color: Colors.grey.shade400,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              '로컬 사진',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 14,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ))
+                : Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade50,
+                      border: Border.all(
+                        color: RecordColors.primary.withOpacity(0.2),
+                        width: 2,
+                        style: BorderStyle.solid,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add_a_photo_outlined,
+                          size: 48,
+                          color: RecordColors.primary.withOpacity(0.6),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          '운동 사진이 없습니다',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: RecordColors.textPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '수정하기에서 사진을 추가해보세요',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: RecordColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCommunityCard() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: RecordColors.primary.withOpacity(0.08),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: RecordColors.primary.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: _currentExercise.isShared 
+                  ? RecordColors.primary.withOpacity(0.1)
+                  : Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              _currentExercise.isShared 
+                  ? Icons.group
+                  : Icons.lock,
+              color: _currentExercise.isShared 
+                  ? RecordColors.primary
+                  : Colors.grey.shade600,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  _currentExercise.isShared ? '커뮤니티 공유됨' : '비공개 기록',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: RecordColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _currentExercise.isShared 
+                      ? '다른 사용자들이 이 운동 기록을 볼 수 있습니다'
+                      : '이 운동 기록은 나만 볼 수 있습니다',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: RecordColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: _currentExercise.isShared 
+                  ? RecordColors.primary.withOpacity(0.1)
+                  : Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              _currentExercise.isShared ? '공개' : '비공개',
+              style: GoogleFonts.notoSans(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: _currentExercise.isShared 
+                    ? RecordColors.primary
+                    : Colors.grey.shade600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotesCard() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: RecordColors.primary.withOpacity(0.08),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: RecordColors.primary.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: RecordColors.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.book,
+                  color: RecordColors.primary,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '운동 일기',
+                style: GoogleFonts.notoSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: RecordColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              _currentExercise.note!,
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: RecordColors.textPrimary,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Expanded(
+            child: SherpaButton(
+              text: '수정하기',
+              onPressed: _editExercise,
+              backgroundColor: RecordColors.primary,
+              height: 56,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: SherpaButton(
+              text: '삭제하기',
+              onPressed: _showDeleteDialog,
+              backgroundColor: RecordColors.error,
+              height: 56,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _editExercise() async {
+    HapticFeedbackManager.lightImpact();
+    final result = await Navigator.pushNamed(
+      context,
+      '/exercise_edit',
+      arguments: _currentExercise,
+    );
+    
+    // If edit screen returned updated data, refresh the display
+    if (result != null && result is ExerciseLog) {
+      setState(() {
+        _currentExercise = result;
+      });
     }
   }
 
-  void _confirmDeleteExercise() {
-    HapticFeedbackManager.mediumImpact();
-    
+  void _showDeleteDialog() {
+    HapticFeedbackManager.lightImpact();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -767,17 +1178,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           ),
           title: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.warning,
-                  color: Colors.red,
-                  size: 20,
-                ),
+              Icon(
+                Icons.warning_amber_rounded,
+                color: RecordColors.warning,
+                size: 24,
               ),
               const SizedBox(width: 12),
               Text(
@@ -785,77 +1189,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: Colors.red,
                 ),
               ),
             ],
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '정말로 이 운동 기록을 삭제하시겠습니까?',
-                style: GoogleFonts.notoSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.red.withOpacity(0.1),
-                    width: 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      _getExerciseEmoji(currentExercise.exerciseType),
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            currentExercise.exerciseType,
-                            style: GoogleFonts.notoSans(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: RecordColors.textPrimary,
-                            ),
-                          ),
-                          Text(
-                            '${currentExercise.durationMinutes}분',
-                            style: GoogleFonts.notoSans(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: RecordColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                '삭제된 기록은 복구할 수 없습니다.',
-                style: GoogleFonts.notoSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.red,
-                ),
-              ),
-            ],
+          content: Text(
+            '이 운동 기록을 삭제하시겠습니까?\n삭제된 기록은 복구할 수 없습니다.',
+            style: GoogleFonts.notoSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              height: 1.5,
+            ),
           ),
           actions: [
             TextButton(
@@ -869,25 +1213,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                _deleteExercise();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text(
-                '삭제',
-                style: GoogleFonts.notoSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+            SherpaButton(
+              text: '삭제',
+              onPressed: _deleteExercise,
+              backgroundColor: RecordColors.error,
+              height: 40,
+              width: 80,
             ),
           ],
         );
@@ -897,190 +1228,223 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
 
   void _deleteExercise() async {
     try {
-      final user = ref.read(globalUserProvider);
-      final updatedExerciseLogs = user.dailyRecords.exerciseLogs
-          .where((log) => log.id != currentExercise.id)
-          .toList();
+      // 실제 삭제 로직 구현
+      final globalUserNotifier = ref.read(globalUserProvider.notifier);
+      await globalUserNotifier.deleteExerciseRecord(_currentExercise.id);
       
-      final updatedRecords = user.dailyRecords.copyWith(
-        exerciseLogs: updatedExerciseLogs,
-      );
-      
-      final updatedUser = user.copyWith(dailyRecords: updatedRecords);
-      ref.read(globalUserProvider.notifier).state = updatedUser;
-
       if (mounted) {
-        Navigator.pop(context);
+        Navigator.pop(context); // 다이얼로그 닫기
+        Navigator.pop(context); // 상세 화면 닫기
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              '운동 기록이 삭제되었습니다.',
-              style: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 12),
+                Text(
+                  '운동 기록이 삭제되었습니다.',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: RecordColors.success,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(20),
           ),
         );
       }
     } catch (e) {
       if (mounted) {
+        Navigator.pop(context); // 다이얼로그 닫기
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              '삭제 중 오류가 발생했습니다. 다시 시도해주세요.',
-              style: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
+            content: Row(
+              children: [
+                const Icon(Icons.error, color: Colors.white),
+                const SizedBox(width: 12),
+                Text(
+                  '삭제 중 오류가 발생했습니다: $e',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: RecordColors.error,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(20),
           ),
         );
       }
     }
   }
 
-  String _formatDate(DateTime date) {
-    final weekdays = ['일', '월', '화', '수', '목', '금', '토'];
-    return '${date.year}년 ${date.month}월 ${date.day}일 (${weekdays[date.weekday % 7]})';
-  }
-
-
-  String _getExerciseIntensity(String exerciseType) {
-    switch (exerciseType) {
-      case '러닝':
-      case '축구':
-      case '농구':
-      case '클라이밍':
-        return '고강도';
-      case '자전거':
-      case '수영':
-      case '테니스':
-      case '배드민턴':
-      case '헬스':
-        return '중강도';
-      case '걷기':
-      case '요가':
-      case '필라테스':
-      case '골프':
-        return '저강도';
-      case '등산':
-        return '중-고강도';
-      default:
-        return '보통';
-    }
-  }
-
   Color _getExerciseColor(String exerciseType) {
     switch (exerciseType) {
-      // 초록색 - 자연적인 운동
+      // 딥 블루 - 유산소 운동
       case '걷기':
-      case '등산':
       case '러닝':
       case '수영':
       case '자전거':
-        return const Color(0xFF059669);
+        return const Color(0xFF2563EB);
       
-      // 보라색 - 몸과 소통하는 운동
+      // 미디엄 블루 - 근력/체조 운동
       case '요가':
       case '클라이밍':
       case '필라테스':
-        return const Color(0xFF8B5CF6);
-      
-      // 검은색 - 묵직한 쇠질 느낌
       case '헬스':
-        return const Color(0xFF1F2937);
+        return const Color(0xFF3B82F6);
       
-      // 노란색 - 밝은 느낌
+      // 스카이 블루 - 라켓 스포츠
       case '골프':
       case '배드민턴':
       case '테니스':
-        return const Color(0xFFFBBF24);
+        return const Color(0xFF0EA5E9);
       
-      // 빨간색 - 타오르는 열정
+      // 라이트 블루 - 볼 스포츠
       case '농구':
       case '축구':
-        return const Color(0xFFEF4444);
+        return const Color(0xFF60A5FA);
       
-      // 주황색 - 기타
-      default:
-        return const Color(0xFFF97316);
-    }
-  }
-
-  int _calculateCalories() {
-    const double weight = 70.0;
-    double met = 0.0;
-    
-    switch (currentExercise.exerciseType) {
-      case '러닝':
-        met = 8.0;
-        break;
-      case '걷기':
-        met = 3.5;
-        break;
-      case '자전거':
-        met = 6.0;
-        break;
-      case '수영':
-        met = 8.0;
-        break;
-      case '요가':
-        met = 2.5;
-        break;
-      case '헬스':
-        met = 6.0;
-        break;
-      case '필라테스':
-        met = 3.0;
-        break;
-      case '테니스':
-        met = 7.0;
-        break;
-      case '축구':
-        met = 7.0;
-        break;
-      case '농구':
-        met = 6.5;
-        break;
-      case '클라이밍':
-        met = 8.0;
-        break;
+      // 등산 - 인디고 블루
       case '등산':
-        met = 6.0;
-        break;
-      case '배드민턴':
-        met = 5.5;
-        break;
-      case '골프':
-        met = 4.5;
-        break;
+        return const Color(0xFF4F46E5);
+      
+      // 기타 - 기본 블루
       default:
-        met = 4.0;
+        return const Color(0xFF2563EB);
     }
-    
-    return ((met * weight * (currentExercise.durationMinutes / 60.0)).round());
   }
 
   String _getExerciseEmoji(String exerciseType) {
     switch (exerciseType) {
-      case '러닝': return '🏃‍♂️';
-      case '걷기': return '🚶‍♂️';
-      case '자전거': return '🚴‍♂️';
-      case '수영': return '🏊‍♂️';
-      case '등산': return '🥾';
-      case '요가': return '🧘‍♀️';
-      case '클라이밍': return '🧗‍♂️';
-      case '필라테스': return '🤸‍♀️';
-      case '헬스': return '💪';
-      case '테니스': return '🎾';
-      case '배드민턴': return '🏸';
-      case '골프': return '⛳';
-      case '축구': return '⚽';
-      case '농구': return '🏀';
-      default: return '🏃‍♂️';
+      case '러닝':
+        return '🏃';
+      case '클라이밍':
+        return '🧗';
+      case '등산':
+        return '🥾';
+      case '헬스':
+        return '🏋️';
+      case '배드민턴':
+        return '🏸';
+      case '수영':
+        return '🏊';
+      case '자전거':
+        return '🚴';
+      case '요가':
+        return '🧘';
+      case '골프':
+        return '⛳';
+      case '축구':
+        return '⚽';
+      case '농구':
+        return '🏀';
+      case '테니스':
+        return '🎾';
+      default:
+        return '💪';
     }
+  }
+
+  String _getIntensityLabel(String intensity) {
+    switch (intensity.toLowerCase()) {
+      case 'low':
+      case '낮음':
+      case 'light':
+        return '편안함';
+      case 'medium':
+      case '보통':
+      case 'moderate':
+        return '적당함';
+      case 'high':
+      case '높음':
+      case 'vigorous':
+        return '힘듬';
+      case 'very_high':
+      case '매우높음':
+      case 'extreme':
+        return '매우 힘듬';
+      default:
+        return '적당함'; // 기본값을 한국어로 변경
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    final weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    final weekday = weekdays[date.weekday % 7];
+    return '${date.month}월 ${date.day}일 ($weekday)';
+  }
+
+  String _formatDateTime(DateTime date) {
+    final weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    final weekday = weekdays[date.weekday % 7];
+    return '${date.year}년 ${date.month}월 ${date.day}일 ($weekday) ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+  }
+
+  int _calculateCalories() {
+    return CalorieCalculator.calculateCalories(
+      exerciseType: _currentExercise.exerciseType,
+      durationMinutes: _currentExercise.durationMinutes,
+      intensity: _currentExercise.intensity,
+    );
+  }
+
+  IconData _getIntensityIcon(String intensity) {
+    switch (intensity.toLowerCase()) {
+      case 'low':
+      case '낮음':
+        return Icons.spa;
+      case 'medium':
+      case '보통':
+        return Icons.directions_walk;
+      case 'high':
+      case '높음':
+        return Icons.directions_run;
+      case 'very_high':
+      case '매우높음':
+        return Icons.whatshot;
+      default:
+        return Icons.directions_walk;
+    }
+  }
+
+  Color _getIntensityColor(String intensity) {
+    switch (intensity.toLowerCase()) {
+      case 'low':
+      case '낮음':
+        return const Color(0xFF10B981);
+      case 'medium':
+      case '보통':
+        return const Color(0xFFF59E0B);
+      case 'high':
+      case '높음':
+        return const Color(0xFFEF4444);
+      case 'very_high':
+      case '매우높음':
+        return const Color(0xFF8B5CF6);
+      default:
+        return const Color(0xFFF59E0B);
+    }
+  }
+
+  String _getAchievementLabel(double score) {
+    if (score >= 9) return '최고의 운동이었어요! 🏆';
+    if (score >= 7) return '정말 만족스러운 운동! 💪';
+    if (score >= 5) return '괜찮은 운동이었어요 👍';
+    if (score >= 3) return '조금 아쉬웠어요 😅';
+    return '다음엔 더 잘할 수 있어요! 💫';
   }
 }

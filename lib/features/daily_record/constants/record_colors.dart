@@ -45,6 +45,14 @@ class RecordColors {
   static const Color error = Color(0xFFEF4444);
   static const Color errorLight = Color(0xFFF87171);
   
+  /// 정보 (파랑)
+  static const Color info = Color(0xFF3B82F6);
+  static const Color infoLight = Color(0xFF60A5FA);
+  
+  /// 커뮤니티 (보라)
+  static const Color community = Color(0xFF8B5CF6);
+  static const Color communityLight = Color(0xFFA78BFA);
+  
   // ==================== 텍스트 색상 ====================
   
   /// 주요 텍스트

@@ -21,6 +21,7 @@ import '../../../../shared/widgets/sherpa_card.dart';
 import '../../../../shared/widgets/animated_progress_widget.dart';
 import '../../../../shared/widgets/point_display_widget.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
+import '../../../../shared/presentation/screens/component_viewer_screen.dart';
 
 // Local Widgets
 import '../widgets/enhanced_consecutive_days_reward_widget.dart';
@@ -122,7 +123,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         });
       }
     } catch (e) {
-      print("일일 보상 확인 중 오류 발생: $e");
+      // 일일 보상 확인 중 오류 발생
     }
   }
 

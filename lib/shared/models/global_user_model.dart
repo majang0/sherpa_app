@@ -574,6 +574,8 @@ class ExerciseLog {
   final int durationMinutes;
   final String intensity;
   final String? note;
+  final String? imageUrl;
+  final bool isShared;
 
   const ExerciseLog({
     required this.id,
@@ -582,7 +584,12 @@ class ExerciseLog {
     required this.durationMinutes,
     required this.intensity,
     this.note,
+    this.imageUrl,
+    this.isShared = false,
   });
+
+  /// 첨부 사진이 있는지 확인
+  bool get hasPhoto => imageUrl != null && imageUrl!.isNotEmpty;
 
   Map<String, dynamic> toJson() {
     return {
@@ -592,6 +599,8 @@ class ExerciseLog {
       'durationMinutes': durationMinutes,
       'intensity': intensity,
       'note': note,
+      'imageUrl': imageUrl,
+      'isShared': isShared,
     };
   }
 
@@ -603,6 +612,8 @@ class ExerciseLog {
       durationMinutes: json['durationMinutes'] ?? 0,
       intensity: json['intensity'] ?? 'medium',
       note: json['note'],
+      imageUrl: json['imageUrl'],
+      isShared: json['isShared'] ?? false,
     );
   }
 }

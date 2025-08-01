@@ -1,0 +1,2 @@
+# This file ensures the keystore directory is tracked in git
+# Actual keystore files should be added to .gitignore for security

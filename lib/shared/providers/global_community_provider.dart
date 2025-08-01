@@ -287,7 +287,7 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
         state = CommunityState.fromJson(communityData);
       }
     } catch (e) {
-      print('Failed to load community data: $e');
+      // 커뮤니티 데이터 로드 실패
     }
   }
 
@@ -297,7 +297,7 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('global_community_data', jsonEncode(state.toJson()));
     } catch (e) {
-      print('Failed to save community data: $e');
+      // 커뮤니티 데이터 저장 실패
     }
   }
 

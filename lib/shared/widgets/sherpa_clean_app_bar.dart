@@ -229,8 +229,21 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
         ),
       ),
 
-      // ✅ 오른쪽: 알림 + 포인트 + 네비게이션
+      // ✅ 오른쪽: 컴포넌트 뷰어 + 알림 + 포인트 + 네비게이션
       actions: [
+        // ✅ 컴포넌트 뷰어 버튼
+        IconButton(
+          onPressed: () {
+            HapticFeedback.lightImpact();
+            Navigator.pushNamed(context, '/component_viewer');
+          },
+          icon: Icon(
+            Icons.widgets_outlined,
+            color: Colors.grey[600],
+            size: 22,
+          ),
+        ),
+
         // ✅ 알림 버튼 + 빨간 불빛
         Padding(
           padding: const EdgeInsets.only(right: 8),

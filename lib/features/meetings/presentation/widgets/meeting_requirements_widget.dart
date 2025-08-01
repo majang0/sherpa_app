@@ -309,6 +309,15 @@ class MeetingRequirementsWidget extends StatelessWidget {
         conditions.add('명함 또는 자기소개 준비');
         conditions.add('적극적인 네트워킹 참여');
         break;
+      case MeetingCategory.culture:
+        conditions.add('시간 엄수');
+        conditions.add('관람 예절 준수');
+        break;
+      case MeetingCategory.outdoor:
+        conditions.add('날씨에 맞는 복장');
+        conditions.add('안전 수칙 준수');
+        break;
+      case MeetingCategory.all:
       default:
         conditions.add('모임 주제에 관심과 열정');
     }
@@ -338,9 +347,21 @@ class MeetingRequirementsWidget extends StatelessWidget {
       case MeetingCategory.study:
         notices.add('시끄럽게 하거나 다른 사람에게 방해되는 행동 금지');
         break;
+      case MeetingCategory.reading:
+        notices.add('해당 책을 미리 읽지 않으면 토론 참여 불가');
+        break;
       case MeetingCategory.networking:
         notices.add('과도한 영업이나 홍보 활동 자제');
         break;
+      case MeetingCategory.culture:
+        notices.add('공연 중 휴대폰 무음 필수');
+        notices.add('중간 퇴장 금지');
+        break;
+      case MeetingCategory.outdoor:
+        notices.add('날씨 악화 시 일정 변경 가능');
+        notices.add('안전사고 발생 시 개인 책임');
+        break;
+      case MeetingCategory.all:
       default:
         break;
     }

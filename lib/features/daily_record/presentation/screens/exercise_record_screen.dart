@@ -5,11 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../constants/record_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
-import '../widgets/running_record_form.dart';
-import '../widgets/climbing_record_form.dart';
-import '../widgets/hiking_record_form.dart';
-import '../widgets/gym_record_form.dart';
-import '../widgets/badminton_record_form.dart';
+import '../widgets/unified_exercise_record_form.dart';
 
 class ExerciseRecordScreen extends ConsumerStatefulWidget {
   final String exerciseType;
@@ -195,20 +191,11 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
   }
 
   Widget _buildExerciseForm() {
-    switch (widget.exerciseType) {
-      case '러닝':
-        return RunningRecordForm(selectedDate: widget.selectedDate);
-      case '클라이밍':
-        return ClimbingRecordForm(selectedDate: widget.selectedDate);
-      case '등산':
-        return HikingRecordForm(selectedDate: widget.selectedDate);
-      case '헬스':
-        return GymRecordForm(selectedDate: widget.selectedDate);
-      case '배드민턴':
-        return BadmintonRecordForm(selectedDate: widget.selectedDate);
-      default:
-        return _buildUnsupportedExerciseForm();
-    }
+    // 모든 운동 타입에 대해 통합된 폼을 사용
+    return UnifiedExerciseRecordForm(
+      selectedDate: widget.selectedDate,
+      exerciseType: widget.exerciseType,
+    );
   }
 
   Widget _buildUnsupportedExerciseForm() {
@@ -257,38 +244,38 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
 
   Color _getExerciseColor(String exerciseType) {
     switch (exerciseType) {
-      // 초록색 - 자연적인 운동
+      // 딥 블루 - 유산소 운동
       case '걷기':
-      case '등산':
       case '러닝':
       case '수영':
       case '자전거':
-        return const Color(0xFF059669);
+        return const Color(0xFF2563EB);
       
-      // 보라색 - 몸과 소통하는 운동
+      // 미디엄 블루 - 근력/체조 운동
       case '요가':
       case '클라이밍':
       case '필라테스':
-        return const Color(0xFF8B5CF6);
-      
-      // 검은색 - 묵직한 쇠질 느낌
       case '헬스':
-        return const Color(0xFF1F2937);
+        return const Color(0xFF3B82F6);
       
-      // 노란색 - 밝은 느낌
+      // 스카이 블루 - 라켓 스포츠
       case '골프':
       case '배드민턴':
       case '테니스':
-        return const Color(0xFFFBBF24);
+        return const Color(0xFF0EA5E9);
       
-      // 빨간색 - 타오르는 열정
+      // 라이트 블루 - 볼 스포츠
       case '농구':
       case '축구':
-        return const Color(0xFFEF4444);
+        return const Color(0xFF60A5FA);
       
-      // 주황색 - 기타
+      // 등산 - 인디고 블루
+      case '등산':
+        return const Color(0xFF4F46E5);
+      
+      // 기타 - 기본 블루
       default:
-        return const Color(0xFFF97316);
+        return const Color(0xFF2563EB);
     }
   }
 

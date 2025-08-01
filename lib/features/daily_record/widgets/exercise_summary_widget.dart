@@ -8,7 +8,6 @@ import '../constants/record_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
-import '../presentation/screens/exercise_detail_screen.dart';
 import 'exercise_full_view_widget.dart';
 
 class ExerciseSummaryWidget extends ConsumerStatefulWidget {
@@ -1006,11 +1005,11 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                     child: OutlinedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        Navigator.push(
+                        // Navigate to exercise detail screen
+                        Navigator.pushNamed(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => ExerciseDetailScreen(exercise: exercise),
-                          ),
+                          '/exercise_detail',
+                          arguments: exercise,
                         );
                       },
                       style: OutlinedButton.styleFrom(
@@ -1045,7 +1044,12 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        // TODO: 운동 수정 화면으로 이동
+                        // Navigate to exercise edit screen
+                        Navigator.pushNamed(
+                          context,
+                          '/exercise_edit',
+                          arguments: exercise,
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFF97316),
@@ -1195,11 +1199,11 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       ),
                       onPressed: () {
                         Navigator.pop(context);
-                        Navigator.push(
+                        // Navigate to exercise detail screen
+                        Navigator.pushNamed(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => ExerciseDetailScreen(exercise: exercise),
-                          ),
+                          '/exercise_detail',
+                          arguments: exercise,
                         );
                       },
                     ),

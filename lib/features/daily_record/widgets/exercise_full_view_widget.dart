@@ -7,7 +7,6 @@ import '../constants/record_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
-import '../presentation/screens/exercise_detail_screen.dart';
 
 class ExerciseFullViewWidget extends ConsumerStatefulWidget {
   @override
@@ -823,11 +822,11 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                       child: InkWell(
                         onTap: () {
                           Navigator.pop(context);
-                          Navigator.push(
+                          // Navigate to exercise detail screen
+                          Navigator.pushNamed(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => ExerciseDetailScreen(exercise: exercise),
-                            ),
+                            '/exercise_detail',
+                            arguments: exercise,
                           );
                         },
                         borderRadius: BorderRadius.circular(16),

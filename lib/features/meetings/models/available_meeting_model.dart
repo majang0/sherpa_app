@@ -2,19 +2,21 @@
 
 import 'package:flutter/material.dart';
 
-/// 모임 카테고리
+/// 🏷️ 모임 카테고리
 enum MeetingCategory {
+  all('전체', '🌟', Color(0xFF6366F1)),
+  exercise('운동/스포츠', '💪', Color(0xFF10B981)),
   study('스터디', '📚', Color(0xFF3B82F6)),
-  exercise('운동', '💪', Color(0xFF10B981)),
-  hobby('취미', '🎨', Color(0xFFEF4444)),
-  culture('문화', '🎭', Color(0xFF8B5CF6)),
-  networking('네트워킹', '🤝', Color(0xFFF59E0B)),
-  reading('독서', '📖', Color(0xFF06B6D4));
+  reading('책/독서', '📖', Color(0xFF8B5CF6)),
+  networking('사교/네트워킹', '🤝', Color(0xFFF59E0B)),
+  culture('문화/영화', '🎭', Color(0xFFEC4899)),
+  outdoor('아웃도어/여행', '🏔️', Color(0xFF06B6D4));
 
-  const MeetingCategory(this.displayName, this.emoji, this.color);
   final String displayName;
   final String emoji;
   final Color color;
+
+  const MeetingCategory(this.displayName, this.emoji, this.color);
 }
 
 /// 모임 유형 (포인트 시스템과 연동)
@@ -56,6 +58,7 @@ class AvailableMeeting {
   final bool isRecurring;
   final List<String> tags;
   final List<String> requirements;
+  final List<String> preparationItems;
 
   const AvailableMeeting({
     required this.id,
@@ -76,6 +79,7 @@ class AvailableMeeting {
     this.isRecurring = false,
     this.tags = const [],
     this.requirements = const [],
+    this.preparationItems = const [],
   });
 
   /// copyWith 메서드 추가
@@ -98,6 +102,7 @@ class AvailableMeeting {
     bool? isRecurring,
     List<String>? tags,
     List<String>? requirements,
+    List<String>? preparationItems,
   }) {
     return AvailableMeeting(
       id: id ?? this.id,
@@ -118,6 +123,7 @@ class AvailableMeeting {
       isRecurring: isRecurring ?? this.isRecurring,
       tags: tags ?? this.tags,
       requirements: requirements ?? this.requirements,
+      preparationItems: preparationItems ?? this.preparationItems,
     );
   }
 
@@ -127,7 +133,7 @@ class AvailableMeeting {
       case MeetingType.free:
         return 1000.0; // 무료 모임 수수료
       case MeetingType.paid:
-        return (price ?? 0) * 0.05; // 유료 모임 5% 수수료
+        return price ?? 0; // 유료 모임 전체 가격 지불
     }
   }
 
@@ -142,18 +148,27 @@ class AvailableMeeting {
 
     // 카테고리별 추가 경험치
     switch (category) {
-      case MeetingCategory.study:
-      case MeetingCategory.reading:
-        baseXp += 20.0;
+      case MeetingCategory.all:
+        baseXp += 10.0;
         break;
       case MeetingCategory.exercise:
-        baseXp += 15.0;
+        baseXp += 20.0;
         break;
-      case MeetingCategory.networking:
+      case MeetingCategory.study:
         baseXp += 25.0;
         break;
-      default:
-        baseXp += 10.0;
+      case MeetingCategory.reading:
+        baseXp += 25.0;
+        break;
+      case MeetingCategory.networking:
+        baseXp += 20.0;
+        break;
+      case MeetingCategory.culture:
+        baseXp += 15.0;
+        break;
+      case MeetingCategory.outdoor:
+        baseXp += 20.0;
+        break;
     }
 
     // 유료 모임 추가 경험치
@@ -167,20 +182,20 @@ class AvailableMeeting {
   /// 능력치 보상 계산
   Map<String, double> get statRewards {
     switch (category) {
-      case MeetingCategory.exercise:
-        return {'stamina': 0.3, 'willpower': 0.1};
-      case MeetingCategory.study:
-        return {'knowledge': 0.3, 'technique': 0.1};
-      case MeetingCategory.reading:
-        return {'knowledge': 0.4};
-      case MeetingCategory.networking:
-        return {'sociality': 0.4, 'technique': 0.1};
-      case MeetingCategory.hobby:
-        return {'technique': 0.2, 'willpower': 0.1};
-      case MeetingCategory.culture:
-        return {'sociality': 0.2, 'willpower': 0.2};
-      default:
+      case MeetingCategory.all:
         return {'sociality': 0.2};
+      case MeetingCategory.exercise:
+        return {'stamina': 0.3, 'willpower': 0.2};
+      case MeetingCategory.study:
+        return {'knowledge': 0.4, 'technique': 0.1};
+      case MeetingCategory.reading:
+        return {'knowledge': 0.3, 'willpower': 0.2};
+      case MeetingCategory.networking:
+        return {'sociality': 0.5};
+      case MeetingCategory.culture:
+        return {'knowledge': 0.2, 'sociality': 0.3};
+      case MeetingCategory.outdoor:
+        return {'stamina': 0.3, 'technique': 0.2};
     }
   }
 
@@ -219,11 +234,31 @@ class AvailableMeeting {
     return '${title.substring(0, 10)}...';
   }
 
-  /// 날짜 포맷 (UI용)
+  /// 날짜 포맷 (한국어 UI용)
   String get formattedDate {
+    final now = DateTime.now();
     final weekdays = ['월', '화', '수', '목', '금', '토', '일'];
     final weekday = weekdays[dateTime.weekday - 1];
-    return '${dateTime.month}/${dateTime.day}($weekday) ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+    
+    // 오늘/내일/모레 표시
+    final daysDiff = DateTime(dateTime.year, dateTime.month, dateTime.day)
+        .difference(DateTime(now.year, now.month, now.day))
+        .inDays;
+    
+    String datePrefix;
+    if (daysDiff == 0) {
+      datePrefix = '오늘';
+    } else if (daysDiff == 1) {
+      datePrefix = '내일';
+    } else if (daysDiff == 2) {
+      datePrefix = '모레';
+    } else {
+      datePrefix = '${dateTime.month}월 ${dateTime.day}일';
+    }
+    
+    final timeStr = '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+    
+    return '$datePrefix($weekday) $timeStr';
   }
 
   Map<String, dynamic> toJson() {
@@ -246,6 +281,7 @@ class AvailableMeeting {
       'isRecurring': isRecurring,
       'tags': tags,
       'requirements': requirements,
+      'preparationItems': preparationItems,
     };
   }
 
@@ -256,7 +292,7 @@ class AvailableMeeting {
       description: json['description'] ?? '',
       category: MeetingCategory.values.firstWhere(
         (e) => e.name == json['category'],
-        orElse: () => MeetingCategory.study,
+        orElse: () => MeetingCategory.all,
       ),
       type: MeetingType.values.firstWhere(
         (e) => e.name == json['type'],
@@ -278,6 +314,7 @@ class AvailableMeeting {
       isRecurring: json['isRecurring'] ?? false,
       tags: List<String>.from(json['tags'] ?? []),
       requirements: List<String>.from(json['requirements'] ?? []),
+      preparationItems: List<String>.from(json['preparationItems'] ?? []),
     );
   }
 }

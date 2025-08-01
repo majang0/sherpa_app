@@ -126,3 +126,30 @@ build/
 # Local configuration
 .env
 .env.local
+.env.production
+.env.staging
+
+# Security and signing related
+*.keystore
+*.jks
+**/android/app/keystore/*.keystore
+**/android/app/keystore/*.jks
+key.properties
+upload-keystore.jks
+
+# API Keys and secrets
+api_keys.dart
+secrets.dart
+**/secrets/
+
+# Firebase Service Account Keys - NEVER COMMIT THESE!
+*firebase-adminsdk*.json
+*service-account*.json
+firebase-service-account*.json
+sherpa-app-*-firebase-adminsdk-*.json
+
+# Firebase config files (keep templates, ignore actual config)
+**/android/app/google-services.json
+**/ios/Runner/GoogleService-Info.plist
+firebase.json
+.firebaserc

@@ -101,13 +101,49 @@ The app uses Riverpod (v2.4.9) with a specific pattern:
 
 - **climbing**: Core gamification engine (mountains, badges, stats)
 - **daily_record**: Activity tracking (exercise, reading, diary, focus timer)
-- **meetings**: Social meetup coordination
+- **meetings**: Social meetup coordination with 3-model architecture
 - **quests**: Daily challenges and objectives
 - **community**: Social features and interactions
 - **home**: Main dashboard aggregating all features
 - **profile**: User profile and growth tracking
 - **shop**: Point spending and rewards
 - **wallet**: Financial transactions and payment features
+
+### Meeting Feature Architecture
+
+**3-Model System** for different meeting contexts:
+
+1. **AvailableMeeting** (`features/meetings/models/available_meeting_model.dart`):
+   - Core meeting data model with 6 categories: study, exercise, hobby, culture, networking, reading
+   - Types: free (1000P fee) vs paid (5% fee)
+   - Auto-calculated rewards based on difficulty and category
+   - Real-time participation tracking with capacity limits
+
+2. **RecommendedMeeting** (`features/home/models/meeting_recommendation_model.dart`):
+   - AI-powered meeting recommendations with GPS coordinates
+   - Extended categories: networking, study, exercise, social, career, hobby, culture, volunteer
+   - Difficulty levels (beginner/intermediate/advanced) and status tracking
+   - Integration with home dashboard for personalized suggestions
+
+3. **MeetingLog** (`features/daily_record/models/record_models.dart`):
+   - Activity completion tracking with mood and satisfaction ratings
+   - 6 mood states: very_happy, happy, good, normal, tired, stressed
+   - Integration with global activity completion flow via `handleActivityCompletion()`
+
+**Meeting Flow Architecture**:
+```
+Browse → Detail → Apply → Process → Success → Participate → Review → Rewards
+```
+
+**Provider Integration**:
+- `globalMeetingProvider`: Central meeting state management
+- Cross-provider sync with quest system for real-time progress tracking
+- Point attribution via `globalPointProvider` with meeting-specific `PointSource`
+
+**UI Components**:
+- `MeetingInfoCardWidget`: Displays meeting details with category-colored tags
+- Tab-based navigation: Meeting + Challenge tabs in `MeetingTabScreen`
+- Integration with main navigation via tab index 3
 
 ### Navigation
 
@@ -121,7 +157,11 @@ Uses standard MaterialApp routing with a route table in `main.dart`:
 **Key Routes**:
 - `/`: Main navigation screen with bottom tabs
 - `/daily_record`, `/diary_record`, `/exercise_record`, `/reading_record`: Activity tracking
-- `/meeting_detail`, `/meeting_application`, `/meeting_success`, `/meeting_review`: Meeting flow
+- Meeting flow routes:
+  - `/meeting_detail`: Meeting details with apply button
+  - `/meeting_application`: Application form
+  - `/meeting_success`: Application confirmation
+  - `/meeting_review`: Post-meeting feedback
 - `/levelup`: Level progression screen
 
 **Navigation Patterns**:
@@ -152,6 +192,12 @@ Key model relationships:
 - `GlobalUser` contains all user data including stats, badges, and daily records
 - `DailyRecordData` aggregates all activity logs (exercise, reading, diary, meetings)
 - `ClimbingSession` tracks current mountain progress
+
+**Meeting Model Relationships**:
+- `AvailableMeeting`: Core meeting entity with enums for MeetingCategory/Type/Scope
+- `RecommendedMeeting`: AI-suggested meetings with GPS + recommendation scoring
+- `MeetingLog`: Completed meeting records with mood/satisfaction tracking
+- Cross-model integration: AvailableMeeting → participation → MeetingLog creation
 
 ### Firebase Integration
 
@@ -314,6 +360,15 @@ The app implements a sophisticated RPG-style progression system:
 4. **Colors**: Ensure all referenced colors exist in the appropriate constants file
 5. **Route navigation**: Use arguments for tab/sub-tab navigation, not query parameters
 6. **Provider dependencies**: Global providers have interdependencies - initialize in correct order
+
+**Meeting-Specific Issues**:
+7. **Meeting model confusion**: Use correct model for context:
+   - `AvailableMeeting` for meetup browsing/application
+   - `RecommendedMeeting` for home dashboard suggestions
+   - `MeetingLog` for completed activity tracking
+8. **Category enum mismatches**: Different models have different category sets
+9. **Meeting completion**: Always trigger `handleActivityCompletion()` with `activityType: 'meeting'`
+10. **Tab navigation**: Meeting tab (index 3) has sub-tabs - use `subTabIndex` for Challenge tab
 
 ### Implementation Discrepancies
 
