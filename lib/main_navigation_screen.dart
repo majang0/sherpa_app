@@ -8,7 +8,6 @@ import 'shared/widgets/sherpa_clean_app_bar.dart';
 // 추가 imports for TabBarView screens
 import 'features/quests/presentation/screens/quest_screen_v2.dart';
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
-import 'features/meetings/presentation/screens/social_exploration_screen.dart';
 import 'features/meetings/presentation/screens/challenge_index_screen.dart';
 import 'features/quests/providers/quest_provider_v2.dart';
 

@@ -9,7 +9,6 @@ import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
 // 📱 화면들
 import 'new_meeting_discovery_screen.dart';
-import 'modern_meeting_discovery_screen.dart';
 import 'challenge_index_screen.dart';
 
 // 🔧 프로바이더
@@ -42,13 +41,6 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
       label: '모임',
       color: AppColors2025.primary,
       semanticLabel: '모임 탭, 다른 사용자들과 만날 수 있는 모임을 찾아보세요',
-    ),
-    TabInfo(
-      icon: Icons.explore_outlined,
-      selectedIcon: Icons.explore,
-      label: '탐색',
-      color: AppColors2025.primary,
-      semanticLabel: '탐색 탭, 새로운 모임과 활동을 탐색해보세요',
     ),
     TabInfo(
       icon: Icons.emoji_events_outlined,
@@ -101,7 +93,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
   }
   
   void _recordTabVisit(int index) {
-    final tabNames = ['모임', '탐색', '챌린지'];
+    final tabNames = ['모임', '챌린지'];
     if (index >= 0 && index < tabNames.length) {
       ref.read(questProviderV2.notifier).recordTabVisit(tabNames[index]);
     }
@@ -144,7 +136,6 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
                 physics: const BouncingScrollPhysics(),
                 children: [
                   NewMeetingDiscoveryScreen(),
-                  ModernMeetingDiscoveryScreen(),
                   ChallengeIndexScreen(),
                 ],
               ),
