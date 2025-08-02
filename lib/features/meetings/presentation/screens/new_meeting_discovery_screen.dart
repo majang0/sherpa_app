@@ -21,6 +21,7 @@ import '../../models/available_meeting_model.dart';
 import '../../../../shared/utils/meeting_image_manager.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_2025.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_list_2025.dart';
+import '../widgets/meeting_creation_dialog.dart';
 
 /// 🌟 새로운 모임 탐색 화면
 /// 사용자가 모임에 최대한 집중할 수 있도록 자연스럽고 부담 없는 흐름으로 구성
@@ -126,6 +127,8 @@ class _NewMeetingDiscoveryScreenState
     
     return Scaffold(
       backgroundColor: AppColors2025.background,
+      floatingActionButton: _buildCreateMeetingFAB(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: SafeArea(
         child: CustomScrollView(
           controller: _mainScrollController,
@@ -1379,22 +1382,75 @@ class _NewMeetingDiscoveryScreenState
     );
   }
   
-  /// 🎯 모임 생성 FAB - 반응형 위치
+  /// 🎯 모임 개설 FAB
   Widget _buildCreateMeetingFAB() {
-    return FloatingActionButton.extended(
-      onPressed: () {
-        HapticFeedback.mediumImpact();
-        Navigator.pushNamed(context, '/meeting_create');
-      },
-      backgroundColor: AppColors2025.primary,
-      foregroundColor: Colors.white,
-      icon: const Icon(Icons.add),
-      label: Text(
-        '모임 만들기',
-        style: GoogleFonts.notoSans(
-          fontWeight: FontWeight.w600,
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors2025.primary, AppColors2025.primary.withOpacity(0.8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors2025.primary.withOpacity(0.3),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _handleCreateMeeting,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.add_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  '모임 개설',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
+    );
+  }
+  
+  /// 🎯 모임 개설 핸들러
+  void _handleCreateMeeting() {
+    HapticFeedback.mediumImpact();
+    
+    // Sherpi 격려 메시지
+    ref.read(sherpiProvider.notifier).showInstantMessage(
+      context: SherpiContext.encouragement,
+      customDialogue: '모임을 만들어볼까요? 간단하게 만들 수 있어요! 🎯',
+      emotion: SherpiEmotion.guiding,
+    );
+    
+    // 모달 띄우기
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      enableDrag: true,
+      builder: (context) => const MeetingCreationDialog(),
     );
   }
   
@@ -1549,4 +1605,5 @@ class _NewMeetingDiscoveryScreenState
   bool _isBookmarked(AvailableMeeting meeting) {
     return _bookmarkedMeetings.contains(meeting.id);
   }
+  
 }

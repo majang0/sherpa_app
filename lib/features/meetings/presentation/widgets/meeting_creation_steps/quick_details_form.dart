@@ -32,9 +32,17 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
   final _locationController = TextEditingController();
   
   bool _isOnline = true;
+  int _minParticipants = 2;
   int _maxParticipants = 10;
   MeetingType _meetingType = MeetingType.free;
   double _price = 5000;
+  MeetingScope _selectedScope = MeetingScope.public;
+  
+  // 태그와 준비물
+  final List<String> _tags = [];
+  final List<String> _preparationItems = [];
+  final TextEditingController _tagController = TextEditingController();
+  final TextEditingController _preparationController = TextEditingController();
 
   @override
   void initState() {
@@ -45,9 +53,13 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
     _descriptionController.text = widget.data.description;
     _locationController.text = widget.data.locationName ?? '';
     _isOnline = widget.data.isOnline;
+    _minParticipants = widget.data.minParticipants;
     _maxParticipants = widget.data.maxParticipants;
     _meetingType = widget.data.meetingType;
     _price = widget.data.price ?? 5000;
+    _selectedScope = widget.data.scope;
+    _tags.addAll(widget.data.tags);
+    _preparationItems.addAll(widget.data.preparationItems);
   }
 
   @override
@@ -55,6 +67,8 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
     _titleController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
+    _tagController.dispose();
+    _preparationController.dispose();
     super.dispose();
   }
 
@@ -67,6 +81,14 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 🌍 공개범위 선택
+          _buildScopeSection(notifier)
+            .animate()
+            .fadeIn(duration: 300.ms)
+            .slideY(begin: 0.1, end: 0, duration: 200.ms),
+          
+          const SizedBox(height: 20),
+          
           // 📝 제목
           _buildTextField(
             label: '모임 제목',
@@ -114,6 +136,22 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           _buildPriceSection(notifier)
             .animate()
             .fadeIn(delay: 400.ms, duration: 300.ms)
+            .slideY(begin: 0.1, end: 0, duration: 200.ms),
+          
+          const SizedBox(height: 24),
+          
+          // 🏷️ 태그 (선택)
+          _buildTagsSection(notifier)
+            .animate()
+            .fadeIn(delay: 500.ms, duration: 300.ms)
+            .slideY(begin: 0.1, end: 0, duration: 200.ms),
+          
+          const SizedBox(height: 24),
+          
+          // 🎒 준비물 (선택)
+          _buildPreparationSection(notifier)
+            .animate()
+            .fadeIn(delay: 600.ms, duration: 300.ms)
             .slideY(begin: 0.1, end: 0, duration: 200.ms),
         ],
       ),
@@ -179,6 +217,51 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
               color: AppColors.textSecondary,
             ),
           ),
+        ),
+      ],
+    );
+  }
+
+  /// 🌍 공개범위 섹션
+  Widget _buildScopeSection(MeetingCreationNotifier notifier) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '공개 범위',
+          style: GoogleFonts.notoSans(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 12),
+        
+        // 전체공개/학교공개 선택
+        Row(
+          children: [
+            _buildScopeOption(
+              label: '전체 공개',
+              description: '누구나 참여 가능',
+              icon: Icons.public_rounded,
+              isSelected: _selectedScope == MeetingScope.public,
+              onTap: () {
+                setState(() => _selectedScope = MeetingScope.public);
+                notifier.setScope(MeetingScope.public);
+              },
+            ),
+            const SizedBox(width: 12),
+            _buildScopeOption(
+              label: '학교 공개',
+              description: '같은 학교만',
+              icon: Icons.school_rounded,
+              isSelected: _selectedScope == MeetingScope.university,
+              onTap: () {
+                setState(() => _selectedScope = MeetingScope.university);
+                notifier.setScope(MeetingScope.university);
+              },
+            ),
+          ],
         ),
       ],
     );
@@ -273,61 +356,160 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          '참가 인원 설정',
+          style: GoogleFonts.notoSans(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        
+        // 최소 참가 인원
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '최대 참가 인원',
+              '최소 참가 인원',
               style: GoogleFonts.notoSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                fontSize: 13,
+                color: AppColors.textSecondary,
               ),
             ),
             Container(
               padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
+                horizontal: 14,
+                vertical: 6,
               ),
               decoration: BoxDecoration(
                 color: AppColors.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
-                '$_maxParticipants명',
+                '$_minParticipants명',
                 style: GoogleFonts.notoSans(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                   color: AppColors.primary,
                 ),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         
-        // 슬라이더
+        // 최소 인원 슬라이더
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
             activeTrackColor: AppColors.primary,
             inactiveTrackColor: AppColors.primary.withOpacity(0.2),
             thumbColor: AppColors.primary,
             overlayColor: AppColors.primary.withOpacity(0.1),
-            trackHeight: 6,
+            trackHeight: 4,
             thumbShape: const RoundSliderThumbShape(
-              enabledThumbRadius: 10,
+              enabledThumbRadius: 8,
+            ),
+          ),
+          child: Slider(
+            value: _minParticipants.toDouble(),
+            min: 2,
+            max: _maxParticipants.toDouble() - 1,
+            divisions: _maxParticipants - 3,
+            onChanged: (value) {
+              setState(() => _minParticipants = value.toInt());
+              notifier.setParticipants(value.toInt(), _maxParticipants);
+              HapticFeedback.lightImpact();
+            },
+          ),
+        ),
+        
+        const SizedBox(height: 20),
+        
+        // 최대 참가 인원
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '최대 참가 인원',
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                color: AppColors.textSecondary,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 6,
+              ),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Text(
+                '$_maxParticipants명',
+                style: GoogleFonts.notoSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        
+        // 최대 인원 슬라이더
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: AppColors.primary,
+            inactiveTrackColor: AppColors.primary.withOpacity(0.2),
+            thumbColor: AppColors.primary,
+            overlayColor: AppColors.primary.withOpacity(0.1),
+            trackHeight: 4,
+            thumbShape: const RoundSliderThumbShape(
+              enabledThumbRadius: 8,
             ),
           ),
           child: Slider(
             value: _maxParticipants.toDouble(),
-            min: 2,
+            min: _minParticipants.toDouble() + 1,
             max: 50,
-            divisions: 48,
+            divisions: 50 - _minParticipants - 1,
             onChanged: (value) {
               setState(() => _maxParticipants = value.toInt());
-              notifier.setParticipants(2, value.toInt());
+              notifier.setParticipants(_minParticipants, value.toInt());
               HapticFeedback.lightImpact();
             },
+          ),
+        ),
+        
+        // 인원 안내
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.blue.shade50,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.info_outline_rounded,
+                size: 16,
+                color: Colors.blue.shade700,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '최소 ${_minParticipants}명이 모이면 모임이 확정되고, 최대 ${_maxParticipants}명까지 참여할 수 있어요',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 12,
+                    color: Colors.blue.shade700,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -569,5 +751,395 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
         ),
       ),
     );
+  }
+  
+  /// 🌍 공개범위 옵션
+  Widget _buildScopeOption({
+    required String label,
+    required String description,
+    required IconData icon,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: isSelected 
+              ? AppColors.primary.withOpacity(0.1)
+              : Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isSelected 
+                ? AppColors.primary 
+                : Colors.grey.shade300,
+              width: isSelected ? 2 : 1,
+            ),
+          ),
+          child: Column(
+            children: [
+              Icon(
+                icon,
+                color: isSelected 
+                  ? AppColors.primary 
+                  : AppColors.textSecondary,
+                size: 28,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                style: GoogleFonts.notoSans(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: isSelected 
+                    ? AppColors.primary 
+                    : AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                description,
+                style: GoogleFonts.notoSans(
+                  fontSize: 12,
+                  color: isSelected 
+                    ? AppColors.primary 
+                    : AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  /// 🏷️ 태그 섹션
+  Widget _buildTagsSection(MeetingCreationNotifier notifier) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '태그 (선택)',
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            Text(
+              '${_tags.length}/10',
+              style: GoogleFonts.notoSans(
+                fontSize: 12,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        
+        // 태그 입력
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _tagController,
+                onSubmitted: (value) => _addTag(value, notifier),
+                style: GoogleFonts.notoSans(fontSize: 14),
+                decoration: InputDecoration(
+                  hintText: '태그를 입력하세요 (예: 초보환영, 주말)',
+                  hintStyle: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    color: AppColors.textSecondary,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: AppColors.primary,
+                      width: 2,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () => _addTag(_tagController.text, notifier),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+              ),
+              child: Text(
+                '추가',
+                style: GoogleFonts.notoSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        
+        // 태그 목록
+        if (_tags.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: _tags.map((tag) => Chip(
+              label: Text(
+                tag,
+                style: GoogleFonts.notoSans(
+                  fontSize: 13,
+                  color: AppColors.primary,
+                ),
+              ),
+              backgroundColor: AppColors.primary.withOpacity(0.1),
+              deleteIcon: Icon(
+                Icons.close_rounded,
+                size: 16,
+                color: AppColors.primary,
+              ),
+              onDeleted: () => _removeTag(tag, notifier),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: BorderSide(
+                  color: AppColors.primary.withOpacity(0.2),
+                ),
+              ),
+            )).toList(),
+          ),
+        ],
+      ],
+    );
+  }
+  
+  /// 🎒 준비물 섹션
+  Widget _buildPreparationSection(MeetingCreationNotifier notifier) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '준비물 (선택)',
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            Text(
+              '${_preparationItems.length}/10',
+              style: GoogleFonts.notoSans(
+                fontSize: 12,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        
+        // 준비물 입력
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _preparationController,
+                onSubmitted: (value) => _addPreparationItem(value, notifier),
+                style: GoogleFonts.notoSans(fontSize: 14),
+                decoration: InputDecoration(
+                  hintText: '준비물을 입력하세요 (예: 운동화, 물병)',
+                  hintStyle: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    color: AppColors.textSecondary,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade50,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: AppColors.primary,
+                      width: 2,
+                    ),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () => _addPreparationItem(_preparationController.text, notifier),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+              ),
+              child: Text(
+                '추가',
+                style: GoogleFonts.notoSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        
+        // 준비물 목록
+        if (_preparationItems.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.orange.shade200,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.backpack_outlined,
+                      size: 16,
+                      color: Colors.orange.shade700,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '참가자가 준비해야 할 것들',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.orange.shade700,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _preparationItems.map((item) => Chip(
+                    label: Text(
+                      item,
+                      style: GoogleFonts.notoSans(
+                        fontSize: 13,
+                        color: Colors.orange.shade700,
+                      ),
+                    ),
+                    backgroundColor: Colors.white,
+                    deleteIcon: Icon(
+                      Icons.close_rounded,
+                      size: 16,
+                      color: Colors.orange.shade700,
+                    ),
+                    onDeleted: () => _removePreparationItem(item, notifier),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      side: BorderSide(
+                        color: Colors.orange.shade300,
+                      ),
+                    ),
+                  )).toList(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+  
+  // 태그 추가
+  void _addTag(String tag, MeetingCreationNotifier notifier) {
+    final trimmedTag = tag.trim();
+    if (trimmedTag.isNotEmpty && _tags.length < 10 && !_tags.contains(trimmedTag)) {
+      setState(() {
+        _tags.add(trimmedTag);
+        _tagController.clear();
+      });
+      notifier.addTag(trimmedTag);
+      HapticFeedback.lightImpact();
+    }
+  }
+  
+  // 태그 제거
+  void _removeTag(String tag, MeetingCreationNotifier notifier) {
+    setState(() {
+      _tags.remove(tag);
+    });
+    notifier.removeTag(tag);
+    HapticFeedback.lightImpact();
+  }
+  
+  // 준비물 추가
+  void _addPreparationItem(String item, MeetingCreationNotifier notifier) {
+    final trimmedItem = item.trim();
+    if (trimmedItem.isNotEmpty && _preparationItems.length < 10 && !_preparationItems.contains(trimmedItem)) {
+      setState(() {
+        _preparationItems.add(trimmedItem);
+        _preparationController.clear();
+      });
+      notifier.addPreparationItem(trimmedItem);
+      HapticFeedback.lightImpact();
+    }
+  }
+  
+  // 준비물 제거
+  void _removePreparationItem(String item, MeetingCreationNotifier notifier) {
+    setState(() {
+      _preparationItems.remove(item);
+    });
+    notifier.removePreparationItem(item);
+    HapticFeedback.lightImpact();
   }
 }
