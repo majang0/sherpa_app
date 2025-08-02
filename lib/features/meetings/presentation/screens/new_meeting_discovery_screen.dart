@@ -45,11 +45,20 @@ class _NewMeetingDiscoveryScreenState
   // ==================== 상태 변수들 ====================
   String _searchQuery = '';
   MeetingCategory _selectedCategory = MeetingCategory.all;
-  bool _showFilters = false;
   
   // 필터 상태
   final Set<String> _activeFilters = {};
   bool _showOnlineOnly = false;
+  bool _showFilters = false;
+  
+  // 빠른 필터 상태 (한국형 UX)
+  final Set<String> _activeQuickFilters = {};
+  
+  // 상세 필터 상태
+  String _selectedScope = 'all'; // 전체공개, 우리학교
+  String? _selectedLocation; // 온라인, 서울, 경기 등
+  DateTimeRange? _selectedDateRange;
+  String? _selectedPriceRange; // 무료, 1만원이하, 1~4만원, 4만원이상
   
   // 북마크 상태
   final Set<String> _bookmarkedMeetings = {};
@@ -59,6 +68,20 @@ class _NewMeetingDiscoveryScreenState
   
   // 필터링된 모임 리스트
   List<AvailableMeeting> _filteredMeetings = [];
+
+  // 활성 필터 개수 계산
+  int get _activeFilterCount {
+    int count = 0;
+    if (_activeFilters.isNotEmpty) count += _activeFilters.length;
+    if (_activeQuickFilters.isNotEmpty) count += _activeQuickFilters.length;
+    if (_selectedCategory != MeetingCategory.all) count += 1;
+    if (_showOnlineOnly) count += 1;
+    if (_selectedScope != 'all') count += 1;
+    if (_selectedLocation != null) count += 1;
+    if (_selectedDateRange != null) count += 1;
+    if (_selectedPriceRange != null) count += 1;
+    return count;
+  }
 
   @override
   void initState() {
@@ -134,11 +157,6 @@ class _NewMeetingDiscoveryScreenState
           controller: _mainScrollController,
           physics: const BouncingScrollPhysics(),
           slivers: [
-            // 🔍 검색바와 필터 (기존 유지)
-            SliverToBoxAdapter(
-              child: _buildSearchSection(),
-            ),
-            
             // 🔥 인기 모임 (실제 메소드)
             SliverToBoxAdapter(
               child: _buildPopularMeetingsSection(),
@@ -175,73 +193,7 @@ class _NewMeetingDiscoveryScreenState
   
   // ==================== UI 컴포넌트들 ====================
   
-  /// 🔍 검색바와 필터 섹션 (개선된 검색 결과 포함)
-  Widget _buildSearchSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          // 검색바
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: '관심있는 모임을 검색해보세요',
-                hintStyle: GoogleFonts.notoSans(
-                  color: AppColors2025.textTertiary,
-                  fontSize: 14,
-                ),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: AppColors2025.textTertiary,
-                ),
-                suffixIcon: _searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: Icon(
-                          Icons.clear,
-                          color: AppColors2025.textTertiary,
-                          size: 20,
-                        ),
-                        onPressed: () {
-                          _searchController.clear();
-                        },
-                      )
-                    : null,
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 16,
-                ),
-              ),
-            ),
-          ),
-          
-          // 검색 결과 표시
-          if (_searchQuery.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            _buildSearchResults(),
-          ],
-          
-          // 활성화된 필터 표시
-          if (_activeFilters.isNotEmpty || _selectedCategory != MeetingCategory.all) ...[
-            const SizedBox(height: 16),
-            _buildActiveFilters(),
-          ],
-        ],
-      ),
-    );
-  }
+
   
   /// 검색 결과 위젯
   Widget _buildSearchResults() {
@@ -906,135 +858,205 @@ class _NewMeetingDiscoveryScreenState
           
           const SizedBox(height: 32),
           
-          // 🔍 검색 및 필터 영역 (모임2탭 스타일)
+          // 🔍 검색 및 필터 영역 (모임2탭 디자인 적용)
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                // 검색바와 필터 버튼
+                // 검색바, 온라인 필터, 필터 버튼 (가로 배치)
                 Row(
                   children: [
                     // 메인 검색바
                     Expanded(
                       child: Container(
-                        height: 52,
+                        height: 48,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(26),
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: (value) {
+                            setState(() => _searchQuery = value);
+                            _updateFilteredMeetings();
+                          },
+                          style: GoogleFonts.notoSans(fontSize: 14),
+                          decoration: InputDecoration(
+                            hintText: '모임 이름, 지역, 키워드로 검색',
+                            hintStyle: GoogleFonts.notoSans(
+                              fontSize: 14,
+                              color: AppColors2025.textSecondary,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.search_rounded,
+                              color: AppColors2025.textSecondary,
+                              size: 20,
+                            ),
+                            suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(
+                                    Icons.clear_rounded,
+                                    color: AppColors2025.textSecondary,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() => _searchQuery = '');
+                                    _updateFilteredMeetings();
+                                  },
+                                )
+                              : null,
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(width: 8),
+                    
+                    // 온라인 필터 토글
+                    GestureDetector(
+                      onTap: () {
+                        setState(() => _showOnlineOnly = !_showOnlineOnly);
+                        HapticFeedback.lightImpact();
+                        _updateFilteredMeetings();
+                      },
+                      child: Container(
+                        height: 48,
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: _showOnlineOnly ? AppColors2025.primary : Colors.white,
+                          borderRadius: BorderRadius.circular(24),
                           border: Border.all(
-                            color: AppColors2025.glassBorder,
-                            width: 1.5,
+                            color: _showOnlineOnly 
+                              ? AppColors2025.primary 
+                              : Colors.grey.shade300,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
-                              blurRadius: 8,
+                              color: (_showOnlineOnly 
+                                ? AppColors2025.primary 
+                                : Colors.black
+                              ).withOpacity(0.05),
+                              blurRadius: 10,
                               offset: const Offset(0, 2),
                             ),
                           ],
                         ),
                         child: Row(
                           children: [
-                            const SizedBox(width: 20),
                             Icon(
-                              Icons.search_rounded,
-                              color: AppColors2025.textTertiary,
-                              size: 22,
+                              Icons.videocam_rounded,
+                              color: _showOnlineOnly ? Colors.white : AppColors2025.textSecondary,
+                              size: 18,
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: TextField(
-                                onChanged: (value) {
-                                  setState(() => _searchQuery = value);
-                                },
-                                decoration: InputDecoration(
-                                  hintText: '카테고리 내에서 검색',
-                                  hintStyle: GoogleFonts.notoSans(
-                                    fontSize: 14,
-                                    color: AppColors2025.textTertiary,
-                                  ),
-                                  border: InputBorder.none,
-                                ),
+                            const SizedBox(width: 6),
+                            Text(
+                              '온라인',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: _showOnlineOnly 
+                                  ? Colors.white 
+                                  : AppColors2025.textSecondary,
                               ),
                             ),
-                            if (_searchQuery.isNotEmpty)
-                              IconButton(
-                                icon: Icon(
-                                  Icons.clear_rounded,
-                                  color: AppColors2025.textTertiary,
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  setState(() => _searchQuery = '');
-                                },
-                              ),
                           ],
                         ),
                       ),
                     ),
                     
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
                     
-                    // 필터 토글 버튼
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: BoxDecoration(
-                        color: _showFilters ? AppColors2025.primary : Colors.white,
-                        borderRadius: BorderRadius.circular(26),
-                        border: Border.all(
-                          color: _showFilters ? AppColors2025.primary : AppColors2025.glassBorder,
-                          width: 1.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: _showFilters 
-                              ? AppColors2025.primary.withOpacity(0.3)
-                              : Colors.black.withOpacity(0.03),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
+                    // 필터 토글 버튼 (뱃지 포함)
+                    Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() => _showFilters = !_showFilters);
+                            HapticFeedback.lightImpact();
+                          },
+                          child: Container(
+                            height: 48,
+                            width: 48,
+                            decoration: BoxDecoration(
+                              color: _showFilters || _activeFilterCount > 0 
+                                ? AppColors2025.primary 
+                                : Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: _showFilters || _activeFilterCount > 0
+                                  ? AppColors2025.primary 
+                                  : Colors.grey.shade300,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: (_showFilters || _activeFilterCount > 0
+                                    ? AppColors2025.primary 
+                                    : Colors.black
+                                  ).withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Icon(
+                              _showFilters ? Icons.filter_list_off_rounded : Icons.filter_list_rounded,
+                              color: _showFilters || _activeFilterCount > 0 
+                                ? Colors.white 
+                                : AppColors2025.textSecondary,
+                              size: 20,
+                            ),
                           ),
-                        ],
-                      ),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.tune_rounded,
-                          color: _showFilters ? Colors.white : AppColors2025.textSecondary,
-                          size: 24,
                         ),
-                        onPressed: () {
-                          setState(() => _showFilters = !_showFilters);
-                          HapticFeedback.lightImpact();
-                        },
-                      ),
+                        // 활성 필터 개수 뱃지
+                        if (_activeFilterCount > 0 && !_showFilters)
+                          Positioned(
+                            right: 4,
+                            top: 4,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: AppColors2025.error,
+                                shape: BoxShape.circle,
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 18,
+                                minHeight: 18,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '$_activeFilterCount',
+                                  style: GoogleFonts.notoSans(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ],
                 ),
                 
-                // 스마트 필터 태그들 (가로 스크롤)
+                // 쉽게 찾기 (빠른 필터)
                 const SizedBox(height: 16),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _buildSmartFilterTag('🌟 최신순', 'recent'),
-                      const SizedBox(width: 8),
-                      _buildSmartFilterTag('🔥 인기순', 'popular'),
-                      const SizedBox(width: 8),
-                      _buildSmartFilterTag('💎 프리미엄', 'premium'),
-                      const SizedBox(width: 8),
-                      _buildSmartFilterTag('🆓 무료만', 'free_only'),
-                      const SizedBox(width: 8),
-                      _buildSmartFilterTag('📍 온라인', 'online'),
-                      const SizedBox(width: 8),
-                      _buildSmartFilterTag('👥 소규모', 'small'),
-                      const SizedBox(width: 8),
-                      _buildSmartFilterTag('🔰 초보환영', 'beginner'),
-                    ],
-                  ),
-                ),
+                _buildQuickFiltersSection(),
                 
-                // 확장 필터 (필터 버튼이 활성화된 경우만 표시)
+                // 확장 필터 섹션
                 if (_showFilters) ...[
                   const SizedBox(height: 16),
                   _buildExpandedFilters(),
@@ -1048,58 +1070,119 @@ class _NewMeetingDiscoveryScreenState
       .fadeIn(duration: const Duration(milliseconds: 400), delay: const Duration(milliseconds: 200));
   }
   
-  // 스마트 필터 태그
-  Widget _buildSmartFilterTag(String label, String key) {
-    final isActive = _activeFilters.contains(key);
-    
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (isActive) {
-            _activeFilters.remove(key);
-          } else {
-            _activeFilters.add(key);
-          }
-          _updateFilteredMeetings();
-        });
-        HapticFeedback.lightImpact();
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: isActive ? AppColors2025.primary.withOpacity(0.1) : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isActive ? AppColors2025.primary : AppColors2025.glassBorder,
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: GoogleFonts.notoSans(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: isActive ? AppColors2025.primary : AppColors2025.textSecondary,
-              ),
-            ),
-            if (isActive) ...[
-              const SizedBox(width: 4),
+  
+  /// 쉽게 찾기 (빠른 필터)
+  Widget _buildQuickFiltersSection() {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 쉽게 찾기 타이틀
+          Row(
+            children: [
               Icon(
-                Icons.check_circle,
+                Icons.flash_on_rounded,
                 size: 16,
                 color: AppColors2025.primary,
               ),
+              const SizedBox(width: 4),
+              Text(
+                '쉽게 찾기',
+                style: GoogleFonts.notoSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors2025.textPrimary,
+                ),
+              ),
             ],
-          ],
-        ),
+          ),
+          const SizedBox(height: 12),
+          
+          // 빠른 필터 칩들
+          SizedBox(
+            height: 36,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: 4,
+              separatorBuilder: (context, index) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final quickFilters = [
+                  {'key': 'weekend', 'label': '이번 주말', 'icon': Icons.weekend_rounded, 'color': Colors.orange},
+                  {'key': 'free', 'label': '무료', 'icon': Icons.money_off_rounded, 'color': Colors.green},
+                  {'key': 'today', 'label': '오늘', 'icon': Icons.today_rounded, 'color': Colors.blue},
+                  {'key': 'nearby', 'label': '내 주변', 'icon': Icons.near_me_rounded, 'color': Colors.indigo},
+                ];
+                
+                final filter = quickFilters[index];
+                final isActive = _activeQuickFilters.contains(filter['key']);
+                
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (isActive) {
+                        _activeQuickFilters.remove(filter['key']);
+                      } else {
+                        _activeQuickFilters.add(filter['key'] as String);
+                      }
+                    });
+                    HapticFeedback.lightImpact();
+                    _updateFilteredMeetings();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: isActive 
+                        ? (filter['color'] as Color).withOpacity(0.1)
+                        : Colors.white,
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(
+                        color: isActive 
+                          ? (filter['color'] as Color)
+                          : Colors.grey.shade300,
+                        width: isActive ? 1.5 : 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 4,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          filter['icon'] as IconData,
+                          size: 16,
+                          color: isActive 
+                            ? (filter['color'] as Color)
+                            : AppColors2025.textSecondary,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          filter['label'] as String,
+                          style: GoogleFonts.notoSans(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: isActive 
+                              ? (filter['color'] as Color)
+                              : AppColors2025.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
-  
-  /// 확장 필터 섹션
+
+  /// 확장 필터 섹션 (상세 필터)
   Widget _buildExpandedFilters() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -1122,78 +1205,91 @@ class _NewMeetingDiscoveryScreenState
               color: AppColors2025.textPrimary,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           
-          // 참가자 수 필터
-          Text(
-            '참가자 수',
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppColors2025.textSecondary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _buildFilterChip('1-5명', 'participants_1_5'),
-              _buildFilterChip('6-10명', 'participants_6_10'),
-              _buildFilterChip('11-20명', 'participants_11_20'),
-              _buildFilterChip('20명 이상', 'participants_20_plus'),
+          // 1. 전체 공개 / 우리 학교
+          _buildFilterSection(
+            '공개 범위',
+            [
+              {'key': 'all', 'label': '전체 공개'},
+              {'key': 'school', 'label': '우리 학교'},
             ],
+            _selectedScope,
+            (value) => setState(() => _selectedScope = value),
           ),
           
           const SizedBox(height: 16),
           
-          // 참가비 필터
-          Text(
-            '참가비',
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppColors2025.textSecondary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _buildFilterChip('무료', 'price_free'),
-              _buildFilterChip('1만원 이하', 'price_under_10k'),
-              _buildFilterChip('1-3만원', 'price_10k_30k'),
-              _buildFilterChip('3만원 이상', 'price_over_30k'),
+          // 2. 모임 카테고리
+          _buildFilterSection(
+            '모임 카테고리',
+            [
+              {'key': 'exercise', 'label': '운동/스포츠'},
+              {'key': 'outdoor', 'label': '아웃도어/여행'},
+              {'key': 'networking', 'label': '사교/네트워킹'},
+              {'key': 'study', 'label': '스터디'},
+              {'key': 'reading', 'label': '책/독서'},
+              {'key': 'culture', 'label': '문화/영화'},
             ],
+            _selectedCategory.name,
+            (value) => setState(() {
+              _selectedCategory = MeetingCategory.values.firstWhere(
+                (cat) => cat.name == value,
+                orElse: () => MeetingCategory.all,
+              );
+              _updateFilteredMeetings();
+            }),
           ),
           
           const SizedBox(height: 16),
           
-          // 시간대 필터
-          Text(
-            '시간대',
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppColors2025.textSecondary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _buildFilterChip('오전', 'time_morning'),
-              _buildFilterChip('오후', 'time_afternoon'),
-              _buildFilterChip('저녁', 'time_evening'),
-              _buildFilterChip('주말', 'time_weekend'),
+          // 3. 지역
+          _buildFilterSection(
+            '지역',
+            [
+              {'key': 'online', 'label': '온라인'},
+              {'key': 'seoul', 'label': '서울'},
+              {'key': 'gyeonggi', 'label': '경기'},
+              {'key': 'incheon', 'label': '인천'},
+              {'key': 'daejeon', 'label': '대전'},
+              {'key': 'gwangju', 'label': '광주'},
+              {'key': 'daegu', 'label': '대구'},
+              {'key': 'jeju', 'label': '제주'},
+              {'key': 'busan', 'label': '부산'},
             ],
+            _selectedLocation,
+            (value) => setState(() {
+              _selectedLocation = value;
+              _updateFilteredMeetings();
+            }),
           ),
           
           const SizedBox(height: 16),
           
-          // 필터 초기화 버튼
+          // 4. 날짜 범위
+          _buildDateRangeSection(),
+          
+          const SizedBox(height: 16),
+          
+          // 5. 가격
+          _buildFilterSection(
+            '가격',
+            [
+              {'key': 'free', 'label': '무료'},
+              {'key': 'under_10k', 'label': '1만원 이하'},
+              {'key': '10k_40k', 'label': '1~4만원'},
+              {'key': 'over_40k', 'label': '4만원 이상'},
+            ],
+            _selectedPriceRange,
+            (value) => setState(() {
+              _selectedPriceRange = value;
+              _updateFilteredMeetings();
+            }),
+          ),
+          
+          const SizedBox(height: 20),
+          
+          // 필터 초기화 및 적용 버튼
           Row(
             children: [
               Expanded(
@@ -1201,7 +1297,12 @@ class _NewMeetingDiscoveryScreenState
                   onPressed: () {
                     setState(() {
                       _activeFilters.clear();
+                      _activeQuickFilters.clear();
                       _selectedCategory = MeetingCategory.all;
+                      _selectedScope = 'all';
+                      _selectedLocation = null;
+                      _selectedDateRange = null;
+                      _selectedPriceRange = null;
                       _updateFilteredMeetings();
                     });
                     HapticFeedback.lightImpact();
@@ -1253,6 +1354,165 @@ class _NewMeetingDiscoveryScreenState
           ),
         ],
       ),
+    );
+  }
+  
+  /// 필터 섹션 빌더
+  Widget _buildFilterSection(
+    String title,
+    List<Map<String, String>> options,
+    String? selectedValue,
+    ValueChanged<String> onChanged,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.notoSans(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors2025.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: options.map((option) {
+            final isSelected = selectedValue == option['key'];
+            return GestureDetector(
+              onTap: () {
+                onChanged(option['key']!);
+                HapticFeedback.lightImpact();
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: isSelected 
+                    ? AppColors2025.primary.withOpacity(0.1)
+                    : Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isSelected 
+                      ? AppColors2025.primary 
+                      : AppColors2025.glassBorder,
+                    width: isSelected ? 1.5 : 1,
+                  ),
+                ),
+                child: Text(
+                  option['label']!,
+                  style: GoogleFonts.notoSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: isSelected 
+                      ? AppColors2025.primary 
+                      : AppColors2025.textSecondary,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+  
+  /// 날짜 범위 선택 섹션
+  Widget _buildDateRangeSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '날짜 범위',
+          style: GoogleFonts.notoSans(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors2025.textSecondary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: () async {
+            final DateTimeRange? picked = await showDateRangePicker(
+              context: context,
+              firstDate: DateTime.now(),
+              lastDate: DateTime.now().add(const Duration(days: 365)),
+              initialDateRange: _selectedDateRange,
+              builder: (context, child) {
+                return Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme: ColorScheme.light(
+                      primary: AppColors2025.primary,
+                    ),
+                  ),
+                  child: child!,
+                );
+              },
+            );
+            if (picked != null) {
+              setState(() {
+                _selectedDateRange = picked;
+                _updateFilteredMeetings();
+              });
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: _selectedDateRange != null 
+                ? AppColors2025.primary.withOpacity(0.1)
+                : Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _selectedDateRange != null
+                  ? AppColors2025.primary
+                  : AppColors2025.glassBorder,
+                width: _selectedDateRange != null ? 1.5 : 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_today,
+                  size: 16,
+                  color: _selectedDateRange != null
+                    ? AppColors2025.primary
+                    : AppColors2025.textSecondary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  _selectedDateRange != null
+                    ? '${_selectedDateRange!.start.month}/${_selectedDateRange!.start.day} - ${_selectedDateRange!.end.month}/${_selectedDateRange!.end.day}'
+                    : '날짜를 선택하세요',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                    color: _selectedDateRange != null
+                      ? AppColors2025.primary
+                      : AppColors2025.textSecondary,
+                  ),
+                ),
+                const Spacer(),
+                if (_selectedDateRange != null)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _selectedDateRange = null;
+                        _updateFilteredMeetings();
+                      });
+                    },
+                    child: Icon(
+                      Icons.clear,
+                      size: 16,
+                      color: AppColors2025.primary,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
   
@@ -1481,90 +1741,117 @@ class _NewMeetingDiscoveryScreenState
       filtered = filtered.where((m) => m.category == _selectedCategory).toList();
     }
     
-    // 액티브 필터들 적용
-    for (final filter in _activeFilters) {
-      switch (filter) {
-        case 'recent':
-          // 최신순 정렬 (날짜가 가까운 순)
-          filtered.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-          break;
-        case 'popular':
-          // 인기순 정렬 (참가자 많은 순)
-          filtered.sort((a, b) => b.currentParticipants.compareTo(a.currentParticipants));
-          break;
-        case 'premium':
-          // 프리미엄 모임 (참가비가 있는 모임)
-          filtered = filtered.where((m) => m.type == MeetingType.paid).toList();
-          break;
-        case 'free_only':
-          // 무료 모임만
-          filtered = filtered.where((m) => m.type == MeetingType.free).toList();
-          break;
+    // 온라인 전용 필터
+    if (_showOnlineOnly) {
+      filtered = filtered.where((m) => 
+        m.location.toLowerCase().contains('온라인') ||
+        m.location.toLowerCase().contains('online') ||
+        m.location.toLowerCase().contains('줌') ||
+        m.location.toLowerCase().contains('zoom')
+      ).toList();
+    }
+    
+    // 지역 필터
+    if (_selectedLocation != null) {
+      switch (_selectedLocation) {
         case 'online':
-          // 온라인 모임 (위치에 "온라인"이 포함된 모임)
           filtered = filtered.where((m) => 
             m.location.toLowerCase().contains('온라인') ||
-            m.location.toLowerCase().contains('online') ||
-            m.location.toLowerCase().contains('줌') ||
-            m.location.toLowerCase().contains('zoom')
+            m.location.toLowerCase().contains('online')
+          ).toList();
+          break;
+        case 'seoul':
+          filtered = filtered.where((m) => m.location.contains('서울')).toList();
+          break;
+        case 'gyeonggi':
+          filtered = filtered.where((m) => m.location.contains('경기')).toList();
+          break;
+        case 'incheon':
+          filtered = filtered.where((m) => m.location.contains('인천')).toList();
+          break;
+        case 'daejeon':
+          filtered = filtered.where((m) => m.location.contains('대전')).toList();
+          break;
+        case 'gwangju':
+          filtered = filtered.where((m) => m.location.contains('광주')).toList();
+          break;
+        case 'daegu':
+          filtered = filtered.where((m) => m.location.contains('대구')).toList();
+          break;
+        case 'jeju':
+          filtered = filtered.where((m) => m.location.contains('제주')).toList();
+          break;
+        case 'busan':
+          filtered = filtered.where((m) => m.location.contains('부산')).toList();
+          break;
+      }
+    }
+    
+    // 가격 범위 필터
+    if (_selectedPriceRange != null) {
+      switch (_selectedPriceRange) {
+        case 'free':
+          filtered = filtered.where((m) => m.type == MeetingType.free).toList();
+          break;
+        case 'under_10k':
+          filtered = filtered.where((m) => m.participationFee < 10000).toList();
+          break;
+        case '10k_40k':
+          filtered = filtered.where((m) => m.participationFee >= 10000 && m.participationFee <= 40000).toList();
+          break;
+        case 'over_40k':
+          filtered = filtered.where((m) => m.participationFee > 40000).toList();
+          break;
+      }
+    }
+    
+    // 날짜 범위 필터
+    if (_selectedDateRange != null) {
+      filtered = filtered.where((m) => 
+        m.dateTime.isAfter(_selectedDateRange!.start.subtract(const Duration(days: 1))) &&
+        m.dateTime.isBefore(_selectedDateRange!.end.add(const Duration(days: 1)))
+      ).toList();
+    }
+    
+    // 빠른 필터들 적용
+    for (final filter in _activeQuickFilters) {
+      switch (filter) {
+        case 'weekend':
+          // 이번 주말 (토요일, 일요일)
+          final now = DateTime.now();
+          final thisWeekend = now.add(Duration(days: (6 - now.weekday) % 7));
+          final nextSunday = thisWeekend.add(const Duration(days: 1));
+          filtered = filtered.where((m) => 
+            (m.dateTime.weekday == DateTime.saturday || m.dateTime.weekday == DateTime.sunday) &&
+            m.dateTime.isAfter(thisWeekend.subtract(const Duration(days: 1))) &&
+            m.dateTime.isBefore(nextSunday.add(const Duration(days: 1)))
+          ).toList();
+          break;
+        case 'free':
+          filtered = filtered.where((m) => m.type == MeetingType.free).toList();
+          break;
+        case 'today':
+          final today = DateTime.now();
+          filtered = filtered.where((m) => 
+            m.dateTime.year == today.year &&
+            m.dateTime.month == today.month &&
+            m.dateTime.day == today.day
           ).toList();
           break;
         case 'nearby':
           // TODO: GPS 기반 위치 필터링 구현 예정
           break;
-        case 'beginner':
-          // 초보자 환영 모임
-          filtered = filtered.where((m) => 
-            m.tags.any((tag) => 
-              tag.contains('초보') || 
-              tag.contains('환영') ||
-              tag.contains('입문')
-            )
-          ).toList();
+      }
+    }
+    
+    // 기타 레거시 필터들 (향후 제거 예정)
+    for (final filter in _activeFilters) {
+      switch (filter) {
+        case 'recent':
+          filtered.sort((a, b) => a.dateTime.compareTo(b.dateTime));
           break;
-        case 'small':
-          // 소규모 모임 (10명 이하)
-          filtered = filtered.where((m) => m.maxParticipants <= 10).toList();
-          break;
-        
-        // 확장 필터들
-        case 'participants_1_5':
-          filtered = filtered.where((m) => m.maxParticipants <= 5).toList();
-          break;
-        case 'participants_6_10':
-          filtered = filtered.where((m) => m.maxParticipants >= 6 && m.maxParticipants <= 10).toList();
-          break;
-        case 'participants_11_20':
-          filtered = filtered.where((m) => m.maxParticipants >= 11 && m.maxParticipants <= 20).toList();
-          break;
-        case 'participants_20_plus':
-          filtered = filtered.where((m) => m.maxParticipants > 20).toList();
-          break;
-          
-        case 'price_free':
-          filtered = filtered.where((m) => m.type == MeetingType.free).toList();
-          break;
-        case 'price_under_10k':
-          filtered = filtered.where((m) => m.participationFee < 10000).toList();
-          break;
-        case 'price_10k_30k':
-          filtered = filtered.where((m) => m.participationFee >= 10000 && m.participationFee <= 30000).toList();
-          break;
-        case 'price_over_30k':
-          filtered = filtered.where((m) => m.participationFee > 30000).toList();
-          break;
-          
-        case 'time_morning':
-          filtered = filtered.where((m) => m.dateTime.hour < 12).toList();
-          break;
-        case 'time_afternoon':
-          filtered = filtered.where((m) => m.dateTime.hour >= 12 && m.dateTime.hour < 18).toList();
-          break;
-        case 'time_evening':
-          filtered = filtered.where((m) => m.dateTime.hour >= 18).toList();
-          break;
-        case 'time_weekend':
-          filtered = filtered.where((m) => m.dateTime.weekday == DateTime.saturday || m.dateTime.weekday == DateTime.sunday).toList();
+        case 'popular':
+          filtered.sort((a, b) => b.currentParticipants.compareTo(a.currentParticipants));
           break;
       }
     }

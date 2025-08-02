@@ -1,11 +1,13 @@
 // lib/features/meetings/presentation/widgets/meeting_creation_steps/quick_details_form.dart
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../../core/constants/app_colors.dart';
 import '../../../models/available_meeting_model.dart';
 import '../../../providers/meeting_creation_provider.dart';
@@ -43,6 +45,9 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
   final List<String> _preparationItems = [];
   final TextEditingController _tagController = TextEditingController();
   final TextEditingController _preparationController = TextEditingController();
+  
+  // 이미지 선택
+  final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
@@ -152,6 +157,14 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           _buildPreparationSection(notifier)
             .animate()
             .fadeIn(delay: 600.ms, duration: 300.ms)
+            .slideY(begin: 0.1, end: 0, duration: 200.ms),
+          
+          const SizedBox(height: 24),
+          
+          // 📷 이미지 업로드 (선택)
+          _buildImageUploadSection(notifier)
+            .animate()
+            .fadeIn(delay: 700.ms, duration: 300.ms)
             .slideY(begin: 0.1, end: 0, duration: 200.ms),
         ],
       ),
@@ -1141,5 +1154,314 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
     });
     notifier.removePreparationItem(item);
     HapticFeedback.lightImpact();
+  }
+  
+  /// 📷 이미지 업로드 섹션
+  Widget _buildImageUploadSection(MeetingCreationNotifier notifier) {
+    final data = ref.watch(meetingCreationProvider);
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '이미지 업로드 (선택)',
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            Text(
+              '${data.photos.length}/5',
+              style: GoogleFonts.notoSans(
+                fontSize: 12,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        
+        // 이미지 그리드
+        Container(
+          width: double.infinity,
+          constraints: const BoxConstraints(minHeight: 120),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.grey.shade300,
+              style: BorderStyle.solid,
+            ),
+          ),
+          child: data.photos.isEmpty
+              ? _buildEmptyImageState(notifier)
+              : _buildImageGrid(data.photos, notifier),
+        ),
+        
+        // 이미지 안내
+        if (data.photos.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.green.shade50,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.photo_camera_outlined,
+                  size: 16,
+                  color: Colors.green.shade700,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '업로드된 이미지는 모임 상세 페이지에 표시됩니다',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 12,
+                      color: Colors.green.shade700,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+  
+  /// 빈 이미지 상태
+  Widget _buildEmptyImageState(MeetingCreationNotifier notifier) {
+    return InkWell(
+      onTap: () => _pickImage(notifier),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: double.infinity,
+        height: 120,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add_photo_alternate_outlined,
+              size: 48,
+              color: Colors.grey.shade400,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '이미지 추가',
+              style: GoogleFonts.notoSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey.shade600,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '모임을 소개할 이미지를 추가해보세요',
+              style: GoogleFonts.notoSans(
+                fontSize: 12,
+                color: Colors.grey.shade500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  /// 이미지 그리드
+  Widget _buildImageGrid(List<File> photos, MeetingCreationNotifier notifier) {
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        children: [
+          // 이미지 그리드
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 1,
+            ),
+            itemCount: photos.length + (photos.length < 5 ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == photos.length) {
+                // 추가 버튼
+                return _buildAddImageButton(notifier);
+              }
+              
+              // 이미지 아이템
+              return _buildImageItem(photos[index], index, notifier);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+  
+  /// 이미지 추가 버튼
+  Widget _buildAddImageButton(MeetingCreationNotifier notifier) {
+    return InkWell(
+      onTap: () => _pickImage(notifier),
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Colors.grey.shade300,
+            style: BorderStyle.solid,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.add,
+              size: 24,
+              color: Colors.grey.shade600,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '추가',
+              style: GoogleFonts.notoSans(
+                fontSize: 12,
+                color: Colors.grey.shade600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  /// 이미지 아이템
+  Widget _buildImageItem(File image, int index, MeetingCreationNotifier notifier) {
+    return Stack(
+      children: [
+        // 이미지
+        Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            image: DecorationImage(
+              image: FileImage(image),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        
+        // 삭제 버튼
+        Positioned(
+          top: 4,
+          right: 4,
+          child: GestureDetector(
+            onTap: () => _removeImage(index, notifier),
+            child: Container(
+              width: 24,
+              height: 24,
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.6),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.close_rounded,
+                color: Colors.white,
+                size: 16,
+              ),
+            ),
+          ),
+        ),
+        
+        // 대표 이미지 표시
+        if (index == 0)
+          Positioned(
+            bottom: 4,
+            left: 4,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                '대표',
+                style: GoogleFonts.notoSans(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+  
+  // 이미지 선택
+  Future<void> _pickImage(MeetingCreationNotifier notifier) async {
+    final data = ref.read(meetingCreationProvider);
+    
+    if (data.photos.length >= 5) {
+      _showSnackBar('이미지는 최대 5개까지 업로드할 수 있습니다');
+      return;
+    }
+    
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+      );
+      
+      if (image != null) {
+        notifier.addPhoto(File(image.path));
+        HapticFeedback.lightImpact();
+        _showSnackBar('이미지가 추가되었습니다');
+      }
+    } catch (e) {
+      _showSnackBar('이미지를 불러올 수 없습니다');
+    }
+  }
+  
+  // 이미지 제거
+  void _removeImage(int index, MeetingCreationNotifier notifier) {
+    notifier.removePhoto(index);
+    HapticFeedback.lightImpact();
+    _showSnackBar('이미지가 제거되었습니다');
+  }
+  
+  // 스낵바 표시
+  void _showSnackBar(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: GoogleFonts.notoSans(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+          ),
+          backgroundColor: AppColors.primary,
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
+    }
   }
 }
