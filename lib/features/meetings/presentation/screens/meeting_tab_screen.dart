@@ -146,293 +146,87 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
     );
   }
 
-  /// 🏆 프리미엄 모던 탭 셀렉터 - 최고급 디자인
+  /// 🎯 심플하고 반응형인 탭 셀렉터
   Widget _buildPremiumModernTabSelector() {
-    return RepaintBoundary(
-      child: Container(
-        height: 72,
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          boxShadow: const [
-            // 메인 그림자 (depth)
-            BoxShadow(
-              color: Color(0x14000000), // Colors.black.withValues(alpha: 0.08)
-              offset: Offset(0, 4),
-              blurRadius: 12,
-              spreadRadius: 0,
-            ),
-            // 앰비언트 그림자 (soft glow)
-            BoxShadow(
-              color: Color(0x0A000000), // Colors.black.withValues(alpha: 0.04)
-              offset: Offset(0, 1),
-              blurRadius: 4,
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(6),
-          child: Row(
-            children: List.generate(_tabs.length, (index) {
-              return Expanded(
-                child: _buildPremiumTabItem(index),
-              );
-            }),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 💎 프리미엄 탭 아이템 - 세련된 상호작용과 애니메이션
-  Widget _buildPremiumTabItem(int index) {
-    final tab = _tabs[index];
-    final isSelected = index == _selectedIndex; // 🎯 직접 상태 확인
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
     
-    return RepaintBoundary(
-      child: _PremiumTabItemWidget(
-        tab: tab,
-        index: index,
-        isSelected: isSelected,
-        onTap: () => _selectTab(index),
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 12 : 16, 
+        vertical: 8,
       ),
-    );
-  }
-}
-
-/// 🚀 독립적인 프리미엄 탭 아이템 위젯 - 완벽한 상호작용
-class _PremiumTabItemWidget extends StatefulWidget {
-  final TabInfo tab;
-  final int index;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _PremiumTabItemWidget({
-    required this.tab,
-    required this.index,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  State<_PremiumTabItemWidget> createState() => _PremiumTabItemWidgetState();
-}
-
-class _PremiumTabItemWidgetState extends State<_PremiumTabItemWidget>
-    with TickerProviderStateMixin {
-  bool _isHovered = false;
-  late AnimationController _scaleController;
-  late AnimationController _hoverController;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _hoverAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _scaleController = AnimationController(
-      duration: const Duration(milliseconds: 150),
-      vsync: this,
-    );
-    _hoverController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-    
-    _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.easeInOut,
-    ));
-    
-    _hoverAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.02,
-    ).animate(CurvedAnimation(
-      parent: _hoverController,
-      curve: Curves.easeInOut,
-    ));
-  }
-
-  @override
-  void dispose() {
-    _scaleController.dispose();
-    _hoverController.dispose();
-    super.dispose();
-  }
-
-  void _handleTapDown(TapDownDetails details) {
-    _scaleController.forward();
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    _scaleController.reverse();
-    widget.onTap();
-  }
-
-  void _handleTapCancel() {
-    _scaleController.reverse();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      label: widget.tab.semanticLabel,
-      hint: widget.isSelected ? '현재 선택됨' : '탭하여 선택',
-      selected: widget.isSelected,
-      button: true,
-      child: Focus(
-        onFocusChange: (hasFocus) {
-          setState(() => _isHovered = hasFocus);
-          if (hasFocus) {
-            _hoverController.forward();
-          } else {
-            _hoverController.reverse();
-          }
-        },
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          onEnter: (_) {
-            setState(() => _isHovered = true);
-            _hoverController.forward();
-          },
-          onExit: (_) {
-            setState(() => _isHovered = false);
-            _hoverController.reverse();
-          },
-          child: GestureDetector(
-            onTapDown: _handleTapDown,
-            onTapUp: _handleTapUp,
-            onTapCancel: _handleTapCancel,
-            child: AnimatedBuilder(
-              animation: Listenable.merge([_scaleAnimation, _hoverAnimation]),
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: _scaleAnimation.value * _hoverAnimation.value,
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOutCubic,
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                    decoration: _buildTabDecoration(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // 🎨 아이콘 with 매끄러운 전환
-                        ExcludeSemantics(
-                          child: AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 250),
-                            transitionBuilder: (child, animation) {
-                              return ScaleTransition(
-                                scale: animation,
-                                child: child,
-                              );
-                            },
-                            child: Icon(
-                              widget.isSelected ? widget.tab.selectedIcon : widget.tab.icon,
-                              key: ValueKey('icon_${widget.index}_${widget.isSelected}'),
-                              size: widget.isSelected ? 24 : 22,
-                              color: _getIconColor(),
-                            ),
-                          ),
-                        ),
-                        
-                        const SizedBox(height: 6),
-                        
-                        // ✨ 라벨 with 프리미엄 타이포그래피
-                        ExcludeSemantics(
-                          child: AnimatedDefaultTextStyle(
-                            duration: const Duration(milliseconds: 250),
-                            style: GoogleFonts.notoSans(
-                              fontSize: 13,
-                              fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w500,
-                              color: _getTextColor(),
-                              letterSpacing: 0.2,
-                              height: 1.2,
-                            ),
-                            child: Text(
-                              widget.tab.label,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 🎨 동적 데코레이션 생성
-  BoxDecoration _buildTabDecoration() {
-    if (widget.isSelected) {
-      // 선택된 상태: 그라데이션 + 그림자
-      return BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors2025.primary,
-            AppColors2025.primaryDark,
-          ],
-        ),
-        borderRadius: BorderRadius.circular(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x592563EB), // AppColors2025.primary.withValues(alpha: 0.35)
-            offset: Offset(0, 3),
+            color: Color(0x0A000000),
+            offset: Offset(0, 2),
             blurRadius: 8,
             spreadRadius: 0,
           ),
-          // 내부 하이라이트
-          BoxShadow(
-            color: Color(0x33FFFFFF), // Colors.white.withValues(alpha: 0.2)
-            offset: Offset(0, -1),
-            blurRadius: 0,
-            spreadRadius: 0,
-          ),
         ],
-      );
-    } else if (_isHovered && !widget.isSelected) {
-      // 호버 상태: 연한 블루 배경
-      return BoxDecoration(
-        color: const Color(0x142563EB), // AppColors2025.primary.withValues(alpha: 0.08)
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: const Color(0x262563EB), // AppColors2025.primary.withValues(alpha: 0.15)
-          width: 1,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Row(
+          children: List.generate(_tabs.length, (index) {
+            return Expanded(
+              child: _buildSimpleTabItem(index),
+            );
+          }),
         ),
-      );
-    } else {
-      // 기본 상태: 투명
-      return BoxDecoration(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(14),
-      );
-    }
+      ),
+    );
   }
 
-  /// 🎨 동적 아이콘 색상
-  Color _getIconColor() {
-    if (widget.isSelected) return Colors.white;
-    if (_isHovered) return AppColors2025.primary;
-    return AppColors2025.textTertiary;
-  }
-
-  /// 🎨 동적 텍스트 색상
-  Color _getTextColor() {
-    if (widget.isSelected) return Colors.white;
-    if (_isHovered) return AppColors2025.primary;
-    return AppColors2025.textTertiary;
+  /// 🎯 심플하고 깔끔한 탭 아이템
+  Widget _buildSimpleTabItem(int index) {
+    final tab = _tabs[index];
+    final isSelected = index == _selectedIndex;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
+    
+    return GestureDetector(
+      onTap: () => _selectTab(index),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          vertical: isSmallScreen ? 8 : 10,
+          horizontal: 4,
+        ),
+        margin: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors2025.primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isSelected ? tab.selectedIcon : tab.icon,
+              size: isSmallScreen ? 18 : 20,
+              color: isSelected ? Colors.white : AppColors2025.textTertiary,
+            ),
+            SizedBox(height: isSmallScreen ? 2 : 4),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                tab.label,
+                style: GoogleFonts.notoSans(
+                  fontSize: isSmallScreen ? 10 : 12,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected ? Colors.white : AppColors2025.textTertiary,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
