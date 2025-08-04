@@ -467,7 +467,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
             ref.read(sherpiProvider.notifier).showInstantMessage(
               context: SherpiContext.welcome,
               customDialogue: '챌린지에 도전하여 의지력을 높여보세요! 🔥',
-              emotion: SherpiEmotion.encouraging,
+              emotion: SherpiEmotion.cheering,
             );
           },
           child: Container(

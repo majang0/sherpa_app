@@ -431,7 +431,7 @@ class _MeetingCreationDialogState
     ref.read(sherpiProvider.notifier).showInstantMessage(
       context: SherpiContext.levelUp,
       customDialogue: '모임이 성공적으로 만들어졌어요! 🎉 많은 사람들이 참여할 거예요!',
-      emotion: SherpiEmotion.celebrating,
+      emotion: SherpiEmotion.cheering,
     );
     
     // 다이얼로그 닫기

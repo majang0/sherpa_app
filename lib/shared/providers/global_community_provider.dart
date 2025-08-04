@@ -481,7 +481,7 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
       ref.read(sherpiProvider.notifier).showInstantMessage(
         context: SherpiContext.encouragement,
         customDialogue: '오늘 첫 커뮤니티 활동! +30P 획득! 🎯',
-        emotion: SherpiEmotion.celebrating,
+        emotion: SherpiEmotion.cheering,
       );
     } else {
       state = state.copyWith(
@@ -514,7 +514,7 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
       ref.read(sherpiProvider.notifier).showInstantMessage(
         context: SherpiContext.encouragement,
         customDialogue: '🎉 인기 게시글 달성! +100P 획득!\n많은 분들이 좋아해 주셨어요!',
-        emotion: SherpiEmotion.celebrating,
+        emotion: SherpiEmotion.cheering,
       );
     }
   }
@@ -543,7 +543,7 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
       ref.read(sherpiProvider.notifier).showInstantMessage(
         context: SherpiContext.encouragement,
         customDialogue: '💡 도움되는 댓글! +50P 획득!\n소중한 정보를 나눠주셨네요!',
-        emotion: SherpiEmotion.celebrating,
+        emotion: SherpiEmotion.cheering,
       );
     }
   }

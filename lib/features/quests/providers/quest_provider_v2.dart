@@ -377,7 +377,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       // 셰르피 특별 메시지
       ref.read(sherpiProvider.notifier).showMessage(
         context: SherpiContext.achievement,
-        emotion: SherpiEmotion.celebrating,
+        emotion: SherpiEmotion.cheering,
         userContext: {
           'achievement': '일일 퀘스트 전체 완료',
           'bonus': QuestCompletionBonus.dailyBonus.pointsBonus.toInt(),
@@ -400,7 +400,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       // 셰르피 특별 메시지
       ref.read(sherpiProvider.notifier).showMessage(
         context: SherpiContext.achievement,
-        emotion: SherpiEmotion.celebrating,
+        emotion: SherpiEmotion.cheering,
         userContext: {
           'achievement': '주간 퀘스트 전체 완료',
           'bonus': QuestCompletionBonus.weeklyBonus.pointsBonus.toInt(),
@@ -534,7 +534,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       // 셰르피 축하 메시지
       ref.read(sherpiProvider.notifier).showMessage(
         context: SherpiContext.specialEvent,
-        emotion: SherpiEmotion.celebrating,
+        emotion: SherpiEmotion.cheering,
         userContext: {
           'premiumType': '프리미엄 퀘스트팩',
         },
@@ -543,7 +543,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       // 포인트 부족 시 셰르피 안내 메시지
       ref.read(sherpiProvider.notifier).showMessage(
         context: SherpiContext.guidance,
-        emotion: SherpiEmotion.worried,
+        emotion: SherpiEmotion.warning,
         userContext: {
           'needPoints': 2000,
           'actionType': '프리미엄 퀘스트팩 구매',

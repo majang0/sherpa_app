@@ -1113,7 +1113,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
       // 셰르피 메시지
       ref.read(sherpiProvider.notifier).showMessage(
         context: SherpiContext.achievement,
-        emotion: SherpiEmotion.celebrating,
+        emotion: SherpiEmotion.cheering,
         userContext: {
           'achievement': bonus.description,
           'experience': bonus.experienceBonus.toInt(),

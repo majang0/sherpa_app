@@ -198,7 +198,7 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
     ref.read(sherpiProvider.notifier).showInstantMessage(
       context: SherpiContext.general,
       customDialogue: record.resultMessage + '\n' + rewards.summaryText,
-      emotion: isSuccess ? SherpiEmotion.celebrating : SherpiEmotion.encouraging,
+      emotion: isSuccess ? SherpiEmotion.cheering : SherpiEmotion.cheering,
     );
 
     _saveClimbingData();
@@ -225,7 +225,7 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
     ref.read(sherpiProvider.notifier).showInstantMessage(
       context: SherpiContext.general,
       customDialogue: '등반을 취소했어요. 다음에 다시 도전해보세요! 🙌',
-      emotion: SherpiEmotion.encouraging,
+      emotion: SherpiEmotion.cheering,
     );
   }
 

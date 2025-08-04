@@ -5,6 +5,8 @@ import 'features/climbing/presentation/screens/climbing_screen.dart'; // 분석 
 import 'features/meetings/presentation/screens/meeting_tab_screen.dart'; // 모임 탭 화면
 import 'features/profile/presentation/screens/profile_screen.dart';
 import 'shared/widgets/sherpa_clean_app_bar.dart';
+import 'shared/widgets/global_sherpi_widget.dart'; // 전역 셰르피 위젯
+import 'shared/widgets/sherpi_message_card.dart'; // 셰르피 메시지 카드
 // 추가 imports for TabBarView screens
 import 'features/quests/presentation/screens/quest_screen_v2.dart';
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
@@ -84,7 +86,17 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _getScreen(_selectedIndex),
+      body: Stack(
+        children: [
+          _getScreen(_selectedIndex),
+          // 셰르피 메시지 카드 (메시지가 있을 때만 표시)
+          const SherpiMessageCard(
+            bottomOffset: 140, // BottomNavigationBar 위 여백
+          ),
+          // 전역 셰르피 위젯 (항상 표시)
+          const GlobalSherpiWidget(),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

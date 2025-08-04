@@ -39,6 +39,9 @@ dependencies:
   firebase_auth: ^4.15.3
   cloud_firestore: ^4.13.6
   firebase_storage: ^11.5.6
+  
+  # AI 연동
+  google_generative_ai: ^0.2.2
 
   # 기능별 패키지
   image_picker: ^1.0.4

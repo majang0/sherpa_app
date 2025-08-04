@@ -1,6 +1,10 @@
 // 셰르피 대화 시스템 - 백엔드 연동 및 AI 준비 구조
 import 'dart:math';
 
+// 새로운 감정 시스템 사용 (sherpi_emotions.dart에서 가져옴)
+import '../../core/constants/sherpi_emotions.dart';
+export '../../core/constants/sherpi_emotions.dart';
+
 // 셰르피가 등장하는 상황 정의
 enum SherpiContext {
   // 기본 상호작용
@@ -44,25 +48,6 @@ enum SherpiContext {
   achievement,          // 특별 성취
   milestone,            // 마일스톤 달성
   seasonalGreeting,     // 계절 인사
-}
-
-// 셰르피의 감정 상태 (이미지 파일명과 일치)
-enum SherpiEmotion {
-  defaults,     // sherpi_default.png
-  happy,        // sherpi_happy.png
-  sad,          // sherpi_sad.png
-  surprised,    // sherpi_surprised.png
-  thinking,     // sherpi_thinking.png
-  guiding,      // sherpi_guiding.png
-  cheering,     // sherpi_cheering.png
-  warning,      // sherpi_warning.png
-  sleeping,     // sherpi_sleeping.png
-  special,      // sherpi_special.png
-  meditating,   // sherpi_meditating.png
-  celebrating,  // sherpi_celebrating.png
-  calm,         // sherpi_calm.png
-  worried,      // sherpi_worried.png
-  encouraging,  // sherpi_encouraging.png
 }
 
 // 정적 대화 데이터 (추후 백엔드 API로 대체 가능)
@@ -273,7 +258,7 @@ const Map<SherpiContext, List<String>> sherpiDialogues = {
 };
 
 // 상황별 추천 감정 매핑 (백엔드에서 AI 판단 시 참고용)
-const Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
+final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
   // 기본 상호작용
   SherpiContext.welcome: SherpiEmotion.happy,
   SherpiContext.dailyGreeting: SherpiEmotion.defaults,

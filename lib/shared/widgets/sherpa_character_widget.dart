@@ -101,7 +101,7 @@ class _SherpaCharacterWidgetState extends ConsumerState<SherpaCharacterWidget>
                   width: widget.size,
                   height: widget.size,
                   decoration: BoxDecoration(
-                    color: SherpiState.getEmotionColor(sherpa.emotion).withValues(alpha: 0.1),
+                    color: Colors.blue.withValues(alpha: 0.1), // 임시 색상
                     borderRadius: BorderRadius.circular(widget.size / 2),
                   ),
                   child: Center(
@@ -131,7 +131,7 @@ class _SherpaCharacterWidgetState extends ConsumerState<SherpaCharacterWidget>
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: SherpiState.getEmotionColor(sherpa.emotion),
+                        color: Colors.blue, // 임시 색상
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(

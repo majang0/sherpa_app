@@ -8,13 +8,12 @@ import '../../features/daily_record/models/detailed_exercise_models.dart' as det
 import '../models/user_level_progress.dart';
 import '../models/point_system_model.dart';
 import '../models/global_badge_model.dart';
+import 'global_sherpi_provider.dart';
+import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/constants/game_constants.dart';
 import 'global_point_provider.dart';
-import 'global_sherpi_provider.dart';
 import 'global_game_provider.dart';
 import 'global_badge_provider.dart'; // 뱃지 Provider 추가
-import '../../core/constants/sherpi_dialogues.dart';
-import '../../features/quests/providers/quest_provider_v2.dart';
 
 /// 글로벌 사용자 데이터 관리 Provider (완전 독립형)
 final globalUserProvider = StateNotifierProvider<GlobalUserNotifier, GlobalUser>((ref) {
@@ -202,7 +201,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // 셰르피 축하 메시지
     ref.read(sherpiProvider.notifier).showMessage(
       context: SherpiContext.levelUp,
-      emotion: SherpiEmotion.celebrating,
+      emotion: SherpiEmotion.cheering,
       userContext: {
         'newLevel': newLevel,
         'oldLevel': oldLevel,
@@ -466,7 +465,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     ref.read(sherpiProvider.notifier).showInstantMessage(
       context: SherpiContext.general,
       customDialogue: record.resultMessage + '\n' + rewards.summaryText,
-      emotion: isSuccess ? SherpiEmotion.celebrating : SherpiEmotion.encouraging,
+      emotion: isSuccess ? SherpiEmotion.cheering : SherpiEmotion.happy,
     );
 
     _saveUserData();
@@ -491,7 +490,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     ref.read(sherpiProvider.notifier).showInstantMessage(
       context: SherpiContext.general,
       customDialogue: '등반을 취소했어요. 다음에 다시 도전해보세요! 🙌',
-      emotion: SherpiEmotion.encouraging,
+      emotion: SherpiEmotion.happy,
     );
   }
 
@@ -1096,7 +1095,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     ref.read(sherpiProvider.notifier).showInstantMessage(
       context: SherpiContext.encouragement,
       customDialogue: message,
-      emotion: SherpiEmotion.encouraging,
+      emotion: SherpiEmotion.happy,
     );
   }
 
@@ -1136,7 +1135,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       ref.read(sherpiProvider.notifier).showInstantMessage(
         context: SherpiContext.levelUp,
         customDialogue: '🎉 목표가 자동으로 완료되었어요!',
-        emotion: SherpiEmotion.celebrating,
+        emotion: SherpiEmotion.cheering,
       );
     }
   }
@@ -1230,12 +1229,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       );
     }
 
-    // 셰르피 피드백
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: message,
-      emotion: SherpiEmotion.cheering,
-    );
+    // 🎭 활동 유형별 셰르피 반응
+    _triggerSherpiReaction(activityType, message, xp, points, additionalData);
     
     // 🔄 퀘스트 시스템에 활동 알림
     _notifyQuestSystem(activityType, additionalData ?? {});
@@ -1518,6 +1513,153 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     } catch (e) {
       return [];
     }
+  }
+
+  /// 🎭 활동 유형별 셰르피 반응 트리거
+  void _triggerSherpiReaction(
+    String activityType, 
+    String message, 
+    double xp, 
+    int points, 
+    Map<String, dynamic>? additionalData,
+  ) {
+    SherpiContext context;
+    SherpiEmotion? emotion;
+    String? customMessage;
+
+    // 활동 유형별 셰르피 반응 설정
+    switch (activityType) {
+      // 📚 독서 완료
+      case 'reading':
+        context = SherpiContext.studyComplete;
+        emotion = SherpiEmotion.thinking;
+        break;
+        
+      // 💪 운동 완료
+      case 'exercise':
+        context = SherpiContext.exerciseComplete;
+        emotion = SherpiEmotion.happy;
+        break;
+        
+      // 📝 일기 작성
+      case 'diary':
+        context = SherpiContext.diaryWritten;
+        emotion = SherpiEmotion.defaults;
+        break;
+        
+      // 🎯 퀘스트 완료
+      case String() when activityType.startsWith('quest_'):
+        context = SherpiContext.questComplete;
+        emotion = SherpiEmotion.cheering;
+        break;
+        
+      // 🏔️ 등반 관련
+      case 'climbing':
+        final isSuccess = additionalData?['isSuccess'] as bool? ?? false;
+        if (isSuccess) {
+          context = SherpiContext.climbingSuccess;
+          emotion = SherpiEmotion.cheering;
+        } else {
+          context = SherpiContext.climbingFailure;
+          emotion = SherpiEmotion.sad;
+        }
+        break;
+        
+      // 🤝 모임 관련
+      case 'meeting_host':
+      case 'meeting_participant':
+        context = SherpiContext.meetingJoined;
+        emotion = SherpiEmotion.happy;
+        break;
+        
+      // 🏆 챌린지 및 특별 성취
+      case 'challenge':
+        context = SherpiContext.achievement;
+        emotion = SherpiEmotion.special;
+        break;
+        
+      // 🎉 레벨업 (경험치가 높은 경우)
+      case String() when xp >= 100:
+        context = SherpiContext.levelUp;
+        emotion = SherpiEmotion.cheering;
+        customMessage = '레벨업! 🎉 정말 대단한 성장이에요!';
+        break;
+        
+      // 🌟 높은 포인트 획득
+      case String() when points >= 100:
+        context = SherpiContext.achievement;
+        emotion = SherpiEmotion.special;
+        customMessage = '대박 포인트 획득! ✨ ${points}P를 얻었어요!';
+        break;
+        
+      // 기본 격려
+      default:
+        context = SherpiContext.encouragement;
+        emotion = SherpiEmotion.cheering;
+    }
+
+    // 레벨업 감지 (현재 레벨과 경험치로 판단)
+    if (_checkIfLeveledUp(xp)) {
+      context = SherpiContext.levelUp;
+      emotion = SherpiEmotion.cheering;
+      customMessage = '🎉 레벨업! ${state.level}레벨 달성! 축하해요!';
+    }
+
+    // 셰르피 메시지 표시
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (customMessage != null) {
+        ref.read(sherpiProvider.notifier).showInstantMessage(
+          context: context,
+          customDialogue: customMessage!,
+          emotion: emotion,
+          duration: const Duration(seconds: 5),
+        );
+      } else {
+        ref.read(sherpiProvider.notifier).showMessage(
+          context: context,
+          emotion: emotion,
+          duration: const Duration(seconds: 4),
+          userContext: {
+            'activityType': activityType,
+            'xp': xp.toInt(),
+            'points': points,
+            'level': state.level,
+          },
+          gameContext: {
+            'consecutiveDays': state.dailyRecords.consecutiveDays,
+            'totalActivities': _getTotalActivitiesCount(),
+            'currentStreak': _getCurrentStreak(),
+          },
+        );
+      }
+    });
+  }
+
+  /// 레벨업 여부 확인
+  bool _checkIfLeveledUp(double xp) {
+    final currentLevel = state.level;
+    final currentExp = state.experience;
+    final newExp = currentExp + xp;
+    
+    // 간단한 레벨업 공식 (1000 XP당 1레벨)
+    final newLevel = (newExp / 1000).floor() + 1;
+    
+    return newLevel > currentLevel;
+  }
+
+  /// 총 활동 수 계산
+  int _getTotalActivitiesCount() {
+    final records = state.dailyRecords;
+    return records.exerciseLogs.length + 
+           records.readingLogs.length + 
+           records.diaryLogs.length + 
+           records.climbingLogs.length +
+           records.meetingLogs.length;
+  }
+
+  /// 현재 연속 기록 계산
+  int _getCurrentStreak() {
+    return state.dailyRecords.consecutiveDays;
   }
 
 }

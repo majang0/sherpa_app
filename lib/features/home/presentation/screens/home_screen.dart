@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:math' as math;
 
 // Core
 import '../../../../core/constants/app_colors.dart';
@@ -13,31 +11,27 @@ import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_point_provider.dart';
-import '../../../../shared/providers/global_game_provider.dart';
 import '../../../quests/providers/quest_provider_v2.dart';
 
 // Shared Widgets
-import '../../../../shared/widgets/sherpa_card.dart';
-import '../../../../shared/widgets/animated_progress_widget.dart';
-import '../../../../shared/widgets/point_display_widget.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
-import '../../../../shared/presentation/screens/component_viewer_screen.dart';
 
 // Local Widgets
 import '../widgets/enhanced_consecutive_days_reward_widget.dart';
-import '../widgets/user_level_card_widget.dart';
-import '../../../climbing/presentation/widgets/animated_rpg_level_card.dart';
 import '../widgets/integrated_quest_system_widget.dart';
 import '../widgets/smart_meeting_recommendation_widget.dart';
 import '../widgets/enhanced_social_feed_widget.dart';
 import '../widgets/personalized_growth_dashboard_widget.dart';
 import '../widgets/university_guild_widget.dart';
 import '../widgets/growth_insights_widget.dart';
+import '../widgets/sherpi_ai_test_card.dart';
 
 // Models
 import '../../../../shared/models/global_user_model.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key});
+  
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
@@ -51,7 +45,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   bool _isDailyRewardAvailable = false;
   bool _isLoading = true;
-  bool _isTransitioning = false;
 
   @override
   void initState() {
@@ -141,6 +134,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
     ref.showSherpi(context, emotion: SherpiEmotion.happy);
   }
+
 
   @override
   void dispose() {
@@ -303,52 +297,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
 
 
-  Widget _buildInfoCard({
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    return SherpaCard(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: color, size: 20),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: GoogleFonts.notoSans(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                Text(
-                  value,
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildPersonalGrowthSection(GlobalUser user) {
     return Container(
@@ -359,6 +307,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
+            const SizedBox(height: 20),
+
+            // 🤖 셰르피 AI 테스트 카드 (개발/테스트용)
+            const SherpiAiTestCard(),
             const SizedBox(height: 20),
 
             // 통합 성장 대시보드
@@ -400,54 +352,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  Widget _buildSectionHeader({
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required bool isGameStyle,
-  }) {
-    return Row(
-      children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            gradient: isGameStyle ? AppColors.primaryGradient : null,
-            color: isGameStyle ? null : AppColors.primary,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 24,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: GoogleFonts.notoSans(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-              Text(
-                subtitle,
-                style: GoogleFonts.notoSans(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 
 
 

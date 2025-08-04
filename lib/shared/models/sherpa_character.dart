@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// ⚠️ DEPRECATED: 오래된 SherpaEmotion enum - 새로운 SherpiEmotion 사용 
+// 임시로 유지하여 호환성 보장, 추후 제거 예정
 enum SherpaEmotion {
   calm,        // 차분한 표정
   happy,       // 기쁜 표정

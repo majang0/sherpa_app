@@ -576,7 +576,7 @@ class ShopItem {
     ref.read(sherpiProvider.notifier).showInstantMessage(
       context: SherpiContext.encouragement,
       customDialogue: message,
-      emotion: SherpiEmotion.celebrating,
+      emotion: SherpiEmotion.cheering,
       duration: const Duration(seconds: 3),
     );
   }
@@ -594,7 +594,7 @@ class ShopItem {
     ref.read(sherpiProvider.notifier).showInstantMessage(
       context: SherpiContext.encouragement,
       customDialogue: message,
-      emotion: SherpiEmotion.worried,
+      emotion: SherpiEmotion.warning,
       duration: const Duration(seconds: 3),
     );
   }
