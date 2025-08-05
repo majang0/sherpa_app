@@ -6,6 +6,7 @@ import '../../core/ai/smart_sherpi_manager.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 import '../../features/sherpi_emotion/providers/emotion_analysis_provider.dart';
 import '../../features/sherpi_emotion/models/emotion_analysis_model.dart';
+import '../models/sherpi_message_history.dart';
 
 enum SherpiDisplayMode {
   floating,      // 우하단 플로팅 (기본)
@@ -146,6 +147,10 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
   final SmartSherpiManager _smartManager = SmartSherpiManager();
   final Ref _ref;
   Timer? _hideTimer;
+  
+  // 메시지 히스토리 저장 (최대 50개)
+  final List<SherpiMessageHistory> _messageHistory = [];
+  static const int _maxHistorySize = 50;
 
   SherpiNotifier(this._ref, {SherpiDialogueSource? dialogueSource})
       : _dialogueSource = dialogueSource ?? StaticDialogueSource(),
@@ -298,6 +303,14 @@ void initializeSherpi() {
       );
       
       _logInteraction(context, selectedEmotion, sherpiResponse.message, enhancedMetadata);
+      
+      // 메시지 히스토리에 추가
+      _addToHistory(
+        emotion: selectedEmotion,
+        message: sherpiResponse.message,
+        context: context,
+        metadata: enhancedMetadata,
+      );
       
       // 🤝 상호작용 기록 및 친밀도 업데이트
       _recordInteraction(context, userContext, gameContext);
@@ -571,6 +584,40 @@ void initializeSherpi() {
     } catch (e) {
       print('💕 감정 동기화 점수 업데이트 실패: $e');
     }
+  }
+
+  /// 📝 메시지 히스토리에 추가
+  void _addToHistory({
+    required SherpiEmotion emotion,
+    required String message,
+    required SherpiContext context,
+    required Map<String, dynamic> metadata,
+  }) {
+    final history = SherpiMessageHistory(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      emotion: emotion,
+      message: message,
+      context: context,
+      timestamp: DateTime.now(),
+      metadata: metadata,
+    );
+    
+    _messageHistory.insert(0, history); // 최신 메시지를 앞에 추가
+    
+    // 최대 개수 유지
+    if (_messageHistory.length > _maxHistorySize) {
+      _messageHistory.removeLast();
+    }
+  }
+  
+  /// 📚 메시지 히스토리 가져오기
+  List<SherpiMessageHistory> getMessageHistory() {
+    return List.unmodifiable(_messageHistory);
+  }
+  
+  /// 🧹 메시지 히스토리 초기화
+  void clearMessageHistory() {
+    _messageHistory.clear();
   }
 }
 

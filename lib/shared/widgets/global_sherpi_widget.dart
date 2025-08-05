@@ -554,22 +554,29 @@ class SherpiExpandedDialog extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Icon(
-                                      Icons.auto_awesome,
-                                      size: 20,
-                                      color: AppColors.primary.withOpacity(0.7),
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.auto_awesome,
+                                          size: 20,
+                                          color: AppColors.primary.withOpacity(0.7),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          '셰르피의 메시지',
+                                          style: GoogleFonts.notoSans(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.primary.withOpacity(0.8),
+                                            letterSpacing: -0.2,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      '셰르피의 메시지',
-                                      style: GoogleFonts.notoSans(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.primary.withOpacity(0.8),
-                                        letterSpacing: -0.2,
-                                      ),
-                                    ),
+                                    // 전체보기 버튼
+                                    _buildViewAllButton(context),
                                   ],
                                 ),
                                 const SizedBox(height: 12),
@@ -916,6 +923,78 @@ class SherpiExpandedDialog extends ConsumerWidget {
     ref.read(sherpiProvider.notifier).showMessage(
       context: SherpiContext.encouragement,
       duration: const Duration(seconds: 5),
+    );
+  }
+  
+  /// 메시지 히스토리 화면 표시
+  void _showMessageHistory(BuildContext context) {
+    Navigator.of(context).pop(); // 다이얼로그 닫기
+    Navigator.pushNamed(context, '/sherpi_message_history');
+  }
+
+  /// 💎 깔끔하고 모던한 전체보기 버튼 - 다이얼로그 분위기에 맞춤
+  Widget _buildViewAllButton(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.9),
+            Colors.white.withOpacity(0.7),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.primary.withOpacity(0.15),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
+          ),
+          BoxShadow(
+            color: Colors.white.withOpacity(0.8),
+            blurRadius: 1,
+            offset: const Offset(0, 1),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () => _showMessageHistory(context),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.forum_outlined,
+                  size: 16,
+                  color: AppColors.primary.withOpacity(0.8),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  '전체보기',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primary.withOpacity(0.9),
+                    letterSpacing: -0.1,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

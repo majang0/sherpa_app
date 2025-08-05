@@ -39,6 +39,9 @@ import 'features/daily_record/presentation/screens/reading_record_screen.dart';
 import 'shared/presentation/screens/component_viewer_screen.dart';
 import 'shared/presentation/screens/meeting_list_all_screen.dart';
 
+// Screens - Sherpi Chat
+import 'features/sherpi_chat/presentation/screens/sherpi_message_history_screen.dart';
+
 // Models
 import 'features/meetings/models/available_meeting_model.dart';
 import 'shared/models/global_user_model.dart';
@@ -171,6 +174,7 @@ class MyApp extends ConsumerWidget {
             sectionTitle: args?['sectionTitle'],
           );
         },
+        '/sherpi_message_history': (context) => SherpiMessageHistoryScreen(),
 
       },
       initialRoute: '/',
