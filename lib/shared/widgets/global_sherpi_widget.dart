@@ -32,7 +32,6 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
       
   late AnimationController _pulseController;
   late AnimationController _bounceController;
-  late AnimationController _shakeController;
   
   @override
   void initState() {
@@ -45,12 +44,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
     );
     
     _bounceController = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
-    
-    _shakeController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 300), // 더 빠른 피드백
       vsync: this,
     );
   }
@@ -59,43 +53,30 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
   void dispose() {
     _pulseController.dispose();
     _bounceController.dispose();
-    _shakeController.dispose();
     super.dispose();
   }
 
   /// 셰르피 탭 이벤트 처리
-  void _onSherpiTapped() async {
-    // 햅틱 피드백 추가
-    try {
-      // HapticFeedback.mediumImpact();
-      print("셰르피 터치됨"); // 햅틱 피드백 대신 로그
-    } catch (e) {
-      // 햅틱 피드백이 지원되지 않는 경우 무시
-    }
+  void _onSherpiTapped() {
+    // 즉시 다이얼로그 표시 - 애니메이션 지연 제거
+    _showExpandedDialog();
     
-    // 터치 피드백 애니메이션
-    await _bounceController.forward();
-    _bounceController.reset();
-    
-    final sherpiState = ref.read(sherpiProvider);
-    
-    // 현재 메시지가 있으면 확장 대화 표시
-    if (sherpiState.isVisible && sherpiState.dialogue.isNotEmpty) {
-      _showExpandedDialog();
-    } else {
-      // 새로운 인사 메시지 표시
-      await ref.read(sherpiProvider.notifier).showMessage(
-        context: SherpiContext.general,
-        duration: const Duration(seconds: 4),
-      );
-    }
+    // 피드백 애니메이션은 비동기로 처리
+    _bounceController.forward().then((_) {
+      _bounceController.reset();
+    });
   }
   
   /// 확장 대화 다이얼로그 표시
   void _showExpandedDialog() {
+    // 안전성을 위한 mounted 체크
+    if (!mounted) return;
+    
     showDialog(
       context: context,
-      builder: (context) => SherpiExpandedDialog(),
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (context) => const SherpiExpandedDialog(),
     );
   }
   
@@ -110,11 +91,6 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
     _pulseController.reset();
   }
   
-  /// 주의 끌기 애니메이션 (흔들기)
-  void _startShakeAnimation() async {
-    await _shakeController.forward();
-    _shakeController.reset();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,26 +108,18 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
       right: 20,   // 오른쪽 여백 증가
       child: GestureDetector(
         onTap: _onSherpiTapped,
-        onLongPress: () => _startShakeAnimation(), // 길게 눌러서 주의 끌기
+        behavior: HitTestBehavior.opaque, // 터치 영역 확대
         child: AnimatedBuilder(
           animation: Listenable.merge([
             _pulseController,
             _bounceController,
-            _shakeController,
           ]),
           builder: (context, child) {
             return Transform.scale(
               scale: 1.0 + 
-                (_pulseController.value * 0.15) + // 더 강한 맥동 효과 (0.1→0.15)
-                (_bounceController.value * 0.2),  // 더 강한 터치 피드백 (0.15→0.2)
-              child: Transform.translate(
-                offset: Offset(
-                  _shakeController.value * 10 * 
-                  (0.5 - ((_shakeController.value * 4) % 1).abs()), // 흔들기 효과
-                  0,
-                ),
-                child: _buildSherpiAvatar(sherpiState),
-              ),
+                (_pulseController.value * 0.1) + // 부드러운 맥동
+                (_bounceController.value * 0.15), // 적절한 터치 피드백
+              child: _buildSherpiAvatar(sherpiState),
             );
           },
         ),
@@ -200,10 +168,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
                     color: Colors.white,
                   );
                 },
-              )
-                .animate(key: ValueKey(currentEmotion))
-                .fadeIn(duration: 300.ms)
-                .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
+              ),
             ),
           ),
           
@@ -232,11 +197,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
                   size: 12,  // 아이콘 크기 증가 (8→12)
                   color: Colors.white,
                 ),
-              )
-                .animate()
-                .scale(begin: const Offset(0, 0))
-                .then()
-                .shimmer(duration: 1000.ms, color: Colors.white.withValues(alpha: 0.5)),
+              ),
             ),
           
           // 친밀도 레벨 배지
@@ -274,10 +235,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
                 ),
               );
             },
-          )
-          .animate()
-          .fadeIn(delay: 800.ms)
-          .scale(begin: const Offset(0.5, 0.5)),
+          ),
           
           // 특별한 상황 이펙트
           if (currentEmotion == SherpiEmotion.special)
@@ -293,14 +251,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
                     ],
                   ),
                 ),
-              )
-                .animate(onPlay: (controller) => controller.repeat())
-                .scale(
-                  begin: const Offset(0.8, 0.8),
-                  end: const Offset(1.2, 1.2),
-                  duration: 2000.ms,
-                )
-                .fade(begin: 0.5, end: 0.0),
+              ),
             ),
         ],
       ),
@@ -645,7 +596,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                           ref,
                           icon: Icons.chat_bubble_outline,
                           title: '자세한 대화하기',
-                          subtitle: '셰르피와 깊이 있는 대화를 나눠보세요',
+                          subtitle: '셰르피와 깊이 있는 대화',
                           gradient: LinearGradient(
                             colors: [Colors.blue.shade400, Colors.blue.shade600],
                           ),
@@ -656,8 +607,8 @@ class SherpiExpandedDialog extends ConsumerWidget {
                           context,
                           ref,
                           icon: Icons.insights_outlined,
-                          title: '더 자세한 분석',
-                          subtitle: '나의 패턴을 분석해보세요',
+                          title: '분석하기',
+                          subtitle: '나의 패턴을 분석',
                           gradient: LinearGradient(
                             colors: [Colors.purple.shade400, Colors.purple.shade600],
                           ),
@@ -668,8 +619,8 @@ class SherpiExpandedDialog extends ConsumerWidget {
                           context,
                           ref,
                           icon: Icons.event_note_outlined,
-                          title: '계획 세우기',
-                          subtitle: '목표 달성을 위한 계획을 세워보세요',
+                          title: '계획하기',
+                          subtitle: '목표 달성을 위한 계획',
                           gradient: LinearGradient(
                             colors: [Colors.orange.shade400, Colors.orange.shade600],
                           ),
@@ -681,7 +632,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                           ref,
                           icon: Icons.favorite_outline,
                           title: '격려 받기',
-                          subtitle: '힘이 되는 메시지를 들어보세요',
+                          subtitle: '응원 메시지',
                           gradient: LinearGradient(
                             colors: [Colors.pink.shade400, Colors.pink.shade600],
                           ),
@@ -740,13 +691,13 @@ class SherpiExpandedDialog extends ConsumerWidget {
     )
       .animate()
       .scale(
-        begin: const Offset(0.95, 0.95),
-        curve: Curves.easeOutBack,
-        duration: 400.ms,
+        begin: const Offset(0.98, 0.98),
+        curve: Curves.easeOut,
+        duration: 200.ms,
       )
       .fade(
         curve: Curves.easeOut,
-        duration: 300.ms,
+        duration: 150.ms,
       );
   }
   
@@ -818,13 +769,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                     color: Colors.white,
                     size: 26,
                   ),
-                )
-                  .animate()
-                  .scale(
-                    delay: 100.ms,
-                    duration: 600.ms,
-                    curve: Curves.elasticOut,
-                  ),
+                ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Column(
@@ -839,7 +784,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                           color: AppColors.textPrimary,
                           letterSpacing: -0.3,
                         ),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
@@ -852,9 +797,8 @@ class SherpiExpandedDialog extends ConsumerWidget {
                           height: 1.3,
                           letterSpacing: -0.2,
                         ),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        softWrap: true,
                       ),
                     ],
                   ),
@@ -913,10 +857,17 @@ class SherpiExpandedDialog extends ConsumerWidget {
   void _openChatScreen(BuildContext context, WidgetRef ref) {
     Navigator.of(context).pop();
     
-    // 채팅 화면으로 이동
+    // 지연 없이 즉시 화면 전환
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const SherpiChatScreen(),
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => const SherpiChatScreen(),
+        transitionDuration: const Duration(milliseconds: 200),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
       ),
     );
   }
@@ -924,25 +875,45 @@ class SherpiExpandedDialog extends ConsumerWidget {
   /// 패턴 분석 표시
   void _showPatternAnalysis(BuildContext context, WidgetRef ref) {
     Navigator.of(context).pop();
-    // TODO: 패턴 분석 화면으로 이동 또는 상세 분석 표시
+    
+    // 부드러운 알림 표시
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('패턴 분석 기능을 준비 중입니다')),
+      SnackBar(
+        content: const Text('패턴 분석 기능을 준비 중입니다'),
+        backgroundColor: AppColors.primary,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
     );
   }
   
   /// 계획 모드 표시
   void _showPlanningMode(BuildContext context, WidgetRef ref) {
     Navigator.of(context).pop();
-    // TODO: 계획 세우기 모드 활성화
+    
+    // 부드러운 알림 표시
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('계획 세우기 기능을 준비 중입니다')),
+      SnackBar(
+        content: const Text('계획 세우기 기능을 준비 중입니다'),
+        backgroundColor: AppColors.primary,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
     );
   }
   
   /// 격려 메시지 표시
-  void _showEncouragement(BuildContext context, WidgetRef ref) async {
+  void _showEncouragement(BuildContext context, WidgetRef ref) {
     Navigator.of(context).pop();
-    await ref.read(sherpiProvider.notifier).showMessage(
+    
+    // 비동기로 격려 메시지 표시
+    ref.read(sherpiProvider.notifier).showMessage(
       context: SherpiContext.encouragement,
       duration: const Duration(seconds: 5),
     );
