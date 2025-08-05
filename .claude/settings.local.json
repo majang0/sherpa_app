@@ -47,7 +47,10 @@
       "Bash(dart format:*)",
       "Bash(keytool:*)",
       "mcp__brave-search__brave_web_search",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(dart run:*)",
+      "Bash(dart:*)",
+      "Bash(powershell.exe:*)"
     ],
     "deny": []
   }

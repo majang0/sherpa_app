@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Features
 import 'features/home/presentation/screens/home_screen.dart';
 import 'features/climbing/presentation/screens/climbing_screen.dart'; // 분석 화면
 import 'features/meetings/presentation/screens/meeting_tab_screen.dart'; // 모임 탭 화면
 import 'features/profile/presentation/screens/profile_screen.dart';
-import 'shared/widgets/sherpa_clean_app_bar.dart';
-import 'shared/widgets/global_sherpi_widget.dart'; // 전역 셰르피 위젯
-import 'shared/widgets/sherpi_message_card.dart'; // 셰르피 메시지 카드
-// 추가 imports for TabBarView screens
 import 'features/quests/presentation/screens/quest_screen_v2.dart';
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
 import 'features/meetings/presentation/screens/challenge_index_screen.dart';
+
+// Providers
 import 'features/quests/providers/quest_provider_v2.dart';
+
+// Shared Widgets
+import 'shared/widgets/sherpa_clean_app_bar.dart';
+import 'shared/widgets/global_sherpi_widget.dart';
+import 'shared/widgets/sherpi_message_card.dart';
 
 class MainNavigationScreen extends ConsumerStatefulWidget {
   @override
@@ -81,7 +86,9 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     if (index >= 0 && index < tabNames.length) {
       ref.read(questProviderV2.notifier).recordTabVisit(tabNames[index]);
     }
+    
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +100,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
           const SherpiMessageCard(
             bottomOffset: 140, // BottomNavigationBar 위 여백
           ),
-          // 전역 셰르피 위젯 (항상 표시)
+          
+          // 셰르피 위젯
           const GlobalSherpiWidget(),
         ],
       ),

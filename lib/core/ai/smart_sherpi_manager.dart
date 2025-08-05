@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/ai_message_cache.dart';
 import 'package:sherpa_app/core/ai/gemini_dialogue_source.dart';
+// Personalized smart sherpi manager removed
 
 // Add unawaited function for background operations
 void unawaited(Future<void> future) {
@@ -11,10 +12,29 @@ void unawaited(Future<void> future) {
 /// 🧠 스마트 셰르피 매니저
 /// 
 /// AI와 정적 메시지를 지능적으로 조합하여 최적의 사용자 경험을 제공합니다.
+/// 친밀도 레벨에 따라 AI 사용 비율과 대화 깊이가 조정됩니다.
 class SmartSherpiManager {
+  // 개인화 매니저 제거됨
+  final bool _usePersonalization = false;
   final AiMessageCache _cache = AiMessageCache();
   final GeminiDialogueSource _geminiSource = GeminiDialogueSource();
-  final StaticDialogueSource _staticSource = StaticDialogueSource();
+  
+  // 친밀도 레벨 (기본값 1)
+  int _intimacyLevel = 1;
+
+  /// 생성자 (개인화 기능 제거됨)
+  SmartSherpiManager();
+  
+  /// 친밀도 레벨 설정
+  void setIntimacyLevel(int level) {
+    _intimacyLevel = level.clamp(1, 10);
+  }
+  
+  /// 친밀도 레벨에 따른 AI 사용 비율 계산
+  double _getAIUsageRateByIntimacy() {
+    // 친밀도 1: 10% → 친밀도 10: 40%
+    return 0.1 + (_intimacyLevel - 1) * 0.033;
+  }
   
   /// 🎯 AI 사용 기준 정의 (명확한 우선순위와 조건)
   static const Map<SherpiContext, AiUsageLevel> _aiUsageLevels = {
@@ -50,23 +70,30 @@ class SmartSherpiManager {
     SherpiContext.encouragement: AiUsageLevel.rarely,    // 일반 격려
   };
   
-  /// 🎮 메인 메시지 가져오기 함수 (최적화된 버전)
+  /// 🎮 메인 메시지 가져오기 함수 (개인화 지원)
   /// 
-  /// 성능 최우선: 90%+ 즉시 응답을 보장합니다.
+  /// 기본 AI 매니저를 사용하여 (개인화 기능 제거됨)
+  /// 더욱 맞춤형 응답을 제공합니다. 성능 최우선: 90%+ 즉시 응답을 보장합니다.
   Future<SherpiResponse> getMessage(
     SherpiContext context,
     Map<String, dynamic>? userContext,
     Map<String, dynamic>? gameContext,
   ) async {
+    // 개인화 기능이 제거되어 기본 로직만 사용
+    
+    // 기존 로직 사용
     final aiLevel = _aiUsageLevels[context] ?? AiUsageLevel.rarely;
     
     // 🚀 빠른 경로: rarely 레벨은 즉시 정적 메시지 (90% 케이스)
     if (aiLevel == AiUsageLevel.rarely) {
-      // 1% 확률로만 AI 사용
-      if (DateTime.now().millisecond % 100 == 0) {
+      // 친밀도에 따른 AI 사용 확률 조정
+      final aiUsageRate = _getAIUsageRateByIntimacy();
+      final randomChance = DateTime.now().millisecond / 1000.0;
+      
+      if (randomChance < aiUsageRate * 0.1) { // rarely는 기본 확률의 10%만 적용
         return await _getAIMessage(context, userContext, gameContext);
       } else {
-        return _getStaticMessageSync(context, userContext, gameContext);
+        return Future.value(_getStaticMessageSync(context, userContext, gameContext));
       }
     }
     
@@ -81,9 +108,10 @@ class SmartSherpiManager {
         return await _getAIMessage(context, userContext, gameContext);
       }
     } else {
-      return _getStaticMessageSync(context, userContext, gameContext);
+      return Future.value(_getStaticMessageSync(context, userContext, gameContext));
     }
   }
+
 
   /// ⚡ 빠른 AI 결정 (복잡한 async 제거)
   bool _shouldUseAIFast(
@@ -91,15 +119,22 @@ class SmartSherpiManager {
     AiUsageLevel level,
     Map<String, dynamic>? userContext,
   ) {
+    // 친밀도에 따른 추가 AI 사용 확률
+    final intimacyBonus = _intimacyLevel * 0.05; // 레벨당 5% 보너스
+    
     switch (level) {
       case AiUsageLevel.always:
         return true;
         
       case AiUsageLevel.important:
-        return _isImportantMomentFast(context, userContext);
+        // 친밀도가 높을수록 중요한 순간의 기준이 완화됨
+        return _isImportantMomentFast(context, userContext) || 
+               (DateTime.now().millisecond / 1000.0 < intimacyBonus);
         
       case AiUsageLevel.occasional:
-        return _isSpecialConditionFast(context, userContext);
+        // 친밀도가 높을수록 특별한 조건이 더 자주 발생
+        return _isSpecialConditionFast(context, userContext) ||
+               (DateTime.now().millisecond / 1000.0 < intimacyBonus * 0.5);
         
       case AiUsageLevel.rarely:
         return false; // 이미 위에서 처리됨
@@ -175,7 +210,7 @@ class SmartSherpiManager {
         generationDuration: Duration.zero,
       );
     } else {
-      return _getStaticMessageSync(context, userContext, gameContext);
+      return Future.value(_getStaticMessageSync(context, userContext, gameContext));
     }
   }
 
@@ -220,7 +255,7 @@ class SmartSherpiManager {
       );
       
     } catch (e) {
-      return _getStaticMessageSync(context, userContext, gameContext);
+      return Future.value(_getStaticMessageSync(context, userContext, gameContext));
     }
   }
   
@@ -253,148 +288,31 @@ class SmartSherpiManager {
     );
   }
 
-  /// 💬 정적 메시지 가져오기 (async 버전 - 필요시에만 사용)
-  Future<SherpiResponse> _getStaticMessage(
-    SherpiContext context,
-    Map<String, dynamic>? userContext,
-    Map<String, dynamic>? gameContext,
-  ) async {
-    final staticMessage = await _staticSource.getDialogue(
-      context, 
-      userContext, 
-      gameContext
-    );
-    
-    return SherpiResponse(
-      message: staticMessage,
-      source: MessageSource.static,
-      responseTime: DateTime.now(),
-      generationDuration: Duration.zero,
-    );
-  }
-  
-  /// 🎯 AI 사용 여부 결정 로직 (명확한 기준)
-  Future<bool> _shouldUseAI(
-    SherpiContext context,
-    AiUsageLevel level,
-    Map<String, dynamic>? userContext,
-  ) async {
-    print('🤔 AI 사용 결정: ${context.name} (${level.name})');
-    
-    switch (level) {
-      case AiUsageLevel.always:
-        // 🔥 항상 AI 사용: 특별한 순간들
-        print('✅ 항상 AI 사용 - 특별한 순간');
-        return true;
-        
-      case AiUsageLevel.important:
-        // ⭐ 조건부 AI 사용: 중요한 성취만
-        final shouldUse = _isImportantMoment(context, userContext);
-        print('${shouldUse ? '✅' : '❌'} 중요한 순간 ${shouldUse ? '맞음' : '아님'} - AI ${shouldUse ? '사용' : '미사용'}');
-        return shouldUse;
-        
-      case AiUsageLevel.occasional:
-        // 📱 특별 조건부 AI: milestone 달성만
-        final shouldUse = _isSpecialCondition(context, userContext);
-        print('${shouldUse ? '✅' : '❌'} 특별 조건 ${shouldUse ? '충족' : '미충족'} - AI ${shouldUse ? '사용' : '미사용'}');
-        return shouldUse;
-        
-      case AiUsageLevel.rarely:
-        // 💬 거의 정적: 1% 확률로만 AI
-        final isLucky = DateTime.now().millisecond % 100 == 0;
-        print('${isLucky ? '🎰' : '⚡'} 깜짝 AI ${isLucky ? '당첨!' : '정적 메시지 사용'}');
-        return isLucky;
-    }
-  }
 
-  /// ⭐ 중요한 순간인지 판단
-  bool _isImportantMoment(SherpiContext context, Map<String, dynamic>? userContext) {
-    switch (context) {
-      case SherpiContext.levelUp:
-        // 특별한 레벨만: 1, 5, 10, 20, 30, 50, 100...
-        final level = int.tryParse(userContext?['레벨']?.toString() ?? '1') ?? 1;
-        return level == 1 || level == 5 || level % 10 == 0;
-        
-      case SherpiContext.badgeEarned:
-        // 첫 3개 뱃지만 AI로 축하
-        final totalBadges = userContext?['총_뱃지_수'] ?? 0;
-        return totalBadges <= 3;
-        
-      case SherpiContext.climbingSuccess:
-        // 첫 성공이거나 어려운 산(성공률 30% 이하)
-        final totalClimbs = userContext?['총_등반_수'] ?? 0;
-        final successRate = double.tryParse(userContext?['등반_성공률']?.toString() ?? '50') ?? 50;
-        return totalClimbs <= 3 || successRate <= 30;
-        
-      case SherpiContext.achievement:
-        // 첫 5개 성취만
-        final totalAchievements = userContext?['총_성취_수'] ?? 0;
-        return totalAchievements <= 5;
-        
-      default:
-        return false;
-    }
-  }
   
-  
-  /// ✨ 특별한 조건인지 확인 (milestone 달성)
-  bool _isSpecialCondition(SherpiContext context, Map<String, dynamic>? userContext) {
-    switch (context) {
-      case SherpiContext.exerciseComplete:
-        // 운동: 연속 7일, 30일, 100일 또는 총 100회, 500회 달성
-        final consecutiveExercise = userContext?['연속_운동일'] ?? 0;
-        final totalExercise = userContext?['총_운동_수'] ?? 0;
-        return consecutiveExercise == 7 || 
-               consecutiveExercise == 30 || 
-               consecutiveExercise == 100 ||
-               totalExercise == 100 || 
-               totalExercise == 500;
-               
-      case SherpiContext.studyComplete:
-        // 독서: 연속 7일, 30일 또는 총 50권, 100권 달성
-        final consecutiveReading = userContext?['연속_독서일'] ?? 0;
-        final totalBooks = userContext?['총_독서_수'] ?? 0;
-        return consecutiveReading == 7 || 
-               consecutiveReading == 30 ||
-               totalBooks == 50 || 
-               totalBooks == 100;
-               
-      case SherpiContext.questComplete:
-        // 퀘스트: 연속 완료 7일, 30일 또는 특별 퀘스트 완료
-        final consecutiveQuests = userContext?['연속_퀘스트일'] ?? 0;
-        final questType = userContext?['퀘스트_타입'] ?? '';
-        return consecutiveQuests == 7 || 
-               consecutiveQuests == 30 ||
-               questType == 'special' || 
-               questType == 'premium';
-               
-      default:
-        // 일반적인 milestone: 연속 접속 7일, 30일, 100일
-        final consecutiveDays = userContext?['연속_접속일'] ?? 0;
-        return consecutiveDays == 7 || 
-               consecutiveDays == 30 || 
-               consecutiveDays == 100;
-    }
-  }
-  
-  /// 🔄 백그라운드 캐시 생성 시작
+  /// 🔄 백그라운드 캐시 생성 시작 (개인화 지원)
   Future<void> startBackgroundCaching(
     Map<String, dynamic> userContext,
     Map<String, dynamic> gameContext,
   ) async {
-    // 비동기로 백그라운드에서 실행 (UI 블로킹 없음)
+    // 기본 백그라운드 캐싱만 사용 (개인화 기능 제거됨)
     unawaited(_cache.pregenerateImportantMessages(
       currentUserContext: userContext,
       currentGameContext: gameContext,
     ));
   }
   
-  /// 📊 시스템 상태 확인
+  /// 📊 시스템 상태 확인 (개인화 지원)
   Future<Map<String, dynamic>> getSystemStatus() async {
     final cacheStatus = await _cache.getCacheStatus();
+    
+    // 개인화 상태 제거됨
+    
     return {
       'cache': cacheStatus,
       'ai_usage_levels': _aiUsageLevels.length,
+      'personalization_enabled': _usePersonalization,
+      'personalized_features': <String, dynamic>{},
       'last_update': DateTime.now().toIso8601String(),
     };
   }
@@ -426,24 +344,41 @@ enum AiUsageLevel {
   rarely,
 }
 
-/// 📨 셰르피 응답 데이터
+/// 📨 셰르피 응답 데이터 (개인화 메타데이터 포함)
 class SherpiResponse {
   final String message;
   final MessageSource source;
   final DateTime responseTime;
   final Duration? generationDuration;
+  final Map<String, dynamic> metadata; // 개인화 정보 추가
   
   SherpiResponse({
     required this.message,
     required this.source,
     required this.responseTime,
     this.generationDuration,
+    this.metadata = const {},
   });
   
   /// ⚡ 빠른 응답인지 확인 (1초 이내)
   bool get isFastResponse {
     return generationDuration == null || 
            generationDuration!.inMilliseconds < 1000;
+  }
+
+  /// 🎯 개인화된 응답인지 확인
+  bool get isPersonalized {
+    return metadata['personalized'] == true;
+  }
+
+  /// 📊 개인화 수준 (0.0 ~ 1.0)
+  double get personalizationLevel {
+    return (metadata['personalization_level'] as double?) ?? 0.0;
+  }
+
+  /// 💾 캐시 히트 여부
+  bool get isCacheHit {
+    return metadata['cache_hit'] == true;
   }
 }
 

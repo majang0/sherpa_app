@@ -347,10 +347,242 @@ The app implements a sophisticated RPG-style progression system:
 - **Shop integration**: Points can be spent on character enhancements and cosmetics
 - **Reward distribution**: Points awarded based on activity completion and quest fulfillment
 
-**AI Companion (Sherpi)**:
-- Context-aware dialogue system with multiple emotional states
-- Responds to user progress and provides encouragement/guidance
-- Managed by `sherpiProvider` with state synchronization across features
+### Sherpi AI Companion System (셰르피 AI 동반자 시스템)
+
+**Overview**: Sherpi is an AI-powered companion that provides emotional support, guidance, and celebration throughout the user's journey. The system achieves the goal of "사용자가 셰르피와 함께한다는 느낌" (feeling of being together with Sherpi).
+
+#### 1. Core Architecture
+
+**File Structure**:
+```
+lib/
+├── core/
+│   ├── ai/
+│   │   ├── gemini_dialogue_source.dart    # Gemini API integration
+│   │   ├── smart_sherpi_manager.dart      # Hybrid message management
+│   │   ├── ai_message_cache.dart          # Performance caching system
+│   │   └── AI_MESSAGE_DECISION_CRITERIA.md # AI usage criteria
+│   ├── config/
+│   │   └── api_config.dart                # API key configuration
+│   └── constants/
+│       ├── sherpi_emotions.dart           # 10-emotion system definition
+│       └── sherpi_dialogues.dart          # Static dialogues & context mapping
+├── shared/
+│   ├── providers/
+│   │   └── global_sherpi_provider.dart    # Global state management
+│   └── widgets/
+│       ├── global_sherpi_widget.dart      # Persistent companion widget
+│       └── sherpi_message_card.dart       # Message display component
+└── sherpi/                                # Documentation & roadmap
+```
+
+#### 2. Gemini AI Integration
+
+**Setup Requirements**:
+```dart
+// lib/core/config/api_config.dart
+class ApiConfig {
+  static const String geminiApiKey = 'YOUR_GEMINI_API_KEY';
+  static const String geminiModel = 'gemini-2.0-flash-exp'; // Latest model
+}
+```
+
+**API Key Setup**:
+1. Get API key from https://makersuite.google.com/app/apikey
+2. Replace `YOUR_GEMINI_API_KEY` in `api_config.dart`
+3. The system will work with placeholder messages if API key is invalid
+
+**Smart Hybrid System** (90% Static + 10% AI):
+- **Static Messages (⚡)**: Instant responses for common scenarios
+- **Cached AI (🚀)**: Pre-generated AI responses stored locally
+- **Realtime AI (🤖)**: Live API calls for personalized experiences
+
+**Performance Optimization**:
+- Background message generation to avoid UI blocking
+- 24-hour cache validity for AI responses
+- Automatic fallback to static messages on API failure
+- Context-based AI usage criteria (only for valuable scenarios)
+
+**Smart AI Manager Decision Logic** (`lib/core/ai/smart_sherpi_manager.dart`):
+```dart
+// AI Usage Criteria (10% of interactions)
+final useAI = (
+  isSignificantMoment ||      // Level up, achievement unlock
+  isPersonalizedContext ||    // User-specific data available
+  hasLongUserHistory ||       // User has 30+ days of data
+  isComplexScenario ||        // Multiple context variables
+  isEmotionalMoment          // High emotional significance
+) && !isRepetitiveAction;    // Avoid AI for repetitive tasks
+```
+
+**Message Source Priority**:
+1. Check cache first (fastest, <50ms)
+2. Use static if no cache (instant, <5ms)
+3. Generate AI if criteria met (background, 2-5s)
+4. Always show something immediately (never block UI)
+
+#### 3. 10-Emotion System
+
+**Emotion States** (`lib/core/constants/sherpi_emotions.dart`):
+```dart
+enum SherpiEmotion {
+  defaults,    // 기본 표정 (sherpi_default.png)
+  happy,       // 기쁜 표정 (sherpi_happy.png)
+  sad,         // 슬픈 표정 (sherpi_sad.png)
+  surprised,   // 놀란 표정 (sherpi_surprised.png)
+  thinking,    // 생각하는 표정 (sherpi_thinking.png)
+  guiding,     // 안내하는 표정 (sherpi_guiding.png)
+  cheering,    // 응원하는 표정 (sherpi_cheering.png)
+  warning,     // 경고하는 표정 (sherpi_warning.png)
+  sleeping,    // 자는 표정 (sherpi_sleeping.png)
+  special      // 특별한 표정 (sherpi_special.png)
+}
+```
+
+**Image Mapping**: Each emotion maps to `assets/images/sherpi/sherpi_[emotion].png`
+
+**Context-to-Emotion Mapping**:
+- Quest completion → `cheering`
+- Exercise complete → `happy`
+- Level up → `special`
+- Tired warning → `warning`
+- Tutorial → `guiding`
+
+#### 4. Global Widget System
+
+**GlobalSherpiWidget** (`lib/shared/widgets/global_sherpi_widget.dart`):
+- **Position**: Bottom-right corner (right: 20, bottom: 100)
+- **Size**: 60x60 base, scales to 80x80 on interaction
+- **Animations**: Pulse (continuous), bounce (on emotion change), shake (on tap)
+- **Integration**: Added to `MainNavigationScreen` Stack
+
+**SherpiMessageCard** (`lib/shared/widgets/sherpi_message_card.dart`):
+- **Animation**: Slide-up entrance, fade-out exit
+- **Display Duration**: 3-5 seconds (configurable)
+- **Visual**: Emotion-based gradient backgrounds
+- **Metadata**: Shows message source (⚡🚀🤖) and response time
+
+#### 5. Automatic Reaction System
+
+**Trigger Points** (in `GlobalUserNotifier.handleActivityCompletion`):
+```dart
+// Automatic Sherpi reactions for different activities
+switch (activityType) {
+  case 'exercise':
+    _triggerSherpiReaction(SherpiContext.exerciseComplete, data);
+  case 'study':
+    _triggerSherpiReaction(SherpiContext.studyComplete, data);
+  case 'diary':
+    _triggerSherpiReaction(SherpiContext.diaryWritten, data);
+  case 'quest':
+    _triggerSherpiReaction(SherpiContext.questComplete, data);
+}
+```
+
+**3-Level Interaction Depth**:
+1. **Level 1**: Quick message card (3-5 seconds)
+2. **Level 2**: Expanded dialog with action buttons
+3. **Level 3**: Dedicated chat screen (future expansion)
+
+#### 6. Provider Integration
+
+**SherpiProvider** (`lib/shared/providers/global_sherpi_provider.dart`):
+```dart
+// Show instant message
+ref.read(sherpiProvider.notifier).showInstantMessage(
+  context: SherpiContext.levelUp,
+  customDialogue: 'Congratulations!',
+  emotion: SherpiEmotion.cheering,
+  duration: Duration(seconds: 4),
+);
+
+// Show AI-powered message
+ref.read(sherpiProvider.notifier).showMessage(
+  context: SherpiContext.questComplete,
+  userContext: {'questName': questTitle},
+  gameContext: {'level': userLevel},
+);
+```
+
+#### 7. Usage Examples
+
+**Basic Message Display**:
+```dart
+// In any widget with WidgetRef
+ref.read(sherpiProvider.notifier).showInstantMessage(
+  context: SherpiContext.encouragement,
+  customDialogue: '힘내세요! 조금만 더 하면 목표 달성이에요!',
+  emotion: SherpiEmotion.cheering,
+);
+```
+
+**Activity Completion with Sherpi**:
+```dart
+await ref.read(globalUserProvider.notifier).handleActivityCompletion(
+  activityType: 'exercise',
+  data: exerciseData,
+  points: 100,
+  xp: 50,
+); // Automatically triggers Sherpi reaction
+```
+
+**Custom Emotion Control**:
+```dart
+ref.read(sherpiProvider.notifier).setEmotion(SherpiEmotion.thinking);
+```
+
+#### 8. Common Issues and Solutions
+
+1. **Emotion Enum Conflicts & Deprecated Files**: 
+   - Old: `SherpaEmotion` (deprecated in `sherpa_character.dart`)
+   - New: `SherpiEmotion` (use this in all new code)
+   - Migration: Replace `celebrating`→`cheering`, `encouraging`→`cheering`, `worried`→`warning`
+   - **Deprecated Files** (kept for compatibility, do not use):
+     - `lib/shared/models/sherpa_character.dart` - Old emotion enum
+     - `lib/shared/widgets/sherpa_character_widget.dart` - Old widget system
+     - `lib/shared/widgets/sherpa_app_bar.dart` - Old app bar with Sherpi
+
+2. **Import Order Error**:
+   - Always import `sherpi_emotions.dart` before any enum usage
+   - File: `lib/core/constants/sherpi_dialogues.dart` has correct pattern
+
+3. **Widget Not Showing**:
+   - Check `MainNavigationScreen` includes `GlobalSherpiWidget` in Stack
+   - Verify `sherpiProvider` is initialized in `main.dart`
+
+4. **API Key Issues**:
+   - System works without valid API key (falls back to static messages)
+   - Check console for "Gemini API initialized successfully" message
+
+5. **Performance**:
+   - Messages are pre-cached in background
+   - UI never blocks on API calls
+   - Cache stored in `SharedPreferences` with 24-hour validity
+
+#### 9. Testing Sherpi System
+
+**Test Card Location**: `lib/features/home/presentation/widgets/sherpi_ai_test_card.dart`
+
+**Manual Testing**:
+```dart
+// Add to any screen for testing
+SherpiAITestCard() // Shows test controls and status
+```
+
+**Verify Integration**:
+1. Launch app - Sherpi should appear bottom-right
+2. Complete any activity - Message card should slide up
+3. Tap Sherpi - Should bounce and show dialog
+4. Check emotions change based on context
+
+#### 10. Future Expansion Ready
+
+The system is designed for future enhancements:
+- **Voice Integration**: Architecture supports TTS/STT addition
+- **Pattern Analysis**: User behavior tracking infrastructure ready
+- **Personalization**: Context system can accommodate user preferences
+- **Social Features**: Can share Sherpi states with friends
+- **Custom Animations**: Lottie integration points prepared
 
 ### Common Issues and Solutions
 

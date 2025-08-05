@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -152,6 +153,11 @@ class _SherpiAiTestCardState extends ConsumerState<SherpiAiTestCard> {
 
   @override
   Widget build(BuildContext context) {
+    // 🚨 DEBUG 모드에서만 표시 (Production에서는 숨김)
+    if (!kDebugMode) {
+      return const SizedBox.shrink();
+    }
+    
     return SherpaCard(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -252,6 +258,7 @@ class _SherpiAiTestCardState extends ConsumerState<SherpiAiTestCard> {
               ),
             ],
           ),
+          
           
           // 마지막 응답 표시
           if (_lastResponse != null) ...[
@@ -452,6 +459,7 @@ class _SherpiAiTestCardState extends ConsumerState<SherpiAiTestCard> {
       ),
     );
   }
+
 
   Widget _buildTestButton({
     required SherpiContext context,

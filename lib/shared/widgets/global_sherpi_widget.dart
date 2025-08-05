@@ -7,8 +7,13 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 
+// Features
+import '../../features/sherpi_chat/presentation/screens/sherpi_chat_screen.dart';
+
 // Shared
 import '../providers/global_sherpi_provider.dart';
+import '../../features/sherpi_relationship/providers/relationship_provider.dart';
+import '../../features/sherpi_relationship/presentation/widgets/intimacy_level_widget.dart';
 
 /// 🌟 전역 셰르피 위젯
 /// 
@@ -59,6 +64,14 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
 
   /// 셰르피 탭 이벤트 처리
   void _onSherpiTapped() async {
+    // 햅틱 피드백 추가
+    try {
+      // HapticFeedback.mediumImpact();
+      print("셰르피 터치됨"); // 햅틱 피드백 대신 로그
+    } catch (e) {
+      // 햅틱 피드백이 지원되지 않는 경우 무시
+    }
+    
     // 터치 피드백 애니메이션
     await _bounceController.forward();
     _bounceController.reset();
@@ -114,10 +127,11 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
     }
     
     return Positioned(
-      bottom: 80, // FloatingActionButton 위치보다 약간 위
-      right: 16,
+      bottom: 100, // 더 눈에 띄는 위치로 상향 조정
+      right: 20,   // 오른쪽 여백 증가
       child: GestureDetector(
         onTap: _onSherpiTapped,
+        onLongPress: () => _startShakeAnimation(), // 길게 눌러서 주의 끌기
         child: AnimatedBuilder(
           animation: Listenable.merge([
             _pulseController,
@@ -127,8 +141,8 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
           builder: (context, child) {
             return Transform.scale(
               scale: 1.0 + 
-                (_pulseController.value * 0.1) + // 맥동 효과
-                (_bounceController.value * 0.15), // 터치 피드백
+                (_pulseController.value * 0.15) + // 더 강한 맥동 효과 (0.1→0.15)
+                (_bounceController.value * 0.2),  // 더 강한 터치 피드백 (0.15→0.2)
               child: Transform.translate(
                 offset: Offset(
                   _shakeController.value * 10 * 
@@ -150,16 +164,21 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
     final emotionTheme = SherpiEmotionMapper.getThemeForEmotion(currentEmotion);
     
     return Container(
-      width: 60,
-      height: 60,
+      width: 76,   // 더 큰 크기로 조정 (기존 60→76)
+      height: 76,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: _getEmotionGradient(emotionTheme),
         boxShadow: [
           BoxShadow(
-            color: _getEmotionColor(emotionTheme).withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: _getEmotionColor(emotionTheme).withOpacity(0.4), // 더 진한 그림자
+            blurRadius: 16,  // 더 큰 블러 효과 (12→16)
+            offset: const Offset(0, 6),  // 더 깊은 그림자 (4→6)
+          ),
+          BoxShadow(
+            color: _getEmotionColor(emotionTheme).withOpacity(0.2),
+            blurRadius: 24,  // 추가 외부 그림자로 입체감 증가
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -170,13 +189,13 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
             child: ClipOval(
               child: Image.asset(
                 currentEmotion.imagePath,
-                width: 48,
-                height: 48,
+                width: 60,   // 이미지 크기도 증가 (48→60)
+                height: 60,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Icon(
                     Icons.face,
-                    size: 32,
+                    size: 40,   // 폴백 아이콘 크기도 증가
                     color: Colors.white,
                   );
                 },
@@ -190,19 +209,26 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
           // 메시지 알림 배지
           if (state.isVisible && state.dialogue.isNotEmpty)
             Positioned(
-              top: 2,
-              right: 2,
+              top: 4,   // 더 여유로운 위치
+              right: 4,
               child: Container(
-                width: 16,
-                height: 16,
+                width: 20,  // 더 큰 배지 (16→20)
+                height: 20,
                 decoration: BoxDecoration(
-                  color: Colors.red,
+                  color: AppColors.error,    // 앱 색상 시스템 사용
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.error.withOpacity(0.3),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: const Icon(
-                  Icons.chat,
-                  size: 8,
+                  Icons.notifications_active,  // 더 명확한 알림 아이콘
+                  size: 12,  // 아이콘 크기 증가 (8→12)
                   color: Colors.white,
                 ),
               )
@@ -211,6 +237,46 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
                 .then()
                 .shimmer(duration: 1000.ms, color: Colors.white.withValues(alpha: 0.5)),
             ),
+          
+          // 친밀도 레벨 배지
+          Consumer(
+            builder: (context, ref, child) {
+              final relationship = ref.watch(sherpiRelationshipProvider);
+              return Positioned(
+                bottom: 4,  // 더 여유로운 위치
+                right: 4,
+                child: Container(
+                  width: 22,   // 더 큰 친밀도 배지 (18→22)
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: _getIntimacyLevelColor(relationship.intimacyLevel),
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 1.5),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _getIntimacyLevelColor(relationship.intimacyLevel).withOpacity(0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${relationship.intimacyLevel}',
+                      style: const TextStyle(
+                        fontSize: 11,  // 텍스트 크기 증가 (9→11)
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          )
+          .animate()
+          .fadeIn(delay: 800.ms)
+          .scale(begin: const Offset(0.5, 0.5)),
           
           // 특별한 상황 이펙트
           if (currentEmotion == SherpiEmotion.special)
@@ -328,6 +394,34 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
         return Colors.grey;
     }
   }
+  
+  /// 친밀도 레벨별 색상 반환
+  Color _getIntimacyLevelColor(int level) {
+    switch (level) {
+      case 1:
+        return Colors.grey.shade400;
+      case 2:
+        return Colors.blue.shade300;
+      case 3:
+        return Colors.green.shade400;
+      case 4:
+        return Colors.orange.shade400;
+      case 5:
+        return Colors.purple.shade400;
+      case 6:
+        return Colors.pink.shade400;
+      case 7:
+        return Colors.red.shade400;
+      case 8:
+        return Colors.indigo.shade500;
+      case 9:
+        return Colors.amber.shade500;
+      case 10:
+        return Colors.deepPurple.shade600;
+      default:
+        return AppColors.primary;
+    }
+  }
 }
 
 /// 🎭 확장 대화 다이얼로그
@@ -340,12 +434,27 @@ class SherpiExpandedDialog extends ConsumerWidget {
     final currentEmotion = sherpiState.emotion;
     
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      backgroundColor: Colors.transparent,  // 투명 배경으로 커스텀 디자인
+      insetPadding: const EdgeInsets.all(20),  // 화면 여백
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 400, maxHeight: 600),
-        padding: const EdgeInsets.all(24),
+        constraints: const BoxConstraints(maxWidth: 420, maxHeight: 650),  // 더 큰 크기
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),  // 더 둥근 모서리
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 40,
+              offset: const Offset(0, 20),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(28),  // 더 넓은 패딩
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -353,14 +462,29 @@ class SherpiExpandedDialog extends ConsumerWidget {
             Row(
               children: [
                 Container(
-                  width: 64,
-                  height: 64,
+                  width: 80,   // 더 큰 아바타 (64→80)
+                  height: 80,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppColors.primary.withValues(alpha: 0.3),
-                      width: 2,
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primary.withOpacity(0.1),
+                        AppColors.primary.withOpacity(0.05),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
+                    border: Border.all(
+                      color: AppColors.primary.withOpacity(0.2),
+                      width: 3,  // 더 굵은 테두리
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withOpacity(0.2),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: ClipOval(
                     child: Image.asset(
@@ -369,7 +493,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 20),  // 더 넓은 간격 (16→20)
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -377,51 +501,82 @@ class SherpiExpandedDialog extends ConsumerWidget {
                       Text(
                         '셰르피와 함께해요!',
                         style: GoogleFonts.notoSans(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 22,    // 더 큰 타이틀 (20→22)
+                          fontWeight: FontWeight.w800,  // 더 굵은 폰트 (w700→w800)
                           color: AppColors.textPrimary,
                         ),
                       ),
                       Text(
                         _getEmotionDescription(currentEmotion),
                         style: GoogleFonts.notoSans(
-                          fontSize: 14,
+                          fontSize: 15,    // 더 큰 서브타이틀 (14→15)
+                          fontWeight: FontWeight.w500,  // 폰트 두께 추가
                           color: AppColors.textSecondary,
                         ),
                       ),
+                      const SizedBox(height: 4),
+                      // 친밀도 표시
+                      CompactIntimacyWidget(),
                     ],
                   ),
                 ),
               ],
             ),
             
-            const SizedBox(height: 24),
+            const SizedBox(height: 28),  // 더 넓은 간격 (24→28)
             
             // 현재 메시지 표시
             if (sherpiState.dialogue.isNotEmpty)
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),  // 더 넓은 패딩 (16→20)
                 decoration: BoxDecoration(
-                  color: AppColors.background.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.divider),
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.primary.withOpacity(0.05),
+                      AppColors.primary.withOpacity(0.02),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),  // 더 둥근 모서리 (12→16)
+                  border: Border.all(
+                    color: AppColors.primary.withOpacity(0.1),
+                    width: 1.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.08),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Text(
                   sherpiState.dialogue,
                   style: GoogleFonts.notoSans(
-                    fontSize: 16,
+                    fontSize: 17,     // 더 큰 메시지 텍스트 (16→17)
+                    fontWeight: FontWeight.w500,  // 폰트 두께 추가
                     color: AppColors.textPrimary,
-                    height: 1.5,
+                    height: 1.6,      // 더 넓은 줄 간격 (1.5→1.6)
                   ),
                 ),
               ),
             
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),  // 더 넓은 간격 (24→32)
             
             // 액션 버튼들
             Column(
               children: [
+                _buildActionButton(
+                  context,
+                  ref,
+                  icon: Icons.chat_bubble,
+                  title: '자세한 대화하기',
+                  subtitle: '셰르피와 깊이 있는 대화를 나눠보세요',
+                  onTap: () => _openChatScreen(context, ref),
+                ),
+                const SizedBox(height: 16),  // 더 넓은 버튼 간격 (12→16)
                 _buildActionButton(
                   context,
                   ref,
@@ -430,7 +585,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                   subtitle: '나의 패턴을 분석해보세요',
                   onTap: () => _showPatternAnalysis(context, ref),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),  // 더 넓은 버튼 간격 (12→16)
                 _buildActionButton(
                   context,
                   ref,
@@ -439,7 +594,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                   subtitle: '목표 달성을 위한 계획을 세워보세요',
                   onTap: () => _showPlanningMode(context, ref),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),  // 더 넓은 버튼 간격 (12→16)
                 _buildActionButton(
                   context,
                   ref,
@@ -492,27 +647,52 @@ class SherpiExpandedDialog extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),  // 더 넓은 패딩 (16→20)
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.divider),
+            borderRadius: BorderRadius.circular(16),  // 더 둥근 모서리 (12→16)
+            border: Border.all(
+              color: AppColors.primary.withOpacity(0.1),
+              width: 1.5,
+            ),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Row(
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 56,   // 더 큰 아이콘 컨테이너 (48→56)
+                height: 56,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.primary.withOpacity(0.15),
+                      AppColors.primary.withOpacity(0.08),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),  // 더 둥근 모서리 (12→16)
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withOpacity(0.1),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Icon(
                   icon,
                   color: AppColors.primary,
-                  size: 24,
+                  size: 28,   // 더 큰 아이콘 (24→28)
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: 20),  // 더 넓은 간격 (16→20)
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -520,16 +700,19 @@ class SherpiExpandedDialog extends ConsumerWidget {
                     Text(
                       title,
                       style: GoogleFonts.notoSans(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 17,    // 더 큰 타이틀 (16→17)
+                        fontWeight: FontWeight.w700,  // 더 굵은 폰트 (w600→w700)
                         color: AppColors.textPrimary,
                       ),
                     ),
+                    const SizedBox(height: 2),  // 타이틀과 서브타이틀 간격 추가
                     Text(
                       subtitle,
                       style: GoogleFonts.notoSans(
-                        fontSize: 14,
+                        fontSize: 15,    // 더 큰 서브타이틀 (14→15)
+                        fontWeight: FontWeight.w500,  // 폰트 두께 추가
                         color: AppColors.textSecondary,
+                        height: 1.3,     // 줄 간격 추가
                       ),
                     ),
                   ],
@@ -537,8 +720,8 @@ class SherpiExpandedDialog extends ConsumerWidget {
               ),
               Icon(
                 Icons.arrow_forward_ios,
-                size: 16,
-                color: AppColors.textSecondary,
+                size: 18,   // 더 큰 화살표 아이콘 (16→18)
+                color: AppColors.primary.withOpacity(0.6),  // 더 선명한 색상
               ),
             ],
           ),
@@ -573,6 +756,18 @@ class SherpiExpandedDialog extends ConsumerWidget {
     }
   }
   
+  /// 채팅 화면 열기
+  void _openChatScreen(BuildContext context, WidgetRef ref) {
+    Navigator.of(context).pop();
+    
+    // 채팅 화면으로 이동
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const SherpiChatScreen(),
+      ),
+    );
+  }
+
   /// 패턴 분석 표시
   void _showPatternAnalysis(BuildContext context, WidgetRef ref) {
     Navigator.of(context).pop();

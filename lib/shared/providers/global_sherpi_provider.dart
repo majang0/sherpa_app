@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/ai/smart_sherpi_manager.dart';
+import '../../features/sherpi_relationship/providers/relationship_provider.dart';
+import '../../features/sherpi_emotion/providers/emotion_analysis_provider.dart';
+import '../../features/sherpi_emotion/models/emotion_analysis_model.dart';
 
 enum SherpiDisplayMode {
   floating,      // 우하단 플로팅 (기본)
@@ -141,11 +144,78 @@ class SherpiState {
 class SherpiNotifier extends StateNotifier<SherpiState> {
   final SherpiDialogueSource _dialogueSource;
   final SmartSherpiManager _smartManager = SmartSherpiManager();
+  final Ref _ref;
   Timer? _hideTimer;
 
-  SherpiNotifier({SherpiDialogueSource? dialogueSource})
+  SherpiNotifier(this._ref, {SherpiDialogueSource? dialogueSource})
       : _dialogueSource = dialogueSource ?? StaticDialogueSource(),
-        super(const SherpiState()); // ✅ 기본값으로 cheering 상태 시작
+        super(const SherpiState()) {
+    // 친밀도 레벨 초기화
+    _updateIntimacyLevel();
+  }
+
+  /// 친밀도 레벨을 SmartSherpiManager에 업데이트
+  void _updateIntimacyLevel() {
+    try {
+      final relationship = _ref.read(sherpiRelationshipProvider);
+      _smartManager.setIntimacyLevel(relationship.intimacyLevel);
+    } catch (e) {
+      // 관계 프로바이더가 아직 초기화되지 않은 경우
+      print('🤝 관계 정보 로드 실패: $e');
+    }
+  }
+  
+  /// 상호작용 기록 및 친밀도 업데이트
+  void _recordInteraction(
+    SherpiContext context, 
+    Map<String, dynamic>? userContext,
+    Map<String, dynamic>? gameContext
+  ) {
+    try {
+      final notifier = _ref.read(sherpiRelationshipProvider.notifier);
+      
+      // 상호작용 타입 결정
+      String interactionType;
+      switch (context) {
+        case SherpiContext.exerciseComplete:
+          interactionType = 'exercise_complete';
+          break;
+        case SherpiContext.studyComplete:
+          interactionType = 'study_complete';
+          break;
+        case SherpiContext.questComplete:
+          interactionType = 'quest_complete';
+          break;
+        case SherpiContext.levelUp:
+          interactionType = 'level_up';
+          break;
+        case SherpiContext.climbingSuccess:
+          interactionType = 'climbing_success';
+          break;
+        case SherpiContext.dailyGreeting:
+          interactionType = 'daily_greeting';
+          break;
+        default:
+          interactionType = 'general';
+      }
+      
+      // 상호작용 기록
+      notifier.recordInteraction(
+        interactionType: interactionType,
+        context: {
+          'sherpiContext': context.name,
+          'userContext': userContext,
+          'gameContext': gameContext,
+        },
+      );
+      
+      // 친밀도 레벨 업데이트
+      _updateIntimacyLevel();
+      
+    } catch (e) {
+      print('🤝 상호작용 기록 실패: $e');
+    }
+  }
 
   @override
   void dispose() {
@@ -178,7 +248,21 @@ void initializeSherpi() {
   }) async {
     try {
       _hideTimer?.cancel();
-      final selectedEmotion = emotion ?? SherpiDialogueUtils.getRecommendedEmotion(context);
+      
+      // 🎭 감정 분석 및 추천 감정 가져오기
+      SherpiEmotion selectedEmotion;
+      if (emotion != null) {
+        selectedEmotion = emotion;
+      } else {
+        // 활동 완료 시 감정 분석 수행
+        if (_isActivityCompletionContext(context) && userContext != null) {
+          selectedEmotion = await _analyzeAndGetRecommendedEmotion(
+            context, userContext, gameContext
+          );
+        } else {
+          selectedEmotion = SherpiDialogueUtils.getRecommendedEmotion(context);
+        }
+      }
       
       // 🚀 스마트 매니저를 통한 지능적 메시지 선택
       final sherpiResponse = await _smartManager.getMessage(
@@ -201,6 +285,7 @@ void initializeSherpi() {
         'is_fast_response': sherpiResponse.isFastResponse,
         if (sherpiResponse.generationDuration != null)
           'generation_duration_ms': sherpiResponse.generationDuration!.inMilliseconds,
+        'emotion_analyzed': _isActivityCompletionContext(context),
       };
       
       state = state.copyWith(
@@ -213,6 +298,17 @@ void initializeSherpi() {
       );
       
       _logInteraction(context, selectedEmotion, sherpiResponse.message, enhancedMetadata);
+      
+      // 🤝 상호작용 기록 및 친밀도 업데이트
+      _recordInteraction(context, userContext, gameContext);
+      
+      // 💖 Sherpi 응답 기록 (감정 동기화를 위해)
+      _recordSherpiResponse(selectedEmotion);
+      
+      // 💕 감정 동기화 점수를 관계 시스템에 업데이트
+      if (_isActivityCompletionContext(context)) {
+        _updateRelationshipEmotionalSync();
+      }
       
       if (!forceShow) {
         _hideTimer = Timer(duration, () {
@@ -357,11 +453,130 @@ void initializeSherpi() {
       ) {
 
   }
+
+  /// 🎭 활동 완료 컨텍스트인지 확인
+  bool _isActivityCompletionContext(SherpiContext context) {
+    const activityContexts = [
+      SherpiContext.exerciseComplete,
+      SherpiContext.studyComplete,
+      SherpiContext.questComplete,
+      SherpiContext.climbingSuccess,
+      SherpiContext.levelUp,
+      SherpiContext.badgeEarned,
+      SherpiContext.achievement,
+    ];
+    return activityContexts.contains(context);
+  }
+
+  /// 🎭 감정 분석 후 추천 감정 반환
+  Future<SherpiEmotion> _analyzeAndGetRecommendedEmotion(
+    SherpiContext context,
+    Map<String, dynamic> userContext,
+    Map<String, dynamic>? gameContext,
+  ) async {
+    try {
+      final emotionNotifier = _ref.read(emotionAnalysisProvider.notifier);
+      
+      // 활동 타입 결정
+      String activityType;
+      bool isSuccess = true; // 기본값은 성공
+      
+      switch (context) {
+        case SherpiContext.exerciseComplete:
+          activityType = 'exercise';
+          break;
+        case SherpiContext.studyComplete:
+          activityType = 'study';
+          break;
+        case SherpiContext.questComplete:
+          activityType = 'quest';
+          break;
+        case SherpiContext.climbingSuccess:
+          activityType = 'climbing';
+          break;
+        case SherpiContext.levelUp:
+          activityType = 'level_up';
+          break;
+        case SherpiContext.badgeEarned:
+          activityType = 'badge';
+          break;
+        case SherpiContext.achievement:
+          activityType = 'achievement';
+          break;
+        default:
+          activityType = 'general';
+      }
+      
+      // 실패 여부 확인 (userContext에서)
+      isSuccess = userContext['isSuccess'] as bool? ?? true;
+      
+      // 연속 일수 추출
+      int consecutiveDays = 0;
+      switch (activityType) {
+        case 'exercise':
+          consecutiveDays = userContext['연속_운동일'] as int? ?? 0;
+          break;
+        case 'study':
+          consecutiveDays = userContext['연속_독서일'] as int? ?? 0;
+          break;
+        default:
+          consecutiveDays = userContext['연속_접속일'] as int? ?? 0;
+      }
+      
+      // 감정 분석 실행
+      final analysisResult = await emotionNotifier.analyzeUserEmotion(
+        activityType: activityType,
+        isSuccess: isSuccess,
+        consecutiveDays: consecutiveDays,
+        performanceData: userContext,
+      );
+      
+      // 추천 감정 반환
+      final recommendedEmotion = emotionNotifier.getRecommendedSherpiEmotion();
+      
+      print('🎭 감정 분석 완료: ${analysisResult.primaryEmotion.name} → ${recommendedEmotion.name}');
+      
+      return recommendedEmotion;
+      
+    } catch (e) {
+      print('🎭 감정 분석 실패: $e');
+      // 실패 시 기본 감정 반환
+      return SherpiDialogueUtils.getRecommendedEmotion(context);
+    }
+  }
+
+  /// 💖 Sherpi 응답 기록 (감정 동기화를 위해)
+  void _recordSherpiResponse(SherpiEmotion emotion) {
+    try {
+      final emotionNotifier = _ref.read(emotionAnalysisProvider.notifier);
+      emotionNotifier.recordSherpiResponse(emotion);
+    } catch (e) {
+      print('💖 Sherpi 응답 기록 실패: $e');
+    }
+  }
+
+  /// 💕 관계 시스템에 감정 동기화 점수 업데이트
+  void _updateRelationshipEmotionalSync() {
+    try {
+      final emotionState = _ref.read(emotionAnalysisProvider);
+      final relationshipNotifier = _ref.read(sherpiRelationshipProvider.notifier);
+      
+      // 감정 분석 시스템에서 계산된 동기화 점수를 관계 시스템에 적용
+      final syncScore = emotionState.emotionalSyncScore;
+      
+      if (syncScore > 0) {
+        relationshipNotifier.updateEmotionalSync(syncScore);
+        print('💕 감정 동기화 점수 업데이트: ${(syncScore * 100).toInt()}%');
+      }
+    } catch (e) {
+      print('💕 감정 동기화 점수 업데이트 실패: $e');
+    }
+  }
 }
 
 // ✅ 초기화 기능이 추가된 Provider
 final sherpiProvider = StateNotifierProvider<SherpiNotifier, SherpiState>((ref) {
-  final notifier = SherpiNotifier();
+  final notifier = SherpiNotifier(ref);
   // 앱 시작 시 자동으로 cheering 상태로 초기화
   /*
   Future.microtask(() => notifier.initializeSherpi());

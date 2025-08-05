@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+// Core
 import 'main_navigation_screen.dart';
 import 'core/constants/app_colors.dart';
-import 'features/climbing/providers/climbing_providers.dart';
-import 'shared/widgets/sherpi_widget.dart';
+
+// Providers
 import 'shared/providers/global_sherpi_provider.dart';
 import 'shared/providers/global_user_provider.dart';
 import 'shared/providers/global_point_provider.dart';
@@ -13,14 +15,17 @@ import 'shared/providers/global_user_title_provider.dart';
 import 'shared/providers/global_game_provider.dart';
 import 'shared/providers/global_meeting_provider.dart';
 import 'features/quests/providers/quest_provider_v2.dart';
+import 'features/sherpi_relationship/providers/relationship_provider.dart';
+import 'features/sherpi_emotion/providers/emotion_analysis_provider.dart';
+
+// Screens - Meetings
 import 'features/meetings/presentation/screens/meeting_detail_screen.dart';
 import 'features/meetings/presentation/screens/meeting_application_screen.dart';
 import 'features/meetings/presentation/screens/meeting_success_screen.dart';
 import 'features/meetings/presentation/screens/meeting_review_screen.dart';
 import 'features/meetings/presentation/screens/meeting_create_multi_step_screen.dart';
-import 'features/meetings/models/available_meeting_model.dart';
-import 'shared/models/global_user_model.dart'; // ExerciseLog를 위한 import
-// ✅ 일일 기록 화면 임포트
+
+// Screens - Daily Record
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
 import 'features/daily_record/presentation/screens/diary_write_edit_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_record_screen.dart';
@@ -29,8 +34,14 @@ import 'features/daily_record/presentation/screens/exercise_dashboard_screen.dar
 import 'features/daily_record/presentation/screens/exercise_detail_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_edit_screen.dart';
 import 'features/daily_record/presentation/screens/reading_record_screen.dart';
+
+// Screens - Shared
 import 'shared/presentation/screens/component_viewer_screen.dart';
 import 'shared/presentation/screens/meeting_list_all_screen.dart';
+
+// Models
+import 'features/meetings/models/available_meeting_model.dart';
+import 'shared/models/global_user_model.dart';
 
 
 // SharedPreferences Provider 초기화
@@ -48,6 +59,12 @@ void main() async {
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+        sherpiRelationshipProvider.overrideWith((ref) => 
+          SherpiRelationshipNotifier(sharedPreferences)
+        ),
+        emotionAnalysisProvider.overrideWith((ref) => 
+          EmotionAnalysisNotifier(sharedPreferences)
+        ),
       ],
       child: MyApp(),
     ),
@@ -184,8 +201,15 @@ class MyApp extends ConsumerWidget {
       // 6. 모임 시스템 초기화
       ref.read(globalMeetingProvider);
       
-      // 7. 셰르피 시스템 초기화 (마지막)
+      // 7. 셰르피 시스템 초기화
       ref.read(sherpiProvider);
+      
+      // 8. 셰르피 관계 시스템 초기화
+      ref.read(sherpiRelationshipProvider);
+      
+      // 9. 감정 분석 시스템 초기화
+      ref.read(emotionAnalysisProvider);
+      
       
     } catch (e) {
     }

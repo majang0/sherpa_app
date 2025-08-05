@@ -119,6 +119,31 @@ class AiMessageCache {
     
     return null; // 캐시 없음, 실시간 생성 필요
   }
+
+  /// 💾 개별 메시지 캐싱 (개인화 시스템용)
+  Future<void> cacheMessage(
+    SherpiContext context,
+    Map<String, dynamic> userContext,
+    String message, {
+    Duration? duration,
+  }) async {
+    try {
+      final cache = await _loadCache();
+      final cacheKey = userContext['cache_key'] as String? ?? 
+                      '${context.name}_${_getUserHash(userContext)}';
+      
+      cache[cacheKey] = CachedMessage(
+        message: message,
+        generatedAt: DateTime.now(),
+        userContext: userContext,
+      );
+      
+      await _saveCache(cache);
+      print('💾 개인화 메시지 캐싱 완료: $cacheKey');
+    } catch (e) {
+      print('❌ 메시지 캐싱 실패: $e');
+    }
+  }
   
   /// 🧹 만료된 캐시 정리
   Future<void> cleanExpiredCache() async {

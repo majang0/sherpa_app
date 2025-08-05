@@ -175,8 +175,8 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
     
     return Positioned(
       bottom: widget.bottomOffset,
-      left: 16,
-      right: 16,
+      left: 20,   // 더 넓은 여백으로 조정
+      right: 20,
       child: SlideTransition(
         position: _slideAnimation,
         child: FadeTransition(
@@ -203,23 +203,28 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
   ) {
     return Container(
       constraints: const BoxConstraints(
-        maxWidth: 350,
-        minHeight: 80,
+        maxWidth: 400,  // 더 넓은 카드 (350→400)
+        minHeight: 90,  // 더 높은 최소 높이 (80→90)
       ),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),  // 더 넓은 패딩 (16→20)
       decoration: BoxDecoration(
         gradient: _getThemeGradient(theme),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: _getThemeColor(theme).withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: _getThemeColor(theme).withOpacity(0.4),  // 더 진한 그림자
+            blurRadius: 16,  // 더 큰 블러 (12→16)
+            offset: const Offset(0, 6),  // 더 깊은 그림자 (4→6)
           ),
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.15),  // 더 진한 검은색 그림자
+            blurRadius: 12,  // 더 큰 블러 (8→12)
+            offset: const Offset(0, 4),  // 더 깊은 그림자 (2→4)
+          ),
+          BoxShadow(
+            color: _getThemeColor(theme).withOpacity(0.2),
+            blurRadius: 24,  // 추가 외곽 그림자로 입체감 증가
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -228,7 +233,7 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
           // 셰르피 아바타
           _buildSherpiAvatar(emotion),
           
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),  // 더 넓은 간격 (12→16)
           
           // 메시지 내용
           Expanded(
@@ -240,10 +245,10 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
                 Text(
                   state.dialogue,
                   style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 15,    // 더 큰 폰트 (14→15)
+                    fontWeight: FontWeight.w600,  // 더 굵은 폰트 (w500→w600)
                     color: Colors.white,
-                    height: 1.4,
+                    height: 1.5,     // 더 넓은 줄 간격 (1.4→1.5)
                   ),
                 ),
                 
@@ -267,8 +272,8 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
   /// 셰르피 아바타 위젯
   Widget _buildSherpiAvatar(SherpiEmotion emotion) {
     return Container(
-      width: 48,
-      height: 48,
+      width: 56,   // 더 큰 아바타 (48→56)
+      height: 56,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white.withValues(alpha: 0.2),
@@ -280,13 +285,13 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       child: ClipOval(
         child: Image.asset(
           emotion.imagePath,
-          width: 36,
-          height: 36,
+          width: 44,   // 더 큰 이미지 (36→44)
+          height: 44,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
             return Icon(
               Icons.face,
-              size: 24,
+              size: 30,   // 더 큰 폴백 아이콘 (24→30)
               color: Colors.white.withValues(alpha: 0.8),
             );
           },
