@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../shared/widgets/sherpa_app_bar.dart';
+import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/widgets/sherpa_card.dart';
 import '../../../../shared/providers/global_point_provider.dart';
 import '../../../../shared/providers/global_user_provider.dart';
@@ -18,9 +18,9 @@ class EnhancedPointShopScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: SherpaAppBar(
+      appBar: SherpaCleanAppBar(
         title: '포인트샵',
-        showSherpa: true,
+        backgroundColor: AppColors.background,
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 16),

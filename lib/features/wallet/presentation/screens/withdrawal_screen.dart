@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../shared/widgets/sherpa_app_bar.dart';
+import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/widgets/sherpa_card.dart';
 import '../../../../shared/models/point_system_model.dart';
 import '../../../../shared/providers/global_point_provider.dart';
@@ -49,9 +49,9 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: SherpaAppBar(
+      appBar: SherpaCleanAppBar(
         title: '포인트 출금',
-        showSherpa: true,
+        backgroundColor: AppColors.background,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
