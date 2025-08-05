@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -434,300 +435,452 @@ class SherpiExpandedDialog extends ConsumerWidget {
     final currentEmotion = sherpiState.emotion;
     
     return Dialog(
-      backgroundColor: Colors.transparent,  // 투명 배경으로 커스텀 디자인
-      insetPadding: const EdgeInsets.all(20),  // 화면 여백
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 420, maxHeight: 650),  // 더 큰 크기
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),  // 더 둥근 모서리
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.all(16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: 420,
+              maxHeight: MediaQuery.sizeOf(context).height * 0.85,
             ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 40,
-              offset: const Offset(0, 20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.white.withOpacity(0.95),
+                  Colors.white.withOpacity(0.85),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.3),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withOpacity(0.08),
+                  blurRadius: 30,
+                  offset: const Offset(0, 15),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 50,
+                  offset: const Offset(0, 25),
+                ),
+              ],
             ),
-          ],
-        ),
-        padding: const EdgeInsets.all(28),  // 더 넓은 패딩
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // 헤더 - 셰르피 이미지와 인사
-            Row(
-              children: [
-                Container(
-                  width: 80,   // 더 큰 아바타 (64→80)
-                  height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.primary.withOpacity(0.1),
-                        AppColors.primary.withOpacity(0.05),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // 헤더 섹션
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(28, 28, 28, 20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.primary.withOpacity(0.05),
+                          Colors.transparent,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        // 셰르피 아바타 with glassmorphism
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.white.withOpacity(0.9),
+                                Colors.white.withOpacity(0.7),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.5),
+                              width: 2,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withOpacity(0.15),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(3),
+                            child: ClipOval(
+                              child: Image.asset(
+                                currentEmotion.imagePath,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '셰르피와 함께해요!',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.textPrimary,
+                                  letterSpacing: -0.5,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                _getEmotionDescription(currentEmotion),
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.textSecondary.withOpacity(0.8),
+                                  letterSpacing: -0.2,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 8),
+                              CompactIntimacyWidget(),
+                            ],
+                          ),
+                        ),
                       ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    border: Border.all(
-                      color: AppColors.primary.withOpacity(0.2),
-                      width: 3,  // 더 굵은 테두리
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withOpacity(0.2),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ClipOval(
-                    child: Image.asset(
-                      currentEmotion.imagePath,
-                      fit: BoxFit.cover,
                     ),
                   ),
-                ),
-                const SizedBox(width: 20),  // 더 넓은 간격 (16→20)
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '셰르피와 함께해요!',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 22,    // 더 큰 타이틀 (20→22)
-                          fontWeight: FontWeight.w800,  // 더 굵은 폰트 (w700→w800)
-                          color: AppColors.textPrimary,
+                  
+                  // 컨텐츠 영역
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(28, 0, 28, 28),
+                    child: Column(
+                      children: [
+            
+                        // 현재 메시지 표시 - Glassmorphism card
+                        if (sherpiState.dialogue.isNotEmpty) ...[
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.7),
+                                  Colors.white.withOpacity(0.5),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.3),
+                                width: 1,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.primary.withOpacity(0.05),
+                                  blurRadius: 15,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.auto_awesome,
+                                      size: 20,
+                                      color: AppColors.primary.withOpacity(0.7),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '셰르피의 메시지',
+                                      style: GoogleFonts.notoSans(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.primary.withOpacity(0.8),
+                                        letterSpacing: -0.2,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  sherpiState.dialogue,
+                                  style: GoogleFonts.notoSans(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.textPrimary.withOpacity(0.9),
+                                    height: 1.6,
+                                    letterSpacing: -0.2,
+                                  ),
+                                  softWrap: true,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+            
+                        // 액션 버튼들 - Modern card design
+                        _buildModernActionButton(
+                          context,
+                          ref,
+                          icon: Icons.chat_bubble_outline,
+                          title: '자세한 대화하기',
+                          subtitle: '셰르피와 깊이 있는 대화를 나눠보세요',
+                          gradient: LinearGradient(
+                            colors: [Colors.blue.shade400, Colors.blue.shade600],
+                          ),
+                          onTap: () => _openChatScreen(context, ref),
                         ),
-                      ),
-                      Text(
-                        _getEmotionDescription(currentEmotion),
-                        style: GoogleFonts.notoSans(
-                          fontSize: 15,    // 더 큰 서브타이틀 (14→15)
-                          fontWeight: FontWeight.w500,  // 폰트 두께 추가
-                          color: AppColors.textSecondary,
+                        const SizedBox(height: 12),
+                        _buildModernActionButton(
+                          context,
+                          ref,
+                          icon: Icons.insights_outlined,
+                          title: '더 자세한 분석',
+                          subtitle: '나의 패턴을 분석해보세요',
+                          gradient: LinearGradient(
+                            colors: [Colors.purple.shade400, Colors.purple.shade600],
+                          ),
+                          onTap: () => _showPatternAnalysis(context, ref),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      // 친밀도 표시
-                      CompactIntimacyWidget(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 28),  // 더 넓은 간격 (24→28)
-            
-            // 현재 메시지 표시
-            if (sherpiState.dialogue.isNotEmpty)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),  // 더 넓은 패딩 (16→20)
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.primary.withOpacity(0.05),
-                      AppColors.primary.withOpacity(0.02),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),  // 더 둥근 모서리 (12→16)
-                  border: Border.all(
-                    color: AppColors.primary.withOpacity(0.1),
-                    width: 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withOpacity(0.08),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                        const SizedBox(height: 12),
+                        _buildModernActionButton(
+                          context,
+                          ref,
+                          icon: Icons.event_note_outlined,
+                          title: '계획 세우기',
+                          subtitle: '목표 달성을 위한 계획을 세워보세요',
+                          gradient: LinearGradient(
+                            colors: [Colors.orange.shade400, Colors.orange.shade600],
+                          ),
+                          onTap: () => _showPlanningMode(context, ref),
+                        ),
+                        const SizedBox(height: 12),
+                        _buildModernActionButton(
+                          context,
+                          ref,
+                          icon: Icons.favorite_outline,
+                          title: '격려 받기',
+                          subtitle: '힘이 되는 메시지를 들어보세요',
+                          gradient: LinearGradient(
+                            colors: [Colors.pink.shade400, Colors.pink.shade600],
+                          ),
+                          onTap: () => _showEncouragement(context, ref),
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // 닫기 버튼 - Modern style
+                        Container(
+                          width: double.infinity,
+                          height: 52,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.grey.shade200,
+                                Colors.grey.shade300,
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(16),
+                              onTap: () => Navigator.of(context).pop(),
+                              child: Center(
+                                child: Text(
+                                  '닫기',
+                                  style: GoogleFonts.notoSans(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey.shade700,
+                                    letterSpacing: -0.2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Text(
-                  sherpiState.dialogue,
-                  style: GoogleFonts.notoSans(
-                    fontSize: 17,     // 더 큰 메시지 텍스트 (16→17)
-                    fontWeight: FontWeight.w500,  // 폰트 두께 추가
-                    color: AppColors.textPrimary,
-                    height: 1.6,      // 더 넓은 줄 간격 (1.5→1.6)
                   ),
-                ),
-              ),
-            
-            const SizedBox(height: 32),  // 더 넓은 간격 (24→32)
-            
-            // 액션 버튼들
-            Column(
-              children: [
-                _buildActionButton(
-                  context,
-                  ref,
-                  icon: Icons.chat_bubble,
-                  title: '자세한 대화하기',
-                  subtitle: '셰르피와 깊이 있는 대화를 나눠보세요',
-                  onTap: () => _openChatScreen(context, ref),
-                ),
-                const SizedBox(height: 16),  // 더 넓은 버튼 간격 (12→16)
-                _buildActionButton(
-                  context,
-                  ref,
-                  icon: Icons.psychology,
-                  title: '더 자세한 분석',
-                  subtitle: '나의 패턴을 분석해보세요',
-                  onTap: () => _showPatternAnalysis(context, ref),
-                ),
-                const SizedBox(height: 16),  // 더 넓은 버튼 간격 (12→16)
-                _buildActionButton(
-                  context,
-                  ref,
-                  icon: Icons.calendar_today,
-                  title: '계획 세우기',
-                  subtitle: '목표 달성을 위한 계획을 세워보세요',
-                  onTap: () => _showPlanningMode(context, ref),
-                ),
-                const SizedBox(height: 16),  // 더 넓은 버튼 간격 (12→16)
-                _buildActionButton(
-                  context,
-                  ref,
-                  icon: Icons.favorite,
-                  title: '격려 받기',
-                  subtitle: '힘이 되는 메시지를 들어보세요',
-                  onTap: () => _showEncouragement(context, ref),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // 닫기 버튼
-            SizedBox(
-              width: double.infinity,
-              child: TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text(
-                  '닫기',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     )
       .animate()
-      .scale(begin: const Offset(0.8, 0.8))
-      .fade();
+      .scale(
+        begin: const Offset(0.95, 0.95),
+        curve: Curves.easeOutBack,
+        duration: 400.ms,
+      )
+      .fade(
+        curve: Curves.easeOut,
+        duration: 300.ms,
+      );
   }
   
-  /// 액션 버튼 위젯 구성
-  Widget _buildActionButton(
+  /// 모던 액션 버튼 위젯 구성 - Glassmorphism style
+  Widget _buildModernActionButton(
     BuildContext context,
     WidgetRef ref, {
     required IconData icon,
     required String title,
     required String subtitle,
+    required Gradient gradient,
     required VoidCallback onTap,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),  // 더 넓은 패딩 (16→20)
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),  // 더 둥근 모서리 (12→16)
-            border: Border.all(
-              color: AppColors.primary.withOpacity(0.1),
-              width: 1.5,
-            ),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withOpacity(0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+    return Container(
+      width: double.infinity,
+      height: 88,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.9),
+            Colors.white.withOpacity(0.7),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.3),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: gradient.colors.first.withOpacity(0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
-          child: Row(
-            children: [
-              Container(
-                width: 56,   // 더 큰 아이콘 컨테이너 (48→56)
-                height: 56,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.primary.withOpacity(0.15),
-                      AppColors.primary.withOpacity(0.08),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 30,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Row(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    gradient: gradient,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: gradient.colors.first.withOpacity(0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
                     ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(16),  // 더 둥근 모서리 (12→16)
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  icon,
-                  color: AppColors.primary,
-                  size: 28,   // 더 큰 아이콘 (24→28)
-                ),
-              ),
-              const SizedBox(width: 20),  // 더 넓은 간격 (16→20)
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.notoSans(
-                        fontSize: 17,    // 더 큰 타이틀 (16→17)
-                        fontWeight: FontWeight.w700,  // 더 굵은 폰트 (w600→w700)
-                        color: AppColors.textPrimary,
+                  child: Icon(
+                    icon,
+                    color: Colors.white,
+                    size: 26,
+                  ),
+                )
+                  .animate()
+                  .scale(
+                    delay: 100.ms,
+                    duration: 600.ms,
+                    curve: Curves.elasticOut,
+                  ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: GoogleFonts.notoSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
+                          letterSpacing: -0.3,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    const SizedBox(height: 2),  // 타이틀과 서브타이틀 간격 추가
-                    Text(
-                      subtitle,
-                      style: GoogleFonts.notoSans(
-                        fontSize: 15,    // 더 큰 서브타이틀 (14→15)
-                        fontWeight: FontWeight.w500,  // 폰트 두께 추가
-                        color: AppColors.textSecondary,
-                        height: 1.3,     // 줄 간격 추가
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: GoogleFonts.notoSans(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.textSecondary.withOpacity(0.8),
+                          height: 1.3,
+                          letterSpacing: -0.2,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 18,   // 더 큰 화살표 아이콘 (16→18)
-                color: AppColors.primary.withOpacity(0.6),  // 더 선명한 색상
-              ),
-            ],
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: gradient.colors.first.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: gradient.colors.first,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    );
+    )
+      .animate()
+      .fadeIn(delay: 200.ms, duration: 500.ms)
+      .slideX(begin: 0.1, end: 0, curve: Curves.easeOutCubic);
   }
   
   /// 감정 상태 설명 반환
