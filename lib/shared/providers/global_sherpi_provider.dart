@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/ai/smart_sherpi_manager.dart';
+import '../../core/ai/personalized_sherpi_manager.dart';
+import '../../core/ai/real_data_connector.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 import '../../features/sherpi_emotion/providers/emotion_analysis_provider.dart';
 import '../../features/sherpi_emotion/models/emotion_analysis_model.dart';
@@ -144,8 +147,11 @@ class SherpiState {
 
 class SherpiNotifier extends StateNotifier<SherpiState> {
   final SherpiDialogueSource _dialogueSource;
-  final SmartSherpiManager _smartManager = SmartSherpiManager();
+  late final PersonalizedSherpiManager _personalizedManager;
+  late final RealDataConnector _dataConnector;
+  final SmartSherpiManager _smartManager = SmartSherpiManager(); // Fallback for compatibility
   final Ref _ref;
+  bool _personalizedManagerInitialized = false;
   Timer? _hideTimer;
   
   // 메시지 히스토리 저장 (최대 50개)
@@ -154,16 +160,37 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
 
   SherpiNotifier(this._ref, {SherpiDialogueSource? dialogueSource})
       : _dialogueSource = dialogueSource ?? StaticDialogueSource(),
+        _dataConnector = RealDataConnector(_ref),
         super(const SherpiState()) {
+    // 개인화 매니저 초기화 (백그라운드에서)
+    _initializePersonalizedManager();
     // 친밀도 레벨 초기화
     _updateIntimacyLevel();
+  }
+  
+  /// 개인화 매니저 초기화
+  Future<void> _initializePersonalizedManager() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      _personalizedManager = PersonalizedSherpiManager(prefs);
+      _personalizedManagerInitialized = true;
+      print('🧠 개인화 매니저 초기화 완료');
+    } catch (e) {
+      print('🧠 개인화 매니저 초기화 실패: $e');
+      _personalizedManagerInitialized = false;
+    }
   }
 
   /// 친밀도 레벨을 SmartSherpiManager에 업데이트
   void _updateIntimacyLevel() {
     try {
       final relationship = _ref.read(sherpiRelationshipProvider);
-      _smartManager.setIntimacyLevel(relationship.intimacyLevel);
+      if (_personalizedManagerInitialized) {
+        // 개인화 매니저는 자동으로 관계 정보를 활용
+        print('🧠 개인화 매니저가 관계 정보를 자동 처리');
+      } else {
+        _smartManager.setIntimacyLevel(relationship.intimacyLevel);
+      }
     } catch (e) {
       // 관계 프로바이더가 아직 초기화되지 않은 경우
       print('🤝 관계 정보 로드 실패: $e');
@@ -269,12 +296,17 @@ void initializeSherpi() {
         }
       }
       
-      // 🚀 스마트 매니저를 통한 지능적 메시지 선택
-      final sherpiResponse = await _smartManager.getMessage(
-        context,
-        userContext,
-        gameContext,
+      // 🔌 실제 사용자 데이터 연결
+      final realUserContext = _dataConnector.buildRealUserContext(
+        context: context,
+        additionalData: userContext,
       );
+      final realGameContext = _dataConnector.buildRealGameContext();
+      
+      // 🧠 개인화된 스마트 매니저를 통한 지능적 메시지 선택
+      final sherpiResponse = _personalizedManagerInitialized 
+          ? await _personalizedManager.getMessage(context, realUserContext, realGameContext)
+          : await _smartManager.getMessage(context, realUserContext, realGameContext);
       
       final metadata = SherpiDialogueUtils.createContextData(
         context: context,
@@ -446,16 +478,36 @@ void initializeSherpi() {
       '최근 활동': '앱 사용 중',
     };
 
-    // 백그라운드에서 중요한 메시지들 사전 생성 시작
-    await _smartManager.startBackgroundCaching(
-      defaultUserContext,
-      defaultGameContext,
-    );
+    // 백그라운드에서 중요한 메시지들 사전 생성 시작  
+    if (_personalizedManagerInitialized) {
+      // 개인화 매니저의 백그라운드 캐싱은 자동으로 처리됨
+      print('🧠 개인화 매니저 백그라운드 프로세싱 활성화');
+    } else {
+      await _smartManager.startBackgroundCaching(
+        defaultUserContext,
+        defaultGameContext,
+      );
+    }
   }
 
   /// 📊 시스템 상태 조회
   Future<Map<String, dynamic>> getSystemStatus() async {
-    return await _smartManager.getSystemStatus();
+    if (_personalizedManagerInitialized) {
+      final personalizedStatus = await _personalizedManager.getPersonalizationStatus();
+      final systemStatus = await _smartManager.getSystemStatus();
+      
+      return {
+        ...systemStatus,
+        'personalization': personalizedStatus,
+        'personalizedManagerActive': true,
+      };
+    } else {
+      final systemStatus = await _smartManager.getSystemStatus();
+      return {
+        ...systemStatus,
+        'personalizedManagerActive': false,
+      };
+    }
   }
 
   void _logInteraction(
@@ -618,6 +670,36 @@ void initializeSherpi() {
   /// 🧹 메시지 히스토리 초기화
   void clearMessageHistory() {
     _messageHistory.clear();
+  }
+  
+  /// 💖 사용자 피드백 기록 (개인화 학습용)
+  Future<void> recordUserFeedback({
+    required String messageId,
+    required String feedbackType, // 'loved', 'liked', 'neutral', 'disliked', 'irrelevant'
+    Map<String, dynamic>? additionalData,
+  }) async {
+    if (_personalizedManagerInitialized) {
+      final feedbackEnum = UserFeedbackType.values.firstWhere(
+        (e) => e.name == feedbackType,
+        orElse: () => UserFeedbackType.neutral,
+      );
+      
+      await _personalizedManager.recordUserFeedback(
+        messageId,
+        feedbackEnum,
+        additionalData,
+      );
+      
+      print('💖 사용자 피드백 기록: $feedbackType');
+    }
+  }
+  
+  /// 🧠 개인화 시스템 상태 조회
+  Future<Map<String, dynamic>?> getPersonalizationStatus() async {
+    if (_personalizedManagerInitialized) {
+      return await _personalizedManager.getPersonalizationStatus();
+    }
+    return null;
   }
 }
 

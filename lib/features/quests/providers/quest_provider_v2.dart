@@ -110,8 +110,8 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       
       state = AsyncValue.data(_allQuests);
       
-      // 셰르피 환영 메시지
-      _showWelcomeSherpi();
+      // 💡 환영 메시지는 홈 화면에서만 표시되므로 여기서는 제거
+      // _showWelcomeSherpi(); // 중복 호출 방지
       
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
@@ -410,32 +410,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     }
   }
 
-  /// 셰르피 환영 메시지
-  void _showWelcomeSherpi() {
-    final hour = DateTime.now().hour;
-    final completableCount = _allQuests.where((q) => q.canComplete).length;
-    final claimableCount = _allQuests.where((q) => q.canClaim).length;
-    
-    SherpiContext context;
-    if (claimableCount > 0) {
-      context = SherpiContext.questComplete;
-    } else if (completableCount > 0) {
-      context = SherpiContext.encouragement;
-    } else if (hour < 12) {
-      context = SherpiContext.dailyGreeting;
-    } else {
-      context = SherpiContext.guidance;
-    }
-    
-    ref.read(sherpiProvider.notifier).showMessage(
-      context: context,
-      emotion: SherpiEmotion.cheering,
-      userContext: {
-        'completableQuests': completableCount,
-        'claimableQuests': claimableCount,
-      },
-    );
-  }
+  // 💡 _showWelcomeSherpi 메서드는 홈 화면으로 이동하여 중복 호출 방지
 
   /// 퀘스트 데이터 저장
   Future<void> _saveQuests() async {

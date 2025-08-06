@@ -25,6 +25,7 @@ import '../widgets/personalized_growth_dashboard_widget.dart';
 import '../widgets/university_guild_widget.dart';
 import '../widgets/growth_insights_widget.dart';
 import '../widgets/sherpi_ai_test_card.dart';
+import '../widgets/ai_test_widget.dart';
 
 // Models
 import '../../../../shared/models/global_user_model.dart';
@@ -319,6 +320,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             
             // 성장 인사이트 위젯 (새로운 시각적 위젯)
             GrowthInsightsWidget(),
+            const SizedBox(height: 20),
+            
+            // AI 테스트 위젯 (개발용)
+            const AITestWidget(),
             const SizedBox(height: 20),
             
             // 퀘스트 시스템 (V2)
