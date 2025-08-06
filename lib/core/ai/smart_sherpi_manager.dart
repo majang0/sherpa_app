@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/ai_message_cache.dart';
-import 'package:sherpa_app/core/ai/gemini_dialogue_source.dart';
+import 'package:sherpa_app/core/ai/enhanced_gemini_dialogue_source.dart';
 // Personalized smart sherpi manager removed
 
 // Add unawaited function for background operations
@@ -17,7 +17,7 @@ class SmartSherpiManager {
   // 개인화 매니저 제거됨
   final bool _usePersonalization = false;
   final AiMessageCache _cache = AiMessageCache();
-  final GeminiDialogueSource _geminiSource = GeminiDialogueSource();
+  final EnhancedGeminiDialogueSource _geminiSource = EnhancedGeminiDialogueSource();
   
   // 친밀도 레벨 (기본값 1)
   int _intimacyLevel = 1;

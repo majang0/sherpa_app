@@ -26,11 +26,11 @@ class BehaviorPatternAnalyzer {
       if (_cachedAnalysis != null && 
           _lastAnalysisTime != null &&
           DateTime.now().difference(_lastAnalysisTime!) < _analysisUpdateInterval) {
-        print('🔍 캐시된 행동 패턴 분석 결과 반환');
+        // 🔍 캐시된 행동 패턴 분석 결과 반환
         return _cachedAnalysis!;
       }
       
-      print('🔍 새로운 행동 패턴 분석 시작');
+      // 🔍 새로운 행동 패턴 분석 시작
       
       // 활동 이력 데이터 수집
       final activityHistory = await _collectActivityHistory();
@@ -80,7 +80,7 @@ class BehaviorPatternAnalyzer {
       return analysisResult;
       
     } catch (e) {
-      print('🔍 행동 패턴 분석 실패: $e');
+      // 🔍 행동 패턴 분석 실패: $e
       return _createFallbackAnalysis();
     }
   }
@@ -157,11 +157,11 @@ class BehaviorPatternAnalyzer {
         }
       }
       
-      print('📊 ${activities.length}개의 활동 기록 수집 완료');
+      // 📊 ${activities.length}개의 활동 기록 수집 완료
       return activities;
       
     } catch (e) {
-      print('📊 활동 이력 수집 실패: $e');
+      // 📊 활동 이력 수집 실패: $e
       return [];
     }
   }
@@ -276,11 +276,11 @@ class BehaviorPatternAnalyzer {
       final socialTriggers = _analyzeSocialMotivation();
       triggers.addAll(socialTriggers);
       
-      print('🎯 ${triggers.length}개의 동기 부여 트리거 식별');
+      // 🎯 ${triggers.length}개의 동기 부여 트리거 식별
       return triggers;
       
     } catch (e) {
-      print('🎯 동기 부여 트리거 분석 실패: $e');
+      // 🎯 동기 부여 트리거 분석 실패: $e
       return [];
     }
   }
@@ -489,10 +489,10 @@ class BehaviorPatternAnalyzer {
       _cachedAnalysis = null;
       _lastAnalysisTime = null;
       
-      print('📊 실시간 행동 패턴 업데이트: ${newActivity.type}');
+      // 📊 실시간 행동 패턴 업데이트: ${newActivity.type}
       
     } catch (e) {
-      print('📊 실시간 행동 패턴 업데이트 실패: $e');
+      // 📊 실시간 행동 패턴 업데이트 실패: $e
     }
   }
   
@@ -516,10 +516,10 @@ class BehaviorPatternAnalyzer {
       
       await _prefs.setStringList('realtime_activities', filteredActivities);
       
-      print('🧹 ${realtimeActivities.length - filteredActivities.length}개의 오래된 분석 데이터 정리');
+      // 🧹 ${realtimeActivities.length - filteredActivities.length}개의 오래된 분석 데이터 정리
       
     } catch (e) {
-      print('🧹 분석 데이터 정리 실패: $e');
+      // 🧹 분석 데이터 정리 실패: $e
     }
   }
   
@@ -1601,9 +1601,9 @@ class BehaviorPatternAnalyzer {
       await _prefs.setString('behavior_analysis_result', json.encode(resultJson));
       await _prefs.setString('behavior_analysis_timestamp', result.analysisTimestamp.toIso8601String());
       
-      print('🔍 행동 패턴 분석 결과 저장 완료');
+      // 🔍 행동 패턴 분석 결과 저장 완료
     } catch (e) {
-      print('🔍 분석 결과 저장 실패: $e');
+      // 🔍 분석 결과 저장 실패: $e
     }
   }
 }

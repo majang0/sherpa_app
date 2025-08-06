@@ -66,7 +66,7 @@ class ResponseQualityOptimizer {
       
       print('📊 응답 품질 최적화 시스템 초기화 완료');
     } catch (e) {
-      print('📊 최적화 데이터 로드 실패: $e');
+      // 📊 최적화 데이터 로드 실패: $e
       _initializeDefaults();
     }
   }
@@ -117,10 +117,10 @@ class ResponseQualityOptimizer {
       // 최적화 트리거 확인
       await _checkOptimizationTriggers(context, messageSource);
       
-      print('📈 메시지 품질 추적 완료: ${qualityScore.overallScore.toStringAsFixed(2)}');
+      // 📈 메시지 품질 추적 완료: ${qualityScore.overallScore.toStringAsFixed(2)}
       
     } catch (e) {
-      print('📈 메시지 품질 추적 실패: $e');
+      // 📈 메시지 품질 추적 실패: $e
     }
   }
   
@@ -156,7 +156,7 @@ class ResponseQualityOptimizer {
       return finalLevel;
       
     } catch (e) {
-      print('🎯 개인화 수준 최적화 실패: $e');
+      // 🎯 개인화 수준 최적화 실패: $e
       return PersonalizationLevel.medium; // 안전한 기본값
     }
   }
@@ -194,11 +194,11 @@ class ResponseQualityOptimizer {
       _cachedABTests![testId] = abTest;
       await _saveABTestResults();
       
-      print('🔄 A/B 테스트 시작: $testName');
+      // 🔄 A/B 테스트 시작: $testName
       return abTest;
       
     } catch (e) {
-      print('🔄 A/B 테스트 실행 실패: $e');
+      // 🔄 A/B 테스트 실행 실패: $e
       rethrow;
     }
   }
@@ -235,7 +235,7 @@ class ResponseQualityOptimizer {
       return insights;
       
     } catch (e) {
-      print('📊 성과 분석 실패: $e');
+      // 📊 성과 분석 실패: $e
       return {};
     }
   }
@@ -267,10 +267,10 @@ class ResponseQualityOptimizer {
       _cachedSettings = updatedSettings;
       await _saveOptimizationSettings();
       
-      print('🎛️ 최적화 설정 업데이트 완료');
+      // 🎛️ 최적화 설정 업데이트 완료
       
     } catch (e) {
-      print('🎛️ 최적화 설정 업데이트 실패: $e');
+      // 🎛️ 최적화 설정 업데이트 실패: $e
     }
   }
   
@@ -289,10 +289,10 @@ class ResponseQualityOptimizer {
       // 메모리 서비스와 동기화
       await _syncWithMemoryService();
       
-      print('🧹 데이터 정리 및 최적화 완료');
+      // 🧹 데이터 정리 및 최적화 완료
       
     } catch (e) {
-      print('🧹 데이터 정리 실패: $e');
+      // 🧹 데이터 정리 실패: $e
     }
   }
   
@@ -576,7 +576,7 @@ class ResponseQualityOptimizer {
   /// 최적화 실행
   Future<void> _executeOptimization(SherpiContext context, String messageSource) async {
     try {
-      print('🔧 최적화 실행: ${context.name}');
+      // 🔧 최적화 실행: ${context.name}
       
       // 성과가 낮은 원인 분석
       final analysisResult = await _analyzePerformanceIssues(context, messageSource);
@@ -587,10 +587,10 @@ class ResponseQualityOptimizer {
       // 설정 조정
       await _applyOptimizationStrategy(strategy, context);
       
-      print('🔧 최적화 완료: ${context.name} → ${strategy.name}');
+      // 🔧 최적화 완료: ${context.name} → ${strategy.name}
       
     } catch (e) {
-      print('🔧 최적화 실행 실패: $e');
+      // 🔧 최적화 실행 실패: $e
     }
   }
   
@@ -666,7 +666,7 @@ class ResponseQualityOptimizer {
       final json = jsonEncode(_cachedMetrics!.toJson());
       await _prefs.setString(_keyQualityMetrics, json);
     } catch (e) {
-      print('📊 품질 메트릭 저장 실패: $e');
+      // 📊 품질 메트릭 저장 실패: $e
     }
   }
   
@@ -675,7 +675,7 @@ class ResponseQualityOptimizer {
       final json = jsonEncode(_cachedSettings!.toJson());
       await _prefs.setString(_keyOptimizationSettings, json);
     } catch (e) {
-      print('🎛️ 최적화 설정 저장 실패: $e');
+      // 🎛️ 최적화 설정 저장 실패: $e
     }
   }
   
@@ -689,7 +689,7 @@ class ResponseQualityOptimizer {
       final json = jsonEncode(testsData);
       await _prefs.setString(_keyABTestResults, json);
     } catch (e) {
-      print('🔄 A/B 테스트 결과 저장 실패: $e');
+      // 🔄 A/B 테스트 결과 저장 실패: $e
     }
   }
   

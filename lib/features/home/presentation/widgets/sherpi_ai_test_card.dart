@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 // Core
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
-import '../../../../core/ai/gemini_dialogue_source.dart';
+import '../../../../core/ai/enhanced_gemini_dialogue_source.dart';
 
 // Shared
 import '../../../../shared/widgets/sherpa_card.dart';

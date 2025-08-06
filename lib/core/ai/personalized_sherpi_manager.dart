@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/ai_message_cache.dart';
-import 'package:sherpa_app/core/ai/gemini_dialogue_source.dart';
+import 'package:sherpa_app/core/ai/enhanced_gemini_dialogue_source.dart';
 import 'package:sherpa_app/core/ai/smart_sherpi_manager.dart';
 import 'package:sherpa_app/core/ai/user_profile_analyzer.dart';
 import 'package:sherpa_app/core/ai/context_synthesizer.dart';
@@ -65,7 +65,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
         _lastProfileUpdate = DateTime.parse(profileData['lastUpdate'] ?? DateTime.now().toIso8601String());
       }
     } catch (e) {
-      print('🧠 개인화 데이터 로드 실패: $e');
+      // 개인화 데이터 로드 실패: $e
       _currentProfile = UserPersonalizationProfile.createDefault();
     }
   }
@@ -79,7 +79,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
         await _prefs.setString(_personalizationKey, jsonEncode(profileData));
       }
     } catch (e) {
-      print('🧠 개인화 데이터 저장 실패: $e');
+      // 개인화 데이터 저장 실패: $e
     }
   }
   
@@ -141,9 +141,9 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
         _lastProfileUpdate = now;
         await _savePersonalizationData();
         
-        print('🧠 사용자 프로필 업데이트 완료: ${_currentProfile?.primaryPersonalityType}');
+        // 사용자 프로필 업데이트 완료
       } catch (e) {
-        print('🧠 프로필 업데이트 실패: $e');
+        // 프로필 업데이트 실패: $e
       }
     }
   }
@@ -232,17 +232,17 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
           final confidenceBonus = (behaviorAnalysis.confidenceScore - 0.6) * 0.3;
           optimizedScore = (optimizedScore + confidenceBonus).clamp(0.0, 1.0);
           
-          print('🔍 행동 패턴 분석 신뢰도 보너스: +${(confidenceBonus * 100).toInt()}%');
+          // 행동 패턴 분석 신뢰도 보너스 적용
         }
       } catch (e) {
-        print('🔍 행동 패턴 분석 실패, 기본 개인화 수준 유지: $e');
+        // 행동 패턴 분석 실패, 기본 개인화 수준 유지: $e
       }
       
-      print('🎯 최적화된 개인화 수준: ${context.name} → $optimizedLevel (${optimizedScore.toStringAsFixed(2)})');
+      // 최적화된 개인화 수준 계산 완료
       return optimizedScore;
       
     } catch (e) {
-      print('🎯 개인화 수준 최적화 실패, 기본 로직 사용: $e');
+      // 개인화 수준 최적화 실패, 기본 로직 사용: $e
       
       // 폴백: 기존 로직 사용
       double baseLevel = _getBasePersonalizationLevel(context);
@@ -291,7 +291,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
       );
       
       // Gemini API 호출
-      final geminiSource = GeminiDialogueSource();
+      final geminiSource = EnhancedGeminiDialogueSource();
       final aiMessage = await geminiSource.getDialogue(
         context,
         personalizedPrompt['userContext'],
@@ -337,7 +337,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
       
       return response;
     } catch (e) {
-      print('🧠 고도 개인화 응답 생성 실패: $e');
+      // 고도 개인화 응답 생성 실패: $e
       // 폴백: 중간 개인화 시도
       return await _getModeratelyPersonalizedResponse(context, userContext, gameContext);
     }
@@ -366,7 +366,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
       }
       
       // 새로운 개인화 응답 생성
-      final geminiSource = GeminiDialogueSource();
+      final geminiSource = EnhancedGeminiDialogueSource();
       final aiMessage = await geminiSource.getDialogue(
         context,
         personalizedPrompt['userContext'],
@@ -410,7 +410,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
       
       return response;
     } catch (e) {
-      print('🧠 중간 개인화 응답 생성 실패: $e');
+      // 중간 개인화 응답 생성 실패: $e
       // 폴백: 기본 SmartSherpiManager 로직
       return await super.getMessage(context, userContext, gameContext);
     }
@@ -442,7 +442,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
         }
       }
     } catch (e) {
-      print('🧠 개인화 캐시 확인 실패: $e');
+      // 개인화 캐시 확인 실패: $e
     }
     
     return null;
@@ -492,7 +492,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
       
       await _prefs.setStringList(historyKey, existingHistory);
     } catch (e) {
-      print('🧠 상호작용 학습 데이터 기록 실패: $e');
+      // 상호작용 학습 데이터 기록 실패: $e
     }
   }
   
@@ -537,9 +537,9 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
         );
       }
       
-      print('🎓 고급 상호작용 학습 완료: ${context.name}');
+      print('🧠 개인화 매니저 초기화 완료');
     } catch (e) {
-      print('🎓 고급 상호작용 학습 실패: $e');
+      // 고급 상호작용 학습 실패: $e
     }
   }
   
@@ -571,9 +571,9 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
         },
       );
       
-      print('📊 응답 품질 추적 완료: $messageId');
+      // 응답 품질 추적 완료
     } catch (e) {
-      print('📊 응답 품질 추적 실패: $e');
+      // 응답 품질 추적 실패: $e
     }
   }
   
@@ -634,7 +634,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
         _lastProfileUpdate = null; // 강제로 다음에 업데이트하도록
       }
     } catch (e) {
-      print('🧠 사용자 피드백 기록 실패: $e');
+      // 사용자 피드백 기록 실패: $e
     }
   }
   
@@ -687,7 +687,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
       );
       
     } catch (e) {
-      print('💡 사용자 선호도 학습 실패: $e');
+      // 사용자 선호도 학습 실패: $e
     }
   }
   
@@ -704,7 +704,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
         currentConditions: currentConditions,
       );
     } catch (e) {
-      print('🔮 최적 조건 예측 실패: $e');
+      // 최적 조건 예측 실패: $e
       return {'confidence': 0.0, 'recommendations': <String>[]};
     }
   }
@@ -714,7 +714,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
     try {
       return await _memoryService.getLearningStatistics();
     } catch (e) {
-      print('📊 학습 통계 조회 실패: $e');
+      // 학습 통계 조회 실패: $e
       return {};
     }
   }
@@ -724,7 +724,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
     try {
       return await _memoryService.generatePersonalizationInsights();
     } catch (e) {
-      print('💎 개인화 인사이트 생성 실패: $e');
+      // 개인화 인사이트 생성 실패: $e
       return {};
     }
   }
@@ -758,7 +758,7 @@ class PersonalizedSherpiManager extends SmartSherpiManager {
         ),
       };
     } catch (e) {
-      print('📈 종합 성과 분석 실패: $e');
+      // 종합 성과 분석 실패: $e
       return {'error': e.toString()};
     }
   }

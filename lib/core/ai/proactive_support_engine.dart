@@ -52,14 +52,14 @@ class ProactiveSupportEngine {
       
       print('🎯 선제적 지원 엔진 초기화 완료');
     } catch (e) {
-      print('🎯 선제적 지원 엔진 초기화 실패: $e');
+      // 🎯 선제적 지원 엔진 초기화 실패: $e
     }
   }
   
   /// 🧠 종합 지원 계획 생성
   Future<ProactiveSupportPlan> generateSupportPlan() async {
     try {
-      print('🧠 선제적 지원 계획 생성 시작');
+      // 🧠 선제적 지원 계획 생성 시작
       
       // 행동 패턴 분석
       final behaviorAnalysis = await _behaviorAnalyzer.analyzeBehaviorPatterns();
@@ -116,7 +116,7 @@ class ProactiveSupportEngine {
       return supportPlan;
       
     } catch (e) {
-      print('🧠 지원 계획 생성 실패: $e');
+      // 🧠 지원 계획 생성 실패: $e
       return _createFallbackSupportPlan();
     }
   }
@@ -454,10 +454,10 @@ class ProactiveSupportEngine {
         await _executeAction(action);
       }
       
-      print('🎯 선제적 지원 실행 완료: ${pendingActions.length}개 액션');
+      // 🎯 선제적 지원 실행 완료: ${pendingActions.length}개 액션
       
     } catch (e) {
-      print('🎯 선제적 지원 실행 실패: $e');
+      // 🎯 선제적 지원 실행 실패: $e
     }
   }
   
@@ -466,7 +466,7 @@ class ProactiveSupportEngine {
     try {
       // 실행 조건 확인
       if (!await _validateActionExecution(action)) {
-        print('🚀 액션 실행 조건 불충족: ${action.id}');
+        // 🚀 액션 실행 조건 불충족: ${action.id}
         return;
       }
       
@@ -504,10 +504,10 @@ class ProactiveSupportEngine {
       // 성과 추적
       await _trackActionPerformance(action);
       
-      print('🚀 액션 실행 완료: ${action.title}');
+      // 🚀 액션 실행 완료: ${action.title}
       
     } catch (e) {
-      print('🚀 액션 실행 실패: ${action.id} - $e');
+      // 🚀 액션 실행 실패: ${action.id} - $e
     }
   }
   
@@ -567,7 +567,7 @@ class ProactiveSupportEngine {
       );
       
     } catch (e) {
-      print('📊 지원 효과성 분석 실패: $e');
+      // 📊 지원 효과성 분석 실패: $e
       return SupportEffectivenessReport(
         reportId: 'error',
         generatedAt: DateTime.now(),
@@ -628,7 +628,7 @@ class ProactiveSupportEngine {
       return advice.take(5).toList(); // 최대 5개
       
     } catch (e) {
-      print('🎯 맞춤형 조언 생성 실패: $e');
+      // 🎯 맞춤형 조언 생성 실패: $e
       return [];
     }
   }
@@ -657,10 +657,10 @@ class ProactiveSupportEngine {
       // 학습 데이터 업데이트
       await _updateLearningData(action, effectivenessScore, userFeedback);
       
-      print('🔄 지원 계획 적응 완료: $actionId');
+      // 🔄 지원 계획 적응 완료: $actionId
       
     } catch (e) {
-      print('🔄 지원 계획 적응 실패: $e');
+      // 🔄 지원 계획 적응 실패: $e
     }
   }
   
@@ -681,10 +681,10 @@ class ProactiveSupportEngine {
       _executedActions.removeWhere((action) => 
         action.executedAt != null && action.executedAt!.isBefore(cutoffTime));
       
-      print('🧹 선제적 지원 엔진 정리 완료');
+      // 🧹 선제적 지원 엔진 정리 완료
       
     } catch (e) {
-      print('🧹 선제적 지원 엔진 정리 실패: $e');
+      // 🧹 선제적 지원 엔진 정리 실패: $e
     }
   }
   
@@ -705,7 +705,7 @@ class ProactiveSupportEngine {
         }
       }
     } catch (e) {
-      print('기존 지원 계획 로드 실패: $e');
+      // 기존 지원 계획 로드 실패: $e
     }
   }
   
@@ -717,7 +717,7 @@ class ProactiveSupportEngine {
       _currentSupportPlan = plan;
       _lastPlanUpdate = plan.createdAt;
     } catch (e) {
-      print('지원 계획 저장 실패: $e');
+      // 지원 계획 저장 실패: $e
     }
   }
   
@@ -914,27 +914,27 @@ class ProactiveSupportEngine {
   }
   
   Future<void> _sendProactiveNotification(ProactiveSupportAction action) async {
-    print('📱 알림 전송: ${action.title}');
+    // 📱 알림 전송: ${action.title}
   }
   
   Future<void> _provideGuidance(ProactiveSupportAction action) async {
-    print('🧭 가이드 제공: ${action.content}');
+    // 🧭 가이드 제공: ${action.content}
   }
   
   Future<void> _makeSuggestion(ProactiveSupportAction action) async {
-    print('💡 제안 전달: ${action.content}');
+    // 💡 제안 전달: ${action.content}
   }
   
   Future<void> _sendReminder(ProactiveSupportAction action) async {
-    print('⏰ 리마인더: ${action.content}');
+    // ⏰ 리마인더: ${action.content}
   }
   
   Future<void> _provideEncouragement(ProactiveSupportAction action) async {
-    print('🎉 격려 메시지: ${action.content}');
+    // 🎉 격려 메시지: ${action.content}
   }
   
   Future<void> _executeGenericAction(ProactiveSupportAction action) async {
-    print('⚙️ 일반 액션 실행: ${action.title}');
+    // ⚙️ 일반 액션 실행: ${action.title}
   }
   
   Future<void> _trackActionPerformance(ProactiveSupportAction action) async {

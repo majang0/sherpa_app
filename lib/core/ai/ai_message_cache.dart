@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
-import 'package:sherpa_app/core/ai/gemini_dialogue_source.dart';
+import 'package:sherpa_app/core/ai/enhanced_gemini_dialogue_source.dart';
 
 /// 📦 캐시된 메시지 데이터 구조
 class CachedMessage {
@@ -44,7 +44,7 @@ class AiMessageCache {
   static const String _cacheKey = 'ai_message_cache';
   static const Duration _cacheExpiry = Duration(days: 7); // 7일 후 만료
   
-  final GeminiDialogueSource _geminiSource = GeminiDialogueSource();
+  final EnhancedGeminiDialogueSource _geminiSource = EnhancedGeminiDialogueSource();
   
   /// 🔥 중요한 이벤트들 - AI가 필요한 특별한 순간들
   static const List<SherpiContext> _premiumContexts = [
