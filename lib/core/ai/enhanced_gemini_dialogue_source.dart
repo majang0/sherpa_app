@@ -27,7 +27,7 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
       print('🧠 Enhanced Gemini 모델 초기화 중... API Key: ${apiKey.substring(0, 10)}...');
       
       _model = GenerativeModel(
-        model: 'gemini-2.5-flash', // Latest Gemini model
+        model: 'gemini-2.5-flash', // Latest Gemini model as requested
         apiKey: apiKey,
         generationConfig: GenerationConfig(
           temperature: 0.75,       // 개인화를 위한 약간 높은 창의성
@@ -74,13 +74,41 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
         gameContext
       );
       
-      // AI 응답 생성
-      final content = [Content.text(personalizedPrompt)];
+      // AI 응답 생성 - 안전한 Content 처리
+      if (personalizedPrompt.isEmpty) {
+        print('⚠️ 빈 프롬프트 감지 - 정적 대화로 폴백');
+        return await _fallbackSource.getDialogue(context, userContext, gameContext);
+      }
+      
+      // 프롬프트 길이 제한 (Gemini API 제한 고려)
+      final trimmedPrompt = personalizedPrompt.length > 8000 
+          ? personalizedPrompt.substring(0, 8000)
+          : personalizedPrompt;
+      
+      final content = [Content.text(trimmedPrompt)];
       final response = await _model.generateContent(content);
       
-      if (response.text != null && response.text!.isNotEmpty) {
+      // 안전한 응답 텍스트 추출
+      String? responseText;
+      try {
+        responseText = response.text;
+      } catch (e) {
+        print('⚠️ 응답 텍스트 추출 실패: $e');
+        // candidates를 직접 확인해서 텍스트 추출 시도
+        if (response.candidates.isNotEmpty) {
+          final candidate = response.candidates.first;
+          if (candidate.content.parts.isNotEmpty) {
+            final part = candidate.content.parts.first;
+            if (part is TextPart) {
+              responseText = part.text;
+            }
+          }
+        }
+      }
+      
+      if (responseText != null && responseText.isNotEmpty) {
         final processedResponse = await _processEnhancedResponse(
-          response.text!, 
+          responseText, 
           context, 
           userContext
         );
@@ -93,7 +121,7 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
           userContext,
         );
         
-        print('✅ Enhanced Gemini 응답 생성 완료: ${processedResponse.substring(0, 30)}...');
+        print('✅ Enhanced Gemini 응답 생성 완료: ${processedResponse.length > 30 ? processedResponse.substring(0, 30) : processedResponse}...');
         return processedResponse;
       } else {
         print('⚠️ Enhanced Gemini 응답이 비어있습니다. 폴백 사용.');
@@ -102,6 +130,11 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
       
     } catch (e) {
       print('❌ Enhanced Gemini API 에러: $e');
+      if (e.toString().contains('FormatException')) {
+        print('🔧 Content 형식 에러 감지 - 정적 대화로 폴백');
+      } else if (e.toString().contains('API')) {
+        print('🌐 API 연결 문제 감지 - 정적 대화로 폴백');
+      }
       // 에러 발생 시 기존 정적 대화로 폴백
       return await _fallbackSource.getDialogue(context, userContext, gameContext);
     }
