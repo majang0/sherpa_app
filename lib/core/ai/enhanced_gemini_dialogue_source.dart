@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:sherpa_app/core/config/api_config.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
-import 'package:sherpa_app/core/ai/user_profile_analyzer.dart';
 
 /// 🧠 고도화된 Gemini AI 대화 소스
 /// 
@@ -186,8 +184,9 @@ $adaptedPrompt
       context.writeln('- 성격 유형: ${userContext!['personalityType']}');
       
       if (userContext['motivationTriggers'] != null) {
-        final triggers = (userContext['motivationTriggers'] as List).join(', ');
-        context.writeln('- 동기 부여 요소: $triggers');
+        final triggers = userContext['motivationTriggers'];
+        final triggersStr = triggers is List ? triggers.join(', ') : triggers.toString();
+        context.writeln('- 동기 부여 요소: $triggersStr');
       }
     }
     
@@ -512,7 +511,7 @@ $adaptedPrompt
     
     // 1. 길이 제한 (개인화를 위해 약간 더 긴 응답 허용)
     if (processed.length > 150) {
-      processed = processed.substring(0, 147) + '...';
+      processed = '${processed.substring(0, 147)}...';
     }
     
     // 2. 개인화된 부적절한 표현 필터링
@@ -580,7 +579,7 @@ $adaptedPrompt
     // 성격 유형별 이모지 선호도 고려
     final maxEmojis = personalityType == '사교형' ? 3 : 2;
     
-    final emojiRegex = RegExp(r'[\\u{1F600}-\\u{1F64F}]|[\\u{1F300}-\\u{1F5FF}]|[\\u{1F680}-\\u{1F6FF}]|[\\u{1F1E0}-\\u{1F1FF}]', unicode: true);
+    final emojiRegex = RegExp(r'[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]', unicode: true);
     final emojis = emojiRegex.allMatches(text);
     
     if (emojis.length > maxEmojis) {
