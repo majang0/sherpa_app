@@ -456,10 +456,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
       builder: (context, child) {
         return GestureDetector(
           onTap: () {
-            ref.read(sherpiProvider.notifier).showMessage(
-              context: SherpiContext.climbingStart,
-              emotion: SherpiEmotion.guiding,
-            );
+            // 셰르피 메시지 제거 - 등반 성공시에만 메시지 표시
             HapticFeedbackManager.lightImpact();
           },
           child: Container(

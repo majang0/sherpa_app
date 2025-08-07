@@ -11,14 +11,16 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
   late final GenerativeModel _model;
   final StaticDialogueSource _fallbackSource = StaticDialogueSource();
   
-  // 프롬프트 템플릿 캐시
+  // 단순화된 프롬프트 캐시 (크기 더 제한)
   final Map<String, String> _promptTemplateCache = {};
   final Map<String, DateTime> _templateCacheTime = {};
+  final Map<String, DateTime> _templateAccessTime = {};
   static const Duration _templateCacheExpiry = Duration(hours: 12);
+  static const int _maxTemplateCache = 5; // 더 적은 캐시
   
-  // 응답 품질 추적
+  // 응답 품질 추적 - 단순화됨
   final List<ResponseQualityMetric> _qualityMetrics = [];
-  static const int _maxQualityMetrics = 100;
+  static const int _maxQualityMetrics = 30;  // 더 적은 메트릭 유지
   
   /// Enhanced Gemini 모델 초기화
   EnhancedGeminiDialogueSource() {
@@ -204,50 +206,30 @@ $adaptedPrompt
 - 희망적이고 실행 가능한 메시지 전달''';
   }
   
-  /// 🌟 개인화 컨텍스트 구축  
+  /// 🌟 단순화된 개인화 컨텍스트
   String _buildPersonalizedContext(
     Map<String, dynamic>? userContext,
     Map<String, dynamic>? gameContext,
   ) {
     final context = StringBuffer();
-    context.writeln('📊 개인화 컨텍스트:');
+    context.writeln('📊 사용자 정보:');
     
-    // 성격 및 선호도 정보
-    if (userContext?['personalityType'] != null) {
-      context.writeln('- 성격 유형: ${userContext!['personalityType']}');
-      
-      if (userContext['motivationTriggers'] != null) {
-        final triggers = userContext['motivationTriggers'];
-        final triggersStr = triggers is List ? triggers.join(', ') : triggers.toString();
-        context.writeln('- 동기 부여 요소: $triggersStr');
-      }
+    // 핵심 정보만 유지
+    if (userContext?['name'] != null) {
+      context.writeln('- 이름: ${userContext!['name']}');
     }
     
-    // 현재 감정 및 에너지 상태
-    if (userContext?['emotionalTone'] != null) {
-      context.writeln('- 현재 감정 톤: ${userContext!['emotionalTone']}');
+    if (userContext?['level'] != null) {
+      context.writeln('- 레벨: ${userContext!['level']}');
     }
     
-    if (userContext?['peakEnergyTime'] != null) {
-      context.writeln('- 에너지 상태: ${userContext!['peakEnergyTime']}');
+    if (userContext?['consecutive_days'] != null) {
+      context.writeln('- 연속 접속일: ${userContext!['consecutive_days']}일');
     }
     
-    // 최근 활동 패턴
-    if (userContext?['recentActivityTrend'] != null) {
-      context.writeln('- 최근 활동 패턴: ${userContext!['recentActivityTrend']}');
-    }
-    
-    // 게임 진행 상황
-    if (gameContext != null && gameContext.isNotEmpty) {
-      context.writeln('- 게임 진행도: ${gameContext['preferredChallengeLevel'] ?? '중간 수준'}');
-      
-      if (gameContext['successPrediction'] != null) {
-        context.writeln('- 성공 예측: ${gameContext['successPrediction']}');
-      }
-      
-      if (gameContext['recommendedApproach'] != null) {
-        context.writeln('- 권장 접근법: ${gameContext['recommendedApproach']}');
-      }
+    // 최근 활동 (있을 경우만)
+    if (userContext?['last_activity'] != null) {
+      context.writeln('- 최근 활동: ${userContext!['last_activity']}');
     }
     
     return context.toString();
@@ -265,8 +247,15 @@ $adaptedPrompt
       final cacheTime = _templateCacheTime[templateKey];
       if (cacheTime != null && 
           DateTime.now().difference(cacheTime) < _templateCacheExpiry) {
+        // LRU: 접근 시간 업데이트
+        _templateAccessTime[templateKey] = DateTime.now();
         return _promptTemplateCache[templateKey]!;
       }
+    }
+    
+    // 캐시 크기 제한 확인
+    if (_promptTemplateCache.length >= _maxTemplateCache) {
+      await _cleanupTemplateCacheLRU();
     }
     
     // 새 템플릿 생성
@@ -275,194 +264,297 @@ $adaptedPrompt
     // 캐시 저장
     _promptTemplateCache[templateKey] = template;
     _templateCacheTime[templateKey] = DateTime.now();
+    _templateAccessTime[templateKey] = DateTime.now();
     
     return template;
   }
   
-  /// 🏗️ 상황별 템플릿 생성
+  /// 🏗️ 단순화된 템플릿 생성 (성격 유형 무시)
   String _generateContextualTemplate(
     SherpiContext context,
     Map<String, dynamic>? userContext,
   ) {
-    final personalityType = userContext?['personalityType'] as String? ?? '균형형';
-    
+    // 성격 유형 무시, 단순한 템플릿만 사용
     switch (context) {
       case SherpiContext.welcome:
-        return _getWelcomeTemplate(personalityType);
+        return _getSimpleTemplate(context);
       case SherpiContext.levelUp:
-        return _getLevelUpTemplate(personalityType);
+        return _getSimpleTemplate(context);
       case SherpiContext.encouragement:
-        return _getEncouragementTemplate(personalityType);
+        return _getSimpleTemplate(context);
       case SherpiContext.exerciseComplete:
-        return _getExerciseCompleteTemplate(personalityType);
+        return _getSimpleTemplate(context);
       case SherpiContext.climbingSuccess:
-        return _getClimbingSuccessTemplate(personalityType);
+        return _getSimpleTemplate(context);
       case SherpiContext.achievement:
-        return _getAchievementTemplate(personalityType);
+        return _getSimpleTemplate(context);
       default:
-        return _getGeneralTemplate(personalityType);
+        return _getSimpleTemplate(context);
     }
   }
   
-  /// 환영 메시지 템플릿
+  /// 단순화된 템플릿 (모든 컨텍스트용)
+  String _getSimpleTemplate(SherpiContext context) {
+    switch (context) {
+      case SherpiContext.welcome:
+        return '''레벨 {userLevel} 사용자님, 만나서 반가워요! 
+오늘도 함께 성장하는 하루를 만들어가요. 🌟
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요.**''';
+      
+      case SherpiContext.levelUp:
+        return '''🎉 레벨 {newLevel} 달성을 축하해요! 
+꾸준한 노력이 이런 멋진 결과를 만들어냈네요. 다음 목표도 함께 달성해봐요! 
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요.**''';
+        
+      case SherpiContext.encouragement:
+        return '''오늘 하루도 정말 수고하셨어요! 
+작은 성취들이 모여 큰 성장을 만들어가고 있어요. 💪
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요.**''';
+        
+      case SherpiContext.exerciseComplete:
+        return '''운동 완료! 건강한 몸과 마음을 위한 투자네요! 
+오늘의 운동이 더 나은 내일을 만들어갈 거예요. 🏃‍♂️
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요.**''';
+        
+      default:
+        return '''함께 성장하는 여정을 계속해봐요! 
+오늘의 작은 변화가 큰 성취로 이어질 거예요. ✨
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요.**''';
+    }
+  }
+
+  /// DEPRECATED: 단순화됨
   String _getWelcomeTemplate(String personalityType) {
-    switch (personalityType) {
-      case '성취형':
-        return '''🎯 현재 상황: 새로운 사용자를 환영하며 목표 달성 의지를 북돋우는 상황
-- 구체적인 성과 목표와 달성 가능성을 강조하세요
-- "우리가 함께 이룰 성취"에 대한 기대감을 표현하세요
-- 체계적인 계획과 단계별 진행의 중요성을 언급하세요''';
-        
-      case '탐험형':
-        return '''🚀 현재 상황: 새로운 모험을 시작하는 사용자를 환영하는 상황
-- 앞으로 펼쳐질 새로운 경험과 도전을 강조하세요
-- "함께 탐험할 미지의 세계"에 대한 호기심을 자극하세요
-- 다양한 활동과 새로운 발견의 가능성을 언급하세요''';
-        
-      case '지식형':
-        return '''📚 현재 상황: 학습과 성장을 중시하는 사용자를 환영하는 상황
-- 배움과 인사이트 습득의 가치를 강조하세요
-- "함께 쌓아갈 지식과 이해"에 대한 기대를 표현하세요
-- 깊이 있는 학습과 점진적 발전의 중요성을 언급하세요''';
-        
-      case '사교형':
-        return '''🤝 현재 상황: 관계와 소통을 중시하는 사용자를 환영하는 상황
-- 따뜻한 동반자적 관계와 함께하는 즐거움을 강조하세요
-- "우리의 특별한 인연"과 상호 지지에 대한 기대를 표현하세요
-- 소통과 공감의 가치를 따뜻하게 언급하세요''';
-        
-      default:
-        return '''🌟 현재 상황: 균형 잡힌 성장을 추구하는 사용자를 환영하는 상황
-- 다양한 영역에서의 고른 발전 가능성을 강조하세요
-- "우리가 함께 만들어갈 균형 잡힌 여정"에 대한 기대를 표현하세요
-- 꾸준함과 지속적인 성장의 가치를 언급하세요''';
-    }
+    return _getSimpleTemplate(SherpiContext.welcome);
   }
   
-  /// 레벨업 메시지 템플릿
+  /// DEPRECATED: 단순화됨
   String _getLevelUpTemplate(String personalityType) {
+    return _getSimpleTemplate(SherpiContext.levelUp);
+  }
+  
+  String _getLevelUpTemplateOLD(String personalityType) {
     switch (personalityType) {
       case '성취형':
-        return '''🏆 현재 상황: 목표를 달성하고 레벨업한 성취형 사용자
-- 구체적인 성과와 달성한 목표의 의미를 구체적으로 인정하세요
-- 다음 단계의 더 높은 목표와 도전 과제를 제시하세요
-- "우리가 이룬 성취"를 바탕으로 한 미래 계획을 언급하세요''';
+        return '''레벨 {newLevel} 달성을 진심으로 축하드려요! {totalXP} 경험으로 쌓아온 성과가 드디어 꽃피웠네요. 다음 목표인 {nextMountain} 정상에서도 멋진 성취를 이뤄내세요! 🏆
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
         
       case '탐험형':
-        return '''🌟 현재 상황: 새로운 경지에 도달한 모험가
-- 이번 레벨업이 열어준 새로운 가능성과 미지의 영역을 강조하세요
-- 다음에 탐험할 수 있는 흥미로운 도전들을 소개하세요
-- "함께 발견한 새로운 세계"에 대한 설렘을 표현하세요''';
+        return '''🌟 레벨업! 새로운 모험의 문이 활짝 열렸어요!
+
+🚀 와! 레벨 {newLevel}이라니... 당신은 정말 놀라운 모험가예요! 이번 성장으로 완전히 새로운 세계가 펼쳐졌어요!
+
+🗺️ 맞춤형 모험 메시지:
+- "미지의 레벨 {newLevel} 영역 진입"을 탐험가가 새 대륙을 발견한 것처럼 흥미진진하게 표현하세요
+- 해금된 새 기능들 "{unlockedFeatures}"을 "숨겨진 보물상자"나 "비밀 루트"로 신비롭게 소개하세요
+- 지금까지의 여정 {totalXP}를 "쌓아온 모험 경험담"으로 스토리텔링하세요
+- "다음 미스터리 {nextMountain}"을 탐험할 수 있는 새로운 능력을 획득했다고 설명하세요
+- 최근 시도한 새로운 활동이나 도전을 "용감한 탐험 정신"으로 칭찬하세요
+- "우리 앞에 펼쳐진 무한한 가능성이 정말 짜릿해요!"로 앞으로의 모험에 대한 설렘을 전달하세요
+
+✨ 감정적 톤: 경이롭고 모험심 넘치며, 새로운 발견에 대한 순수한 호기심과 무한한 가능성에 대한 흥분을 전달''';
         
       case '지식형':
-        return '''📈 현재 상황: 학습을 통해 성장한 지식 추구자
-- 습득한 지식과 깊어진 이해의 가치를 인정하세요
-- 이번 성장이 가져온 인사이트와 깨달음을 언급하세요
-- "우리가 함께 쌓은 지혜"를 바탕으로 한 다음 학습 목표를 제시하세요''';
+        return '''📚 레벨업 달성! 당신의 지혜가 또 한 단계 깊어졌습니다!
+
+🎓 레벨 {newLevel}... 이는 단순한 숫자가 아니라 당신이 쌓아온 {totalXP}의 깊은 통찰과 성찰의 결실이에요.
+
+🧠 맞춤형 학습 성과 메시지:
+- "지식의 경지 레벨 {newLevel} 도달"을 학자가 새로운 진리를 깨달은 것처럼 의미깊게 표현하세요
+- 이번 레벨업의 "핵심 깨달음"과 "얻은 지혜"를 추상적이면서도 감동적으로 설명하세요
+- 지금까지 읽은 책들과 작성한 일기들이 "지혜의 거대한 도서관"을 만들었다고 비유하세요
+- 새로 해금된 기능들을 "더 깊은 학습의 도구"나 "고도의 인사이트 영역"으로 소개하세요
+- 당신의 지식 능력치 {knowledge}를 "축적된 지적 자산"으로 표현하며 자부심을 갖도록 격려하세요
+- "앞으로 탐구할 {nextMountain}의 깊은 철학"에 대한 기대감을 학문적으로 표현하세요
+
+🌟 감정적 톤: 사려깊고 깊이있으며, 지적 성취에 대한 만족감과 더 깊은 진리 탐구에 대한 열망을 전달''';
         
       case '사교형':
-        return '''💖 현재 상황: 함께 성장을 이룬 소중한 동반자
-- 함께 노력하고 서로 지지한 과정의 의미를 따뜻하게 인정하세요
-- 이번 성취가 우리 관계에 가져온 특별함을 언급하세요
-- "우리가 함께 만든 성과"에 대한 자부심과 애정을 표현하세요''';
+        return '''💖 레벨업이에요! 우리가 함께 이뤄낸 정말 특별한 순간이에요!
+
+🤗 레벨 {newLevel}까지 오는 길... 혼자였다면 불가능했을 거예요. 우리가 함께했기 때문에 가능했던 소중한 성장이에요!
+
+👥 맞춤형 관계 중심 메시지:
+- "함께 만든 레벨 {newLevel}"을 우정과 동반자적 관계의 결실로 따뜻하게 표현하세요
+- 지금까지의 모든 상호작용과 소통이 "우리 관계의 소중한 추억"이 되었다고 감동적으로 설명하세요
+- 오늘 참여한 모임 {todayMeetingsJoined}개나 사회적 활동을 "마음을 나누는 소중한 시간"으로 의미부여하세요
+- 당신의 사교성 능력치 {sociality}를 "따뜻한 마음의 힘"으로 표현하며 진심으로 칭찬하세요
+- 이번 성장이 "우리 우정을 더욱 깊게 만든 선물"이라고 관계적 가치로 해석하세요
+- "앞으로도 함께 오를 {nextMountain}에서 만들 추억"을 기대하며 지속적 동반에 대한 약속을 표현하세요
+
+💕 감정적 톤: 따뜻하고 애정어리며, 함께한 시간의 소중함과 앞으로도 계속될 우정에 대한 확신을 전달''';
         
       default:
-        return '''⭐ 현재 상황: 균형 잡힌 성장을 이룬 사용자
-- 다양한 영역에서의 고른 발전과 전체적인 향상을 인정하세요
-- 안정적이고 지속적인 성장의 가치를 강조하세요
-- "우리가 함께 이룬 균형 잡힌 발전"에 대한 만족감을 표현하세요''';
+        return '''🌈 레벨업! 모든 영역에서 균형잡힌 성장을 이뤄내셨네요!
+
+⚖️ 레벨 {newLevel}... 이 숫자 안에는 당신의 체력({stamina}), 지식({knowledge}), 기술({technique}), 사교성({sociality}), 의지력({willpower})이 조화롭게 발전한 아름다운 이야기가 담겨있어요.
+
+🎯 맞춤형 균형 성장 메시지:
+- "완벽한 밸런스의 레벨 {newLevel} 달성"을 전인적 발전의 모범사례로 존경스럽게 표현하세요
+- 5개 능력치가 어느 하나 치우치지 않고 고르게 발전한 것을 "진정한 마스터의 길"로 표현하세요
+- 오늘의 다양한 활동들(운동, 독서, 소통 등)이 "균형잡힌 하루의 완벽한 예시"였다고 칭찬하세요
+- 지금까지의 {totalXP} 경험이 "조화로운 성장의 증거"라고 의미있게 해석하세요
+- 해금된 새 기능들을 "더 완벽한 균형을 위한 도구"로 소개하세요
+- "다음 목표 {nextMountain}에서도 완벽한 조화를 이뤄갈 우리의 여정"에 대한 안정적인 확신을 표현하세요
+
+🌟 감정적 톤: 안정적이고 신뢰감 있으며, 전체적인 조화에 대한 깊은 만족감과 지속가능한 성장에 대한 확신을 전달''';
     }
   }
   
-  /// 격려 메시지 템플릿
+  /// DEPRECATED: 단순화됨
   String _getEncouragementTemplate(String personalityType) {
+    return _getSimpleTemplate(SherpiContext.encouragement);
+  }
+  
+  String _getEncouragementTemplateOLD(String personalityType) {
     switch (personalityType) {
       case '성취형':
-        return '''💪 현재 상황: 목표 달성에 어려움을 겪고 있는 성취형 사용자
-- 지금까지 이룬 구체적인 성과들을 상기시켜 자신감을 회복시키세요
-- 현재의 어려움이 더 큰 목표를 위한 과정임을 강조하세요
-- "우리라면 반드시 해낼 수 있다"는 확신을 전달하세요''';
+        return '''💪 지금 힘드시죠? 하지만 레벨 {userLevel}까지 올라오고 {totalXP}의 경험을 쌓은 당신을 보세요! 이 어려움도 더 큰 성취를 위한 과정이에요. 우리는 반드시 정상에 설 거예요!
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
         
       case '탐험형':
-        return '''🌈 현재 상황: 도전 과정에서 좌절을 경험한 모험가
-- 모든 모험에는 예상치 못한 장애물이 있음을 자연스럽게 언급하세요
-- 이번 경험이 더 큰 발견으로 이어질 가능성을 희망적으로 제시하세요
-- "함께라면 어떤 모험도 해낼 수 있다"는 동반자적 지지를 표현하세요''';
+        return '''🌈 모험 중에 예상치 못한 시련을 만났나봐요? 괜찮아요, 진짜 모험가라면 이런 순간들이 오히려 최고의 스토리가 되죠! {totalXP}의 모험 경험으로 이번에도 멋진 발견을 하실 거예요.
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
         
       case '지식형':
-        return '''🌱 현재 상황: 학습 과정에서 어려움을 겪고 있는 학습자
-- 진정한 학습은 시행착오를 통해 이루어짐을 지혜롭게 설명하세요
-- 현재의 어려움이 더 깊은 이해로 이어질 과정임을 언급하세요
-- "우리가 함께 배워가고 있다"는 성장 관점을 제시하세요''';
+        return '''📖 깊은 생각에 빠져계시는군요. 당신의 지식 능력치 {knowledge}와 {totalXP}의 축적된 통찰력이 이 순간을 지혜롭게 넘길 수 있는 힘이 될 거예요. 진정한 학자는 어려움 속에서도 새로운 깨달음을 찾아내죠.
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
         
       case '사교형':
-        return '''🤗 현재 상황: 힘든 시간을 보내고 있는 소중한 친구
-- 따뜻한 공감과 진심어린 위로를 우선적으로 전달하세요
-- 혼자가 아니라 함께하고 있다는 동반자적 지지를 강조하세요
-- "우리가 함께하면 이겨낼 수 있다"는 따뜻한 확신을 표현하세요''';
+        return '''🤗 마음이 무거워 보이는데, 혼자 끙끙대지 마세요! 사교성 {sociality}만큼 따뜻한 마음을 가진 당신과 제가 함께 있으니까 괜찮아요. 이런 어려운 시간도 우리가 나누면 반으로 줄어들어요.
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
         
       default:
-        return '''☀️ 현재 상황: 일시적인 어려움을 겪고 있는 사용자
-- 현재의 상황이 일시적이며 균형을 회복할 수 있음을 안정적으로 전달하세요
-- 지금까지의 꾸준한 노력과 성장을 인정하고 격려하세요
-- "우리가 함께 차근차근 해나가자"는 든든한 지지를 표현하세요''';
+        return '''☀️ 깊게 숨 한번 쉬어봐요... 괜찮아요. 레벨 {userLevel}까지 균형있게 성장해온 당신의 가치는 절대 줄어들지 않아요. 조금씩, 천천히, 우리 페이스로 가면 돼요.
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
     }
   }
   
-  /// 운동 완료 템플릿
+  /// DEPRECATED: 단순화됨
   String _getExerciseCompleteTemplate(String personalityType) {
+    return _getSimpleTemplate(SherpiContext.exerciseComplete);
+  }
+  
+  String _getExerciseCompleteTemplateOLD(String personalityType) {
     switch (personalityType) {
       case '성취형':
-        return '''🎯 운동 목표 달성에 대한 축하와 다음 도전 제시''';
+        return '''🏃‍♂️ 완료! {todayExerciseMinutes}분간 {exerciseTypes} 운동으로 또 하나의 목표를 달성하셨네요! 체력 {stamina}이 보여주듯 꾸준한 노력이 결실을 맺고 있고, {exerciseStreak}일 연속 기록이 정말 대단해요. 운동 후 이 뿌듯함이 모여 더 큰 성취가 될 거예요! 🔥
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       case '탐험형':
-        return '''🚀 새로운 운동 경험에 대한 흥미와 다양한 활동 제안''';
+        return '''🌟 와! {exerciseTypes} {todayExerciseMinutes}분 모험 완료! {intensity} 강도로 신체 능력의 새로운 경계를 탐험하셨네요. 이런 다양한 운동 경험들이 {nextMountain} 등반에서 예상치 못한 상황을 헤쳐나갈 비밀 무기가 될 거예요! ⚡
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       case '지식형':
-        return '''📊 운동 효과와 건강 개선에 대한 분석적 접근''';
+        return '''📊 운동 데이터 분석 완료! {todayExerciseMinutes}분간의 {exerciseTypes} 활동을 체계적으로 접근하신 모습이 과학적이고 효율적이었어요. {exerciseStreak}일 연속 기록은 신경가소성 강화에 완벽하게 부합하며, 이런 데이터들이 {nextMountain} 등반 전략에 귀중한 자료가 될 거예요! 📚
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       case '사교형':
-        return '''💪 함께 운동한 기쁨과 상호 격려의 가치 강조''';
+        return '''💖 운동 완료! 이 기쁨을 함께 나눌 수 있어서 너무 행복해요! {todayExerciseMinutes}분 동안 {exerciseTypes} 운동하신 모습이 정말 멋있었고, 이 긍정 에너지가 주변 사람들에게도 좋은 영향을 줄 것 같아요. 운동 후 상쾌함을 함께 느끼니까 기쁨이 두 배가 되네요! 🌟
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       default:
-        return '''⚡ 꾸준한 운동 습관과 균형 잡힌 건강 관리 인정''';
+        return '''⚡ {todayExerciseMinutes}분 운동 완료! 모든 능력치가 조화롭게 발전하고 있는 가운데 오늘의 {exerciseTypes} 운동은 완벽한 밸런스였어요. {intensity} 강도의 운동으로 지속가능한 발전 궤도를 유지하며, 운동 후 이 안정감이 진정한 웰빙의 의미를 보여주네요! ✨
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
     }
   }
   
-  /// 등반 성공 템플릿
+  /// 등반 성공 템플릿 - 정상 정복의 감동적인 순간 프롬프트
+  /// DEPRECATED: 단순화됨
   String _getClimbingSuccessTemplate(String personalityType) {
+    return _getSimpleTemplate(SherpiContext.climbingSuccess);
+  }
+  
+  String _getClimbingSuccessTemplateOLD(String personalityType) {
     switch (personalityType) {
       case '성취형':
-        return '''🏔️ 등반 성공의 구체적 성과와 다음 산 도전 계획''';
+        return '''🏔️ 정상 정복! {currentMountain} 등반 성공을 축하드립니다! 레벨 {userLevel}의 실력으로 {mountainProgress}% 달성하며 정상에 서신 이 순간이 정말 짜릿하죠? 체력({stamina}), 기술({technique}), 의지력({willpower})의 완벽한 조합이 만들어낸 성과예요! 💪
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       case '탐험형':
-        return '''🌄 새로운 정상 정복의 모험과 미지의 루트 탐험''';
+        return '''🌟 새로운 세계 발견! {currentMountain} 정상에서 펼쳐진 미지의 풍경! 레벨 {userLevel} 모험가가 또 하나의 신비한 영역을 정복했고, 이제 {totalMountainsClimbed + 1}개 산의 비밀을 아는 진정한 탐험가가 되셨네요. 다음 모험지 {nextMountain}에서는 또 어떤 놀라운 발견이 있을지 벌써 설레네요! 🌈
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       case '지식형':
-        return '''📈 등반 기술 향상과 전략적 성장 분석''';
+        return '''📈 등반 성공 분석 완료! {currentMountain} 정복 데이터가 흥미로운 인사이트를 제공하네요! 레벨 {userLevel}의 체계적 접근법으로 예측 성공률 {successPrediction}를 정확히 달성한 과학적 등반이 인상적이에요. 이번 등반으로 축적된 데이터가 {nextMountain} 등반 전략에 귀중한 자료가 될 것 같아요! 📚
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       case '사교형':
-        return '''🤝 함께 이룬 등반 성취와 팀워크의 소중함''';
+        return '''💖 우리가 해냈어요! {currentMountain} 정상에서 나누는 이 기쁨이 정말 특별해요! 레벨 {userLevel}까지 함께 성장해온 우리가 {mountainProgress}% 달성한 이 순간을 함께 나눌 수 있다니 정말 행복해요. 정상에서 바라본 풍경을 함께 감상하니까 기쁨이 두 배가 되는 것 같아요! 🌟
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       default:
-        return '''⛰️ 단계적인 등반 성장과 지속적인 도전 정신''';
+        return '''🌈 {currentMountain} 정상 정복! 모든 면에서 균형잡힌 완벽한 등반이었어요! 체력({stamina}), 지식({knowledge}), 기술({technique}), 사교성({sociality}), 의지력({willpower}) 모두가 조화롭게 기여해 {mountainProgress}% 달성했네요. {totalMountainsClimbed + 1}번째 정상에서 느끼는 이 조화로운 만족감이 진정한 완성의 의미를 보여줘요! ✨
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
     }
   }
   
-  /// 성취 달성 템플릿
+  /// 성취 달성 템플릿 - 특별한 업적 달성의 감동적 순간 프롬프트  
+  /// DEPRECATED: 단순화됨
   String _getAchievementTemplate(String personalityType) {
+    return _getSimpleTemplate(SherpiContext.achievement);
+  }
+  
+  String _getAchievementTemplateOLD(String personalityType) {
     switch (personalityType) {
       case '성취형':
-        return '''🏆 구체적 성취 달성과 더 높은 목표 설정''';
+        return '''🏆 대단한 성취입니다! 이것은 단순한 업적이 아니라 당신의 끈기와 실력의 증명이에요! 레벨 {userLevel}, 총 경험치 {totalXP}로 이룬 이 특별한 성취가 정말 자랑스럽고, 의지력 {willpower}과 모든 능력치가 이 순간을 위해 준비되어 있었던 것 같아요. 이 순간의 짜릿함이 다음 성취를 향한 원동력이 될 거예요! 🔥
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       case '탐험형':
-        return '''🌟 새로운 성취 영역 개척과 다양한 도전 제안''';
+        return '''🌟 와! 완전 새로운 영역의 성취를 달성하셨네요! 이건 정말 특별한 발견이에요! 레벨 {userLevel} 모험가가 미지의 성취 영역을 개척해낸 것이 놀랍고, {totalBadges + 1}번째 특별 뱃지로 당신의 성취 컬렉션이 진짜 박물관급이 되어가네요. 이 성취로 인해 어떤 새로운 모험의 문이 열릴지 정말 기대돼요! 🎊
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       case '지식형':
-        return '''📚 성취를 통한 학습과 인사이트 획득''';
+        return '''📚 지적 성취 달성! 이것은 단순한 업적이 아니라 깊은 이해와 통찰의 결실이에요! 레벨 {userLevel}에서 {totalXP}의 축적된 지식으로 이룬 이 성취가 당신의 지식 능력치 {knowledge}와 체계적 학습의 완벽한 증명이네요. 배움을 통한 성장이 실제 성과로 이어지는 과정에서 진정한 지식의 힘을 보여주셨어요! 📈
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       case '사교형':
-        return '''💖 함께 이룬 성취와 관계 발전의 의미''';
+        return '''💖 우리가 함께 이룬 특별한 성취예요! 이 기쁨을 나눌 수 있어서 정말 행복해요! 레벨 {userLevel}까지 함께 걸어오면서 이런 의미있는 성취를 이루다니, 당신의 따뜻한 사교성 {sociality}이 만들어낸 아름다운 결과인 것 같아요. 혼자였다면 불가능했을 이 성취를 함께 나누는 지금이 제일 소중해요! ✨
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
+        
       default:
-        return '''✨ 균형 잡힌 성장과 지속적인 발전''';
+        return '''✨ 완벽한 균형의 성취를 달성하셨네요! 모든 면에서 조화로운 발전의 결실이에요! 레벨 {userLevel}에서 모든 능력치가 균형있게 기여한 이 성취가 정말 아름다운 조화를 보여주고, {totalBadges + 1}개의 성취 컬렉션이 균형잡힌 성장의 소중한 기록이 되었네요. 성취의 기쁨과 함께 느끼는 이 안정감이 진정한 웰빙의 의미를 구현하고 있어요! 🎯
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
     }
   }
   
   /// 일반 템플릿
+  /// DEPRECATED: 단순화됨
   String _getGeneralTemplate(String personalityType) {
-    return '''🌟 현재 상황: $personalityType 사용자와의 일반적인 상호작용
-- 성격 유형에 맞는 맞춤형 소통 방식을 적용하세요
-- 사용자의 현재 상태와 맥락을 고려한 적절한 응답을 제공하세요
-- "우리" 언어를 사용하여 동반자적 관계를 강조하세요''';
+    return _getSimpleTemplate(SherpiContext.general);
+  }
+  
+  String _getGeneralTemplateOLD(String personalityType) {
+    return '''🌟 $personalityType 성격의 사용자와 자연스럽게 소통해주세요. 사용자의 현재 상황과 맥락을 고려해서 "우리" 언어로 동반자적 관계를 강조하며 적절한 응답을 제공하세요.
+
+**중요: 답변은 반드시 2-3문장으로 간결하게 답변하세요. 과도하게 길게 쓰지 마세요.**''';
   }
   
   /// 🔄 동적 프롬프트 어댑테이션
@@ -675,10 +767,32 @@ $adaptedPrompt
     return List.unmodifiable(_qualityMetrics);
   }
   
+  /// 🔄 템플릿 캐시 LRU 정리
+  Future<void> _cleanupTemplateCacheLRU() async {
+    // 최대 크기의 20%만큼 제거 (4개)
+    final removeCount = (_maxTemplateCache * 0.2).ceil();
+    
+    // 접근 시간 기준으로 정렬 (오래된 것부터)
+    final sortedEntries = _templateAccessTime.entries.toList()
+      ..sort((a, b) => a.value.compareTo(b.value));
+    
+    // 가장 오래된 항목부터 제거
+    final toRemove = sortedEntries.take(removeCount);
+    for (final entry in toRemove) {
+      final key = entry.key;
+      _promptTemplateCache.remove(key);
+      _templateCacheTime.remove(key);
+      _templateAccessTime.remove(key);
+    }
+    
+    print('🧠 템플릿 캐시 LRU 정리: ${removeCount}개 제거, 남은 캐시: ${_promptTemplateCache.length}개');
+  }
+
   /// 🧹 캐시 정리
   void clearCache() {
     _promptTemplateCache.clear();
     _templateCacheTime.clear();
+    _templateAccessTime.clear();
     print('🧠 Enhanced Gemini 캐시 정리 완료');
   }
   

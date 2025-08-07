@@ -70,11 +70,13 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
         setState(() {
           _selectedIndex = _tabController.index;
         });
+        // 🎯 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
         _recordTabVisit(_selectedIndex);
         HapticFeedback.lightImpact();
       }
     });
     
+    // 🎯 초기 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _recordTabVisit(_selectedIndex);
     });
@@ -88,10 +90,12 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
       setState(() {
         _selectedIndex = index;
       });
+      // 🎯 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
       _recordTabVisit(index);
     }
   }
   
+  /// 🎯 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
   void _recordTabVisit(int index) {
     final tabNames = ['모임', '챌린지'];
     if (index >= 0 && index < tabNames.length) {

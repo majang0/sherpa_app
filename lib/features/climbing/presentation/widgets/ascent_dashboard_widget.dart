@@ -951,7 +951,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           _buildClimbingProgress(),
           const SizedBox(height: 24),
 
-          // 🔧 수정: 셰르피 항상 표시
+          // 등반 중 셰르피 격려 메시지
           if (_showSherpiMessage)
             _buildSherpiEncouragement(),
           const SizedBox(height: 20),
@@ -1643,7 +1643,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     );
 
     _startProgressTracking();
-    _startSherpiMessages();
+    _startSherpiMessages(); // 등반 중 격려 메시지는 유지
   }
 
   void _cancelClimbing() {

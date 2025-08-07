@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 // Core
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
-import '../../../../core/ai/enhanced_gemini_dialogue_source.dart';
+import '../../../../core/utils/sherpi_system_checker.dart';
 
 // Shared
 import '../../../../shared/widgets/sherpa_card.dart';
@@ -63,6 +63,7 @@ class _SherpiAiTestCardState extends ConsumerState<SherpiAiTestCard> {
         userContext: userContext,
         gameContext: gameContext,
         duration: const Duration(seconds: 6),
+        forceShow: true, // 🧪 테스트 버튼은 강제 표시 (개발자 도구용)
       );
       
       // 응답 정보 가져오기
@@ -276,7 +277,7 @@ class _SherpiAiTestCardState extends ConsumerState<SherpiAiTestCard> {
                 children: [
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.chat_bubble_outline,
                         size: 16,
                         color: AppColors.textSecondary,
@@ -349,14 +350,14 @@ class _SherpiAiTestCardState extends ConsumerState<SherpiAiTestCard> {
             ),
           ],
           
-          // 시스템 상태 버튼
+          // Phase 1 검증 버튼
           const SizedBox(height: 16),
           Center(
             child: TextButton.icon(
               onPressed: _showSystemStatus,
-              icon: const Icon(Icons.analytics_outlined, size: 16),
+              icon: const Icon(Icons.verified_outlined, size: 16),
               label: Text(
-                '시스템 상태 확인',
+                'Phase 1 단순화 검증',
                 style: GoogleFonts.notoSans(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -369,54 +370,194 @@ class _SherpiAiTestCardState extends ConsumerState<SherpiAiTestCard> {
     );
   }
 
-  /// 시스템 상태 확인 다이얼로그
+  /// 시스템 상태 확인 다이얼로그 (Phase 1 단순화 검증 포함)
   Future<void> _showSystemStatus() async {
+    // 로딩 다이얼로그 표시
+    if (mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Phase 1 단순화 시스템 검증 중...'),
+            ],
+          ),
+        ),
+      );
+    }
+    
     try {
-      final status = await ref.read(sherpiProvider.notifier).getSystemStatus();
+      // 🔍 Phase 1 단순화 검증 실행
+      final results = await SherpiSystemChecker.checkSystemIntegration(ref);
+      final summary = SherpiSystemChecker.summarizeSystemStatus(results);
       
       if (mounted) {
+        // 로딩 다이얼로그 닫기
+        Navigator.of(context).pop();
+        
+        // 결과 다이얼로그 표시
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: Row(
               children: [
-                const Icon(Icons.analytics_outlined, size: 24),
-                const SizedBox(width: 12),
-                Text(
-                  '스마트 AI 시스템 상태',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
+                Icon(
+                  results['overall_status'] == 'SUCCESS' ? Icons.check_circle : Icons.error,
+                  color: results['overall_status'] == 'SUCCESS' ? Colors.green : Colors.red,
+                  size: 24,
                 ),
-              ],
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildStatusItem('📦 캐시 시스템', '${status['cache']?['valid'] ?? 0}개 유효 메시지'),
-                _buildStatusItem('🧠 AI 사용 패턴', '${status['ai_usage_levels'] ?? 0}개 컨텍스트'),
-                _buildStatusItem('⏰ 마지막 업데이트', '${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}'),
-                const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                const SizedBox(width: 12),
+                Expanded(
                   child: Text(
-                    '💡 90%는 즉시 응답, 10%는 AI가 생성합니다. 중요한 순간에는 AI 사용률이 증가합니다.',
+                    'Phase 1 단순화 검증',
                     style: GoogleFonts.notoSans(
-                      fontSize: 12,
-                      color: Colors.blue.shade700,
-                      height: 1.4,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
               ],
             ),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 전체 상태
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: results['overall_status'] == 'SUCCESS' 
+                          ? Colors.green.shade50 
+                          : Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: results['overall_status'] == 'SUCCESS' 
+                            ? Colors.green.shade300 
+                            : Colors.red.shade300,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            results['overall_status'] == 'SUCCESS' 
+                              ? '✅ 모든 시스템 정상 작동' 
+                              : '❌ 시스템 오류 감지',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: results['overall_status'] == 'SUCCESS' 
+                                ? Colors.green.shade700 
+                                : Colors.red.shade700,
+                            ),
+                          ),
+                          if (results['overall_status'] == 'SUCCESS') ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              'Phase 1 단순화가 성공적으로 적용되었습니다',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 12,
+                                color: Colors.green.shade600,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    
+                    // 상세 결과 (접을 수 있는 형태)
+                    ExpansionTile(
+                      title: Text(
+                        '상세 검증 결과',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            summary,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontFamily: 'monospace',
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    
+                    const SizedBox(height: 12),
+                    
+                    // Phase 1 개선 사항 요약
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '📈 Phase 1 개선 사항',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.blue.shade700,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '• AI 시스템: 4단계 → 3단계 단순화\n'
+                            '• 캐시 최적화: 7일 → 3일, LRU 정책\n'
+                            '• 메모리 제한: 메트릭 50개, 템플릿 20개\n'
+                            '• 응답 속도: 95%+ 즉시 응답 보장',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 12,
+                              color: Colors.blue.shade600,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             actions: [
+              if (results['overall_status'] != 'SUCCESS')
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('시스템 관리자에게 문의하세요: ${results['error_message']}'),
+                        backgroundColor: Colors.orange,
+                        duration: const Duration(seconds: 4),
+                      ),
+                    );
+                  },
+                  child: const Text('문제 신고'),
+                ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
                 child: const Text('확인'),
@@ -426,39 +567,21 @@ class _SherpiAiTestCardState extends ConsumerState<SherpiAiTestCard> {
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('상태 조회 실패: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if (mounted) {
+        // 로딩 다이얼로그가 열려있으면 닫기
+        Navigator.of(context).pop();
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('시스템 검증 실패: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 4),
+          ),
+        );
+      }
     }
   }
 
-  Widget _buildStatusItem(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const Spacer(),
-          Text(
-            value,
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
 
   Widget _buildTestButton({

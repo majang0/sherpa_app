@@ -317,19 +317,29 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     await _saveQuests();
     state = AsyncValue.data(_allQuests);
     
-    // 셰르피 보상 메시지
-    ref.read(sherpiProvider.notifier).showMessage(
-      context: SherpiContext.questComplete,
-      emotion: SherpiEmotion.cheering,
-      userContext: {
-        'questTitle': quest.title,
-        'experience': quest.rewards.experience.toInt(),
-        'points': quest.rewards.points.toInt(),
-        'statGranted': statGranted,
-        'statType': statGranted ? quest.rewards.statType : null,
-        'statIncrease': statGranted ? quest.rewards.statIncrease : null,
-      },
-    );
+    // 🎯 셰르피 보상 메시지 (쉬운 퀘스트 제외)
+    final questDifficulty = quest.template.type == QuestTypeV2.daily 
+        ? quest.template.dailyDifficulty 
+        : quest.template.weeklyDifficulty;
+    
+    // 쉬운 퀘스트나 탭 방문 퀘스트는 셰르피 메시지 없음
+    final isEasyQuest = (questDifficulty?.name == 'easy' || quest.template.weeklyDifficulty?.name == 'easy');
+    final isTabVisitQuest = quest.trackingCondition.type == QuestTrackingType.tabVisit;
+    
+    if (!isEasyQuest && !isTabVisitQuest) {
+      ref.read(sherpiProvider.notifier).showMessage(
+        context: SherpiContext.questComplete,
+        emotion: SherpiEmotion.cheering,
+        userContext: {
+          'questTitle': quest.title,
+          'experience': quest.rewards.experience.toInt(),
+          'points': quest.rewards.points.toInt(),
+          'statGranted': statGranted,
+          'statType': statGranted ? quest.rewards.statType : null,
+          'statIncrease': statGranted ? quest.rewards.statIncrease : null,
+        },
+      );
+    }
   }
 
   /// 글로벌 능력치 업데이트

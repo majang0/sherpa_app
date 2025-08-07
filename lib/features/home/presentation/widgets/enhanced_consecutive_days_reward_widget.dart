@@ -138,12 +138,13 @@ class _EnhancedConsecutiveDaysRewardWidgetState
     // 경험치 지급
     ref.read(globalUserProvider.notifier).addExperience(rewardExperience.toDouble());
 
-    // 셰르피 반응
+    // 셰르피 반응 - 연속 일수 달성 전용 컨텍스트 사용
     ref.read(sherpiProvider.notifier).showMessage(
-      context: SherpiContext.dailyGreeting,
+      context: SherpiContext.achievement,
       emotion: SherpiEmotion.cheering,
       userContext: {
         'consecutiveDays': consecutiveDays,
+        'achievementType': '연속 접속',
       },
     );
 

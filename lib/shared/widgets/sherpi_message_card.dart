@@ -48,6 +48,10 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
   late AnimationController _fadeController;
   late AnimationController _scaleController;
   
+  // 🚨 중복 방지: 마지막으로 표시된 메시지 추적
+  String? _lastShownMessage;
+  DateTime? _lastShownTime;
+  
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
@@ -165,9 +169,23 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
   Widget build(BuildContext context) {
     final sherpiState = ref.watch(sherpiProvider);
     
-    // 셰르피가 보이지 않으면 카드도 표시하지 않음
+    // 🚨 중복 방지: 셰르피가 보이지 않거나 메시지가 없으면 표시 안함
     if (!sherpiState.isVisible || sherpiState.dialogue.isEmpty) {
       return const SizedBox.shrink();
+    }
+    
+    // 🚨 중복 방지: 같은 메시지를 3초 이내에 다시 표시하지 않음
+    final now = DateTime.now();
+    if (_lastShownMessage == sherpiState.dialogue &&
+        _lastShownTime != null &&
+        now.difference(_lastShownTime!).inSeconds < 3) {
+      return const SizedBox.shrink();
+    }
+    
+    // 새로운 메시지인 경우 추적 정보 업데이트
+    if (_lastShownMessage != sherpiState.dialogue) {
+      _lastShownMessage = sherpiState.dialogue;
+      _lastShownTime = now;
     }
     
     final currentEmotion = sherpiState.emotion;

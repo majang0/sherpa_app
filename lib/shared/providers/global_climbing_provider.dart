@@ -113,12 +113,7 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
 
     _saveClimbingData();
 
-    // 셀르피 메시지
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.general,
-      customDialogue: '$mountainName 등반을 시작했어요! 성공 확률: ${(successProbability * 100).toStringAsFixed(1)}% 🏔️',
-      emotion: SherpiEmotion.cheering,
-    );
+    // 등반 시작 시에는 셰르피 메시지 없음
 
     print('등반 시작: $mountainName (예상 소요 시간: ${durationHours}h)');
   }
@@ -194,12 +189,7 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
       _distributeRewards(rewards, isSuccess, session.mountainName, record);
     }
 
-    // 셀르피 결과 메시지
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.general,
-      customDialogue: record.resultMessage + '\n' + rewards.summaryText,
-      emotion: isSuccess ? SherpiEmotion.cheering : SherpiEmotion.cheering,
-    );
+    // 등반 성공 시 셰르피 메시지는 handleActivityCompletion에서 처리하므로 여기서는 제거
 
     _saveClimbingData();
     print('등반 완료: ${session.mountainName} - ${isSuccess ? "성공" : "실패"}');
@@ -222,11 +212,7 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
 
     _saveClimbingData();
 
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.general,
-      customDialogue: '등반을 취소했어요. 다음에 다시 도전해보세요! 🙌',
-      emotion: SherpiEmotion.cheering,
-    );
+    // 등반 취소 시에는 셰르피 메시지 없음
   }
 
   /// 등반 세션 상태 업데이트 (주기적 호출)

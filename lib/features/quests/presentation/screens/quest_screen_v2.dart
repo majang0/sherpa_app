@@ -66,7 +66,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
     // 초기 애니메이션 시작
     _fadeInController.forward();
     
-    // 탭 방문 기록 (퀘스트 추적용)
+    // 🎯 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(questProviderV2.notifier).recordTabVisit('퀘스트');
     });

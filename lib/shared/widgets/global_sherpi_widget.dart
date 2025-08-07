@@ -58,6 +58,12 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
 
   /// 셰르피 탭 이벤트 처리
   void _onSherpiTapped() {
+    // 🔔 메시지를 읽음으로 표시 (알림 배지 숨김)
+    final sherpiState = ref.read(sherpiProvider);
+    if (sherpiState.isVisible && sherpiState.dialogue.isNotEmpty) {
+      ref.read(sherpiProvider.notifier).markMessageAsRead();
+    }
+    
     // 즉시 다이얼로그 표시 - 애니메이션 지연 제거
     _showExpandedDialog();
     
@@ -172,7 +178,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
             ),
           ),
           
-          // 메시지 알림 배지
+          // 메시지 알림 배지 (새로운 메시지가 있을 때만 표시)
           if (state.isVisible && state.dialogue.isNotEmpty)
             Positioned(
               top: 4,   // 더 여유로운 위치
@@ -523,7 +529,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                     child: Column(
                       children: [
             
-                        // 현재 메시지 표시 - Glassmorphism card
+                        // 현재 메시지 표시 - 다이얼로그에서는 실시간 메시지 표시
                         if (sherpiState.dialogue.isNotEmpty) ...[
                           Container(
                             width: double.infinity,
@@ -592,6 +598,39 @@ class SherpiExpandedDialog extends ConsumerWidget {
                                   softWrap: true,
                                 ),
                               ],
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                        ] else ...[
+                          // 메시지가 없을 때 기본 환영 메시지
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.7),
+                                  Colors.white.withOpacity(0.5),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              '안녕하세요! 언제든지 도움이 필요하면 말씀해 주세요. 함께 목표를 달성해 나가요! 💪',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textPrimary.withOpacity(0.9),
+                                height: 1.6,
+                                letterSpacing: -0.2,
+                              ),
+                              softWrap: true,
                             ),
                           ),
                           const SizedBox(height: 24),
@@ -919,10 +958,11 @@ class SherpiExpandedDialog extends ConsumerWidget {
   void _showEncouragement(BuildContext context, WidgetRef ref) {
     Navigator.of(context).pop();
     
-    // 비동기로 격려 메시지 표시
+    // 격려 메시지 표시 (다이얼로그 버튼은 항상 새 메시지 생성)
     ref.read(sherpiProvider.notifier).showMessage(
       context: SherpiContext.encouragement,
       duration: const Duration(seconds: 5),
+      forceShow: true, // 다이얼로그 액션 버튼은 항상 표시
     );
   }
   

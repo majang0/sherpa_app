@@ -198,15 +198,16 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // 통합된 포인트 시스템으로 레벨업 보너스 지급
     ref.read(globalPointProvider.notifier).onLevelUp(newLevel);
 
-    // 셰르피 축하 메시지
-    ref.read(sherpiProvider.notifier).showMessage(
-      context: SherpiContext.levelUp,
-      emotion: SherpiEmotion.cheering,
-      userContext: {
-        'newLevel': newLevel,
-        'oldLevel': oldLevel,
-      },
-    );
+    // 🚫 레벨업 셰르피 메시지는 _triggerSherpiReaction에서 처리됨
+    // 직접 호출하면 중복 메시지 발생 가능
+    // ref.read(sherpiProvider.notifier).showMessage(
+    //   context: SherpiContext.levelUp,
+    //   emotion: SherpiEmotion.cheering,
+    //   userContext: {
+    //     'newLevel': newLevel,
+    //     'oldLevel': oldLevel,
+    //   },
+    // );
   }
 
   /// 능력치 업데이트
@@ -346,23 +347,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     state = state.copyWith(currentClimbingSession: session);
     _saveUserData();
 
-    // 🎯 뱃지 효과 피드백 메시지
-    String feedbackMessage = '$mountainName 등반을 시작했어요! 성공 확률: ${(successProbability * 100).toStringAsFixed(1)}%';
-
-    // 시간 단축 효과가 있다면 추가 메시지
-    if (adjustedDuration < durationHours) {
-      final reductionPercent = ((durationHours - adjustedDuration) / durationHours * 100).round();
-      feedbackMessage += '\n⚡ 시간 마술사 효과로 등반 시간 ${reductionPercent}% 단축!';
-    }
-
-    feedbackMessage += ' 🏔️';
-
-    // 셰르피 메시지
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.general,
-      customDialogue: feedbackMessage,
-      emotion: SherpiEmotion.cheering,
-    );
+    // 등반 시작 시에는 셰르피 메시지 없음
 
   }
 
@@ -631,7 +616,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
   // ==================== 일일 기록 관리 ====================
 
-  /// 걸음수 업데이트
+  /// 걸음수 업데이트 (자동 달성 지표 - 셰르피 메시지 없음)
   void updateSteps(int steps) {
     final updatedRecords = state.dailyRecords.copyWith(
       todaySteps: steps,
@@ -645,13 +630,13 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
 
-    // 🔄 퀘스트 시스템과 연동
-    _notifyQuestSystem('steps', {'steps': steps});
+    // 🚫 자동 달성 지표이므로 퀘스트 시스템 연동 제거 (셰르피 메시지 방지)
+    // _notifyQuestSystem('steps', {'steps': steps});
 
     _saveUserData();
   }
 
-  /// 집중 시간 업데이트
+  /// 집중 시간 업데이트 (중간 업데이트는 조용히 처리)
   void updateFocusTime(int minutes) {
     final currentFocusMinutes = state.dailyRecords.todayFocusMinutes;
     final updatedRecords = state.dailyRecords.copyWith(
@@ -663,12 +648,12 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
 
-    // 🔄 퀘스트 시스템과 연동 - 집중 시간 추가와 총 시간 모두 전달
-    _notifyQuestSystem('focus', {
-      'minutes': minutes,
-      'totalMinutes': currentFocusMinutes + minutes,
-      'dailyRecords.todayFocusMinutes': currentFocusMinutes + minutes,
-    });
+    // 🚫 집중 시간 중간 업데이트는 조용히 처리 (완료시에만 메시지)
+    // _notifyQuestSystem('focus', {
+    //   'minutes': minutes,
+    //   'totalMinutes': currentFocusMinutes + minutes,
+    //   'dailyRecords.todayFocusMinutes': currentFocusMinutes + minutes,
+    // });
 
     _saveUserData();
   }
@@ -681,14 +666,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     state = state.copyWith(dailyRecords: updatedRecords);
 
-    // 보상 지급
-    _handleActivityCompletion(
-      activityType: 'meeting',
-      xp: 50.0,
-      points: 100,
-      statIncreases: {'sociality': 0.2},
-      message: '모임 참여 완료! 🤝',
-    );
+    // 기록 작성 자체로는 보상 없음 - 퀘스트/목표 달성 시에만 보상
 
     _saveUserData();
   }
@@ -704,14 +682,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
 
-    // 보상 지급
-    _handleActivityCompletion(
-      activityType: 'reading',
-      xp: 30.0 + (readingLog.pages * 2.0),
-      points: 0, // 독서는 포인트 없음
-      statIncreases: {'knowledge': 0.1 + (readingLog.pages * 0.01)},
-      message: '독서 기록 완료! 📚 ${readingLog.pages}페이지',
-    );
+    // 기록 작성 자체로는 보상 없음 - 퀘스트/목표 달성 시에만 보상
 
     // 🔄 퀘스트 시스템과 연동
     _notifyQuestSystem('reading', {'pages': readingLog.pages});
@@ -749,14 +720,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
 
-    // 보상 지급
-    _handleActivityCompletion(
-      activityType: 'exercise',
-      xp: 40.0 + (exerciseLog.durationMinutes * 0.5),
-      points: 0, // 운동은 포인트 없음
-      statIncreases: {'stamina': 0.2 + (exerciseLog.durationMinutes * 0.005)},
-      message: '운동 기록 완료! 💪 ${exerciseLog.durationMinutes}분',
-    );
+    // 기록 작성 자체로는 보상 없음 - 퀘스트/목표 달성 시에만 보상
 
     // 🔄 퀘스트 시스템과 연동
     _notifyQuestSystem('exercise', {'duration': exerciseLog.durationMinutes});
@@ -932,14 +896,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
 
-    // 보상 지급
-    _handleActivityCompletion(
-      activityType: 'diary',
-      xp: 25.0,
-      points: 0, // 일기는 포인트 없음
-      statIncreases: {'willpower': 0.1},
-      message: '일기 작성 완료! 📝',
-    );
+    // 기록 작성 자체로는 보상 없음 - 퀘스트/목표 달성 시에만 보상
 
     // 🔄 퀘스트 시스템과 연동
     _notifyQuestSystem('diary', {});
@@ -974,14 +931,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     state = state.copyWith(dailyRecords: updatedRecords);
 
-    // 보상 지급
-    _handleActivityCompletion(
-      activityType: 'movie',
-      xp: 20.0 + (movieLog.watchTimeMinutes * 0.1),
-      points: 0, // 영화는 포인트 없음
-      statIncreases: {'knowledge': 0.05, 'willpower': 0.05},
-      message: '영화 감상 완료! 🎬 ${movieLog.movieTitle}',
-    );
+    // 기록 작성 자체로는 보상 없음 - 퀘스트/목표 달성 시에만 보상
 
     // 🔄 퀘스트 시스템과 연동
     _notifyQuestSystem('movie', {'title': movieLog.movieTitle, 'duration': movieLog.watchTimeMinutes});
@@ -1229,8 +1179,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       );
     }
 
-    // 🎭 활동 유형별 셰르피 반응
-    _triggerSherpiReaction(activityType, message, xp, points, additionalData);
+    // 🎭 활동 유형별 셰르피 반응 (climbing은 provider에서 직접 처리함)
+    if (activityType != 'climbing') {
+      _triggerSherpiReaction(activityType, message, xp, points, additionalData);
+    }
     
     // 🔄 퀘스트 시스템에 활동 알림
     _notifyQuestSystem(activityType, additionalData ?? {});
@@ -1355,6 +1307,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   }
 
   /// 레거시 메서드 (기존 호환성 유지)
+  /// DEPRECATED: 이중 호출 방지를 위해 제거됨
+  /// 모든 코드에서 handleActivityCompletion을 직접 호출하도록 변경
   void _handleActivityCompletion({
     required String activityType,
     required double xp,
@@ -1362,13 +1316,9 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     required Map<String, double> statIncreases,
     required String message,
   }) {
-    handleActivityCompletion(
-      activityType: activityType,
-      xp: xp,
-      points: points,
-      statIncreases: statIncreases,
-      message: message,
-    );
+    // 이중 호출 방지: 더 이상 handleActivityCompletion을 호출하지 않음
+    // 대신 각 활동별로 직접 handleActivityCompletion을 호출하도록 수정 필요
+    print('⚠️ _handleActivityCompletion은 deprecated됨. handleActivityCompletion을 직접 사용하세요.');
   }
 
   /// 🔄 퀘스트 시스템에 활동 알림 (최적화된 연동)
@@ -1547,23 +1497,29 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         emotion = SherpiEmotion.defaults;
         break;
         
-      // 🎯 퀘스트 완료
+      // 🎯 퀘스트 완료 (단순 탭 방문 퀘스트 제외)
       case String() when activityType.startsWith('quest_'):
+        // 탭 방문이나 단순 조회 퀘스트는 셰르피 메시지 없음
+        final questType = additionalData?['questType'] as String? ?? '';
+        final questDescription = additionalData?['description'] as String? ?? '';
+        
+        if (questType.contains('tabVisit') || 
+            questDescription.contains('확인') || 
+            questDescription.contains('둘러보기') ||
+            questDescription.contains('현황') ||
+            questDescription.contains('진행상황')) {
+          // 단순 조회/방문 퀘스트는 조용히 처리
+          return; // 셰르피 메시지 없이 종료
+        }
+        
         context = SherpiContext.questComplete;
         emotion = SherpiEmotion.cheering;
         break;
         
-      // 🏔️ 등반 관련
+      // 🏔️ 등반 관련 - 더 이상 사용하지 않음 (GlobalClimbingProvider에서 직접 처리)
       case 'climbing':
-        final isSuccess = additionalData?['isSuccess'] as bool? ?? false;
-        if (isSuccess) {
-          context = SherpiContext.climbingSuccess;
-          emotion = SherpiEmotion.cheering;
-        } else {
-          context = SherpiContext.climbingFailure;
-          emotion = SherpiEmotion.sad;
-        }
-        break;
+        // climbing은 handleActivityCompletion에서 제외되므로 이 코드는 실행되지 않음
+        return;
         
       // 🤝 모임 관련
       case 'meeting_host':
@@ -1599,15 +1555,17 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     }
 
     // 레벨업 감지 (현재 레벨과 경험치로 판단)
-    if (_checkIfLeveledUp(xp)) {
+    final isLevelUp = _checkIfLeveledUp(xp);
+    if (isLevelUp) {
       context = SherpiContext.levelUp;
       emotion = SherpiEmotion.cheering;
       customMessage = '🎉 레벨업! ${state.level}레벨 달성! 축하해요!';
     }
 
-    // 셰르피 메시지 표시
+    // 셰르피 메시지 표시 (레벨업이면 레벨업 메시지만, 아니면 활동 메시지만)
     Future.delayed(const Duration(milliseconds: 500), () {
       if (customMessage != null) {
+        // 레벨업이나 특별 상황: 커스텀 메시지 표시
         ref.read(sherpiProvider.notifier).showInstantMessage(
           context: context,
           customDialogue: customMessage!,
@@ -1615,6 +1573,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           duration: const Duration(seconds: 5),
         );
       } else {
+        // 일반 활동 완료: AI 메시지 표시
         ref.read(sherpiProvider.notifier).showMessage(
           context: context,
           emotion: emotion,

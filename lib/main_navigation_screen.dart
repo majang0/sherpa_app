@@ -12,6 +12,7 @@ import 'features/meetings/presentation/screens/challenge_index_screen.dart';
 
 // Providers
 import 'features/quests/providers/quest_provider_v2.dart';
+import 'shared/providers/global_sherpi_provider.dart';
 
 // Shared Widgets
 import 'shared/widgets/sherpa_clean_app_bar.dart';
@@ -81,7 +82,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
       _selectedIndex = index;
     });
     
-    // 탭 방문 기록 (퀘스트 추적용)
+    // 🎯 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
     final tabNames = ['홈', '레벨업', '퀘스트', '모임', '프로필'];
     if (index >= 0 && index < tabNames.length) {
       ref.read(questProviderV2.notifier).recordTabVisit(tabNames[index]);
@@ -96,13 +97,22 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
       body: Stack(
         children: [
           _getScreen(_selectedIndex),
-          // 셰르피 메시지 카드 (메시지가 있을 때만 표시)
-          const SherpiMessageCard(
-            bottomOffset: 140, // BottomNavigationBar 위 여백
+          // 🚨 FIXED: 중복 메시지 표시 방지 - 상호 배타적 표시
+          Consumer(
+            builder: (context, ref, child) {
+              final sherpiState = ref.watch(sherpiProvider);
+              
+              // 메시지가 있을 때는 메시지 카드만 표시
+              if (sherpiState.isVisible && sherpiState.dialogue.isNotEmpty) {
+                return const SherpiMessageCard(
+                  bottomOffset: 140, // BottomNavigationBar 위 여백
+                );
+              }
+              
+              // 메시지가 없을 때는 플로팅 셰르피만 표시
+              return const GlobalSherpiWidget();
+            },
           ),
-          
-          // 셰르피 위젯
-          const GlobalSherpiWidget(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

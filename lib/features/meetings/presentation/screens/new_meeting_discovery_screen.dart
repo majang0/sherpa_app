@@ -98,16 +98,16 @@ class _NewMeetingDiscoveryScreenState
     // 검색 컨트롤러 리스너 추가
     _searchController.addListener(_onSearchChanged);
     
-    // 환영 메시지
+    // 🚫 환영 메시지 제거 - 단순 화면 진입은 조용히 처리
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(sherpiProvider.notifier).showMessage(
-        context: SherpiContext.welcome,
-        emotion: SherpiEmotion.cheering,
-        userContext: {
-          'screen': 'new_meeting_discovery',
-          'feature': 'meeting_tab_redesign',
-        },
-      );
+      // ref.read(sherpiProvider.notifier).showMessage(
+      //   context: SherpiContext.welcome,
+      //   emotion: SherpiEmotion.cheering,
+      //   userContext: {
+      //     'screen': 'new_meeting_discovery',
+      //     'feature': 'meeting_tab_redesign',
+      //   },
+      // );
       
       // 초기 필터링 실행
       _updateFilteredMeetings();

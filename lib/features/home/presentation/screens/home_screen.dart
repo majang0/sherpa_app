@@ -97,9 +97,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       setState(() => _isLoading = false);
     }
     
-    // 환영 메시지
+    // 환영 메시지 (테스트 카드와 충돌 방지를 위해 지연)
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showWelcomeSherpi();
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          _showWelcomeSherpi();
+        }
+      });
     });
   }
 
@@ -128,12 +132,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     if (hour < 12) {
       context = SherpiContext.dailyGreeting;
     } else if (hour < 18) {
-      context = SherpiContext.welcome;
+      context = SherpiContext.encouragement; // welcome 대신 격려 메시지 사용
     } else {
       context = SherpiContext.dailyGreeting;
     }
 
-    ref.showSherpi(context, emotion: SherpiEmotion.happy);
+    // 🚨 중복 방지: forceShow를 false로 설정하여 중복 메시지 방지 적용
+    ref.read(sherpiProvider.notifier).showMessage(
+      context: context,
+      emotion: SherpiEmotion.happy,
+      forceShow: false, // 중복 방지 활성화
+    );
   }
 
 
@@ -214,7 +223,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       child: RefreshIndicator(
         onRefresh: () async {
           await ref.read(globalUserProvider.notifier).refresh();
-          ref.showSherpi(SherpiContext.encouragement, emotion: SherpiEmotion.cheering);
+          // 🚨 중복 방지: forceShow false로 설정
+          ref.read(sherpiProvider.notifier).showMessage(
+            context: SherpiContext.encouragement,
+            emotion: SherpiEmotion.cheering,
+            forceShow: false, // 중복 방지 활성화
+          );
         },
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),

@@ -73,14 +73,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
     _fadeAnimationController.forward();
     _slideAnimationController.forward();
     
-    // 셰르피 환영 메시지
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(sherpiProvider.notifier).showMessage(
-        context: SherpiContext.welcome,
-        emotion: SherpiEmotion.cheering,
-        duration: Duration(seconds: 3),
-      );
-    });
+    // 🚫 셰르피 환영 메시지 제거 - 단순 화면 진입은 조용히 처리
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   ref.read(sherpiProvider.notifier).showMessage(
+    //     context: SherpiContext.welcome,
+    //     emotion: SherpiEmotion.cheering,
+    //     duration: Duration(seconds: 3),
+    //   );
+    // });
   }
 
   @override

@@ -59,17 +59,17 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
 
     _animationController.forward();
 
-    // 🎯 화면 진입 시 셰르피 안내
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(sherpiProvider.notifier).showMessage(
-        context: SherpiContext.encouragement,
-        emotion: SherpiEmotion.cheering,
-        userContext: {
-          'screen': 'meeting_review',
-          'meeting_title': widget.meeting.title,
-        },
-      );
-    });
+    // 🚫 화면 진입 시 셰르피 안내 제거 - 단순 화면 진입은 조용히 처리
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   ref.read(sherpiProvider.notifier).showMessage(
+    //     context: SherpiContext.encouragement,
+    //     emotion: SherpiEmotion.cheering,
+    //     userContext: {
+    //       'screen': 'meeting_review',
+    //       'meeting_title': widget.meeting.title,
+    //     },
+    //   );
+    // });
   }
 
   @override
