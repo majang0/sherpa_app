@@ -58,14 +58,6 @@ class AiMessageCache {
   
   final EnhancedGeminiDialogueSource _geminiSource = EnhancedGeminiDialogueSource();
   
-  /// 🔥 중요한 이벤트들 - AI가 필요한 특별한 순간들
-  static const List<SherpiContext> _premiumContexts = [
-    SherpiContext.welcome,        // 첫 설치
-    SherpiContext.levelUp,        // 중요 레벨업 (10, 20, 50)
-    SherpiContext.longTimeNoSee,  // 재복귀
-    SherpiContext.milestone,      // 특별 달성
-    SherpiContext.specialEvent,   // 기념일
-  ];
   
   /// 🚀 선택적 백그라운드 메시지 생성 (최적화됨)
   Future<void> pregenerateImportantMessages({

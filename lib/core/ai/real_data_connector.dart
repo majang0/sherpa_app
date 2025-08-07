@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/shared/providers/global_user_provider.dart';
 import 'package:sherpa_app/shared/providers/global_point_provider.dart';
 import 'package:sherpa_app/features/quests/providers/quest_provider_v2.dart';
-import 'package:sherpa_app/shared/providers/global_game_provider.dart';
 import 'package:sherpa_app/shared/providers/global_user_title_provider.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/shared/models/point_system_model.dart';
@@ -103,7 +102,6 @@ class RealDataConnector {
     final user = _ref.read(globalUserProvider);
     final points = _ref.read(globalPointProvider);
     final quests = _ref.read(questProviderV2);
-    final game = _ref.read(globalGameProvider);
     final titles = _ref.read(globalUserTitleProvider);
     // Relationship provider는 옵셔널로 처리
     // final relationship = _ref.read(sherpiRelationshipProvider);
@@ -304,8 +302,8 @@ class RealDataConnector {
       'timeOfDay': _getTimeOfDay(now.hour),
       'isWeekend': now.weekday >= 6,
       'todayProgress': {
-        'exercise': todayRecord?.exerciseLogs.isNotEmpty ?? false,
-        'reading': todayRecord?.readingLogs.isNotEmpty ?? false,
+        'exercise': todayRecord.exerciseLogs.isNotEmpty,
+        'reading': todayRecord.readingLogs.isNotEmpty,
         'diary': todayRecord.diaryLogs.isNotEmpty,
       },
       'energyLevel': _estimateEnergyLevel(now.hour, todayRecord),
@@ -378,7 +376,7 @@ class RealDataConnector {
   
   double _calculateCompletionRate(GlobalUser user) {
     // 총 플레이 일수는 1일로 가정 (createdAt 필드가 없음)
-    final totalDays = 1;
+    const totalDays = 1;
     
     // 오늘 하루의 활동 완료 여부로 계산
     final hasActivity = user.dailyRecords.exerciseLogs.isNotEmpty || 
@@ -416,9 +414,9 @@ class RealDataConnector {
     return 'night';
   }
   
-  String _estimateEnergyLevel(int hour, DailyRecordData? todayRecord) {
-    final activityCount = (todayRecord?.exerciseLogs.length ?? 0) +
-                         (todayRecord?.readingLogs.length ?? 0);
+  String _estimateEnergyLevel(int hour, DailyRecordData todayRecord) {
+    final activityCount = todayRecord.exerciseLogs.length +
+                         todayRecord.readingLogs.length;
     
     if (activityCount >= 3) return 'low';
     if (activityCount >= 1) return 'medium';
@@ -427,10 +425,10 @@ class RealDataConnector {
     return 'medium';
   }
   
-  String _suggestActivity(int hour, DailyRecordData? todayRecord) {
-    final hasExercised = todayRecord?.exerciseLogs.isNotEmpty ?? false;
-    final hasRead = todayRecord?.readingLogs.isNotEmpty ?? false;
-    final hasWrittenDiary = todayRecord?.diaryLogs.isNotEmpty ?? false;
+  String _suggestActivity(int hour, DailyRecordData todayRecord) {
+    final hasExercised = todayRecord.exerciseLogs.isNotEmpty;
+    final hasRead = todayRecord.readingLogs.isNotEmpty;
+    final hasWrittenDiary = todayRecord.diaryLogs.isNotEmpty;
     
     if (!hasExercised && hour < 20) return 'exercise';
     if (!hasRead && hour < 22) return 'reading';
