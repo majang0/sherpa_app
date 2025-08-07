@@ -200,6 +200,12 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
       lastInteractionDate: DateTime.now(),
     );
   }
+  
+  /// 🎨 Phase 2: 관계 정보 직접 업데이트 (개인화 설정 등)
+  void updateRelationship(SherpiRelationship newRelationship) {
+    state = newRelationship;
+    print('🎨 관계 정보 직접 업데이트 완료: ${newRelationship.personalizationSettings.personalityType.displayName}');
+  }
 
   /// 💭 특별한 순간 회상하기
   SpecialMoment? recallSpecialMoment({String? type}) {
@@ -312,19 +318,19 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
 }
 
 /// 🌟 셰르피 관계 프로바이더
-final sherpiRelationshipProvider = StateNotifierProvider<SherpiRelationshipNotifier, SherpiRelationship>((ref) {
+final relationshipProvider = StateNotifierProvider<SherpiRelationshipNotifier, SherpiRelationship>((ref) {
   throw UnimplementedError('SharedPreferences를 main.dart에서 제공해야 합니다');
 });
 
 /// 관계 통계 프로바이더
 final relationshipStatsProvider = Provider<Map<String, dynamic>>((ref) {
-  final notifier = ref.watch(sherpiRelationshipProvider.notifier);
+  final notifier = ref.watch(relationshipProvider.notifier);
   return notifier.getRelationshipStats();
 });
 
 /// 특별한 순간 목록 프로바이더
 final specialMomentsProvider = Provider<List<SpecialMoment>>((ref) {
-  return ref.watch(sherpiRelationshipProvider).specialMoments;
+  return ref.watch(relationshipProvider).specialMoments;
 });
 
 /// 다음 레벨 진행률 프로바이더

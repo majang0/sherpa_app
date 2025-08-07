@@ -24,7 +24,7 @@ class EmotionSyncIndicator extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emotionState = ref.watch(emotionAnalysisProvider);
-    final relationship = ref.watch(sherpiRelationshipProvider);
+    final relationship = ref.watch(relationshipProvider);
     
     final syncLevel = EmotionalSyncLevelExtension.fromValue(relationship.emotionalSync);
     final currentEmotion = emotionState.currentAnalysis?.primaryEmotion;

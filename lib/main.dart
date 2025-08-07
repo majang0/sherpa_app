@@ -62,7 +62,7 @@ void main() async {
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-        sherpiRelationshipProvider.overrideWith((ref) => 
+        relationshipProvider.overrideWith((ref) => 
           SherpiRelationshipNotifier(sharedPreferences)
         ),
         emotionAnalysisProvider.overrideWith((ref) => 
@@ -209,7 +209,7 @@ class MyApp extends ConsumerWidget {
       ref.read(sherpiProvider);
       
       // 8. 셰르피 관계 시스템 초기화
-      ref.read(sherpiRelationshipProvider);
+      ref.read(relationshipProvider);
       
       // 9. 감정 분석 시스템 초기화
       ref.read(emotionAnalysisProvider);

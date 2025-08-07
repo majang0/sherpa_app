@@ -22,7 +22,7 @@ class IntimacyLevelWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final relationship = ref.watch(sherpiRelationshipProvider);
+    final relationship = ref.watch(relationshipProvider);
     final stats = ref.watch(relationshipStatsProvider);
     final progress = ref.watch(nextLevelProgressProvider);
 
@@ -227,7 +227,7 @@ class CompactIntimacyWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final relationship = ref.watch(sherpiRelationshipProvider);
+    final relationship = ref.watch(relationshipProvider);
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

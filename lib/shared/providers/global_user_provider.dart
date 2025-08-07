@@ -14,6 +14,7 @@ import '../../core/constants/game_constants.dart';
 import 'global_point_provider.dart';
 import 'global_game_provider.dart';
 import 'global_badge_provider.dart'; // 뱃지 Provider 추가
+import '../models/sherpi_quick_response_model.dart'; // Phase 2: 빠른 응답 모델
 
 /// 글로벌 사용자 데이터 관리 Provider (완전 독립형)
 final globalUserProvider = StateNotifierProvider<GlobalUserNotifier, GlobalUser>((ref) {
@@ -1465,7 +1466,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     }
   }
 
-  /// 🎭 활동 유형별 셰르피 반응 트리거
+  /// 🎭 활동 유형별 셰르피 반응 트리거 (Phase 2: 빠른 응답 자동 표시 포함)
   void _triggerSherpiReaction(
     String activityType, 
     String message, 
@@ -1562,7 +1563,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       customMessage = '🎉 레벨업! ${state.level}레벨 달성! 축하해요!';
     }
 
-    // 셰르피 메시지 표시 (레벨업이면 레벨업 메시지만, 아니면 활동 메시지만)
+    // 셰르피 메시지 표시 + 빠른 응답 자동 트리거
     Future.delayed(const Duration(milliseconds: 500), () {
       if (customMessage != null) {
         // 레벨업이나 특별 상황: 커스텀 메시지 표시
@@ -1591,7 +1592,383 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           },
         );
       }
+
+      // 🚀 Phase 2: 활동 완료 후 적절한 빠른 응답 옵션 자동 표시
+      _triggerQuickResponseForActivity(context, activityType, additionalData);
     });
+  }
+
+  /// ⚡ 활동 유형별 빠른 응답 자동 표시 (Phase 2)
+  void _triggerQuickResponseForActivity(
+    SherpiContext context,
+    String activityType,
+    Map<String, dynamic>? additionalData,
+  ) {
+    // 빠른 응답이 적절한 컨텍스트인지 확인
+    final shouldShowQuickResponse = _shouldShowQuickResponseFor(activityType);
+    
+    if (!shouldShowQuickResponse) return;
+
+    // 메시지 표시 후 약간의 딜레이를 두고 빠른 응답 옵션 표시
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      try {
+        ref.read(sherpiProvider.notifier).showQuickResponseOptions(
+          showDuration: const Duration(seconds: 8),
+        );
+      } catch (e) {
+        // 에러 발생 시 조용히 처리 (빠른 응답은 선택적 기능)
+        print('빠른 응답 표시 중 오류: $e');
+      }
+    });
+  }
+
+  /// 활동 유형별 빠른 응답 표시 여부 결정
+  bool _shouldShowQuickResponseFor(String activityType) {
+    switch (activityType) {
+      case 'exercise':
+      case 'reading':
+      case 'diary':
+      case 'meeting_host':
+      case 'meeting_participant':
+        return true; // 주요 활동에만 빠른 응답 표시
+      case String() when activityType.startsWith('quest_'):
+        return true; // 퀘스트 완료시 빠른 응답 표시
+      case 'challenge':
+        return true; // 챌린지 완료시 빠른 응답 표시
+      default:
+        return false; // 기타 활동은 빠른 응답 생략
+    }
+  }
+
+  /// 활동별 맞춤 빠른 응답 옵션 생성 (Phase 2: 실제 데이터 기반 개인화)
+  List<QuickResponseOption>? _getQuickResponseOptionsForActivity(
+    String activityType,
+    Map<String, dynamic>? additionalData,
+  ) {
+    // 사용자 실제 데이터 수집
+    final user = state;
+    final todayRecord = user.dailyRecords;
+    final userLevel = user.level;
+    final consecutiveDays = todayRecord.consecutiveDays;
+    final currentHour = DateTime.now().hour;
+
+    switch (activityType) {
+      case 'exercise':
+        final exerciseCount = todayRecord.exerciseLogs.length;
+        final totalMinutes = todayRecord.exerciseLogs.fold<int>(
+          0, (sum, log) => sum + log.durationMinutes);
+        
+        return [
+          // 운동량에 따라 다른 옵션 제공
+          if (exerciseCount == 1 && totalMinutes < 30)
+            QuickResponseOption(
+              id: 'exercise_more',
+              text: '더 운동할래요! 💪',
+              responseText: '좋아요! 30분은 채워보세요!',
+              triggerContext: SherpiContext.encouragement,
+              type: QuickResponseType.action,
+              isPersonalized: true,
+            )
+          else if (exerciseCount >= 2 || totalMinutes >= 60)
+            QuickResponseOption(
+              id: 'exercise_enough',
+              text: '충분히 운동했어요 😌',
+              responseText: '${totalMinutes}분 운동! 정말 대단해요!',
+              triggerContext: SherpiContext.encouragement,
+              type: QuickResponseType.acknowledgment,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'exercise_rest',
+              text: '이제 휴식할게요 😌',
+              responseText: '충분한 휴식도 중요해요. 수고했어요!',
+              triggerContext: SherpiContext.encouragement,
+              type: QuickResponseType.acknowledgment,
+            ),
+            
+          // 레벨에 따라 다른 제안
+          if (userLevel >= 10)
+            QuickResponseOption(
+              id: 'exercise_advanced',
+              text: '고강도 운동에 도전하고 싶어요 🔥',
+              responseText: '${userLevel}레벨 실력이면 충분히 가능해요!',
+              triggerContext: SherpiContext.encouragement,
+              type: QuickResponseType.ambitious,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'exercise_record',
+              text: '기록을 더 추가하고 싶어요 📝',
+              responseText: '좋습니다! 상세한 기록이 성장에 도움이 돼요.',
+              triggerContext: SherpiContext.encouragement,
+              type: QuickResponseType.action,
+            ),
+        ];
+
+      case 'reading':
+      case 'study':
+        final todayPages = todayRecord.readingLogs.fold<int>(
+          0, (sum, log) => sum + log.pages);
+        final readingCount = todayRecord.readingLogs.length;
+        
+        return [
+          // 독서량에 따른 개인화
+          if (readingCount == 1 && todayPages < 20)
+            QuickResponseOption(
+              id: 'reading_continue',
+              text: '계속 읽고 싶어요 📚',
+              responseText: '${todayPages}페이지 읽었네요! 더 읽어보세요!',
+              triggerContext: SherpiContext.studyComplete,
+              type: QuickResponseType.action,
+              isPersonalized: true,
+            )
+          else if (todayPages >= 50)
+            QuickResponseOption(
+              id: 'reading_amazing',
+              text: '오늘 정말 많이 읽었어요! 🤓',
+              responseText: '${todayPages}페이지! 정말 대단한 독서량이에요!',
+              triggerContext: SherpiContext.studyComplete,
+              type: QuickResponseType.celebratory,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'reading_note',
+              text: '노트를 정리하고 싶어요 ✏️',
+              responseText: '훌륭한 생각이에요! 정리가 기억에 도움이 됩니다.',
+              triggerContext: SherpiContext.studyComplete,
+              type: QuickResponseType.action,
+            ),
+
+          // 연속 일수에 따른 격려
+          if (consecutiveDays >= 7)
+            QuickResponseOption(
+              id: 'reading_streak',
+              text: '독서 습관이 자리잡았어요! 📖',
+              responseText: '${consecutiveDays}일 연속! 정말 훌륭한 습관이에요!',
+              triggerContext: SherpiContext.studyComplete,
+              type: QuickResponseType.proud,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'reading_share',
+              text: '다른 사람과 나누고 싶어요 💬',
+              responseText: '지식을 나누는 것은 멋진 일이에요!',
+              triggerContext: SherpiContext.studyComplete,
+              type: QuickResponseType.social,
+            ),
+        ];
+
+      case 'diary':
+        final diaryCount = todayRecord.diaryLogs.length;
+        final isEvening = currentHour >= 18;
+        
+        return [
+          // 시간대와 일기 빈도에 따른 개인화
+          if (isEvening && diaryCount == 1)
+            QuickResponseOption(
+              id: 'diary_evening',
+              text: '하루를 정리하는 시간이에요 🌅',
+              responseText: '저녁 시간 일기 쓰기, 정말 좋은 습관이에요!',
+              triggerContext: SherpiContext.diaryWritten,
+              type: QuickResponseType.reflective,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'diary_reflect',
+              text: '더 생각해볼게요 🤔',
+              responseText: '깊은 성찰이 성장의 원동력이에요!',
+              triggerContext: SherpiContext.diaryWritten,
+              type: QuickResponseType.reflective,
+            ),
+            
+          // 연속 기록에 따른 격려
+          if (consecutiveDays >= 5)
+            QuickResponseOption(
+              id: 'diary_consistency',
+              text: '꾸준함이 대단해요! 💪',
+              responseText: '${consecutiveDays}일째 꾸준히! 성장이 보여요!',
+              triggerContext: SherpiContext.diaryWritten,
+              type: QuickResponseType.proud,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'diary_grateful',
+              text: '감사한 마음이에요 🙏',
+              responseText: '감사하는 마음이 정말 아름다워요!',
+              triggerContext: SherpiContext.diaryWritten,
+              type: QuickResponseType.emotional,
+            ),
+
+          QuickResponseOption(
+            id: 'diary_plan',
+            text: '내일을 계획해볼게요 📅',
+            responseText: '계획을 세우는 것은 현명한 선택이에요!',
+            triggerContext: SherpiContext.diaryWritten,
+            type: QuickResponseType.action,
+          ),
+        ];
+
+      case 'meeting_host':
+      case 'meeting_participant':
+        final meetingCount = todayRecord.meetingLogs.length;
+        final isHost = activityType == 'meeting_host';
+        
+        return [
+          // 호스팅 여부에 따른 개인화
+          if (isHost)
+            QuickResponseOption(
+              id: 'meeting_leadership',
+              text: '리더십을 발휘했어요! 👑',
+              responseText: '모임을 이끈 리더십이 정말 멋져요!',
+              triggerContext: SherpiContext.meetingJoined,
+              type: QuickResponseType.proud,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'meeting_enjoyed',
+              text: '정말 즐거웠어요! 😊',
+              responseText: '좋은 모임이었군요! 사람들과의 만남이 소중해요.',
+              triggerContext: SherpiContext.meetingJoined,
+              type: QuickResponseType.emotional,
+            ),
+
+          // 모임 참여 횟수에 따른 격려
+          if (meetingCount >= 2)
+            QuickResponseOption(
+              id: 'meeting_active',
+              text: '오늘 ${meetingCount}번째 모임이에요! 🎉',
+              responseText: '활발한 사회활동이 정말 인상적이에요!',
+              triggerContext: SherpiContext.meetingJoined,
+              type: QuickResponseType.social,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'meeting_learned',
+              text: '많이 배웠어요 📚',
+              responseText: '새로운 배움이 있어서 좋았겠어요!',
+              triggerContext: SherpiContext.meetingJoined,
+              type: QuickResponseType.learning,
+            ),
+
+          QuickResponseOption(
+            id: 'meeting_network',
+            text: '좋은 사람들을 만났어요 👥',
+            responseText: '인맥도 넓히고 즐거운 시간이었네요!',
+            triggerContext: SherpiContext.meetingJoined,
+            type: QuickResponseType.social,
+          ),
+        ];
+
+      case String() when activityType.startsWith('quest_'):
+        // 퀘스트 난이도와 완료 횟수에 따른 개인화
+        final difficulty = additionalData?['difficulty'] ?? 'easy';
+        
+        return [
+          if (difficulty == 'hard')
+            QuickResponseOption(
+              id: 'quest_expert',
+              text: '어려운 퀘스트도 해냈어요! 🏅',
+              responseText: '고난이도 퀘스트 완료! 정말 실력자네요!',
+              triggerContext: SherpiContext.questComplete,
+              type: QuickResponseType.proud,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'quest_next',
+              text: '다른 퀘스트도 해볼게요! 🎯',
+              responseText: '도전 정신이 훌륭해요! 계속 성장해보세요!',
+              triggerContext: SherpiContext.questComplete,
+              type: QuickResponseType.action,
+            ),
+
+          if (userLevel >= 15)
+            QuickResponseOption(
+              id: 'quest_mentor',
+              text: '다른 사람도 도와주고 싶어요 🤝',
+              responseText: '${userLevel}레벨의 경험을 나누는 것도 멋져요!',
+              triggerContext: SherpiContext.questComplete,
+              type: QuickResponseType.social,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'quest_proud',
+              text: '뿌듯해요! 😄',
+              responseText: '성취감을 느끼는 모습이 정말 보기 좋아요!',
+              triggerContext: SherpiContext.questComplete,
+              type: QuickResponseType.emotional,
+            ),
+
+          QuickResponseOption(
+            id: 'quest_reward',
+            text: '보상이 궁금해요 🎁',
+            responseText: '노력의 결실을 확인해보세요!',
+            triggerContext: SherpiContext.questComplete,
+            type: QuickResponseType.curiosity,
+          ),
+        ];
+
+      case 'challenge':
+        final duration = additionalData?['duration'] ?? 1;
+        
+        return [
+          if (duration >= 7)
+            QuickResponseOption(
+              id: 'challenge_perseverance',
+              text: '${duration}일간 정말 대단했어요! 🏆',
+              responseText: '이런 끈기와 노력이 정말 감동적이에요!',
+              triggerContext: SherpiContext.achievement,
+              type: QuickResponseType.celebratory,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'challenge_accomplished',
+              text: '해냈어요! 🏆',
+              responseText: '정말 대단한 성취예요! 축하해요!',
+              triggerContext: SherpiContext.achievement,
+              type: QuickResponseType.celebratory,
+            ),
+
+          if (userLevel >= 20)
+            QuickResponseOption(
+              id: 'challenge_legend',
+              text: '이제 전설이 되었어요! ⭐',
+              responseText: '${userLevel}레벨의 전설적인 도전이었어요!',
+              triggerContext: SherpiContext.achievement,
+              type: QuickResponseType.legendary,
+              isPersonalized: true,
+            )
+          else
+            QuickResponseOption(
+              id: 'challenge_next',
+              text: '더 큰 도전을 해보고 싶어요 🚀',
+              responseText: '멈추지 않는 도전 정신이 훌륭해요!',
+              triggerContext: SherpiContext.achievement,
+              type: QuickResponseType.ambitious,
+            ),
+
+          QuickResponseOption(
+            id: 'challenge_share',
+            text: '친구들에게 자랑하고 싶어요 📢',
+            responseText: '자랑할 만한 멋진 성취네요!',
+            triggerContext: SherpiContext.achievement,
+            type: QuickResponseType.social,
+          ),
+        ];
+
+      default:
+        return null;
+    }
   }
 
   /// 레벨업 여부 확인

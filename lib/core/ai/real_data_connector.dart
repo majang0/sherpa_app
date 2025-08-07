@@ -104,7 +104,7 @@ class RealDataConnector {
     final quests = _ref.read(questProviderV2);
     final titles = _ref.read(globalUserTitleProvider);
     // Relationship provider는 옵셔널로 처리
-    // final relationship = _ref.read(sherpiRelationshipProvider);
+    // final relationship = _ref.read(relationshipProvider);
     
     return {
       // 게임 진행 상태

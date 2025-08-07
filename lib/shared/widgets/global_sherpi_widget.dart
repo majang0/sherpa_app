@@ -15,6 +15,9 @@ import '../../features/sherpi_chat/presentation/screens/sherpi_chat_screen.dart'
 import '../providers/global_sherpi_provider.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 import '../../features/sherpi_relationship/presentation/widgets/intimacy_level_widget.dart';
+import '../models/sherpi_relationship_model.dart';
+import 'sherpi_quick_response_widget.dart';
+import 'sherpi_relationship_growth_widget.dart';
 
 /// 🌟 전역 셰르피 위젯
 /// 
@@ -109,27 +112,41 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
       _stopPulseAnimation();
     }
     
-    return Positioned(
-      bottom: 100, // 더 눈에 띄는 위치로 상향 조정
-      right: 20,   // 오른쪽 여백 증가
-      child: GestureDetector(
-        onTap: _onSherpiTapped,
-        behavior: HitTestBehavior.opaque, // 터치 영역 확대
-        child: AnimatedBuilder(
-          animation: Listenable.merge([
-            _pulseController,
-            _bounceController,
-          ]),
-          builder: (context, child) {
-            return Transform.scale(
-              scale: 1.0 + 
-                (_pulseController.value * 0.1) + // 부드러운 맥동
-                (_bounceController.value * 0.15), // 적절한 터치 피드백
-              child: _buildSherpiAvatar(sherpiState),
-            );
-          },
+    return Stack(
+      children: [
+        // 메인 셰르피 플로팅 위젯
+        Positioned(
+          bottom: 100, // 더 눈에 띄는 위치로 상향 조정
+          right: 20,   // 오른쪽 여백 증가
+          child: GestureDetector(
+            onTap: _onSherpiTapped,
+            behavior: HitTestBehavior.opaque, // 터치 영역 확대
+            child: AnimatedBuilder(
+              animation: Listenable.merge([
+                _pulseController,
+                _bounceController,
+              ]),
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: 1.0 + 
+                    (_pulseController.value * 0.1) + // 부드러운 맥동
+                    (_bounceController.value * 0.15), // 적절한 터치 피드백
+                  child: _buildSherpiAvatar(sherpiState),
+                );
+              },
+            ),
+          ),
         ),
-      ),
+        
+        // 빠른 응답 위젯 (셰르피 위에 표시)
+        if (sherpiState.showQuickResponseOptions)
+          const Positioned(
+            bottom: 180, // 셰르피 위 적절한 위치
+            left: 0,
+            right: 0,
+            child: SherpiQuickResponseWidget(),
+          ),
+      ],
     );
   }
   
@@ -209,7 +226,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
           // 친밀도 레벨 배지
           Consumer(
             builder: (context, ref, child) {
-              final relationship = ref.watch(sherpiRelationshipProvider);
+              final relationship = ref.watch(relationshipProvider);
               return Positioned(
                 bottom: 4,  // 더 여유로운 위치
                 right: 4,
@@ -684,6 +701,28 @@ class SherpiExpandedDialog extends ConsumerWidget {
                           ),
                           onTap: () => _showEncouragement(context, ref),
                         ),
+                        const SizedBox(height: 12),
+                        _buildModernActionButton(
+                          context,
+                          ref,
+                          icon: Icons.tune,
+                          title: '셰르피 설정',
+                          subtitle: '성격과 메시지 빈도 변경',
+                          gradient: LinearGradient(
+                            colors: [Colors.teal.shade400, Colors.teal.shade600],
+                          ),
+                          onTap: () => _showPersonalizationSettings(context, ref),
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Phase 2: 관계 성장 시각화 위젯
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: Colors.white.withOpacity(0.3),
+                          ),
+                          child: const SherpiRelationshipGrowthWidget(showFullStats: false),
+                        ),
                         const SizedBox(height: 24),
                         
                         // 닫기 버튼 - Modern style
@@ -963,6 +1002,215 @@ class SherpiExpandedDialog extends ConsumerWidget {
       context: SherpiContext.encouragement,
       duration: const Duration(seconds: 5),
       forceShow: true, // 다이얼로그 액션 버튼은 항상 표시
+    );
+  }
+  
+  /// 개인화 설정 화면 표시
+  void _showPersonalizationSettings(BuildContext context, WidgetRef ref) {
+    Navigator.of(context).pop();
+    
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.tune, color: Colors.teal.shade600),
+                  const SizedBox(width: 8),
+                  Text(
+                    '셰르피 개인화 설정',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '셰르피의 성격과 메시지 빈도를 조정할 수 있습니다.',
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 24),
+              _buildQuickPersonalitySetting(context, ref),
+              const SizedBox(height: 16),
+              _buildQuickFrequencySetting(context, ref),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('설정이 저장되었습니다!'),
+                        backgroundColor: Colors.teal,
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text(
+                    '저장',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  /// 빠른 성격 설정
+  Widget _buildQuickPersonalitySetting(BuildContext context, WidgetRef ref) {
+    final relationship = ref.watch(relationshipProvider);
+    final currentType = relationship.personalizationSettings.personalityType;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '성격 유형',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: SherpiPersonalityType.values.map((type) {
+            final isSelected = type == currentType;
+            return GestureDetector(
+              onTap: () {
+                final updatedSettings = relationship.personalizationSettings.copyWith(
+                  personalityType: type,
+                );
+                final updatedRelationship = relationship.copyWith(
+                  personalizationSettings: updatedSettings,
+                );
+                ref.read(relationshipProvider.notifier).updateRelationship(updatedRelationship);
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.teal : Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: isSelected ? Colors.teal : Colors.grey.shade300,
+                  ),
+                ),
+                child: Text(
+                  type.displayName,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : AppColors.textSecondary,
+                    fontSize: 12,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+  
+  /// 빠른 빈도 설정
+  Widget _buildQuickFrequencySetting(BuildContext context, WidgetRef ref) {
+    final relationship = ref.watch(relationshipProvider);
+    final currentFreq = relationship.personalizationSettings.messageFrequency;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '메시지 빈도',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: MessageFrequency.values.map((freq) {
+            final isSelected = freq == currentFreq;
+            return GestureDetector(
+              onTap: () {
+                final updatedSettings = relationship.personalizationSettings.copyWith(
+                  messageFrequency: freq,
+                );
+                final updatedRelationship = relationship.copyWith(
+                  personalizationSettings: updatedSettings,
+                );
+                ref.read(relationshipProvider.notifier).updateRelationship(updatedRelationship);
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: isSelected ? Colors.teal : Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: isSelected ? Colors.teal : Colors.grey.shade300,
+                  ),
+                ),
+                child: Text(
+                  freq.displayName,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : AppColors.textSecondary,
+                    fontSize: 12,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
   
