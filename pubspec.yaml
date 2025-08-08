@@ -41,7 +41,7 @@ dependencies:
   firebase_storage: ^11.5.6
   
   # AI 연동
-  google_generative_ai: ^0.2.2
+  google_generative_ai: ^0.4.7
   flutter_dotenv: ^5.1.0  # 환경변수 관리
 
   # 기능별 패키지

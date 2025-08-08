@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
-import 'package:sherpa_app/core/ai/enhanced_gemini_dialogue_source.dart';
+// import 'package:sherpa_app/core/ai/enhanced_gemini_dialogue_source.dart'; // 임시 비활성화
 
 /// 📦 캐시된 메시지 데이터 구조 (LRU 지원)
 class CachedMessage {
@@ -54,9 +54,9 @@ class CachedMessage {
 class AiMessageCache {
   static const String _cacheKey = 'ai_message_cache';
   static const Duration _cacheExpiry = Duration(hours: 24); // 24시간 후 만료 (더 짧게)
-  static const int _maxCacheSize = 50; // 최대 캐시 크기 (더 작게)
   
-  final EnhancedGeminiDialogueSource _geminiSource = EnhancedGeminiDialogueSource();
+  // 임시로 캐시에서 Gemini 생성 비활성화
+  // final EnhancedGeminiDialogueSource _geminiSource = EnhancedGeminiDialogueSource();
   
   
   /// 🚀 핵심 메시지만 백그라운드 생성 (단순화)
@@ -87,21 +87,25 @@ class AiMessageCache {
       }
       
       try {
+        // 임시로 캐시 생성 비활성화 - 테스트 중
+        print('⚠️ 캐시 생성이 임시로 비활성화되었습니다.');
+        continue;
+        
         // AI 메시지 생성
-        final message = await _geminiSource.getDialogue(
-          context,
-          currentUserContext,
-          currentGameContext,
-        );
+        // final message = await _geminiSource.getDialogue(
+        //   context,
+        //   currentUserContext,
+        //   currentGameContext,
+        // );
         
-        // 캐시에 저장
-        cache[cacheKey] = CachedMessage(
-          message: message,
-          generatedAt: DateTime.now(),
-          userContext: currentUserContext,
-        );
+        // 캐시에 저장 - 비활성화됨
+        // cache[cacheKey] = CachedMessage(
+        //   message: message,
+        //   generatedAt: DateTime.now(),
+        //   userContext: currentUserContext,
+        // );
         
-        print('✅ ${context.name} 메시지 생성 완료');
+        // print('✅ ${context.name} 메시지 생성 완료');
         
         // API 부하 방지를 위한 딜레이
         await Future.delayed(const Duration(seconds: 2));

@@ -61,8 +61,8 @@ class SmartSherpiManager {
         personalityBonus = 0.0; // 균형형은 기본값 유지
     }
     
-    // 최종 AI 사용률 계산 (0.05 ~ 1.0 범위로 제한)
-    return (baseRate + personalityBonus).clamp(0.05, 1.0);
+    // 최종 AI 사용률 계산 (빈도 배율 적용 후 0.05 ~ 1.0 범위로 제한)
+    return (baseRate * frequencyMultiplier + personalityBonus).clamp(0.05, 1.0);
   }
   
   /// 🎯 AI 사용 기준 정의 (단순화된 3단계 시스템)
@@ -295,11 +295,14 @@ class SmartSherpiManager {
     Map<String, dynamic> userContext,
     Map<String, dynamic> gameContext,
   ) async {
+    // 임시로 백그라운드 캐싱 비활성화 - 테스트 중
+    print('⚠️ 백그라운드 캐시 생성이 임시로 비활성화되었습니다.');
+    
     // 기본 백그라운드 캐싱만 사용 (개인화 기능 제거됨)
-    unawaited(_cache.pregenerateImportantMessages(
-      currentUserContext: userContext,
-      currentGameContext: gameContext,
-    ));
+    // unawaited(_cache.pregenerateImportantMessages(
+    //   currentUserContext: userContext,
+    //   currentGameContext: gameContext,
+    // ));
   }
   
   /// 📊 시스템 상태 확인

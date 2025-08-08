@@ -17,11 +17,11 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
       print('🧠 단순 Gemini 모델 초기화 중...');
       
       _model = GenerativeModel(
-        model: 'gemini-2.0-flash-exp', // Latest available model
+        model: ApiConfig.geminiModel, // 설정 파일에서 모델 가져오기
         apiKey: apiKey,
         generationConfig: GenerationConfig(
           temperature: 0.8,
-          maxOutputTokens: 300,  // 짧은 응답으로 제한
+          maxOutputTokens: 1000,  // 충분한 토큰 수
         ),
       );
       
@@ -50,10 +50,28 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
       // 단순화된 프롬프트 생성
       final prompt = _buildSimplePrompt(context, userContext, gameContext);
       
-      final content = [Content.text(prompt)];
-      final response = await _model.generateContent(content);
+      // 가장 간단한 방식으로 API 호출
+      final response = await _model.generateContent([Content.text(prompt)]);
       
-      final responseText = response.text;
+      // 안전한 텍스트 추출
+      String? responseText;
+      
+      if (response.text != null && response.text!.isNotEmpty) {
+        responseText = response.text!;
+      } else {
+        // 대안 방법: candidates에서 직접 추출
+        if (response.candidates.isNotEmpty) {
+          final candidate = response.candidates.first;
+          if (candidate.content.parts.isNotEmpty) {
+            for (final part in candidate.content.parts) {
+              if (part is TextPart && part.text.isNotEmpty) {
+                responseText = part.text;
+                break;
+              }
+            }
+          }
+        }
+      }
       
       if (responseText != null && responseText.isNotEmpty) {
         final processedResponse = _processSimpleResponse(responseText);
@@ -66,6 +84,11 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
       
     } catch (e) {
       print('❌ Gemini API 에러: $e');
+      // 더 자세한 에러 정보 출력
+      if (e.toString().contains('FormatException') || 
+          e.toString().contains('Unhandled format')) {
+        print('💡 이것은 SDK 호환성 문제일 수 있습니다. 폴백으로 전환합니다.');
+      }
       return await _fallbackSource.getDialogue(context, userContext, gameContext);
     }
   }

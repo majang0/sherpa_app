@@ -918,3 +918,56 @@ Be aware of these differences between dependencies and actual usage:
 		
 ** MCP 서버 제거가 필요할 때 예시: **
 claude mcp remove youtube-mcp
+
+## Gemini AI 시스템 트러블슈팅 가이드 (2025년 8월 업데이트)
+
+### ❌ 알려진 문제: FormatException & SDK 호환성 이슈
+
+**문제**: `google_generative_ai` 패키지에서 "Unhandled format for Content: {role: model}" 또는 "FormatException" 에러 발생
+
+**근본 원인**: 
+- 2025년부터 `google_generative_ai` 패키지가 deprecated됨 (Firebase AI Logic SDK로 통합)
+- 새로운 Gemini 2.5 Flash 모델의 응답 형식과 기존 SDK 간 호환성 문제
+- **백그라운드 캐시 시스템**이 앱 시작 시 자동으로 여러 API 요청을 보내면서 에러 발생
+
+### ✅ 적용된 해결책
+
+**1. 백그라운드 캐시 시스템 비활성화**:
+- `lib/core/ai/ai_message_cache.dart`: 캐시에서 자동 Gemini 호출 비활성화
+- `lib/core/ai/smart_sherpi_manager.dart`: 백그라운드 캐싱 비활성화
+- **이유**: 사용자 요청 시에만 API 호출하여 에러 방지
+
+**2. 안전한 응답 처리**:
+- FormatException 발생 시 자동으로 정적 메시지로 fallback
+- 에러 감지 및 복구 메커니즘 추가
+
+**3. 현재 설정**:
+```yaml
+# pubspec.yaml
+google_generative_ai: ^0.4.7  # 안정적인 버전 유지
+```
+
+### 🚨 주의사항
+
+**캐시 시스템은 의도적으로 비활성화 상태로 유지**:
+- `_geminiSource` 인스턴스 생성 비활성화
+- `pregenerateImportantMessages()` 함수 비활성화
+- 백그라운드 자동 캐시 생성 중단
+
+**재활성화 금지**:
+- 향후 Firebase AI Logic SDK로 완전 마이그레이션 전까지는 캐시 시스템을 재활성화하지 말 것
+- 재활성화 시 앱 시작 시 FormatException 에러 재발 가능성
+
+### 📝 추가 정보
+
+**API 키 설정**:
+- `.env` 파일: `GEMINI_API_KEY=AIzaSyB...` (실제 키 설정됨)
+- API 자체는 정상 작동 (curl 테스트 성공)
+
+**Fallback 시스템**:
+- AI 응답 실패 시 자동으로 정적 메시지 사용
+- 사용자 경험 중단 없음 보장
+
+**향후 계획**:
+- Firebase AI Logic SDK (`firebase_ai` 패키지)로 마이그레이션 예정
+- 2025년 Google I/O 이후 안정화된 새 SDK 사용 권장
