@@ -7,12 +7,19 @@ import 'package:google_fonts/google_fonts.dart';
 // Core
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/sherpi_dialogues.dart';
+import '../../core/animation/micro_interactions.dart';
 
 // Features
 import '../../features/sherpi_chat/presentation/screens/sherpi_chat_screen.dart';
+import '../../features/sherpi_analysis/services/user_data_analyzer.dart';
+import '../../features/sherpi_analysis/services/ai_insight_generator.dart';
+import '../../features/sherpi_analysis/presentation/screens/analysis_result_screen.dart';
+import '../../features/sherpi_planning/services/smart_planner_service.dart';
+import '../../features/sherpi_planning/presentation/screens/planning_result_screen.dart';
 
 // Shared
 import '../providers/global_sherpi_provider.dart';
+import '../providers/global_user_provider.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 import '../../features/sherpi_relationship/presentation/widgets/intimacy_level_widget.dart';
 import 'sherpi_relationship_growth_widget.dart';
@@ -651,7 +658,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                           const SizedBox(height: 24),
                         ],
             
-                        // 액션 버튼들 - Modern card design
+                        // 액션 버튼들 - Modern card design with staggered animations
                         _buildModernActionButton(
                           context,
                           ref,
@@ -662,6 +669,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                             colors: [Colors.blue.shade400, Colors.blue.shade600],
                           ),
                           onTap: () => _openChatScreen(context, ref),
+                          index: 0,
                         ),
                         const SizedBox(height: 12),
                         _buildModernActionButton(
@@ -674,6 +682,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                             colors: [Colors.purple.shade400, Colors.purple.shade600],
                           ),
                           onTap: () => _showPatternAnalysis(context, ref),
+                          index: 1,
                         ),
                         const SizedBox(height: 12),
                         _buildModernActionButton(
@@ -686,6 +695,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                             colors: [Colors.orange.shade400, Colors.orange.shade600],
                           ),
                           onTap: () => _showPlanningMode(context, ref),
+                          index: 2,
                         ),
                         const SizedBox(height: 12),
                         _buildModernActionButton(
@@ -698,6 +708,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
                             colors: [Colors.pink.shade400, Colors.pink.shade600],
                           ),
                           onTap: () => _showEncouragement(context, ref),
+                          index: 3,
                         ),
                         const SizedBox(height: 24),
                         
@@ -781,8 +792,14 @@ class SherpiExpandedDialog extends ConsumerWidget {
     required String subtitle,
     required Gradient gradient,
     required VoidCallback onTap,
+    int index = 0, // For staggered animations
   }) {
-    return Container(
+    return MicroInteractions.tapResponse(
+      onTap: onTap,
+      scaleDownTo: 0.97,
+      duration: MicroInteractions.fast,
+      enableHaptic: true,
+      child: Container(
       width: double.infinity,
       height: 88,
       decoration: BoxDecoration(
@@ -815,7 +832,6 @@ class SherpiExpandedDialog extends ConsumerWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onTap,
           borderRadius: BorderRadius.circular(20),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -894,8 +910,10 @@ class SherpiExpandedDialog extends ConsumerWidget {
       ),
     )
       .animate()
-      .fadeIn(delay: 200.ms, duration: 500.ms)
-      .slideX(begin: 0.1, end: 0, curve: Curves.easeOutCubic);
+      .fadeIn(delay: (150 + (index * 100)).ms, duration: 600.ms, curve: Curves.easeOutCubic)
+      .slideX(begin: 0.05, end: 0, delay: (100 + (index * 80)).ms, curve: MicroInteractions.easeOutQuart)
+      .scale(begin: const Offset(0.95, 0.95), end: const Offset(1.0, 1.0), delay: (100 + (index * 80)).ms),
+    );
   }
   
   /// 감정 상태 설명 반환
@@ -944,39 +962,536 @@ class SherpiExpandedDialog extends ConsumerWidget {
   }
 
   /// 패턴 분석 표시
-  void _showPatternAnalysis(BuildContext context, WidgetRef ref) {
-    Navigator.of(context).pop();
+  void _showPatternAnalysis(BuildContext context, WidgetRef ref) async {
+    // ✅ ref 사용을 Widget dispose 전에 미리 실행
+    print('📊 [DEBUG] 분석 시작 전 사용자 데이터 미리 로드...');
+    late final globalUser;
+    try {
+      globalUser = ref.read(globalUserProvider);
+      print('📊 [DEBUG] 사용자 데이터 미리 로드 완료: ${globalUser.name}, 레벨: ${globalUser.level}');
+    } catch (e) {
+      print('❌ [DEBUG] 사용자 데이터 로드 실패: $e');
+      Navigator.of(context).pop(); // 에러 시에만 다이얼로그 닫기
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('사용자 데이터를 불러올 수 없습니다: $e'),
+          backgroundColor: Colors.red.shade400,
+        ),
+      );
+      return;
+    }
     
-    // 부드러운 알림 표시
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('패턴 분석 기능을 준비 중입니다'),
-        backgroundColor: AppColors.primary,
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+    // 먼저 다이얼로그를 닫고 새 context를 얻기 위해 약간의 딜레이 추가
+    Navigator.of(context).pop();
+    await Future.delayed(const Duration(milliseconds: 100));
+    
+    // 진행상황을 추적할 ValueNotifier 생성
+    final progressNotifier = ValueNotifier<double>(0.0);
+    final statusNotifier = ValueNotifier<String>('분석 준비 중...');
+    
+    // BuildContext를 저장하기 위해 Navigator의 context를 사용
+    final navigatorContext = Navigator.of(context).context;
+    
+    // 프로그레스 다이얼로그 표시
+    showDialog(
+      context: navigatorContext,
+      barrierDismissible: false,
+      builder: (dialogContext) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: 300,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 셰르피 아이콘
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColors.primary, AppColors.primary.withOpacity(0.7)],
+                  ),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: const Icon(
+                  Icons.analytics,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              Text(
+                '데이터 분석 중',
+                style: GoogleFonts.notoSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey.shade800,
+                ),
+              ),
+              const SizedBox(height: 8),
+              
+              // 상태 텍스트
+              ValueListenableBuilder<String>(
+                valueListenable: statusNotifier,
+                builder: (context, status, child) {
+                  return Text(
+                    status,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
+                    ),
+                    textAlign: TextAlign.center,
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              
+              // 프로그레스 바
+              ValueListenableBuilder<double>(
+                valueListenable: progressNotifier,
+                builder: (context, progress, child) {
+                  return Column(
+                    children: [
+                      LinearProgressIndicator(
+                        value: progress,
+                        backgroundColor: Colors.grey.shade200,
+                        valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                        borderRadius: BorderRadius.circular(8),
+                        minHeight: 8,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${(progress * 100).toInt()}%',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
+    
+    try {
+      // 1단계: 데이터 검증 (20%)
+      statusNotifier.value = '사용자 데이터 검증 중...';
+      progressNotifier.value = 0.2;
+      await Future.delayed(const Duration(milliseconds: 300));
+      
+      print('📊 [DEBUG] 1단계: 데이터 검증 시작...');
+      
+      // 데이터 검증 (이미 로드된 globalUser 사용)
+      if (globalUser.dailyRecords.exerciseLogs.isEmpty && 
+          globalUser.dailyRecords.readingLogs.isEmpty && 
+          globalUser.dailyRecords.diaryLogs.isEmpty) {
+        print('⚠️ [DEBUG] 경고: 활동 데이터가 없습니다!');
+      } else {
+        print('📊 [DEBUG] 활동 데이터 확인됨 - 운동: ${globalUser.dailyRecords.exerciseLogs.length}, 독서: ${globalUser.dailyRecords.readingLogs.length}, 일기: ${globalUser.dailyRecords.diaryLogs.length}');
+      }
+      
+      // mounted 상태 확인
+      if (!navigatorContext.mounted) {
+        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        return;
+      }
+      
+      // 2단계: 활동 패턴 분석 (40%)
+      print('📊 [DEBUG] 2단계: 활동 패턴 분석 시작...');
+      statusNotifier.value = '활동 패턴 분석 중...';
+      progressNotifier.value = 0.4;
+      await Future.delayed(const Duration(milliseconds: 400));
+      
+      if (!navigatorContext.mounted) {
+        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        return;
+      }
+      
+      // 3단계: 기분 분석 (60%)
+      print('📊 [DEBUG] 3단계: 기분 패턴 분석 시작...');
+      statusNotifier.value = '기분 패턴 분석 중...';
+      progressNotifier.value = 0.6;
+      await Future.delayed(const Duration(milliseconds: 300));
+      
+      if (!navigatorContext.mounted) {
+        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        return;
+      }
+      
+      // 4단계: 성과 지표 계산 (80%)
+      print('📊 [DEBUG] 4단계: 성과 지표 계산 시작...');
+      statusNotifier.value = '성과 지표 계산 중...';
+      progressNotifier.value = 0.8;
+      await Future.delayed(const Duration(milliseconds: 400));
+      
+      if (!navigatorContext.mounted) {
+        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        return;
+      }
+      
+      // 실제 기본 분석 수행
+      print('📊 [DEBUG] UserDataAnalyzer.analyzeUserData 호출 시작...');
+      final baseAnalysisResult = UserDataAnalyzer.analyzeUserData(globalUser);
+      print('📊 [DEBUG] UserDataAnalyzer.analyzeUserData 완료!');
+      print('📊 [DEBUG] 분석 결과: 인사이트 ${baseAnalysisResult.insights.length}개, 추천사항 ${baseAnalysisResult.recommendations.length}개');
+      
+      if (!navigatorContext.mounted) {
+        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        return;
+      }
+      
+      // 5단계: 기본 인사이트 완성 (95%) - AI 기능 임시 비활성화
+      print('📊 [DEBUG] 5단계: 기본 인사이트 완성 중...');
+      statusNotifier.value = '인사이트 완성 중...';
+      progressNotifier.value = 0.95;
+      await Future.delayed(const Duration(milliseconds: 400));
+      
+      if (!navigatorContext.mounted) {
+        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        return;
+      }
+      
+      // AI 기능을 임시로 비활성화하고 기본 분석 결과만 사용
+      print('📊 [DEBUG] 기본 분석 결과를 최종 결과로 설정...');
+      AnalysisResult finalAnalysisResult = baseAnalysisResult;
+      
+      // 6단계: 완료 (100%) with success animation
+      print('📊 [DEBUG] 6단계: 최종 완료 단계...');
+      statusNotifier.value = '🎉 분석 완료! ✨';
+      progressNotifier.value = 1.0;
+      await Future.delayed(const Duration(milliseconds: 800)); // Extra time for success feeling
+      
+      if (!navigatorContext.mounted) {
+        print('⚠️ [DEBUG] Widget이 dispose되어 화면 전환을 건너뜁니다.');
+        return;
+      }
+      
+      // 로딩 다이얼로그 닫기
+      if (navigatorContext.mounted) {
+        Navigator.of(navigatorContext).pop();
+        
+        // 분석 결과 화면으로 이동 with enhanced animation
+        Navigator.of(navigatorContext).push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => 
+                AnalysisResultScreen(analysisResult: finalAnalysisResult),
+            transitionDuration: const Duration(milliseconds: 400), // Slightly longer for smoother feel
+            reverseTransitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: CurvedAnimation(
+                  parent: animation,
+                  curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
+                ),
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0.0, 0.05), // Subtle slide
+                    end: Offset.zero,
+                  ).animate(CurvedAnimation(
+                    parent: animation,
+                    curve: MicroInteractions.easeOutQuart, // Custom easing
+                  )),
+                  child: ScaleTransition(
+                    scale: Tween<double>(
+                      begin: 0.98,
+                      end: 1.0,
+                    ).animate(CurvedAnimation(
+                      parent: animation,
+                      curve: MicroInteractions.easeOutBack,
+                    )),
+                    child: child,
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      }
+    } catch (e, stackTrace) {
+      // 오류 발생 시 로딩 다이얼로그 닫기
+      print('❌ [DEBUG] 분석 중 치명적 오류 발생: $e');
+      print('❌ [DEBUG] 스택 트레이스: $stackTrace');
+      if (navigatorContext.mounted) {
+        Navigator.of(navigatorContext).pop();
+        
+        // 오류 메시지 표시
+        ScaffoldMessenger.of(navigatorContext).showSnackBar(
+          SnackBar(
+            content: Text('데이터 분석 중 오류가 발생했습니다: ${e.toString()}'),
+            backgroundColor: Colors.red.shade400,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            action: SnackBarAction(
+              label: '다시 시도',
+              textColor: Colors.white,
+              onPressed: () => _showPatternAnalysis(context, ref),
+            ),
+          ),
+        );
+      }
+    }
   }
   
   /// 계획 모드 표시
-  void _showPlanningMode(BuildContext context, WidgetRef ref) {
+  void _showPlanningMode(BuildContext context, WidgetRef ref) async {
     Navigator.of(context).pop();
     
-    // 부드러운 알림 표시
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('계획 세우기 기능을 준비 중입니다'),
-        backgroundColor: AppColors.primary,
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+    // 진행상황을 추적할 ValueNotifier 생성
+    final progressNotifier = ValueNotifier<double>(0.0);
+    final statusNotifier = ValueNotifier<String>('계획 생성 준비 중...');
+    
+    // 프로그레스 다이얼로그 표시
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          width: 300,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 셰르피 아이콘
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.orange.shade400, Colors.orange.shade600],
+                  ),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: const Icon(
+                  Icons.event_note_outlined,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              Text(
+                '개인화된 계획 생성',
+                style: GoogleFonts.notoSans(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey.shade800,
+                ),
+              ),
+              const SizedBox(height: 8),
+              
+              // 상태 텍스트
+              ValueListenableBuilder<String>(
+                valueListenable: statusNotifier,
+                builder: (context, status, child) {
+                  return Text(
+                    status,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 13,
+                      color: Colors.grey.shade600,
+                    ),
+                    textAlign: TextAlign.center,
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              
+              // 프로그레스 바
+              ValueListenableBuilder<double>(
+                valueListenable: progressNotifier,
+                builder: (context, progress, child) {
+                  return Column(
+                    children: [
+                      LinearProgressIndicator(
+                        value: progress,
+                        backgroundColor: Colors.grey.shade200,
+                        valueColor: AlwaysStoppedAnimation(Colors.orange.shade500),
+                        borderRadius: BorderRadius.circular(8),
+                        minHeight: 8,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${(progress * 100).toInt()}%',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.orange.shade600,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
+    
+    try {
+      // 1단계: 사용자 데이터 분석 (25%)
+      statusNotifier.value = '사용자 패턴 분석 중...';
+      progressNotifier.value = 0.25;
+      await Future.delayed(const Duration(milliseconds: 400));
+      
+      final globalUser = ref.read(globalUserProvider);
+      
+      // 기존 분석 결과가 있으면 활용 (선택적)
+      AnalysisResult? analysisResult;
+      try {
+        analysisResult = UserDataAnalyzer.analyzeUserData(globalUser);
+      } catch (e) {
+        // 분석이 실패해도 계획 생성은 진행
+        analysisResult = null;
+      }
+      
+      // 2단계: 목표 설정 (50%)
+      statusNotifier.value = '개인화된 목표 설정 중...';
+      progressNotifier.value = 0.5;
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      // 3단계: 일정 계획 (70%)
+      statusNotifier.value = '주간 일정 계획 중...';
+      progressNotifier.value = 0.7;
+      await Future.delayed(const Duration(milliseconds: 400));
+      
+      // 4단계: 개선 계획 (85%)
+      statusNotifier.value = '개선 계획 수립 중...';
+      progressNotifier.value = 0.85;
+      await Future.delayed(const Duration(milliseconds: 400));
+      
+      // 기본 계획 생성
+      var planningResult = SmartPlannerService.createPersonalizedPlan(
+        globalUser,
+        analysisResult,
+      );
+      
+      // 5단계: AI 성장 계획 생성 (85-95%) - NEW!
+      statusNotifier.value = 'AI 맞춤 성장 계획 생성 중...';
+      progressNotifier.value = 0.85;
+      await Future.delayed(const Duration(milliseconds: 600));
+      
+      try {
+        // AI 기반 성장 계획 생성
+        if (analysisResult != null) {
+          final aiGenerator = AiInsightGenerator();
+          
+          final aiGrowthPlan = await aiGenerator.generateSmartGrowthPlan(globalUser, analysisResult);
+          
+          // AI 계획을 기존 계획에 통합 (인사이트에 AI 추천 추가)
+          // Note: PlanningInsights 객체를 유지하고 AI 추천은 별도로 표시
+          print('🤖 AI 성장 계획 생성 완료: ${aiGrowthPlan.length}자');
+          // AI 추천사항은 인사이트 페이지에서 별도로 표시될 예정
+          
+          statusNotifier.value = 'AI 성장 계획 완료! 🤖🌱';
+        } else {
+          statusNotifier.value = 'SMART 목표 생성 중...';
+        }
+      } catch (e) {
+        print('⚠️ AI 성장 계획 생성 실패, 기본 계획 사용: $e');
+        statusNotifier.value = 'SMART 목표 생성 중...';
+      }
+      
+      progressNotifier.value = 0.95;
+      await Future.delayed(const Duration(milliseconds: 300));
+      
+      // 6단계: 완료 (100%) with success animation
+      statusNotifier.value = '🎯 계획 생성 완료! 🌟';
+      progressNotifier.value = 1.0;
+      await Future.delayed(const Duration(milliseconds: 800)); // Extra time for success feeling
+      
+      // 로딩 다이얼로그 닫기
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        
+        // 계획 결과 화면으로 이동 with enhanced animation
+        Navigator.of(context).push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => 
+                PlanningResultScreen(planningResult: planningResult),
+            transitionDuration: const Duration(milliseconds: 400),
+            reverseTransitionDuration: const Duration(milliseconds: 300),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: CurvedAnimation(
+                  parent: animation,
+                  curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
+                ),
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0.0, 0.05),
+                    end: Offset.zero,
+                  ).animate(CurvedAnimation(
+                    parent: animation,
+                    curve: MicroInteractions.easeOutQuart,
+                  )),
+                  child: ScaleTransition(
+                    scale: Tween<double>(
+                      begin: 0.98,
+                      end: 1.0,
+                    ).animate(CurvedAnimation(
+                      parent: animation,
+                      curve: MicroInteractions.easeOutBack,
+                    )),
+                    child: child,
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      }
+    } catch (e) {
+      // 에러 발생 시 로딩 다이얼로그 닫기
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        
+        // 에러 메시지 표시
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('계획 생성 중 오류가 발생했습니다. 다시 시도해주세요.'),
+            backgroundColor: Colors.red.shade400,
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      }
+    }
   }
   
   /// 격려 메시지 표시
