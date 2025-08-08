@@ -15,7 +15,6 @@ import '../../features/sherpi_chat/presentation/screens/sherpi_chat_screen.dart'
 import '../providers/global_sherpi_provider.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 import '../../features/sherpi_relationship/presentation/widgets/intimacy_level_widget.dart';
-import 'sherpi_quick_response_widget.dart';
 import 'sherpi_relationship_growth_widget.dart';
 import 'sherpi_personalization_dialog.dart';
 
@@ -138,14 +137,6 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
           ),
         ),
         
-        // 빠른 응답 위젯 (셰르피 위에 표시)
-        if (sherpiState.showQuickResponseOptions)
-          const Positioned(
-            bottom: 180, // 셰르피 위 적절한 위치
-            left: 0,
-            right: 0,
-            child: SherpiQuickResponseWidget(),
-          ),
       ],
     );
   }

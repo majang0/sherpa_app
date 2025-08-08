@@ -9,7 +9,6 @@ import '../../core/ai/real_data_connector.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 import '../../features/sherpi_emotion/providers/emotion_analysis_provider.dart';
 import '../models/sherpi_message_history.dart';
-import '../models/sherpi_quick_response_model.dart';
 import '../models/sherpi_relationship_model.dart';
 
 enum SherpiDisplayMode {
@@ -28,10 +27,6 @@ class SherpiState {
   final DateTime? lastShownTime;
   final SherpiContext? currentContext;
   final Map<String, dynamic>? metadata;
-  // Phase 2: 빠른 응답 시스템 필드들
-  final List<QuickResponseOption> quickResponseOptions;
-  final bool showQuickResponseOptions;
-  final DateTime? quickResponseShownTime;
 
   const SherpiState({
     this.emotion = SherpiEmotion.defaults, // 기본 감정으로 변경
@@ -41,10 +36,6 @@ class SherpiState {
     this.lastShownTime,
     this.currentContext, // 기본값 없음
     this.metadata,
-    // Phase 2: 빠른 응답 기본값들
-    this.quickResponseOptions = const [],
-    this.showQuickResponseOptions = false,
-    this.quickResponseShownTime,
   });
 
   SherpiState copyWith({
@@ -55,10 +46,6 @@ class SherpiState {
     DateTime? lastShownTime,
     SherpiContext? currentContext,
     Map<String, dynamic>? metadata,
-    // Phase 2: 빠른 응답 필드들
-    List<QuickResponseOption>? quickResponseOptions,
-    bool? showQuickResponseOptions,
-    DateTime? quickResponseShownTime,
   }) {
     return SherpiState(
       emotion: emotion ?? this.emotion,
@@ -68,10 +55,6 @@ class SherpiState {
       lastShownTime: lastShownTime ?? this.lastShownTime,
       currentContext: currentContext ?? this.currentContext,
       metadata: metadata ?? this.metadata,
-      // Phase 2: 빠른 응답 필드들
-      quickResponseOptions: quickResponseOptions ?? this.quickResponseOptions,
-      showQuickResponseOptions: showQuickResponseOptions ?? this.showQuickResponseOptions,
-      quickResponseShownTime: quickResponseShownTime ?? this.quickResponseShownTime,
     );
   }
 
@@ -400,8 +383,6 @@ void initializeSherpi() {
         _updateRelationshipEmotionalSync();
       }
       
-      // 🚀 Phase 2: 빠른 응답 옵션 자동 표시
-      _maybeShowQuickResponseOptions(context);
       
       if (!forceShow) {
         _hideTimer = Timer(duration, () {
@@ -823,215 +804,6 @@ void initializeSherpi() {
     _lastDialogue = dialogue;
   }
   
-  /// 🚀 Phase 2: 빠른 응답 옵션들 표시
-  /// 현재 컨텍스트에 맞는 빠른 응답 옵션들을 표시합니다.
-  void showQuickResponseOptions({Duration? showDuration}) {
-    final currentContext = state.currentContext;
-    if (currentContext == null) return;
-    
-    // 빠른 응답이 지원되는 컨텍스트인지 확인
-    if (!QuickResponseTemplates.isQuickResponseSupported(currentContext)) {
-      return;
-    }
-    
-    try {
-      // 개인화 설정 가져오기
-      final relationship = _ref.read(relationshipProvider);
-      final personalizationSettings = relationship.personalizationSettings;
-      
-      // 개인화된 빠른 응답 옵션들 생성
-      final options = QuickResponseTemplates.getPersonalizedOptions(
-        currentContext,
-        personalizationSettings.userPreferredName,
-        personalizationSettings.nickname,
-      );
-      
-      // 빈 옵션이면 기본 템플릿 사용
-      final finalOptions = options.isNotEmpty 
-          ? options 
-          : (QuickResponseTemplates.getTemplate(currentContext)?.staticOptions ?? []);
-      
-      if (finalOptions.isEmpty) return;
-      
-      // 상태 업데이트
-      state = state.copyWith(
-        quickResponseOptions: finalOptions,
-        showQuickResponseOptions: true,
-        quickResponseShownTime: DateTime.now(),
-      );
-      
-      print('🚀 빠른 응답 옵션 표시: ${currentContext.name} - ${finalOptions.length}개 옵션');
-      
-      // 일정 시간 후 자동 숨김
-      final duration = showDuration ?? 
-          (QuickResponseTemplates.getTemplate(currentContext)?.showDuration ?? 
-           const Duration(seconds: 8));
-           
-      Timer(duration, hideQuickResponseOptions);
-      
-    } catch (e) {
-      print('🚀 빠른 응답 옵션 표시 실패: $e');
-    }
-  }
-  
-  /// 🚀 빠른 응답 옵션들 숨기기
-  void hideQuickResponseOptions() {
-    state = state.copyWith(
-      showQuickResponseOptions: false,
-      quickResponseOptions: [],
-    );
-  }
-  
-  /// 🚀 사용자가 빠른 응답을 선택했을 때 처리
-  Future<void> selectQuickResponse(QuickResponseOption option) async {
-    try {
-      print('🚀 빠른 응답 선택: ${option.text} - "${option.responseText}"');
-      
-      // 빠른 응답 옵션들 숨기기
-      hideQuickResponseOptions();
-      
-      // 사용자의 응답을 셰르피에게 전달하고 새로운 메시지 표시
-      if (option.triggerContext != null) {
-        // 새로운 컨텍스트가 있는 경우, 해당 컨텍스트로 메시지 표시
-        await showMessage(
-          context: option.triggerContext!,
-          userContext: {
-            'userResponse': option.responseText,
-            'quickResponseId': option.id,
-            'responseType': option.type.name,
-          },
-          forceShow: true,
-        );
-      } else {
-        // 일반적인 응답 메시지 표시
-        showInstantMessage(
-          context: SherpiContext.general,
-          customDialogue: _generateResponseToUserSelection(option),
-          emotion: _getEmotionForResponseType(option.type),
-          forceShow: true,
-        );
-      }
-      
-      // 🤝 상호작용 기록
-      _recordQuickResponseInteraction(option);
-      
-      // 🎯 성취감과 친밀도 향상을 위한 특별 메시지 (간헐적으로)
-      if (DateTime.now().millisecond % 5 == 0) { // 20% 확률
-        Timer(const Duration(seconds: 2), () {
-          showInstantMessage(
-            context: SherpiContext.general,
-            customDialogue: _getEncouragementForQuickResponse(option.type),
-            emotion: SherpiEmotion.cheering,
-            duration: const Duration(seconds: 3),
-          );
-        });
-      }
-      
-    } catch (e) {
-      print('🚀 빠른 응답 처리 실패: $e');
-    }
-  }
-  
-  /// 🚀 사용자 선택에 대한 셰르피의 응답 메시지 생성
-  String _generateResponseToUserSelection(QuickResponseOption option) {
-    final relationship = _ref.read(relationshipProvider);
-    final nickname = relationship.personalizationSettings.nickname;
-    final userName = relationship.personalizationSettings.userPreferredName;
-    
-    switch (option.type) {
-      case QuickResponseType.positive:
-        return '${userName}님의 긍정적인 마음이 저에게도 전해져요! 정말 기뻐요! 😊';
-      case QuickResponseType.appreciation:
-        return '${userName}님이 고마워해주시니 $nickname도 정말 뿌듯해요! 💕';
-      case QuickResponseType.motivation:
-        return '그래요! 그 의지로 계속 해나가세요! $nickname가 항상 응원할게요! 🔥';
-      case QuickResponseType.inquiry:
-        return '${userName}님의 궁금증을 해결해드리고 싶어요. 더 자세히 알아보죠! 🤔';
-      case QuickResponseType.negative:
-        return '${userName}님이 힘들어하시는군요... 괜찮아요, $nickname가 함께 할게요! 💪';
-      default:
-        return '${userName}님과 대화할 수 있어서 정말 좋아요! ✨';
-    }
-  }
-  
-  /// 🚀 응답 타입별 셰르피 감정 매핑
-  SherpiEmotion _getEmotionForResponseType(QuickResponseType type) {
-    switch (type) {
-      case QuickResponseType.positive:
-        return SherpiEmotion.happy;
-      case QuickResponseType.appreciation:
-        return SherpiEmotion.happy;
-      case QuickResponseType.motivation:
-        return SherpiEmotion.cheering;
-      case QuickResponseType.inquiry:
-        return SherpiEmotion.thinking;
-      case QuickResponseType.negative:
-        return SherpiEmotion.guiding;
-      default:
-        return SherpiEmotion.defaults;
-    }
-  }
-  
-  /// 🚀 빠른 응답 타입별 격려 메시지
-  String _getEncouragementForQuickResponse(QuickResponseType type) {
-    switch (type) {
-      case QuickResponseType.positive:
-        return '이런 긍정적인 에너지가 정말 좋아요! 🌟';
-      case QuickResponseType.appreciation:
-        return '서로 감사하는 마음이 우리 관계를 더 깊게 만들어요! 💝';
-      case QuickResponseType.motivation:
-        return '이 의지라면 어떤 목표든 달성할 수 있을 거예요! 🚀';
-      case QuickResponseType.inquiry:
-        return '궁금한 게 있다는 건 성장하고 있다는 증거예요! 📚';
-      case QuickResponseType.negative:
-        return '솔직하게 마음을 표현해주어서 고마워요. 함께 이겨내요! 🤗';
-      default:
-        return '우리의 대화가 점점 더 자연스러워지고 있어요! 😊';
-    }
-  }
-  
-  /// 🚀 빠른 응답 상호작용 기록
-  void _recordQuickResponseInteraction(QuickResponseOption option) {
-    try {
-      final notifier = _ref.read(relationshipProvider.notifier);
-      notifier.recordInteraction(
-        interactionType: 'quick_response',
-        context: {
-          'optionId': option.id,
-          'optionType': option.type.name,
-          'responseText': option.responseText,
-          'triggerContext': option.triggerContext?.name,
-        },
-      );
-    } catch (e) {
-      print('🚀 빠른 응답 상호작용 기록 실패: $e');
-    }
-  }
-  
-  /// 🚀 자동으로 빠른 응답 표시 (메시지 표시 후)
-  void _maybeShowQuickResponseOptions(SherpiContext context) {
-    // 빠른 응답이 지원되는 컨텍스트인지 확인
-    if (!QuickResponseTemplates.isQuickResponseSupported(context)) {
-      return;
-    }
-    
-    // 개인화 설정에서 메시지 빈도가 최소인 경우 빠른 응답 표시 안함
-    try {
-      final relationship = _ref.read(relationshipProvider);
-      if (relationship.personalizationSettings.messageFrequency == MessageFrequency.minimal) {
-        return;
-      }
-    } catch (e) {
-      // 관계 정보 로드 실패 시 기본 동작
-    }
-    
-    // 일정 시간 후 빠른 응답 옵션 표시 (메시지가 읽힐 시간을 준다)
-    Timer(const Duration(seconds: 2), () {
-      if (mounted && state.isVisible && state.currentContext == context) {
-        showQuickResponseOptions();
-      }
-    });
-  }
   
 }
 
@@ -1150,30 +922,4 @@ extension SherpiProviderExtension on WidgetRef {
     }
   }
   
-  /// 🚀 Phase 2: 빠른 응답 관련 확장 메서드들
-  
-  /// 빠른 응답 옵션들 수동 표시
-  void showSherpiQuickResponses({Duration? showDuration}) {
-    read(sherpiProvider.notifier).showQuickResponseOptions(showDuration: showDuration);
-  }
-  
-  /// 빠른 응답 옵션들 숨기기
-  void hideSherpiQuickResponses() {
-    read(sherpiProvider.notifier).hideQuickResponseOptions();
-  }
-  
-  /// 빠른 응답 선택 처리
-  Future<void> selectSherpiQuickResponse(QuickResponseOption option) async {
-    await read(sherpiProvider.notifier).selectQuickResponse(option);
-  }
-  
-  /// 현재 빠른 응답 옵션들 가져오기
-  List<QuickResponseOption> getSherpiQuickResponseOptions() {
-    return read(sherpiProvider).quickResponseOptions;
-  }
-  
-  /// 빠른 응답 표시 여부 확인
-  bool isSherpiQuickResponseVisible() {
-    return read(sherpiProvider).showQuickResponseOptions;
-  }
 }
