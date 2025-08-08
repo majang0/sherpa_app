@@ -16,9 +16,9 @@ class AiInsightGenerator {
   AiInsightGenerator() {
     try {
       _geminiSource = EnhancedGeminiDialogueSource();
-      print('🤖 AI 인사이트 생성기 초기화 완료');
+      // AI 인사이트 생성기 초기화 완료
     } catch (e) {
-      print('❌ AI 인사이트 생성기 초기화 실패: $e');
+      // AI 인사이트 생성기 초기화 실패
       rethrow;
     }
   }
@@ -29,7 +29,7 @@ class AiInsightGenerator {
     AnalysisResult analysisResult,
   ) async {
     try {
-      print('🔍 AI 인사이트 생성 시작...');
+      // AI 인사이트 생성 시작
       
       // 사용자 데이터 요약 생성
       final userSummary = _buildUserDataSummary(user, analysisResult);
@@ -56,11 +56,11 @@ class AiInsightGenerator {
       // 중요도 순으로 정렬하고 최대 8개만 반환
       combinedInsights.sort((a, b) => b.importance.compareTo(a.importance));
       
-      print('✅ AI 인사이트 ${aiInsights.length}개 생성 완료');
+      // AI 인사이트 생성 완료
       return combinedInsights.take(8).toList();
       
     } catch (e) {
-      print('❌ AI 인사이트 생성 실패: $e');
+      // AI 인사이트 생성 실패
       // 실패 시 기본 인사이트 반환
       return analysisResult.insights;
     }
@@ -72,7 +72,7 @@ class AiInsightGenerator {
     AnalysisResult analysisResult,
   ) async {
     try {
-      print('💡 AI 추천사항 생성 시작...');
+      // AI 추천사항 생성 시작
       
       // 사용자 데이터와 현재 성과 요약
       final performanceSummary = _buildPerformanceSummary(user, analysisResult);
@@ -102,11 +102,11 @@ class AiInsightGenerator {
       // 우선순위 순으로 정렬하고 최대 6개만 반환
       combinedRecommendations.sort((a, b) => b.priority.compareTo(a.priority));
       
-      print('✅ AI 추천사항 ${aiRecommendations.length}개 생성 완료');
+      // AI 추천사항 생성 완료
       return combinedRecommendations.take(6).toList();
       
     } catch (e) {
-      print('❌ AI 추천사항 생성 실패: $e');
+      // AI 추천사항 생성 실패
       // 실패 시 기본 추천사항 반환
       return analysisResult.recommendations;
     }
@@ -118,7 +118,7 @@ class AiInsightGenerator {
     AnalysisResult analysisResult,
   ) async {
     try {
-      print('🎯 스마트 성장 계획 생성 시작...');
+      // 스마트 성장 계획 생성 시작
       
       // 성장 계획을 위한 종합적인 데이터 준비
       final growthContext = _buildGrowthContext(user, analysisResult);
@@ -138,11 +138,11 @@ class AiInsightGenerator {
         },
       );
       
-      print('✅ 스마트 성장 계획 생성 완료');
+      // 스마트 성장 계획 생성 완료
       return _processGrowthPlan(aiResponse);
       
     } catch (e) {
-      print('❌ 스마트 성장 계획 생성 실패: $e');
+      // 스마트 성장 계획 생성 실패
       // 실패 시 기본 계획 반환
       return _getDefaultGrowthPlan(user, analysisResult);
     }
@@ -294,7 +294,7 @@ ${_getWeakAreas(analysisResult).map((area) => '- $area').join('\n')}
         if (insights.length >= 3) break;
       }
     } catch (e) {
-      print('AI 인사이트 파싱 오류: $e');
+      // AI 인사이트 파싱 오류
     }
     
     return insights;
@@ -334,7 +334,7 @@ ${_getWeakAreas(analysisResult).map((area) => '- $area').join('\n')}
         if (recommendations.length >= 2) break;
       }
     } catch (e) {
-      print('AI 추천사항 파싱 오류: $e');
+      // AI 추천사항 파싱 오류
     }
     
     return recommendations;

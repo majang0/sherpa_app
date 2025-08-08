@@ -964,13 +964,11 @@ class SherpiExpandedDialog extends ConsumerWidget {
   /// 패턴 분석 표시
   void _showPatternAnalysis(BuildContext context, WidgetRef ref) async {
     // ✅ ref 사용을 Widget dispose 전에 미리 실행
-    print('📊 [DEBUG] 분석 시작 전 사용자 데이터 미리 로드...');
     late final globalUser;
     try {
       globalUser = ref.read(globalUserProvider);
-      print('📊 [DEBUG] 사용자 데이터 미리 로드 완료: ${globalUser.name}, 레벨: ${globalUser.level}');
     } catch (e) {
-      print('❌ [DEBUG] 사용자 데이터 로드 실패: $e');
+      // 사용자 데이터 로드 실패
       Navigator.of(context).pop(); // 에러 시에만 다이얼로그 닫기
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1097,90 +1095,77 @@ class SherpiExpandedDialog extends ConsumerWidget {
       progressNotifier.value = 0.2;
       await Future.delayed(const Duration(milliseconds: 300));
       
-      print('📊 [DEBUG] 1단계: 데이터 검증 시작...');
-      
       // 데이터 검증 (이미 로드된 globalUser 사용)
       if (globalUser.dailyRecords.exerciseLogs.isEmpty && 
           globalUser.dailyRecords.readingLogs.isEmpty && 
           globalUser.dailyRecords.diaryLogs.isEmpty) {
-        print('⚠️ [DEBUG] 경고: 활동 데이터가 없습니다!');
-      } else {
-        print('📊 [DEBUG] 활동 데이터 확인됨 - 운동: ${globalUser.dailyRecords.exerciseLogs.length}, 독서: ${globalUser.dailyRecords.readingLogs.length}, 일기: ${globalUser.dailyRecords.diaryLogs.length}');
+        // 경고: 활동 데이터가 없습니다
       }
       
       // mounted 상태 확인
       if (!navigatorContext.mounted) {
-        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        // Widget이 dispose되어 분석 중단
         return;
       }
       
       // 2단계: 활동 패턴 분석 (40%)
-      print('📊 [DEBUG] 2단계: 활동 패턴 분석 시작...');
       statusNotifier.value = '활동 패턴 분석 중...';
       progressNotifier.value = 0.4;
       await Future.delayed(const Duration(milliseconds: 400));
       
       if (!navigatorContext.mounted) {
-        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        // Widget이 dispose되어 분석 중단
         return;
       }
       
       // 3단계: 기분 분석 (60%)
-      print('📊 [DEBUG] 3단계: 기분 패턴 분석 시작...');
       statusNotifier.value = '기분 패턴 분석 중...';
       progressNotifier.value = 0.6;
       await Future.delayed(const Duration(milliseconds: 300));
       
       if (!navigatorContext.mounted) {
-        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        // Widget이 dispose되어 분석 중단
         return;
       }
       
       // 4단계: 성과 지표 계산 (80%)
-      print('📊 [DEBUG] 4단계: 성과 지표 계산 시작...');
       statusNotifier.value = '성과 지표 계산 중...';
       progressNotifier.value = 0.8;
       await Future.delayed(const Duration(milliseconds: 400));
       
       if (!navigatorContext.mounted) {
-        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        // Widget이 dispose되어 분석 중단
         return;
       }
       
       // 실제 기본 분석 수행
-      print('📊 [DEBUG] UserDataAnalyzer.analyzeUserData 호출 시작...');
       final baseAnalysisResult = UserDataAnalyzer.analyzeUserData(globalUser);
-      print('📊 [DEBUG] UserDataAnalyzer.analyzeUserData 완료!');
-      print('📊 [DEBUG] 분석 결과: 인사이트 ${baseAnalysisResult.insights.length}개, 추천사항 ${baseAnalysisResult.recommendations.length}개');
       
       if (!navigatorContext.mounted) {
-        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        // Widget이 dispose되어 분석 중단
         return;
       }
       
       // 5단계: 기본 인사이트 완성 (95%) - AI 기능 임시 비활성화
-      print('📊 [DEBUG] 5단계: 기본 인사이트 완성 중...');
       statusNotifier.value = '인사이트 완성 중...';
       progressNotifier.value = 0.95;
       await Future.delayed(const Duration(milliseconds: 400));
       
       if (!navigatorContext.mounted) {
-        print('⚠️ [DEBUG] Widget이 dispose되어 분석을 중단합니다.');
+        // Widget이 dispose되어 분석 중단
         return;
       }
       
       // AI 기능을 임시로 비활성화하고 기본 분석 결과만 사용
-      print('📊 [DEBUG] 기본 분석 결과를 최종 결과로 설정...');
       AnalysisResult finalAnalysisResult = baseAnalysisResult;
       
       // 6단계: 완료 (100%) with success animation
-      print('📊 [DEBUG] 6단계: 최종 완료 단계...');
       statusNotifier.value = '🎉 분석 완료! ✨';
       progressNotifier.value = 1.0;
       await Future.delayed(const Duration(milliseconds: 800)); // Extra time for success feeling
       
       if (!navigatorContext.mounted) {
-        print('⚠️ [DEBUG] Widget이 dispose되어 화면 전환을 건너뜁니다.');
+        // Widget이 dispose되어 화면 전환 건너뛰기
         return;
       }
       
@@ -1227,8 +1212,6 @@ class SherpiExpandedDialog extends ConsumerWidget {
       }
     } catch (e, stackTrace) {
       // 오류 발생 시 로딩 다이얼로그 닫기
-      print('❌ [DEBUG] 분석 중 치명적 오류 발생: $e');
-      print('❌ [DEBUG] 스택 트레이스: $stackTrace');
       if (navigatorContext.mounted) {
         Navigator.of(navigatorContext).pop();
         
@@ -1412,7 +1395,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
           
           // AI 계획을 기존 계획에 통합 (인사이트에 AI 추천 추가)
           // Note: PlanningInsights 객체를 유지하고 AI 추천은 별도로 표시
-          print('🤖 AI 성장 계획 생성 완료: ${aiGrowthPlan.length}자');
+          // AI 성장 계획 생성 완료
           // AI 추천사항은 인사이트 페이지에서 별도로 표시될 예정
           
           statusNotifier.value = 'AI 성장 계획 완료! 🤖🌱';
@@ -1420,7 +1403,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
           statusNotifier.value = 'SMART 목표 생성 중...';
         }
       } catch (e) {
-        print('⚠️ AI 성장 계획 생성 실패, 기본 계획 사용: $e');
+        // AI 성장 계획 생성 실패, 기본 계획 사용
         statusNotifier.value = 'SMART 목표 생성 중...';
       }
       

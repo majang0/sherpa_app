@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../shared/models/global_user_model.dart';
+import '../constants/analysis_constants.dart';
 
 /// 사용자 데이터 분석 결과 모델
 class AnalysisResult {
@@ -152,25 +153,12 @@ class UserDataAnalyzer {
   static AnalysisResult analyzeUserData(GlobalUser user) {
     try {
       final now = DateTime.now();
-      print('📊 분석 시작: ${user.name}, 레벨: ${user.level}');
-      
       // 각 부분별 분석 수행
       final activityPatterns = _analyzeActivityPatterns(user);
-      print('✅ 활동 패턴 분석 완료');
-      
       final moodAnalysis = _analyzeMoodPatterns(user);
-      print('✅ 기분 분석 완료');
-      
       final performanceMetrics = _analyzePerformance(user);
-      print('✅ 성과 분석 완료');
-      
       final insights = _generateInsights(user, activityPatterns, moodAnalysis, performanceMetrics);
-      print('✅ 인사이트 생성 완료: ${insights.length}개');
-      
       final recommendations = _generateRecommendations(user, activityPatterns, moodAnalysis, performanceMetrics);
-      print('✅ 추천사항 생성 완료: ${recommendations.length}개');
-      
-      print('🎉 분석 완료!');
       
       return AnalysisResult(
         activityPatterns: activityPatterns,
@@ -182,8 +170,7 @@ class UserDataAnalyzer {
       );
     } catch (e, stackTrace) {
       // 분석 중 오류 발생 시 기본 결과 반환
-      print('❌ 분석 오류: $e');
-      print('📍 Stack trace: $stackTrace');
+      // 분석 오류 시 기본 결과 반환
       return _createDefaultAnalysisResult(user, DateTime.now());
     }
   }
@@ -498,25 +485,25 @@ class UserDataAnalyzer {
     final leastActiveActivity = patterns.activityFrequency.entries
         .reduce((a, b) => a.value < b.value ? a : b);
     
-    if (leastActiveActivity.value < 5) {
+    if (leastActiveActivity.value < AnalysisConstants.minimumActivityCount) {
       recommendations.add(Recommendation(
         title: '${leastActiveActivity.key} 활동 늘리기',
         description: '이번 주에 ${leastActiveActivity.key} 활동을 2회 이상 해보는 것은 어떨까요?',
         actionText: '목표 설정하기',
         type: RecommendationType.balance,
-        priority: 4,
+        priority: AnalysisConstants.priorityHigh,
         icon: Icons.balance,
       ));
     }
     
     // 연속 기록 도전
-    if (patterns.currentStreak > 0 && patterns.currentStreak < 7) {
+    if (patterns.currentStreak > 0 && patterns.currentStreak < AnalysisConstants.streakTargetDays) {
       recommendations.add(Recommendation(
-        title: '7일 연속 도전',
-        description: '현재 ${patterns.currentStreak}일 연속 기록 중! 7일 연속 달성에 도전해보세요.',
+        title: '${AnalysisConstants.streakTargetDays}일 연속 도전',
+        description: '현재 ${patterns.currentStreak}일 연속 기록 중! ${AnalysisConstants.streakTargetDays}일 연속 달성에 도전해보세요.',
         actionText: '도전하기',
         type: RecommendationType.challenge,
-        priority: 5,
+        priority: AnalysisConstants.priorityCritical,
         icon: Icons.local_fire_department,
       ));
     }
@@ -527,30 +514,30 @@ class UserDataAnalyzer {
       description: '${patterns.mostActiveTime}에 가장 활발하시네요. 이 시간대에 중요한 활동을 배치해보세요.',
       actionText: '일정 조정',
       type: RecommendationType.improvement,
-      priority: 3,
+      priority: AnalysisConstants.priorityMedium,
       icon: Icons.schedule,
     ));
     
     // 기분 개선 추천
-    if (mood.moodStability < 70) {
+    if (mood.moodStability < AnalysisConstants.moodStabilityThreshold) {
       recommendations.add(Recommendation(
         title: '기분 안정성 향상',
         description: '규칙적인 운동과 충분한 휴식으로 기분의 안정성을 높여보세요.',
         actionText: '운동 계획 세우기',
         type: RecommendationType.activity,
-        priority: 4,
+        priority: AnalysisConstants.priorityHigh,
         icon: Icons.self_improvement,
       ));
     }
     
     // 새로운 목표 추천
-    if (metrics.goalCompletionRate > 90) {
+    if (metrics.goalCompletionRate > AnalysisConstants.highGoalCompletionRate) {
       recommendations.add(Recommendation(
         title: '더 높은 목표 설정',
         description: '현재 목표를 잘 달성하고 계세요! 조금 더 도전적인 목표를 설정해보는 건 어떨까요?',
         actionText: '새 목표 만들기',
         type: RecommendationType.goal,
-        priority: 3,
+        priority: AnalysisConstants.priorityMedium,
         icon: Icons.rocket_launch,
       ));
     }
@@ -564,16 +551,7 @@ class UserDataAnalyzer {
   // === 헬퍼 메서드들 ===
   
   static String _getDayName(int weekday) {
-    switch (weekday) {
-      case 1: return '월요일';
-      case 2: return '화요일';
-      case 3: return '수요일';
-      case 4: return '목요일';
-      case 5: return '금요일';
-      case 6: return '토요일';
-      case 7: return '일요일';
-      default: return '월요일';
-    }
+    return AnalysisConstants.weekdayNames[weekday] ?? '월요일';
   }
   
   static double _calculateConsistencyScore(List<DateTime> dates) {
