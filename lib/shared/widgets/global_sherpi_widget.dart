@@ -16,6 +16,7 @@ import '../../features/sherpi_analysis/services/ai_insight_generator.dart';
 import '../../features/sherpi_analysis/presentation/screens/analysis_result_screen.dart';
 import '../../features/sherpi_planning/services/smart_planner_service.dart';
 import '../../features/sherpi_planning/presentation/screens/planning_result_screen.dart';
+import '../../features/sherpi_planning/presentation/screens/planning_input_screen.dart';
 
 // Shared
 import '../providers/global_sherpi_provider.dart';
@@ -1236,245 +1237,47 @@ class SherpiExpandedDialog extends ConsumerWidget {
     }
   }
   
-  /// 계획 모드 표시
+  /// 계획 모드 표시 - 즉시 입력 화면으로 이동
   void _showPlanningMode(BuildContext context, WidgetRef ref) async {
+    // 다이얼로그 닫기
     Navigator.of(context).pop();
     
-    // 진행상황을 추적할 ValueNotifier 생성
-    final progressNotifier = ValueNotifier<double>(0.0);
-    final statusNotifier = ValueNotifier<String>('계획 생성 준비 중...');
-    
-    // 프로그레스 다이얼로그 표시
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          width: 300,
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+    // 즉시 계획 입력 화면으로 이동 (로딩 없음)
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => 
+            const PlanningInputScreen(),
+        transitionDuration: const Duration(milliseconds: 400),
+        reverseTransitionDuration: const Duration(milliseconds: 300),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: CurvedAnimation(
+              parent: animation,
+              curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
+            ),
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.0, 0.05),
+                end: Offset.zero,
+              ).animate(CurvedAnimation(
+                parent: animation,
+                curve: MicroInteractions.easeOutQuart,
+              )),
+              child: ScaleTransition(
+                scale: Tween<double>(
+                  begin: 0.98,
+                  end: 1.0,
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: MicroInteractions.easeOutBack,
+                )),
+                child: child,
               ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // 셰르피 아이콘
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.orange.shade400, Colors.orange.shade600],
-                  ),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: const Icon(
-                  Icons.event_note_outlined,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-              const SizedBox(height: 16),
-              
-              Text(
-                '개인화된 계획 생성',
-                style: GoogleFonts.notoSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey.shade800,
-                ),
-              ),
-              const SizedBox(height: 8),
-              
-              // 상태 텍스트
-              ValueListenableBuilder<String>(
-                valueListenable: statusNotifier,
-                builder: (context, status, child) {
-                  return Text(
-                    status,
-                    style: GoogleFonts.notoSans(
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
-                    ),
-                    textAlign: TextAlign.center,
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-              
-              // 프로그레스 바
-              ValueListenableBuilder<double>(
-                valueListenable: progressNotifier,
-                builder: (context, progress, child) {
-                  return Column(
-                    children: [
-                      LinearProgressIndicator(
-                        value: progress,
-                        backgroundColor: Colors.grey.shade200,
-                        valueColor: AlwaysStoppedAnimation(Colors.orange.shade500),
-                        borderRadius: BorderRadius.circular(8),
-                        minHeight: 8,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '${(progress * 100).toInt()}%',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.orange.shade600,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
-    
-    try {
-      // 1단계: 사용자 데이터 분석 (25%)
-      statusNotifier.value = '사용자 패턴 분석 중...';
-      progressNotifier.value = 0.25;
-      await Future.delayed(const Duration(milliseconds: 400));
-      
-      final globalUser = ref.read(globalUserProvider);
-      
-      // 기존 분석 결과가 있으면 활용 (선택적)
-      AnalysisResult? analysisResult;
-      try {
-        analysisResult = UserDataAnalyzer.analyzeUserData(globalUser);
-      } catch (e) {
-        // 분석이 실패해도 계획 생성은 진행
-        analysisResult = null;
-      }
-      
-      // 2단계: 목표 설정 (50%)
-      statusNotifier.value = '개인화된 목표 설정 중...';
-      progressNotifier.value = 0.5;
-      await Future.delayed(const Duration(milliseconds: 500));
-      
-      // 3단계: 일정 계획 (70%)
-      statusNotifier.value = '주간 일정 계획 중...';
-      progressNotifier.value = 0.7;
-      await Future.delayed(const Duration(milliseconds: 400));
-      
-      // 4단계: 개선 계획 (85%)
-      statusNotifier.value = '개선 계획 수립 중...';
-      progressNotifier.value = 0.85;
-      await Future.delayed(const Duration(milliseconds: 400));
-      
-      // 기본 계획 생성
-      var planningResult = SmartPlannerService.createPersonalizedPlan(
-        globalUser,
-        analysisResult,
-      );
-      
-      // 5단계: AI 성장 계획 생성 (85-95%) - NEW!
-      statusNotifier.value = 'AI 맞춤 성장 계획 생성 중...';
-      progressNotifier.value = 0.85;
-      await Future.delayed(const Duration(milliseconds: 600));
-      
-      try {
-        // AI 기반 성장 계획 생성
-        if (analysisResult != null) {
-          final aiGenerator = AiInsightGenerator();
-          
-          final aiGrowthPlan = await aiGenerator.generateSmartGrowthPlan(globalUser, analysisResult);
-          
-          // AI 계획을 기존 계획에 통합 (인사이트에 AI 추천 추가)
-          // Note: PlanningInsights 객체를 유지하고 AI 추천은 별도로 표시
-          // AI 성장 계획 생성 완료
-          // AI 추천사항은 인사이트 페이지에서 별도로 표시될 예정
-          
-          statusNotifier.value = 'AI 성장 계획 완료! 🤖🌱';
-        } else {
-          statusNotifier.value = 'SMART 목표 생성 중...';
-        }
-      } catch (e) {
-        // AI 성장 계획 생성 실패, 기본 계획 사용
-        statusNotifier.value = 'SMART 목표 생성 중...';
-      }
-      
-      progressNotifier.value = 0.95;
-      await Future.delayed(const Duration(milliseconds: 300));
-      
-      // 6단계: 완료 (100%) with success animation
-      statusNotifier.value = '🎯 계획 생성 완료! 🌟';
-      progressNotifier.value = 1.0;
-      await Future.delayed(const Duration(milliseconds: 800)); // Extra time for success feeling
-      
-      // 로딩 다이얼로그 닫기
-      if (context.mounted) {
-        Navigator.of(context).pop();
-        
-        // 계획 결과 화면으로 이동 with enhanced animation
-        Navigator.of(context).push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => 
-                PlanningResultScreen(planningResult: planningResult),
-            transitionDuration: const Duration(milliseconds: 400),
-            reverseTransitionDuration: const Duration(milliseconds: 300),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(
-                opacity: CurvedAnimation(
-                  parent: animation,
-                  curve: const Interval(0.0, 0.8, curve: Curves.easeOut),
-                ),
-                child: SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0.0, 0.05),
-                    end: Offset.zero,
-                  ).animate(CurvedAnimation(
-                    parent: animation,
-                    curve: MicroInteractions.easeOutQuart,
-                  )),
-                  child: ScaleTransition(
-                    scale: Tween<double>(
-                      begin: 0.98,
-                      end: 1.0,
-                    ).animate(CurvedAnimation(
-                      parent: animation,
-                      curve: MicroInteractions.easeOutBack,
-                    )),
-                    child: child,
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      }
-    } catch (e) {
-      // 에러 발생 시 로딩 다이얼로그 닫기
-      if (context.mounted) {
-        Navigator.of(context).pop();
-        
-        // 에러 메시지 표시
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('계획 생성 중 오류가 발생했습니다. 다시 시도해주세요.'),
-            backgroundColor: Colors.red.shade400,
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        );
-      }
-    }
   }
   
   /// 격려 메시지 표시

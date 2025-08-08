@@ -12,6 +12,7 @@ class GlobalUser {
   final List<String> ownedBadgeIds;
   final DailyRecordData dailyRecords;
   final ClimbingSession? currentClimbingSession;
+  final UserPlanningData? planningData;
 
   const GlobalUser({
     required this.id,
@@ -23,6 +24,7 @@ class GlobalUser {
     required this.ownedBadgeIds,
     required this.dailyRecords,
     this.currentClimbingSession,
+    this.planningData,
   });
 
   String get title {
@@ -42,6 +44,7 @@ class GlobalUser {
     List<String>? ownedBadgeIds,
     DailyRecordData? dailyRecords,
     ClimbingSession? currentClimbingSession,
+    UserPlanningData? planningData,
   }) {
     return GlobalUser(
       id: id ?? this.id,
@@ -53,6 +56,7 @@ class GlobalUser {
       ownedBadgeIds: ownedBadgeIds ?? this.ownedBadgeIds,
       dailyRecords: dailyRecords ?? this.dailyRecords,
       currentClimbingSession: currentClimbingSession ?? this.currentClimbingSession,
+      planningData: planningData ?? this.planningData,
     );
   }
 
@@ -67,6 +71,7 @@ class GlobalUser {
       'ownedBadgeIds': ownedBadgeIds,
       'dailyRecords': dailyRecords.toJson(),
       'currentClimbingSession': currentClimbingSession?.toJson(),
+      'planningData': planningData?.toJson(),
     };
   }
 
@@ -82,6 +87,9 @@ class GlobalUser {
       dailyRecords: DailyRecordData.fromJson(json['dailyRecords'] ?? {}),
       currentClimbingSession: json['currentClimbingSession'] != null
           ? ClimbingSession.fromJson(json['currentClimbingSession'])
+          : null,
+      planningData: json['planningData'] != null
+          ? UserPlanningData.fromJson(json['planningData'])
           : null,
     );
   }
@@ -1531,6 +1539,200 @@ class ChallengeRewards {
       statIncreases: Map<String, double>.from(json['statIncreases'] ?? {}),
       newBadgeIds: List<String>.from(json['newBadgeIds'] ?? []),
       specialReward: json['specialReward'],
+    );
+  }
+}
+
+/// 사용자 계획 데이터
+class UserPlanningData {
+  final List<UserGoal> goals;
+  final List<UserGoal> completedGoals;
+  final DateTime? lastPlanningDate;
+  final int totalGoalsCreated;
+  final int totalGoalsCompleted;
+  final Map<String, int> categoryStats;
+
+  const UserPlanningData({
+    required this.goals,
+    required this.completedGoals,
+    this.lastPlanningDate,
+    required this.totalGoalsCreated,
+    required this.totalGoalsCompleted,
+    required this.categoryStats,
+  });
+
+  /// 활성 목표 수
+  int get activeGoalsCount => goals.where((g) => g.isActive).length;
+
+  /// 전체 달성률
+  double get overallCompletionRate {
+    if (totalGoalsCreated == 0) return 0.0;
+    return (totalGoalsCompleted / totalGoalsCreated) * 100;
+  }
+
+  UserPlanningData copyWith({
+    List<UserGoal>? goals,
+    List<UserGoal>? completedGoals,
+    DateTime? lastPlanningDate,
+    int? totalGoalsCreated,
+    int? totalGoalsCompleted,
+    Map<String, int>? categoryStats,
+  }) {
+    return UserPlanningData(
+      goals: goals ?? this.goals,
+      completedGoals: completedGoals ?? this.completedGoals,
+      lastPlanningDate: lastPlanningDate ?? this.lastPlanningDate,
+      totalGoalsCreated: totalGoalsCreated ?? this.totalGoalsCreated,
+      totalGoalsCompleted: totalGoalsCompleted ?? this.totalGoalsCompleted,
+      categoryStats: categoryStats ?? this.categoryStats,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'goals': goals.map((g) => g.toJson()).toList(),
+      'completedGoals': completedGoals.map((g) => g.toJson()).toList(),
+      'lastPlanningDate': lastPlanningDate?.toIso8601String(),
+      'totalGoalsCreated': totalGoalsCreated,
+      'totalGoalsCompleted': totalGoalsCompleted,
+      'categoryStats': categoryStats,
+    };
+  }
+
+  factory UserPlanningData.fromJson(Map<String, dynamic> json) {
+    return UserPlanningData(
+      goals: (json['goals'] as List<dynamic>?)
+          ?.map((g) => UserGoal.fromJson(g))
+          .toList() ?? [],
+      completedGoals: (json['completedGoals'] as List<dynamic>?)
+          ?.map((g) => UserGoal.fromJson(g))
+          .toList() ?? [],
+      lastPlanningDate: json['lastPlanningDate'] != null
+          ? DateTime.parse(json['lastPlanningDate'])
+          : null,
+      totalGoalsCreated: json['totalGoalsCreated'] ?? 0,
+      totalGoalsCompleted: json['totalGoalsCompleted'] ?? 0,
+      categoryStats: Map<String, int>.from(json['categoryStats'] ?? {}),
+    );
+  }
+
+  /// 빈 계획 데이터 생성
+  factory UserPlanningData.empty() {
+    return const UserPlanningData(
+      goals: [],
+      completedGoals: [],
+      totalGoalsCreated: 0,
+      totalGoalsCompleted: 0,
+      categoryStats: {},
+    );
+  }
+}
+
+/// 사용자 목표
+class UserGoal {
+  final String id;
+  final String title;
+  final String? description;
+  final String category;
+  final int duration; // 일 단위
+  final String? schedule;
+  final DateTime createdAt;
+  final DateTime? completedAt;
+  final double progress;
+  final bool isActive;
+  final Map<String, dynamic>? metadata;
+
+  const UserGoal({
+    required this.id,
+    required this.title,
+    this.description,
+    required this.category,
+    required this.duration,
+    this.schedule,
+    required this.createdAt,
+    this.completedAt,
+    required this.progress,
+    required this.isActive,
+    this.metadata,
+  });
+
+  /// 남은 일수 계산
+  int get daysRemaining {
+    if (!isActive) return 0;
+    final elapsed = DateTime.now().difference(createdAt).inDays;
+    final remaining = duration - elapsed;
+    return remaining > 0 ? remaining : 0;
+  }
+
+  /// 진행률 계산 (시간 기반)
+  double get timeBasedProgress {
+    if (!isActive) return 0.0;
+    final elapsed = DateTime.now().difference(createdAt).inDays;
+    if (elapsed >= duration) return 100.0;
+    return (elapsed / duration) * 100;
+  }
+
+  UserGoal copyWith({
+    String? id,
+    String? title,
+    String? description,
+    String? category,
+    int? duration,
+    String? schedule,
+    DateTime? createdAt,
+    DateTime? completedAt,
+    double? progress,
+    bool? isActive,
+    Map<String, dynamic>? metadata,
+  }) {
+    return UserGoal(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      duration: duration ?? this.duration,
+      schedule: schedule ?? this.schedule,
+      createdAt: createdAt ?? this.createdAt,
+      completedAt: completedAt ?? this.completedAt,
+      progress: progress ?? this.progress,
+      isActive: isActive ?? this.isActive,
+      metadata: metadata ?? this.metadata,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'category': category,
+      'duration': duration,
+      'schedule': schedule,
+      'createdAt': createdAt.toIso8601String(),
+      'completedAt': completedAt?.toIso8601String(),
+      'progress': progress,
+      'isActive': isActive,
+      'metadata': metadata,
+    };
+  }
+
+  factory UserGoal.fromJson(Map<String, dynamic> json) {
+    return UserGoal(
+      id: json['id'] ?? '',
+      title: json['title'] ?? '',
+      description: json['description'],
+      category: json['category'] ?? 'growth',
+      duration: json['duration'] ?? 7,
+      schedule: json['schedule'],
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
+      completedAt: json['completedAt'] != null
+          ? DateTime.parse(json['completedAt'])
+          : null,
+      progress: (json['progress'] ?? 0).toDouble(),
+      isActive: json['isActive'] ?? true,
+      metadata: json['metadata'],
     );
   }
 }

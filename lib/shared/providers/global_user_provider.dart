@@ -1625,6 +1625,189 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     return state.dailyRecords.consecutiveDays;
   }
 
+  // ==================== 계획 관리 시스템 ====================
+
+  /// 계획 데이터 초기화 또는 가져오기
+  UserPlanningData get planningData {
+    return state.planningData ?? UserPlanningData.empty();
+  }
+
+  /// 새로운 목표 저장
+  void saveGoals(List<Map<String, dynamic>> rawGoals) {
+    final currentPlanningData = planningData;
+    
+    // Map을 UserGoal로 변환
+    final newGoals = rawGoals.map((goalMap) => UserGoal(
+      id: goalMap['id'] ?? DateTime.now().millisecondsSinceEpoch.toString(),
+      title: goalMap['title'] ?? '',
+      description: goalMap['description'],
+      category: goalMap['category'] ?? 'growth',
+      duration: goalMap['duration'] ?? 7,
+      schedule: goalMap['schedule'],
+      createdAt: goalMap['createdAt'] ?? DateTime.now(),
+      progress: (goalMap['progress'] ?? 0).toDouble(),
+      isActive: goalMap['isActive'] ?? true,
+      metadata: goalMap['metadata'],
+    )).toList();
+
+    // 카테고리별 통계 업데이트
+    final updatedCategoryStats = Map<String, int>.from(currentPlanningData.categoryStats);
+    for (final goal in newGoals) {
+      updatedCategoryStats[goal.category] = (updatedCategoryStats[goal.category] ?? 0) + 1;
+    }
+
+    // 새로운 계획 데이터 생성
+    final updatedPlanningData = currentPlanningData.copyWith(
+      goals: [...currentPlanningData.goals, ...newGoals],
+      lastPlanningDate: DateTime.now(),
+      totalGoalsCreated: currentPlanningData.totalGoalsCreated + newGoals.length,
+      categoryStats: updatedCategoryStats,
+    );
+
+    // 상태 업데이트
+    state = state.copyWith(planningData: updatedPlanningData);
+    _saveUserData();
+
+    // 계획 저장 시 셰르피 반응
+    ref.read(sherpiProvider.notifier).showInstantMessage(
+      context: SherpiContext.general,
+      customDialogue: '${newGoals.length}개의 새로운 목표가 설정되었어요! 함께 달성해봐요! 💪',
+      emotion: SherpiEmotion.cheering,
+    );
+  }
+
+  /// 목표 진행률 업데이트
+  void updateGoalProgress(String goalId, double progress) {
+    final currentPlanningData = planningData;
+    
+    final updatedGoals = currentPlanningData.goals.map((goal) {
+      if (goal.id == goalId) {
+        final updatedGoal = goal.copyWith(progress: progress);
+        
+        // 100% 달성 시 완료 처리
+        if (progress >= 100.0) {
+          return _completeGoal(updatedGoal);
+        }
+        
+        return updatedGoal;
+      }
+      return goal;
+    }).toList();
+
+    final updatedPlanningData = currentPlanningData.copyWith(goals: updatedGoals);
+    state = state.copyWith(planningData: updatedPlanningData);
+    _saveUserData();
+  }
+
+  /// 목표 완료 처리 (내부 메서드)
+  UserGoal _completeGoal(UserGoal goal) {
+    final currentPlanningData = planningData;
+    
+    // 완료된 목표로 이동
+    final completedGoal = goal.copyWith(
+      completedAt: DateTime.now(),
+      progress: 100.0,
+      isActive: false,
+    );
+
+    // 활성 목표에서 제거하고 완료 목표에 추가
+    final updatedGoals = currentPlanningData.goals.where((g) => g.id != goal.id).toList();
+    final updatedCompletedGoals = [...currentPlanningData.completedGoals, completedGoal];
+
+    // 전체 통계 업데이트
+    final updatedPlanningData = currentPlanningData.copyWith(
+      goals: updatedGoals,
+      completedGoals: updatedCompletedGoals,
+      totalGoalsCompleted: currentPlanningData.totalGoalsCompleted + 1,
+    );
+
+    state = state.copyWith(planningData: updatedPlanningData);
+    _saveUserData();
+
+    // 목표 완료 보상
+    addExperience(100);
+    ref.read(globalPointProvider.notifier).awardPoints(
+      amount: 500,
+      source: PointSource.goalCompletion,
+      description: '목표 달성: ${goal.title}',
+    );
+    
+    // 셰르피 축하 메시지
+    ref.read(sherpiProvider.notifier).showInstantMessage(
+      context: SherpiContext.general,
+      customDialogue: '목표를 달성하셨네요! 정말 대단해요! 🎉',
+      emotion: SherpiEmotion.special,
+    );
+
+    return completedGoal;
+  }
+
+  /// 목표 삭제
+  void deleteGoal(String goalId) {
+    final currentPlanningData = planningData;
+    
+    final updatedGoals = currentPlanningData.goals.where((g) => g.id != goalId).toList();
+    final updatedPlanningData = currentPlanningData.copyWith(goals: updatedGoals);
+    
+    state = state.copyWith(planningData: updatedPlanningData);
+    _saveUserData();
+  }
+
+  /// 목표 수정
+  void updateGoal(String goalId, Map<String, dynamic> updates) {
+    final currentPlanningData = planningData;
+    
+    final updatedGoals = currentPlanningData.goals.map((goal) {
+      if (goal.id == goalId) {
+        return goal.copyWith(
+          title: updates['title'] ?? goal.title,
+          description: updates['description'] ?? goal.description,
+          category: updates['category'] ?? goal.category,
+          duration: updates['duration'] ?? goal.duration,
+          schedule: updates['schedule'] ?? goal.schedule,
+          isActive: updates['isActive'] ?? goal.isActive,
+          metadata: updates['metadata'] ?? goal.metadata,
+        );
+      }
+      return goal;
+    }).toList();
+
+    final updatedPlanningData = currentPlanningData.copyWith(goals: updatedGoals);
+    state = state.copyWith(planningData: updatedPlanningData);
+    _saveUserData();
+  }
+
+  /// 목표 일시정지/재개
+  void toggleGoalStatus(String goalId) {
+    final currentPlanningData = planningData;
+    
+    final updatedGoals = currentPlanningData.goals.map((goal) {
+      if (goal.id == goalId) {
+        return goal.copyWith(isActive: !goal.isActive);
+      }
+      return goal;
+    }).toList();
+
+    final updatedPlanningData = currentPlanningData.copyWith(goals: updatedGoals);
+    state = state.copyWith(planningData: updatedPlanningData);
+    _saveUserData();
+  }
+
+  /// 모든 활성 목표 가져오기
+  List<UserGoal> getActiveGoals() {
+    return planningData.goals.where((g) => g.isActive).toList();
+  }
+
+  /// 카테고리별 목표 가져오기
+  List<UserGoal> getGoalsByCategory(String category) {
+    return planningData.goals.where((g) => g.category == category).toList();
+  }
+
+  /// 기한 임박 목표 가져오기 (3일 이내)
+  List<UserGoal> getUpcomingDeadlines() {
+    return planningData.goals.where((g) => g.isActive && g.daysRemaining <= 3).toList();
+  }
+
 }
 
 // ==================== UI용 Provider들 ====================

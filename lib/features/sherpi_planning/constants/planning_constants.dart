@@ -30,7 +30,7 @@ class PlanningConstants {
   static const double improvementTargetRate = 0.1; // 개선 목표율 (10%)
   
   // === 진행 상태 메시지 ===
-  static const Map<double, String> progressMessages = {
+  static final Map<double, String> progressMessages = {
     0.2: '사용자 데이터 분석 중...',
     0.4: '목표 설정 중...',
     0.6: '일정 계획 중...',
