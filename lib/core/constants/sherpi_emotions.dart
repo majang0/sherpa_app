@@ -35,7 +35,16 @@ enum SherpiEmotion {
   sleeping('sherpi_sleeping.png'),
   
   /// ✨ 특별한 상태 - 기념일, 마일스톤, 특별한 순간
-  special('sherpi_special.png');
+  special('sherpi_special.png'),
+  
+  /// 😁 미소 상태 - 차분한 만족감, 진지한 성격 표현
+  smile('sherpi_smile.png'),
+  
+  /// 💬 대화 상태 - 유머러스한 상황, 재치있는 대화
+  talking('sherpi_talking.png'),
+  
+  /// 😎 자신감 상태 - 확신에 찬 모습, 당당함
+  confidence('sherpi_confidence.png');
 
   const SherpiEmotion(this.fileName);
   
@@ -124,6 +133,12 @@ class SherpiEmotionMapper {
         return EmotionTheme.warning;
       case SherpiEmotion.sleeping:
         return EmotionTheme.calm;
+      case SherpiEmotion.smile:
+        return EmotionTheme.positive;
+      case SherpiEmotion.talking:
+        return EmotionTheme.positive;
+      case SherpiEmotion.confidence:
+        return EmotionTheme.celebration;
     }
   }
   
@@ -205,6 +220,12 @@ class SherpiEmotionTone {
         return "부드럽고 평온한 톤. 휴식의 중요성과 다시 시작하는 것에 대한 격려";
       case SherpiEmotion.defaults:
         return "친근하고 균형잡힌 톤. 자연스럽고 편안한 일상적 대화";
+      case SherpiEmotion.smile:
+        return "차분하고 만족스러운 톤. 진지하면서도 따뜻한 격려";
+      case SherpiEmotion.talking:
+        return "유머러스하고 재치있는 톤. 즐겁고 활발한 대화";
+      case SherpiEmotion.confidence:
+        return "자신감 있고 확신에 찬 톤. 당당하고 긍정적인 에너지";
     }
   }
   
@@ -231,6 +252,12 @@ class SherpiEmotionTone {
         return ['😴', '🌙', '💤', '🌸', '☁️', '🕊️'];
       case SherpiEmotion.defaults:
         return ['😊', '👋', '💫', '🌟', '✨', '🤝'];
+      case SherpiEmotion.smile:
+        return ['😁', '😌', '🙂', '💚', '🌿', '☺️'];
+      case SherpiEmotion.talking:
+        return ['💬', '😄', '🗣️', '💭', '🎭', '😆'];
+      case SherpiEmotion.confidence:
+        return ['😎', '💪', '⭐', '🔥', '👍', '✊'];
     }
   }
 }

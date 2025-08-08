@@ -48,47 +48,46 @@ class CachedMessage {
   }
 }
 
-/// 🧠 AI 메시지 캐싱 및 사전 생성 시스템
+/// 🧠 단순화된 AI 메시지 캐시 시스템
 /// 
-/// 단순화된 캐시 시스템으로 성능과 메모리 사용량을 최적화합니다.
+/// 핵심 기능만 유지하여 성능과 메모리를 최적화합니다.
 class AiMessageCache {
   static const String _cacheKey = 'ai_message_cache';
-  static const Duration _cacheExpiry = Duration(days: 3); // 3일 후 만료
-  static const int _maxCacheSize = 100; // 최대 캐시 크기
+  static const Duration _cacheExpiry = Duration(hours: 24); // 24시간 후 만료 (더 짧게)
+  static const int _maxCacheSize = 50; // 최대 캐시 크기 (더 작게)
   
   final EnhancedGeminiDialogueSource _geminiSource = EnhancedGeminiDialogueSource();
   
   
-  /// 🚀 선택적 백그라운드 메시지 생성 (최적화됨)
+  /// 🚀 핵심 메시지만 백그라운드 생성 (단순화)
   Future<void> pregenerateImportantMessages({
     required Map<String, dynamic> currentUserContext,
     required Map<String, dynamic> currentGameContext,
   }) async {
-    print('🤖 AI 메시지 선택적 생성 시작...');
+    print('🤖 핵심 AI 메시지 생성 시작...');
     
     final cache = await _loadCache();
     
-    // 사용자별 맞춤 컨텍스트 선별
-    final personalizedContexts = _getPersonalizedContexts(currentUserContext);
+    // 핵심 컨텍스트만 선별 (3개로 제한)
+    final coreContexts = [
+      SherpiContext.welcome,
+      SherpiContext.levelUp,
+      SherpiContext.encouragement
+    ];
     
-    for (final context in personalizedContexts) {
+    for (final context in coreContexts) {
       final cacheKey = '${context.name}_${_getUserHash(currentUserContext)}';
       
-      // 캐시 확인 및 스마트 갱신 판단
+      // 캐시 확인
       if (cache.containsKey(cacheKey)) {
         final cached = cache[cacheKey]!;
-        if (!cached.isExpired && !_shouldRefreshCache(cached, currentUserContext)) {
-          continue; // 유효한 캐시가 있고 갱신 불필요
+        if (!cached.isExpired) {
+          continue; // 유효한 캐시가 있음
         }
       }
       
-      // 캐시 크기 제한 확인
-      if (cache.length >= _maxCacheSize) {
-        await _cleanupLRU(cache);
-      }
-      
       try {
-        // 백그라운드에서 AI 메시지 생성
+        // AI 메시지 생성
         final message = await _geminiSource.getDialogue(
           context,
           currentUserContext,
@@ -104,89 +103,23 @@ class AiMessageCache {
         
         print('✅ ${context.name} 메시지 생성 완료');
         
-        // 즉시 저장 (앱 종료 시 손실 방지)
-        await _saveCache(cache);
-        
-        // API 부하 방지를 위한 딜레이 (줄임)
-        await Future.delayed(const Duration(milliseconds: 1500));
+        // API 부하 방지를 위한 딜레이
+        await Future.delayed(const Duration(seconds: 2));
         
       } catch (e) {
         print('❌ ${context.name} 메시지 생성 실패: $e');
       }
     }
     
-    print('🎉 AI 메시지 선택적 생성 완료! (캐시 크기: ${cache.length})');
+    // 캐시 정리 및 저장
+    await _cleanupExpired(cache);
+    await _saveCache(cache);
+    
+    print('🎉 핵심 AI 메시지 생성 완료! (캐시 크기: ${cache.length})');
   }
   
-  /// 🎯 사용자별 맞춤 컨텍스트 선별
-  List<SherpiContext> _getPersonalizedContexts(Map<String, dynamic> userContext) {
-    final contexts = <SherpiContext>[SherpiContext.welcome]; // 항상 포함
-    
-    final level = int.tryParse(userContext['레벨']?.toString() ?? '1') ?? 1;
-    final lastLoginDays = userContext['last_login_days_ago'] as int? ?? 0;
-    
-    // 조건부 추가
-    if (level > 0 && level % 5 == 0) contexts.add(SherpiContext.levelUp);
-    if (lastLoginDays > 3) contexts.add(SherpiContext.longTimeNoSee);
-    if (level >= 10) contexts.add(SherpiContext.milestone);
-    
-    return contexts;
-  }
-  
-  /// ⚡ 캐시된 AI 메시지 즉시 반환 (LRU 업데이트)
-  Future<String?> getCachedMessage(
-    SherpiContext context,
-    Map<String, dynamic> userContext,
-  ) async {
-    final cache = await _loadCache();
-    final cacheKey = '${context.name}_${_getUserHash(userContext)}';
-    
-    final cachedMessage = cache[cacheKey];
-    if (cachedMessage != null && !cachedMessage.isExpired) {
-      // LRU: 접근 시간 업데이트
-      cachedMessage.updateAccessTime();
-      await _saveCache(cache);
-      
-      print('⚡ 캐시된 AI 메시지 사용: ${context.name}');
-      return cachedMessage.message;
-    }
-    
-    return null; // 캐시 없음, 실시간 생성 필요
-  }
-
-  /// 💾 개별 메시지 캐싱 (크기 제한 적용)
-  Future<void> cacheMessage(
-    SherpiContext context,
-    Map<String, dynamic> userContext,
-    String message, {
-    Duration? duration,
-  }) async {
-    try {
-      final cache = await _loadCache();
-      final cacheKey = userContext['cache_key'] as String? ?? 
-                      '${context.name}_${_getUserHash(userContext)}';
-      
-      // 캐시 크기 제한 확인
-      if (cache.length >= _maxCacheSize) {
-        await _cleanupLRU(cache);
-      }
-      
-      cache[cacheKey] = CachedMessage(
-        message: message,
-        generatedAt: DateTime.now(),
-        userContext: userContext,
-      );
-      
-      await _saveCache(cache);
-      print('💾 메시지 캐싱 완료: $cacheKey (캐시 크기: ${cache.length})');
-    } catch (e) {
-      print('❌ 메시지 캐싱 실패: $e');
-    }
-  }
-  
-  /// 🧹 만료된 캐시 정리
-  Future<void> cleanExpiredCache() async {
-    final cache = await _loadCache();
+  /// 🧹 만료된 캐시 정리 (단순화)
+  Future<void> _cleanupExpired(Map<String, CachedMessage> cache) async {
     final expiredKeys = cache.entries
         .where((entry) => entry.value.isExpired)
         .map((entry) => entry.key)
@@ -196,33 +129,24 @@ class AiMessageCache {
       cache.remove(key);
     }
     
-    await _saveCache(cache);
-    print('🧹 만료된 캐시 ${expiredKeys.length}개 정리 완료');
+    print('🧹 만료된 캐시 ${expiredKeys.length}개 정리');
   }
   
-  /// 🔄 LRU 정책으로 캐시 정리
-  Future<void> _cleanupLRU(Map<String, CachedMessage> cache) async {
-    // 최대 크기의 20%만큼 제거 (20개)
-    final removeCount = (_maxCacheSize * 0.2).ceil();
+  /// ⚡ 캐시된 AI 메시지 즉시 반환 (단순화)
+  Future<String?> getCachedMessage(
+    SherpiContext context,
+    Map<String, dynamic> userContext,
+  ) async {
+    final cache = await _loadCache();
+    final cacheKey = '${context.name}_${_getUserHash(userContext)}';
     
-    // 마지막 접근 시간 기준으로 정렬 (오래된 것부터)
-    final sortedEntries = cache.entries.toList()
-      ..sort((a, b) => a.value.lastAccessTime.compareTo(b.value.lastAccessTime));
-    
-    // 가장 오래된 항목부터 제거
-    final toRemove = sortedEntries.take(removeCount);
-    for (final entry in toRemove) {
-      cache.remove(entry.key);
+    final cachedMessage = cache[cacheKey];
+    if (cachedMessage != null && !cachedMessage.isExpired) {
+      print('⚡ 캐시된 AI 메시지 사용: ${context.name}');
+      return cachedMessage.message;
     }
     
-    print('🔄 LRU 정리: ${removeCount}개 제거, 남은 캐시: ${cache.length}개');
-  }
-  
-  /// 📊 스마트 캐시 갱신 (사용자 레벨 변경 감지)
-  bool _shouldRefreshCache(CachedMessage cached, Map<String, dynamic> currentContext) {
-    final cachedLevel = cached.userContext['레벨']?.toString() ?? '1';
-    final currentLevel = currentContext['레벨']?.toString() ?? '1';
-    return cachedLevel != currentLevel;
+    return null; // 캐시 없음
   }
   
   /// 💾 캐시 로드

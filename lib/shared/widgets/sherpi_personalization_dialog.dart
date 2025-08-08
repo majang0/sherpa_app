@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../core/constants/sherpi_emotions.dart';
 import '../models/sherpi_relationship_model.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 
@@ -1072,15 +1073,15 @@ class _SherpiPersonalizationDialogState
   String _getPersonalityImagePath(SherpiPersonalityType type) {
     switch (type) {
       case SherpiPersonalityType.energetic:
-        return 'assets/images/sherpi/sherpi_cheering.png';
+        return SherpiEmotion.cheering.imagePath;
       case SherpiPersonalityType.calm:
-        return 'assets/images/sherpi/sherpi_thinking.png';
+        return SherpiEmotion.thinking.imagePath;
       case SherpiPersonalityType.humorous:
-        return 'assets/images/sherpi/sherpi_talking.png';
+        return SherpiEmotion.talking.imagePath;
       case SherpiPersonalityType.serious:
-        return 'assets/images/sherpi/sherpi_smile.png';
+        return SherpiEmotion.smile.imagePath;
       case SherpiPersonalityType.balanced:
-        return 'assets/images/sherpi/sherpi_guiding.png';
+        return SherpiEmotion.guiding.imagePath;
     }
   }
   

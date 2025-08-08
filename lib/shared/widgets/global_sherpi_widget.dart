@@ -708,18 +708,6 @@ class SherpiExpandedDialog extends ConsumerWidget {
                           ),
                           onTap: () => _showEncouragement(context, ref),
                         ),
-                        const SizedBox(height: 12),
-                        _buildModernActionButton(
-                          context,
-                          ref,
-                          icon: Icons.tune,
-                          title: '셰르피 설정',
-                          subtitle: '성격 유형 변경',
-                          gradient: LinearGradient(
-                            colors: [Colors.teal.shade400, Colors.teal.shade600],
-                          ),
-                          onTap: () => _showPersonalizationSettings(context, ref),
-                        ),
                         const SizedBox(height: 24),
                         
                         // Phase 2: 관계 성장 시각화 위젯

@@ -16,6 +16,7 @@ import '../../../../shared/models/global_user_model.dart';
 import '../../../../core/constants/game_constants.dart';
 import '../../../../core/constants/mountain_data.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
+import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/models/mountain.dart';
 
@@ -1088,7 +1089,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                   child: Transform.scale(
                     scale: 1.4,
                   child: Image.asset(
-                    'assets/images/sherpi/sherpi_thinking.png',
+                    SherpiEmotion.thinking.imagePath,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Center(

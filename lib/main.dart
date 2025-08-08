@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Core
 import 'main_navigation_screen.dart';
 import 'core/constants/app_colors.dart';
+import 'core/config/api_config.dart';
 
 // Providers
 import 'shared/providers/global_sherpi_provider.dart';
@@ -55,6 +57,12 @@ final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 🔐 환경 변수 초기화 (.env 파일 로드)
+  await dotenv.load(fileName: ".env");
+  
+  // 🧪 API 키 상태 디버그 (개발 중에만 사용)
+  // ApiConfig.debugApiKeyStatus(); // 필요시 주석 해제
+  
   // SharedPreferences 초기화
   final sharedPreferences = await SharedPreferences.getInstance();
 

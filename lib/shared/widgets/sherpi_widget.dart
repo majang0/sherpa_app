@@ -314,7 +314,7 @@ class _SherpiWidgetState extends ConsumerState<SherpiWidget>
                     ],
                   ),
                   child: Image.asset(
-                    SherpiDialogueUtils.getImagePath(state.emotion),
+                    state.emotion.imagePath,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return _buildFallbackSherpi(state.emotion);
@@ -593,7 +593,7 @@ class GlobalSherpiOverlay extends ConsumerWidget {
                             height: 100, // ✅ 이미지 크기는 그대로
                             child: ClipOval(
                               child: Image.asset(
-                                SherpiDialogueUtils.getImagePath(sherpiState.emotion),
+                                sherpiState.emotion.imagePath,
                                 width: 85,
                                 height: 85,
                                 fit: BoxFit.cover, // ✅ 검색 결과[6]의 해결책

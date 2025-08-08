@@ -42,6 +42,7 @@ dependencies:
   
   # AI 연동
   google_generative_ai: ^0.2.2
+  flutter_dotenv: ^5.1.0  # 환경변수 관리
 
   # 기능별 패키지
   image_picker: ^1.0.4
@@ -96,6 +97,7 @@ flutter:
     - assets/images/meeting/
     - assets/animations/
     - assets/fonts/
+    - .env  # 환경변수 파일 포함
 
   fonts:
     - family: NotoSans

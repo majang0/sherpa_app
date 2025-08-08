@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/constants/sherpi_emotions.dart';
 import '../../../providers/meeting_creation_provider.dart';
 
 /// ✅ 최종 검토 화면 - Step 4
@@ -97,7 +98,7 @@ class QuickFinalReview extends StatelessWidget {
             ),
             child: ClipOval(
               child: Image.asset(
-                'assets/images/sherpi/sherpi_cheering.png',
+                SherpiEmotion.cheering.imagePath,
                 fit: BoxFit.cover,
               ),
             ),

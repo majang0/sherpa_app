@@ -8,6 +8,7 @@ import 'dart:math' as math;
 // Core
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
+import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../../core/constants/game_constants.dart';
 
 // Shared Providers
@@ -520,7 +521,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                           child: Transform.scale(
                             scale: 2,
                             child: Image.asset(
-                              'assets/images/sherpi/sherpi_guiding.png',
+                              SherpiEmotion.guiding.imagePath,
                               fit: BoxFit.contain,
                             ),
                           ),

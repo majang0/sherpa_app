@@ -373,29 +373,3 @@ class AIDialogueSource implements SherpiDialogueSource {
 }
 
 // 유틸리티 함수들
-class SherpiDialogueUtils {
-  // 감정에 따른 이미지 경로 반환
-  static String getImagePath(SherpiEmotion emotion) {
-    return 'assets/images/sherpi/sherpi_${emotion.name}.png';
-  }
-
-  // 상황에 따른 추천 감정 반환
-  static SherpiEmotion getRecommendedEmotion(SherpiContext context) {
-    return contextEmotionMap[context] ?? SherpiEmotion.defaults;
-  }
-
-  // 백엔드 API용 컨텍스트 데이터 생성
-  static Map<String, dynamic> createContextData({
-    required SherpiContext context,
-    Map<String, dynamic>? userData,
-    Map<String, dynamic>? gameData,
-  }) {
-    return {
-      'context': context.name,
-      'timestamp': DateTime.now().toIso8601String(),
-      'user': userData ?? {},
-      'game': gameData ?? {},
-      'recommendedEmotion': getRecommendedEmotion(context).name,
-    };
-  }
-}

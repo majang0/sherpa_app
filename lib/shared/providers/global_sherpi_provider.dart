@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
+import '../../core/constants/sherpi_emotions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/ai/smart_sherpi_manager.dart';
 import '../../core/ai/real_data_connector.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 import '../../features/sherpi_emotion/providers/emotion_analysis_provider.dart';
-import '../../features/sherpi_emotion/models/emotion_analysis_model.dart';
 import '../models/sherpi_message_history.dart';
 import '../models/sherpi_quick_response_model.dart';
 import '../models/sherpi_relationship_model.dart';
@@ -98,6 +98,12 @@ class SherpiState {
         return '😴'; // 잠자는 셰르피
       case SherpiEmotion.special:
         return '✨'; // 특별한 셰르피
+      case SherpiEmotion.smile:
+        return '😁'; // 미소 짓는 셰르피
+      case SherpiEmotion.talking:
+        return '💬'; // 대화하는 셰르피
+      case SherpiEmotion.confidence:
+        return '😎'; // 자신감 있는 셰르피
     }
   }
 
@@ -126,6 +132,12 @@ class SherpiState {
         return const Color(0xFF6B7280); // 회색
       case SherpiEmotion.special:
         return const Color(0xFF8B5CF6); // 보라색
+      case SherpiEmotion.smile:
+        return const Color(0xFF06B6D4); // 청록색
+      case SherpiEmotion.talking:
+        return const Color(0xFFEC4899); // 분홍색
+      case SherpiEmotion.confidence:
+        return const Color(0xFFDC2626); // 빨간색
     }
   }
 
@@ -314,7 +326,7 @@ void initializeSherpi() {
             context, userContext, gameContext
           );
         } else {
-          selectedEmotion = SherpiDialogueUtils.getRecommendedEmotion(context);
+          selectedEmotion = SherpiEmotionMapper.getEmotionForContext(context);
         }
       }
       
@@ -328,11 +340,13 @@ void initializeSherpi() {
       // 🧠 스마트 매니저를 통한 지능적 메시지 선택
       final sherpiResponse = await _smartManager.getMessage(context, realUserContext, realGameContext);
       
-      final metadata = SherpiDialogueUtils.createContextData(
-        context: context,
-        userData: userContext,
-        gameData: gameContext,
-      );
+      final metadata = {
+        'context': context.name,
+        'timestamp': DateTime.now().toIso8601String(),
+        'user': userContext ?? {},
+        'game': gameContext ?? {},
+        'recommendedEmotion': selectedEmotion.name,
+      };
       
       // 응답 소스 정보를 메타데이터에 추가
       final enhancedMetadata = {
@@ -429,7 +443,7 @@ void initializeSherpi() {
     }
 
     _hideTimer?.cancel();
-    final selectedEmotion = emotion ?? SherpiDialogueUtils.getRecommendedEmotion(context);
+    final selectedEmotion = emotion ?? SherpiEmotionMapper.getEmotionForContext(context);
     
     // 메시지 표시 (중복 방지 통과한 경우만)
     final isNewMessage = state.dialogue != customDialogue;
@@ -675,7 +689,7 @@ void initializeSherpi() {
     } catch (e) {
       print('🎭 감정 분석 실패: $e');
       // 실패 시 기본 감정 반환
-      return SherpiDialogueUtils.getRecommendedEmotion(context);
+      return SherpiEmotionMapper.getEmotionForContext(context);
     }
   }
 
@@ -1034,7 +1048,7 @@ final sherpiProvider = StateNotifierProvider<SherpiNotifier, SherpiState>((ref) 
 
 final sherpiImageProvider = Provider<String>((ref) {
   final emotion = ref.watch(sherpiProvider.select((state) => state.emotion));
-  return SherpiDialogueUtils.getImagePath(emotion);
+  return emotion.imagePath;
 });
 
 final sherpiVisibilityProvider = Provider<bool>((ref) {

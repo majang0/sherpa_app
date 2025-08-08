@@ -8,6 +8,7 @@ import 'dart:math' as math;
 // Core
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
+import '../../../../core/constants/sherpi_emotions.dart';
 
 // Shared Providers
 import '../../../../shared/providers/global_user_provider.dart';
@@ -482,7 +483,7 @@ class _PersonalizedGrowthDashboardWidgetState
                       child: Transform.scale(
                         scale: 2.2,
                         child: Image.asset(
-                          'assets/images/sherpi/sherpi_cheering.png',
+                          SherpiEmotion.cheering.imagePath,
                           fit: BoxFit.contain,
                         ),
                       ),
