@@ -179,107 +179,203 @@ class _SherpiRelationshipGrowthWidgetState
     final nextLevel = relationship.intimacyLevel < 10 
         ? relationship.intimacyLevel + 1 
         : 10;
+    final levelColor = _getRelationshipColor(relationship.intimacyLevel);
     
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '친밀도 진행도',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
-              ),
-            ),
-            Text(
-              '${(progress * 100).toInt()}%',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: _getRelationshipColor(relationship.intimacyLevel),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Stack(
-          children: [
-            // 배경 바
-            Container(
-              height: 24,
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            // 진행도 바
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 800),
-              height: 24,
-              width: MediaQuery.of(context).size.width * progress * 0.85,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    _getRelationshipColor(relationship.intimacyLevel),
-                    _getRelationshipColor(relationship.intimacyLevel).withOpacity(0.7),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: _getRelationshipColor(relationship.intimacyLevel)
-                        .withOpacity(0.3),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.08),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 상단 정보 바
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // 현재 레벨 배지
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: levelColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: levelColor.withOpacity(0.3),
+                    width: 1,
                   ),
-                ],
-              ),
-              child: Center(
+                ),
                 child: Text(
-                  relationship.intimacyLevel < 10
-                      ? '다음 레벨까지 ${relationship.interactionsToNextLevel}회'
-                      : '최고 레벨 달성! 🌟',
-                  style: const TextStyle(
-                    color: Colors.white,
+                  'Lv.${relationship.intimacyLevel}',
+                  style: TextStyle(
                     fontSize: 12,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
+                    color: levelColor,
                   ),
                 ),
               ),
-            ).animate()
-              .slideX(begin: -1, end: 0, duration: 800.ms)
-              .fadeIn(),
-            // 다음 레벨 표시
-            if (relationship.intimacyLevel < 10)
-              Positioned(
-                right: 8,
-                top: 4,
-                bottom: 4,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+              
+              // 중앙 - 다음 레벨까지 남은 횟수 (가장 강조)
+              if (relationship.intimacyLevel < 10) ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Lv.$nextLevel',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: _getRelationshipColor(nextLevel),
-                      ),
+                    gradient: LinearGradient(
+                      colors: [
+                        levelColor.withOpacity(0.15),
+                        levelColor.withOpacity(0.08),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: levelColor.withOpacity(0.4),
+                      width: 1.5,
                     ),
                   ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.trending_up,
+                        size: 16,
+                        color: levelColor,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${relationship.interactionsToNextLevel}회 남음',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: levelColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ] else ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.amber.withOpacity(0.15),
+                        Colors.orange.withOpacity(0.08),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.amber.withOpacity(0.4),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.emoji_events,
+                        size: 16,
+                        color: Colors.amber,
+                      ),
+                      const SizedBox(width: 6),
+                      const Text(
+                        '최고 레벨!',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.amber,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              
+              // 진행률 퍼센트
+              Text(
+                '${(progress * 100).toInt()}%',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[600],
                 ),
               ),
-          ],
-        ),
-      ],
-    );
+            ],
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // 진행도 바 (깔끔한 디자인)
+          Container(
+            height: 8,
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Stack(
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 1000),
+                  curve: Curves.easeOutCubic,
+                  width: MediaQuery.of(context).size.width * progress,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        levelColor,
+                        levelColor.withOpacity(0.8),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: [
+                      BoxShadow(
+                        color: levelColor.withOpacity(0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // 하단 상세 정보
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '현재: ${relationship.totalInteractions}회',
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[500],
+                ),
+              ),
+              if (relationship.intimacyLevel < 10)
+                Text(
+                  '목표: ${(relationship.intimacyLevel + 1) * 100}회 (Lv.$nextLevel)',
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[500],
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    ).animate()
+      .fadeIn(duration: 600.ms)
+      .slideY(begin: 0.1, end: 0, duration: 600.ms);
   }
   
   Widget _buildEmotionalSyncGauge(SherpiRelationship relationship) {
@@ -536,8 +632,8 @@ class _SherpiRelationshipGrowthWidgetState
   double _calculateLevelProgress(SherpiRelationship relationship) {
     if (relationship.intimacyLevel >= 10) return 1.0;
     
-    final currentLevelRequirement = (relationship.intimacyLevel - 1) * 100;
-    final nextLevelRequirement = relationship.intimacyLevel * 100;
+    final currentLevelRequirement = relationship.intimacyLevel * 100;
+    final nextLevelRequirement = (relationship.intimacyLevel + 1) * 100;
     final currentProgress = relationship.totalInteractions - currentLevelRequirement;
     final totalRequired = nextLevelRequirement - currentLevelRequirement;
     

@@ -63,8 +63,9 @@ class SherpiRelationship {
   /// 다음 레벨까지 필요한 상호작용 횟수
   int get interactionsToNextLevel {
     if (intimacyLevel >= 10) return 0;
-    final nextLevelRequirement = intimacyLevel * 100;
-    return nextLevelRequirement - totalInteractions;
+    final nextLevelRequirement = (intimacyLevel + 1) * 100;
+    final remainingInteractions = nextLevelRequirement - totalInteractions;
+    return remainingInteractions > 0 ? remainingInteractions : 0;
   }
 
   /// 감정 동기화 수준 설명

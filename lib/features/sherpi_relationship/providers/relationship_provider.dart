@@ -185,8 +185,8 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
   double _calculateNextLevelProgress() {
     if (state.intimacyLevel >= 10) return 1.0;
     
-    final currentLevelRequirement = (state.intimacyLevel - 1) * 100;
-    final nextLevelRequirement = state.intimacyLevel * 100;
+    final currentLevelRequirement = state.intimacyLevel * 100;
+    final nextLevelRequirement = (state.intimacyLevel + 1) * 100;
     final range = nextLevelRequirement - currentLevelRequirement;
     final progress = state.totalInteractions - currentLevelRequirement;
     
