@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -383,21 +384,34 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
     );
   }
   
+
   /// 닫기 버튼
   Widget _buildCloseButton() {
-    return GestureDetector(
-      onTap: _hideCard,
-      child: Container(
-        width: 28,
-        height: 28,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white.withValues(alpha: 0.2),
-        ),
-        child: Icon(
-          Icons.close,
-          size: 16,
-          color: Colors.white.withValues(alpha: 0.8),
+    final screenWidth = MediaQuery.of(context).size.width;
+    final buttonSize = screenWidth > 400 ? 32.0 : 28.0;
+    final iconSize = screenWidth > 400 ? 18.0 : 16.0;
+    
+    return Semantics(
+      label: '메시지 닫기',
+      hint: '셰르피 메시지 카드를 닫습니다',
+      button: true,
+      child: GestureDetector(
+        onTap: () {
+          HapticFeedback.selectionClick();
+          _hideCard();
+        },
+        child: Container(
+          width: buttonSize,
+          height: buttonSize,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white.withValues(alpha: 0.2),
+          ),
+          child: Icon(
+            Icons.close,
+            size: iconSize,
+            color: Colors.white.withValues(alpha: 0.8),
+          ),
         ),
       ),
     );
@@ -501,6 +515,7 @@ extension SherpiMessageCardExtension on WidgetRef {
     Duration? duration,
     double? bottomOffset,
     bool autoHide = true,
+    bool showCloseButton = true,
     VoidCallback? onTap,
   }) async {
     // 먼저 셰르피 메시지를 설정
@@ -520,6 +535,7 @@ extension SherpiMessageCardExtension on WidgetRef {
     Duration? duration,
     double? bottomOffset,
     bool autoHide = true,
+    bool showCloseButton = true,
     VoidCallback? onTap,
   }) {
     read(sherpiProvider.notifier).showInstantMessage(
