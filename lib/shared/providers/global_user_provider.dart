@@ -1726,10 +1726,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     // 목표 완료 보상
     addExperience(100);
-    ref.read(globalPointProvider.notifier).awardPoints(
-      amount: 500,
-      source: PointSource.goalCompletion,
-      description: '목표 달성: ${goal.title}',
+    ref.read(globalPointProvider.notifier).earnPoints(
+      500,
+      PointSource.goalCompletion,
+      '목표 달성: ${goal.title}',
     );
     
     // 셰르피 축하 메시지

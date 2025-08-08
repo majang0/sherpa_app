@@ -38,6 +38,7 @@ enum PointSource {
   // 기타
   levelUp,              // 레벨업
   signup,               // 가입 보너스
+  goalCompletion,       // 목표 완료
 }
 
 enum PointSpendType {
