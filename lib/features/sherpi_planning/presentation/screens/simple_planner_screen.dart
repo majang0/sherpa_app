@@ -114,13 +114,58 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
             // 메인 비주얼 - 산 경로
             Expanded(
               flex: 2,
-              child: Container(
-                margin: const EdgeInsets.all(16),
-                child: MountainPathWidget(
-                  goals: goals,
-                  onGoalTap: _onGoalTapped,
-                ),
-              ).animate().fadeIn(duration: 600.ms),
+              child: Stack(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(16),
+                    child: MountainPathWidget(
+                      goals: goals,
+                      onGoalTap: _onGoalTapped,
+                    ),
+                  ).animate().fadeIn(duration: 600.ms),
+                  
+                  // 목표 리스트 버튼
+                  Positioned(
+                    top: 20,
+                    right: 20,
+                    child: Material(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(12),
+                      child: InkWell(
+                        onTap: _showGoalsList,
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.list_alt,
+                                size: 18,
+                                color: AppColors.primary,
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                '목표 관리',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ).animate()
+                    .fadeIn(delay: 300.ms)
+                    .slideX(begin: 0.2, end: 0),
+                ],
+              ),
             ),
             
             // 오늘의 체크포인트
@@ -213,6 +258,308 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     );
   }
   
+  // 목표 리스트 보기 모달
+  void _showGoalsList() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        final goals = ref.read(globalUserProvider).planningData?.goals ?? [];
+        
+        return DraggableScrollableSheet(
+          initialChildSize: 0.7,
+          minChildSize: 0.3,
+          maxChildSize: 0.9,
+          builder: (context, scrollController) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: Column(
+                children: [
+                  // 핸들바
+                  Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  
+                  // 헤더
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          '🎯 내 목표',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF2D3142),
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${goals.length}개',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  const Divider(),
+                  
+                  // 목표 리스트
+                  Expanded(
+                    child: goals.isEmpty
+                        ? Center(
+                            child: Text(
+                              '아직 설정한 목표가 없어요',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            controller: scrollController,
+                            padding: const EdgeInsets.all(20),
+                            itemCount: goals.length,
+                            itemBuilder: (context, index) {
+                              final goal = goals[index];
+                              return _buildGoalCard(goal);
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+  
+  // 목표 카드 위젯
+  Widget _buildGoalCard(UserGoal goal) {
+    final daysLeft = goal.daysRemaining;
+    final progressPercent = goal.progress.toInt();
+    
+    return Dismissible(
+      key: Key(goal.id),
+      background: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.red.withOpacity(0.8),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        alignment: Alignment.centerRight,
+        child: const Icon(
+          Icons.delete_outline,
+          color: Colors.white,
+          size: 28,
+        ),
+      ),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) async {
+        return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('목표 삭제'),
+            content: Text('${goal.title} 목표를 삭제하시겠어요?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('취소'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(
+                  '삭제',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      onDismissed: (direction) {
+        ref.read(globalUserProvider.notifier).deleteGoal(goal.id);
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${goal.title} 목표가 삭제되었어요'),
+            action: SnackBarAction(
+              label: '되돌리기',
+              onPressed: () {
+                // 되돌리기 기능 (향후 구현)
+              },
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Colors.grey[200]!,
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // 카테고리 아이콘
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: _getCategoryColor(goal.category).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                _getCategoryIcon(goal.category),
+                color: _getCategoryColor(goal.category),
+                size: 24,
+              ),
+            ),
+            
+            const SizedBox(width: 12),
+            
+            // 목표 정보
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    goal.title,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF2D3142),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        size: 12,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'D-$daysLeft',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: daysLeft <= 3 ? Colors.red : Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Icon(
+                        Icons.trending_up,
+                        size: 12,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '$progressPercent%',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            
+            // 진행률 원형 차트
+            SizedBox(
+              width: 50,
+              height: 50,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    value: goal.progress / 100,
+                    backgroundColor: Colors.grey[200],
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      _getCategoryColor(goal.category),
+                    ),
+                    strokeWidth: 3,
+                  ),
+                  Text(
+                    '$progressPercent%',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: _getCategoryColor(goal.category),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  // 카테고리별 색상
+  Color _getCategoryColor(String category) {
+    switch (category) {
+      case 'health':
+        return Colors.green;
+      case 'study':
+        return Colors.blue;
+      case 'habit':
+        return Colors.purple;
+      case 'social':
+        return Colors.orange;
+      default:
+        return AppColors.primary;
+    }
+  }
+  
+  // 카테고리별 아이콘
+  IconData _getCategoryIcon(String category) {
+    switch (category) {
+      case 'health':
+        return Icons.fitness_center;
+      case 'study':
+        return Icons.school;
+      case 'habit':
+        return Icons.psychology;
+      case 'social':
+        return Icons.people;
+      default:
+        return Icons.flag;
+    }
+  }
+  
   // 빈 체크포인트 화면
   Widget _buildEmptyCheckpoints() {
     return Center(
@@ -283,50 +630,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       }
     }
     
-    // 일일 활동 체크포인트 추가
-    final dailyRecord = user.dailyRecords;
-    
-    // 운동 체크포인트
-    if (!_hasExercisedToday(dailyRecord)) {
-      final exerciseId = 'exercise_${now.day}';
-      checkpoints.add({
-        'id': exerciseId,
-        'title': '운동 30분',
-        'mountain': '건강봉',
-        'points': 50,
-        'completed': _checkpointCompletions[exerciseId] ?? false,
-        'linkedActivity': 'exercise',
-        'category': 'health',
-      });
-    }
-    
-    // 독서 체크포인트
-    if (!_hasReadToday(dailyRecord)) {
-      final readingId = 'reading_${now.day}';
-      checkpoints.add({
-        'id': readingId,
-        'title': '독서 1장',
-        'mountain': '지식봉',
-        'points': 30,
-        'completed': _checkpointCompletions[readingId] ?? false,
-        'linkedActivity': 'reading',
-        'category': 'study',
-      });
-    }
-    
-    // 일기 체크포인트
-    if (!_hasWrittenDiaryToday(dailyRecord)) {
-      final diaryId = 'diary_${now.day}';
-      checkpoints.add({
-        'id': diaryId,
-        'title': '일기 작성',
-        'mountain': '성찰봉',
-        'points': 20,
-        'completed': _checkpointCompletions[diaryId] ?? false,
-        'linkedActivity': 'diary',
-        'category': 'habit',
-      });
-    }
+    // 일일 활동 체크포인트는 제거 - 목표에서 설정한 것만 표시
     
     return checkpoints;
   }
@@ -363,35 +667,6 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     }
   }
   
-  // 오늘 운동했는지 확인
-  bool _hasExercisedToday(DailyRecordData dailyRecord) {
-    final today = DateTime.now();
-    return dailyRecord.exerciseLogs.any((log) =>
-      log.date.year == today.year &&
-      log.date.month == today.month &&
-      log.date.day == today.day
-    );
-  }
-  
-  // 오늘 독서했는지 확인
-  bool _hasReadToday(DailyRecordData dailyRecord) {
-    final today = DateTime.now();
-    return dailyRecord.readingLogs.any((log) =>
-      log.date.year == today.year &&
-      log.date.month == today.month &&
-      log.date.day == today.day
-    );
-  }
-  
-  // 오늘 일기 썼는지 확인
-  bool _hasWrittenDiaryToday(DailyRecordData dailyRecord) {
-    final today = DateTime.now();
-    return dailyRecord.diaryLogs.any((log) =>
-      log.date.year == today.year &&
-      log.date.month == today.month &&
-      log.date.day == today.day
-    );
-  }
   
   // 전체 진행률 계산
   double _calculateOverallProgress(List<UserGoal> goals) {

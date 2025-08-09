@@ -130,6 +130,41 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     final level12RequiredXp = GameConstants.getRequiredXpForLevel(12);
     final currentXp = level11TotalXp + (level12RequiredXp * 0.3);
 
+    // 샘플 목표 데이터 생성 (3개)
+    final now = DateTime.now();
+    final sampleGoals = [
+      UserGoal(
+        id: 'goal_001',
+        title: '매일 일기 작성',
+        description: '하루를 되돌아보며 감사 일기를 작성하기',
+        category: 'habit',
+        duration: 30, // 30일
+        createdAt: now.subtract(const Duration(days: 7)),
+        progress: 23.3, // 7일 진행 (23.3%)
+        isActive: true,
+      ),
+      UserGoal(
+        id: 'goal_002',
+        title: '주 3회 달리기',
+        description: '5km 달리기를 주 3회 이상 완주하기',
+        category: 'health',
+        duration: 60, // 60일
+        createdAt: now.subtract(const Duration(days: 14)),
+        progress: 35.0, // 14일 진행, 여러 번 달림
+        isActive: true,
+      ),
+      UserGoal(
+        id: 'goal_003',
+        title: '오전 7시 기상',
+        description: '매일 아침 7시에 일어나는 습관 만들기',
+        category: 'habit',
+        duration: 21, // 21일 (습관 형성)
+        createdAt: now.subtract(const Duration(days: 10)),
+        progress: 47.6, // 10일 진행 (47.6%)
+        isActive: true,
+      ),
+    ];
+
     final user = GlobalUser(
       id: 'user_001',
       name: '박지호',
@@ -154,6 +189,16 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         'common_stamina',    // 꾸준함의 증표 (경험치 +10%)
       ],
       dailyRecords: _createSampleDailyRecords(),
+      planningData: UserPlanningData(
+        goals: sampleGoals,
+        completedGoals: [],
+        totalGoalsCreated: 3,
+        totalGoalsCompleted: 0,
+        categoryStats: {
+          'health': 1,
+          'habit': 2,
+        },
+      ),
     );
     return user;
   }

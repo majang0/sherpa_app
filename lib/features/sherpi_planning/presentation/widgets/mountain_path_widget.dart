@@ -101,29 +101,32 @@ class MountainPathWidget extends StatelessWidget {
       }
     }
     
-    final averageProgress = activeGoals > 0 ? totalProgress / activeGoals : 0;
+    final averageProgress = activeGoals > 0 ? (totalProgress / activeGoals) / 100 : 0; // 100으로 나누어 0~1 범위로 정규화
     
     return Positioned(
       left: 30 + (averageProgress * 200), // 진행률에 따라 위치 조정
       bottom: 40 + (averageProgress * 100), // 고도 상승
       child: Container(
-        width: 36,
-        height: 36,
+        width: 44,
+        height: 44,
         decoration: BoxDecoration(
-          color: AppColors.primary,
+          color: Colors.white,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
               color: AppColors.primary.withOpacity(0.3),
-              blurRadius: 8,
+              blurRadius: 12,
               spreadRadius: 2,
             ),
           ],
         ),
-        child: const Icon(
-          Icons.person,
-          color: Colors.white,
-          size: 20,
+        child: ClipOval(
+          child: Image.asset(
+            'assets/images/sherpi/sherpi_confidence.png', // 자신감 있는 셰르피
+            width: 40,
+            height: 40,
+            fit: BoxFit.contain,
+          ),
         ),
       ).animate(onPlay: (controller) => controller.repeat())
         .scale(
@@ -143,12 +146,15 @@ class MountainPathWidget extends StatelessWidget {
   // 산봉우리 마커
   Widget _buildPeakMarker(BuildContext context, UserGoal goal, int index) {
     final progress = goal.progress;
-    final isCompleted = progress >= 1.0;
+    final isCompleted = progress >= 100.0;
     final isActive = goal.isActive;
+    final daysLeft = goal.daysRemaining;
     
-    // 위치 계산 (목표별로 분산 배치)
-    final double xPosition = 60 + (index * 80.0);
-    final double yPosition = 80 - (index * 20.0);
+    // 위치 계산 (목표별로 분산 배치 - 더 균등하게)
+    final totalGoals = goals.length;
+    final screenWidth = MediaQuery.of(context).size.width - 32; // 좌우 마진 제외
+    final double xPosition = 30 + ((screenWidth - 60) / (totalGoals + 1)) * (index + 1);
+    final double yPosition = 60 + (index % 2 == 0 ? 0 : 30);
     
     return Positioned(
       left: xPosition,
@@ -157,23 +163,22 @@ class MountainPathWidget extends StatelessWidget {
         onTap: () => onGoalTap(goal.id),
         child: Column(
           children: [
-            // 산 또는 깃발 아이콘
+            // 카테고리별 셰르피 이미지
             Container(
               width: 50,
               height: 50,
               decoration: BoxDecoration(
                 color: isCompleted 
                     ? Colors.green.withOpacity(0.2)
-                    : (isActive ? Colors.blue.withOpacity(0.2) : Colors.grey.withOpacity(0.2)),
+                    : (isActive ? _getCategoryColor(goal.category).withOpacity(0.2) : Colors.grey.withOpacity(0.2)),
                 shape: BoxShape.circle,
               ),
               child: Center(
-                child: Icon(
-                  isCompleted ? Icons.flag : Icons.terrain,
-                  color: isCompleted 
-                      ? Colors.green 
-                      : (isActive ? AppColors.primary : Colors.grey),
-                  size: 28,
+                child: Image.asset(
+                  _getCategorySherpiImage(goal.category, isCompleted),
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.contain,
                 ),
               ),
             ).animate()
@@ -219,7 +224,7 @@ class MountainPathWidget extends StatelessWidget {
                     ),
                     child: FractionallySizedBox(
                       alignment: Alignment.centerLeft,
-                      widthFactor: progress,
+                      widthFactor: progress / 100,
                       child: Container(
                         decoration: BoxDecoration(
                           color: isCompleted ? Colors.green : AppColors.primary,
@@ -229,12 +234,26 @@ class MountainPathWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 2),
-                  Text(
-                    '${(progress * 100).toInt()}%',
-                    style: TextStyle(
-                      fontSize: 9,
-                      color: Colors.grey[600],
-                    ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${progress.toInt()}%',
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'D-$daysLeft',
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: daysLeft <= 3 ? Colors.red : Colors.grey[600],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -270,6 +289,42 @@ class MountainPathWidget extends StatelessWidget {
         return '⛰️ 목표봉';
     }
   }
+  
+  // 카테고리별 색상
+  Color _getCategoryColor(String category) {
+    switch (category) {
+      case 'health':
+        return Colors.green;
+      case 'study':
+        return Colors.blue;
+      case 'habit':
+        return Colors.purple;
+      case 'social':
+        return Colors.orange;
+      default:
+        return AppColors.primary;
+    }
+  }
+  
+  // 카테고리별 셰르피 이미지
+  String _getCategorySherpiImage(String category, bool isCompleted) {
+    if (isCompleted) {
+      return 'assets/images/sherpi/sherpi_special.png'; // 완료시 특별한 표정
+    }
+    
+    switch (category) {
+      case 'health':
+        return 'assets/images/sherpi/sherpi_cheering.png'; // 건강 목표는 응원하는 표정
+      case 'study':
+        return 'assets/images/sherpi/sherpi_thinking.png'; // 학습 목표는 생각하는 표정
+      case 'habit':
+        return 'assets/images/sherpi/sherpi_guiding.png'; // 습관 목표는 안내하는 표정
+      case 'social':
+        return 'assets/images/sherpi/sherpi_happy.png'; // 사교 목표는 행복한 표정
+      default:
+        return 'assets/images/sherpi/sherpi_default.png'; // 기본 표정
+    }
+  }
 }
 
 /// 산 경로를 그리는 CustomPainter
@@ -280,16 +335,32 @@ class MountainPathPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // 배경 산 실루엣 그리기
+    final backgroundPaint = Paint()
+      ..color = AppColors.primary.withOpacity(0.03)
+      ..style = PaintingStyle.fill;
+    
+    final backgroundPath = Path();
+    backgroundPath.moveTo(0, size.height);
+    backgroundPath.lineTo(0, size.height * 0.5);
+    
+    // 배경 산봉우리들
+    backgroundPath.quadraticBezierTo(size.width * 0.25, size.height * 0.3, size.width * 0.5, size.height * 0.4);
+    backgroundPath.quadraticBezierTo(size.width * 0.75, size.height * 0.2, size.width, size.height * 0.35);
+    backgroundPath.lineTo(size.width, size.height);
+    backgroundPath.close();
+    canvas.drawPath(backgroundPath, backgroundPaint);
+    
     if (goals.isEmpty) return;
     
     final pathPaint = Paint()
-      ..color = Colors.brown.withOpacity(0.3)
+      ..color = AppColors.primary.withOpacity(0.5)
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
     
     final dottedPaint = Paint()
-      ..color = Colors.brown.withOpacity(0.2)
+      ..color = AppColors.primary.withOpacity(0.2)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -301,45 +372,55 @@ class MountainPathPainter extends CustomPainter {
     
     // 목표들을 연결하는 경로 그리기
     for (int i = 0; i < goals.length; i++) {
-      final xPosition = 60 + (i * 80.0);
-      final yPosition = 80 + (i * 20.0);
+      final totalGoals = goals.length;
+      final xPosition = 30 + ((size.width - 60) / (totalGoals + 1)) * (i + 1);
+      final yPosition = 60 + (i % 2 == 0 ? 0 : 30) + 50;
       
       // 곡선으로 연결
       if (i == 0) {
         path.quadraticBezierTo(
           45,
           size.height - 60,
-          xPosition + 25,
-          yPosition + 50,
+          xPosition.toDouble(),
+          yPosition.toDouble(),
         );
       } else {
-        final prevX = 60 + ((i - 1) * 80.0);
-        final prevY = 80 + ((i - 1) * 20.0);
+        final prevIndex = i - 1;
+        final prevX = 30 + ((size.width - 60) / (totalGoals + 1)) * (prevIndex + 1);
+        final prevY = 60 + (prevIndex % 2 == 0 ? 0 : 30) + 50;
         
         path.quadraticBezierTo(
-          (prevX + xPosition) / 2 + 25,
-          (prevY + yPosition) / 2 + 30,
-          xPosition + 25,
-          yPosition + 50,
+          (prevX + xPosition) / 2,
+          (prevY + yPosition) / 2 - 20,
+          xPosition.toDouble(),
+          yPosition.toDouble(),
         );
       }
     }
     
-    // 실선 경로 그리기
-    canvas.drawPath(path, pathPaint);
+    // 점선 경로 그리기
+    _drawDashedPath(canvas, path, dottedPaint);
     
-    // 점선 효과 추가
-    for (double i = 0; i < 1; i += 0.02) {
-      final metric = path.computeMetrics().first;
-      final offset = metric.getTangentForOffset(metric.length * i)?.position;
-      if (offset != null && i % 0.04 < 0.02) {
-        canvas.drawCircle(offset, 1, dottedPaint);
+    // 완료된 부분 실선으로 그리기
+    double totalProgress = 0;
+    int activeGoals = 0;
+    for (final goal in goals) {
+      if (goal.isActive) {
+        totalProgress += goal.progress;
+        activeGoals++;
       }
+    }
+    final averageProgress = activeGoals > 0 ? (totalProgress / activeGoals) / 100 : 0; // 0~1 범위로 정규화
+    
+    if (averageProgress > 0) {
+      final metrics = path.computeMetrics().first;
+      final extractPath = metrics.extractPath(0, metrics.length * averageProgress);
+      canvas.drawPath(extractPath, pathPaint);
     }
     
     // 베이스 캠프 그리기
     final baseCampPaint = Paint()
-      ..color = Colors.orange[700]!
+      ..color = AppColors.primary
       ..style = PaintingStyle.fill;
     
     canvas.drawCircle(Offset(30, size.height - 40), 8, baseCampPaint);
@@ -358,6 +439,21 @@ class MountainPathPainter extends CustomPainter {
     );
     textPainter.layout();
     textPainter.paint(canvas, Offset(15, size.height - 25));
+  }
+  
+  void _drawDashedPath(Canvas canvas, Path path, Paint paint) {
+    final dashWidth = 5.0;
+    final dashSpace = 5.0;
+    double distance = 0.0;
+    
+    for (final metric in path.computeMetrics()) {
+      while (distance < metric.length) {
+        final extractPath = metric.extractPath(distance, distance + dashWidth);
+        canvas.drawPath(extractPath, paint);
+        distance += dashWidth + dashSpace;
+      }
+      distance = 0.0;
+    }
   }
 
   @override

@@ -76,19 +76,19 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: isCompleted 
-                    ? _getCategoryColor(category).withOpacity(0.1)
+                    ? Colors.green.withOpacity(0.1)
                     : Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: isCompleted 
-                      ? _getCategoryColor(category).withOpacity(0.3)
+                      ? Colors.green.withOpacity(0.3)
                       : Colors.grey[200]!,
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: isCompleted
-                        ? _getCategoryColor(category).withOpacity(0.1)
+                        ? Colors.green.withOpacity(0.1)
                         : Colors.black.withOpacity(0.03),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
@@ -104,12 +104,12 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                     height: 28,
                     decoration: BoxDecoration(
                       color: isCompleted 
-                          ? _getCategoryColor(category)
+                          ? Colors.green
                           : Colors.transparent,
                       shape: BoxShape.circle,
                       border: Border.all(
                         color: isCompleted 
-                            ? _getCategoryColor(category)
+                            ? Colors.green
                             : Colors.grey[400]!,
                         width: 2,
                       ),
@@ -168,7 +168,7 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                     ),
                   ),
                   
-                  // 포인트
+                  // 상태 표시 (완료 또는 오늘)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -180,21 +180,21 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                         decoration: BoxDecoration(
                           color: isCompleted
                               ? Colors.green.withOpacity(0.1)
-                              : Colors.grey[100],
+                              : AppColors.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           children: [
                             Icon(
-                              Icons.star,
+                              isCompleted ? Icons.check_circle : Icons.schedule,
                               size: 14,
                               color: isCompleted 
                                   ? Colors.green 
-                                  : Colors.grey[400],
+                                  : AppColors.primary,
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              '+$points',
+                              isCompleted ? '완료' : '오늘',
                               style: GoogleFonts.notoSans(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
