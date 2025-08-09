@@ -1632,7 +1632,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     return state.planningData ?? UserPlanningData.empty();
   }
 
-  /// 새로운 목표 저장
+  /// 새로운 목표 저장 (기존 목표 유지하면서 추가)
   void saveGoals(List<Map<String, dynamic>> rawGoals) {
     final currentPlanningData = planningData;
     
@@ -1649,6 +1649,9 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       isActive: goalMap['isActive'] ?? true,
       metadata: goalMap['metadata'],
     )).toList();
+    
+    // 기존 목표와 새 목표를 합침
+    final allGoals = [...currentPlanningData.goals, ...newGoals];
 
     // 카테고리별 통계 업데이트
     final updatedCategoryStats = Map<String, int>.from(currentPlanningData.categoryStats);
@@ -1658,7 +1661,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     // 새로운 계획 데이터 생성
     final updatedPlanningData = currentPlanningData.copyWith(
-      goals: [...currentPlanningData.goals, ...newGoals],
+      goals: allGoals,
       lastPlanningDate: DateTime.now(),
       totalGoalsCreated: currentPlanningData.totalGoalsCreated + newGoals.length,
       categoryStats: updatedCategoryStats,

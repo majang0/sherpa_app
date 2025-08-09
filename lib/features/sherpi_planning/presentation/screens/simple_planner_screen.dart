@@ -40,6 +40,9 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
   late AnimationController _animationController;
   bool _showQuickInput = false;
   
+  // 체크포인트 완료 상태를 관리하는 Map
+  final Map<String, bool> _checkpointCompletions = {};
+  
   @override
   void initState() {
     super.initState();
@@ -265,14 +268,15 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     if (user.planningData != null) {
       for (final goal in user.planningData!.goals) {
         if (goal.isActive) {
+          final checkpointId = '${goal.id}_${now.day}';
           // 목표별로 오늘의 체크포인트 생성
           checkpoints.add({
-            'id': '${goal.id}_${now.day}',
+            'id': checkpointId,
             'goalId': goal.id,
             'title': goal.title,
             'mountain': _getCategoryMountain(goal.category),
             'points': _getCategoryPoints(goal.category),
-            'completed': false,
+            'completed': _checkpointCompletions[checkpointId] ?? false,
             'category': goal.category,
           });
         }
@@ -284,12 +288,13 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     
     // 운동 체크포인트
     if (!_hasExercisedToday(dailyRecord)) {
+      final exerciseId = 'exercise_${now.day}';
       checkpoints.add({
-        'id': 'exercise_${now.day}',
+        'id': exerciseId,
         'title': '운동 30분',
         'mountain': '건강봉',
         'points': 50,
-        'completed': false,
+        'completed': _checkpointCompletions[exerciseId] ?? false,
         'linkedActivity': 'exercise',
         'category': 'health',
       });
@@ -297,12 +302,13 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     
     // 독서 체크포인트
     if (!_hasReadToday(dailyRecord)) {
+      final readingId = 'reading_${now.day}';
       checkpoints.add({
-        'id': 'reading_${now.day}',
+        'id': readingId,
         'title': '독서 1장',
         'mountain': '지식봉',
         'points': 30,
-        'completed': false,
+        'completed': _checkpointCompletions[readingId] ?? false,
         'linkedActivity': 'reading',
         'category': 'study',
       });
@@ -310,12 +316,13 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     
     // 일기 체크포인트
     if (!_hasWrittenDiaryToday(dailyRecord)) {
+      final diaryId = 'diary_${now.day}';
       checkpoints.add({
-        'id': 'diary_${now.day}',
+        'id': diaryId,
         'title': '일기 작성',
         'mountain': '성찰봉',
         'points': 20,
-        'completed': false,
+        'completed': _checkpointCompletions[diaryId] ?? false,
         'linkedActivity': 'diary',
         'category': 'habit',
       });
@@ -422,19 +429,20 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
   
   // 목표 생성
   void _createGoal(Map<String, dynamic> goalData) {
-    final newGoal = UserGoal(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      title: goalData['title'],
-      description: goalData['description'],
-      category: goalData['category'],
-      duration: goalData['duration'],
-      createdAt: DateTime.now(),
-      progress: 0,
-      isActive: true,
-    );
+    // 목표 데이터를 바로 Map 형태로 준비
+    final goalMap = {
+      'id': DateTime.now().millisecondsSinceEpoch.toString(),
+      'title': goalData['title'],
+      'description': goalData['description'] ?? '',
+      'category': goalData['category'],
+      'duration': goalData['duration'],
+      'createdAt': DateTime.now(),
+      'progress': 0.0,
+      'isActive': true,
+    };
     
     // 글로벌 프로바이더에 저장
-    ref.read(globalUserProvider.notifier).saveGoals([newGoal.toJson()]);
+    ref.read(globalUserProvider.notifier).saveGoals([goalMap]);
     
     // 포인트 지급
     ref.read(globalPointProvider.notifier).earnPoints(
@@ -446,7 +454,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     // 셰르피 반응
     ref.read(sherpiProvider.notifier).showInstantMessage(
       context: SherpiContext.general,
-      customDialogue: '좋아요! "${newGoal.title}" 목표를 향해 함께 올라가봐요! 🚀',
+      customDialogue: '좋아요! "${goalData['title']}" 목표를 향해 함께 올라가봐요! 🚀',
       emotion: SherpiEmotion.cheering,
       duration: const Duration(seconds: 3),
     );
@@ -461,11 +469,15 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
   void _toggleCheckpoint(Map<String, dynamic> checkpoint) {
     HapticFeedbackManager.lightImpact();
     
+    final checkpointId = checkpoint['id'] as String;
+    final newCompletedState = !checkpoint['completed'];
+    
     setState(() {
-      checkpoint['completed'] = !checkpoint['completed'];
+      checkpoint['completed'] = newCompletedState;
+      _checkpointCompletions[checkpointId] = newCompletedState;
     });
     
-    if (checkpoint['completed']) {
+    if (newCompletedState) {
       // 포인트 지급
       ref.read(globalPointProvider.notifier).earnPoints(
         checkpoint['points'],
@@ -478,10 +490,20 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       
       // 목표 진행률 업데이트
       if (checkpoint['goalId'] != null) {
-        ref.read(globalUserProvider.notifier).updateGoalProgress(
-          checkpoint['goalId'],
-          0.1, // 10% 진행
-        );
+        // 현재 진행률을 가져와서 10% 증가시킴
+        final goal = ref.read(globalUserProvider).planningData?.goals
+            .firstWhere((g) => g.id == checkpoint['goalId'], 
+                        orElse: () => UserGoal(
+                          id: '', title: '', category: '', duration: 0, 
+                          createdAt: DateTime.now(), progress: 0, isActive: false));
+        
+        if (goal != null && goal.id.isNotEmpty) {
+          final newProgress = (goal.progress + 10).clamp(0.0, 100.0);
+          ref.read(globalUserProvider.notifier).updateGoalProgress(
+            checkpoint['goalId'],
+            newProgress,
+          );
+        }
       }
       
       // 셰르피 축하 메시지
@@ -500,12 +522,15 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     HapticFeedbackManager.lightImpact();
     
     final goal = ref.read(globalUserProvider).planningData?.goals
-        .firstWhere((g) => g.id == goalId);
+        .firstWhere((g) => g.id == goalId,
+                    orElse: () => UserGoal(
+                      id: '', title: '', category: '', duration: 0,
+                      createdAt: DateTime.now(), progress: 0, isActive: false));
     
-    if (goal != null) {
+    if (goal != null && goal.id.isNotEmpty) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
         context: SherpiContext.general,
-        customDialogue: '${goal.title} - 진행률: ${(goal.progress * 100).toInt()}%',
+        customDialogue: '${goal.title} - 진행률: ${goal.progress.toInt()}%',
         emotion: SherpiEmotion.guiding,
         duration: const Duration(seconds: 2),
       );

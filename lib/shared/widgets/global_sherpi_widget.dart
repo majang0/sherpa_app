@@ -14,8 +14,6 @@ import '../../features/sherpi_chat/presentation/screens/sherpi_chat_screen.dart'
 import '../../features/sherpi_analysis/services/user_data_analyzer.dart';
 import '../../features/sherpi_analysis/services/ai_insight_generator.dart';
 import '../../features/sherpi_analysis/presentation/screens/analysis_result_screen.dart';
-import '../../features/sherpi_planning/services/smart_planner_service.dart';
-import '../../features/sherpi_planning/presentation/screens/planning_result_screen.dart';
 import '../../features/sherpi_planning/presentation/screens/simple_planner_screen.dart';
 
 // Shared
