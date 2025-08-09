@@ -16,7 +16,7 @@ import '../../features/sherpi_analysis/services/ai_insight_generator.dart';
 import '../../features/sherpi_analysis/presentation/screens/analysis_result_screen.dart';
 import '../../features/sherpi_planning/services/smart_planner_service.dart';
 import '../../features/sherpi_planning/presentation/screens/planning_result_screen.dart';
-import '../../features/sherpi_planning/presentation/screens/planning_input_screen.dart';
+import '../../features/sherpi_planning/presentation/screens/simple_planner_screen.dart';
 
 // Shared
 import '../providers/global_sherpi_provider.dart';
@@ -1246,7 +1246,7 @@ class SherpiExpandedDialog extends ConsumerWidget {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => 
-            const PlanningInputScreen(),
+            const SimplePlannerScreen(),
         transitionDuration: const Duration(milliseconds: 400),
         reverseTransitionDuration: const Duration(milliseconds: 300),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
