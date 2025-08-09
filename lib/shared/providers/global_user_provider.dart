@@ -1601,8 +1601,13 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       // 🤝 모임 관련
       case 'meeting_host':
       case 'meeting_participant':
+      case 'meeting_review':
         context = SherpiContext.meetingJoined;
         emotion = SherpiEmotion.happy;
+        // 모임 후기 작성인 경우 특별 메시지
+        if (activityType == 'meeting_review') {
+          customMessage = '모임 후기 작성 완료! ⭐ 소중한 경험을 공유해주셔서 감사해요!';
+        }
         break;
         
       // 🏆 챌린지 및 특별 성취

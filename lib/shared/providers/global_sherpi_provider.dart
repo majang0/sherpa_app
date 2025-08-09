@@ -417,13 +417,14 @@ void initializeSherpi() {
     }
   }
 
-  void showInstantMessage({
+  Future<void> showInstantMessage({
     required SherpiContext context,
     required String customDialogue,
     SherpiEmotion? emotion,
     Duration duration = const Duration(seconds: 4),
     bool forceShow = false, // 🚨 중복 방지 제어 매개변수 추가
-  }) {
+    Map<String, dynamic>? userContext, // 🎯 Phase 2: AI 사용을 위한 컨텍스트 추가
+  }) async {
     // 🚨 전역 락: 이미 메시지를 표시 중이면 무시 (동시 호출 방지)
     if (_isShowingMessage && !forceShow) {
       print('🚨 전역 락: 이미 메시지 표시 중 - ${context.name}');
@@ -442,20 +443,68 @@ void initializeSherpi() {
     _hideTimer?.cancel();
     final selectedEmotion = emotion ?? SherpiEmotionMapper.getEmotionForContext(context);
     
+    // 🎯 Phase 2: AI 메시지 시도 (빠른 경로만 - 캐시된 메시지)
+    String finalMessage = customDialogue;
+    String responseSource = 'instant';
+    
+    try {
+      // 🔌 실제 사용자 데이터 연결
+      final realUserContext = _dataConnector.buildRealUserContext(
+        context: context,
+        additionalData: userContext,
+      );
+      final realGameContext = _dataConnector.buildRealGameContext();
+      
+      // 🧠 스마트 매니저를 통한 AI 메시지 시도 (빠른 응답만)
+      final sherpiResponse = await Future.any([
+        _smartManager.getMessage(context, realUserContext, realGameContext),
+        Future.delayed(const Duration(milliseconds: 500), () => null), // 500ms 타임아웃
+      ]);
+      
+      if (sherpiResponse != null) {
+        // AI 메시지가 빠르게 반환된 경우 (캐시 히트)
+        if (sherpiResponse.isFastResponse) {
+          finalMessage = sherpiResponse.message;
+          responseSource = sherpiResponse.source.name;
+        }
+      }
+    } catch (e) {
+      // AI 실패 시 정적 메시지 사용
+      print('🔇 AI 메시지 실패, 정적 메시지 사용: $e');
+    }
+    
     // 메시지 표시 (중복 방지 통과한 경우만)
-    final isNewMessage = state.dialogue != customDialogue;
+    final isNewMessage = state.dialogue != finalMessage;
+    
+    // 메타데이터 생성
+    final metadata = {
+      'context': context.name,
+      'timestamp': DateTime.now().toIso8601String(),
+      'response_source': responseSource,
+      'is_fast_response': true,
+      'original_message': customDialogue, // 원본 메시지 보존
+    };
     
     state = state.copyWith(
       emotion: selectedEmotion,
-      dialogue: customDialogue,
+      dialogue: finalMessage,
       isVisible: isNewMessage, // 새로운 메시지일 때만 알림 표시
       lastShownTime: DateTime.now(),
       currentContext: context,
+      metadata: metadata,
     );
     
     // 디버그 로그
     if (isNewMessage) {
-      print('📢 Sherpi 즉시 메시지 표시: ${context.name} - "${customDialogue.length > 30 ? customDialogue.substring(0, 30) + "..." : customDialogue}"');
+      print('📢 Sherpi 즉시 메시지 표시: ${context.name} - "${finalMessage.length > 30 ? finalMessage.substring(0, 30) + "..." : finalMessage}" ($responseSource)');
+      
+      // 🔔 메시지 히스토리에 추가 (새 메시지일 때만)
+      _addToHistory(
+        emotion: selectedEmotion,
+        message: finalMessage,
+        context: context,
+        metadata: metadata,
+      );
     } else {
       print('🔇 Sherpi 즉시 메시지 중복/숨김: ${context.name}');
     }

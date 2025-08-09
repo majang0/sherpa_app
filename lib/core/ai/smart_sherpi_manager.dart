@@ -51,9 +51,9 @@ class SmartSherpiManager {
   
   /// Phase 2: 친밀도 레벨 + 개인화 설정에 따른 AI 사용 비율 계산
   double _getAIUsageRateByIntimacy() {
-    // 🎯 Phase 1 개선: AI 사용률 대폭 증가 (10% → 30%)
-    // 기본 친밀도 기반 비율: 친밀도 1: 30% → 친밀도 10: 60%
-    double baseRate = 0.3 + (_intimacyLevel - 1) * 0.033;
+    // 🎯 Phase 2 개선: AI 사용률 추가 증가 (30% → 50%)
+    // 기본 친밀도 기반 비율: 친밀도 1: 50% → 친밀도 10: 80%
+    double baseRate = 0.5 + (_intimacyLevel - 1) * 0.033;
     
     // 메시지 빈도 설정에 따른 조정
     double frequencyMultiplier = _personalizationSettings.messageFrequencyMultiplier;
@@ -79,22 +79,25 @@ class SmartSherpiManager {
   
   /// 🎯 AI 사용 기준 정의 (단순화된 3단계 시스템)
   static const Map<SherpiContext, AiUsageLevel> _aiUsageLevels = {
-    // 🌟 프리미엄: 감정적 연결이 중요한 순간 (80% AI)
+    // 🌟 프리미엄: 감정적 연결이 중요한 순간 (95% AI)
     SherpiContext.welcome: AiUsageLevel.premium,
     SherpiContext.longTimeNoSee: AiUsageLevel.premium,
     SherpiContext.levelUp: AiUsageLevel.premium,  // 모든 레벨업을 premium으로
     SherpiContext.milestone: AiUsageLevel.premium,
     SherpiContext.specialEvent: AiUsageLevel.premium,
     
-    // ⭐ 스마트: 특별한 성취 순간 (15% AI)
+    // ⭐ 스마트: 특별한 성취 순간 (60% AI)
     SherpiContext.badgeEarned: AiUsageLevel.smart,
     SherpiContext.climbingSuccess: AiUsageLevel.smart,
     SherpiContext.questComplete: AiUsageLevel.smart,
     SherpiContext.achievement: AiUsageLevel.smart,
     SherpiContext.exerciseComplete: AiUsageLevel.smart,
     SherpiContext.studyComplete: AiUsageLevel.smart,
+    SherpiContext.diaryWritten: AiUsageLevel.smart,     // 일기 작성도 smart로
+    SherpiContext.meetingJoined: AiUsageLevel.smart,    // 모임 참여도 smart로
+    SherpiContext.statIncrease: AiUsageLevel.smart,     // 스탯 증가도 smart로
     
-    // 💬 기본: 일상적 상호작용 (5% AI)
+    // 💬 기본: 일상적 상호작용 (40% AI)
     SherpiContext.general: AiUsageLevel.basic,
     SherpiContext.guidance: AiUsageLevel.basic,
     SherpiContext.dailyGreeting: AiUsageLevel.basic,
@@ -128,8 +131,8 @@ class SmartSherpiManager {
         return Future.value(_getStaticMessageSync(context, userContext, gameContext));
       }
       
-      // 🎯 Phase 1 개선: AI 사용률 증가 (5% → 15%)
-      if (randomChance < 0.15 + aiUsageRate * 0.1) { // 15% + 친밀도 & 성격 보너스
+      // 🎯 Phase 2 개선: AI 사용률 증가 (15% → 40%)
+      if (randomChance < 0.40 + aiUsageRate * 0.1) { // 40% + 친밀도 & 성격 보너스
         return await _getAIMessage(context, enhancedUserContext, gameContext);
       } else {
         return Future.value(_getStaticMessageSync(context, enhancedUserContext, gameContext));
@@ -158,14 +161,14 @@ class SmartSherpiManager {
     
     switch (level) {
       case AiUsageLevel.premium:
-        // 🎯 Phase 1 개선: 프리미엄 AI 사용률 증가 (80% → 90%)
-        final baseRate = 0.9 + intimacyBonus + frequencyAdjustment;
-        return randomValue < baseRate.clamp(0.0, 1.0); // 90% + 보너스/조정
+        // 🎯 Phase 2 개선: 프리미엄 AI 사용률 증가 (90% → 95%)
+        final baseRate = 0.95 + intimacyBonus + frequencyAdjustment;
+        return randomValue < baseRate.clamp(0.0, 1.0); // 95% + 보너스/조정
         
       case AiUsageLevel.smart:
-        // 🎯 Phase 1 개선: 스마트 AI 사용률 증가 (15% → 35%)
-        final baseRate = 0.35 + intimacyBonus * 0.5 + (frequencyAdjustment * 0.5);
-        return randomValue < baseRate.clamp(0.0, 1.0); // 35% + 작은 보너스/조정
+        // 🎯 Phase 2 개선: 스마트 AI 사용률 증가 (35% → 60%)
+        final baseRate = 0.60 + intimacyBonus * 0.5 + (frequencyAdjustment * 0.5);
+        return randomValue < baseRate.clamp(0.0, 1.0); // 60% + 작은 보너스/조정
         
       case AiUsageLevel.basic:
         return false; // 이미 위에서 처리됨 (15% 확률로 증가)

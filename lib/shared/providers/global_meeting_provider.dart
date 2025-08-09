@@ -531,6 +531,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
     userNotifier.increaseStats(deltaWillpower: 0.1);
 
     // 🔄 주간 퀘스트 시스템 업데이트 트리거 (핵심 수정!)
+    // handleActivityCompletion이 자동으로 셰르피 메시지를 표시함
     userNotifier.handleActivityCompletion(
       activityType: 'meeting_review',
       xp: 0.0, // 위에서 이미 지급했으므로 0
@@ -544,12 +545,6 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         'hasNote': note != null && note.isNotEmpty,
         'weeklyUpdate': true, // 주간 퀘스트 업데이트가 필요함을 표시
       },
-    );
-
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: '모임 후기 작성 완료! 추가 경험치를 획득했어요! ⭐',
-      emotion: SherpiEmotion.cheering,
     );
   }
   
