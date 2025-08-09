@@ -107,6 +107,9 @@ class RealDataConnector {
     // final relationship = _ref.read(relationshipProvider);
     
     return {
+      // 🎯 사용자 이름을 gameContext에도 추가 (AI가 사용자 이름을 부르도록)
+      'userPreferredName': user.name,  // 사용자의 실제 이름 추가
+      
       // 게임 진행 상태
       'currentMountain': '시작 전', // game 모델 구조 확인 후 수정
       'mountainProgress': 0.0,

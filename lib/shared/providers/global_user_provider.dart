@@ -727,7 +727,18 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
 
-    // 기록 작성 자체로는 보상 없음 - 퀘스트/목표 달성 시에만 보상
+    // 🎯 셰르피 메시지만 표시 (보상 없음)
+    _triggerSherpiReaction(
+      'reading',
+      '독서 기록 완료! 📚',
+      0.0,  // 경험치 없음
+      0,    // 포인트 없음
+      {
+        'bookTitle': readingLog.bookTitle,
+        'pages': readingLog.pages,
+        'rating': readingLog.rating,
+      },
+    );
 
     // 🔄 퀘스트 시스템과 연동
     _notifyQuestSystem('reading', {'pages': readingLog.pages});
@@ -765,7 +776,18 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
 
-    // 기록 작성 자체로는 보상 없음 - 퀘스트/목표 달성 시에만 보상
+    // 🎯 셰르피 메시지만 표시 (보상 없음)
+    _triggerSherpiReaction(
+      'exercise',
+      '운동 완료! 💪',
+      0.0,  // 경험치 없음
+      0,    // 포인트 없음
+      {
+        'exerciseType': exerciseLog.exerciseType,
+        'durationMinutes': exerciseLog.durationMinutes,
+        'intensity': exerciseLog.intensity,
+      },
+    );
 
     // 🔄 퀘스트 시스템과 연동
     _notifyQuestSystem('exercise', {'duration': exerciseLog.durationMinutes});
@@ -941,7 +963,17 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
 
-    // 기록 작성 자체로는 보상 없음 - 퀘스트/목표 달성 시에만 보상
+    // 🎯 셰르피 메시지만 표시 (보상 없음)
+    _triggerSherpiReaction(
+      'diary',
+      '일기 작성 완료! 📝',
+      0.0,  // 경험치 없음
+      0,    // 포인트 없음
+      {
+        'mood': diaryLog.mood,
+        'content': diaryLog.content,
+      },
+    );
 
     // 🔄 퀘스트 시스템과 연동
     _notifyQuestSystem('diary', {});
@@ -1607,6 +1639,43 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       customMessage = '🎉 레벨업! ${state.level}레벨 달성! 축하해요!';
     }
 
+    // 🎯 Phase 2: 활동별 상세 데이터 준비
+    final enrichedUserContext = <String, dynamic>{
+      'activityType': activityType,
+      'xp': xp.toInt(),
+      'points': points,
+      'level': state.level,
+    };
+    
+    // 활동별 추가 데이터 포함
+    if (additionalData != null) {
+      enrichedUserContext.addAll(additionalData);
+    }
+    
+    // 활동 유형별 특별 데이터 추가
+    switch (activityType) {
+      case 'exercise':
+        enrichedUserContext['exerciseType'] = additionalData?['exerciseType'] ?? 'general';
+        enrichedUserContext['durationMinutes'] = additionalData?['durationMinutes'] ?? 30;
+        enrichedUserContext['intensity'] = additionalData?['intensity'] ?? 'medium';
+        break;
+      case 'reading':
+        enrichedUserContext['bookTitle'] = additionalData?['bookTitle'] ?? 'Unknown Book';
+        enrichedUserContext['pages'] = additionalData?['pages'] ?? 10;
+        enrichedUserContext['rating'] = additionalData?['rating'];
+        break;
+      case 'diary':
+        enrichedUserContext['mood'] = additionalData?['mood'] ?? 'normal';
+        enrichedUserContext['content'] = additionalData?['content'] ?? '';
+        break;
+      case String() when activityType.startsWith('quest_'):
+        enrichedUserContext['questName'] = additionalData?['questName'] ?? 'Quest';
+        enrichedUserContext['questType'] = additionalData?['questType'] ?? 'daily';
+        enrichedUserContext['difficulty'] = additionalData?['difficulty'] ?? 'normal';
+        enrichedUserContext['rewardPoints'] = points;
+        break;
+    }
+    
     // 셰르피 메시지 표시 + 빠른 응답 자동 트리거
     Future.delayed(const Duration(milliseconds: 500), () {
       if (customMessage != null) {
@@ -1618,17 +1687,12 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           duration: const Duration(seconds: 5),
         );
       } else {
-        // 일반 활동 완료: AI 메시지 표시
+        // 일반 활동 완료: Phase 2 강화된 데이터로 AI 메시지 표시
         ref.read(sherpiProvider.notifier).showMessage(
           context: context,
           emotion: emotion,
           duration: const Duration(seconds: 4),
-          userContext: {
-            'activityType': activityType,
-            'xp': xp.toInt(),
-            'points': points,
-            'level': state.level,
-          },
+          userContext: enrichedUserContext,
           gameContext: {
             'consecutiveDays': state.dailyRecords.consecutiveDays,
             'totalActivities': _getTotalActivitiesCount(),

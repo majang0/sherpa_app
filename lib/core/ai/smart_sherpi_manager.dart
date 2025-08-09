@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/ai_message_cache.dart';
 import 'package:sherpa_app/core/ai/enhanced_gemini_dialogue_source.dart';
+import 'package:sherpa_app/core/ai/activity_data_collector.dart'; // Phase 2: Activity data collector
 import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart'; // Phase 2: PersonalizationSettings import
 
 // Add unawaited function for background operations
@@ -22,9 +24,18 @@ class SmartSherpiManager {
   
   // Phase 2: 개인화 설정 (Week 1)
   PersonalizationSettings _personalizationSettings = const PersonalizationSettings();
+  
+  // Phase 2: 활동별 데이터 수집기 (Ref 필요)
+  ActivityDataCollector? _dataCollector;
 
   /// 생성자
   SmartSherpiManager();
+  
+  /// Phase 2: Ref를 통한 데이터 수집기 초기화
+  void initDataCollector(Ref ref) {
+    _dataCollector = ActivityDataCollector(ref);
+    print('📊 활동별 데이터 수집기 초기화 완료');
+  }
   
   /// 친밀도 레벨 설정
   void setIntimacyLevel(int level) {
@@ -40,8 +51,9 @@ class SmartSherpiManager {
   
   /// Phase 2: 친밀도 레벨 + 개인화 설정에 따른 AI 사용 비율 계산
   double _getAIUsageRateByIntimacy() {
-    // 기본 친밀도 기반 비율: 친밀도 1: 10% → 친밀도 10: 40%
-    double baseRate = 0.1 + (_intimacyLevel - 1) * 0.033;
+    // 🎯 Phase 1 개선: AI 사용률 대폭 증가 (10% → 30%)
+    // 기본 친밀도 기반 비율: 친밀도 1: 30% → 친밀도 10: 60%
+    double baseRate = 0.3 + (_intimacyLevel - 1) * 0.033;
     
     // 메시지 빈도 설정에 따른 조정
     double frequencyMultiplier = _personalizationSettings.messageFrequencyMultiplier;
@@ -50,19 +62,19 @@ class SmartSherpiManager {
     double personalityBonus = 0.0;
     switch (_personalizationSettings.personalityType) {
       case SherpiPersonalityType.energetic:
-        personalityBonus = 0.05; // 활발형은 더 많은 AI 사용
+        personalityBonus = 0.08; // 활발형은 더 많은 AI 사용 (5% → 8%)
       case SherpiPersonalityType.humorous:
-        personalityBonus = 0.03; // 유머형은 약간 더 많은 AI 사용
+        personalityBonus = 0.05; // 유머형은 약간 더 많은 AI 사용 (3% → 5%)
       case SherpiPersonalityType.serious:
         personalityBonus = -0.02; // 진지형은 약간 적은 AI 사용 (더 정확한 정보 우선)
       case SherpiPersonalityType.calm:
-        personalityBonus = 0.01; // 차분형은 약간 더 신중한 AI 사용
+        personalityBonus = 0.02; // 차분형은 약간 더 신중한 AI 사용 (1% → 2%)
       case SherpiPersonalityType.balanced:
         personalityBonus = 0.0; // 균형형은 기본값 유지
     }
     
-    // 최종 AI 사용률 계산 (빈도 배율 적용 후 0.05 ~ 1.0 범위로 제한)
-    return (baseRate * frequencyMultiplier + personalityBonus).clamp(0.05, 1.0);
+    // 최종 AI 사용률 계산 (빈도 배율 적용 후 0.15 ~ 1.0 범위로 제한)
+    return (baseRate * frequencyMultiplier + personalityBonus).clamp(0.15, 1.0);
   }
   
   /// 🎯 AI 사용 기준 정의 (단순화된 3단계 시스템)
@@ -89,7 +101,7 @@ class SmartSherpiManager {
     SherpiContext.encouragement: AiUsageLevel.basic,
   };
   
-  /// 🎮 메인 메시지 가져오기 함수 (단순화된 3단계)
+  /// 🎮 메인 메시지 가져오기 함수 (Phase 2: 활동별 데이터 수집 포함)
   /// 
   /// 단순화된 3단계 AI 시스템으로 95%+ 즉시 응답을 보장합니다.
   Future<SherpiResponse> getMessage(
@@ -97,6 +109,12 @@ class SmartSherpiManager {
     Map<String, dynamic>? userContext,
     Map<String, dynamic>? gameContext,
   ) async {
+    // 🎯 Phase 2: 활동별 데이터 수집 및 userContext 강화
+    Map<String, dynamic>? enhancedUserContext = userContext;
+    if (_dataCollector != null && userContext != null) {
+      enhancedUserContext = _enhanceUserContextWithActivityData(context, userContext);
+    }
+    
     final aiLevel = _aiUsageLevels[context] ?? AiUsageLevel.basic;
     
     // 🚀 빠른 경로: basic 레벨은 대부분 정적 메시지 (95% 케이스)
@@ -110,10 +128,11 @@ class SmartSherpiManager {
         return Future.value(_getStaticMessageSync(context, userContext, gameContext));
       }
       
-      if (randomChance < 0.05 + aiUsageRate * 0.05) { // 5% + 친밀도 & 성격 보너스
-        return await _getAIMessage(context, userContext, gameContext);
+      // 🎯 Phase 1 개선: AI 사용률 증가 (5% → 15%)
+      if (randomChance < 0.15 + aiUsageRate * 0.1) { // 15% + 친밀도 & 성격 보너스
+        return await _getAIMessage(context, enhancedUserContext, gameContext);
       } else {
-        return Future.value(_getStaticMessageSync(context, userContext, gameContext));
+        return Future.value(_getStaticMessageSync(context, enhancedUserContext, gameContext));
       }
     }
     
@@ -121,9 +140,9 @@ class SmartSherpiManager {
     final shouldUseAI = _shouldUseAI(context, aiLevel);
     
     if (shouldUseAI) {
-      return await _getAIMessage(context, userContext, gameContext);
+      return await _getAIMessage(context, enhancedUserContext, gameContext);
     } else {
-      return Future.value(_getStaticMessageSync(context, userContext, gameContext));
+      return Future.value(_getStaticMessageSync(context, enhancedUserContext, gameContext));
     }
   }
 
@@ -139,15 +158,17 @@ class SmartSherpiManager {
     
     switch (level) {
       case AiUsageLevel.premium:
-        final baseRate = 0.8 + intimacyBonus + frequencyAdjustment;
-        return randomValue < baseRate.clamp(0.0, 1.0); // 80% + 보너스/조정
+        // 🎯 Phase 1 개선: 프리미엄 AI 사용률 증가 (80% → 90%)
+        final baseRate = 0.9 + intimacyBonus + frequencyAdjustment;
+        return randomValue < baseRate.clamp(0.0, 1.0); // 90% + 보너스/조정
         
       case AiUsageLevel.smart:
-        final baseRate = 0.15 + intimacyBonus * 0.5 + (frequencyAdjustment * 0.5);
-        return randomValue < baseRate.clamp(0.0, 1.0); // 15% + 작은 보너스/조정
+        // 🎯 Phase 1 개선: 스마트 AI 사용률 증가 (15% → 35%)
+        final baseRate = 0.35 + intimacyBonus * 0.5 + (frequencyAdjustment * 0.5);
+        return randomValue < baseRate.clamp(0.0, 1.0); // 35% + 작은 보너스/조정
         
       case AiUsageLevel.basic:
-        return false; // 이미 위에서 처리됨
+        return false; // 이미 위에서 처리됨 (15% 확률로 증가)
     }
   }
 
@@ -242,43 +263,83 @@ class SmartSherpiManager {
     switch (_personalizationSettings.personalityType) {
       case SherpiPersonalityType.energetic:
         return {
+          // 🎯 Phase 1 개선: 컨텍스트별 메시지 10개 이상으로 확대
           SherpiContext.welcome: '와! ${_personalizationSettings.userPreferredName}님! 셰르파에 오신 걸 환영해요!! 🎉✨',
           SherpiContext.dailyGreeting: '${_personalizationSettings.userPreferredName}님! 오늘도 에너지 넘치게 파이팅!! 💪🔥',
           SherpiContext.encouragement: '우와! 정말 잘하고 있어요! 계속 달려봐요!! ✨🚀',
           SherpiContext.levelUp: '와아! 레벨업이에요!! 너무 멋져요!! 🎊🏆',
           SherpiContext.exerciseComplete: '운동 완료!! 최고예요!! 💪⚡',
+          SherpiContext.studyComplete: '공부 완료!! ${_personalizationSettings.userPreferredName}님 대단해요!! 📚🌟',
+          SherpiContext.questComplete: '퀘스트 클리어!! 완전 프로 실력이에요!! 🎯🎉',
+          SherpiContext.climbingSuccess: '등반 성공!! 정상에서 보는 뷰가 최고죠!! 🏔️✨',
+          SherpiContext.badgeEarned: '뱃지 획득!! ${_personalizationSettings.userPreferredName}님 컬렉션이 늘어나고 있어요!! 🏅✨',
+          SherpiContext.statIncrease: '스탯 업!! 더 강해지고 있어요!! 💪📈',
+          SherpiContext.diaryWritten: '일기 작성 완료!! 오늘의 감정이 소중해요!! 📝💝',
+          SherpiContext.longTimeNoSee: '${_personalizationSettings.userPreferredName}님!! 정말 오랜만이에요!! 너무 보고 싶었어요!! 🤗💕',
         };
       case SherpiPersonalityType.calm:
         return {
+          // 🎯 Phase 1 개선: 컨텍스트별 메시지 10개 이상으로 확대
           SherpiContext.welcome: '안녕하세요 ${_personalizationSettings.userPreferredName}님. 셰르파에 오신 것을 환영합니다. 🌱',
           SherpiContext.dailyGreeting: '${_personalizationSettings.userPreferredName}님, 오늘도 차근차근 해보아요. ☺️',
           SherpiContext.encouragement: '${_personalizationSettings.userPreferredName}님은 이미 충분히 잘하고 계세요. 🌸',
           SherpiContext.levelUp: '레벨업을 축하드립니다. 꾸준한 노력의 결과네요. 🌟',
           SherpiContext.exerciseComplete: '운동을 완료하셨네요. 몸과 마음이 건강해지고 있어요. 💚',
+          SherpiContext.studyComplete: '학습을 마치셨네요. ${_personalizationSettings.userPreferredName}님의 지식이 깊어지고 있습니다. 📖',
+          SherpiContext.questComplete: '퀘스트를 완료하셨습니다. 한 걸음 한 걸음이 모두 의미 있어요. 🎯',
+          SherpiContext.climbingSuccess: '정상에 도달하셨네요. 여유를 가지고 경치를 즐겨보세요. 🏔️',
+          SherpiContext.badgeEarned: '새로운 뱃지를 획득하셨습니다. ${_personalizationSettings.userPreferredName}님의 성장이 보입니다. 🏅',
+          SherpiContext.statIncrease: '능력치가 향상되었습니다. 내면의 성장이 느껴지네요. 📊',
+          SherpiContext.diaryWritten: '오늘의 기록을 남기셨네요. 소중한 하루였길 바랍니다. 📝',
+          SherpiContext.longTimeNoSee: '${_personalizationSettings.userPreferredName}님, 오랜만입니다. 편안한 마음으로 돌아오셨길 바라요. 🌿',
         };
       case SherpiPersonalityType.humorous:
         return {
+          // 🎯 Phase 1 개선: 컨텍스트별 메시지 10개 이상으로 확대
           SherpiContext.welcome: '어머! ${_personalizationSettings.userPreferredName}님이 오셨네요! 셰르파가 더 즐거워졌어요! 🎭',
           SherpiContext.dailyGreeting: '${_personalizationSettings.userPreferredName}님! 오늘 기분은 어때요? 저는 1일 1깡 할 기분이에요! 😄',
           SherpiContext.encouragement: '${_personalizationSettings.userPreferredName}님! 이 정도면 셰르피보다 더 능력자인걸요? 😉',
           SherpiContext.levelUp: '레벨업! 축하해요! 이제 저랑 수평선상에서 만나는 건가요? 😂🎉',
           SherpiContext.exerciseComplete: '운동 완료! 땀 한 방울 한 방울이 다 보석이에요! ✨💎',
+          SherpiContext.studyComplete: '공부 끝! ${_personalizationSettings.userPreferredName}님 뇌가 빛나고 있어요! 번쩍번쩍! 🧠✨',
+          SherpiContext.questComplete: '퀘스트 깨기! 이제 ${_personalizationSettings.userPreferredName}님은 퀘스트 브레이커! 🎮😎',
+          SherpiContext.climbingSuccess: '정상 도착! 이제 산이 ${_personalizationSettings.userPreferredName}님을 올려다보고 있을걸요? 🏔️😂',
+          SherpiContext.badgeEarned: '뱃지 겟! 이러다 뱃지 부자 되겠어요! 💰🏅',
+          SherpiContext.statIncrease: '스탯 상승! 파워가 9000을 넘어가려 하네요! 💪9️⃣0️⃣0️⃣0️⃣',
+          SherpiContext.diaryWritten: '일기 완성! 오늘의 ${_personalizationSettings.userPreferredName}님 스토리, 베스트셀러감이에요! 📚😊',
+          SherpiContext.longTimeNoSee: '${_personalizationSettings.userPreferredName}님! 어디 계셨어요? 셰르피가 기다리다가 돌이 될 뻔했어요! 🗿😅',
         };
       case SherpiPersonalityType.serious:
         return {
+          // 🎯 Phase 1 개선: 컨텍스트별 메시지 10개 이상으로 확대
           SherpiContext.welcome: '${_personalizationSettings.userPreferredName}님, 셰르파 시스템에 접속하신 것을 환영합니다. 📋',
           SherpiContext.dailyGreeting: '${_personalizationSettings.userPreferredName}님, 오늘의 목표를 달성해보세요. 🎯',
           SherpiContext.encouragement: '${_personalizationSettings.userPreferredName}님의 현재 진행상황은 양호합니다. 계속 진행하시기 바랍니다. 📊',
           SherpiContext.levelUp: '레벨 상승을 확인했습니다. 체계적인 성장을 보이고 계십니다. 📈',
           SherpiContext.exerciseComplete: '운동 세션이 완료되었습니다. 규칙적인 운동이 건강 유지의 핵심입니다. ✅',
+          SherpiContext.studyComplete: '학습 목표를 달성하셨습니다. ${_personalizationSettings.userPreferredName}님의 지식 습득률이 향상되고 있습니다. 📚',
+          SherpiContext.questComplete: '퀘스트가 완료되었습니다. 목표 달성률이 상승했습니다. ✓',
+          SherpiContext.climbingSuccess: '등반이 성공적으로 완료되었습니다. 계획적인 접근이 좋은 결과를 가져왔습니다. 🏔️',
+          SherpiContext.badgeEarned: '새로운 뱃지를 획득하셨습니다. ${_personalizationSettings.userPreferredName}님의 성과가 인정받았습니다. 🏅',
+          SherpiContext.statIncrease: '능력치가 상향 조정되었습니다. 지속적인 개선이 확인됩니다. 📊',
+          SherpiContext.diaryWritten: '일일 기록이 저장되었습니다. 꾸준한 기록이 성장의 지표가 됩니다. 📝',
+          SherpiContext.longTimeNoSee: '${_personalizationSettings.userPreferredName}님, 재접속을 환영합니다. 그동안의 데이터가 보존되어 있습니다. 📂',
         };
       default: // balanced
         return {
+          // 🎯 Phase 1 개선: 컨텍스트별 메시지 10개 이상으로 확대
           SherpiContext.welcome: '안녕하세요 ${_personalizationSettings.userPreferredName}님! 셰르파에 오신 것을 환영해요! 🎉',
           SherpiContext.dailyGreeting: '${_personalizationSettings.userPreferredName}님, 오늘도 화이팅! 💪',
           SherpiContext.encouragement: '${_personalizationSettings.userPreferredName}님, 잘하고 있어요! 계속해봐요! ✨',
           SherpiContext.levelUp: '레벨업 축하드려요! 🚀',
           SherpiContext.exerciseComplete: '운동 완료! 수고하셨어요! 💪',
+          SherpiContext.studyComplete: '공부 완료! ${_personalizationSettings.userPreferredName}님 정말 열심히 하셨네요! 📚',
+          SherpiContext.questComplete: '퀘스트 완료! 오늘도 목표를 달성하셨네요! 🎯',
+          SherpiContext.climbingSuccess: '등반 성공! 정상에서의 기분이 어떠신가요? 🏔️',
+          SherpiContext.badgeEarned: '뱃지 획득! ${_personalizationSettings.userPreferredName}님의 또 다른 성취예요! 🏅',
+          SherpiContext.statIncrease: '스탯이 올랐어요! 점점 더 강해지고 있네요! 💪',
+          SherpiContext.diaryWritten: '일기 작성 완료! 오늘 하루도 의미있었길 바라요. 📝',
+          SherpiContext.longTimeNoSee: '${_personalizationSettings.userPreferredName}님, 오랜만이에요! 다시 만나서 반가워요! 😊',
         };
     }
   }
@@ -286,6 +347,108 @@ class SmartSherpiManager {
   /// 이모지 제거 유틸리티 함수
   String _removeEmojis(String text) {
     return text.replaceAll(RegExp(r'[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]', unicode: true), '').trim();
+  }
+  
+  /// 🎯 Phase 2: 활동별 데이터로 UserContext 강화
+  Map<String, dynamic> _enhanceUserContextWithActivityData(
+    SherpiContext context,
+    Map<String, dynamic> userContext,
+  ) {
+    if (_dataCollector == null) return userContext;
+    
+    // 기존 userContext 복사
+    final enhanced = Map<String, dynamic>.from(userContext);
+    
+    // 컨텍스트별 활동 데이터 수집
+    Map<String, dynamic>? activityData;
+    
+    switch (context) {
+      case SherpiContext.exerciseComplete:
+        // 운동 데이터가 userContext에 있다고 가정
+        if (userContext['exerciseType'] != null) {
+          activityData = _dataCollector!.collectExerciseData(
+            exerciseType: userContext['exerciseType'] ?? 'general',
+            durationMinutes: userContext['durationMinutes'] ?? 30,
+            intensity: userContext['intensity'] ?? 'medium',
+            additionalData: userContext,
+          );
+        }
+        break;
+        
+      case SherpiContext.studyComplete:
+        // 독서 데이터가 userContext에 있다고 가정
+        if (userContext['bookTitle'] != null) {
+          activityData = _dataCollector!.collectStudyData(
+            bookTitle: userContext['bookTitle'] ?? 'Unknown Book',
+            pages: userContext['pages'] ?? 10,
+            rating: userContext['rating']?.toDouble(),
+            genre: userContext['genre'],
+            additionalData: userContext,
+          );
+        }
+        break;
+        
+      case SherpiContext.diaryWritten:
+        // 일기 데이터가 userContext에 있다고 가정
+        if (userContext['mood'] != null) {
+          activityData = _dataCollector!.collectDiaryData(
+            mood: userContext['mood'] ?? 'normal',
+            content: userContext['content'] ?? '',
+            tags: userContext['tags'] as List<String>?,
+            additionalData: userContext,
+          );
+        }
+        break;
+        
+      case SherpiContext.questComplete:
+        // 퀘스트 데이터가 userContext에 있다고 가정
+        if (userContext['questName'] != null) {
+          activityData = _dataCollector!.collectQuestData(
+            questName: userContext['questName'] ?? 'Quest',
+            questType: userContext['questType'] ?? 'daily',
+            rewardPoints: userContext['rewardPoints'] ?? 100,
+            difficulty: userContext['difficulty'] ?? 'normal',
+            additionalData: userContext,
+          );
+        }
+        break;
+        
+      case SherpiContext.climbingSuccess:
+        // 등반 데이터가 userContext에 있다고 가정
+        if (userContext['mountainName'] != null) {
+          activityData = _dataCollector!.collectClimbingData(
+            mountainName: userContext['mountainName'] ?? 'Unknown Mountain',
+            progress: userContext['progress'] ?? 0.0,
+            isSuccess: userContext['isSuccess'] ?? false,
+            additionalData: userContext,
+          );
+        }
+        break;
+        
+      case SherpiContext.meetingJoined:
+        // 모임 데이터가 userContext에 있다고 가정
+        if (userContext['meetingTitle'] != null) {
+          activityData = _dataCollector!.collectMeetingData(
+            meetingTitle: userContext['meetingTitle'] ?? 'Meeting',
+            meetingType: userContext['meetingType'] ?? 'social',
+            participants: userContext['participants'] ?? 5,
+            additionalData: userContext,
+          );
+        }
+        break;
+        
+      default:
+        // 다른 컨텍스트는 활동 데이터가 필요 없음
+        break;
+    }
+    
+    // 활동 데이터가 수집되었으면 userContext에 추가
+    if (activityData != null) {
+      enhanced['activityData'] = activityData;
+      print('📊 Phase 2: 활동별 데이터 수집 완료 - ${context.name}');
+    }
+    
+    return enhanced;
   }
 
 

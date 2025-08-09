@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:sherpa_app/core/config/api_config.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
+import 'package:sherpa_app/core/ai/activity_prompt_templates.dart';
+import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
 
 /// 🧠 단순화된 Gemini AI 대화 소스
 /// 
@@ -93,29 +95,115 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
     }
   }
   
-  /// 🎯 단순화된 프롬프트 생성
+  /// 🎯 Phase 2: 활동별 전문 프롬프트 생성
   String _buildSimplePrompt(
     SherpiContext context,
     Map<String, dynamic>? userContext,
     Map<String, dynamic>? gameContext,
   ) {
-    final personalityType = gameContext?['personalityType'] ?? '균형형';
+    // 성격 타입 파싱
+    final personalityTypeStr = gameContext?['personalityType'] ?? '균형형';
+    final personality = _parsePersonalityType(personalityTypeStr);
+    
+    // 활동별 데이터가 있는지 확인
+    final activityData = userContext?['activityData'] as Map<String, dynamic>?;
+    
+    // 🎯 Phase 2: 활동별 전문 프롬프트 사용
+    if (activityData != null) {
+      switch (context) {
+        case SherpiContext.exerciseComplete:
+          return ActivityPromptTemplates.generateExercisePrompt(
+            activityData: activityData,
+            userContext: userContext ?? {},
+            gameContext: gameContext ?? {},
+            personality: personality,
+          );
+          
+        case SherpiContext.studyComplete:
+          return ActivityPromptTemplates.generateStudyPrompt(
+            activityData: activityData,
+            userContext: userContext ?? {},
+            gameContext: gameContext ?? {},
+            personality: personality,
+          );
+          
+        case SherpiContext.diaryWritten:
+          return ActivityPromptTemplates.generateDiaryPrompt(
+            activityData: activityData,
+            userContext: userContext ?? {},
+            gameContext: gameContext ?? {},
+            personality: personality,
+          );
+          
+        case SherpiContext.questComplete:
+          return ActivityPromptTemplates.generateQuestPrompt(
+            activityData: activityData,
+            userContext: userContext ?? {},
+            gameContext: gameContext ?? {},
+            personality: personality,
+          );
+          
+        case SherpiContext.climbingSuccess:
+          final isSuccess = activityData['isSuccess'] ?? false;
+          return ActivityPromptTemplates.generateClimbingPrompt(
+            activityData: activityData,
+            userContext: userContext ?? {},
+            gameContext: gameContext ?? {},
+            personality: personality,
+            isSuccess: isSuccess,
+          );
+          
+        case SherpiContext.meetingJoined:
+          return ActivityPromptTemplates.generateMeetingPrompt(
+            activityData: activityData,
+            userContext: userContext ?? {},
+            gameContext: gameContext ?? {},
+            personality: personality,
+          );
+          
+        default:
+          // 활동별 프롬프트가 없는 경우 기본 프롬프트 사용
+          break;
+      }
+    }
+    
+    // 기본 프롬프트 (활동별 데이터가 없는 경우)
     final userName = gameContext?['userPreferredName'] ?? '친구';
     
-    return '''당신은 '셰르피'입니다. 사용자의 성장을 함께하는 AI 동반자입니다.
+    return '''당신은 '셰르피'입니다. $userName님의 성장을 함께하는 AI 동반자입니다.
     
 사용자 정보:
 - 이름: $userName
-- 성격 유형: $personalityType
+- 성격 유형: $personalityTypeStr
 - 상황: ${context.name}
 
 다음 지침을 따라주세요:
-1. 따뜻하고 친근한 톤으로 대화하세요
+1. $userName님을 이름으로 부르며 따뜻하고 친근하게 대화하세요
 2. 2-3문장으로 간결하게 답변하세요  
 3. 이모지는 1-2개만 사용하세요
-4. 사용자를 격려하고 동기부여하세요
+4. $userName님을 격려하고 동기부여하세요
 
 한국어로 응답해주세요.''';
+  }
+  
+  /// 성격 타입 문자열을 enum으로 변환
+  SherpiPersonalityType _parsePersonalityType(String typeStr) {
+    switch (typeStr) {
+      case '활발형':
+      case 'energetic':
+        return SherpiPersonalityType.energetic;
+      case '차분형':
+      case 'calm':
+        return SherpiPersonalityType.calm;
+      case '유머형':
+      case 'humorous':
+        return SherpiPersonalityType.humorous;
+      case '진지형':
+      case 'serious':
+        return SherpiPersonalityType.serious;
+      default:
+        return SherpiPersonalityType.balanced;
+    }
   }
   
   /// 📝 단순한 응답 후처리

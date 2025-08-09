@@ -46,6 +46,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   bool _isDailyRewardAvailable = false;
   bool _isLoading = true;
+  
+  // 🎯 세션당 환영 메시지 표시 여부 추적 (static으로 앱 실행 동안 유지)
+  static bool _hasShownWelcomeInSession = false;
 
   @override
   void initState() {
@@ -126,6 +129,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _showWelcomeSherpi() {
+    // 🎯 세션당 한 번만 환영 메시지 표시 (static 변수로 관리)
+    if (_hasShownWelcomeInSession) {
+      return; // 이미 이번 세션에서 환영 메시지를 보았으면 표시하지 않음
+    }
+    
+    // 세션에서 첫 환영 메시지 표시 완료로 마킹
+    _hasShownWelcomeInSession = true;
+    
     final hour = DateTime.now().hour;
     SherpiContext context;
 

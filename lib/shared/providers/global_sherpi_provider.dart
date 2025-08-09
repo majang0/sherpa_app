@@ -10,6 +10,7 @@ import '../../features/sherpi_relationship/providers/relationship_provider.dart'
 import '../../features/sherpi_emotion/providers/emotion_analysis_provider.dart';
 import '../models/sherpi_message_history.dart';
 import '../models/sherpi_relationship_model.dart';
+import 'global_user_provider.dart'; // Phase 1: 실제 사용자 이름을 가져오기 위해 추가
 
 enum SherpiDisplayMode {
   floating,      // 우하단 플로팅 (기본)
@@ -182,6 +183,9 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
         super(const SherpiState()) {
     // 친밀도 레벨 초기화
     _updateIntimacyLevel();
+    
+    // 🎯 Phase 2: SmartSherpiManager에 데이터 수집기 초기화
+    _smartManager.initDataCollector(_ref);
   }
   
 
@@ -190,9 +194,18 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
     try {
       final relationship = _ref.read(relationshipProvider);
       _smartManager.setIntimacyLevel(relationship.intimacyLevel);
-      // Phase 2: 개인화 설정도 함께 업데이트
-      _smartManager.setPersonalizationSettings(relationship.personalizationSettings);
-      print('🎨 관계 정보 업데이트: 친밀도 ${relationship.intimacyLevel}, 성격 ${relationship.personalizationSettings.personalityType.displayName}');
+      
+      // 🎯 Phase 1 개선: 실제 사용자 이름을 PersonalizationSettings에 반영
+      final user = _ref.read(globalUserProvider);
+      final userName = user.name.isNotEmpty ? user.name : '친구';
+      
+      // Phase 2: 개인화 설정도 함께 업데이트 (사용자 이름 포함)
+      final updatedSettings = relationship.personalizationSettings.copyWith(
+        userPreferredName: userName, // 실제 사용자 이름으로 업데이트
+      );
+      _smartManager.setPersonalizationSettings(updatedSettings);
+      
+      print('🎨 관계 정보 업데이트: 친밀도 ${relationship.intimacyLevel}, 성격 ${updatedSettings.personalityType.displayName}, 사용자 이름: $userName');
     } catch (e) {
       // 관계 프로바이더가 아직 초기화되지 않은 경우
       print('🤝 관계 정보 로드 실패: $e');
@@ -312,6 +325,9 @@ void initializeSherpi() {
           selectedEmotion = SherpiEmotionMapper.getEmotionForContext(context);
         }
       }
+      
+      // 🎯 Phase 1: 메시지 표시 전 최신 사용자 정보로 설정 업데이트
+      _updateIntimacyLevel();
       
       // 🔌 실제 사용자 데이터 연결
       final realUserContext = _dataConnector.buildRealUserContext(
