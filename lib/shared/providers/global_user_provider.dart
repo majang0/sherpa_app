@@ -1160,7 +1160,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
       // 자동 완료 알림
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.levelUp,
+        context: SherpiContext.achievement,
         customDialogue: '🎉 목표가 자동으로 완료되었어요!',
         emotion: SherpiEmotion.cheering,
       );
@@ -1611,11 +1611,11 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         emotion = SherpiEmotion.special;
         break;
         
-      // 🎉 레벨업 (경험치가 높은 경우)
+      // 🎉 높은 경험치 획득 (레벨업이 아닌 경우)
       case String() when xp >= 100:
-        context = SherpiContext.levelUp;
+        context = SherpiContext.achievement;
         emotion = SherpiEmotion.cheering;
-        customMessage = '레벨업! 🎉 정말 대단한 성장이에요!';
+        customMessage = '대단해요! 🎉 ${xp.toInt()} 경험치를 획득했어요!';
         break;
         
       // 🌟 높은 포인트 획득

@@ -464,7 +464,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
 
       // 9. 성공 피드백
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.levelUp,
+        context: SherpiContext.meetingJoined,
         customDialogue: '🎉 "${meeting.title}" 모임 참여 완료!\n경험치 +${meeting.experienceReward.toInt()}, 포인트 +${meeting.participationReward.toInt()}',
         emotion: SherpiEmotion.cheering,
       );

@@ -226,7 +226,7 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
 
       // 7. 성공 피드백
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.levelUp,
+        context: SherpiContext.achievement,
         customDialogue: '🎉 "${challenge.title}" 챌린지 참여 완료!\n참여 보너스 경험치 +25를 획득했어요!',
         emotion: SherpiEmotion.cheering,
       );
@@ -317,7 +317,7 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
 
       // 4. 완료 피드백
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.levelUp,
+        context: SherpiContext.questComplete,
         customDialogue: '🏆 "${challenge.title}" 챌린지 완료!\n경험치 +${challenge.experienceReward}, 포인트 +${challenge.completionReward}',
         emotion: SherpiEmotion.cheering,
       );
