@@ -52,6 +52,7 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
   // 🚨 중복 방지: 마지막으로 표시된 메시지 추적
   String? _lastShownMessage;
   DateTime? _lastShownTime;
+  bool _hasShownAnimation = false;  // 애니메이션 중복 방지
   
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
@@ -108,10 +109,7 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       curve: Curves.easeOut,
     ));
     
-    // 초기 애니메이션 시작
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showCard();
-    });
+    // 초기 애니메이션은 build에서 처리 (새 메시지일 때만)
   }
   
   @override
@@ -175,18 +173,29 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       return const SizedBox.shrink();
     }
     
-    // 🚨 중복 방지: 같은 메시지를 3초 이내에 다시 표시하지 않음
+    // 🚨 중복 방지: 같은 메시지를 5초 이내에 다시 표시하지 않음 (탭 전환 시 중복 방지 강화)
     final now = DateTime.now();
     if (_lastShownMessage == sherpiState.dialogue &&
         _lastShownTime != null &&
-        now.difference(_lastShownTime!).inSeconds < 3) {
+        now.difference(_lastShownTime!).inSeconds < 5) {
       return const SizedBox.shrink();
     }
     
-    // 새로운 메시지인 경우 추적 정보 업데이트
+    // 새로운 메시지인 경우 추적 정보 업데이트하고 애니메이션 재시작
     if (_lastShownMessage != sherpiState.dialogue) {
       _lastShownMessage = sherpiState.dialogue;
       _lastShownTime = now;
+      _hasShownAnimation = false;  // 애니메이션 리셋
+    }
+    
+    // 애니메이션을 아직 표시하지 않았다면 시작
+    if (!_hasShownAnimation) {
+      _hasShownAnimation = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _showCard();
+        }
+      });
     }
     
     final currentEmotion = sherpiState.emotion;

@@ -785,7 +785,7 @@ void initializeSherpi() {
     }
   }
   
-  /// 🚨 중복 메시지 감지 (2초 이내 같은 컨텍스트/메시지는 중복으로 간주)
+  /// 🚨 중복 메시지 감지 (3초 이내 같은 컨텍스트/메시지는 중복으로 간주)
   bool _isDuplicateMessage(SherpiContext context, String? dialogue) {
     final now = DateTime.now();
     
@@ -795,9 +795,9 @@ void initializeSherpi() {
       return false;
     }
     
-    // 2초 이내에 같은 컨텍스트의 메시지가 온 경우
+    // 3초 이내에 같은 컨텍스트의 메시지가 온 경우 (탭 전환 시 중복 방지를 위해 시간 증가)
     final timeDiff = now.difference(_lastMessageTime!);
-    if (timeDiff.inSeconds < 2 && _lastContext == context) {
+    if (timeDiff.inSeconds < 3 && _lastContext == context) {
       // 같은 메시지 내용인 경우 중복으로 간주
       if (dialogue != null && _lastDialogue == dialogue) {
         return true;

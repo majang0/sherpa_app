@@ -97,20 +97,33 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
       body: Stack(
         children: [
           _getScreen(_selectedIndex),
-          // 🚨 FIXED: 중복 메시지 표시 방지 - 상호 배타적 표시
+          // 🚨 FIXED: 셰르피 위젯을 두 개의 별도 Consumer로 분리하여 상태 충돌 방지
+          // 플로팅 셰르피 위젯 (항상 표시, 메시지 있을 때는 숨김)
           Consumer(
             builder: (context, ref, child) {
               final sherpiState = ref.watch(sherpiProvider);
               
-              // 메시지가 있을 때는 메시지 카드만 표시
+              // 메시지가 표시 중일 때는 플로팅 셰르피 숨김
+              if (sherpiState.isVisible && sherpiState.dialogue.isNotEmpty) {
+                return const SizedBox.shrink();
+              }
+              
+              return const GlobalSherpiWidget();
+            },
+          ),
+          // 메시지 카드 (메시지가 있을 때만 표시)
+          Consumer(
+            builder: (context, ref, child) {
+              final sherpiState = ref.watch(sherpiProvider);
+              
+              // 메시지가 있고 visible일 때만 표시
               if (sherpiState.isVisible && sherpiState.dialogue.isNotEmpty) {
                 return const SherpiMessageCard(
                   bottomOffset: 140, // BottomNavigationBar 위 여백
                 );
               }
               
-              // 메시지가 없을 때는 플로팅 셰르피만 표시
-              return const GlobalSherpiWidget();
+              return const SizedBox.shrink();
             },
           ),
         ],
