@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:math' as math;
 import 'dart:ui';
+import 'package:confetti/confetti.dart';
 import '../../constants/quest_colors.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../shared/providers/global_user_provider.dart';
@@ -33,6 +34,9 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
   late AnimationController _celebrationController;
   late Animation<double> _fadeInAnimation;
   
+  // Confetti 컨트롤러 - 보상 상자 효과용
+  late ConfettiController _confettiController;
+  
   // 현재 선택된 카테고리
   QuestTypeV2 _selectedCategory = QuestTypeV2.daily;
   
@@ -58,6 +62,11 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
       vsync: this,
     );
     
+    // Confetti 컨트롤러 초기화
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
+    
     // 애니메이션 설정
     _fadeInAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeInController, curve: Curves.easeOutCubic),
@@ -76,6 +85,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
   void dispose() {
     _fadeInController.dispose();
     _celebrationController.dispose();
+    _confettiController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -402,6 +412,38 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
               QuestCompletionAnimationWidget(
                 key: _completionAnimationKey,
                 animationController: _celebrationController,
+              ),
+              
+              // 🎉 Confetti 위젯 - 보상 상자 클릭 시 효과
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConfettiWidget(
+                  confettiController: _confettiController,
+                  blastDirectionality: BlastDirectionality.explosive,
+                  shouldLoop: false,
+                  colors: const [
+                    QuestColors.accentGold,
+                    QuestColors.skyBlue,
+                    QuestColors.completed,
+                    QuestColors.epicPurple,
+                    QuestColors.legendaryGold,
+                    Colors.pink,
+                    Colors.orange,
+                  ],
+                  createParticlePath: (size) {
+                    final path = Path();
+                    path.addOval(Rect.fromCircle(
+                      center: Offset(size.width / 2, size.height / 2),
+                      radius: size.width / 2,
+                    ));
+                    return path;
+                  },
+                  emissionFrequency: 0.05,
+                  numberOfParticles: 30,
+                  gravity: 0.2,
+                  minBlastForce: 20,
+                  maxBlastForce: 40,
+                ),
               ),
             ],
           ),
@@ -1100,6 +1142,9 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
       
       final bonusKey = type == QuestTypeV2.daily ? 'daily_bonus_v2_today' : 'weekly_bonus_v2_today';
       
+      // 🎉 Confetti 효과 시작!
+      _confettiController.play();
+      
       // 보상 지급
       userNotifier.addExperience(bonus.experienceBonus);
       pointNotifier.addPoints(
@@ -1123,6 +1168,9 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
       
       // 완료 애니메이션 트리거
       _onAllClearRewardClaimed();
+      
+      // 화면 새로고침
+      setState(() {});
       
     } catch (e) {
       // 에러 처리

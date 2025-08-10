@@ -58,16 +58,6 @@ class QuestTemplatesData {
     
     QuestTemplate(
       id: 'D_E_06',
-      title: '포인트 확인하기',
-      description: '내 포인트 잔액을 확인해보세요',
-      type: QuestTypeV2.daily,
-      category: QuestCategoryV2.technique,
-      dailyDifficulty: QuestDifficultyV2.easy,
-      trackingCondition: QuestTrackingCondition.tabVisit('포인트샵'),
-    ),
-    
-    QuestTemplate(
-      id: 'D_E_07',
       title: '챌린지 둘러보기',
       description: '진행 중인 챌린지들을 확인해보세요',
       type: QuestTypeV2.daily,
@@ -86,7 +76,7 @@ class QuestTemplatesData {
       type: QuestTypeV2.daily,
       category: QuestCategoryV2.technique,
       dailyDifficulty: QuestDifficultyV2.medium,
-      trackingCondition: QuestTrackingCondition.globalData('ClimbingRecord.isSuccess', true),
+      trackingCondition: QuestTrackingCondition.globalData('todayClimbingSuccess', true),
     ),
     
     QuestTemplate(
@@ -173,7 +163,7 @@ class QuestTemplatesData {
       type: QuestTypeV2.daily,
       category: QuestCategoryV2.knowledge,
       dailyDifficulty: QuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.globalData('ReadingLog.pages', 30),
+      trackingCondition: QuestTrackingCondition.globalData('readingPages', 30),
       targetProgress: 30,
     ),
     
@@ -184,7 +174,7 @@ class QuestTemplatesData {
       type: QuestTypeV2.daily,
       category: QuestCategoryV2.knowledge,
       dailyDifficulty: QuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.globalData('MovieLog', 1),
+      trackingCondition: QuestTrackingCondition.globalData('movieLogs', 1),
     ),
   ];
 

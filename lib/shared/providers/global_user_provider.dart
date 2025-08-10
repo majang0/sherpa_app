@@ -14,6 +14,7 @@ import '../../core/constants/game_constants.dart';
 import 'global_point_provider.dart';
 import 'global_game_provider.dart';
 import 'global_badge_provider.dart'; // 뱃지 Provider 추가
+import '../../features/quests/providers/quest_provider_v2.dart'; // 퀘스트 Provider 추가
 
 /// 글로벌 사용자 데이터 관리 Provider (완전 독립형)
 final globalUserProvider = StateNotifierProvider<GlobalUserNotifier, GlobalUser>((ref) {
@@ -491,14 +492,49 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       }
     }
 
+    // 🎯 퀘스트 시스템 즉시 업데이트 (등반 성공하기 퀘스트 처리)
+    // 등반 완료 후 바로 퀘스트 진행률을 체크하도록 트리거
+    print('⛰️ [GlobalUser] 등반 완료: ${session.mountainName}');
+    print('⛰️ [GlobalUser] 등반 성공 여부: $isSuccess');
+    print('⛰️ [GlobalUser] 등반 기록 추가됨 - 총 ${updatedClimbingLogs.length}개 기록');
+    
+    // 데이터 저장을 먼저 완료
+    _saveUserData();
+    
+    // 등반 성공 시 퀘스트 시스템 업데이트
+    if (isSuccess) {
+      print('✅ [GlobalUser] 등반 성공! 퀘스트 시스템 업데이트 요청');
+      // 퀘스트 시스템에 등반 성공을 알림 - state가 완전히 업데이트된 후 실행
+      Future.microtask(() async {
+        // state 업데이트가 완전히 적용되도록 더 긴 지연 시간 적용
+        await Future.delayed(const Duration(seconds: 1));
+        print('🔄 [GlobalUser] 퀘스트 시스템 동기화 시작');
+        
+        // 현재 상태를 직접 체크
+        final currentUser = ref.read(globalUserProvider);
+        final todayClimbingSuccess = currentUser.dailyRecords.climbingLogs
+            .where((log) {
+              final today = DateTime.now();
+              return log.startTime.year == today.year &&
+                     log.startTime.month == today.month &&
+                     log.startTime.day == today.day &&
+                     log.isSuccess;
+            }).isNotEmpty;
+        
+        print('🔍 [GlobalUser] 오늘 등반 성공 기록 확인: $todayClimbingSuccess');
+        
+        // 퀘스트 동기화
+        await ref.read(questProviderV2.notifier).syncWithGlobalData();
+        print('✅ [GlobalUser] 퀘스트 시스템 동기화 완료');
+      });
+    }
+    
     // 셀르피 결과 메시지
     ref.read(sherpiProvider.notifier).showInstantMessage(
       context: SherpiContext.general,
       customDialogue: record.resultMessage + '\n' + rewards.summaryText,
       emotion: isSuccess ? SherpiEmotion.cheering : SherpiEmotion.happy,
     );
-
-    _saveUserData();
   }
 
   /// 등반 취소

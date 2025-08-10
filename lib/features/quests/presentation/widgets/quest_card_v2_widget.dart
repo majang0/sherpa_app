@@ -280,6 +280,10 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
     final trackingText = QuestConditionFormatter.formatTrackingCondition(quest.trackingCondition);
     IconData trackingIcon;
     
+    // 등반 퀘스트 특별 처리
+    final isClimbingQuest = quest.trackingCondition.type == QuestTrackingType.globalData &&
+        quest.trackingCondition.parameters['path'] == 'ClimbingRecord.isSuccess';
+    
     switch (quest.trackingCondition.type) {
       case QuestTrackingType.appLaunch:
         trackingIcon = Icons.login;
@@ -291,7 +295,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
         trackingIcon = Icons.tab;
         break;
       case QuestTrackingType.globalData:
-        trackingIcon = Icons.track_changes;
+        trackingIcon = isClimbingQuest ? Icons.terrain : Icons.track_changes;
         break;
       case QuestTrackingType.weeklyAccumulation:
         trackingIcon = Icons.calendar_view_week;

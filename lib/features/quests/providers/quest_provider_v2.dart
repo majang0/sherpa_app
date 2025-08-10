@@ -102,7 +102,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       }
       
       // 글로벌 데이터와 동기화
-      await _syncWithGlobalData();
+      await syncWithGlobalData();
       
       if (needsUpdate) {
         await _saveQuests();
@@ -170,8 +170,10 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     
   }
 
-  /// 글로벌 데이터와 동기화
-  Future<void> _syncWithGlobalData() async {
+  /// 글로벌 데이터와 동기화 (public으로 변경 - 등반 완료 시 즉시 호출 가능)
+  Future<void> syncWithGlobalData() async {
+    print('🔄 [QuestProvider] 글로벌 데이터와 동기화 시작');
+    
     final globalUser = ref.read(globalUserProvider);
     final pointData = ref.read(globalPointProvider);
     
@@ -195,6 +197,40 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       trackingData['visitedTab'] = lastVisitedTab;
     }
     
+    // 등반 관련 데이터 디버깅
+    print('📊 [QuestProvider] === 추적 데이터 상세 ===');
+    print('  - ClimbingRecord.isSuccess (레거시): ${trackingData['ClimbingRecord.isSuccess']}');
+    print('  - todayClimbingSuccess (신규): ${trackingData['todayClimbingSuccess']}');
+    print('  - 전체 등반 기록 수: ${globalUser.dailyRecords.climbingLogs.length}');
+    
+    // 오늘 등반 기록 상세 확인
+    final today = DateTime.now();
+    final todayClimbingLogs = globalUser.dailyRecords.climbingLogs
+        .where((log) => 
+          log.startTime.year == today.year &&
+          log.startTime.month == today.month &&
+          log.startTime.day == today.day)
+        .toList();
+    
+    print('  - 오늘 등반 기록 수: ${todayClimbingLogs.length}');
+    if (todayClimbingLogs.isNotEmpty) {
+      print('  - 오늘 등반 상세:');
+      for (var log in todayClimbingLogs) {
+        print('    * ${log.mountainName}: ${log.isSuccess ? "✅ 성공" : "❌ 실패"}');
+      }
+    }
+    
+    // 등반 성공하기 퀘스트 상태 확인
+    final climbingQuest = _allQuests.firstWhere(
+      (q) => q.title.contains('등반') && q.title.contains('성공'),
+      orElse: () => _allQuests.first,
+    );
+    if (climbingQuest.title.contains('등반')) {
+      print('🎯 [QuestProvider] 등반 성공하기 퀘스트 현재 상태: ${climbingQuest.status}');
+      print('  - 퀘스트 진행률: ${climbingQuest.currentProgress}/${climbingQuest.targetProgress}');
+    }
+    print('📊 [QuestProvider] ====================');
+    
     _lastTrackingData = trackingData;
     
     // 모든 퀘스트의 진행률 업데이트
@@ -204,14 +240,22 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       final updatedQuest = QuestTrackingService.updateQuestProgress(quest, trackingData);
       
       if (updatedQuest != null) {
+        print('✅ [QuestProvider] 퀘스트 업데이트됨: ${quest.title}');
+        print('  - 이전 상태: ${quest.status}');
+        print('  - 새 상태: ${updatedQuest.status}');
+        print('  - 진행률: ${updatedQuest.currentProgress}/${updatedQuest.targetProgress}');
         _allQuests[i] = updatedQuest;
         anyUpdated = true;
       }
     }
     
     if (anyUpdated) {
+      print('💾 [QuestProvider] 퀘스트 저장 중...');
       await _saveQuests();
       state = AsyncValue.data(_allQuests);
+      print('✅ [QuestProvider] 동기화 완료 - ${_allQuests.length}개 퀘스트');
+    } else {
+      print('ℹ️ [QuestProvider] 업데이트할 퀘스트 없음');
     }
   }
 
@@ -240,7 +284,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     
     if (hasChanges) {
       _lastTrackingData = trackingData;
-      _syncWithGlobalData();
+      syncWithGlobalData();
     }
   }
 
