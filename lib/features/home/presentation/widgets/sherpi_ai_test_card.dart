@@ -11,6 +11,7 @@ import '../../../../core/utils/sherpi_system_checker.dart';
 // Shared
 import '../../../../shared/widgets/sherpa_card.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
+import '../../../../core/ai/smart_sherpi_manager.dart';
 
 /// 🤖 셰르피 AI 테스트 카드 위젯
 /// 
@@ -43,19 +44,80 @@ class _SherpiAiTestCardState extends ConsumerState<SherpiAiTestCard> {
     final startTime = DateTime.now();
 
     try {
-      // 테스트용 컨텍스트 데이터
-      final userContext = {
-        '사용자명': '테스트 사용자',
-        '레벨': '5',
-        '연속 접속일': '3일',
-        '현재 시간': _getTimeDescription(),
-      };
+      // 활동별 테스트 데이터 생성
+      Map<String, dynamic> userContext;
+      Map<String, dynamic> gameContext;
       
-      final gameContext = {
-        '현재 산': '설악산',
-        '등반 성공률': '78%',
-        '최근 활동': '오늘 앱 접속, 스마트 AI 테스트 중',
-      };
+      switch (sherpiContext) {
+        case SherpiContext.exerciseComplete:
+          userContext = {
+            'activityType': 'exercise',
+            'exerciseType': '러닝',
+            'durationMinutes': 30,
+            'intensity': 'high',
+            'todayExerciseCount': 1,
+            'totalExerciseMinutes': 30,
+            'exerciseStreak': 3,
+            'calories': 450,
+          };
+          gameContext = {
+            'userPreferredName': '테스트 사용자',
+            'consecutiveDays': 3,
+            'totalActivities': 15,
+            'currentStreak': 3,
+          };
+          break;
+          
+        case SherpiContext.studyComplete:
+          userContext = {
+            'activityType': 'reading',
+            'bookTitle': '코스모스',
+            'pages': 50,
+            'rating': 5,
+            'todayBooksRead': 1,
+            'totalPagesRead': 50,
+            'readingStreak': 2,
+            'readingLevel': 5,
+          };
+          gameContext = {
+            'userPreferredName': '테스트 사용자',
+            'consecutiveDays': 3,
+            'totalActivities': 15,
+            'currentStreak': 3,
+          };
+          break;
+          
+        case SherpiContext.diaryWritten:
+          userContext = {
+            'activityType': 'diary',
+            'mood': 'happy',
+            'content': '오늘은 정말 좋은 하루였다!',
+            'todayDiaryWritten': true,
+            'diaryStreak': 25,
+            'positivityScore': 80,
+          };
+          gameContext = {
+            'userPreferredName': '테스트 사용자',
+            'consecutiveDays': 25,
+            'totalActivities': 100,
+            'currentStreak': 25,
+          };
+          break;
+          
+        default:
+          // 기본 테스트 데이터
+          userContext = {
+            '사용자명': '테스트 사용자',
+            '레벨': '5',
+            '연속 접속일': '3일',
+            '현재 시간': _getTimeDescription(),
+          };
+          gameContext = {
+            '현재 산': '설악산',
+            '등반 성공률': '78%',
+            '최근 활동': '오늘 앱 접속, 스마트 AI 테스트 중',
+          };
+      }
       
       // 🚀 스마트 시스템을 통한 메시지 생성
       await ref.read(sherpiProvider.notifier).showMessage(
@@ -213,22 +275,118 @@ class _SherpiAiTestCardState extends ConsumerState<SherpiAiTestCard> {
           
           const SizedBox(height: 20),
           
-          // 테스트 버튼들
+          // 🐛 디버그 모드 토글
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: SmartSherpiManager.debugForceAI 
+                  ? Colors.purple.withOpacity(0.1)
+                  : Colors.grey.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: SmartSherpiManager.debugForceAI
+                    ? Colors.purple.withOpacity(0.3)
+                    : Colors.grey.withOpacity(0.3),
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.bug_report,
+                  color: SmartSherpiManager.debugForceAI
+                      ? Colors.purple
+                      : Colors.grey,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'AI 응답 강제 사용 (디버그 모드)',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: SmartSherpiManager.debugForceAI
+                          ? Colors.purple
+                          : Colors.grey,
+                    ),
+                  ),
+                ),
+                Switch(
+                  value: SmartSherpiManager.debugForceAI,
+                  onChanged: (value) {
+                    setState(() {
+                      SmartSherpiManager.debugForceAI = value;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          value 
+                              ? '🐛 디버그 모드 ON: AI 응답 강제 사용'
+                              : '⚡ 디버그 모드 OFF: 일반 모드',
+                        ),
+                        backgroundColor: value ? Colors.purple : Colors.grey,
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  activeColor: Colors.purple,
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // 활동별 테스트 버튼들
+          Text(
+            '📊 활동별 AI 응답 테스트',
+            style: GoogleFonts.notoSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          
           Row(
             children: [
               Expanded(
                 child: _buildTestButton(
-                  context: SherpiContext.welcome,
-                  title: '환영 인사',
-                  icon: Icons.waving_hand,
+                  context: SherpiContext.exerciseComplete,
+                  title: '운동 완료',
+                  icon: Icons.fitness_center,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildTestButton(
+                  context: SherpiContext.studyComplete,
+                  title: '독서 완료',
+                  icon: Icons.menu_book,
                   color: Colors.green,
+                ),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 12),
+          
+          Row(
+            children: [
+              Expanded(
+                child: _buildTestButton(
+                  context: SherpiContext.diaryWritten,
+                  title: '일기 작성',
+                  icon: Icons.edit_note,
+                  color: Colors.purple,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: _buildTestButton(
                   context: SherpiContext.levelUp,
-                  title: '레벨업 축하',
+                  title: '레벨업',
                   icon: Icons.celebration,
                   color: Colors.orange,
                 ),

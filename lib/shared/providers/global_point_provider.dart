@@ -381,8 +381,10 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
   // ==================== 일일 목표 관련 포인트 지급 ====================
 
   /// 일일 목표 전체 완료 (기본 보상)
-  void onDailyGoalAllClear() {
-    earnPoints(50, PointSource.dailyGoalAd, '일일 목표 전체 완료');
+  int onDailyGoalAllClear() {
+    const points = 50;
+    earnPoints(points, PointSource.dailyGoalAd, '일일 목표 전체 완료');
+    return points;
   }
 
   /// 일일 목표 전체 완료 후 광고 시청

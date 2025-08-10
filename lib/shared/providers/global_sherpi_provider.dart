@@ -176,6 +176,9 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
   
   // 🚨 전역 메시지 표시 락 - 동시 메시지 호출 방지
   bool _isShowingMessage = false;
+  
+  // 🐛 디버그 모드 - AI 응답 강제 사용
+  static bool debugForceAI = false;
 
   SherpiNotifier(this._ref, {SherpiDialogueSource? dialogueSource})
       : _dialogueSource = dialogueSource ?? StaticDialogueSource(),

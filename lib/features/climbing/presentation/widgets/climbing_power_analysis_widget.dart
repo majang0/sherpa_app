@@ -608,8 +608,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              width: sizes.iconSize * 1.6,
-              height: sizes.iconSize * 1.6,
+              width: sizes.iconSize * 1.3,
+              height: sizes.iconSize * 1.3,
               decoration: BoxDecoration(
                 color: (card['color'] as Color).withOpacity(0.15),
                 borderRadius: BorderRadius.circular(8),
@@ -629,7 +629,7 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                 color: AppColors.textPrimary,
               ),
             ),
-            SizedBox(height: sizes.itemSpacing * 0.75),
+            SizedBox(height: sizes.itemSpacing * 0.5),
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(

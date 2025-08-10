@@ -1192,7 +1192,16 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     }
 
     // 통합된 포인트 시스템으로 일일 목표 완료 보너스 직접 지급
-    ref.read(globalPointProvider.notifier).onDailyGoalAllClear();
+    final bonusPoints = ref.read(globalPointProvider.notifier).onDailyGoalAllClear();
+
+    // 달성한 목표 리스트 구성
+    final completedGoals = records.dailyGoals.where((g) => g.isCompleted).toList();
+    final goalDetails = {
+      'totalGoals': completedGoals.length,
+      'goalList': completedGoals.map((g) => g.title).toList(),
+      'bonusPoints': bonusPoints,
+      'consecutiveDays': records.consecutiveDays,
+    };
 
     // 보상 지급 (XP와 능력치만)
     handleActivityCompletion(
@@ -1201,6 +1210,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       points: 0, // 포인트는 위에서 직접 지급
       statIncreases: {'willpower': 0.1},
       message: '🎉 모든 일일 목표 완료 보상! 대단해요!',
+      additionalData: goalDetails, // 목표 상세 정보 전달
     );
 
     // 보상 수령 상태로 변경
@@ -1616,6 +1626,24 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         emotion = SherpiEmotion.special;
         break;
         
+      // 🎊 일일 목표 전체 달성 - 가장 특별한 성취!
+      case 'all_goals_reward':
+        context = SherpiContext.achievement;
+        emotion = SherpiEmotion.special;
+        // 전체 목표 달성은 특별한 메시지 (AI가 아닌 커스텀 메시지로 즉시 표시)
+        customMessage = '''🎊 축하드려요! 오늘의 모든 목표를 완벽하게 달성하셨네요! 🏆
+
+✅ 6000걸음 걷기 완료
+✅ 일기 작성 완료  
+✅ 운동 기록 완료
+✅ 독서 1페이지 이상 완료
+✅ 몰입 시간 달성
+
+🎁 보상: 200 경험치 + 보너스 포인트 + 의지력 0.1 증가!
+
+정말 대단한 하루였어요! 이런 꾸준함이 큰 변화를 만들어냅니다! 💪✨''';
+        break;
+        
       // 🎉 높은 경험치 획득 (레벨업이 아닌 경우)
       case String() when xp >= 100:
         context = SherpiContext.achievement;
@@ -1684,12 +1712,17 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // 셰르피 메시지 표시 + 빠른 응답 자동 트리거
     Future.delayed(const Duration(milliseconds: 500), () {
       if (customMessage != null) {
+        // 일일 목표 전체 달성은 특별히 긴 시간 표시
+        final displayDuration = activityType == 'all_goals_reward' 
+            ? const Duration(seconds: 8)  // 전체 목표 달성은 8초간 표시
+            : const Duration(seconds: 5);
+            
         // 레벨업이나 특별 상황: 커스텀 메시지 표시
         ref.read(sherpiProvider.notifier).showInstantMessage(
           context: context,
           customDialogue: customMessage!,
           emotion: emotion,
-          duration: const Duration(seconds: 5),
+          duration: displayDuration,
         );
       } else {
         // 일반 활동 완료: Phase 2 강화된 데이터로 AI 메시지 표시

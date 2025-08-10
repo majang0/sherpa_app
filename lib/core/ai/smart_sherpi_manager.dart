@@ -27,6 +27,9 @@ class SmartSherpiManager {
   
   // Phase 2: 활동별 데이터 수집기 (Ref 필요)
   ActivityDataCollector? _dataCollector;
+  
+  // 🐛 디버그 모드 - AI 응답 강제 사용
+  static bool debugForceAI = false;
 
   /// 생성자
   SmartSherpiManager();
@@ -77,25 +80,27 @@ class SmartSherpiManager {
     return (baseRate * frequencyMultiplier + personalityBonus).clamp(0.15, 1.0);
   }
   
-  /// 🎯 AI 사용 기준 정의 (단순화된 3단계 시스템)
+  /// 🎯 AI 사용 기준 정의 (활동 완료 시 AI 우선)
   static const Map<SherpiContext, AiUsageLevel> _aiUsageLevels = {
-    // 🌟 프리미엄: 감정적 연결이 중요한 순간 (95% AI)
+    // 🌟 프리미엄: 감정적 연결이 중요한 순간 (100% AI)
     SherpiContext.welcome: AiUsageLevel.premium,
     SherpiContext.longTimeNoSee: AiUsageLevel.premium,
-    SherpiContext.levelUp: AiUsageLevel.premium,  // 모든 레벨업을 premium으로
+    SherpiContext.levelUp: AiUsageLevel.premium,
     SherpiContext.milestone: AiUsageLevel.premium,
     SherpiContext.specialEvent: AiUsageLevel.premium,
     
-    // ⭐ 스마트: 특별한 성취 순간 (60% AI)
+    // ⭐ 활동 완료 - 항상 AI 사용으로 개인화된 응답 제공 (100% AI)
+    SherpiContext.exerciseComplete: AiUsageLevel.premium,  // 운동 완료 시 AI 100%
+    SherpiContext.studyComplete: AiUsageLevel.premium,     // 독서 완료 시 AI 100%
+    SherpiContext.diaryWritten: AiUsageLevel.premium,      // 일기 작성 시 AI 100%
+    
+    // ⭐ 스마트: 특별한 성취 순간 (80% AI)
     SherpiContext.badgeEarned: AiUsageLevel.smart,
     SherpiContext.climbingSuccess: AiUsageLevel.smart,
     SherpiContext.questComplete: AiUsageLevel.smart,
     SherpiContext.achievement: AiUsageLevel.smart,
-    SherpiContext.exerciseComplete: AiUsageLevel.smart,
-    SherpiContext.studyComplete: AiUsageLevel.smart,
-    SherpiContext.diaryWritten: AiUsageLevel.smart,     // 일기 작성도 smart로
-    SherpiContext.meetingJoined: AiUsageLevel.smart,    // 모임 참여도 smart로
-    SherpiContext.statIncrease: AiUsageLevel.smart,     // 스탯 증가도 smart로
+    SherpiContext.meetingJoined: AiUsageLevel.smart,
+    SherpiContext.statIncrease: AiUsageLevel.smart,
     
     // 💬 기본: 일상적 상호작용 (40% AI)
     SherpiContext.general: AiUsageLevel.basic,
@@ -152,26 +157,37 @@ class SmartSherpiManager {
 
   /// ⚡ Phase 2: 개인화 설정을 반영한 AI 결정 (확률 기반)
   bool _shouldUseAI(SherpiContext context, AiUsageLevel level) {
+    // 🐛 디버그 모드일 때는 항상 AI 사용
+    if (debugForceAI) {
+      print('🐛 디버그 모드: AI 응답 강제 사용');
+      return true;
+    }
+    
     final randomValue = DateTime.now().millisecond / 1000.0;
     final intimacyBonus = _intimacyLevel * 0.05; // 레벨당 5% 보너스
     final frequencyMultiplier = _personalizationSettings.messageFrequencyMultiplier;
+    
+    // 활동 완료 컨텍스트는 항상 AI 사용
+    if (context == SherpiContext.exerciseComplete ||
+        context == SherpiContext.studyComplete ||
+        context == SherpiContext.diaryWritten) {
+      return true; // 활동 완료 시 100% AI 사용
+    }
     
     // 메시지 빈도가 최소일 때는 프리미엄 상황에서도 AI 사용률을 줄임
     final frequencyAdjustment = frequencyMultiplier < 0.5 ? -0.2 : 0.0;
     
     switch (level) {
       case AiUsageLevel.premium:
-        // 🎯 Phase 2 개선: 프리미엄 AI 사용률 증가 (90% → 95%)
-        final baseRate = 0.95 + intimacyBonus + frequencyAdjustment;
-        return randomValue < baseRate.clamp(0.0, 1.0); // 95% + 보너스/조정
+        return true; // 프리미엄 레벨은 항상 AI 사용 (100%)
         
       case AiUsageLevel.smart:
-        // 🎯 Phase 2 개선: 스마트 AI 사용률 증가 (35% → 60%)
-        final baseRate = 0.60 + intimacyBonus * 0.5 + (frequencyAdjustment * 0.5);
-        return randomValue < baseRate.clamp(0.0, 1.0); // 60% + 작은 보너스/조정
+        // 🎯 스마트 AI 사용률 증가 (60% → 80%)
+        final baseRate = 0.80 + intimacyBonus * 0.5 + (frequencyAdjustment * 0.5);
+        return randomValue < baseRate.clamp(0.0, 1.0); // 80% + 보너스
         
       case AiUsageLevel.basic:
-        return false; // 이미 위에서 처리됨 (15% 확률로 증가)
+        return false; // 이미 위에서 처리됨 (40% 확률)
     }
   }
 

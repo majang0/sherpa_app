@@ -24,7 +24,16 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
         generationConfig: GenerationConfig(
           temperature: 0.8,
           maxOutputTokens: 1000,  // 충분한 토큰 수
+          topK: 40,
+          topP: 0.95,
         ),
+        // Safety settings to avoid blocking
+        safetySettings: [
+          SafetySetting(HarmCategory.harassment, HarmBlockThreshold.none),
+          SafetySetting(HarmCategory.hateSpeech, HarmBlockThreshold.none),
+          SafetySetting(HarmCategory.sexuallyExplicit, HarmBlockThreshold.none),
+          SafetySetting(HarmCategory.dangerousContent, HarmBlockThreshold.none),
+        ],
       );
       
       print('✅ 단순 Gemini 모델 초기화 완료!');
@@ -52,35 +61,61 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
       // 단순화된 프롬프트 생성
       final prompt = _buildSimplePrompt(context, userContext, gameContext);
       
-      // 가장 간단한 방식으로 API 호출
-      final response = await _model.generateContent([Content.text(prompt)]);
-      
-      // 안전한 텍스트 추출
-      String? responseText;
-      
-      if (response.text != null && response.text!.isNotEmpty) {
-        responseText = response.text!;
-      } else {
-        // 대안 방법: candidates에서 직접 추출
-        if (response.candidates.isNotEmpty) {
-          final candidate = response.candidates.first;
-          if (candidate.content.parts.isNotEmpty) {
-            for (final part in candidate.content.parts) {
-              if (part is TextPart && part.text.isNotEmpty) {
-                responseText = part.text;
-                break;
+      // Chat 세션 방식으로 변경하여 role 에러 해결
+      try {
+        // 방법 1: Chat 세션 사용
+        final chat = _model.startChat(history: []);
+        final response = await chat.sendMessage(Content.text(prompt));
+        
+        // 안전한 텍스트 추출
+        String? responseText;
+        
+        if (response.text != null && response.text!.isNotEmpty) {
+          responseText = response.text!;
+        } else {
+          // 대안 방법: candidates에서 직접 추출
+          if (response.candidates.isNotEmpty) {
+            final candidate = response.candidates.first;
+            if (candidate.content.parts.isNotEmpty) {
+              for (final part in candidate.content.parts) {
+                if (part is TextPart && part.text.isNotEmpty) {
+                  responseText = part.text;
+                  break;
+                }
               }
             }
           }
         }
-      }
-      
-      if (responseText != null && responseText.isNotEmpty) {
-        final processedResponse = _processSimpleResponse(responseText);
-        print('✅ Gemini 응답 생성 완료: ${processedResponse.length > 30 ? processedResponse.substring(0, 30) : processedResponse}...');
-        return processedResponse;
-      } else {
-        print('⚠️ Gemini 응답이 비어있습니다. 폴백 사용.');
+        
+        if (responseText != null && responseText.isNotEmpty) {
+          final processedResponse = _processSimpleResponse(responseText);
+          print('✅ Gemini 응답 생성 완료: ${processedResponse.length > 30 ? processedResponse.substring(0, 30) : processedResponse}...');
+          return processedResponse;
+        } else {
+          print('⚠️ Gemini 응답이 비어있습니다. 폴백 사용.');
+          return await _fallbackSource.getDialogue(context, userContext, gameContext);
+        }
+      } catch (chatError) {
+        // Chat 방식 실패 시 일반 방식으로 재시도
+        print('⚠️ Chat 세션 실패, 일반 방식으로 재시도: $chatError');
+        
+        try {
+          // 방법 2: Content list 직접 전달
+          final contents = [
+            Content('user', [TextPart(prompt)])
+          ];
+          final response = await _model.generateContent(contents);
+          
+          if (response.text != null && response.text!.isNotEmpty) {
+            final processedResponse = _processSimpleResponse(response.text!);
+            print('✅ Gemini 응답 생성 완료 (대체 방식)');
+            return processedResponse;
+          }
+        } catch (e) {
+          print('⚠️ 대체 방식도 실패: $e');
+        }
+        
+        print('⚠️ 모든 방식 실패. 폴백 사용.');
         return await _fallbackSource.getDialogue(context, userContext, gameContext);
       }
       
