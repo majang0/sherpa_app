@@ -62,11 +62,6 @@ class ApiConfig {
   
   /// 🧪 API 키 상태를 디버그용으로 출력합니다.
   static void debugApiKeyStatus() {
-    print('🔐 [API Config Debug]');
-    print('📁 .env 키: ${dotenv.env['GEMINI_API_KEY']?.substring(0, 10)}...');
-    print('⚙️ 컴파일타임 키: ${const String.fromEnvironment('GEMINI_API_KEY').substring(0, 10)}...');
-    print('🔑 최종 키: ${geminiApiKey.substring(0, 10)}...');
-    print('✅ 유효성: ${isApiKeyValid ? "유효함" : "무효함"}');
-    print('🎯 모델: $geminiModel');
+    // Debug 출력 비활성화
   }
 }

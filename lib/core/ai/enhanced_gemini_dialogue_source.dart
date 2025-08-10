@@ -16,7 +16,6 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
   EnhancedGeminiDialogueSource() {
     try {
       final apiKey = ApiConfig.finalApiKey;
-      print('🧠 단순 Gemini 모델 초기화 중...');
       
       _model = GenerativeModel(
         model: ApiConfig.geminiModel, // 설정 파일에서 모델 가져오기
@@ -36,9 +35,7 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
         ],
       );
       
-      print('✅ 단순 Gemini 모델 초기화 완료!');
     } catch (e) {
-      print('❌ Gemini 모델 초기화 실패: $e');
       rethrow;
     }
   }
@@ -52,11 +49,9 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
     try {
       // API 키 유효성 검사
       if (!ApiConfig.isApiKeyValid) {
-        print('⚠️ API 키가 유효하지 않습니다. 정적 대화를 사용합니다.');
         return await _fallbackSource.getDialogue(context, userContext, gameContext);
       }
       
-      print('🧠 Gemini AI 응답 생성 중... Context: ${context.name}');
       
       // 단순화된 프롬프트 생성
       final prompt = _buildSimplePrompt(context, userContext, gameContext);
@@ -89,15 +84,12 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
         
         if (responseText != null && responseText.isNotEmpty) {
           final processedResponse = _processSimpleResponse(responseText);
-          print('✅ Gemini 응답 생성 완료: ${processedResponse.length > 30 ? processedResponse.substring(0, 30) : processedResponse}...');
           return processedResponse;
         } else {
-          print('⚠️ Gemini 응답이 비어있습니다. 폴백 사용.');
           return await _fallbackSource.getDialogue(context, userContext, gameContext);
         }
       } catch (chatError) {
         // Chat 방식 실패 시 일반 방식으로 재시도
-        print('⚠️ Chat 세션 실패, 일반 방식으로 재시도: $chatError');
         
         try {
           // 방법 2: Content list 직접 전달
@@ -108,23 +100,18 @@ class EnhancedGeminiDialogueSource implements SherpiDialogueSource {
           
           if (response.text != null && response.text!.isNotEmpty) {
             final processedResponse = _processSimpleResponse(response.text!);
-            print('✅ Gemini 응답 생성 완료 (대체 방식)');
             return processedResponse;
           }
         } catch (e) {
-          print('⚠️ 대체 방식도 실패: $e');
         }
         
-        print('⚠️ 모든 방식 실패. 폴백 사용.');
         return await _fallbackSource.getDialogue(context, userContext, gameContext);
       }
       
     } catch (e) {
-      print('❌ Gemini API 에러: $e');
       // 더 자세한 에러 정보 출력
       if (e.toString().contains('FormatException') || 
           e.toString().contains('Unhandled format')) {
-        print('💡 이것은 SDK 호환성 문제일 수 있습니다. 폴백으로 전환합니다.');
       }
       return await _fallbackSource.getDialogue(context, userContext, gameContext);
     }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
-// import 'package:sherpa_app/core/ai/enhanced_gemini_dialogue_source.dart'; // 임시 비활성화
 
 /// 📦 캐시된 메시지 데이터 구조 (LRU 지원)
 class CachedMessage {
@@ -55,16 +54,12 @@ class AiMessageCache {
   static const String _cacheKey = 'ai_message_cache';
   static const Duration _cacheExpiry = Duration(hours: 24); // 24시간 후 만료 (더 짧게)
   
-  // 임시로 캐시에서 Gemini 생성 비활성화
-  // final EnhancedGeminiDialogueSource _geminiSource = EnhancedGeminiDialogueSource();
-  
   
   /// 🚀 핵심 메시지만 백그라운드 생성 (단순화)
   Future<void> pregenerateImportantMessages({
     required Map<String, dynamic> currentUserContext,
     required Map<String, dynamic> currentGameContext,
   }) async {
-    print('🤖 핵심 AI 메시지 생성 시작...');
     
     final cache = await _loadCache();
     
@@ -86,40 +81,14 @@ class AiMessageCache {
         }
       }
       
-      try {
-        // 임시로 캐시 생성 비활성화 - 테스트 중
-        print('⚠️ 캐시 생성이 임시로 비활성화되었습니다.');
-        continue;
-        
-        // AI 메시지 생성
-        // final message = await _geminiSource.getDialogue(
-        //   context,
-        //   currentUserContext,
-        //   currentGameContext,
-        // );
-        
-        // 캐시에 저장 - 비활성화됨
-        // cache[cacheKey] = CachedMessage(
-        //   message: message,
-        //   generatedAt: DateTime.now(),
-        //   userContext: currentUserContext,
-        // );
-        
-        // print('✅ ${context.name} 메시지 생성 완료');
-        
-        // API 부하 방지를 위한 딜레이
-        await Future.delayed(const Duration(seconds: 2));
-        
-      } catch (e) {
-        print('❌ ${context.name} 메시지 생성 실패: $e');
-      }
+      // 캐시 생성 비활성화 상태
+      continue;
     }
     
     // 캐시 정리 및 저장
     await _cleanupExpired(cache);
     await _saveCache(cache);
     
-    print('🎉 핵심 AI 메시지 생성 완료! (캐시 크기: ${cache.length})');
   }
   
   /// 🧹 만료된 캐시 정리 (단순화)
@@ -133,7 +102,6 @@ class AiMessageCache {
       cache.remove(key);
     }
     
-    print('🧹 만료된 캐시 ${expiredKeys.length}개 정리');
   }
   
   /// ⚡ 캐시된 AI 메시지 즉시 반환 (단순화)
@@ -146,7 +114,6 @@ class AiMessageCache {
     
     final cachedMessage = cache[cacheKey];
     if (cachedMessage != null && !cachedMessage.isExpired) {
-      print('⚡ 캐시된 AI 메시지 사용: ${context.name}');
       return cachedMessage.message;
     }
     
@@ -165,7 +132,6 @@ class AiMessageCache {
       return cacheJson.map((key, value) => 
           MapEntry(key, CachedMessage.fromJson(value)));
     } catch (e) {
-      print('❌ 캐시 로드 실패: $e');
       return {};
     }
   }

@@ -37,7 +37,6 @@ class SmartSherpiManager {
   /// Phase 2: Ref를 통한 데이터 수집기 초기화
   void initDataCollector(Ref ref) {
     _dataCollector = ActivityDataCollector(ref);
-    print('📊 활동별 데이터 수집기 초기화 완료');
   }
   
   /// 친밀도 레벨 설정
@@ -49,7 +48,6 @@ class SmartSherpiManager {
   void setPersonalizationSettings(PersonalizationSettings settings) {
     _personalizationSettings = settings;
     // 설정 변경 시 캐시 갱신 필요성 확인
-    print('🎨 셰르피 개인화 설정 업데이트: ${settings.personalityType.displayName}');
   }
   
   /// Phase 2: 친밀도 레벨 + 개인화 설정에 따른 AI 사용 비율 계산
@@ -159,7 +157,6 @@ class SmartSherpiManager {
   bool _shouldUseAI(SherpiContext context, AiUsageLevel level) {
     // 🐛 디버그 모드일 때는 항상 AI 사용
     if (debugForceAI) {
-      print('🐛 디버그 모드: AI 응답 강제 사용');
       return true;
     }
     
@@ -464,7 +461,6 @@ class SmartSherpiManager {
     // 활동 데이터가 수집되었으면 userContext에 추가
     if (activityData != null) {
       enhanced['activityData'] = activityData;
-      print('📊 Phase 2: 활동별 데이터 수집 완료 - ${context.name}');
     }
     
     return enhanced;
@@ -472,19 +468,12 @@ class SmartSherpiManager {
 
 
   
-  /// 🔄 백그라운드 캐시 생성 시작 (개인화 지원)
+  /// 🔄 백그라운드 캐시 생성 (현재 비활성화)
   Future<void> startBackgroundCaching(
     Map<String, dynamic> userContext,
     Map<String, dynamic> gameContext,
   ) async {
-    // 임시로 백그라운드 캐싱 비활성화 - 테스트 중
-    print('⚠️ 백그라운드 캐시 생성이 임시로 비활성화되었습니다.');
-    
-    // 기본 백그라운드 캐싱만 사용 (개인화 기능 제거됨)
-    // unawaited(_cache.pregenerateImportantMessages(
-    //   currentUserContext: userContext,
-    //   currentGameContext: gameContext,
-    // ));
+    // 백그라운드 캐싱 비활성화 상태
   }
   
   /// 📊 시스템 상태 확인

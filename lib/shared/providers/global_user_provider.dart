@@ -1405,7 +1405,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   }) {
     // 이중 호출 방지: 더 이상 handleActivityCompletion을 호출하지 않음
     // 대신 각 활동별로 직접 handleActivityCompletion을 호출하도록 수정 필요
-    print('⚠️ _handleActivityCompletion은 deprecated됨. handleActivityCompletion을 직접 사용하세요.');
+    // _handleActivityCompletion은 deprecated됨. handleActivityCompletion을 직접 사용하세요.
   }
 
   /// 🔄 퀘스트 시스템에 활동 알림 (최적화된 연동)

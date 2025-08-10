@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/constants/sherpi_emotions.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/ai/smart_sherpi_manager.dart';
 import '../../core/ai/real_data_connector.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
@@ -208,10 +207,8 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
       );
       _smartManager.setPersonalizationSettings(updatedSettings);
       
-      print('🎨 관계 정보 업데이트: 친밀도 ${relationship.intimacyLevel}, 성격 ${updatedSettings.personalityType.displayName}, 사용자 이름: $userName');
     } catch (e) {
       // 관계 프로바이더가 아직 초기화되지 않은 경우
-      print('🤝 관계 정보 로드 실패: $e');
     }
   }
   
@@ -263,7 +260,6 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
       _updateIntimacyLevel();
       
     } catch (e) {
-      print('🤝 상호작용 기록 실패: $e');
     }
   }
 
@@ -299,7 +295,6 @@ void initializeSherpi() {
     try {
       // 🚨 전역 락: 이미 메시지를 표시 중이면 무시 (동시 호출 방지)
       if (_isShowingMessage && !forceShow) {
-        print('🚨 전역 락: 이미 메시지 표시 중 - ${context.name}');
         return;
       }
       
@@ -307,7 +302,6 @@ void initializeSherpi() {
       
       // 🚨 중복 메시지 방지: 강제 표시가 아닌 경우에만 중복 검사
       if (!forceShow && _isDuplicateMessage(context, null)) {
-        print('🚨 중복 메시지 무시: ${context.name}');
         _isShowingMessage = false; // 락 해제
         return;
       }
@@ -376,9 +370,7 @@ void initializeSherpi() {
       
       // 디버그 로그
       if (shouldShowNotification) {
-        print('📢 Sherpi 메시지 표시: ${context.name} - "${sherpiResponse.message.length > 30 ? sherpiResponse.message.substring(0, 30) + "..." : sherpiResponse.message}" (${sherpiResponse.source.name})');
       } else {
-        print('🔇 Sherpi 메시지 중복/숨김: ${context.name}');
       }
       
       _logInteraction(context, selectedEmotion, sherpiResponse.message, enhancedMetadata);
@@ -430,7 +422,6 @@ void initializeSherpi() {
   }) async {
     // 🚨 전역 락: 이미 메시지를 표시 중이면 무시 (동시 호출 방지)
     if (_isShowingMessage && !forceShow) {
-      print('🚨 전역 락: 이미 메시지 표시 중 - ${context.name}');
       return;
     }
     
@@ -438,7 +429,6 @@ void initializeSherpi() {
     
     // 🚨 강화된 중복 메시지 방지: forceShow가 false면 중복 검사 적용
     if (!forceShow && _isDuplicateMessage(context, customDialogue)) {
-      print('🚨 중복 메시지 무시: ${context.name} - "$customDialogue"');
       _isShowingMessage = false; // 락 해제
       return;
     }
@@ -473,7 +463,6 @@ void initializeSherpi() {
       }
     } catch (e) {
       // AI 실패 시 정적 메시지 사용
-      print('🔇 AI 메시지 실패, 정적 메시지 사용: $e');
     }
     
     // 메시지 표시 (중복 방지 통과한 경우만)
@@ -499,7 +488,6 @@ void initializeSherpi() {
     
     // 디버그 로그
     if (isNewMessage) {
-      print('📢 Sherpi 즉시 메시지 표시: ${context.name} - "${finalMessage.length > 30 ? finalMessage.substring(0, 30) + "..." : finalMessage}" ($responseSource)');
       
       // 🔔 메시지 히스토리에 추가 (새 메시지일 때만)
       _addToHistory(
@@ -509,7 +497,6 @@ void initializeSherpi() {
         metadata: metadata,
       );
     } else {
-      print('🔇 Sherpi 즉시 메시지 중복/숨김: ${context.name}');
     }
     
     _hideTimer = Timer(duration, hideMessage);
@@ -731,12 +718,10 @@ void initializeSherpi() {
       // 추천 감정 반환
       final recommendedEmotion = emotionNotifier.getRecommendedSherpiEmotion();
       
-      print('🎭 감정 분석 완료: ${analysisResult.primaryEmotion.name} → ${recommendedEmotion.name}');
       
       return recommendedEmotion;
       
     } catch (e) {
-      print('🎭 감정 분석 실패: $e');
       // 실패 시 기본 감정 반환
       return SherpiEmotionMapper.getEmotionForContext(context);
     }
@@ -748,7 +733,6 @@ void initializeSherpi() {
       final emotionNotifier = _ref.read(emotionAnalysisProvider.notifier);
       emotionNotifier.recordSherpiResponse(emotion);
     } catch (e) {
-      print('💖 Sherpi 응답 기록 실패: $e');
     }
   }
 
@@ -763,10 +747,8 @@ void initializeSherpi() {
       
       if (syncScore > 0) {
         relationshipNotifier.updateEmotionalSync(syncScore);
-        print('💕 감정 동기화 점수 업데이트: ${(syncScore * 100).toInt()}%');
       }
     } catch (e) {
-      print('💕 감정 동기화 점수 업데이트 실패: $e');
     }
   }
 
@@ -822,7 +804,6 @@ void initializeSherpi() {
       // SmartSherpiManager에도 즉시 반영
       _smartManager.setPersonalizationSettings(newSettings);
       
-      print('🎨 개인화 설정 업데이트 완료: ${newSettings.personalityType.displayName}');
       
       // 설정 변경을 알리는 메시지 표시 (선택사항)
       showInstantMessage(
@@ -833,7 +814,6 @@ void initializeSherpi() {
       );
       
     } catch (e) {
-      print('🎨 개인화 설정 업데이트 실패: $e');
     }
   }
   
@@ -985,7 +965,6 @@ extension SherpiProviderExtension on WidgetRef {
       final relationship = read(relationshipProvider);
       return relationship.personalizationSettings;
     } catch (e) {
-      print('🎨 개인화 설정 로드 실패: $e');
       return const PersonalizationSettings(); // 기본값 반환
     }
   }
