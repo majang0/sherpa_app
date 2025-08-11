@@ -1,11 +1,9 @@
 // lib/features/daily_record/widgets/enhanced_diary_calendar_widget_v2.dart
-// 감성적이고 입체적인 일기 캘린더 위젯 - 개선된 버전
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../constants/record_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
@@ -20,74 +18,33 @@ class EnhancedDiaryCalendarWidget extends ConsumerStatefulWidget {
 }
 
 class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalendarWidget>
-    with TickerProviderStateMixin {
-  late AnimationController _slideController;
-  late Animation<Offset> _slideAnimation;
-  late AnimationController _fadeController;
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  late AnimationController _scaleController;
-  late Animation<double> _scaleAnimation;
   
-  // 호버 효과를 위한 상태
-  int? _hoveredDayIndex;
-  bool _isMainCardHovered = false;
-
   @override
   void initState() {
     super.initState();
     
-    _slideController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
-    
-    _fadeController = AnimationController(
+    _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
-    _scaleController = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
-    
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.5),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutQuart,
-    ));
     
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
-      parent: _fadeController,
+      parent: _animationController,
       curve: Curves.easeOut,
     ));
     
-    _scaleAnimation = Tween<double>(
-      begin: 0.95,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _scaleController,
-      curve: Curves.easeOutBack,
-    ));
-    
-    // 순차적 애니메이션 시작
-    Future.delayed(const Duration(milliseconds: 800), () {
-      _fadeController.forward();
-      _slideController.forward();
-      _scaleController.forward();
-    });
+    _animationController.forward();
   }
 
   @override
   void dispose() {
-    _slideController.dispose();
-    _fadeController.dispose();
-    _scaleController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -100,104 +57,47 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
     final sortedDiaryLogs = List<DiaryLog>.from(diaryLogs)
       ..sort((a, b) => b.date.compareTo(a.date));
     
-    return SlideTransition(
-      position: _slideAnimation,
-      child: FadeTransition(
-        opacity: _fadeAnimation,
-        child: ScaleTransition(
-          scale: _scaleAnimation,
-          child: MouseRegion(
-            onEnter: (_) => setState(() => _isMainCardHovered = true),
-            onExit: (_) => setState(() => _isMainCardHovered = false),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              transform: Matrix4.identity()
-                ..scale(_isMainCardHovered ? 1.01 : 1.0),
-              child: Container(
-                padding: const EdgeInsets.all(28),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.95),
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    // 메인 그림자 - 핑크 톤
-                    BoxShadow(
-                      color: const Color(0xFFEC4899).withOpacity(0.08),
-                      blurRadius: 30,
-                      offset: const Offset(0, 10),
-                      spreadRadius: 0,
-                    ),
-                    // 중간 그림자 - 부드러운 그림자
-                    BoxShadow(
-                      color: const Color(0xFFEC4899).withOpacity(0.05),
-                      blurRadius: 20,
-                      offset: const Offset(0, 5),
-                      spreadRadius: 5,
-                    ),
-                    // 세밀한 그림자 - 선명도
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 헤더
-                        _buildHeader(context),
-                        
-                        const SizedBox(height: 28),
-                        
-                        // 최근 7일 캘린더
-                        _buildWeeklyCalendar(sortedDiaryLogs),
-                        
-                        const SizedBox(height: 20),
-                        
-                        // 전체보기 버튼
-                        _buildFullViewButton().animate()
-                          .fadeIn(delay: 200.ms, duration: 600.ms)
-                          .slideY(begin: 0.2, end: 0, delay: 200.ms),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // 최근 기록들
-                        if (sortedDiaryLogs.isNotEmpty) ...[
-                          _buildRecentHeader()
-                            .animate()
-                            .fadeIn(delay: 300.ms, duration: 600.ms),
-                          const SizedBox(height: 16),
-                          ...sortedDiaryLogs.take(3).map((diary) => 
-                            _buildDiaryItem(diary)
-                              .animate()
-                              .fadeIn(delay: 400.ms, duration: 600.ms)
-                              .slideX(begin: -0.1, end: 0, delay: 400.ms)
-                          ),
-                        ] else
-                          _buildEmptyState()
-                            .animate()
-                            .fadeIn(delay: 300.ms, duration: 800.ms)
-                            .scale(begin: const Offset(0.9, 0.9), delay: 300.ms),
-                        
-                        const SizedBox(height: 28),
-                        
-                        // 일기 작성하기 버튼
-                        _buildWriteButton()
-                          .animate()
-                          .fadeIn(delay: 500.ms, duration: 600.ms)
-                          .slideY(begin: 0.3, end: 0, delay: 500.ms),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.95),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFEC4899).withOpacity(0.08),
+              blurRadius: 30,
+              offset: const Offset(0, 10),
             ),
-          ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(context),
+            const SizedBox(height: 24),
+            _buildWeeklyCalendar(sortedDiaryLogs),
+            const SizedBox(height: 20),
+            _buildFullViewButton(),
+            const SizedBox(height: 24),
+            
+            // 최근 기록들
+            if (sortedDiaryLogs.isNotEmpty) ...[
+              _buildRecentHeader(),
+              const SizedBox(height: 16),
+              ...sortedDiaryLogs.take(3).map((diary) => _buildDiaryItem(diary)),
+            ] else
+              _buildEmptyState(),
+            
+            const SizedBox(height: 24),
+            _buildWriteButton(),
+          ],
         ),
       ),
     );
@@ -206,7 +106,6 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
   Widget _buildHeader(BuildContext context) {
     return Row(
       children: [
-        // 아이콘 컨테이너 - 그라데이션 배경
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -229,12 +128,8 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             color: Colors.white,
             size: 26,
           ),
-        ).animate()
-          .scale(delay: 100.ms, duration: 600.ms, curve: Curves.elasticOut),
-        
+        ),
         const SizedBox(width: 16),
-        
-        // 텍스트 영역
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,10 +156,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             ],
           ),
         ),
-        
-        // 작성 버튼 - 플로팅 스타일
         GestureDetector(
-          onTapDown: (_) => HapticFeedbackManager.lightImpact(),
           onTap: () {
             HapticFeedbackManager.mediumImpact();
             Navigator.push(
@@ -286,11 +178,6 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 4,
-                  offset: const Offset(0, 1),
-                ),
               ],
             ),
             child: const Icon(
@@ -298,8 +185,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               color: Color(0xFFEC4899),
               size: 24,
             ),
-          ).animate()
-            .scale(delay: 200.ms, duration: 600.ms, curve: Curves.elasticOut),
+          ),
         ),
       ],
     );
@@ -310,7 +196,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
     final weekDays = List.generate(7, (index) => now.subtract(Duration(days: 6 - index)));
     
     return Container(
-      padding: const EdgeInsets.all(16),  // 패딩 감소
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -359,29 +245,18 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               ),
             ],
           ),
-          const SizedBox(height: 16),  // 간격 감소
-          // Center와 FittedBox로 오버플로우 방지
+          const SizedBox(height: 16),
           Center(
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: weekDays.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final day = entry.value;
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2),  // 각 아이템 간격 축소
-                    child: _buildCalendarDay(day, diaryLogs, index)
-                      .animate()
-                      .fadeIn(delay: (100 * index).ms, duration: 600.ms)
-                      .scale(
-                        begin: const Offset(0.8, 0.8),
-                        delay: (100 * index).ms,
-                        duration: 600.ms,
-                        curve: Curves.elasticOut,
-                      ),
-                  );
-                }).toList(),
+                children: weekDays.map((day) => 
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: _buildCalendarDay(day, diaryLogs),
+                  )
+                ).toList(),
               ),
             ),
           ),
@@ -390,26 +265,21 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
     );
   }
 
-  Widget _buildCalendarDay(DateTime day, List<DiaryLog> diaryLogs, int index) {
+  Widget _buildCalendarDay(DateTime day, List<DiaryLog> diaryLogs) {
     final dayLogs = diaryLogs.where((log) => _isSameDay(log.date, day)).toList();
     final latestDiary = dayLogs.isNotEmpty ? dayLogs.first : null;
     final hasMultipleDiaries = dayLogs.length > 1;
     final isToday = _isSameDay(day, DateTime.now());
-    final isHovered = _hoveredDayIndex == index;
     final weekdayName = ['월', '화', '수', '목', '금', '토', '일'][day.weekday - 1];
     
     return GestureDetector(
-      onTapDown: (_) => HapticFeedbackManager.lightImpact(),
       onTap: () {
         HapticFeedbackManager.mediumImpact();
         _showDateDiaryModal(day, dayLogs);
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 40,  // 너비를 작게 조정
-        height: 60,  // 높이를 작게 조정
-        transform: Matrix4.identity()
-          ..scale(isHovered ? 1.02 : 1.0),  // 호버 시 스케일 최소화
+      child: Container(
+        width: 40,
+        height: 60,
         decoration: BoxDecoration(
           gradient: isToday
               ? const LinearGradient(
@@ -427,21 +297,18 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
-          borderRadius: BorderRadius.circular(12),  // 둥글기 감소
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
-            if (isHovered || isToday) ...[
+            if (isToday)
               BoxShadow(
                 color: const Color(0xFFEC4899).withOpacity(0.2),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
-                spreadRadius: 0,
               ),
-            ],
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
               blurRadius: 6,
               offset: const Offset(0, 2),
-              spreadRadius: 0,
             ),
           ],
         ),
@@ -451,7 +318,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             Text(
               weekdayName,
               style: GoogleFonts.notoSans(
-                fontSize: 8,  // 폰트 크기 감소
+                fontSize: 8,
                 fontWeight: FontWeight.w600,
                 color: isToday ? Colors.white.withOpacity(0.9) : RecordColors.textSecondary,
               ),
@@ -460,15 +327,14 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             Text(
               '${day.day}',
               style: GoogleFonts.notoSans(
-                fontSize: 12,  // 폰트 크기 감소
+                fontSize: 12,
                 fontWeight: FontWeight.w700,
                 color: isToday ? Colors.white : RecordColors.textPrimary,
               ),
             ),
             const SizedBox(height: 3),
             if (latestDiary != null) ...[
-              if (hasMultipleDiaries) ...[
-                // 심플한 디자인으로 변경
+              if (hasMultipleDiaries)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                   decoration: BoxDecoration(
@@ -485,8 +351,8 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                       color: isToday ? Colors.white : const Color(0xFFEC4899),
                     ),
                   ),
-                ),
-              ] else ...[
+                )
+              else
                 Text(
                   _getMoodEmoji(latestDiary.mood),
                   style: TextStyle(
@@ -494,8 +360,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                     color: isToday ? Colors.white : null,
                   ),
                 ),
-              ],
-            ] else ...[
+            ] else
               Container(
                 width: 6,
                 height: 6,
@@ -506,7 +371,6 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                   shape: BoxShape.circle,
                 ),
               ),
-            ],
           ],
         ),
       ),
@@ -557,7 +421,6 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
 
   Widget _buildDiaryItem(DiaryLog diary) {
     return GestureDetector(
-      onTapDown: (_) => HapticFeedbackManager.lightImpact(),
       onTap: () {
         HapticFeedbackManager.mediumImpact();
         Navigator.push(
@@ -578,18 +441,11 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               color: const Color(0xFFEC4899).withOpacity(0.05),
               blurRadius: 12,
               offset: const Offset(0, 4),
-              spreadRadius: 0,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 4,
-              offset: const Offset(0, 1),
             ),
           ],
         ),
         child: Row(
           children: [
-            // 기분 이모지 - 그라데이션 배경
             Container(
               width: 40,
               height: 40,
@@ -612,8 +468,6 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               ),
             ),
             const SizedBox(width: 14),
-            
-            // 내용
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -671,8 +525,6 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                 ],
               ),
             ),
-            
-            // 화살표 아이콘
             Container(
               width: 28,
               height: 28,
@@ -680,10 +532,10 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                 color: const Color(0xFFEC4899).withOpacity(0.05),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_forward_ios_rounded,
                 size: 14,
-                color: const Color(0xFFEC4899),
+                color: Color(0xFFEC4899),
               ),
             ),
           ],
