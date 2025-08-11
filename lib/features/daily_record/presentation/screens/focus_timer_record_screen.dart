@@ -150,10 +150,16 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
     _backgroundTimer?.cancel();
     
     if (_backgroundSeconds > 0 && _backgroundSeconds < 10) {
-      // HP 감소
+      // HP 감소 (백그라운드 전환 시 30 감소)
       setState(() {
-        _focusHP = math.max(0, _focusHP - 10);
+        _focusHP = math.max(0, _focusHP - 30);
       });
+      
+      // HP가 0이 되면 실패 처리
+      if (_focusHP <= 0) {
+        _handleHPFailure('백그라운드 전환으로 인한 HP 소진');
+        return;
+      }
       
       // 셰르피 반응
       ref.read(sherpiProvider.notifier).showInstantMessage(
@@ -180,29 +186,60 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
   void _handleFocusFailure() {
     if (!mounted) return;
     
-    // 몰입 실패 처리
+    // 타이머 정지
     _timer?.cancel();
+    _backgroundTimer?.cancel();
+    _pulseController.stop();
+    _rippleController.stop();
+    _bossHPController.stop();
+    
     setState(() {
       _isRunning = false;
       _isInFocusMode = false;
       _focusHP = 0;
     });
     
+    // 전체화면 모드 종료
+    _exitImmersiveMode();
+    
+    // 실패 패널티 (10초 이탈은 20포인트)
+    ref.read(globalPointProvider.notifier).spendPoints(
+      20,
+      '10초 이탈 실패 패널티',
+    );
+    
+    // 실패 알림창 표시
+    _showBackgroundFailureDialog();
+  }
+
+  // 🎮 HP 소진으로 인한 실패 처리
+  void _handleHPFailure(String reason) {
+    if (!mounted) return;
+    
+    // 타이머 정지
+    _timer?.cancel();
+    _backgroundTimer?.cancel();
+    _pulseController.stop();
+    _rippleController.stop();
+    _bossHPController.stop();
+    
+    setState(() {
+      _isRunning = false;
+      _isInFocusMode = false;
+      _focusHP = 0;
+    });
+    
+    // 전체화면 모드 종료
+    _exitImmersiveMode();
+    
     // 실패 패널티
     ref.read(globalPointProvider.notifier).spendPoints(
-      10,
-      '몰입 실패 패널티',
+      20,
+      'HP 소진 패널티',
     );
     
-    // 셰르피 실망
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.climbingFailure,
-      customDialogue: '10초 이상 자리를 비우셨네요... 다음엔 꼭 성공해봐요! 😢',
-      emotion: SherpiEmotion.sad,
-      duration: const Duration(seconds: 4),
-    );
-    
-    Navigator.of(context).pop();
+    // 실패 알림창 표시
+    _showHPFailureDialog(reason);
   }
 
   @override
@@ -238,6 +275,12 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
     setState(() {
       _focusHP = math.max(0, _focusHP - 20);
     });
+    
+    // HP가 0이 되면 실패 처리
+    if (_focusHP <= 0) {
+      _handleHPFailure('뒤로가기 시도로 인한 HP 소진');
+      return true;
+    }
     
     // 셰르피 걱정 표현
     if (_exitAttempts == 1) {
@@ -902,13 +945,26 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
     );
   }
   
-  // 🎮 HP 바 위젯
+  // 🎮 HP 바 위젯 (강화된 색상 시스템)
   Widget _buildFocusHPBar() {
-    final hpColor = _focusHP > 60 
-        ? AppColors.success
-        : _focusHP > 30 
-            ? AppColors.warning
-            : AppColors.error;
+    // HP 상태별 색상 및 아이콘
+    Color hpColor;
+    IconData hpIcon;
+    String hpStatus;
+    
+    if (_focusHP > 60) {
+      hpColor = const Color(0xFF10B981); // 초록색 (안전)
+      hpIcon = Icons.favorite;
+      hpStatus = '안전';
+    } else if (_focusHP > 30) {
+      hpColor = const Color(0xFFF59E0B); // 노란색 (주의)
+      hpIcon = Icons.warning_amber;
+      hpStatus = '주의';
+    } else {
+      hpColor = const Color(0xFFEF4444); // 빨간색 (위험)
+      hpIcon = Icons.warning;
+      hpStatus = '위험';
+    }
     
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -920,7 +976,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
               Row(
                 children: [
                   Icon(
-                    Icons.favorite,
+                    hpIcon,
                     color: hpColor,
                     size: 20,
                   ),
@@ -931,6 +987,23 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: hpColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: hpColor.withOpacity(0.5), width: 1),
+                    ),
+                    child: Text(
+                      hpStatus,
+                      style: GoogleFonts.notoSans(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: hpColor,
+                      ),
                     ),
                   ),
                 ],
@@ -949,12 +1022,29 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           TweenAnimationBuilder<double>(
             tween: Tween(begin: _focusHP / 100, end: _focusHP / 100),
             duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
             builder: (context, value, child) {
-              return LinearProgressIndicator(
-                value: value,
-                minHeight: 8,
-                backgroundColor: Colors.white.withOpacity(0.1),
-                valueColor: AlwaysStoppedAnimation<Color>(hpColor),
+              return Container(
+                height: 10,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  boxShadow: [
+                    BoxShadow(
+                      color: hpColor.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: LinearProgressIndicator(
+                    value: value,
+                    minHeight: 10,
+                    backgroundColor: Colors.white.withOpacity(0.1),
+                    valueColor: AlwaysStoppedAnimation<Color>(hpColor),
+                  ),
+                ),
               );
             },
           ),
@@ -1189,13 +1279,6 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                '• HP가 20 감소합니다',
-                style: GoogleFonts.notoSans(
-                  fontSize: 13,
-                  color: Colors.red.withOpacity(0.9),
-                ),
-              ),
               Text(
                 '• 포인트 20P가 차감됩니다',
                 style: GoogleFonts.notoSans(
@@ -1611,7 +1694,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'HP: $_focusHP% 남음',
+                      '포기 시 20포인트가 차감됩니다',
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         color: AppColors.warning,
@@ -1697,6 +1780,332 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
     _exitImmersiveMode();
     
     Navigator.of(context).pop();
+  }
+  
+  // 🎮 HP 실패 알림창
+  void _showHPFailureDialog(String reason) {
+    if (!mounted) return;
+    
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        backgroundColor: const Color(0xFF1A1A2E),
+        title: Row(
+          children: [
+            Icon(
+              Icons.warning_amber_rounded,
+              color: const Color(0xFFEF4444),
+              size: 28,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                '몰입 실패',
+                style: GoogleFonts.notoSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEF4444).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: const Color(0xFFEF4444).withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.favorite_border,
+                        color: const Color(0xFFEF4444),
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'HP가 0이 되었습니다',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFFEF4444),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '실패 사유: $reason',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 13,
+                      color: Colors.white70,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '패널티 내역:',
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '• 20 포인트 차감',
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                color: Colors.red.withOpacity(0.9),
+              ),
+            ),
+            Text(
+              '• 몰입 기록이 저장되지 않습니다',
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                color: Colors.red.withOpacity(0.9),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF10B981).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.lightbulb_outline,
+                    color: const Color(0xFF10B981),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '팁: 몰입 중에는 화면을 벗어나지 말고, 뒤로가기를 자주 누르지 마세요!',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        color: const Color(0xFF10B981),
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+                Navigator.of(context).pop(); // 타이머 화면 닫기
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF10B981),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: Text(
+                '다시 도전하기',
+                style: GoogleFonts.notoSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 🎮 백그라운드 10초 이탈 실패 알림창
+  void _showBackgroundFailureDialog() {
+    if (!mounted) return;
+    
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        backgroundColor: const Color(0xFF1A1A2E),
+        title: Row(
+          children: [
+            Icon(
+              Icons.schedule_rounded,
+              color: const Color(0xFFEF4444),
+              size: 28,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                '몰입 실패',
+                style: GoogleFonts.notoSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEF4444).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: const Color(0xFFEF4444).withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time,
+                        color: const Color(0xFFEF4444),
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '10초 이상 화면을 벗어났습니다',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFFEF4444),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '실패 사유: 앱을 백그라운드로 전환한 후 10초가 경과하여 자동으로 실패 처리되었습니다.',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 13,
+                      color: Colors.white70,
+                      height: 1.4,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '패널티 내역:',
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '• 20 포인트 차감',
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                color: Colors.red.withOpacity(0.9),
+              ),
+            ),
+            Text(
+              '• 몰입 기록이 저장되지 않습니다',
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                color: Colors.red.withOpacity(0.9),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF10B981).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.lightbulb_outline,
+                    color: const Color(0xFF10B981),
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      '팁: 몰입 중에는 다른 앱으로 전환하지 마세요. 잠시 나가더라도 10초 안에 돌아오세요!',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        color: const Color(0xFF10B981),
+                        height: 1.3,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // 다이얼로그 닫기
+                Navigator.of(context).pop(); // 타이머 화면 닫기
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF10B981),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: Text(
+                '다시 도전하기',
+                style: GoogleFonts.notoSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
