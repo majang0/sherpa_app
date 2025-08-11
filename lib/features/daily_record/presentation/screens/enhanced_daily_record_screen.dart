@@ -7,7 +7,7 @@ import '../../../../shared/providers/global_user_provider.dart';
 import '../../widgets/simple_today_growth_widget.dart';
 import '../../widgets/step_analysis_widget.dart';
 import '../../widgets/focus_time_analysis_widget.dart';
-import '../../widgets/enhanced_diary_calendar_widget.dart';
+import '../../widgets/enhanced_diary_calendar_widget_v2.dart';
 
 import '../../widgets/exercise_summary_widget.dart';
 import '../../widgets/enhanced_reading_calendar_widget.dart';
