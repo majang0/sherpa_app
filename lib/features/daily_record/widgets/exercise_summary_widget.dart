@@ -1505,6 +1505,19 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
     final now = DateTime.now();
     final days = List.generate(14, (index) => now.subtract(Duration(days: 13 - index)));
     
+    // 최대 운동 시간 계산 (차트 스케일링용)
+    int maxMinutes = 120; // 기본 최소값
+    for (final day in days) {
+      final dayMinutes = exerciseLogs
+          .where((log) => _isSameDay(log.date, day))
+          .fold(0, (sum, log) => sum + log.durationMinutes);
+      if (dayMinutes > maxMinutes) {
+        maxMinutes = dayMinutes;
+      }
+    }
+    // 차트 높이를 위한 적절한 스케일 설정 (10분 단위로 올림)
+    maxMinutes = ((maxMinutes + 9) ~/ 10) * 10;
+    
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -1553,7 +1566,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       ),
                     ),
                     Text(
-                      '매일 운동 시간에 따른 색상 구분',
+                      '막대를 길게 눌러 정확한 시간 확인',
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -1590,33 +1603,65 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                     .fold(0, (sum, log) => sum + log.durationMinutes);
                 
                 return Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 1),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        // 막대
-                        Container(
-                          width: double.infinity,
-                          height: math.max(4, (dayMinutes / 180 * 140).clamp(0, 140)),
-                          decoration: BoxDecoration(
-                            color: _getBarColor(dayMinutes),
-                            borderRadius: BorderRadius.circular(2),
-                          ),
+                  child: Tooltip(
+                    message: dayMinutes > 0 ? '${day.month}월 ${day.day}일: ${dayMinutes}분 운동' : '',
+                    preferBelow: false,
+                    verticalOffset: 20,
+                    decoration: BoxDecoration(
+                      color: dayMinutes > 0 ? _getBarColor(dayMinutes) : Colors.transparent,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    textStyle: GoogleFonts.notoSans(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                    waitDuration: const Duration(milliseconds: 250),
+                    showDuration: const Duration(seconds: 2),
+                    child: GestureDetector(
+                      onTap: () {
+                        if (dayMinutes > 0) {
+                          HapticFeedbackManager.lightImpact();
+                          // 간단한 정보 표시
+                          final exercisesForDay = exerciseLogs
+                              .where((log) => _isSameDay(log.date, day))
+                              .toList();
+                          _showDateExerciseModal(day, exercisesForDay);
+                        }
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 1),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            // 막대
+                            Container(
+                              width: double.infinity,
+                              height: dayMinutes > 0 
+                                  ? math.max(4, (dayMinutes / maxMinutes * 140).clamp(4, 140))
+                                  : 2,
+                              decoration: BoxDecoration(
+                                color: dayMinutes > 0 
+                                    ? _getBarColor(dayMinutes)
+                                    : RecordColors.textLight.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            // 날짜
+                            Text(
+                              '${day.day}',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: _isSameDay(day, now) 
+                                    ? const Color(0xFFF97316)
+                                    : RecordColors.textSecondary,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 4),
-                        // 날짜
-                        Text(
-                          '${day.day}',
-                          style: GoogleFonts.notoSans(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            color: _isSameDay(day, now) 
-                                ? const Color(0xFFF97316)
-                                : RecordColors.textSecondary,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 );

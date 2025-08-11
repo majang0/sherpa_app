@@ -1221,9 +1221,33 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 전체 목표 완료 보상 수령 (버튼 클릭 시)
   void claimAllGoalsReward() {
     final records = state.dailyRecords;
+    final today = DateTime.now();
 
-    // 이미 보상을 받았거나 모든 목표가 완료되지 않았다면 리턴
-    if (records.isAllGoalsRewardClaimed || !records.isAllGoalsCompleted) {
+    // 이미 보상을 받았다면 리턴
+    if (records.isAllGoalsRewardClaimed) {
+      return;
+    }
+
+    // 실제 데이터 기반으로 목표 완료 상태 확인
+    int actuallyCompletedCount = 0;
+    if (records.todaySteps >= 6000) actuallyCompletedCount++;
+    if (records.todayFocusMinutes >= 30) actuallyCompletedCount++;
+    if (records.readingLogs.any((log) => 
+      log.date.year == today.year && 
+      log.date.month == today.month && 
+      log.date.day == today.day && 
+      log.pages >= 1)) actuallyCompletedCount++;
+    if (records.diaryLogs.any((log) => 
+      log.date.year == today.year && 
+      log.date.month == today.month && 
+      log.date.day == today.day)) actuallyCompletedCount++;
+    if (records.exerciseLogs.any((log) => 
+      log.date.year == today.year && 
+      log.date.month == today.month && 
+      log.date.day == today.day)) actuallyCompletedCount++;
+    
+    // 모든 목표(5개)가 완료되지 않았다면 리턴
+    if (actuallyCompletedCount < 5) {
       return;
     }
 
@@ -1249,8 +1273,9 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       additionalData: goalDetails, // 목표 상세 정보 전달
     );
 
-    // 보상 수령 상태로 변경
+    // 보상 수령 상태로 변경 및 isAllGoalsCompleted 플래그 설정
     final updatedRecords = records.copyWith(
+      isAllGoalsCompleted: true,  // 실제 데이터 기반으로 확인했으므로 true로 설정
       isAllGoalsRewardClaimed: true,
     );
 

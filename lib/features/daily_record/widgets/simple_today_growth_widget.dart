@@ -481,13 +481,6 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
               ),
             ),
           );
-          
-          // 상태 변경을 강제로 새로고침
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (mounted) {
-              setState(() {});
-            }
-          });
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: RecordColors.success,
