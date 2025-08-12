@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
@@ -256,7 +256,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: RecordColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -331,12 +331,12 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: RecordColors.primary.withOpacity(0.1),
+                          color: ModernColors.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
                           Icons.title,
-                          color: RecordColors.primary,
+                          color: ModernColors.primary,
                           size: 18,
                         ),
                       ),
@@ -346,7 +346,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                     ],
@@ -357,7 +357,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: RecordColors.textPrimary,
+                      color: ModernColors.textPrimary,
                       height: 1.4,
                     ),
                   ),
@@ -390,12 +390,12 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: RecordColors.primary.withOpacity(0.1),
+                        color: ModernColors.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(
                         Icons.article,
-                        color: RecordColors.primary,
+                        color: ModernColors.primary,
                         size: 18,
                       ),
                     ),
@@ -405,7 +405,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -416,7 +416,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                     height: 1.7,
                   ),
                 ),
@@ -449,12 +449,12 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: RecordColors.primary.withOpacity(0.1),
+                          color: ModernColors.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
                           Icons.attach_file,
-                          color: RecordColors.primary,
+                          color: ModernColors.primary,
                           size: 18,
                         ),
                       ),
@@ -464,7 +464,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                     ],
@@ -678,7 +678,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
             ),
           ],
         ),
-        backgroundColor: RecordColors.primary,
+        backgroundColor: ModernColors.primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -704,7 +704,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
             ),
           ],
         ),
-        backgroundColor: RecordColors.success,
+        backgroundColor: ModernColors.success,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

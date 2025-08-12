@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/modern_colors.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../shared/providers/global_user_provider.dart';
-import 'daily_quest_widget.dart';
+import 'enhanced_daily_quest_widget.dart';
 
 class SimpleTodayGrowthWidget extends ConsumerStatefulWidget {
   @override
@@ -597,7 +597,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.8,
       ),
-      child: DailyQuestWidget(),
+      child: EnhancedDailyQuestWidget(),
     );
   }
 

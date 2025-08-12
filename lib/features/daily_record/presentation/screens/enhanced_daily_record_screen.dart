@@ -13,7 +13,7 @@ import '../../widgets/exercise_summary_widget.dart';
 import '../../widgets/enhanced_reading_calendar_widget.dart';
 import '../../widgets/movie_calendar_widget.dart';
 import '../../widgets/enhanced_meeting_calendar_widget.dart';
-import '../../widgets/daily_quest_widget.dart';
+import '../../widgets/enhanced_daily_quest_widget.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -208,7 +208,7 @@ class _EnhancedDailyRecordScreenState extends ConsumerState<EnhancedDailyRecordS
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.8,
       ),
-      child: DailyQuestWidget(),
+      child: EnhancedDailyQuestWidget(),
     );
   }
 }

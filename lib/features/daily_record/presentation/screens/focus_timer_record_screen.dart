@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'dart:math' as math;
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';  // 셰르피 컨텍스트 + 감정 포함
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
@@ -314,7 +314,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           end: Alignment.bottomCenter,
           colors: [
             Colors.white,
-            AppColors.background,
+            ModernColors.background,
           ],
         ),
       ),
@@ -353,7 +353,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           child: Icon(
             Icons.psychology_rounded,
             size: 28,
-            color: AppColors.primary,
+            color: ModernColors.primary,
           ),
         ),
         const SizedBox(height: 12),
@@ -362,7 +362,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           style: GoogleFonts.notoSans(
             fontSize: 22,
             fontWeight: FontWeight.w700,
-            color: AppColors.primary,
+            color: ModernColors.primary,
             letterSpacing: -0.3,
           ),
         ),
@@ -371,7 +371,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           '나에게 맞는 집중 방식으로 몰입해보세요',
           style: GoogleFonts.notoSans(
             fontSize: 14,
-            color: AppColors.textSecondary,
+            color: ModernColors.textSecondary,
             height: 1.3,
           ),
         ),
@@ -489,7 +489,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                      color: isSelected ? ModernColors.primary : ModernColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 3),
@@ -498,7 +498,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: isSelected ? AppColors.primary.withOpacity(0.9) : AppColors.secondary,
+                      color: isSelected ? ModernColors.primary.withOpacity(0.9) : ModernColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -506,7 +506,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     type.description,
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                       height: 1.3,
                     ),
                   ),
@@ -583,7 +583,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     Icon(
                       Icons.schedule_rounded,
                       size: 20,
-                      color: AppColors.primary.withOpacity(0.7),
+                      color: ModernColors.primary.withOpacity(0.7),
                     ),
                     const SizedBox(width: 6),
                     Text(
@@ -591,7 +591,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                   ],
@@ -612,7 +612,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                      color: ModernColors.primary,
                     ),
                   ),
                 ),
@@ -636,8 +636,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     min: 5,
                     max: 120,
                     divisions: 23, // 5분 간격
-                    activeColor: AppColors.primary,
-                    inactiveColor: AppColors.primary.withOpacity(0.2),
+                    activeColor: ModernColors.primary,
+                    inactiveColor: ModernColors.primary.withOpacity(0.2),
                     onChanged: (value) {
                       setState(() {
                         _selectedMinutes = value.round();
@@ -664,7 +664,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
               _selectedFocusType != null ? '추천: ${_selectedFocusType!.timeRange}' : '원하는 시간을 설정하세요',
               style: GoogleFonts.notoSans(
                 fontSize: 12,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ],
@@ -703,7 +703,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: AppColors.primary,
+                color: ModernColors.primary,
               ),
             ),
           ),
@@ -771,7 +771,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.08),
+              color: ModernColors.primary.withOpacity(0.08),
               blurRadius: 12,
               offset: const Offset(0, 3),
               spreadRadius: 1,
@@ -809,7 +809,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.4,
                 ),
               ),
@@ -908,8 +908,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.primaryLight.withOpacity(0.1),
-                AppColors.secondary.withOpacity(0.1),
+                ModernColors.secondary.withOpacity(0.1),
+                ModernColors.secondary.withOpacity(0.1),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -919,7 +919,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           child: Icon(
             Icons.timer_outlined,
             size: 32,
-            color: AppColors.primary,
+            color: ModernColors.primary,
           ),
         ),
         const SizedBox(height: 16),
@@ -928,7 +928,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           style: GoogleFonts.notoSans(
             fontSize: 28,
             fontWeight: FontWeight.w700,
-            color: AppColors.primary,
+            color: ModernColors.primary,
             letterSpacing: -0.5,
           ),
         ),
@@ -938,7 +938,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           style: GoogleFonts.notoSans(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: AppColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
       ],
@@ -954,12 +954,12 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.08),
+            color: ModernColors.primary.withOpacity(0.08),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.05),
+            color: ModernColors.primary.withOpacity(0.05),
             blurRadius: 40,
             offset: const Offset(0, 20),
           ),
@@ -980,14 +980,14 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.primaryLight.withOpacity(0.1),
-                      AppColors.secondary.withOpacity(0.1),
+                      ModernColors.secondary.withOpacity(0.1),
+                      ModernColors.secondary.withOpacity(0.1),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   border: Border.all(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: ModernColors.primary.withOpacity(0.1),
                     width: 2,
                   ),
                 ),
@@ -1006,7 +1006,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 56,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
+                          color: ModernColors.primary,
                           height: 1,
                         ),
                       ),
@@ -1016,7 +1016,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 24,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.primary.withOpacity(0.7),
+                          color: ModernColors.primary.withOpacity(0.7),
                         ),
                       ),
                     ],
@@ -1026,8 +1026,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
                       color: _selectedMinutes >= 30 
-                          ? AppColors.success.withOpacity(0.1)
-                          : AppColors.warning.withOpacity(0.1),
+                          ? ModernColors.success.withOpacity(0.1)
+                          : ModernColors.warning.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -1036,8 +1036,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: _selectedMinutes >= 30 
-                            ? AppColors.success
-                            : AppColors.warning,
+                            ? ModernColors.success
+                            : ModernColors.warning,
                       ),
                     ),
                   ),
@@ -1076,10 +1076,10 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           // 슬라이더
           SliderTheme(
             data: SliderThemeData(
-              activeTrackColor: AppColors.primary,
-              inactiveTrackColor: AppColors.primary.withOpacity(0.1),
-              thumbColor: AppColors.primary,
-              overlayColor: AppColors.primary.withOpacity(0.1),
+              activeTrackColor: ModernColors.primary,
+              inactiveTrackColor: ModernColors.primary.withOpacity(0.1),
+              thumbColor: ModernColors.primary,
+              overlayColor: ModernColors.primary.withOpacity(0.1),
               trackHeight: 6,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
@@ -1119,7 +1119,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withOpacity(0.1),
+                color: ModernColors.primary.withOpacity(0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -1127,7 +1127,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           ),
           child: Icon(
             icon,
-            color: AppColors.primary,
+            color: ModernColors.primary,
             size: 20,
           ),
         ),
@@ -1146,7 +1146,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
         ),
@@ -1176,21 +1176,21 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                   width: isRecommended ? 100 : 80,
                   decoration: BoxDecoration(
                     color: isSelected 
-                        ? AppColors.primary
+                        ? ModernColors.primary
                         : Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isSelected 
-                          ? AppColors.primary
+                          ? ModernColors.primary
                           : isRecommended
-                              ? AppColors.success.withOpacity(0.5)
-                              : AppColors.primary.withOpacity(0.15),
+                              ? ModernColors.success.withOpacity(0.5)
+                              : ModernColors.primary.withOpacity(0.15),
                       width: isSelected ? 2 : 1.5,
                     ),
                     boxShadow: [
                       BoxShadow(
                         color: isSelected 
-                            ? AppColors.primary.withOpacity(0.25)
+                            ? ModernColors.primary.withOpacity(0.25)
                             : Colors.black.withOpacity(0.05),
                         blurRadius: isSelected ? 15 : 10,
                         offset: const Offset(0, 5),
@@ -1207,7 +1207,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                           fontWeight: FontWeight.w700,
                           color: isSelected 
                               ? Colors.white 
-                              : AppColors.textPrimary,
+                              : ModernColors.textPrimary,
                         ),
                       ),
                       if (isRecommended) ...[
@@ -1219,7 +1219,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                             fontWeight: FontWeight.w600,
                             color: isSelected 
                                 ? Colors.white.withOpacity(0.9)
-                                : AppColors.success,
+                                : ModernColors.success,
                           ),
                         ),
                       ],
@@ -1240,15 +1240,15 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primaryLight.withOpacity(0.05),
-            AppColors.secondary.withOpacity(0.05),
+            ModernColors.secondary.withOpacity(0.05),
+            ModernColors.secondary.withOpacity(0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.1),
+          color: ModernColors.primary.withOpacity(0.1),
           width: 1,
         ),
       ),
@@ -1257,12 +1257,12 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: ModernColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               Icons.tips_and_updates_outlined,
-              color: AppColors.primary,
+              color: ModernColors.primary,
               size: 24,
             ),
           ),
@@ -1276,7 +1276,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.primary,
+                    color: ModernColors.primary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -1285,7 +1285,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 13,
                     height: 1.4,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -1303,15 +1303,15 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
         borderRadius: BorderRadius.circular(16),
         gradient: LinearGradient(
           colors: [
-            AppColors.primary,
-            AppColors.primary.withOpacity(0.8),
+            ModernColors.primary,
+            ModernColors.primary.withOpacity(0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: ModernColors.primary.withOpacity(0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
             spreadRadius: 0,
@@ -1642,7 +1642,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                       strokeWidth: 8,
                       backgroundColor: Colors.white.withOpacity(0.2),
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        AppColors.accent,
+                        ModernColors.primary,
                       ),
                     ),
                   ),
@@ -2094,7 +2094,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  gradient: AppColors.primaryGradient,
+                  gradient: ModernColors.primaryGradient,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -2109,7 +2109,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 8),
@@ -2118,7 +2118,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                 textAlign: TextAlign.center,
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                   height: 1.4,
                 ),
               ),
@@ -2133,7 +2133,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: ModernColors.primary,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -2202,7 +2202,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
         backgroundColor: const Color(0xFF1A1A2E),
         title: Row(
           children: [
-            Icon(Icons.warning_amber_rounded, color: AppColors.warning, size: 28),
+            Icon(Icons.warning_amber_rounded, color: ModernColors.warning, size: 28),
             const SizedBox(width: 12),
             Text(
               '정말 포기하시겠어요?',
@@ -2230,19 +2230,19 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.warning.withOpacity(0.1),
+                color: ModernColors.warning.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline, size: 20, color: AppColors.warning),
+                  Icon(Icons.info_outline, size: 20, color: ModernColors.warning),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       '포기 시 20포인트가 차감됩니다',
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
-                        color: AppColors.warning,
+                        color: ModernColors.warning,
                       ),
                     ),
                   ),
@@ -2267,7 +2267,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
             child: Text(
               '계속하기',
               style: GoogleFonts.notoSans(
-                color: AppColors.success,
+                color: ModernColors.success,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -2275,7 +2275,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           ElevatedButton(
             onPressed: () => Navigator.of(context).pop(true),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.error,
+              backgroundColor: ModernColors.error,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../presentation/screens/reading_record_screen.dart';
 import 'reading_detail_modal.dart';
 import '../utils/reading_utils.dart';
@@ -338,7 +338,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -427,7 +427,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: RecordColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -436,7 +436,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ),
                     ],
@@ -504,7 +504,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: RecordColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ),
@@ -544,7 +544,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                 ? Colors.transparent
                 : (hasReading 
                     ? const Color(0xFF10B981).withOpacity(0.3)
-                    : (isCurrentMonth ? RecordColors.textLight.withOpacity(0.1) : Colors.transparent)),
+                    : (isCurrentMonth ? ModernColors.textTertiary.withOpacity(0.1) : Colors.transparent)),
             width: 1.5,
           ),
           boxShadow: hasReading || isToday ? [
@@ -570,7 +570,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                     fontWeight: FontWeight.w700,
                     color: isCurrentMonth
                         ? (isToday ? Colors.white : const Color(0xFF10B981))
-                        : RecordColors.textLight,
+                        : ModernColors.textTertiary,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -623,9 +623,9 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                         ? (isToday 
                             ? Colors.white 
                             : (isFuture 
-                                ? RecordColors.textLight.withOpacity(0.4)
-                                : RecordColors.textPrimary))
-                        : RecordColors.textLight.withOpacity(0.25),
+                                ? ModernColors.textTertiary.withOpacity(0.4)
+                                : ModernColors.textPrimary))
+                        : ModernColors.textTertiary.withOpacity(0.25),
                   ),
                 ),
                 if (isClickable && !hasReading && !isFuture) ...[

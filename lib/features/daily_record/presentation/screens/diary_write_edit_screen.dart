@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
@@ -158,7 +158,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: _isSubmitting ? RecordColors.textLight : (selectedMoodInfo?['color'] ?? RecordColors.primary),
+                    color: _isSubmitting ? ModernColors.textTertiary : (selectedMoodInfo?['color'] ?? ModernColors.primary),
                   ),
                 ),
               ),
@@ -177,8 +177,8 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: selectedMoodInfo?['gradient'] ?? [
-                    RecordColors.primary,
-                    RecordColors.primary.withOpacity(0.7),
+                    ModernColors.primary,
+                    ModernColors.primary.withOpacity(0.7),
                   ],
                 ),
               ),
@@ -252,7 +252,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: (moodInfo?['color'] ?? RecordColors.primary).withOpacity(0.2),
+            color: (moodInfo?['color'] ?? ModernColors.primary).withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -273,14 +273,14 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: moodInfo?['gradient'] ?? [
-                      RecordColors.primary,
-                      RecordColors.primary.withOpacity(0.8),
+                      ModernColors.primary,
+                      ModernColors.primary.withOpacity(0.8),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: (moodInfo?['color'] ?? RecordColors.primary).withOpacity(0.3),
+                      color: (moodInfo?['color'] ?? ModernColors.primary).withOpacity(0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -302,7 +302,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: moodInfo?['color'] ?? RecordColors.primary,
+                        color: moodInfo?['color'] ?? ModernColors.primary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -311,7 +311,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -326,10 +326,10 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              color: (moodInfo?['color'] ?? RecordColors.primary).withOpacity(0.1),
+              color: (moodInfo?['color'] ?? ModernColors.primary).withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: (moodInfo?['color'] ?? RecordColors.primary).withOpacity(0.2),
+                color: (moodInfo?['color'] ?? ModernColors.primary).withOpacity(0.2),
                 width: 1,
               ),
             ),
@@ -338,7 +338,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
               children: [
                 Icon(
                   Icons.calendar_today,
-                  color: moodInfo?['color'] ?? RecordColors.primary,
+                  color: moodInfo?['color'] ?? ModernColors.primary,
                   size: 18,
                 ),
                 const SizedBox(width: 8),
@@ -347,7 +347,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: moodInfo?['color'] ?? RecordColors.primary,
+                    color: moodInfo?['color'] ?? ModernColors.primary,
                   ),
                 ),
               ],
@@ -386,12 +386,12 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: RecordColors.primary.withOpacity(0.1),
+                        color: ModernColors.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
                         Icons.sentiment_satisfied,
-                        color: RecordColors.primary,
+                        color: ModernColors.primary,
                         size: 20,
                       ),
                     ),
@@ -405,7 +405,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: RecordColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -414,7 +414,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: RecordColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                         ],
@@ -492,7 +492,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
           color: isSelected ? null : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? mood['color'] : RecordColors.textLight.withOpacity(0.2),
+            color: isSelected ? mood['color'] : ModernColors.textTertiary.withOpacity(0.2),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected ? [
@@ -525,7 +525,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.white : RecordColors.textPrimary,
+                color: isSelected ? Colors.white : ModernColors.textPrimary,
               ),
             ),
           ],
@@ -558,12 +558,12 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: RecordColors.primary.withOpacity(0.1),
+                    color: ModernColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.title,
-                    color: RecordColors.primary,
+                    color: ModernColors.primary,
                     size: 18,
                   ),
                 ),
@@ -573,7 +573,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -585,8 +585,8 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: _titleController.text.isNotEmpty 
-                      ? RecordColors.primary.withOpacity(0.3)
-                      : RecordColors.textLight.withOpacity(0.2),
+                      ? ModernColors.primary.withOpacity(0.3)
+                      : ModernColors.textTertiary.withOpacity(0.2),
                   width: 1.5,
                 ),
               ),
@@ -595,13 +595,13 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.4,
                 ),
                 decoration: InputDecoration(
                   hintText: '예: 오늘의 소중한 순간들',
                   hintStyle: GoogleFonts.notoSans(
-                    color: RecordColors.textLight,
+                    color: ModernColors.textTertiary,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -644,12 +644,12 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: RecordColors.primary.withOpacity(0.1),
+                    color: ModernColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.article,
-                    color: RecordColors.primary,
+                    color: ModernColors.primary,
                     size: 18,
                   ),
                 ),
@@ -663,7 +663,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -672,7 +672,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ),
                     ],
@@ -687,8 +687,8 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: _contentController.text.isNotEmpty 
-                      ? RecordColors.primary.withOpacity(0.3)
-                      : RecordColors.textLight.withOpacity(0.2),
+                      ? ModernColors.primary.withOpacity(0.3)
+                      : ModernColors.textTertiary.withOpacity(0.2),
                   width: 1.5,
                 ),
               ),
@@ -698,13 +698,13 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.7,
                 ),
                 decoration: InputDecoration(
                   hintText: '오늘의 소중한 순간들을 기록해보세요...\n\n✨ 이런 것들을 적어보세요:\n\n• 감사했던 순간들\n• 새롭게 배운 것들\n• 만났던 사람들과의 이야기\n• 느꼈던 감정들\n• 내일에 대한 계획이나 기대',
                   hintStyle: GoogleFonts.notoSans(
-                    color: RecordColors.textLight,
+                    color: ModernColors.textTertiary,
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
                     height: 1.6,
@@ -729,7 +729,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: RecordColors.primary.withOpacity(0.1),
+                        color: ModernColors.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -737,7 +737,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: RecordColors.primary,
+                          color: ModernColors.primary,
                         ),
                       ),
                     ),
@@ -752,7 +752,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
 
   Widget _buildSubmitButton(Map<String, dynamic>? moodInfo) {
     final canSubmit = _canSubmit();
-    final buttonColor = canSubmit ? (moodInfo?['color'] ?? RecordColors.primary) : RecordColors.textLight;
+    final buttonColor = canSubmit ? (moodInfo?['color'] ?? ModernColors.primary) : ModernColors.textTertiary;
     
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -864,7 +864,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                   ),
                 ],
               ),
-              backgroundColor: RecordColors.success,
+              backgroundColor: ModernColors.success,
               duration: const Duration(seconds: 2),
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
@@ -902,7 +902,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                   ),
                 ],
               ),
-              backgroundColor: RecordColors.success,
+              backgroundColor: ModernColors.success,
               duration: const Duration(seconds: 2),
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(

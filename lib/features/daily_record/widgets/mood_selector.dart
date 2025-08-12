@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../models/diary_model.dart';
 
 class MoodSelector extends StatefulWidget {
@@ -56,7 +56,7 @@ class _MoodSelectorState extends State<MoodSelector>
           style: GoogleFonts.notoSans(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 12),
@@ -65,7 +65,7 @@ class _MoodSelectorState extends State<MoodSelector>
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFFE2E8F0)),
+            border: Border.all(color: ModernColors.borderLight),
           ),
           child: Column(
             children: [
@@ -73,7 +73,7 @@ class _MoodSelectorState extends State<MoodSelector>
                 '오늘 하루, 어떤 기분이셨나요?',
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
               const SizedBox(height: 20),
@@ -137,7 +137,7 @@ class _MoodSelectorState extends State<MoodSelector>
                   style: GoogleFonts.notoSans(
                     fontSize: 10,
                     fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                    color: isSelected ? mood.color : AppColors.textSecondary,
+                    color: isSelected ? mood.color : ModernColors.textSecondary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -184,7 +184,7 @@ class _MoodSelectorState extends State<MoodSelector>
                   moodData.description,
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],

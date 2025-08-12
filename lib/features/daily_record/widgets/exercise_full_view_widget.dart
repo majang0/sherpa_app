@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
@@ -245,7 +245,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -342,7 +342,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
-                      color: RecordColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                   Text(
@@ -350,7 +350,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
-                      color: RecordColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -447,7 +447,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -517,7 +517,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: isSelected ? Colors.white : RecordColors.textPrimary,
+                    color: isSelected ? Colors.white : ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -603,7 +603,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: RecordColors.background.withOpacity(0.5),
+                      color: ModernColors.background.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -612,7 +612,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                         Icon(
                           Icons.info_outline,
                           size: 14,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                         const SizedBox(width: 6),
                         Text(
@@ -620,7 +620,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -740,7 +740,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
               height: 4,
               margin: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: RecordColors.textLight,
+                color: ModernColors.textTertiary,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -781,7 +781,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -790,14 +790,14 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close, color: RecordColors.textLight),
+                    icon: Icon(Icons.close, color: ModernColors.textTertiary),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -891,7 +891,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                                         Icon(
                                           Icons.timer,
                                           size: 14,
-                                          color: RecordColors.textSecondary,
+                                          color: ModernColors.textSecondary,
                                         ),
                                         const SizedBox(width: 4),
                                         Text(
@@ -899,7 +899,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                                           style: GoogleFonts.notoSans(
                                             fontSize: 13,
                                             fontWeight: FontWeight.w500,
-                                            color: RecordColors.textSecondary,
+                                            color: ModernColors.textSecondary,
                                           ),
                                         ),
                                         if (exercise.note != null) ...[
@@ -907,7 +907,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                                           Icon(
                                             Icons.note,
                                             size: 14,
-                                            color: RecordColors.textSecondary,
+                                            color: ModernColors.textSecondary,
                                           ),
                                         ],
                                       ],
@@ -1023,7 +1023,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
               style: GoogleFonts.notoSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: RecordColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -1062,7 +1062,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                 ? Colors.transparent
                 : (hasExercise 
                     ? const Color(0xFFF97316).withOpacity(0.3)
-                    : (isCurrentMonth ? RecordColors.textLight.withOpacity(0.1) : Colors.transparent)),
+                    : (isCurrentMonth ? ModernColors.textTertiary.withOpacity(0.1) : Colors.transparent)),
             width: 1.5,
           ),
           boxShadow: hasExercise || isToday ? [
@@ -1092,8 +1092,8 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                               ? Colors.white 
                               : (hasExercise 
                                   ? const Color(0xFFF97316) 
-                                  : RecordColors.textPrimary))
-                          : RecordColors.textLight,
+                                  : ModernColors.textPrimary))
+                          : ModernColors.textTertiary,
                     ),
                   ),
                 ),
@@ -1161,12 +1161,12 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
               decoration: BoxDecoration(
                 color: isToday 
                     ? Colors.white.withOpacity(0.9)
-                    : RecordColors.cardBackground,
+                    : ModernColors.surface,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isToday 
                       ? Colors.white.withOpacity(0.3)
-                      : RecordColors.textSecondary.withOpacity(0.3),
+                      : ModernColors.textSecondary.withOpacity(0.3),
                   width: 1,
                 ),
                 boxShadow: [
@@ -1184,8 +1184,8 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                     fontSize: 8,
                     fontWeight: FontWeight.w900,
                     color: isToday 
-                        ? RecordColors.textPrimary
-                        : RecordColors.textSecondary,
+                        ? ModernColors.textPrimary
+                        : ModernColors.textSecondary,
                     height: 1,
                   ),
                 ),

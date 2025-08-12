@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 
 /// 운동 분석 위젯
@@ -21,10 +21,10 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: RecordColors.cardBackground,
+        color: ModernColors.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.exerciseLight,
+          color: ModernColors.exerciseLight,
           width: 1,
         ),
       ),
@@ -37,12 +37,12 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: RecordColors.exerciseLight,
+                  color: ModernColors.exerciseLight,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   Icons.fitness_center,
-                  color: RecordColors.exercise,
+                  color: ModernColors.exercise,
                   size: 20,
                 ),
               ),
@@ -52,7 +52,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -92,7 +92,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
             icon: Icons.timer,
             title: '총 운동시간',
             value: '${totalMinutes}분',
-            color: RecordColors.exercise,
+            color: ModernColors.exercise,
           ),
         ),
         const SizedBox(width: 12),
@@ -101,7 +101,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
             icon: Icons.calendar_today,
             title: '운동 일수',
             value: '${totalDays}일',
-            color: RecordColors.focus,
+            color: ModernColors.focus,
           ),
         ),
         const SizedBox(width: 12),
@@ -110,7 +110,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
             icon: Icons.trending_up,
             title: '일평균',
             value: '${avgMinutes.toStringAsFixed(0)}분',
-            color: RecordColors.success,
+            color: ModernColors.success,
           ),
         ),
       ],
@@ -142,7 +142,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 4),
@@ -150,7 +150,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
             title,
             style: GoogleFonts.notoSans(
               fontSize: 12,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
         ],
@@ -173,19 +173,19 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
           end: Alignment.bottomRight,
           colors: isGoalAchieved
               ? [
-            RecordColors.success.withValues(alpha: 0.1), // ✅ withOpacity → withValues 수정
-            RecordColors.success.withValues(alpha: 0.05), // ✅ withOpacity → withValues 수정
+            ModernColors.success.withValues(alpha: 0.1), // ✅ withOpacity → withValues 수정
+            ModernColors.success.withValues(alpha: 0.05), // ✅ withOpacity → withValues 수정
           ]
               : [
-            RecordColors.exercise.withValues(alpha: 0.1), // ✅ withOpacity → withValues 수정
-            RecordColors.exercise.withValues(alpha: 0.05), // ✅ withOpacity → withValues 수정
+            ModernColors.exercise.withValues(alpha: 0.1), // ✅ withOpacity → withValues 수정
+            ModernColors.exercise.withValues(alpha: 0.05), // ✅ withOpacity → withValues 수정
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isGoalAchieved
-              ? RecordColors.success.withValues(alpha: 0.2) // ✅ withOpacity → withValues 수정
-              : RecordColors.exercise.withValues(alpha: 0.2), // ✅ withOpacity → withValues 수정
+              ? ModernColors.success.withValues(alpha: 0.2) // ✅ withOpacity → withValues 수정
+              : ModernColors.exercise.withValues(alpha: 0.2), // ✅ withOpacity → withValues 수정
           width: 1,
         ),
       ),
@@ -203,7 +203,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: RecordColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -211,7 +211,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
                     '${weeklyMinutes}분 / ${weeklyGoal}분',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: RecordColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -219,7 +219,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: isGoalAchieved ? RecordColors.success : RecordColors.warning,
+                  color: isGoalAchieved ? ModernColors.success : ModernColors.warning,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -240,7 +240,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
           Container(
             height: 8,
             decoration: BoxDecoration(
-              color: RecordColors.progressBackground,
+              color: ModernColors.gray200,
               borderRadius: BorderRadius.circular(4),
             ),
             child: FractionallySizedBox(
@@ -248,7 +248,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
               widthFactor: progress,
               child: Container(
                 decoration: BoxDecoration(
-                  color: isGoalAchieved ? RecordColors.success : RecordColors.exercise,
+                  color: isGoalAchieved ? ModernColors.success : ModernColors.exercise,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -262,7 +262,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
             'WHO 권장: 주 150분 이상 중강도 운동',
             style: GoogleFonts.notoSans(
               fontSize: 11,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
               fontStyle: FontStyle.italic,
             ),
           ),
@@ -289,7 +289,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: RecordColors.progressBackground,
+          color: ModernColors.gray100,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(
@@ -297,7 +297,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
             '운동 기록이 없습니다',
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
         ),
@@ -312,7 +312,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
           style: GoogleFonts.notoSans(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: RecordColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 12),
@@ -323,9 +323,9 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
           final percentage = (typeEntry.value / totalMinutes * 100);
 
           final colors = [
-            RecordColors.exercise,
-            RecordColors.focus,
-            RecordColors.meeting,
+            ModernColors.exercise,
+            ModernColors.focus,
+            ModernColors.meeting,
           ];
 
           return Container(
@@ -346,7 +346,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
                     typeEntry.key,
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
-                      color: RecordColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                 ),
@@ -354,7 +354,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
                   '${typeEntry.value}분 (${percentage.toStringAsFixed(0)}%)',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],

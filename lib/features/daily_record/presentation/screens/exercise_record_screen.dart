@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../widgets/unified_exercise_record_form.dart';
 
@@ -218,7 +218,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
           Icon(
             Icons.construction,
             size: 64,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
           const SizedBox(height: 16),
           Text(
@@ -226,7 +226,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -234,7 +234,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
             '곧 업데이트 예정입니다',
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
         ],

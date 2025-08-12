@@ -36,6 +36,7 @@ import 'features/daily_record/presentation/screens/exercise_dashboard_screen.dar
 import 'features/daily_record/presentation/screens/exercise_detail_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_edit_screen.dart';
 import 'features/daily_record/presentation/screens/reading_record_screen.dart';
+import 'features/daily_record/presentation/screens/focus_timer_record_screen.dart';
 
 // Screens - Shared
 import 'shared/presentation/screens/component_viewer_screen.dart';
@@ -174,6 +175,7 @@ class MyApp extends ConsumerWidget {
         },
         '/reading_record': (context) => ReadingRecordScreen(),
         '/focus_timer': (context) => EnhancedDailyRecordScreen(), // 집중 타이머는 기록 화면에서 접근
+        '/focus_timer_record': (context) => FocusTimerRecordScreen(),
         '/component_viewer': (context) => ComponentViewerScreen(),
         '/meeting_list_all': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;

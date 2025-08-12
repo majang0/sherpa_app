@@ -122,9 +122,11 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Column(
                   children: [
+                    _buildProgressOverview(),
+                    const SizedBox(height: 14),
                     _buildQuestListSection(),
-                    const SizedBox(height: 10),
-                    _buildProgressSection(),
+                    const SizedBox(height: 14),
+                    _buildRewardSection(),
                     const SizedBox(height: 10),
                   ],
                 ),
@@ -476,7 +478,7 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
     );
   }
 
-  Widget _buildProgressSection() {
+  Widget _buildProgressOverview() {
     final user = ref.watch(globalUserProvider);
     final goals = user.dailyRecords.dailyGoals;
     
@@ -484,126 +486,124 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
     final totalCount = goals.length;
     final allCompleted = completedCount == totalCount;
     final progress = totalCount > 0 ? completedCount / totalCount : 0.0;
-    final isRewardClaimed = user.dailyRecords.isAllGoalsRewardClaimed;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: ModernColors.shadowBase.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
         children: [
-          // Circular Progress Section
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  ModernColors.surface,
-                  ModernColors.gray50.withOpacity(0.3),
+          // Simple Progress Circle
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 64,
+                height: 64,
+                child: CircularProgressIndicator(
+                  value: progress,
+                  strokeWidth: 4,
+                  backgroundColor: ModernColors.gray200.withOpacity(0.3),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    allCompleted ? ModernColors.success : ModernColors.primary,
+                  ),
+                ),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${(progress * 100).round()}%',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: allCompleted
+                          ? ModernColors.success
+                          : ModernColors.textPrimary,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+                  Text(
+                    '$completedCount/$totalCount',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: ModernColors.textSecondary,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
                 ],
               ),
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: ModernColors.shadowBase.withOpacity(0.06),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
+            ],
+          ),
+          const SizedBox(width: 16),
+          // Progress text
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Circular Progress
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      width: 64,
-                      height: 64,
-                      child: CircularProgressIndicator(
-                        value: progress,
-                        strokeWidth: 5,
-                        backgroundColor: ModernColors.gray200.withOpacity(0.3),
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          allCompleted ? ModernColors.success : ModernColors.primary,
-                        ),
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '${(progress * 100).round()}%',
-                          style: TextStyle(
-                            fontFamily: 'Pretendard',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                            color: allCompleted
-                                ? const Color(0xFF10B981)
-                                : const Color(0xFF3B82F6),
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        Text(
-                          '$completedCount/$totalCount',
-                          style: TextStyle(
-                            fontFamily: 'Pretendard',
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF64748B),
-                            letterSpacing: -0.2,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                Text(
+                  allCompleted ? '모든 목표 달성!' : '오늘의 진행 상황',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: allCompleted
+                        ? ModernColors.success
+                        : ModernColors.textPrimary,
+                    letterSpacing: -0.5,
+                  ),
                 ),
-                const SizedBox(width: 16),
-                // Progress text
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        allCompleted ? '모든 목표 달성!' : '오늘의 진행 상황',
-                        style: TextStyle(
-                          fontFamily: 'Pretendard',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: allCompleted
-                              ? const Color(0xFF10B981)
-                              : const Color(0xFF1E293B),
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        allCompleted 
-                            ? '훌륭해요! 오늘의 모든 목표를 완료했어요.'
-                            : '조금만 더 힘내요! ${totalCount - completedCount}개의 목표가 남았어요.',
-                        style: TextStyle(
-                          fontFamily: 'Pretendard',
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: const Color(0xFF64748B),
-                          letterSpacing: -0.3,
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
+                const SizedBox(height: 4),
+                Text(
+                  allCompleted 
+                      ? '훌륭해요! 오늘의 모든 목표를 완료했어요.'
+                      : '조금만 더 힘내요! ${totalCount - completedCount}개의 목표가 남았어요.',
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: ModernColors.textSecondary,
+                    letterSpacing: -0.3,
+                    height: 1.4,
                   ),
                 ),
               ],
             ),
           ),
-          
-          // Reward section - always visible for motivation
-          const SizedBox(height: 10),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeOutCubic,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
+        ],
+      ),
+    );
+  }
+
+
+  Widget _buildRewardSection() {
+    final user = ref.watch(globalUserProvider);
+    final goals = user.dailyRecords.dailyGoals;
+    
+    int completedCount = goals.where((g) => _isGoalAchieved(g.id, user)).length;
+    final totalCount = goals.length;
+    final allCompleted = completedCount == totalCount;
+    final isRewardClaimed = user.dailyRecords.isAllGoalsRewardClaimed;
+
+    return AnimatedContainer(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOutCubic,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -819,9 +819,6 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                 ],
               ],
             ),
-          ),
-        ],
-      ),
     ).animate()
       .fadeIn(duration: 500.ms, delay: 300.ms)
       .slideY(begin: 0.1, end: 0, duration: 500.ms, curve: Curves.easeOutCubic);
@@ -987,12 +984,7 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
         );
         break;
       case 'focus':
-        _showModernInfoDialog(
-          icon: Icons.timer_outlined,
-          title: '집중 시간 목표',
-          message: '중요한 일에 30분간 집중해보세요.',
-          color: ModernColors.accent,
-        );
+        Navigator.pushNamed(context, '/focus_timer_record');
         break;
       case 'diary':
         Navigator.push(
@@ -1138,3 +1130,4 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
     }
   }
 }
+

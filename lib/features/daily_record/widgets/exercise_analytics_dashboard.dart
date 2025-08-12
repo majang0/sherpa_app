@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
@@ -132,12 +132,12 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   Icons.analytics_outlined,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 18,
                 ),
               ),
@@ -147,7 +147,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -162,7 +162,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: RecordColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
               const SizedBox(width: 8),
@@ -180,7 +180,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: RecordColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
               const SizedBox(width: 8),
@@ -193,7 +193,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: RecordColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -206,7 +206,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                         _cachedTrendData = null; // 캐시 무효화
                       });
                     },
-                    activeColor: RecordColors.primary,
+                    activeColor: ModernColors.primary,
                   ),
                 ],
               ),
@@ -229,7 +229,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: isSelected ? Colors.white : RecordColors.textSecondary,
+              color: isSelected ? Colors.white : ModernColors.textSecondary,
             ),
           ),
           selected: isSelected,
@@ -243,7 +243,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             }
           },
           backgroundColor: Colors.grey.shade100,
-          selectedColor: RecordColors.primary,
+          selectedColor: ModernColors.primary,
           checkmarkColor: Colors.white,
         ),
       );
@@ -262,7 +262,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: isSelected ? Colors.white : RecordColors.textSecondary,
+              color: isSelected ? Colors.white : ModernColors.textSecondary,
             ),
           ),
           selected: isSelected,
@@ -276,7 +276,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             }
           },
           backgroundColor: Colors.grey.shade100,
-          selectedColor: RecordColors.secondary,
+          selectedColor: ModernColors.secondary,
           checkmarkColor: Colors.white,
         ),
       );
@@ -296,7 +296,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 16),
@@ -310,7 +310,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                   '${stats['totalMinutes']}분',
                   '${stats['avgMinutesPerDay']?.toStringAsFixed(1)}분/일',
                   Icons.timer_outlined,
-                  RecordColors.primary,
+                  ModernColors.primary,
                 ),
               ),
               const SizedBox(width: 12),
@@ -320,7 +320,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                   '${stats['totalCount']}회',
                   '주 ${stats['weeklyAverage']?.toStringAsFixed(1)}회',
                   Icons.fitness_center,
-                  RecordColors.secondary,
+                  ModernColors.secondary,
                 ),
               ),
             ],
@@ -336,7 +336,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                   _getIntensityLabel(stats['avgIntensity'] ?? 'medium'),
                   '최근 ${_selectedPeriod}',
                   Icons.trending_up,
-                  RecordColors.warning,
+                  ModernColors.warning,
                 ),
               ),
               const SizedBox(width: 12),
@@ -346,7 +346,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                   '${stats['streak']}일',
                   '최대 ${stats['maxStreak']}일',
                   Icons.local_fire_department,
-                  RecordColors.success,
+                  ModernColors.success,
                 ),
               ),
             ],
@@ -395,7 +395,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             style: GoogleFonts.notoSans(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           Text(
@@ -403,7 +403,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           const SizedBox(height: 4),
@@ -449,12 +449,12 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.info.withOpacity(0.1),
+                  color: ModernColors.info.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.show_chart,
-                  color: RecordColors.info,
+                  color: ModernColors.info,
                   size: 20,
                 ),
               ),
@@ -464,7 +464,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -496,7 +496,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                           value.toInt().toString(),
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         );
                       },
@@ -514,7 +514,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                             _formatTrendLabel(index),
                             style: GoogleFonts.notoSans(
                               fontSize: 10,
-                              color: RecordColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           );
                         }
@@ -530,18 +530,18 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                   LineChartBarData(
                     spots: trendData,
                     isCurved: true,
-                    color: RecordColors.primary,
+                    color: ModernColors.primary,
                     barWidth: 3,
                     belowBarData: BarAreaData(
                       show: true,
-                      color: RecordColors.primary.withOpacity(0.1),
+                      color: ModernColors.primary.withOpacity(0.1),
                     ),
                     dotData: FlDotData(
                       show: true,
                       getDotPainter: (spot, percent, barData, index) {
                         return FlDotCirclePainter(
                           radius: 4,
-                          color: RecordColors.primary,
+                          color: ModernColors.primary,
                           strokeWidth: 2,
                           strokeColor: Colors.white,
                         );
@@ -582,12 +582,12 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.secondary.withOpacity(0.1),
+                  color: ModernColors.secondary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.category_outlined,
-                  color: RecordColors.secondary,
+                  color: ModernColors.secondary,
                   size: 20,
                 ),
               ),
@@ -597,7 +597,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -654,7 +654,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -663,7 +663,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -714,12 +714,12 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.success.withOpacity(0.1),
+                  color: ModernColors.success.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.insights_outlined,
-                  color: RecordColors.success,
+                  color: ModernColors.success,
                   size: 20,
                 ),
               ),
@@ -729,7 +729,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -786,7 +786,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -795,7 +795,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -831,12 +831,12 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.warning.withOpacity(0.1),
+                  color: ModernColors.warning.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.compare_arrows,
-                  color: RecordColors.warning,
+                  color: ModernColors.warning,
                   size: 20,
                 ),
               ),
@@ -846,7 +846,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -879,7 +879,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
 
   Widget _buildComparisonRow(String period1, String stats1, String period2, String stats2, double change) {
     final isPositive = change >= 0;
-    final changeColor = isPositive ? RecordColors.success : RecordColors.error;
+    final changeColor = isPositive ? ModernColors.success : ModernColors.error;
     
     return Container(
       padding: const EdgeInsets.all(16),
@@ -900,7 +900,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                     Text(
@@ -908,7 +908,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                   ],
@@ -916,7 +916,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
               ),
               Icon(
                 Icons.arrow_forward,
-                color: RecordColors.textSecondary,
+                color: ModernColors.textSecondary,
                 size: 16,
               ),
               Expanded(
@@ -928,7 +928,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                     Text(
@@ -936,7 +936,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                   ],
@@ -996,7 +996,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
           Icon(
             Icons.show_chart,
             size: 64,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
           const SizedBox(height: 16),
           Text(
@@ -1004,7 +1004,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
         ],
@@ -1160,7 +1160,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
         'title': '운동을 시작해보세요!',
         'description': '첫 운동 기록을 남겨 개인화된 분석을 받아보세요.',
         'icon': Icons.play_arrow,
-        'color': RecordColors.primary,
+        'color': ModernColors.primary,
       });
       return insights;
     }
@@ -1177,7 +1177,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
       'title': '선호 운동: $mostFrequentType',
       'description': '가장 자주 하는 운동입니다. 다양한 운동도 시도해보세요!',
       'icon': Icons.favorite,
-      'color': RecordColors.secondary,
+      'color': ModernColors.secondary,
     });
 
     // 연속 기록 분석
@@ -1186,7 +1186,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
         'title': '훌륭한 연속 기록!',
         'description': '${stats['streak']}일 연속으로 운동하고 있습니다. 계속 유지하세요!',
         'icon': Icons.local_fire_department,
-        'color': RecordColors.success,
+        'color': ModernColors.success,
       });
     }
 
@@ -1197,14 +1197,14 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
         'title': '충분한 운동량',
         'description': 'WHO 권장 운동량을 충족하고 있습니다!',
         'icon': Icons.thumb_up,
-        'color': RecordColors.success,
+        'color': ModernColors.success,
       });
     } else if (avgMinutes > 0) {
       insights.add({
         'title': '운동 시간 늘리기',
         'description': '일일 평균 ${avgMinutes.toStringAsFixed(1)}분입니다. 30분을 목표로 해보세요!',
         'icon': Icons.trending_up,
-        'color': RecordColors.warning,
+        'color': ModernColors.warning,
       });
     }
 

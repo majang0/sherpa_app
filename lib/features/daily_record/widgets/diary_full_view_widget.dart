@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../presentation/screens/diary_write_edit_screen.dart';
 import '../presentation/screens/diary_detail_screen.dart';
 import '../../../shared/providers/global_user_provider.dart';
@@ -349,7 +349,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -438,7 +438,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: RecordColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -447,7 +447,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ),
                     ],
@@ -515,7 +515,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: RecordColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ),
@@ -556,7 +556,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                 ? Colors.transparent
                 : (hasDiary 
                     ? (moodInfo?['color'] ?? const Color(0xFFEC4899)).withOpacity(0.3)
-                    : (isCurrentMonth ? RecordColors.textLight.withOpacity(0.1) : Colors.transparent)),
+                    : (isCurrentMonth ? ModernColors.textTertiary.withOpacity(0.1) : Colors.transparent)),
             width: 1.5,
           ),
           boxShadow: hasDiary || isToday ? [
@@ -582,7 +582,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                     fontWeight: FontWeight.w700,
                     color: isCurrentMonth
                         ? (isToday ? Colors.white : Colors.white)
-                        : RecordColors.textLight,
+                        : ModernColors.textTertiary,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -617,9 +617,9 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                         ? (isToday 
                             ? Colors.white 
                             : (isFuture 
-                                ? RecordColors.textLight.withOpacity(0.4) // 미래 날짜 더 연하게
-                                : RecordColors.textPrimary))
-                        : RecordColors.textLight.withOpacity(0.25), // 다른 월 더 연하게
+                                ? ModernColors.textTertiary.withOpacity(0.4) // 미래 날짜 더 연하게
+                                : ModernColors.textPrimary))
+                        : ModernColors.textTertiary.withOpacity(0.25), // 다른 월 더 연하게
                   ),
                 ),
                 if (isClickable && !hasDiary && !isFuture) ...[

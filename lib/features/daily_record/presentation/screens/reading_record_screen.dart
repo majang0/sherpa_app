@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/models/global_user_model.dart';
@@ -183,7 +183,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: _isSubmitting ? RecordColors.textLight : const Color(0xFF10B981),
+                    color: _isSubmitting ? ModernColors.textTertiary : const Color(0xFF10B981),
                   ),
                 ),
               ),
@@ -377,7 +377,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -471,7 +471,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: RecordColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -480,7 +480,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: RecordColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                         ],
@@ -558,7 +558,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           color: isSelected ? null : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? const Color(0xFF10B981) : RecordColors.textLight.withOpacity(0.2),
+            color: isSelected ? const Color(0xFF10B981) : ModernColors.textTertiary.withOpacity(0.2),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected ? [
@@ -591,7 +591,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.white : RecordColors.textPrimary,
+                color: isSelected ? Colors.white : ModernColors.textPrimary,
               ),
             ),
           ],
@@ -639,7 +639,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -652,7 +652,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 border: Border.all(
                   color: _bookTitleController.text.isNotEmpty 
                       ? const Color(0xFF10B981).withOpacity(0.3)
-                      : RecordColors.textLight.withOpacity(0.2),
+                      : ModernColors.textTertiary.withOpacity(0.2),
                   width: 1.5,
                 ),
               ),
@@ -661,13 +661,13 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.4,
                 ),
                 decoration: InputDecoration(
                   hintText: '예: 데미안, 어린 왕자, 1984',
                   hintStyle: GoogleFonts.notoSans(
-                    color: RecordColors.textLight,
+                    color: ModernColors.textTertiary,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
@@ -737,7 +737,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -746,7 +746,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ),
                     ],
@@ -765,7 +765,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       border: Border.all(
                         color: _startPageController.text.isNotEmpty 
                             ? const Color(0xFF10B981).withOpacity(0.3)
-                            : RecordColors.textLight.withOpacity(0.2),
+                            : ModernColors.textTertiary.withOpacity(0.2),
                         width: 1.5,
                       ),
                     ),
@@ -776,12 +776,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                       decoration: InputDecoration(
                         hintText: '시작',
                         hintStyle: GoogleFonts.notoSans(
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -818,7 +818,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       border: Border.all(
                         color: _endPageController.text.isNotEmpty 
                             ? const Color(0xFF10B981).withOpacity(0.3)
-                            : RecordColors.textLight.withOpacity(0.2),
+                            : ModernColors.textTertiary.withOpacity(0.2),
                         width: 1.5,
                       ),
                     ),
@@ -829,12 +829,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                       decoration: InputDecoration(
                         hintText: '끝',
                         hintStyle: GoogleFonts.notoSans(
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -931,7 +931,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          color: RecordColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -940,7 +940,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                     ],
@@ -1024,7 +1024,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: _rating > 0 ? Colors.amber.shade700 : RecordColors.textSecondary,
+                            color: _rating > 0 ? Colors.amber.shade700 : ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -1100,7 +1100,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
-                          color: RecordColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -1109,7 +1109,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                     ],
@@ -1185,7 +1185,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           color: isSelected ? null : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? const Color(0xFF10B981) : RecordColors.textLight.withOpacity(0.2),
+            color: isSelected ? const Color(0xFF10B981) : ModernColors.textTertiary.withOpacity(0.2),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected ? [
@@ -1218,7 +1218,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.white : RecordColors.textPrimary,
+                color: isSelected ? Colors.white : ModernColors.textPrimary,
               ),
             ),
           ],
@@ -1270,7 +1270,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -1279,7 +1279,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ),
                     ],
@@ -1295,7 +1295,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 border: Border.all(
                   color: _noteController.text.isNotEmpty 
                       ? const Color(0xFF10B981).withOpacity(0.3)
-                      : RecordColors.textLight.withOpacity(0.2),
+                      : ModernColors.textTertiary.withOpacity(0.2),
                   width: 1.5,
                 ),
               ),
@@ -1305,13 +1305,13 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.7,
                 ),
                 decoration: InputDecoration(
                   hintText: '인상 깊었던 구절이나 느낀 점을 적어보세요...\n\n📌 이런 것들을 기록해보세요:\n\n• 기억에 남는 문장\n• 새롭게 알게 된 점\n• 삶에 적용해보고 싶은 내용\n• 저자의 통찰이 돋보였던 부분',
                   hintStyle: GoogleFonts.notoSans(
-                    color: RecordColors.textLight,
+                    color: ModernColors.textTertiary,
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
                     height: 1.6,
@@ -1396,7 +1396,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -1439,7 +1439,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -1448,7 +1448,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textLight,
+                        color: ModernColors.textTertiary,
                       ),
                     ),
                   ],
@@ -1501,7 +1501,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: RecordColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -1510,7 +1510,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: RecordColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -1549,7 +1549,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
 
   Widget _buildSubmitButton() {
     final canSubmit = _canSubmit();
-    final buttonColor = canSubmit ? const Color(0xFF10B981) : RecordColors.textLight;
+    final buttonColor = canSubmit ? const Color(0xFF10B981) : ModernColors.textTertiary;
     
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -1678,7 +1678,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 ),
               ],
             ),
-            backgroundColor: RecordColors.success,
+            backgroundColor: ModernColors.success,
             duration: const Duration(seconds: 2),
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(

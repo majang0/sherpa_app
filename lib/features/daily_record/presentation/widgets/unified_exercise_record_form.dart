@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../models/detailed_exercise_models.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
@@ -154,7 +154,7 @@ class _UnifiedExerciseRecordFormState
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -165,7 +165,7 @@ class _UnifiedExerciseRecordFormState
                       style: GoogleFonts.notoSans(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -217,12 +217,12 @@ class _UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: ModernColors.primary.withOpacity(0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: ModernColors.primary.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -241,12 +241,12 @@ class _UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.timer_outlined,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 20,
                 ),
               ),
@@ -256,7 +256,7 @@ class _UnifiedExerciseRecordFormState
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -272,7 +272,7 @@ class _UnifiedExerciseRecordFormState
                   style: GoogleFonts.notoSans(
                     fontSize: 32,
                     fontWeight: FontWeight.w800,
-                    color: RecordColors.primary,
+                    color: ModernColors.primary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -281,7 +281,7 @@ class _UnifiedExerciseRecordFormState
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -292,10 +292,10 @@ class _UnifiedExerciseRecordFormState
           // Custom slider
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: RecordColors.primary,
-              inactiveTrackColor: RecordColors.primary.withOpacity(0.1),
-              thumbColor: RecordColors.primary,
-              overlayColor: RecordColors.primary.withOpacity(0.2),
+              activeTrackColor: ModernColors.primary,
+              inactiveTrackColor: ModernColors.primary.withOpacity(0.1),
+              thumbColor: ModernColors.primary,
+              overlayColor: ModernColors.primary.withOpacity(0.2),
               trackHeight: 8.0,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 14.0),
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 24.0),
@@ -338,12 +338,12 @@ class _UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: ModernColors.primary.withOpacity(0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: ModernColors.primary.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -362,12 +362,12 @@ class _UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.fitness_center,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 20,
                 ),
               ),
@@ -377,7 +377,7 @@ class _UnifiedExerciseRecordFormState
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -410,7 +410,7 @@ class _UnifiedExerciseRecordFormState
                         border: Border.all(
                           color: isSelected
                               ? difficulty.color
-                              : RecordColors.primary.withOpacity(0.1),
+                              : ModernColors.primary.withOpacity(0.1),
                           width: isSelected ? 2 : 1,
                         ),
                         boxShadow: isSelected
@@ -464,12 +464,12 @@ class _UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: ModernColors.primary.withOpacity(0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: ModernColors.primary.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -489,12 +489,12 @@ class _UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.book,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 20,
                 ),
               ),
@@ -504,14 +504,14 @@ class _UnifiedExerciseRecordFormState
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -519,7 +519,7 @@ class _UnifiedExerciseRecordFormState
                   style: GoogleFonts.notoSans(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.primary,
+                    color: ModernColors.primary,
                   ),
                 ),
               ),
@@ -536,13 +536,13 @@ class _UnifiedExerciseRecordFormState
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  RecordColors.primary.withOpacity(0.05),
-                  RecordColors.primary.withOpacity(0.02),
+                  ModernColors.primary.withOpacity(0.05),
+                  ModernColors.primary.withOpacity(0.02),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: RecordColors.primary.withOpacity(0.1),
+                color: ModernColors.primary.withOpacity(0.1),
                 width: 1,
               ),
             ),
@@ -553,7 +553,7 @@ class _UnifiedExerciseRecordFormState
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: RecordColors.primary.withOpacity(0.1),
+                        color: ModernColors.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -567,7 +567,7 @@ class _UnifiedExerciseRecordFormState
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     const Spacer(),
@@ -575,7 +575,7 @@ class _UnifiedExerciseRecordFormState
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: RecordColors.primary,
+                        color: ModernColors.primary,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -592,10 +592,10 @@ class _UnifiedExerciseRecordFormState
                 const SizedBox(height: 16),
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
-                    activeTrackColor: RecordColors.primary,
-                    inactiveTrackColor: RecordColors.primary.withOpacity(0.2),
-                    thumbColor: RecordColors.primary,
-                    overlayColor: RecordColors.primary.withOpacity(0.2),
+                    activeTrackColor: ModernColors.primary,
+                    inactiveTrackColor: ModernColors.primary.withOpacity(0.2),
+                    thumbColor: ModernColors.primary,
+                    overlayColor: ModernColors.primary.withOpacity(0.2),
                     trackHeight: 6.0,
                     thumbShape:
                         const RoundSliderThumbShape(enabledThumbRadius: 12.0),
@@ -621,7 +621,7 @@ class _UnifiedExerciseRecordFormState
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -638,13 +638,13 @@ class _UnifiedExerciseRecordFormState
             maxLength: 200,
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
             decoration: InputDecoration(
               hintText: _getPersonalizedPrompt(widget.exerciseType),
               hintStyle: GoogleFonts.notoSans(
                 fontSize: 14,
-                color: RecordColors.textSecondary,
+                color: ModernColors.textSecondary,
                 height: 1.4,
               ),
               filled: true,
@@ -660,14 +660,14 @@ class _UnifiedExerciseRecordFormState
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   width: 2,
                 ),
               ),
               contentPadding: const EdgeInsets.all(16),
               counterStyle: GoogleFonts.notoSans(
                 fontSize: 11,
-                color: RecordColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ),
@@ -684,12 +684,12 @@ class _UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: ModernColors.primary.withOpacity(0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: ModernColors.primary.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -708,12 +708,12 @@ class _UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.camera_alt_outlined,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 20,
                 ),
               ),
@@ -723,14 +723,14 @@ class _UnifiedExerciseRecordFormState
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
               const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -738,7 +738,7 @@ class _UnifiedExerciseRecordFormState
                   style: GoogleFonts.notoSans(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.primary,
+                    color: ModernColors.primary,
                   ),
                 ),
               ),
@@ -751,10 +751,10 @@ class _UnifiedExerciseRecordFormState
               child: Container(
                 height: 120,
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.05),
+                  color: ModernColors.primary.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: RecordColors.primary.withOpacity(0.2),
+                    color: ModernColors.primary.withOpacity(0.2),
                     width: 2,
                     style: BorderStyle.solid,
                   ),
@@ -765,7 +765,7 @@ class _UnifiedExerciseRecordFormState
                     children: [
                       Icon(
                         Icons.add_photo_alternate_outlined,
-                        color: RecordColors.primary.withOpacity(0.6),
+                        color: ModernColors.primary.withOpacity(0.6),
                         size: 40,
                       ),
                       const SizedBox(height: 8),
@@ -774,7 +774,7 @@ class _UnifiedExerciseRecordFormState
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: RecordColors.primary.withOpacity(0.8),
+                          color: ModernColors.primary.withOpacity(0.8),
                         ),
                       ),
                     ],
@@ -833,12 +833,12 @@ class _UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: ModernColors.primary.withOpacity(0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: ModernColors.primary.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -854,12 +854,12 @@ class _UnifiedExerciseRecordFormState
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: RecordColors.primary.withOpacity(0.1),
+              color: ModernColors.primary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               Icons.group_outlined,
-              color: RecordColors.primary,
+              color: ModernColors.primary,
               size: 20,
             ),
           ),
@@ -873,7 +873,7 @@ class _UnifiedExerciseRecordFormState
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -882,7 +882,7 @@ class _UnifiedExerciseRecordFormState
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -896,7 +896,7 @@ class _UnifiedExerciseRecordFormState
                 _isShared = value;
               });
             },
-            activeColor: RecordColors.primary,
+            activeColor: ModernColors.primary,
           ),
         ],
       ),
@@ -909,7 +909,7 @@ class _UnifiedExerciseRecordFormState
       child: SherpaButton(
         text: '운동 기록 완료',
         onPressed: _isSubmitting ? null : _submitExerciseRecord,
-        backgroundColor: RecordColors.primary,
+        backgroundColor: ModernColors.primary,
         height: 56,
         isLoading: _isSubmitting,
       ),
@@ -925,7 +925,7 @@ class _UnifiedExerciseRecordFormState
       shape: RoundedRectangleBorder(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         side: BorderSide(
-          color: RecordColors.primary.withOpacity(0.1),
+          color: ModernColors.primary.withOpacity(0.1),
           width: 1,
         ),
       ),
@@ -938,7 +938,7 @@ class _UnifiedExerciseRecordFormState
               ListTile(
                 leading: Icon(
                   Icons.camera_alt,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                 ),
                 title: Text(
                   '카메라로 촬영',
@@ -966,7 +966,7 @@ class _UnifiedExerciseRecordFormState
               ListTile(
                 leading: Icon(
                   Icons.photo_library,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                 ),
                 title: Text(
                   '갤러리에서 선택',
@@ -1070,7 +1070,7 @@ class _UnifiedExerciseRecordFormState
                 ),
               ],
             ),
-            backgroundColor: RecordColors.primary,
+            backgroundColor: ModernColors.primary,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -1092,7 +1092,7 @@ class _UnifiedExerciseRecordFormState
                 fontWeight: FontWeight.w600,
               ),
             ),
-            backgroundColor: RecordColors.error,
+            backgroundColor: ModernColors.error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -1123,7 +1123,7 @@ class _UnifiedExerciseRecordFormState
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? RecordColors.primary : Colors.grey.shade100,
+          color: isSelected ? ModernColors.primary : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -1133,7 +1133,7 @@ class _UnifiedExerciseRecordFormState
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: isSelected ? Colors.white : RecordColors.textPrimary,
+                color: isSelected ? Colors.white : ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 2),
@@ -1145,7 +1145,7 @@ class _UnifiedExerciseRecordFormState
                 fontWeight: FontWeight.w500,
                 color: isSelected
                     ? Colors.white.withOpacity(0.9)
-                    : RecordColors.textSecondary,
+                    : ModernColors.textSecondary,
               ),
             ),
           ],

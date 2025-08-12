@@ -13,6 +13,32 @@ class ModernColors {
   static const Color primaryLight = Color(0xFF3B82F6);
   static const Color primaryLighter = Color(0xFF60A5FA);
   
+  // ==================== 현대적 중성 색상 (2024 트렌드) ====================
+  
+  /// 🎨 Modern Neutrals - 채도가 낮은 현대적 색상
+  static const Color modernPrimary = Color(0xFF5B7FFF);     // 부드러운 파란색
+  static const Color modernSurface = Color(0xFFFCFCFC);     // 거의 흰색
+  static const Color modernBackground = Color(0xFFF7F8FA);  // 매우 연한 회색
+  static const Color modernText = Color(0xFF0A0D14);        // 거의 검은색
+  static const Color modernTextSecondary = Color(0xFF6B7280); // 중간 회색
+  static const Color modernTextTertiary = Color(0xFF9CA3AF);  // 연한 회색
+  static const Color modernAccent = Color(0xFF8B5CF6);      // 보라빛 악센트
+  static const Color modernSuccess = Color(0xFF10B981);     // 민트 그린
+  static const Color modernWarning = Color(0xFFF59E0B);     // 따뜻한 오렌지
+  static const Color modernError = Color(0xFFEF4444);       // 부드러운 레드
+  
+  /// 🌫️ Neutral Grays - 세련된 회색 팔레트
+  static const Color gray50 = Color(0xFFF9FAFB);
+  static const Color gray100 = Color(0xFFF3F4F6);
+  static const Color gray200 = Color(0xFFE5E7EB);
+  static const Color gray300 = Color(0xFFD1D5DB);
+  static const Color gray400 = Color(0xFF9CA3AF);
+  static const Color gray500 = Color(0xFF6B7280);
+  static const Color gray600 = Color(0xFF4B5563);
+  static const Color gray700 = Color(0xFF374151);
+  static const Color gray800 = Color(0xFF1F2937);
+  static const Color gray900 = Color(0xFF111827);
+  
   /// 🌟 Secondary - 보조 브랜드 색상 (Sky-500)
   static const Color secondary = Color(0xFF0EA5E9);
   static const Color secondaryHover = Color(0xFF0284C7);
@@ -94,6 +120,104 @@ class ModernColors {
   /// 🎯 퀘스트 - 성취감 있는 앰버
   static const Color quest = Color(0xFFF59E0B);
   static const Color questLight = Color(0xFFFEF3C7);
+
+  // ==================== 그림자 및 깊이 시스템 ====================
+  
+  /// 🌑 그림자 베이스 색상
+  static const Color shadowBase = Color(0xFF1E293B);  // Slate-800
+  static const Color shadowSubtle = Color(0xFF0F172A); // Slate-900
+  static const Color shadowWarm = Color(0xFF374151);  // Gray-700
+
+  /// 🔍 그림자 투명도 레벨
+  static const double shadowSubtleOpacity = 0.04;  // Level 1: 은은한 분리
+  static const double shadowLightOpacity = 0.06;   // Level 2: 상호작용 요소
+  static const double shadowMediumOpacity = 0.10;  // Level 3: 강조 요소
+  static const double shadowStrongOpacity = 0.16;  // Level 4: 플로팅 요소
+
+  /// 📐 입체감 레벨별 그림자 반환
+  static List<BoxShadow> getElevationShadow(int level) {
+    switch (level) {
+      case 0:
+        return []; // Flat - 그림자 없음
+      case 1:
+        return [
+          BoxShadow(
+            color: shadowBase.withOpacity(shadowSubtleOpacity),
+            blurRadius: 6,
+            offset: const Offset(0, 1),
+          ),
+        ];
+      case 2:
+        return [
+          BoxShadow(
+            color: shadowBase.withOpacity(shadowLightOpacity),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ];
+      case 3:
+        return [
+          BoxShadow(
+            color: shadowBase.withOpacity(shadowMediumOpacity),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ];
+      case 4:
+        return [
+          BoxShadow(
+            color: shadowBase.withOpacity(shadowStrongOpacity),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
+          ),
+        ];
+      default:
+        return getElevationShadow(1); // 기본값으로 Level 1 반환
+    }
+  }
+
+  /// 🎨 컨텍스트별 그림자 (기능별 색상 활용)
+  static List<BoxShadow> getContextShadow(String context, {int level = 1}) {
+    final contextColor = getFunctionColor(context);
+    final opacity = getElevationShadow(level).first.color.opacity * 0.7; // 약간 더 subtle하게
+    
+    switch (level) {
+      case 1:
+        return [
+          BoxShadow(
+            color: contextColor.withOpacity(opacity),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ];
+      case 2:
+        return [
+          BoxShadow(
+            color: contextColor.withOpacity(opacity),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
+          ),
+        ];
+      case 3:
+        return [
+          BoxShadow(
+            color: contextColor.withOpacity(opacity),
+            blurRadius: 18,
+            offset: const Offset(0, 5),
+          ),
+        ];
+      case 4:
+        return [
+          BoxShadow(
+            color: contextColor.withOpacity(opacity),
+            blurRadius: 28,
+            offset: const Offset(0, 10),
+          ),
+        ];
+      default:
+        return getContextShadow(context, level: 1);
+    }
+  }
 
   // ==================== 단순화된 그라데이션 시스템 ====================
   
