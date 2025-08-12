@@ -142,27 +142,39 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
     int completedCount = goals.where((g) => _isGoalAchieved(g.id, user)).length;
     
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 8, 12, 12),
+      padding: const EdgeInsets.fromLTRB(16, 8, 12, 14),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            ModernColors.surface,
-            ModernColors.gray50.withOpacity(0.5),
+            Colors.white,
+            const Color(0xFFF0F7FF), // 아주 연한 블루
           ],
         ),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF3B82F6).withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: Column(
         children: [
           // Elegant drag handle
           Container(
-            width: 36,
-            height: 3,
-            margin: const EdgeInsets.only(bottom: 8),
+            width: 40,
+            height: 4,
+            margin: const EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
-              color: ModernColors.gray300,
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFF3B82F6).withOpacity(0.3),
+                  const Color(0xFF60A5FA).withOpacity(0.3),
+                ],
+              ),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -175,60 +187,60 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                 children: [
                   // Shadow layer
                   Container(
-                    width: 36,
-                    height: 36,
+                    width: 42,
+                    height: 42,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: ModernColors.primary.withOpacity(0.2),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
+                          color: const Color(0xFF3B82F6).withOpacity(0.25),
+                          blurRadius: 16,
+                          offset: const Offset(0, 6),
                         ),
                       ],
                     ),
                   ),
                   // Gradient background
                   Container(
-                    width: 34,
-                    height: 34,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          ModernColors.primary.withOpacity(0.9),
-                          ModernColors.accent.withOpacity(0.8),
+                          Color(0xFF3B82F6), // 진한 블루
+                          Color(0xFF60A5FA), // 밝은 블루
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                   ),
                   // Glass effect overlay
                   Container(
-                    width: 34,
-                    height: 34,
+                    width: 40,
+                    height: 40,
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.center,
                         colors: [
-                          Colors.white.withOpacity(0.2),
-                          Colors.white.withOpacity(0.05),
+                          Colors.white.withOpacity(0.3),
+                          Colors.white.withOpacity(0.1),
                         ],
                       ),
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                   ),
                   // Icon
-                  Icon(
+                  const Icon(
                     Icons.emoji_events_rounded,
                     color: Colors.white,
-                    size: 18,
+                    size: 22,
                   ),
                 ],
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 12),
               // Title and subtitle
               Expanded(
                 child: Column(
@@ -238,22 +250,22 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                       '오늘의 목표',
                       style: TextStyle(
                         fontFamily: 'Pretendard',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: ModernColors.textPrimary,
-                        letterSpacing: -0.5,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFF1E293B),
+                        letterSpacing: -0.8,
                         height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 1),
+                    const SizedBox(height: 2),
                     Text(
                       '${goals.length}개 중 $completedCount개 완료',
                       style: TextStyle(
                         fontFamily: 'Pretendard',
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: ModernColors.textSecondary,
-                        letterSpacing: -0.2,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF3B82F6),
+                        letterSpacing: -0.3,
                       ),
                     ),
                   ],
@@ -263,16 +275,23 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
               IconButton(
                 onPressed: () => Navigator.pop(context),
                 icon: Container(
-                  width: 28,
-                  height: 28,
+                  width: 32,
+                  height: 32,
                   decoration: BoxDecoration(
-                    color: ModernColors.gray100,
-                    borderRadius: BorderRadius.circular(10),
+                    color: const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF3B82F6).withOpacity(0.1),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.close_rounded,
-                    color: ModernColors.textTertiary,
-                    size: 16,
+                    color: Color(0xFF64748B),
+                    size: 18,
                   ),
                 ),
                 padding: EdgeInsets.zero,
@@ -319,16 +338,31 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: isAchieved 
-                  ? ModernColors.success.withOpacity(0.05)
-                  : ModernColors.surface,
+                  ? const Color(0xFFF0FDF4) // 연한 성공 색상
+                  : Colors.white,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
+                // 메인 컬러 그림자로 구분
                 BoxShadow(
                   color: isAchieved
-                      ? ModernColors.success.withOpacity(0.08)
-                      : ModernColors.shadowBase.withOpacity(0.06),
-                  blurRadius: isAchieved ? 16 : 12,
+                      ? const Color(0xFF10B981).withOpacity(0.15)
+                      : const Color(0xFF3B82F6).withOpacity(0.12),
+                  blurRadius: isAchieved ? 24 : 20,
+                  offset: const Offset(0, 8),
+                  spreadRadius: isAchieved ? 2 : 1,
+                ),
+                // 서브틀한 깊이감
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 8,
                   offset: const Offset(0, 4),
+                ),
+                // 내부 하이라이트 효과
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.8),
+                  blurRadius: 1,
+                  offset: const Offset(0, 1),
+                  spreadRadius: -1,
                 ),
               ],
             ),
@@ -390,12 +424,12 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                         goal.title,
                         style: TextStyle(
                           fontFamily: 'Pretendard',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
                           color: isAchieved
-                              ? ModernColors.textSecondary
-                              : ModernColors.textPrimary,
-                          letterSpacing: -0.3,
+                              ? const Color(0xFF94A3B8)
+                              : const Color(0xFF1E293B),
+                          letterSpacing: -0.5,
                           decoration: isAchieved
                               ? TextDecoration.lineThrough
                               : null,
@@ -406,12 +440,12 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                         statusText,
                         style: TextStyle(
                           fontFamily: 'Pretendard',
-                          fontSize: 11,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                           color: isAchieved
-                              ? ModernColors.success
-                              : ModernColors.textTertiary,
-                          letterSpacing: -0.2,
+                              ? const Color(0xFF10B981)
+                              : const Color(0xFF3B82F6),
+                          letterSpacing: -0.3,
                         ),
                       ),
                     ],
@@ -502,11 +536,11 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                           '${(progress * 100).round()}%',
                           style: TextStyle(
                             fontFamily: 'Pretendard',
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
                             color: allCompleted
-                                ? ModernColors.success
-                                : ModernColors.textPrimary,
+                                ? const Color(0xFF10B981)
+                                : const Color(0xFF3B82F6),
                             letterSpacing: -0.5,
                           ),
                         ),
@@ -515,8 +549,8 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                           style: TextStyle(
                             fontFamily: 'Pretendard',
                             fontSize: 11,
-                            fontWeight: FontWeight.w400,
-                            color: ModernColors.textSecondary,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF64748B),
                             letterSpacing: -0.2,
                           ),
                         ),
@@ -534,12 +568,12 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                         allCompleted ? '모든 목표 달성!' : '오늘의 진행 상황',
                         style: TextStyle(
                           fontFamily: 'Pretendard',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
                           color: allCompleted
-                              ? ModernColors.success
-                              : ModernColors.textPrimary,
-                          letterSpacing: -0.3,
+                              ? const Color(0xFF10B981)
+                              : const Color(0xFF1E293B),
+                          letterSpacing: -0.5,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -549,10 +583,10 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                             : '조금만 더 힘내요! ${totalCount - completedCount}개의 목표가 남았어요.',
                         style: TextStyle(
                           fontFamily: 'Pretendard',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: ModernColors.textSecondary,
-                          letterSpacing: -0.2,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF64748B),
+                          letterSpacing: -0.3,
                           height: 1.4,
                         ),
                       ),
@@ -584,20 +618,28 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                       ],
               ),
               borderRadius: BorderRadius.circular(20),
-              border: !allCompleted
-                  ? Border.all(
-                      color: ModernColors.gray200.withOpacity(0.3),
-                      width: 1,
-                      style: BorderStyle.solid,
-                    )
-                  : null,
               boxShadow: [
+                // 메인 상태별 그림자
                 BoxShadow(
                   color: allCompleted
-                      ? ModernColors.success.withOpacity(0.1)
-                      : ModernColors.shadowBase.withOpacity(0.03),
-                  blurRadius: allCompleted ? 16 : 8,
-                  offset: const Offset(0, 4),
+                      ? const Color(0xFF10B981).withOpacity(0.15)
+                      : const Color(0xFF64748B).withOpacity(0.08),
+                  blurRadius: allCompleted ? 20 : 12,
+                  offset: const Offset(0, 6),
+                  spreadRadius: allCompleted ? 1 : 0,
+                ),
+                // 서브틀한 깊이감
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 6,
+                  offset: const Offset(0, 3),
+                ),
+                // 내부 하이라이트
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.7),
+                  blurRadius: 1,
+                  offset: const Offset(0, 1),
+                  spreadRadius: -1,
                 ),
               ],
             ),
@@ -631,12 +673,12 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                           '완주 보상',
                           style: TextStyle(
                           fontFamily: 'Pretendard',
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
                             color: allCompleted
-                                ? ModernColors.success
-                                : ModernColors.textSecondary,
-                            letterSpacing: -0.3,
+                                ? const Color(0xFF10B981)
+                                : const Color(0xFF1E293B),
+                            letterSpacing: -0.5,
                           ),
                         ),
                         if (!allCompleted)
@@ -644,10 +686,10 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                             '모든 목표 완료 시 획득',
                             style: TextStyle(
                               fontFamily: 'Pretendard',
-                              fontSize: 11,
-                              fontWeight: FontWeight.w400,
-                              color: ModernColors.textTertiary,
-                              letterSpacing: -0.2,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: const Color(0xFF3B82F6),
+                              letterSpacing: -0.3,
                             ),
                           ),
                       ],
@@ -790,28 +832,28 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
       children: [
         Icon(
           icon,
-          color: isActive ? ModernColors.success : ModernColors.textTertiary,
-          size: 16,
+          color: isActive ? const Color(0xFF10B981) : const Color(0xFF94A3B8),
+          size: 18,
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 3),
         Text(
           value,
           style: TextStyle(
             fontFamily: 'Pretendard',
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: isActive ? ModernColors.success : ModernColors.textSecondary,
-            letterSpacing: -0.3,
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: isActive ? const Color(0xFF10B981) : const Color(0xFF64748B),
+            letterSpacing: -0.4,
           ),
         ),
         Text(
           label,
           style: TextStyle(
             fontFamily: 'Pretendard',
-            fontSize: 10,
-            fontWeight: FontWeight.w400,
-            color: isActive ? ModernColors.textSecondary : ModernColors.textTertiary,
-            letterSpacing: -0.2,
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            color: isActive ? const Color(0xFF64748B) : const Color(0xFF94A3B8),
+            letterSpacing: -0.3,
           ),
         ),
       ],
