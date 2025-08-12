@@ -211,8 +211,9 @@ The app is configured for Firebase services but currently uses local storage:
 
 - **Theme**: Custom theme defined in `core/theme/app_theme.dart`
 - **Colors**: 
-  - App-wide colors in `core/constants/app_colors.dart`
-  - Feature-specific colors (e.g., `features/daily_record/constants/record_colors.dart`)
+  - **Recommended**: Modern unified color system in `core/theme/modern_colors.dart`
+  - Legacy: App-wide colors in `core/constants/app_colors.dart` (deprecated)
+  - Legacy: Feature-specific colors in `features/daily_record/constants/record_colors.dart` (deprecated)
 - **Animations**: Heavy use of Lottie, flutter_animate, and confetti for gamification
 - **Widgets**: Shared widgets in `shared/widgets/` including:
   - `SherpaCleanAppBar` - Standard app bar (no titleStyle parameter)
@@ -225,15 +226,16 @@ The app is configured for Firebase services but currently uses local storage:
 ```dart
 SherpaCleanAppBar(
   title: 'Page Title',
-  backgroundColor: RecordColors.background,
+  backgroundColor: ModernColors.background,
   actions: [...],
 )
 ```
 
-2. **Color Constants**:
-- Use `RecordColors` for daily record features
-- Use `AppColors` for general app features
-- `RecordColors.secondary` available for secondary UI elements
+2. **Color System (Updated 2024-08-12)**:
+- **PRIMARY**: Use `ModernColors` for all new development - modern blue-white theme
+- **DEPRECATED**: `AppColors` and `RecordColors` - kept for backward compatibility
+- **Migration**: All daily record widgets updated to use `ModernColors`
+- Example: `ModernColors.primary`, `ModernColors.success`, `ModernColors.primaryGradient`
 
 ### Activity Completion Flow
 
@@ -971,3 +973,79 @@ google_generative_ai: ^0.4.7  # 안정적인 버전 유지
 **향후 계획**:
 - Firebase AI Logic SDK (`firebase_ai` 패키지)로 마이그레이션 예정
 - 2025년 Google I/O 이후 안정화된 새 SDK 사용 권장
+
+## 🎨 색상 시스템 업그레이드 가이드 (2024-08-12)
+
+### ModernColors 사용법
+
+**새로운 통합 색상 시스템**이 구현되었습니다. 모든 새로운 개발에서는 `ModernColors`를 사용하세요.
+
+#### Import 방법
+```dart
+import '../../../core/theme/modern_colors.dart';
+```
+
+#### 주요 색상들
+```dart
+// 브랜드 색상
+ModernColors.primary        // 메인 브랜드 블루
+ModernColors.secondary      // 보조 스카이 블루  
+ModernColors.accent         // 포인트 인디고
+
+// 상태 색상
+ModernColors.success        // 성공 (초록)
+ModernColors.error          // 오류 (빨강)
+ModernColors.warning        // 경고 (주황)
+
+// 텍스트 색상
+ModernColors.textPrimary    // 주요 텍스트
+ModernColors.textSecondary  // 보조 텍스트
+ModernColors.textTertiary   // 연한 텍스트
+
+// UI 요소
+ModernColors.background     // 배경색
+ModernColors.surface        // 카드 배경
+ModernColors.border         // 테두리
+ModernColors.borderLight    // 연한 테두리
+
+// 그라데이션 (단순화됨)
+ModernColors.primaryGradient   // 메인 그라데이션
+ModernColors.secondaryGradient // 보조 그라데이션
+ModernColors.softGradient      // 부드러운 배경용
+```
+
+#### 기능별 색상
+```dart
+ModernColors.diary      // 일기 (부드러운 블루)
+ModernColors.exercise   // 운동 (활기찬 블루)
+ModernColors.reading    // 독서 (지적인 인디고)
+ModernColors.meeting    // 모임 (따뜻한 블루)
+ModernColors.focus      // 집중 (깊은 블루)
+```
+
+### ⚠️ 마이그레이션 정보
+
+**Deprecated 시스템들**:
+- `AppColors` - 향후 제거 예정
+- `RecordColors` - 향후 제거 예정
+
+**현재 상태** (2024-08-12):
+- ✅ **기록탭 전체**: ModernColors 적용 완료
+  - SimpleTodayGrowthWidget
+  - StepAnalysisWidget  
+  - 모든 Calendar 위젯들 (Diary, Meeting, Reading, Movie)
+  - ExerciseSummaryWidget
+  - DailyQuestWidget
+- ✅ **주요 화면**: EnhancedDailyRecordScreen
+
+**사용 권장사항**:
+1. **새 위젯/화면**: 무조건 `ModernColors` 사용
+2. **기존 코드 수정**: 점진적으로 `ModernColors`로 마이그레이션
+3. **색상 추가 금지**: 정의되지 않은 임의 색상 사용 금지
+
+### 주요 개선사항
+
+- **코드 간소화**: 395줄 → 120줄 (70% 감소)
+- **시각적 일관성**: 블루-화이트 통합 테마
+- **성능 향상**: 런타임 색상 계산 감소
+- **유지보수성**: 중앙집중식 색상 관리

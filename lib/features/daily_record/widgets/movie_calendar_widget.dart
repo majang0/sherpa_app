@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
@@ -81,7 +81,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: RecordColors.textLight.withOpacity(0.1),
+              color: ModernColors.borderLight,
               width: 1,
             ),
             boxShadow: [
@@ -120,7 +120,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -128,7 +128,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -195,7 +195,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -254,7 +254,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
           Container(
             width: 1,
             height: 40,
-            color: RecordColors.textLight.withOpacity(0.3),
+            color: ModernColors.textTertiary.withOpacity(0.3),
           ),
           Expanded(
             child: _buildStatItem(
@@ -266,7 +266,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
           Container(
             width: 1,
             height: 40,
-            color: RecordColors.textLight.withOpacity(0.3),
+            color: ModernColors.textTertiary.withOpacity(0.3),
           ),
           Expanded(
             child: _buildStatItem(
@@ -301,7 +301,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
           style: GoogleFonts.notoSans(
             fontSize: 10,
             fontWeight: FontWeight.w500,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
       ],
@@ -336,17 +336,17 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: RecordColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 12),
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: RecordColors.background,
+            color: ModernColors.background,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: RecordColors.textLight.withOpacity(0.1),
+              color: ModernColors.borderLight,
               width: 1,
             ),
           ),
@@ -367,7 +367,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                         border: Border.all(
                           color: isFirst 
                               ? const Color(0xFFEF4444).withOpacity(0.3)
-                              : RecordColors.textLight.withOpacity(0.2),
+                              : ModernColors.textTertiary.withOpacity(0.2),
                           width: 1,
                         ),
                       ),
@@ -384,7 +384,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: isFirst ? const Color(0xFFEF4444) : RecordColors.textPrimary,
+                        color: isFirst ? const Color(0xFFEF4444) : ModernColors.textPrimary,
                       ),
                     ),
                     Text(
@@ -392,7 +392,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 9,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -420,10 +420,10 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: RecordColors.background,
+          color: ModernColors.background,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: RecordColors.textLight.withOpacity(0.1),
+            color: ModernColors.borderLight,
             width: 1,
           ),
         ),
@@ -463,7 +463,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -487,7 +487,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -505,7 +505,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ),
                     ],
@@ -519,7 +519,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
               Icon(
                 Icons.share,
                 size: 14,
-                color: RecordColors.primary,
+                color: ModernColors.primary,
               ),
           ],
         ),
@@ -531,10 +531,10 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: RecordColors.background,
+        color: ModernColors.background,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: ModernColors.borderLight,
           width: 1,
         ),
       ),
@@ -551,7 +551,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
             style: GoogleFonts.notoSans(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           const SizedBox(height: 4),
@@ -560,7 +560,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: RecordColors.textLight,
+              color: ModernColors.textTertiary,
             ),
           ),
           const SizedBox(height: 12),

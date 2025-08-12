@@ -1,121 +1,93 @@
 // lib/features/daily_record/constants/record_colors.dart
 
 import 'package:flutter/material.dart';
+import '../../../core/theme/modern_colors.dart';
 
-/// 기록 탭 전용 색상 팔레트 - 블루 계열로 통일
+/// 📝 기록 탭 전용 색상 팔레트
+/// ModernColors를 기반으로 한 깔끔하고 일관된 블루-화이트 디자인
+@Deprecated('Use ModernColors instead. This will be removed in future versions.')
 class RecordColors {
-  // ==================== 메인 색상 ====================
+  // ==================== 🔵 메인 색상 (ModernColors 기반) ====================
   
   /// 기본 배경색
-  static const Color background = Color(0xFFF8FAFC);
+  static const Color background = ModernColors.background;
   
-  /// 주요 브랜드 색상 - 딥 블루
-  static const Color primary = Color(0xFF2563EB);
-  static const Color primarySoft = Color(0xFF3B82F6);
-  static const Color primaryLight = Color(0xFF60A5FA);
+  /// 주요 브랜드 색상
+  static const Color primary = ModernColors.primary;
+  static const Color primarySoft = ModernColors.primaryLight;
+  static const Color primaryLight = ModernColors.primaryLighter;
   
   /// 보조 색상
-  static const Color secondary = Color(0xFF64748B);
+  static const Color secondary = ModernColors.textTertiary;
   
   /// 스카이 블루 계열
-  static const Color sky = Color(0xFF0EA5E9);
-  static const Color skyLight = Color(0xFF38BDF8);
-  static const Color skyPale = Color(0xFF7DD3FC);
+  static const Color sky = ModernColors.secondary;
+  static const Color skyLight = ModernColors.secondaryLight;
+  @Deprecated('Use ModernColors.secondaryLight instead')
+  static const Color skyPale = ModernColors.secondaryLight;
 
-  // ✅ 일기 관련 색상 추가
-  static const Color diary = Color(0xFFEC4899);
-  static const Color diaryLight = Color(0xFFFDF2F8);
-  static const Color progressBackground = Color(0xFFE5E7EB);
+  /// 일기 관련 색상
+  static const Color diary = ModernColors.diary;
+  static const Color diaryLight = ModernColors.diaryLight;
+  static const Color progressBackground = ModernColors.borderLight;
   
   /// 액센트 색상
-  static const Color accent = Color(0xFF1D4ED8);
-  static const Color accentSoft = Color(0xFF3B82F6);
+  static const Color accent = ModernColors.accent;
+  static const Color accentSoft = ModernColors.accent;
   
-  // ==================== 상태 색상 ====================
+  // ==================== ✅ 상태 색상 (ModernColors 기반) ====================
   
-  /// 성공 (초록)
-  static const Color success = Color(0xFF10B981);
-  static const Color successLight = Color(0xFF34D399);
+  /// 성공
+  static const Color success = ModernColors.success;
+  static const Color successLight = ModernColors.success;
   
-  /// 경고 (주황)
-  static const Color warning = Color(0xFFF59E0B);
-  static const Color warningLight = Color(0xFFFBBF24);
+  /// 경고
+  static const Color warning = ModernColors.warning;
+  static const Color warningLight = ModernColors.warning;
   
-  /// 오류 (빨강)
-  static const Color error = Color(0xFFEF4444);
-  static const Color errorLight = Color(0xFFF87171);
+  /// 오류
+  static const Color error = ModernColors.error;
+  static const Color errorLight = ModernColors.error;
   
-  /// 정보 (파랑)
-  static const Color info = Color(0xFF3B82F6);
-  static const Color infoLight = Color(0xFF60A5FA);
+  /// 정보
+  static const Color info = ModernColors.info;
+  static const Color infoLight = ModernColors.info;
   
-  /// 커뮤니티 (보라)
-  static const Color community = Color(0xFF8B5CF6);
-  static const Color communityLight = Color(0xFFA78BFA);
+  /// 커뮤니티 (단순화)
+  static const Color community = ModernColors.accent;
+  static const Color communityLight = ModernColors.accent;
   
-  // ==================== 텍스트 색상 ====================
+  // ==================== 📝 텍스트 색상 (ModernColors 기반) ====================
   
-  /// 주요 텍스트
-  static const Color textPrimary = Color(0xFF1E293B);
+  /// 텍스트 계층
+  static const Color textPrimary = ModernColors.textPrimary;
+  static const Color textSecondary = ModernColors.textSecondary;
+  static const Color textLight = ModernColors.textTertiary;
+  @Deprecated('Use ModernColors.textPlaceholder instead')
+  static const Color textFaint = ModernColors.textPlaceholder;
   
-  /// 보조 텍스트
-  static const Color textSecondary = Color(0xFF475569);
+  // ==================== 🎨 단순화된 그라데이션 (ModernColors 기반) ====================
   
-  /// 연한 텍스트
-  static const Color textLight = Color(0xFF94A3B8);
-  
-  /// 매우 연한 텍스트
-  static const Color textFaint = Color(0xFFCBD5E1);
-  
-  // ==================== 그라데이션 ====================
-  
-  /// 주요 그라데이션 - 블루
-  static const LinearGradient primaryGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [
-      Color(0xFF2563EB),
-      Color(0xFF1D4ED8),
-    ],
-  );
+  /// 주요 그라데이션
+  static const LinearGradient primaryGradient = ModernColors.primaryGradient;
   
   /// 스카이 그라데이션
-  static const LinearGradient skyGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [
-      Color(0xFF0EA5E9),
-      Color(0xFF3B82F6),
-    ],
-  );
+  static const LinearGradient skyGradient = ModernColors.secondaryGradient;
   
-  /// 성공 그라데이션
-  static const LinearGradient successGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [
-      Color(0xFF10B981),
-      Color(0xFF059669),
-    ],
-  );
+  /// 부드러운 그라데이션
+  static const LinearGradient softBlueGradient = ModernColors.softGradient;
   
-  /// 부드러운 블루 그라데이션
-  static const LinearGradient softBlueGradient = LinearGradient(
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-    colors: [
-      Color(0xFFDBEAFE),
-      Color(0xFFBFDBFE),
-    ],
-  );
+  // 기존 코드 호환성을 위한 별칭
+  @Deprecated('Use primaryGradient instead')
+  static const LinearGradient successGradient = ModernColors.primaryGradient;
   
-  // ==================== 특수 색상 ====================
+  // ==================== 🎨 특수 색상 (ModernColors 기반) ====================
   
   /// 카드 배경
-  static const Color cardBackground = Colors.white;
+  static const Color cardBackground = ModernColors.surface;
   
   /// 구분선
-  static const Color divider = Color(0xFFE2E8F0);
+  static const Color divider = ModernColors.border;
   
   /// 오버레이
   static const Color overlay = Color(0x80000000);
@@ -123,44 +95,29 @@ class RecordColors {
   /// 투명 배경
   static const Color transparent = Colors.transparent;
   
-  // ==================== 기능별 색상 ====================
+  // ==================== 🚀 기능별 색상 (ModernColors 기반) ====================
   
   /// 독서 관련 색상
-  static const Color reading = Color(0xFF8B5CF6);
-  static const Color readingLight = Color(0xFFA78BFA);
+  static const Color reading = ModernColors.reading;
+  static const Color readingLight = ModernColors.readingLight;
   
   /// 모임 관련 색상  
-  static const Color meeting = Color(0xFF06B6D4);
-  static const Color meetingLight = Color(0xFF22D3EE);
+  static const Color meeting = ModernColors.meeting;
+  static const Color meetingLight = ModernColors.meetingLight;
   
   /// 운동 관련 색상
-  static const Color exercise = Color(0xFFEF4444);
-  static const Color exerciseLight = Color(0xFFF87171);
+  static const Color exercise = ModernColors.exercise;
+  static const Color exerciseLight = ModernColors.exerciseLight;
   
   /// 집중 관련 색상
-  static const Color focus = Color(0xFF8B5CF6);
-  static const Color focusLight = Color(0xFFA78BFA);
+  static const Color focus = ModernColors.focus;
+  static const Color focusLight = ModernColors.focusLight;
   
-  // ==================== 유틸리티 메서드 ====================
+  // ==================== ⚙️ 유틸리티 메서드 (ModernColors 위임) ====================
   
-  /// 카테고리별 색상 반환
+  /// 카테고리별 색상 반환 (ModernColors 위임)
   static Color getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
-      case '독서':
-      case 'reading':
-        return reading;
-      case '모임':
-      case 'meeting':
-        return meeting;
-      case '운동':
-      case 'exercise':
-        return exercise;
-      case '집중':
-      case 'focus':
-        return focus;
-      default:
-        return primary;
-    }
+    return ModernColors.getFunctionColor(category);
   }
   
   /// 밝기에 따른 적응형 색상

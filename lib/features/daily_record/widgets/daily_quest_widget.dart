@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
@@ -87,7 +87,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
             height: 4,
             margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
-              color: RecordColors.textLight,
+              color: ModernColors.textTertiary,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -97,11 +97,11 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  gradient: RecordColors.primaryGradient,
+                  gradient: ModernColors.primaryGradient,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: RecordColors.primary.withOpacity(0.3),
+                      color: ModernColors.primary.withOpacity(0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -123,7 +123,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                         height: 1.2,
                       ),
                     ),
@@ -132,7 +132,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                       '성장을 위한 5가지 일일 목표',
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                         height: 1.3,
                       ),
                     ),
@@ -141,7 +141,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
               ),
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.close, color: RecordColors.textSecondary),
+                icon: Icon(Icons.close, color: ModernColors.textSecondary),
               ),
             ],
           ),
@@ -243,13 +243,13 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: shouldShowAsCompleted 
-            ? RecordColors.success.withOpacity(0.08)
+            ? ModernColors.success.withOpacity(0.08)
             : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: shouldShowAsCompleted
-              ? RecordColors.success.withOpacity(0.3)
-              : RecordColors.primary.withOpacity(0.15),
+              ? ModernColors.success.withOpacity(0.3)
+              : ModernColors.primary.withOpacity(0.15),
           width: 1.5,
         ),
       ),
@@ -270,8 +270,8 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                   height: 48,
                   decoration: BoxDecoration(
                     color: shouldShowAsCompleted
-                        ? RecordColors.success
-                        : RecordColors.primary.withOpacity(0.8),
+                        ? ModernColors.success
+                        : ModernColors.primary.withOpacity(0.8),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
@@ -299,8 +299,8 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: shouldShowAsCompleted
-                              ? RecordColors.success
-                              : RecordColors.textPrimary,
+                              ? ModernColors.success
+                              : ModernColors.textPrimary,
                           decoration: shouldShowAsCompleted
                               ? TextDecoration.lineThrough
                               : null,
@@ -315,8 +315,8 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                         ),
                         decoration: BoxDecoration(
                           color: shouldShowAsCompleted
-                              ? RecordColors.success.withOpacity(0.15)
-                              : RecordColors.primary.withOpacity(0.1),
+                              ? ModernColors.success.withOpacity(0.15)
+                              : ModernColors.primary.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -325,8 +325,8 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: shouldShowAsCompleted
-                                ? RecordColors.success
-                                : RecordColors.primary,
+                                ? ModernColors.success
+                                : ModernColors.primary,
                           ),
                         ),
                       ),
@@ -338,8 +338,8 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 13,
                           color: shouldShowAsCompleted 
-                              ? RecordColors.success.withOpacity(0.8)
-                              : RecordColors.textSecondary,
+                              ? ModernColors.success.withOpacity(0.8)
+                              : ModernColors.textSecondary,
                           height: 1.3,
                         ),
                       ),
@@ -349,7 +349,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                           '클릭하여 ${_getActionText(goal.id)}',
                           style: GoogleFonts.notoSans(
                             fontSize: 11,
-                            color: RecordColors.primary,
+                            color: ModernColors.primary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -362,19 +362,19 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: RecordColors.success.withOpacity(0.2),
+                      color: ModernColors.success.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
                       Icons.check_circle,
-                      color: RecordColors.success,
+                      color: ModernColors.success,
                       size: 20,
                     ),
                   )
                 else
                   Icon(
                     Icons.arrow_forward_ios,
-                    color: RecordColors.primary,
+                    color: ModernColors.primary,
                     size: 16,
                   ),
               ],
@@ -420,13 +420,13 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: allActuallyCompleted
-                  ? RecordColors.success.withOpacity(0.08)
-                  : RecordColors.primary.withOpacity(0.05),
+                  ? ModernColors.success.withOpacity(0.08)
+                  : ModernColors.primary.withOpacity(0.05),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: allActuallyCompleted
-                    ? RecordColors.success.withOpacity(0.3)
-                    : RecordColors.primary.withOpacity(0.2),
+                    ? ModernColors.success.withOpacity(0.3)
+                    : ModernColors.primary.withOpacity(0.2),
                 width: 1.5,
               ),
             ),
@@ -437,8 +437,8 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                     Icon(
                       allActuallyCompleted ? Icons.celebration : Icons.emoji_events,
                       color: allActuallyCompleted 
-                          ? RecordColors.success 
-                          : RecordColors.primary,
+                          ? ModernColors.success 
+                          : ModernColors.primary,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -449,8 +449,8 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: allActuallyCompleted
-                              ? RecordColors.success
-                              : RecordColors.textPrimary,
+                              ? ModernColors.success
+                              : ModernColors.textPrimary,
                         ),
                       ),
                     ),
@@ -461,8 +461,8 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                       ),
                       decoration: BoxDecoration(
                         color: allActuallyCompleted
-                            ? RecordColors.success
-                            : RecordColors.primary,
+                            ? ModernColors.success
+                            : ModernColors.primary,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -482,7 +482,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                 Container(
                   height: 8,
                   decoration: BoxDecoration(
-                    color: RecordColors.textLight.withOpacity(0.15),
+                    color: ModernColors.textTertiary.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Stack(
@@ -492,7 +492,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                         curve: Curves.easeOutBack,
                         width: MediaQuery.of(context).size.width * completionRate * 0.75, // 여백 고려
                         decoration: BoxDecoration(
-                          color: allActuallyCompleted ? RecordColors.success : RecordColors.primary,
+                          color: allActuallyCompleted ? ModernColors.success : ModernColors.primary,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -507,7 +507,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                       : '${(completionRate * 100).round()}% 달성 • 남은 목표 ${totalCount - actuallyCompletedCount}개',
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: allActuallyCompleted ? RecordColors.success : RecordColors.textSecondary,
+                    color: allActuallyCompleted ? ModernColors.success : ModernColors.textSecondary,
                     fontWeight: allActuallyCompleted ? FontWeight.w600 : FontWeight.w500,
                   ),
                   textAlign: TextAlign.center,
@@ -522,15 +522,15 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          RecordColors.success.withOpacity(0.1),
-                          RecordColors.success.withOpacity(0.05),
+                          ModernColors.success.withOpacity(0.1),
+                          ModernColors.success.withOpacity(0.05),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: RecordColors.success.withOpacity(0.2),
+                        color: ModernColors.success.withOpacity(0.2),
                         width: 1,
                       ),
                     ),
@@ -541,7 +541,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: RecordColors.success,
+                            color: ModernColors.success,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -575,7 +575,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                                 color: Colors.white,
                               ),
                             ),
-                            backgroundColor: RecordColors.success,
+                            backgroundColor: ModernColors.success,
                             duration: const Duration(seconds: 3),
                             behavior: SnackBarBehavior.floating,
                             shape: RoundedRectangleBorder(
@@ -587,7 +587,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: RecordColors.success,
+                        backgroundColor: ModernColors.success,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -618,10 +618,10 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     decoration: BoxDecoration(
-                      color: RecordColors.success.withOpacity(0.1),
+                      color: ModernColors.success.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: RecordColors.success.withOpacity(0.3),
+                        color: ModernColors.success.withOpacity(0.3),
                         width: 1,
                       ),
                     ),
@@ -630,7 +630,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                       children: [
                         Icon(
                           Icons.check_circle,
-                          color: RecordColors.success,
+                          color: ModernColors.success,
                           size: 20,
                         ),
                         const SizedBox(width: 8),
@@ -639,7 +639,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: RecordColors.success,
+                            color: ModernColors.success,
                           ),
                         ),
                       ],
@@ -653,7 +653,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: RecordColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -663,7 +663,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: RecordColors.primary,
+                      color: ModernColors.primary,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -738,7 +738,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                gradient: RecordColors.primaryGradient,
+                gradient: ModernColors.primaryGradient,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Center(
@@ -754,7 +754,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
               style: GoogleFonts.notoSans(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: RecordColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -763,7 +763,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
               message,
               style: GoogleFonts.notoSans(
                 fontSize: 14,
-                color: RecordColors.textSecondary,
+                color: ModernColors.textSecondary,
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
@@ -774,7 +774,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
               child: ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: RecordColors.primary,
+                  backgroundColor: ModernColors.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -845,7 +845,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: RecordColors.success.withOpacity(0.2),
+                color: ModernColors.success.withOpacity(0.2),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -864,7 +864,7 @@ class _DailyQuestWidgetState extends ConsumerState<DailyQuestWidget>
           style: GoogleFonts.notoSans(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: RecordColors.success,
+            color: ModernColors.success,
           ),
           textAlign: TextAlign.center,
         ),

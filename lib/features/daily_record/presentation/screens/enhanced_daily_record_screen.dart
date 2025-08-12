@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../widgets/simple_today_growth_widget.dart';
 import '../../widgets/step_analysis_widget.dart';
@@ -77,14 +77,14 @@ class _EnhancedDailyRecordScreenState extends ConsumerState<EnhancedDailyRecordS
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: RecordColors.background,
+      backgroundColor: ModernColors.background,
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: RefreshIndicator(
           onRefresh: () async {
             await ref.read(globalUserProvider.notifier).refresh();
           },
-          color: RecordColors.primary,
+          color: ModernColors.primary,
           child: SingleChildScrollView(
             controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
@@ -142,11 +142,11 @@ class _EnhancedDailyRecordScreenState extends ConsumerState<EnhancedDailyRecordS
           angle: _fabRotation.value * 2 * 3.14159,
           child: Container(
             decoration: BoxDecoration(
-              gradient: RecordColors.primaryGradient,
+              gradient: ModernColors.primaryGradient,
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: RecordColors.primary.withOpacity(0.4),
+                  color: ModernColors.primary.withOpacity(0.4),
                   blurRadius: 15,
                   offset: const Offset(0, 6),
                   spreadRadius: 0,

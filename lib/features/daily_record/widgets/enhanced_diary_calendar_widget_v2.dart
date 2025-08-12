@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
@@ -139,7 +139,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                 style: GoogleFonts.notoSans(
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -149,7 +149,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textSecondary,
+                  color: ModernColors.textSecondary,
                   height: 1.2,
                 ),
               ),
@@ -239,7 +239,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                 style: GoogleFonts.notoSans(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textSecondary,
+                  color: ModernColors.textSecondary,
                   letterSpacing: 0.5,
                 ),
               ),
@@ -320,7 +320,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               style: GoogleFonts.notoSans(
                 fontSize: 8,
                 fontWeight: FontWeight.w600,
-                color: isToday ? Colors.white.withOpacity(0.9) : RecordColors.textSecondary,
+                color: isToday ? Colors.white.withOpacity(0.9) : ModernColors.textSecondary,
               ),
             ),
             const SizedBox(height: 2),
@@ -329,7 +329,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: isToday ? Colors.white : RecordColors.textPrimary,
+                color: isToday ? Colors.white : ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 3),
@@ -367,7 +367,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                 decoration: BoxDecoration(
                   color: isToday 
                       ? Colors.white.withOpacity(0.5)
-                      : RecordColors.textLight.withOpacity(0.2),
+                      : ModernColors.textTertiary.withOpacity(0.2),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -396,7 +396,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
           style: GoogleFonts.notoSans(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: RecordColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(width: 10),
@@ -497,7 +497,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                         style: GoogleFonts.notoSans(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ),
                       if (diary.hasAttachments) ...[
@@ -505,7 +505,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                         Icon(
                           Icons.attachment_rounded,
                           size: 14,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ],
                     ],
@@ -516,7 +516,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                     style: GoogleFonts.notoSans(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: RecordColors.textPrimary,
+                      color: ModernColors.textPrimary,
                       height: 1.3,
                     ),
                     maxLines: 1,
@@ -599,7 +599,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -608,7 +608,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             style: GoogleFonts.notoSans(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
               height: 1.3,
             ),
           ),
@@ -830,7 +830,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                       style: GoogleFonts.notoSans(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     if (dayLogs.length > 1)
@@ -839,7 +839,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                         style: GoogleFonts.notoSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                   ],
@@ -983,7 +983,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                         style: GoogleFonts.notoSans(
                           fontSize: 17,
                           fontWeight: FontWeight.w700,
-                          color: RecordColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -999,7 +999,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             diary.content,
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
               height: 1.5,
             ),
             maxLines: 4,
@@ -1164,7 +1164,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -1174,7 +1174,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             style: GoogleFonts.notoSans(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
               height: 1.4,
             ),
             textAlign: TextAlign.center,
@@ -1246,7 +1246,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                           gradient: LinearGradient(
                             colors: isLatest 
                                 ? [const Color(0xFFEC4899), const Color(0xFFF97316)]
-                                : [RecordColors.textLight, RecordColors.textLight.withOpacity(0.8)],
+                                : [ModernColors.textTertiary, ModernColors.textTertiary.withOpacity(0.8)],
                           ),
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
@@ -1323,7 +1323,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                                 style: GoogleFonts.notoSans(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
-                                  color: RecordColors.textPrimary,
+                                  color: ModernColors.textPrimary,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -1334,7 +1334,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                               diary.content,
                               style: GoogleFonts.notoSans(
                                 fontSize: 12,
-                                color: RecordColors.textSecondary,
+                                color: ModernColors.textSecondary,
                                 height: 1.3,
                               ),
                               maxLines: 2,

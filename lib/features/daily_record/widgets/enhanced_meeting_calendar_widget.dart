@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
@@ -86,7 +86,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: RecordColors.textLight.withOpacity(0.1),
+              color: ModernColors.textTertiary.withOpacity(0.1),
               width: 1,
             ),
             boxShadow: [
@@ -125,7 +125,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                           style: GoogleFonts.notoSans(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -133,7 +133,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                           style: GoogleFonts.notoSans(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -201,7 +201,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -210,7 +210,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                       style: GoogleFonts.notoSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textLight,
+                        color: ModernColors.textTertiary,
                       ),
                     ),
                   ],
@@ -261,7 +261,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
           Container(
             width: 1,
             height: 40,
-            color: RecordColors.textLight.withOpacity(0.3),
+            color: ModernColors.textTertiary.withOpacity(0.3),
           ),
           Expanded(
             child: _buildStatItem(
@@ -296,7 +296,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
           style: GoogleFonts.notoSans(
             fontSize: 11,
             fontWeight: FontWeight.w500,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
       ],
@@ -350,7 +350,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           const SizedBox(height: 12),
@@ -366,7 +366,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               Container(
                 width: 1,
                 height: 40,
-                color: RecordColors.textLight.withOpacity(0.3),
+                color: ModernColors.textTertiary.withOpacity(0.3),
               ),
               Expanded(
                 child: _buildStatItem(
@@ -378,7 +378,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               Container(
                 width: 1,
                 height: 40,
-                color: RecordColors.textLight.withOpacity(0.3),
+                color: ModernColors.textTertiary.withOpacity(0.3),
               ),
               Expanded(
                 child: _buildStatItem(
@@ -428,10 +428,10 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: RecordColors.background,
+        color: ModernColors.background,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: ModernColors.textTertiary.withOpacity(0.1),
           width: 1,
         ),
       ),
@@ -443,7 +443,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           const SizedBox(height: 12),
@@ -473,7 +473,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                       style: GoogleFonts.notoSans(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     Text(
@@ -481,7 +481,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                       style: GoogleFonts.notoSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -502,10 +502,10 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: RecordColors.background,
+        color: ModernColors.background,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: ModernColors.textTertiary.withOpacity(0.1),
           width: 1,
         ),
       ),
@@ -517,7 +517,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           const SizedBox(height: 16),
@@ -550,7 +550,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
           color: isToday ? const Color(0xFF8B5CF6).withOpacity(0.1) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isToday ? const Color(0xFF8B5CF6) : RecordColors.textLight.withOpacity(0.2),
+            color: isToday ? const Color(0xFF8B5CF6) : ModernColors.textTertiary.withOpacity(0.2),
             width: isToday ? 2 : 1,
           ),
         ),
@@ -562,7 +562,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               style: GoogleFonts.notoSans(
                 fontSize: 9,
                 fontWeight: FontWeight.w500,
-                color: RecordColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
             const SizedBox(height: 2),
@@ -571,7 +571,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: isToday ? const Color(0xFF8B5CF6) : RecordColors.textPrimary,
+                color: isToday ? const Color(0xFF8B5CF6) : ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 4),
@@ -599,7 +599,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: RecordColors.textLight.withOpacity(0.3),
+                  color: ModernColors.textTertiary.withOpacity(0.3),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -624,10 +624,10 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: RecordColors.background,
+          color: ModernColors.background,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: RecordColors.textLight.withOpacity(0.1),
+            color: ModernColors.textTertiary.withOpacity(0.1),
             width: 1,
           ),
         ),
@@ -667,7 +667,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -687,7 +687,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                         style: GoogleFonts.notoSans(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -696,7 +696,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                         style: GoogleFonts.notoSans(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ),
                       const Spacer(),
@@ -758,7 +758,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -767,7 +767,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
             style: GoogleFonts.notoSans(
               fontSize: 13,
               fontWeight: FontWeight.w500,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -862,7 +862,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               height: 4,
               margin: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: RecordColors.textLight,
+                color: ModernColors.textTertiary,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -891,7 +891,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               style: GoogleFonts.notoSans(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: RecordColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             
@@ -904,7 +904,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textSecondary,
+                  color: ModernColors.textSecondary,
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,
@@ -989,10 +989,10 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               margin: const EdgeInsets.symmetric(horizontal: 24),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: RecordColors.background,
+                color: ModernColors.background,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: RecordColors.textLight.withOpacity(0.1),
+                  color: ModernColors.textTertiary.withOpacity(0.1),
                   width: 1,
                 ),
               ),
@@ -1010,7 +1010,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ),
@@ -1099,7 +1099,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 height: 4,
                 margin: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: RecordColors.textLight,
+                  color: ModernColors.textTertiary,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -1133,7 +1133,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                             style: GoogleFonts.notoSans(
                               fontSize: 20,
                               fontWeight: FontWeight.w800,
-                              color: RecordColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           if (dayMeetings.length > 1)
@@ -1142,7 +1142,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                               style: GoogleFonts.notoSans(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: RecordColors.textSecondary,
+                                color: ModernColors.textSecondary,
                               ),
                             ),
                         ],
@@ -1212,7 +1212,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -1223,7 +1223,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                               style: GoogleFonts.notoSans(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: RecordColors.textSecondary,
+                                color: ModernColors.textSecondary,
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -1254,7 +1254,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                   meeting.note!,
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                     height: 1.5,
                   ),
                   maxLines: 3,
@@ -1417,7 +1417,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: RecordColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -1430,7 +1430,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                                 style: GoogleFonts.notoSans(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,
-                                  color: RecordColors.textSecondary,
+                                  color: ModernColors.textSecondary,
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -1456,7 +1456,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                     // 화살표
                     Icon(
                       Icons.chevron_right,
-                      color: RecordColors.textLight,
+                      color: ModernColors.textTertiary,
                       size: 20,
                     ),
                   ],

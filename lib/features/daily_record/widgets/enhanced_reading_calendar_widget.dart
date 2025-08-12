@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../presentation/screens/reading_record_screen.dart';
 import 'reading_full_view_widget.dart';
 import 'reading_detail_modal.dart';
@@ -88,7 +88,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: RecordColors.textLight.withOpacity(0.1),
+              color: ModernColors.borderLight,
               width: 1,
             ),
             boxShadow: [
@@ -127,7 +127,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                           style: GoogleFonts.notoSans(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -135,7 +135,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                           style: GoogleFonts.notoSans(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -200,7 +200,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -257,7 +257,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
           Container(
             width: 1,
             height: 40,
-            color: RecordColors.textLight.withOpacity(0.3),
+            color: ModernColors.textTertiary.withOpacity(0.3),
           ),
           Expanded(
             child: _buildStatItem(
@@ -292,7 +292,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
           style: GoogleFonts.notoSans(
             fontSize: 11,
             fontWeight: FontWeight.w500,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
       ],
@@ -306,10 +306,10 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: RecordColors.background,
+        color: ModernColors.background,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: ModernColors.borderLight,
           width: 1,
         ),
       ),
@@ -321,7 +321,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           const SizedBox(height: 16),
@@ -372,7 +372,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
           style: GoogleFonts.notoSans(
             fontSize: 10,
             fontWeight: FontWeight.w500,
-            color: isToday ? const Color(0xFF10B981) : RecordColors.textSecondary,
+            color: isToday ? const Color(0xFF10B981) : ModernColors.textSecondary,
           ),
         ),
         Text(
@@ -380,7 +380,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
           style: GoogleFonts.notoSans(
             fontSize: 9,
             fontWeight: FontWeight.w400,
-            color: RecordColors.textLight,
+            color: ModernColors.textTertiary,
           ),
         ),
         if (totalPages > 0)
@@ -406,10 +406,10 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: RecordColors.background,
+          color: ModernColors.background,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: RecordColors.textLight.withOpacity(0.1),
+            color: ModernColors.borderLight,
             width: 1,
           ),
         ),
@@ -449,7 +449,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -473,7 +473,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                         style: GoogleFonts.notoSans(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -482,7 +482,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                         style: GoogleFonts.notoSans(
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ),
                       const Spacer(),
@@ -510,10 +510,10 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: RecordColors.background,
+        color: ModernColors.background,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: ModernColors.borderLight,
           width: 1,
         ),
       ),
@@ -529,7 +529,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
             style: GoogleFonts.notoSans(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           const SizedBox(height: 4),
@@ -538,7 +538,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: RecordColors.textLight,
+              color: ModernColors.textTertiary,
             ),
           ),
         ],

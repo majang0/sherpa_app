@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import 'daily_quest_widget.dart';
@@ -95,7 +95,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: ModernColors.borderLight,
           width: 1,
         ),
       ),
@@ -131,7 +131,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
           style: GoogleFonts.notoSans(
             fontSize: 22,
             fontWeight: FontWeight.w800,
-            color: RecordColors.textPrimary,
+            color: ModernColors.textPrimary,
             height: 1.2,
           ),
         ),
@@ -208,7 +208,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
           style: GoogleFonts.notoSans(
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: isAchieved ? RecordColors.success : RecordColors.textPrimary,
+            color: isAchieved ? ModernColors.success : ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 4),
@@ -216,7 +216,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
           label,
           style: GoogleFonts.notoSans(
             fontSize: 12,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -224,7 +224,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
           '목표: $target',
           style: GoogleFonts.notoSans(
             fontSize: 10,
-            color: RecordColors.textLight,
+            color: ModernColors.textTertiary,
           ),
         ),
       ],
@@ -249,7 +249,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 Text(
@@ -257,7 +257,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
-                    color: isAllCompleted ? RecordColors.success : RecordColors.primary,
+                    color: isAllCompleted ? ModernColors.success : ModernColors.primary,
                   ),
                 ),
               ],
@@ -268,7 +268,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
             Container(
               height: 8,
               decoration: BoxDecoration(
-                color: RecordColors.textLight.withOpacity(0.15),
+                color: ModernColors.borderLight,
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Stack(
@@ -279,9 +279,9 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                       decoration: BoxDecoration(
                         gradient: isAllCompleted 
                           ? LinearGradient(
-                              colors: [RecordColors.success, RecordColors.success.withOpacity(0.8)],
+                              colors: [ModernColors.success, ModernColors.success.withOpacity(0.8)],
                             )
-                          : RecordColors.primaryGradient,
+                          : ModernColors.primaryGradient,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -302,15 +302,15 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      RecordColors.success.withOpacity(0.1),
-                      RecordColors.success.withOpacity(0.05),
+                      ModernColors.success.withOpacity(0.1),
+                      ModernColors.success.withOpacity(0.05),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: RecordColors.success.withOpacity(0.2),
+                    color: ModernColors.success.withOpacity(0.2),
                     width: 1,
                   ),
                 ),
@@ -319,7 +319,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                   children: [
                     Icon(
                       Icons.emoji_events,
-                      color: RecordColors.success,
+                      color: ModernColors.success,
                       size: 16,
                     ),
                     const SizedBox(width: 8),
@@ -328,7 +328,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                       style: GoogleFonts.notoSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.success,
+                        color: ModernColors.success,
                       ),
                     ),
                   ],
@@ -363,15 +363,15 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                RecordColors.primary.withOpacity(0.1),
-                RecordColors.primary.withOpacity(0.05),
+                ModernColors.primary.withOpacity(0.1),
+                ModernColors.primary.withOpacity(0.05),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: RecordColors.primary.withOpacity(0.2),
+              color: ModernColors.primary.withOpacity(0.2),
               width: 1,
             ),
           ),
@@ -382,7 +382,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                 children: [
                   Icon(
                     Icons.emoji_events,
-                    color: RecordColors.primary,
+                    color: ModernColors.primary,
                     size: 16,
                   ),
                   const SizedBox(width: 8),
@@ -391,7 +391,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                     style: GoogleFonts.notoSans(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: RecordColors.primary,
+                      color: ModernColors.primary,
                     ),
                   ),
                 ],
@@ -402,7 +402,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: RecordColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
             ],
@@ -421,7 +421,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                 child: ElevatedButton(
                   onPressed: _showGoalsBottomSheetModal,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: RecordColors.primary,
+                    backgroundColor: ModernColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
@@ -473,7 +473,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                   color: Colors.white,
                 ),
               ),
-              backgroundColor: RecordColors.success,
+              backgroundColor: ModernColors.success,
               duration: const Duration(seconds: 3),
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
@@ -483,7 +483,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: RecordColors.success,
+          backgroundColor: ModernColors.success,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
@@ -546,10 +546,10 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: RecordColors.success.withOpacity(0.1),
+        color: ModernColors.success.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: RecordColors.success.withOpacity(0.3),
+          color: ModernColors.success.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -558,7 +558,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
         children: [
           Icon(
             Icons.check_circle,
-            color: RecordColors.success,
+            color: ModernColors.success,
             size: 18,
           ),
           const SizedBox(width: 8),
@@ -567,7 +567,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: RecordColors.success,
+              color: ModernColors.success,
             ),
           ),
         ],

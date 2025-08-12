@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../constants/record_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 
 class StepAnalysisWidget extends ConsumerWidget {
@@ -48,7 +48,7 @@ class StepAnalysisWidget extends ConsumerWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: ModernColors.borderLight,
           width: 1,
         ),
       ),
@@ -60,7 +60,7 @@ class StepAnalysisWidget extends ConsumerWidget {
             children: [
               Icon(
                 Icons.directions_walk,
-                color: RecordColors.primary,
+                color: ModernColors.primary,
                 size: 24,
               ),
               const SizedBox(width: 12),
@@ -75,7 +75,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                           style: GoogleFonts.notoSans(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -110,7 +110,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: RecordColors.primary.withOpacity(0.1),
+                        color: ModernColors.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -118,7 +118,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: RecordColors.primary,
+                          color: ModernColors.primary,
                         ),
                       ),
                     ),
@@ -134,7 +134,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                           style: GoogleFonts.notoSans(
                             fontSize: 32,
                             fontWeight: FontWeight.w800,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                             height: 1.0,
                           ),
                         ),
@@ -143,7 +143,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                           '걸음',
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -158,7 +158,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                           width: 8,
                           height: 8,
                           decoration: BoxDecoration(
-                            color: isCompleted ? RecordColors.success : RecordColors.primary,
+                            color: isCompleted ? ModernColors.success : ModernColors.primary,
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -171,7 +171,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: isCompleted ? RecordColors.success : RecordColors.textSecondary,
+                              color: isCompleted ? ModernColors.success : ModernColors.textSecondary,
                             ),
                           ),
                         ),
@@ -196,9 +196,9 @@ class StepAnalysisWidget extends ConsumerWidget {
                       child: CircularProgressIndicator(
                         value: 1.0,
                         strokeWidth: 8,
-                        backgroundColor: RecordColors.textLight.withOpacity(0.1),
+                        backgroundColor: ModernColors.borderLight,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          RecordColors.textLight.withOpacity(0.1),
+                          ModernColors.borderLight,
                         ),
                       ),
                     ),
@@ -211,7 +211,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                         strokeWidth: 8,
                         backgroundColor: Colors.transparent,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          isCompleted ? RecordColors.success : RecordColors.primary,
+                          isCompleted ? ModernColors.success : ModernColors.primary,
                         ),
                       ),
                     ),
@@ -226,14 +226,14 @@ class StepAnalysisWidget extends ConsumerWidget {
                               style: GoogleFonts.notoSans(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
-                                color: isCompleted ? RecordColors.success : RecordColors.primary,
+                                color: isCompleted ? ModernColors.success : ModernColors.primary,
                               ),
                             ),
                             Text(
                               '달성',
                               style: GoogleFonts.notoSans(
                                 fontSize: 11,
-                                color: RecordColors.textSecondary,
+                                color: ModernColors.textSecondary,
                               ),
                             ),
                           ],
@@ -259,7 +259,7 @@ class StepAnalysisWidget extends ConsumerWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: ModernColors.borderLight,
           width: 1,
         ),
       ),
@@ -270,7 +270,7 @@ class StepAnalysisWidget extends ConsumerWidget {
             children: [
               Icon(
                 Icons.trending_up,
-                color: RecordColors.primary,
+                color: ModernColors.primary,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -279,7 +279,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -293,7 +293,7 @@ class StepAnalysisWidget extends ConsumerWidget {
               child: Center(
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(RecordColors.primary),
+                  valueColor: AlwaysStoppedAnimation<Color>(ModernColors.primary),
                 ),
               ),
             ),
@@ -303,7 +303,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                 child: Text(
                   '데이터를 불러올 수 없습니다',
                   style: GoogleFonts.notoSans(
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ),
@@ -323,7 +323,7 @@ class StepAnalysisWidget extends ConsumerWidget {
           child: Text(
             '데이터가 없습니다',
             style: GoogleFonts.notoSans(
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
         ),
@@ -358,7 +358,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                 );
               }
               return FlLine(
-                color: RecordColors.textLight.withOpacity(0.1),
+                color: ModernColors.borderLight,
                 strokeWidth: 0.5,
               );
             },
@@ -387,7 +387,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                       isToday ? '오늘' : '${data.date.month}/${data.date.day}',
                       style: GoogleFonts.notoSans(
                         fontSize: 10,
-                        color: isToday ? RecordColors.primary : RecordColors.textSecondary,
+                        color: isToday ? ModernColors.primary : ModernColors.textSecondary,
                         fontWeight: isToday ? FontWeight.w600 : FontWeight.w400,
                       ),
                     ),
@@ -406,7 +406,7 @@ class StepAnalysisWidget extends ConsumerWidget {
               spots: spots,
               isCurved: true,
               curveSmoothness: 0.3,
-              color: RecordColors.primary,
+              color: ModernColors.primary,
               barWidth: 3,
               isStrokeCapRound: true,
               dotData: FlDotData(
@@ -419,10 +419,10 @@ class StepAnalysisWidget extends ConsumerWidget {
                   return FlDotCirclePainter(
                     radius: isToday ? 5 : 3,
                     color: isToday 
-                        ? RecordColors.primary
+                        ? ModernColors.primary
                         : isGoalAchieved 
-                            ? RecordColors.success
-                            : RecordColors.textLight,
+                            ? ModernColors.success
+                            : ModernColors.textTertiary,
                     strokeWidth: isToday ? 2 : 1,
                     strokeColor: Colors.white,
                   );
@@ -430,14 +430,14 @@ class StepAnalysisWidget extends ConsumerWidget {
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: RecordColors.primary.withOpacity(0.1),
+                color: ModernColors.primary.withOpacity(0.1),
               ),
             ),
           ],
           lineTouchData: LineTouchData(
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
-              tooltipBgColor: RecordColors.textPrimary.withOpacity(0.8),
+              tooltipBgColor: ModernColors.textPrimary.withOpacity(0.8),
               getTooltipItems: (touchedSpots) {
                 return touchedSpots.map((spot) {
                   final index = spot.x.toInt();
@@ -472,7 +472,7 @@ class StepAnalysisWidget extends ConsumerWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: ModernColors.borderLight,
           width: 1,
         ),
       ),
@@ -483,7 +483,7 @@ class StepAnalysisWidget extends ConsumerWidget {
             children: [
               Icon(
                 Icons.analytics_outlined,
-                color: RecordColors.primary,
+                color: ModernColors.primary,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -492,7 +492,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -506,7 +506,7 @@ class StepAnalysisWidget extends ConsumerWidget {
               child: Center(
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(RecordColors.primary),
+                  valueColor: AlwaysStoppedAnimation<Color>(ModernColors.primary),
                 ),
               ),
             ),
@@ -516,7 +516,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                 child: Text(
                   '통계를 불러올 수 없습니다',
                   style: GoogleFonts.notoSans(
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ),
@@ -535,7 +535,7 @@ class StepAnalysisWidget extends ConsumerWidget {
           child: _buildStatItem(
             '주간 발걸음',
             _formatStepsExact((stats.weeklyAverage * 7).round()),
-            RecordColors.primary,
+            ModernColors.primary,
           ),
         ),
         const SizedBox(width: 24),
@@ -543,7 +543,7 @@ class StepAnalysisWidget extends ConsumerWidget {
           child: _buildStatItem(
             '최고 발걸음',
             _formatStepsExact(stats.maxSteps),
-            RecordColors.success,
+            ModernColors.success,
           ),
         ),
         const SizedBox(width: 24),
@@ -551,7 +551,7 @@ class StepAnalysisWidget extends ConsumerWidget {
           child: _buildStatItem(
             '전체 발걸음',
             _formatStepsWithK(stats.totalSteps),
-            RecordColors.accent,
+            ModernColors.accent,
           ),
         ),
       ],
@@ -575,7 +575,7 @@ class StepAnalysisWidget extends ConsumerWidget {
           label,
           style: GoogleFonts.notoSans(
             fontSize: 12,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
             fontWeight: FontWeight.w500,
           ),
           textAlign: TextAlign.center,
@@ -591,13 +591,13 @@ class StepAnalysisWidget extends ConsumerWidget {
     
     Color badgeColor;
     if (ranking <= 10) {
-      badgeColor = RecordColors.success;
+      badgeColor = ModernColors.success;
     } else if (ranking <= 30) {
-      badgeColor = RecordColors.primary;
+      badgeColor = ModernColors.primary;
     } else if (ranking <= 50) {
-      badgeColor = RecordColors.accent;
+      badgeColor = ModernColors.accent;
     } else {
-      badgeColor = RecordColors.textLight;
+      badgeColor = ModernColors.textTertiary;
     }
     
     return Container(
