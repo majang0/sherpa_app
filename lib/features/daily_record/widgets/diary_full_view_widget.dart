@@ -122,7 +122,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
         opacity: _fadeAnimation,
         child: Stack(
           children: [
-            // 배경 그라데이션
+            // 배경 그라데이션 - 파스톤 블루 계열
             Container(
               height: 280,
               decoration: BoxDecoration(
@@ -130,8 +130,8 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFFEC4899),
-                    const Color(0xFFEC4899).withOpacity(0.7),
+                    ModernColors.diary,
+                    ModernColors.diary.withOpacity(0.7),
                   ],
                 ),
               ),
@@ -198,7 +198,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFEC4899).withOpacity(0.2),
+            color: ModernColors.diary.withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -219,14 +219,14 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      const Color(0xFFEC4899),
-                      const Color(0xFFF97316),
+                      ModernColors.diary,
+                      ModernColors.diaryAccent,
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFEC4899).withOpacity(0.3),
+                      color: ModernColors.diary.withOpacity(0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -248,7 +248,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFFEC4899),
+                        color: ModernColors.diary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -257,40 +257,6 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                 ),
               ),
             ],
-          ),
-          
-          const SizedBox(height: 24),
-          
-          // 통계 정보
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFEC4899).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: const Color(0xFFEC4899).withOpacity(0.2),
-                width: 1,
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.calendar_month,
-                  color: const Color(0xFFEC4899),
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '${_selectedMonth.year}년 ${_selectedMonth.month}월 • $monthlyCount개 일기 • 총 $totalDiaries개',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFFEC4899),
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
       ),
@@ -319,12 +285,15 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFFEC4899).withOpacity(0.1),
+                color: ModernColors.background,  // 연한 회색 배경
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: const Color(0xFFEC4899).withOpacity(0.2),
-                  width: 1,
-                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: ModernColors.diary.withOpacity(0.15),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: IconButton(
                 onPressed: () {
@@ -335,7 +304,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                 },
                 icon: Icon(
                   Icons.chevron_left_rounded,
-                  color: const Color(0xFFEC4899),
+                  color: ModernColors.diary,
                   size: 20,
                 ),
               ),
@@ -362,12 +331,15 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFFEC4899).withOpacity(0.1),
+                color: ModernColors.background,  // 연한 회색 배경
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: const Color(0xFFEC4899).withOpacity(0.2),
-                  width: 1,
-                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: ModernColors.diary.withOpacity(0.15),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: IconButton(
                 onPressed: () {
@@ -378,7 +350,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                 },
                 icon: Icon(
                   Icons.chevron_right_rounded,
-                  color: const Color(0xFFEC4899),
+                  color: ModernColors.diary,
                   size: 20,
                 ),
               ),
@@ -411,91 +383,29 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 섹션 헤더
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEC4899).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(
-                    Icons.calendar_view_month,
-                    color: const Color(0xFFEC4899),
-                    size: 18,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${_selectedMonth.month}월 일기 캘린더',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: ModernColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '날짜를 클릭하여 일기를 확인하거나 작성해보세요',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: ModernColors.textTertiary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 20),
-            
-            // 캘린더 내용
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8FAFC),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: const Color(0xFFEC4899).withOpacity(0.1),
-                  width: 1,
-                ),
-              ),
-              child: Column(
-                children: [
-                  // 요일 헤더
-                  _buildWeekdayHeaders(),
-                  const SizedBox(height: 12),
+            // 요일 헤더
+            _buildWeekdayHeaders(),
+            const SizedBox(height: 10),
 
-                  // 캘린더 날짜들 (6주)
-                  ...List.generate(6, (weekIndex) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        children: List.generate(7, (dayIndex) {
-                          final date = startDate.add(Duration(days: weekIndex * 7 + dayIndex));
-                          final isCurrentMonth = date.month == _selectedMonth.month;
-                          final isToday = _isToday(date);
-                          final diaryLog = _getDiaryForDate(monthlyLogs, date);
+            // 캘린더 날짜들 (6주)
+            ...List.generate(6, (weekIndex) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  children: List.generate(7, (dayIndex) {
+                    final date = startDate.add(Duration(days: weekIndex * 7 + dayIndex));
+                    final isCurrentMonth = date.month == _selectedMonth.month;
+                    final isToday = _isToday(date);
+                    final diaryLog = _getDiaryForDate(monthlyLogs, date);
 
-                          return Expanded(
-                            child: _buildCalendarDay(date, isCurrentMonth, isToday, diaryLog),
-                          );
-                        }),
-                      ),
+                    return Expanded(
+                      child: _buildCalendarDay(date, isCurrentMonth, isToday, diaryLog),
                     );
                   }),
-                ],
-              ),
-            ),
+                ),
+              );
+            }),
           ],
         ),
       ),
@@ -533,12 +443,12 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
     return GestureDetector(
       onTap: isClickable ? () => _onDateTap(date, diaryLog) : null,
       child: Container(
-        height: 72, // 높이 더 증가하여 이모지와 텍스트 공간 확보
-        margin: const EdgeInsets.all(2), // 마진 증가
+        height: 50, // 이전 크기로 복원
+        margin: const EdgeInsets.all(1), // 마진도 줄여서 공간 최적화
         decoration: BoxDecoration(
           gradient: isToday 
               ? LinearGradient(
-                  colors: [const Color(0xFFEC4899), const Color(0xFFF97316)],
+                  colors: [ModernColors.diary, ModernColors.diaryAccent],
                 )
               : hasDiary 
                   ? LinearGradient(
@@ -550,101 +460,101 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                   ? Colors.grey.shade200.withOpacity(0.5) // 미래 날짜는 더 진한 회색
                   : (isCurrentMonth ? Colors.white : Colors.grey.shade100.withOpacity(0.3))) // 다른 월은 더 연한 회색
               : null,
-          borderRadius: BorderRadius.circular(16), // 둥근 모서리 증가
-          border: Border.all(
-            color: isToday 
-                ? Colors.transparent
-                : (hasDiary 
-                    ? (moodInfo?['color'] ?? const Color(0xFFEC4899)).withOpacity(0.3)
-                    : (isCurrentMonth ? ModernColors.textTertiary.withOpacity(0.1) : Colors.transparent)),
-            width: 1.5,
-          ),
+          borderRadius: BorderRadius.circular(10), // 둥근 모서리 조금 줄임
+          // 테두리 제거 - 그림자와 색상 대비로 구분
           boxShadow: hasDiary || isToday ? [
             BoxShadow(
-              color: (moodInfo?['color'] ?? const Color(0xFFEC4899)).withOpacity(0.15),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
+              color: (moodInfo?['color'] ?? ModernColors.diary).withOpacity(0.15),
+              blurRadius: 6, // 그림자 약간 줄임
+              offset: const Offset(0, 2),
             ),
           ] : [],
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (hasDiary) ...[
-                // 날짜 표시
-                Text(
+        child: Stack(
+          children: [
+            // 날짜 숫자는 항상 상단에 표시
+            Positioned(
+              top: 2,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Text(
                   '${date.day}',
                   style: GoogleFonts.notoSans(
-                    fontSize: 13,
+                    fontSize: hasDiary ? 9 : 11, // 일기 있으면 더 작게
                     fontWeight: FontWeight.w700,
-                    color: isCurrentMonth
-                        ? (isToday ? Colors.white : Colors.white)
-                        : ModernColors.textTertiary,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                // 기분 이모지
-                Text(
-                  moodInfo?['emoji'] ?? '😊',
-                  style: const TextStyle(fontSize: 16), // 이모지 크기 조정
-                ),
-                // 제목 미리보기 (있는 경우)
-                if (diaryLog.title.isNotEmpty) ...[
-                  const SizedBox(height: 1),
-                  Text(
-                    diaryLog.title,
-                    style: GoogleFonts.notoSans(
-                      fontSize: 8,
-                      fontWeight: FontWeight.w600,
-                      color: isToday ? Colors.white.withOpacity(0.9) : Colors.white.withOpacity(0.95),
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ] else ...[
-                // 일기가 없는 날
-                Text(
-                  '${date.day}',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 15,
-                    fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
                     color: isCurrentMonth
                         ? (isToday 
                             ? Colors.white 
-                            : (isFuture 
-                                ? ModernColors.textTertiary.withOpacity(0.4) // 미래 날짜 더 연하게
-                                : ModernColors.textPrimary))
-                        : ModernColors.textTertiary.withOpacity(0.25), // 다른 월 더 연하게
+                            : (hasDiary 
+                                ? Colors.white 
+                                : (isFuture 
+                                    ? ModernColors.textTertiary.withOpacity(0.4)
+                                    : ModernColors.textPrimary)))
+                        : ModernColors.textTertiary.withOpacity(0.25),
                   ),
                 ),
-                if (isClickable && !hasDiary && !isFuture) ...[
-                  const SizedBox(height: 4),
-                  Container(
-                    width: 16,
-                    height: 16,
+              ),
+            ),
+            
+            // 일기 이모지는 + 버튼과 같은 위치에 표시 (오버플로우 방지)
+            if (hasDiary)
+              Positioned(
+                bottom: 6, // + 버튼과 같은 위치
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Text(
+                    moodInfo?['emoji'] ?? '😊',
+                    style: const TextStyle(
+                      fontSize: 20, // 이모지 크기 증가로 꽉 차는 느낌
+                      height: 1.0, // 높이 비율 조정으로 오버플로우 방지
+                    ),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.visible, // 오버플로우 처리
+                  ),
+                ),
+              ),
+            
+            // + 버튼은 중앙에 더 세련되게 표시
+            if (isClickable && !hasDiary && !isFuture)
+              Positioned(
+                bottom: 6,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    width: 18,
+                    height: 18,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEC4899).withOpacity(0.2),
+                      gradient: LinearGradient(
+                        colors: [
+                          ModernColors.diary.withOpacity(0.2),
+                          ModernColors.diaryAccent.withOpacity(0.3),
+                        ],
+                      ),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFFEC4899).withOpacity(0.5),
+                        color: ModernColors.diary.withOpacity(0.4),
                         width: 1,
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ModernColors.diary.withOpacity(0.15),
+                          blurRadius: 4,
+                          offset: const Offset(0, 1),
+                        ),
+                      ],
                     ),
                     child: Icon(
-                      Icons.add,
-                      size: 10,
-                      color: const Color(0xFFEC4899),
+                      Icons.add_rounded,
+                      size: 11,
+                      color: ModernColors.diary,
                     ),
                   ),
-                ],
-              ],
-            ],
-          ),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -703,9 +613,9 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFEC4899).withOpacity(0.4),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
+              color: ModernColors.diary.withOpacity(0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -719,7 +629,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
             );
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFEC4899),
+            backgroundColor: ModernColors.diary,
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(

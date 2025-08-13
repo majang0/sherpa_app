@@ -93,9 +93,27 @@ class ModernColors {
 
   // ==================== 기능별 색상 (블루톤 조화) ====================
   
-  /// 📔 일기 - 부드러운 블루
+  /// 📔 일기 - 부드러운 블루 (Refined for 2024)
   static const Color diary = Color(0xFF60A5FA);
   static const Color diaryLight = Color(0xFFEFF6FF);
+  static const Color diaryAccent = Color(0xFF93C5FD);  // Sky-300
+  static const Color diarySoft = Color(0xFFDBEAFE);    // Blue-100
+  static const Color diaryMuted = Color(0xFFBFDBFE);   // Blue-200
+  
+  // ==================== Borderless Design 시스템 ====================
+  
+  /// 🎨 레이어드 배경 색상 - 테두리 없는 구분을 위한 배경 계층
+  static const Color backgroundElevated = Color(0xFFFBFCFE);  // surface보다 한단계 위
+  static const Color backgroundFloating = Color(0xFFFFFFFF);  // 플로팅 카드용
+  static const Color backgroundSubtle = Color(0xFFF8FAFF);   // 매우 연한 accent 배경
+  
+  /// 🌟 Glass Morphism 색상
+  static const Color diaryGlass = Color(0x1560A5FA);         // 반투명 파란색 (8% opacity)
+  static const Color glassOverlay = Color(0x0A60A5FA);       // 더 연한 glass 효과 (4% opacity)
+  
+  /// 🎯 Interactive 상태 색상
+  static const Color hoverOverlay = Color(0x0860A5FA);       // hover 효과용 (3% opacity)
+  static const Color pressOverlay = Color(0x1560A5FA);       // press 효과용 (8% opacity)
   
   /// 💪 운동 - 활기찬 스카이 블루
   static const Color exercise = Color(0xFF0284C7);

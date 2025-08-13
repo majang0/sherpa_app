@@ -85,17 +85,13 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: ModernColors.surface,  // 깔끔한 흰색 배경
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: ModernColors.borderLight,
-              width: 1,
-            ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF10B981).withOpacity(0.08),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+                color: ModernColors.textTertiary.withOpacity(0.08),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -108,12 +104,12 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withOpacity(0.1),
+                      color: ModernColors.reading.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Icons.menu_book,
-                      color: const Color(0xFF10B981),
+                      color: ModernColors.reading,
                       size: 24,
                     ),
                   ),
@@ -154,14 +150,12 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [const Color(0xFF10B981), const Color(0xFF059669)],
-                        ),
+                        color: ModernColors.reading,  // 단순한 독서 색상
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF10B981).withOpacity(0.3),
-                            blurRadius: 8,
+                            color: ModernColors.reading.withOpacity(0.2),
+                            blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
                         ],
@@ -233,17 +227,15 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF10B981).withOpacity(0.1),
-            const Color(0xFF059669).withOpacity(0.05),
-          ],
-        ),
+        color: ModernColors.background,  // 연한 회색 배경으로 구분
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFF10B981).withOpacity(0.2),
-          width: 1,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: ModernColors.textTertiary.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -284,7 +276,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
           style: GoogleFonts.notoSans(
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: const Color(0xFF10B981),
+            color: ModernColors.reading,
           ),
         ),
         Text(
@@ -306,12 +298,15 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: ModernColors.background,
+        color: ModernColors.background,  // 연한 회색 배경
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: ModernColors.borderLight,
-          width: 1,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: ModernColors.textTertiary.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,13 +350,9 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
             width: 16,
             height: barHeight,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: isToday
-                  ? [const Color(0xFF10B981), const Color(0xFF34D399)]
-                  : [const Color(0xFF10B981).withOpacity(0.6), const Color(0xFF34D399).withOpacity(0.6)],
-              ),
+              color: isToday 
+                ? ModernColors.reading
+                : ModernColors.reading.withOpacity(0.6),
               borderRadius: BorderRadius.circular(8),
             ),
           ),
@@ -372,7 +363,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
           style: GoogleFonts.notoSans(
             fontSize: 10,
             fontWeight: FontWeight.w500,
-            color: isToday ? const Color(0xFF10B981) : ModernColors.textSecondary,
+            color: isToday ? ModernColors.reading : ModernColors.textSecondary,
           ),
         ),
         Text(
@@ -389,7 +380,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
             style: GoogleFonts.notoSans(
               fontSize: 8,
               fontWeight: FontWeight.w600,
-              color: const Color(0xFF10B981),
+              color: ModernColors.reading,
             ),
           ),
       ],
@@ -406,12 +397,15 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: ModernColors.background,
+          color: ModernColors.surface,  // 흰색 카드 배경
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: ModernColors.borderLight,
-            width: 1,
-          ),
+          boxShadow: [
+            BoxShadow(
+              color: ModernColors.textTertiary.withOpacity(0.06),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -420,12 +414,8 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: reading.categoryColor.withOpacity(0.1),
+                color: reading.categoryColor.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: reading.categoryColor.withOpacity(0.3),
-                  width: 1,
-                ),
               ),
               child: Center(
                 child: Text(
@@ -460,7 +450,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                         style: GoogleFonts.notoSans(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF10B981),
+                          color: ModernColors.reading,
                         ),
                       ),
                     ],
@@ -510,12 +500,15 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: ModernColors.background,
+        color: ModernColors.background,  // 연한 회색 배경
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: ModernColors.borderLight,
-          width: 1,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: ModernColors.textTertiary.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -578,23 +571,21 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
           );
         },
         style: OutlinedButton.styleFrom(
-          foregroundColor: const Color(0xFF10B981),
-          side: BorderSide(
-            color: const Color(0xFF10B981).withOpacity(0.3),
-            width: 1.5,
-          ),
+          foregroundColor: ModernColors.reading,
+          backgroundColor: ModernColors.background,  // 연한 회색 배경
           padding: const EdgeInsets.symmetric(vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          backgroundColor: Colors.white,
+          elevation: 0,
+          shadowColor: Colors.transparent,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               Icons.calendar_view_month,
-              color: const Color(0xFF10B981),
+              color: ModernColors.reading,
               size: 18,
             ),
             const SizedBox(width: 8),
@@ -603,7 +594,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF10B981),
+                color: ModernColors.reading,
               ),
             ),
           ],
@@ -626,14 +617,14 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF10B981),
+          backgroundColor: ModernColors.reading,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
           elevation: 0,
-          shadowColor: const Color(0xFF10B981).withOpacity(0.3),
+          shadowColor: Colors.transparent,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
