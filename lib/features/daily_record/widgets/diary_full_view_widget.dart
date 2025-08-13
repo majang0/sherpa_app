@@ -94,269 +94,157 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
     }).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      extendBodyBehindAppBar: true,
+      backgroundColor: const Color(0xFFFAFBFC),
+      extendBodyBehindAppBar: false,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
-        leading: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [ModernColors.diary, ModernColors.diaryAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: ModernColors.getContextShadow('diary', level: 1),
               ),
-            ],
-          ),
-          child: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
-          ),
+              child: const Icon(
+                Icons.calendar_view_month_rounded,
+                color: Colors.white,
+                size: 18,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              '일기 캘린더',
+              style: GoogleFonts.notoSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: ModernColors.textPrimary,
+              ),
+            ),
+          ],
         ),
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
-        child: Stack(
-          children: [
-            // 배경 그라데이션 - 파스톤 블루 계열
-            Container(
-              height: 280,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    ModernColors.diary,
-                    ModernColors.diary.withOpacity(0.7),
-                  ],
-                ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              const SizedBox(height: 24),
+              
+              // 월 선택 섹션
+              ScaleTransition(
+                scale: _scaleAnimation,
+                child: _buildMonthSelector(),
               ),
-            ),
-            
-            // 메인 콘텐츠
-            SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  const SizedBox(height: 120), // AppBar 공간
-                  
-                  // 헤더 섹션
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: _buildHeader(monthlyLogs),
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // 월 선택 섹션
-                  ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: _buildMonthSelector(),
-                  ),
-                  
-                  const SizedBox(height: 20),
-                  
-                  // 캘린더 그리드 섹션
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: _buildCalendarGrid(monthlyLogs),
-                  ),
-                  
-                  const SizedBox(height: 32),
-                  
-                  // 액션 버튼
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: _buildActionButton(),
-                  ),
-                  
-                  // 하단 여백 증가하여 오버플로우 방지
-                  SizedBox(height: MediaQuery.of(context).padding.bottom + 60),
-                ],
+              
+              const SizedBox(height: 24),
+              
+              // 캘린더 그리드 섹션
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: _buildCalendarGrid(monthlyLogs),
               ),
-            ),
-          ],
+              
+              const SizedBox(height: 36),
+              
+              // 액션 버튼
+              FadeTransition(
+                opacity: _fadeAnimation,
+                child: _buildActionButton(),
+              ),
+              
+              // 하단 여백 증가하여 오버플로우 방지
+              SizedBox(height: MediaQuery.of(context).padding.bottom + 40),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(List<DiaryLog> monthlyLogs) {
-    final user = ref.watch(globalUserProvider);
-    final totalDiaries = user.dailyRecords.diaryLogs.length;
-    final monthlyCount = monthlyLogs.length;
-    
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: ModernColors.diary.withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // 아이콘과 제목
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      ModernColors.diary,
-                      ModernColors.diaryAccent,
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: ModernColors.diary.withOpacity(0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.edit_note,
-                  color: Colors.white,
-                  size: 32,
-                ),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '일기 기록 전체보기',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        color: ModernColors.diary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildMonthSelector() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // 이전 달 버튼
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month - 1);
+              });
+              HapticFeedbackManager.lightImpact();
+            },
+            icon: Icon(
+              Icons.chevron_left,
+              color: ModernColors.todayPastel,
+              size: 24,
             ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: ModernColors.background,  // 연한 회색 배경
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: ModernColors.diary.withOpacity(0.15),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month - 1);
-                  });
-                  HapticFeedbackManager.lightImpact();
-                },
-                icon: Icon(
-                  Icons.chevron_left_rounded,
-                  color: ModernColors.diary,
-                  size: 20,
+          ),
+          
+          // 년월 표시 (2줄로 분리)
+          Column(
+            children: [
+              // 연도
+              Text(
+                '${_selectedMonth.year}년',
+                style: GoogleFonts.notoSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: ModernColors.textSecondary,
                 ),
               ),
-            ),
-            Expanded(
-              child: Center(
-                child: Column(
-                  children: [
-                    Text(
-                      '${_selectedMonth.year}년 ${_selectedMonth.month}월',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                        color: ModernColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-
-                  ],
+              // 월
+              Text(
+                '${_selectedMonth.month}월',
+                style: GoogleFonts.notoSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: ModernColors.textPrimary,
                 ),
               ),
+            ],
+          ),
+          
+          // 다음 달 버튼
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1);
+              });
+              HapticFeedbackManager.lightImpact();
+            },
+            icon: Icon(
+              Icons.chevron_right,
+              color: ModernColors.todayPastel,
+              size: 24,
             ),
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: ModernColors.background,  // 연한 회색 배경
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: ModernColors.diary.withOpacity(0.15),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1);
-                  });
-                  HapticFeedbackManager.lightImpact();
-                },
-                icon: Icon(
-                  Icons.chevron_right_rounded,
-                  color: ModernColors.diary,
-                  size: 20,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -369,45 +257,43 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            // 요일 헤더
-            _buildWeekdayHeaders(),
-            const SizedBox(height: 10),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 12,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // 요일 헤더
+          _buildWeekdayHeaders(),
+          const SizedBox(height: 20),
 
-            // 캘린더 날짜들 (6주)
-            ...List.generate(6, (weekIndex) {
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Row(
-                  children: List.generate(7, (dayIndex) {
-                    final date = startDate.add(Duration(days: weekIndex * 7 + dayIndex));
-                    final isCurrentMonth = date.month == _selectedMonth.month;
-                    final isToday = _isToday(date);
-                    final diaryLog = _getDiaryForDate(monthlyLogs, date);
+          // 캘린더 날짜들 (6주)
+          ...List.generate(6, (weekIndex) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: List.generate(7, (dayIndex) {
+                  final date = startDate.add(Duration(days: weekIndex * 7 + dayIndex));
+                  final isCurrentMonth = date.month == _selectedMonth.month;
+                  final isToday = _isToday(date);
+                  final diaryLog = _getDiaryForDate(monthlyLogs, date);
 
-                    return Expanded(
-                      child: _buildCalendarDay(date, isCurrentMonth, isToday, diaryLog),
-                    );
-                  }),
-                ),
-              );
-            }),
-          ],
-        ),
+                  return Expanded(
+                    child: _buildCalendarDay(date, isCurrentMonth, isToday, diaryLog),
+                  );
+                }),
+              ),
+            );
+          }),
+        ],
       ),
     );
   }
@@ -416,20 +302,30 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
     const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
-        children: weekdays.map((day) => Expanded(
-          child: Center(
-            child: Text(
-              day,
-              style: GoogleFonts.notoSans(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: ModernColors.textSecondary,
+        children: weekdays.asMap().entries.map((entry) {
+          final index = entry.key;
+          final day = entry.value;
+          final isWeekend = index == 0 || index == 6; // 일요일(0) 또는 토요일(6)
+          
+          return Expanded(
+            child: Center(
+              child: Text(
+                day,
+                style: GoogleFonts.notoSans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: index == 6 
+                    ? ModernColors.todayPastel // 토요일은 파스텔 블루
+                    : index == 0 
+                      ? ModernColors.error // 일요일은 빨간색
+                      : ModernColors.textTertiary, // 평일은 기본 색상
+                ),
               ),
             ),
-          ),
-        )).toList(),
+          );
+        }).toList(),
       ),
     );
   }
@@ -437,87 +333,65 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
   Widget _buildCalendarDay(DateTime date, bool isCurrentMonth, bool isToday, DiaryLog? diaryLog) {
     final hasDiary = diaryLog != null;
     final moodInfo = hasDiary ? _moodData[diaryLog.mood] : null;
-    final isFuture = date.isAfter(DateTime.now().subtract(const Duration(hours: 1))); // 1시간 여유를 둠
+    final isFuture = date.isAfter(DateTime.now().subtract(const Duration(hours: 1)));
     final isClickable = isCurrentMonth && !isFuture;
+
+    // 파스텔 색상 결정
+    Color? backgroundColor;
+    Color textColor = ModernColors.textPrimary;
+    
+    if (isToday) {
+      backgroundColor = ModernColors.todayPastel;
+      textColor = Colors.white;
+    } else if (hasDiary) {
+      backgroundColor = ModernColors.getMoodPastelColor(diaryLog!.mood);
+      textColor = ModernColors.textPrimary;
+    }
 
     return GestureDetector(
       onTap: isClickable ? () => _onDateTap(date, diaryLog) : null,
       child: Container(
-        height: 50, // 이전 크기로 복원
-        margin: const EdgeInsets.all(1), // 마진도 줄여서 공간 최적화
+        height: 52,
+        margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
         decoration: BoxDecoration(
-          gradient: isToday 
-              ? LinearGradient(
-                  colors: [ModernColors.diary, ModernColors.diaryAccent],
-                )
-              : hasDiary 
-                  ? LinearGradient(
-                      colors: moodInfo?['gradient'] ?? [Colors.grey.shade100, Colors.grey.shade50],
-                    )
-                  : null,
-          color: !isToday && !hasDiary 
-              ? (isFuture 
-                  ? Colors.grey.shade200.withOpacity(0.5) // 미래 날짜는 더 진한 회색
-                  : (isCurrentMonth ? Colors.white : Colors.grey.shade100.withOpacity(0.3))) // 다른 월은 더 연한 회색
-              : null,
-          borderRadius: BorderRadius.circular(10), // 둥근 모서리 조금 줄임
-          // 테두리 제거 - 그림자와 색상 대비로 구분
-          boxShadow: hasDiary || isToday ? [
-            BoxShadow(
-              color: (moodInfo?['color'] ?? ModernColors.diary).withOpacity(0.15),
-              blurRadius: 6, // 그림자 약간 줄임
-              offset: const Offset(0, 2),
-            ),
-          ] : [],
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(26),
         ),
         child: Stack(
           children: [
-            // 날짜 숫자는 항상 상단에 표시
+            // 날짜 숫자 (중앙 상단)
             Positioned(
-              top: 2,
+              top: 6,
               left: 0,
               right: 0,
               child: Center(
                 child: Text(
                   '${date.day}',
                   style: GoogleFonts.notoSans(
-                    fontSize: hasDiary ? 9 : 11, // 일기 있으면 더 작게
-                    fontWeight: FontWeight.w700,
-                    color: isCurrentMonth
-                        ? (isToday 
-                            ? Colors.white 
-                            : (hasDiary 
-                                ? Colors.white 
-                                : (isFuture 
-                                    ? ModernColors.textTertiary.withOpacity(0.4)
-                                    : ModernColors.textPrimary)))
-                        : ModernColors.textTertiary.withOpacity(0.25),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: isCurrentMonth 
+                        ? textColor
+                        : ModernColors.textTertiary.withOpacity(0.3),
                   ),
                 ),
               ),
             ),
             
-            // 일기 이모지는 + 버튼과 같은 위치에 표시 (오버플로우 방지)
+            // 이모지 (일기가 있는 경우) 또는 + 아이콘 (일기가 없는 경우)
             if (hasDiary)
               Positioned(
-                bottom: 6, // + 버튼과 같은 위치
+                bottom: 8,
                 left: 0,
                 right: 0,
                 child: Center(
                   child: Text(
                     moodInfo?['emoji'] ?? '😊',
-                    style: const TextStyle(
-                      fontSize: 20, // 이모지 크기 증가로 꽉 차는 느낌
-                      height: 1.0, // 높이 비율 조정으로 오버플로우 방지
-                    ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.visible, // 오버플로우 처리
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
-              ),
-            
-            // + 버튼은 중앙에 더 세련되게 표시
-            if (isClickable && !hasDiary && !isFuture)
+              )
+            else if (isClickable) // 일기가 없고 클릭 가능한 경우 모던한 + 아이콘 표시
               Positioned(
                 bottom: 6,
                 left: 0,
@@ -527,29 +401,13 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                     width: 18,
                     height: 18,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          ModernColors.diary.withOpacity(0.2),
-                          ModernColors.diaryAccent.withOpacity(0.3),
-                        ],
-                      ),
+                      color: ModernColors.gray100,
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: ModernColors.diary.withOpacity(0.4),
-                        width: 1,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: ModernColors.diary.withOpacity(0.15),
-                          blurRadius: 4,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
                     ),
                     child: Icon(
-                      Icons.add_rounded,
+                      Icons.add,
                       size: 11,
-                      color: ModernColors.diary,
+                      color: ModernColors.textTertiary,
                     ),
                   ),
                 ),
@@ -608,14 +466,14 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         width: double.infinity,
-        height: 56,
+        height: 58,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: ModernColors.diary.withOpacity(0.2),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: ModernColors.diary.withOpacity(0.15),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -631,22 +489,22 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
           style: ElevatedButton.styleFrom(
             backgroundColor: ModernColors.diary,
             foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.symmetric(vertical: 18),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
             ),
             elevation: 0,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.edit, size: 22),
-              const SizedBox(width: 10),
+              Icon(Icons.edit_outlined, size: 22),
+              const SizedBox(width: 12),
               Text(
                 '새 일기 작성하기',
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],

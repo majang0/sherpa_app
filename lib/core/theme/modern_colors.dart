@@ -100,6 +100,19 @@ class ModernColors {
   static const Color diarySoft = Color(0xFFDBEAFE);    // Blue-100
   static const Color diaryMuted = Color(0xFFBFDBFE);   // Blue-200
   
+  // ==================== 파스텔 감정 색상 시스템 ====================
+  
+  /// 🌈 파스텔 감정 색상 (이미지 기반)
+  static const Color pastelYellow = Color(0xFFFFF4E6);   // 연한 노란색 - 기쁨
+  static const Color pastelBlue = Color(0xFFE3F2FD);     // 연한 하늘색 - 좋음
+  static const Color pastelPink = Color(0xFFFCE4EC);     // 연한 분홍 - 생각
+  static const Color pastelMint = Color(0xFFE0F2F1);     // 연한 민트 - 차분
+  static const Color pastelPurple = Color(0xFFF3E5F5);   // 연한 보라 - 설렘
+  static const Color pastelOrange = Color(0xFFFFF3E0);   // 연한 주황 - 활력
+  
+  /// 📅 오늘 날짜 표시용 파스텔 블루
+  static const Color todayPastel = Color(0xFF64B5F6);    // 밝은 파란색
+  
   // ==================== Borderless Design 시스템 ====================
   
   /// 🎨 레이어드 배경 색상 - 테두리 없는 구분을 위한 배경 계층
@@ -342,6 +355,26 @@ class ModernColors {
         return info;
       default:
         return textSecondary;
+    }
+  }
+  
+  /// 감정별 파스텔 색상 반환 (이미지 기반)
+  static Color getMoodPastelColor(String mood) {
+    switch (mood.toLowerCase()) {
+      case 'very_happy':
+      case 'happy':
+        return pastelYellow;
+      case 'good':
+      case 'excited':
+        return pastelBlue;
+      case 'normal':
+      case 'thoughtful':
+        return pastelPink;
+      case 'tired':
+      case 'sad':
+        return pastelMint;
+      default:
+        return pastelBlue;
     }
   }
 }
