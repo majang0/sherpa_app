@@ -3,6 +3,7 @@
 import 'dart:math' as math;
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/providers/global_user_provider.dart';
+import '../../../core/constants/mood_constants.dart';
 
 /// 14일간 샘플 데이터 생성 서비스
 /// 앱 초기 사용자에게 풍부한 예시 데이터를 제공
@@ -13,9 +14,9 @@ class SampleDataGenerator {
   static DailyRecordData generateSampleData() {
     final now = DateTime.now();
     final sampleLogs = _generateSampleLogs(now);
-    
+
     final meetingCount = (sampleLogs['meetings'] as List<MeetingLog>).length;
-    
+
     final result = DailyRecordData(
       todaySteps: _generateTodaySteps(),
       todayFocusMinutes: _generateTodayFocus(),
@@ -32,7 +33,7 @@ class SampleDataGenerator {
       isAllGoalsCompleted: false,
       isAllGoalsRewardClaimed: false,
     );
-    
+
     return result;
   }
 
@@ -55,16 +56,17 @@ class SampleDataGenerator {
   static List<DailyGoal> _generateTodayGoals() {
     final defaultGoals = DailyGoal.createDefaultGoals();
     final completedCount = 2 + _random.nextInt(3); // 2~4개 완료
-    
+
     for (int i = 0; i < completedCount; i++) {
       if (i < defaultGoals.length) {
         defaultGoals[i] = defaultGoals[i].copyWith(
           isCompleted: true,
-          completedAt: DateTime.now().subtract(Duration(hours: _random.nextInt(12))),
+          completedAt:
+              DateTime.now().subtract(Duration(hours: _random.nextInt(12))),
         );
       }
     }
-    
+
     return defaultGoals;
   }
 
@@ -78,34 +80,33 @@ class SampleDataGenerator {
 
     for (int i = 0; i < 60; i++) {
       final date = now.subtract(Duration(days: i));
-      
+
       // 모임 생성 - 더 다양한 패턴으로 생성
       final meetingCount = _getMeetingCountForDay(i);
       for (int j = 0; j < meetingCount; j++) {
         final meeting = _generateMeetingLog(date, j);
         meetings.add(meeting);
       }
-      
+
       if (_random.nextDouble() < 0.6) {
         readings.add(_generateReadingLog(date));
       }
-      
+
       // 운동 데이터 대폭 증가 - 거의 매일 1-3개의 운동 기록
       final exerciseCount = _getExerciseCountForDay(i);
       for (int k = 0; k < exerciseCount; k++) {
         exercises.add(_generateExerciseLog(date, k));
       }
-      
+
       if (_random.nextDouble() < 0.4) {
         diaries.add(_generateDiaryLog(date));
       }
-      
+
       if (_random.nextDouble() < 0.3) {
         movies.add(_generateMovieLog(date));
       }
     }
 
-    
     return {
       'meetings': meetings,
       'readings': readings,
@@ -122,7 +123,7 @@ class SampleDataGenerator {
     if (dayIndex == 4) return 2; // 4일 전 - 모임 많은 날
     if (dayIndex == 7) return 2; // 1주일 전 - 주말 모임들
     if (dayIndex == 10) return 4; // 10일 전 - 매우 바쁜 하루
-    
+
     // 나머지 날짜는 70% 확률로 0-1개
     if (_random.nextDouble() < 0.7) {
       return _random.nextDouble() < 0.8 ? 1 : 2; // 80% 확률로 1개, 20% 확률로 2개
@@ -154,11 +155,11 @@ class SampleDataGenerator {
       {'name': '스타트업 밋업', 'category': '네트워킹'},
       {'name': '요가 클래스', 'category': '운동'},
     ];
-    
-    final moods = ['very_happy', 'happy', 'good', 'normal'];
-    
+
+    final moods = MoodConstants.standardMoods;
+
     final selectedMeeting = meetingData[_random.nextInt(meetingData.length)];
-    
+
     return MeetingLog(
       id: 'meeting_${date.millisecondsSinceEpoch}_$index',
       date: date.add(Duration(hours: 9 + index * 2)), // 시간대 분산
@@ -185,12 +186,12 @@ class SampleDataGenerator {
       {'title': '대화의 기술', 'author': '라이언 김'},
       {'title': '습관의 재발견', 'author': '찰스 두히그'}
     ];
-    
+
     final book = books[_random.nextInt(books.length)];
     final pages = 1 + _random.nextInt(50); // 1~50페이지
-    
-    final moods = ['happy', 'excited', 'thoughtful', 'moved', 'surprised', 'calm'];
-    
+
+    final moods = MoodConstants.standardMoods;
+
     return ReadingLog(
       id: 'reading_${date.millisecondsSinceEpoch}',
       date: date,
@@ -199,7 +200,9 @@ class SampleDataGenerator {
       category: _getBookCategory(book['title']!),
       pages: pages,
       rating: 3.0 + _random.nextDouble() * 2.0, // 3.0~5.0
-      mood: _random.nextDouble() < 0.7 ? moods[_random.nextInt(moods.length)] : null,
+      mood: _random.nextDouble() < 0.7
+          ? moods[_random.nextInt(moods.length)]
+          : null,
       note: _random.nextDouble() < 0.4 ? _generateReadingNote() : null,
     );
   }
@@ -221,7 +224,7 @@ class SampleDataGenerator {
     if (dayIndex == 45) return 3; // 45일 전 - 활발한 운동
     if (dayIndex == 50) return 2; // 50일 전 - 중간 운동량
     if (dayIndex == 55) return 3; // 55일 전 - 활발한 운동
-    
+
     // 나머지 날짜는 90% 확률로 1-2개 운동
     if (_random.nextDouble() < 0.9) {
       return _random.nextDouble() < 0.7 ? 1 : 2; // 70% 확률로 1개, 30% 확률로 2개
@@ -233,23 +236,31 @@ class SampleDataGenerator {
   static ExerciseLog _generateExerciseLog(DateTime date, int index) {
     // 5개 주요 운동 타입 (70% 확률)
     final primaryExerciseTypes = ['러닝', '클라이밍', '등산', '헬스', '배드민턴'];
-    
+
     // 기타 운동 타입 (30% 확률)
     final secondaryExerciseTypes = [
-      '걷기', '자전거', '수영', '요가', '필라테스', '테니스', '축구', '농구'
+      '걷기',
+      '자전거',
+      '수영',
+      '요가',
+      '필라테스',
+      '테니스',
+      '축구',
+      '농구'
     ];
-    
+
     final intensities = ['light', 'moderate', 'vigorous'];
-    
+
     // 70% 확률로 주요 운동, 30% 확률로 기타 운동
-    final exerciseType = _random.nextDouble() < 0.7 
+    final exerciseType = _random.nextDouble() < 0.7
         ? primaryExerciseTypes[_random.nextInt(primaryExerciseTypes.length)]
-        : secondaryExerciseTypes[_random.nextInt(secondaryExerciseTypes.length)];
-    
+        : secondaryExerciseTypes[
+            _random.nextInt(secondaryExerciseTypes.length)];
+
     // 운동 타입별 적절한 시간 설정
     int duration;
     String intensity;
-    
+
     switch (exerciseType) {
       case '러닝':
         duration = 30 + _random.nextInt(61); // 30~90분
@@ -283,7 +294,7 @@ class SampleDataGenerator {
         duration = 30 + _random.nextInt(91); // 30~120분
         intensity = intensities[_random.nextInt(intensities.length)];
     }
-    
+
     return ExerciseLog(
       id: 'exercise_${date.millisecondsSinceEpoch}_$index',
       date: date.add(Duration(hours: 6 + index * 2)), // 시간대 분산
@@ -297,13 +308,22 @@ class SampleDataGenerator {
   /// 일기 로그 생성
   static DiaryLog _generateDiaryLog(DateTime date) {
     final titles = [
-      '오늘의 성찰', '새로운 도전', '감사한 하루', '배움의 시간',
-      '작은 성취감', '힐링 타임', '계획과 실행', '소중한 만남',
-      '성장하는 하루', '평범한 일상', '의미 있는 시간', '새로운 시작'
+      '오늘의 성찰',
+      '새로운 도전',
+      '감사한 하루',
+      '배움의 시간',
+      '작은 성취감',
+      '힐링 타임',
+      '계획과 실행',
+      '소중한 만남',
+      '성장하는 하루',
+      '평범한 일상',
+      '의미 있는 시간',
+      '새로운 시작'
     ];
-    
-    final moods = ['excited', 'happy', 'good', 'normal', 'thoughtful', 'tired', 'sad', 'angry'];
-    
+
+    final moods = MoodConstants.standardMoods;
+
     return DiaryLog(
       id: 'diary_${date.millisecondsSinceEpoch}',
       date: date,
@@ -349,7 +369,7 @@ class SampleDataGenerator {
       '꾸준히 하다 보니 습관이 되었네요.',
       '건강해지는 느낌이 좋습니다.',
     ];
-    
+
     final specificNotes = [
       '새로운 기록을 달성했어요!',
       '컨디션이 정말 좋았습니다.',
@@ -362,7 +382,7 @@ class SampleDataGenerator {
       '근력이 많이 늘었음을 느껴요.',
       '지구력 향상을 실감하고 있어요.',
     ];
-    
+
     final allNotes = [...generalNotes, ...specificNotes];
     return allNotes[_random.nextInt(allNotes.length)];
   }
@@ -394,10 +414,10 @@ class SampleDataGenerator {
       {'title': '겨울왕국 2', 'director': '크리스 벅', 'genre': '애니메이션'},
       {'title': '1917', 'director': '샘 멘데스', 'genre': '드라마'},
     ];
-    
+
     final movie = movies[_random.nextInt(movies.length)];
     final watchTime = 90 + _random.nextInt(60); // 90-150분
-    
+
     return MovieLog(
       id: 'movie_${date.millisecondsSinceEpoch}_${_random.nextInt(1000)}',
       date: date.subtract(Duration(hours: _random.nextInt(24))),
@@ -428,11 +448,15 @@ class SampleDataGenerator {
 
   /// 책 제목에 따른 카테고리 반환
   static String _getBookCategory(String title) {
-    if (title.contains('해빗') || title.contains('습관') || title.contains('인간관계')) {
+    if (title.contains('해빗') ||
+        title.contains('습관') ||
+        title.contains('인간관계')) {
       return '자기계발';
     } else if (title.contains('사피엔스')) {
       return '역사';
-    } else if (title.contains('네트워크') || title.contains('코드') || title.contains('자바')) {
+    } else if (title.contains('네트워크') ||
+        title.contains('코드') ||
+        title.contains('자바')) {
       return 'IT';
     } else if (title.contains('대화') || title.contains('기술')) {
       return '커뮤니케이션';
@@ -445,17 +469,17 @@ class SampleDataGenerator {
   static List<DailyStepData> generate14DaysStepData() {
     final stepHistory = <DailyStepData>[];
     final now = DateTime.now();
-    
+
     // 다양한 패턴의 걸음수 생성 (4000~15000 범위)
     final stepPatterns = [
       4200, 8800, 12200, 9100, 6500, 14900, 11500, // 첫째 주
       5800, 10500, 13200, 12100, 7200, 11800, 9900, // 둘째 주
     ];
-    
+
     for (int i = 13; i >= 0; i--) {
       final date = now.subtract(Duration(days: i));
       int steps;
-      
+
       if (i == 0) {
         // 오늘은 현재 진행 중인 걸음수
         steps = _generateTodaySteps();
@@ -465,14 +489,14 @@ class SampleDataGenerator {
         final variation = _random.nextInt(2000) - 1000; // ±1000 변동
         steps = (baseSteps + variation).clamp(4000, 15000);
       }
-      
+
       stepHistory.add(DailyStepData(
         date: date,
         steps: steps,
         goal: 6000,
       ));
     }
-    
+
     return stepHistory;
   }
 }

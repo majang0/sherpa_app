@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/modern_colors.dart';
+import '../../../core/constants/mood_constants.dart';
 import '../presentation/screens/diary_write_edit_screen.dart';
 import '../presentation/screens/diary_detail_screen.dart';
 import '../../../shared/providers/global_user_provider.dart';
@@ -12,7 +13,8 @@ import '../../../shared/models/global_user_model.dart';
 
 class DiaryFullViewWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<DiaryFullViewWidget> createState() => _DiaryFullViewWidgetState();
+  ConsumerState<DiaryFullViewWidget> createState() =>
+      _DiaryFullViewWidgetState();
 }
 
 class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
@@ -26,65 +28,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
 
   DateTime _selectedMonth = DateTime.now();
 
-  // 기분 데이터 매핑 (ModernColors 시스템으로 통일)
-  final Map<String, Map<String, dynamic>> _moodData = {
-    'excited': {
-      'emoji': '🥰', 
-      'label': '설레요', 
-      'color': ModernColors.getMoodLightColor('excited'),
-      'selectedColor': ModernColors.getMoodMediumColor('excited'),
-      'backgroundColor': ModernColors.getMoodPastelColor('excited'),
-    },
-    'happy': {
-      'emoji': '😄', 
-      'label': '기뻐요', 
-      'color': ModernColors.getMoodLightColor('happy'),
-      'selectedColor': ModernColors.getMoodMediumColor('happy'),
-      'backgroundColor': ModernColors.getMoodPastelColor('happy'),
-    },
-    'good': {
-      'emoji': '😊', 
-      'label': '좋아요', 
-      'color': ModernColors.getMoodLightColor('good'),
-      'selectedColor': ModernColors.getMoodMediumColor('good'),
-      'backgroundColor': ModernColors.getMoodPastelColor('good'),
-    },
-    'normal': {
-      'emoji': '😐', 
-      'label': '보통이에요', 
-      'color': ModernColors.getMoodLightColor('normal'),
-      'selectedColor': ModernColors.getMoodMediumColor('normal'),
-      'backgroundColor': ModernColors.getMoodPastelColor('normal'),
-    },
-    'thoughtful': {
-      'emoji': '🤔', 
-      'label': '생각이 많아요', 
-      'color': ModernColors.getMoodLightColor('thoughtful'),
-      'selectedColor': ModernColors.getMoodMediumColor('thoughtful'),
-      'backgroundColor': ModernColors.getMoodPastelColor('thoughtful'),
-    },
-    'tired': {
-      'emoji': '😴', 
-      'label': '피곤해요', 
-      'color': ModernColors.getMoodLightColor('tired'),
-      'selectedColor': ModernColors.getMoodMediumColor('tired'),
-      'backgroundColor': ModernColors.getMoodPastelColor('tired'),
-    },
-    'sad': {
-      'emoji': '😢', 
-      'label': '슬퍼요', 
-      'color': ModernColors.getMoodLightColor('sad'),
-      'selectedColor': ModernColors.getMoodMediumColor('sad'),
-      'backgroundColor': ModernColors.getMoodPastelColor('sad'),
-    },
-    'angry': {
-      'emoji': '😠', 
-      'label': '화나요', 
-      'color': ModernColors.getMoodLightColor('angry'),
-      'selectedColor': ModernColors.getMoodMediumColor('angry'),
-      'backgroundColor': ModernColors.getMoodPastelColor('angry'),
-    },
-  };
+  // 감정 데이터는 MoodConstants에서 중앙 관리
 
   @override
   void initState() {
@@ -102,11 +46,12 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
@@ -188,29 +133,29 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
           child: Column(
             children: [
               const SizedBox(height: 24),
-              
+
               // 월 선택 섹션
               ScaleTransition(
                 scale: _scaleAnimation,
                 child: _buildMonthSelector(),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // 캘린더 그리드 섹션
               FadeTransition(
                 opacity: _fadeAnimation,
                 child: _buildCalendarGrid(monthlyLogs),
               ),
-              
+
               const SizedBox(height: 36),
-              
+
               // 액션 버튼
               FadeTransition(
                 opacity: _fadeAnimation,
                 child: _buildActionButton(),
               ),
-              
+
               // 하단 여백 증가하여 오버플로우 방지
               SizedBox(height: MediaQuery.of(context).padding.bottom + 40),
             ],
@@ -219,7 +164,6 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
       ),
     );
   }
-
 
   Widget _buildMonthSelector() {
     return Container(
@@ -243,7 +187,8 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
           IconButton(
             onPressed: () {
               setState(() {
-                _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month - 1);
+                _selectedMonth =
+                    DateTime(_selectedMonth.year, _selectedMonth.month - 1);
               });
               HapticFeedbackManager.lightImpact();
             },
@@ -253,7 +198,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
               size: 24,
             ),
           ),
-          
+
           // 년월 표시 (2줄로 분리)
           Column(
             children: [
@@ -277,12 +222,13 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
               ),
             ],
           ),
-          
+
           // 다음 달 버튼
           IconButton(
             onPressed: () {
               setState(() {
-                _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1);
+                _selectedMonth =
+                    DateTime(_selectedMonth.year, _selectedMonth.month + 1);
               });
               HapticFeedbackManager.lightImpact();
             },
@@ -329,13 +275,15 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
               padding: const EdgeInsets.only(bottom: 8),
               child: Row(
                 children: List.generate(7, (dayIndex) {
-                  final date = startDate.add(Duration(days: weekIndex * 7 + dayIndex));
+                  final date =
+                      startDate.add(Duration(days: weekIndex * 7 + dayIndex));
                   final isCurrentMonth = date.month == _selectedMonth.month;
                   final isToday = _isToday(date);
                   final diaryLog = _getDiaryForDate(monthlyLogs, date);
 
                   return Expanded(
-                    child: _buildCalendarDay(date, isCurrentMonth, isToday, diaryLog),
+                    child: _buildCalendarDay(
+                        date, isCurrentMonth, isToday, diaryLog),
                   );
                 }),
               ),
@@ -356,7 +304,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
           final index = entry.key;
           final day = entry.value;
           final isWeekend = index == 0 || index == 6; // 일요일(0) 또는 토요일(6)
-          
+
           return Expanded(
             child: Center(
               child: Text(
@@ -364,11 +312,11 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                 style: GoogleFonts.notoSans(
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: index == 6 
-                    ? ModernColors.todayPastel // 토요일은 파스텔 블루
-                    : index == 0 
-                      ? ModernColors.error // 일요일은 빨간색
-                      : ModernColors.textTertiary, // 평일은 기본 색상
+                  color: index == 6
+                      ? ModernColors.todayPastel // 토요일은 파스텔 블루
+                      : index == 0
+                          ? ModernColors.error // 일요일은 빨간색
+                          : ModernColors.textTertiary, // 평일은 기본 색상
                 ),
               ),
             ),
@@ -378,16 +326,18 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
     );
   }
 
-  Widget _buildCalendarDay(DateTime date, bool isCurrentMonth, bool isToday, DiaryLog? diaryLog) {
+  Widget _buildCalendarDay(
+      DateTime date, bool isCurrentMonth, bool isToday, DiaryLog? diaryLog) {
     final hasDiary = diaryLog != null;
-    final moodInfo = hasDiary ? _moodData[diaryLog.mood] : null;
-    final isFuture = date.isAfter(DateTime.now().subtract(const Duration(hours: 1)));
+    final moodInfo = hasDiary ? MoodConstants.getMoodInfo(diaryLog.mood) : null;
+    final isFuture =
+        date.isAfter(DateTime.now().subtract(const Duration(hours: 1)));
     final isClickable = isCurrentMonth && !isFuture;
 
     // 파스텔 색상 결정
     Color? backgroundColor;
     Color textColor = ModernColors.textPrimary;
-    
+
     if (isToday) {
       backgroundColor = ModernColors.todayPastel;
       textColor = Colors.white;
@@ -419,14 +369,14 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: isCurrentMonth 
+                    color: isCurrentMonth
                         ? textColor
                         : ModernColors.textTertiary.withOpacity(0.3),
                   ),
                 ),
               ),
             ),
-            
+
             // 이모지 (일기가 있는 경우) 또는 + 아이콘 (일기가 없는 경우)
             if (hasDiary)
               Positioned(
@@ -469,11 +419,10 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
 
   DiaryLog? _getDiaryForDate(List<DiaryLog> diaryLogs, DateTime date) {
     try {
-      return diaryLogs.firstWhere((log) => 
-        log.date.year == date.year &&
-        log.date.month == date.month &&
-        log.date.day == date.day
-      );
+      return diaryLogs.firstWhere((log) =>
+          log.date.year == date.year &&
+          log.date.month == date.month &&
+          log.date.day == date.day);
     } catch (e) {
       return null;
     }
@@ -482,13 +431,13 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
   bool _isToday(DateTime date) {
     final today = DateTime.now();
     return date.year == today.year &&
-           date.month == today.month &&
-           date.day == today.day;
+        date.month == today.month &&
+        date.day == today.day;
   }
 
   void _onDateTap(DateTime date, DiaryLog? diaryLog) {
     HapticFeedbackManager.lightImpact();
-    
+
     if (diaryLog != null) {
       // 기존 일기가 있는 경우 - 상세보기로 이동
       Navigator.push(

@@ -5,13 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
+import '../../../../core/constants/mood_constants.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import 'diary_write_edit_screen.dart';
 
 class DiaryDetailScreen extends ConsumerStatefulWidget {
   final DiaryLog diary;
-  
+
   const DiaryDetailScreen({required this.diary});
 
   @override
@@ -27,70 +28,12 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
 
-  // 기분 데이터 매핑 (ModernColors 기반 - 8개 감정 통일)
-  final Map<String, Map<String, dynamic>> _moodData = {
-    'excited': {
-      'emoji': '🥰', 
-      'label': '설레요', 
-      'color': ModernColors.getMoodLightColor('excited'),
-      'selectedColor': ModernColors.getMoodMediumColor('excited'),
-      'backgroundColor': ModernColors.getMoodPastelColor('excited'),
-    },
-    'happy': {
-      'emoji': '😄', 
-      'label': '기뻐요', 
-      'color': ModernColors.getMoodLightColor('happy'),
-      'selectedColor': ModernColors.getMoodMediumColor('happy'),
-      'backgroundColor': ModernColors.getMoodPastelColor('happy'),
-    },
-    'good': {
-      'emoji': '😊', 
-      'label': '좋아요', 
-      'color': ModernColors.getMoodLightColor('good'),
-      'selectedColor': ModernColors.getMoodMediumColor('good'),
-      'backgroundColor': ModernColors.getMoodPastelColor('good'),
-    },
-    'normal': {
-      'emoji': '😐', 
-      'label': '보통이에요', 
-      'color': ModernColors.getMoodLightColor('normal'),
-      'selectedColor': ModernColors.getMoodMediumColor('normal'),
-      'backgroundColor': ModernColors.getMoodPastelColor('normal'),
-    },
-    'thoughtful': {
-      'emoji': '🤔', 
-      'label': '생각이 많아요', 
-      'color': ModernColors.getMoodLightColor('thoughtful'),
-      'selectedColor': ModernColors.getMoodMediumColor('thoughtful'),
-      'backgroundColor': ModernColors.getMoodPastelColor('thoughtful'),
-    },
-    'tired': {
-      'emoji': '😴', 
-      'label': '피곤해요', 
-      'color': ModernColors.getMoodLightColor('tired'),
-      'selectedColor': ModernColors.getMoodMediumColor('tired'),
-      'backgroundColor': ModernColors.getMoodPastelColor('tired'),
-    },
-    'sad': {
-      'emoji': '😢', 
-      'label': '슬퍼요', 
-      'color': ModernColors.getMoodLightColor('sad'),
-      'selectedColor': ModernColors.getMoodMediumColor('sad'),
-      'backgroundColor': ModernColors.getMoodPastelColor('sad'),
-    },
-    'angry': {
-      'emoji': '😠', 
-      'label': '화나요', 
-      'color': ModernColors.getMoodLightColor('angry'),
-      'selectedColor': ModernColors.getMoodMediumColor('angry'),
-      'backgroundColor': ModernColors.getMoodPastelColor('angry'),
-    },
-  };
+  // 감정 데이터는 MoodConstants에서 중앙 관리
 
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -103,17 +46,18 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
-    
+
     _fadeController.forward();
     Future.delayed(const Duration(milliseconds: 200), () {
       _slideController.forward();
@@ -133,8 +77,9 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    final moodInfo = _moodData[widget.diary.mood] ?? _moodData['normal']!;
-    
+    final moodInfo = MoodConstants.getMoodInfo(widget.diary.mood) ??
+        MoodConstants.getMoodInfo('normal')!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       extendBodyBehindAppBar: true,
@@ -156,7 +101,8 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
         actions: [
@@ -202,36 +148,36 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션 (날짜, 기분)
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildHeader(moodInfo),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 콘텐츠 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildContent(),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 액션 버튼들
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildActionButtons(moodInfo),
                   ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -316,9 +262,9 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // 날짜 정보 - Borderless Design
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
@@ -449,7 +395,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
             ),
             const SizedBox(height: 16),
           ],
-          
+
           // 내용
           Container(
             width: double.infinity,
@@ -506,7 +452,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               ],
             ),
           ),
-          
+
           // 첨부 파일 (있는 경우)
           if (widget.diary.hasAttachments) ...[
             const SizedBox(height: 16),
@@ -553,7 +499,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                     ],
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // 첨부 파일 목록
                   if (widget.diary.imageUrl != null)
                     _buildAttachmentItem(
@@ -628,9 +574,9 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               ),
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // 공유 버튼
           Container(
             height: 56,
@@ -655,9 +601,9 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               ),
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // 복사 버튼
           Container(
             height: 56,
@@ -804,7 +750,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
     HapticFeedbackManager.lightImpact();
     final content = '${widget.diary.title}\n\n${widget.diary.content}';
     Clipboard.setData(ClipboardData(text: content));
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
