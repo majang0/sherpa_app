@@ -26,16 +26,64 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
 
   DateTime _selectedMonth = DateTime.now();
 
-  // 기분 데이터 매핑 (DetailScreen과 동일)
+  // 기분 데이터 매핑 (ModernColors 시스템으로 통일)
   final Map<String, Map<String, dynamic>> _moodData = {
-    'very_happy': {'emoji': '😄', 'label': '매우 기뻐요', 'color': Color(0xFFFFD93D), 'gradient': [Color(0xFFFFD93D), Color(0xFFFFE55C)]},
-    'happy': {'emoji': '😊', 'label': '기뻐요', 'color': Color(0xFF4ECDC4), 'gradient': [Color(0xFF4ECDC4), Color(0xFF44A08D)]},
-    'good': {'emoji': '🙂', 'label': '좋아요', 'color': Color(0xFF45B7D1), 'gradient': [Color(0xFF45B7D1), Color(0xFF96C93D)]},
-    'normal': {'emoji': '😐', 'label': '보통이에요', 'color': Color(0xFF96CEB4), 'gradient': [Color(0xFF96CEB4), Color(0xFF87CEEB)]},
-    'thoughtful': {'emoji': '🤔', 'label': '생각이 많아요', 'color': Color(0xFF9B59B6), 'gradient': [Color(0xFF9B59B6), Color(0xFF8E44AD)]},
-    'tired': {'emoji': '😴', 'label': '피곤해요', 'color': Color(0xFF95A5A6), 'gradient': [Color(0xFF95A5A6), Color(0xFF7F8C8D)]},
-    'sad': {'emoji': '😢', 'label': '슬퍼요', 'color': Color(0xFF5DADE2), 'gradient': [Color(0xFF5DADE2), Color(0xFF3498DB)]},
-    'excited': {'emoji': '🤗', 'label': '설레요', 'color': Color(0xFFFF6B9D), 'gradient': [Color(0xFFFF6B9D), Color(0xFFF093FB)]},
+    'excited': {
+      'emoji': '🥰', 
+      'label': '설레요', 
+      'color': ModernColors.getMoodLightColor('excited'),
+      'selectedColor': ModernColors.getMoodMediumColor('excited'),
+      'backgroundColor': ModernColors.getMoodPastelColor('excited'),
+    },
+    'happy': {
+      'emoji': '😄', 
+      'label': '기뻐요', 
+      'color': ModernColors.getMoodLightColor('happy'),
+      'selectedColor': ModernColors.getMoodMediumColor('happy'),
+      'backgroundColor': ModernColors.getMoodPastelColor('happy'),
+    },
+    'good': {
+      'emoji': '😊', 
+      'label': '좋아요', 
+      'color': ModernColors.getMoodLightColor('good'),
+      'selectedColor': ModernColors.getMoodMediumColor('good'),
+      'backgroundColor': ModernColors.getMoodPastelColor('good'),
+    },
+    'normal': {
+      'emoji': '😐', 
+      'label': '보통이에요', 
+      'color': ModernColors.getMoodLightColor('normal'),
+      'selectedColor': ModernColors.getMoodMediumColor('normal'),
+      'backgroundColor': ModernColors.getMoodPastelColor('normal'),
+    },
+    'thoughtful': {
+      'emoji': '🤔', 
+      'label': '생각이 많아요', 
+      'color': ModernColors.getMoodLightColor('thoughtful'),
+      'selectedColor': ModernColors.getMoodMediumColor('thoughtful'),
+      'backgroundColor': ModernColors.getMoodPastelColor('thoughtful'),
+    },
+    'tired': {
+      'emoji': '😴', 
+      'label': '피곤해요', 
+      'color': ModernColors.getMoodLightColor('tired'),
+      'selectedColor': ModernColors.getMoodMediumColor('tired'),
+      'backgroundColor': ModernColors.getMoodPastelColor('tired'),
+    },
+    'sad': {
+      'emoji': '😢', 
+      'label': '슬퍼요', 
+      'color': ModernColors.getMoodLightColor('sad'),
+      'selectedColor': ModernColors.getMoodMediumColor('sad'),
+      'backgroundColor': ModernColors.getMoodPastelColor('sad'),
+    },
+    'angry': {
+      'emoji': '😠', 
+      'label': '화나요', 
+      'color': ModernColors.getMoodLightColor('angry'),
+      'selectedColor': ModernColors.getMoodMediumColor('angry'),
+      'backgroundColor': ModernColors.getMoodPastelColor('angry'),
+    },
   };
 
   @override
@@ -343,8 +391,9 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
     if (isToday) {
       backgroundColor = ModernColors.todayPastel;
       textColor = Colors.white;
-    } else if (hasDiary) {
-      backgroundColor = ModernColors.getMoodPastelColor(diaryLog!.mood);
+    } else if (hasDiary && moodInfo != null) {
+      // ModernColors 시스템을 사용한 통일된 감정 색상 적용
+      backgroundColor = ModernColors.getMoodMediumColor(diaryLog.mood).withOpacity(0.4);
       textColor = ModernColors.textPrimary;
     }
 
