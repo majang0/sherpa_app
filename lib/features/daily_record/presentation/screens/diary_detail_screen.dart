@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import 'diary_write_edit_screen.dart';
@@ -28,16 +27,64 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
 
-  // 기분 데이터 매핑
+  // 기분 데이터 매핑 (ModernColors 기반 - 8개 감정 통일)
   final Map<String, Map<String, dynamic>> _moodData = {
-    'very_happy': {'emoji': '😄', 'label': '매우 기뻐요', 'color': Color(0xFFFFD93D), 'gradient': [Color(0xFFFFD93D), Color(0xFFFFE55C)]},
-    'happy': {'emoji': '😊', 'label': '기뻐요', 'color': Color(0xFF4ECDC4), 'gradient': [Color(0xFF4ECDC4), Color(0xFF44A08D)]},
-    'good': {'emoji': '🙂', 'label': '좋아요', 'color': Color(0xFF45B7D1), 'gradient': [Color(0xFF45B7D1), Color(0xFF96C93D)]},
-    'normal': {'emoji': '😐', 'label': '보통이에요', 'color': Color(0xFF96CEB4), 'gradient': [Color(0xFF96CEB4), Color(0xFF87CEEB)]},
-    'thoughtful': {'emoji': '🤔', 'label': '생각이 많아요', 'color': Color(0xFF9B59B6), 'gradient': [Color(0xFF9B59B6), Color(0xFF8E44AD)]},
-    'tired': {'emoji': '😴', 'label': '피곤해요', 'color': Color(0xFF95A5A6), 'gradient': [Color(0xFF95A5A6), Color(0xFF7F8C8D)]},
-    'sad': {'emoji': '😢', 'label': '슬퍼요', 'color': Color(0xFF5DADE2), 'gradient': [Color(0xFF5DADE2), Color(0xFF3498DB)]},
-    'excited': {'emoji': '🤗', 'label': '설레요', 'color': Color(0xFFFF6B9D), 'gradient': [Color(0xFFFF6B9D), Color(0xFFF093FB)]},
+    'excited': {
+      'emoji': '🥰', 
+      'label': '설레요', 
+      'color': ModernColors.getMoodLightColor('excited'),
+      'selectedColor': ModernColors.getMoodMediumColor('excited'),
+      'backgroundColor': ModernColors.getMoodPastelColor('excited'),
+    },
+    'happy': {
+      'emoji': '😄', 
+      'label': '기뻐요', 
+      'color': ModernColors.getMoodLightColor('happy'),
+      'selectedColor': ModernColors.getMoodMediumColor('happy'),
+      'backgroundColor': ModernColors.getMoodPastelColor('happy'),
+    },
+    'good': {
+      'emoji': '😊', 
+      'label': '좋아요', 
+      'color': ModernColors.getMoodLightColor('good'),
+      'selectedColor': ModernColors.getMoodMediumColor('good'),
+      'backgroundColor': ModernColors.getMoodPastelColor('good'),
+    },
+    'normal': {
+      'emoji': '😐', 
+      'label': '보통이에요', 
+      'color': ModernColors.getMoodLightColor('normal'),
+      'selectedColor': ModernColors.getMoodMediumColor('normal'),
+      'backgroundColor': ModernColors.getMoodPastelColor('normal'),
+    },
+    'thoughtful': {
+      'emoji': '🤔', 
+      'label': '생각이 많아요', 
+      'color': ModernColors.getMoodLightColor('thoughtful'),
+      'selectedColor': ModernColors.getMoodMediumColor('thoughtful'),
+      'backgroundColor': ModernColors.getMoodPastelColor('thoughtful'),
+    },
+    'tired': {
+      'emoji': '😴', 
+      'label': '피곤해요', 
+      'color': ModernColors.getMoodLightColor('tired'),
+      'selectedColor': ModernColors.getMoodMediumColor('tired'),
+      'backgroundColor': ModernColors.getMoodPastelColor('tired'),
+    },
+    'sad': {
+      'emoji': '😢', 
+      'label': '슬퍼요', 
+      'color': ModernColors.getMoodLightColor('sad'),
+      'selectedColor': ModernColors.getMoodMediumColor('sad'),
+      'backgroundColor': ModernColors.getMoodPastelColor('sad'),
+    },
+    'angry': {
+      'emoji': '😠', 
+      'label': '화나요', 
+      'color': ModernColors.getMoodLightColor('angry'),
+      'selectedColor': ModernColors.getMoodMediumColor('angry'),
+      'backgroundColor': ModernColors.getMoodPastelColor('angry'),
+    },
   };
 
   @override
@@ -130,7 +177,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               onPressed: _editDiary,
               icon: Icon(
                 Icons.edit_outlined,
-                color: moodInfo['color'],
+                color: ModernColors.diary,
                 size: 20,
               ),
             ),
@@ -141,14 +188,17 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
         opacity: _fadeAnimation,
         child: Stack(
           children: [
-            // 배경 그라데이션
+            // 배경 그라데이션 (diary_write_edit_screen.dart와 동일)
             Container(
               height: 280,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: moodInfo['gradient'],
+                  colors: [
+                    ModernColors.diary,
+                    ModernColors.diary.withOpacity(0.7),
+                  ],
                 ),
               ),
             ),
@@ -201,7 +251,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: moodInfo['color'].withOpacity(0.2),
+            color: ModernColors.diary.withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -221,15 +271,18 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: moodInfo['gradient'],
-                  ),
+                  color: moodInfo['selectedColor'],
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: moodInfo['color'].withOpacity(0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
+                      color: moodInfo['selectedColor'].withOpacity(0.4),
+                      blurRadius: 16,
+                      offset: const Offset(0, 8),
+                    ),
+                    BoxShadow(
+                      color: moodInfo['selectedColor'].withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
                     ),
                   ],
                 ),
@@ -247,7 +300,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
-                      color: moodInfo['color'],
+                      color: moodInfo['selectedColor'],
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -266,32 +319,62 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
           
           const SizedBox(height: 24),
           
-          // 날짜 정보
+          // 날짜 정보 - Borderless Design
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: BoxDecoration(
-              color: moodInfo['color'].withOpacity(0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: moodInfo['color'].withOpacity(0.2),
-                width: 1,
+              gradient: LinearGradient(
+                colors: [
+                  ModernColors.diary.withOpacity(0.06),
+                  ModernColors.diary.withOpacity(0.10),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: ModernColors.diary.withOpacity(0.12),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
+                ),
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.8),
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
+                  spreadRadius: -1,
+                ),
+              ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.calendar_today,
-                  color: moodInfo['color'],
-                  size: 18,
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: ModernColors.diary.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: ModernColors.diary.withOpacity(0.2),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.calendar_today,
+                    color: ModernColors.diary,
+                    size: 18,
+                  ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
                 Text(
                   _getFormattedDate(widget.diary.date),
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: moodInfo['color'],
+                    fontWeight: FontWeight.w700,
+                    color: ModernColors.diary,
                   ),
                 ),
               ],
@@ -512,7 +595,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: moodInfo['color'].withOpacity(0.3),
+                    color: ModernColors.diary.withOpacity(0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -521,7 +604,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               child: ElevatedButton(
                 onPressed: _editDiary,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: moodInfo['color'],
+                  backgroundColor: ModernColors.diary,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
@@ -567,7 +650,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               onPressed: _shareDiary,
               icon: Icon(
                 Icons.share,
-                color: moodInfo['color'],
+                color: ModernColors.diary,
                 size: 22,
               ),
             ),
@@ -594,7 +677,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               onPressed: _copyDiary,
               icon: Icon(
                 Icons.copy,
-                color: moodInfo['color'],
+                color: ModernColors.diary,
                 size: 20,
               ),
             ),
@@ -611,28 +694,58 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withOpacity(0.2),
-          width: 1,
+        gradient: LinearGradient(
+          colors: [
+            color.withOpacity(0.04),
+            color.withOpacity(0.08),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
+          ),
+          BoxShadow(
+            color: ModernColors.surface.withOpacity(0.9),
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+            spreadRadius: -1,
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: 20,
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(0.2),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: 20,
+            ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Text(
             label,
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
               color: color,
             ),
           ),

@@ -100,12 +100,30 @@ class ModernColors {
   static const Color diarySoft = Color(0xFFDBEAFE);    // Blue-100
   static const Color diaryMuted = Color(0xFFBFDBFE);   // Blue-200
   
-  // ==================== 파스텔 감정 색상 시스템 ====================
+  // ==================== 감정 색상 시스템 (3단계 깊이) ====================
   
-  /// 🌈 파스텔 감정 색상 (이미지 기반)
-  static const Color pastelYellow = Color(0xFFFFF4E6);   // 연한 노란색 - 기쁨
-  static const Color pastelBlue = Color(0xFFE3F2FD);     // 연한 하늘색 - 좋음
-  static const Color pastelPink = Color(0xFFFCE4EC);     // 연한 분홍 - 생각
+  /// 🌈 기쁨 계열 (따뜻한 오렌지-골드 스펙트럼)
+  static const Color joyPastel = Color(0xFFFFF4E6);      // 매우 연한 피치 (배경용)
+  static const Color joyLight = Color(0xFFFFE0B2);       // 연한 오렌지 (버튼 기본)
+  static const Color joyMedium = Color(0xFFFFB74D);      // 중간 오렌지 (선택 상태)
+  static const Color joyBright = Color(0xFFFF9800);      // 밝은 오렌지 (강조)
+  
+  /// 🌊 차분 계열 (블루 스펙트럼)
+  static const Color calmPastel = Color(0xFFE8F4FD);     // 매우 연한 하늘 (배경용)
+  static const Color calmLight = Color(0xFFBBDEFB);      // 연한 하늘색 (버튼 기본)
+  static const Color calmMedium = Color(0xFF90CAF9);     // 중간 하늘색 (선택 상태)
+  static const Color calmBright = Color(0xFF42A5F5);     // 밝은 하늘색 (강조)
+  
+  /// 🌸 생각 계열 (핑크 스펙트럼)
+  static const Color thoughtPastel = Color(0xFFFCE4EC);  // 매우 연한 분홍 (배경용)
+  static const Color thoughtLight = Color(0xFFF8BBD9);   // 연한 분홍색 (버튼 기본)
+  static const Color thoughtMedium = Color(0xFFEC407A);  // 중간 분홍색 (선택 상태)
+  static const Color thoughtBright = Color(0xFFE91E63);  // 밝은 분홍색 (강조)
+  
+  /// 🎨 레거시 파스텔 색상 (하위 호환성)
+  static const Color pastelYellow = Color(0xFFFFF59D);   // 더 진한 노란색 (기쁨)
+  static const Color pastelBlue = Color(0xFFE3F2FD);     // 연한 하늘색 (보통)  
+  static const Color pastelPink = Color(0xFFFCE4EC);     // 연한 분홍색 (생각)
   static const Color pastelMint = Color(0xFFE0F2F1);     // 연한 민트 - 차분
   static const Color pastelPurple = Color(0xFFF3E5F5);   // 연한 보라 - 설렘
   static const Color pastelOrange = Color(0xFFFFF3E0);   // 연한 주황 - 활력
@@ -358,23 +376,114 @@ class ModernColors {
     }
   }
   
-  /// 감정별 파스텔 색상 반환 (이미지 기반)
+  /// 감정별 파스텔 색상 반환 (배경용 - 가장 연한 색상)
   static Color getMoodPastelColor(String mood) {
     switch (mood.toLowerCase()) {
-      case 'very_happy':
-      case 'happy':
-        return pastelYellow;
-      case 'good':
       case 'excited':
-        return pastelBlue;
+      case 'happy': 
+      case 'good':
+        return pastelYellow;  // #FFF4E6 연한 노란색 (기쁨)
       case 'normal':
       case 'thoughtful':
-        return pastelPink;
+        return pastelBlue;    // #E3F2FD 연한 하늘색 (보통)
       case 'tired':
       case 'sad':
-        return pastelMint;
+      case 'angry':
+        return pastelPink;    // #FCE4EC 연한 분홍색 (생각)
       default:
         return pastelBlue;
+    }
+  }
+  
+  /// 감정별 기본 색상 반환 (버튼 기본 상태)
+  static Color getMoodLightColor(String mood) {
+    switch (mood.toLowerCase()) {
+      case 'excited':
+      case 'happy': 
+      case 'good':
+        return joyLight;      // 연한 노란색 (기쁨)
+      case 'normal':
+      case 'thoughtful':
+        return calmLight;     // 연한 하늘색 (차분)
+      case 'tired':
+      case 'sad':
+      case 'angry':
+        return thoughtLight;  // 연한 분홍색 (생각)
+      default:
+        return calmLight;
+    }
+  }
+  
+  /// 감정별 선택 색상 반환 (버튼 선택 상태)
+  static Color getMoodMediumColor(String mood) {
+    switch (mood.toLowerCase()) {
+      case 'excited':
+      case 'happy': 
+      case 'good':
+        return joyMedium;     // 중간 노란색 (기쁨)
+      case 'normal':
+      case 'thoughtful':
+        return calmMedium;    // 중간 하늘색 (차분)
+      case 'tired':
+      case 'sad':
+      case 'angry':
+        return thoughtMedium; // 중간 분홍색 (생각)
+      default:
+        return calmMedium;
+    }
+  }
+  
+  /// 감정별 강조 색상 반환 (버튼 강조 상태)
+  static Color getMoodBrightColor(String mood) {
+    switch (mood.toLowerCase()) {
+      case 'excited':
+      case 'happy': 
+      case 'good':
+        return joyBright;     // 밝은 노란색 (기쁨)
+      case 'normal':
+      case 'thoughtful':
+        return calmBright;    // 밝은 하늘색 (차분)
+      case 'tired':
+      case 'sad':
+      case 'angry':
+        return thoughtBright; // 밝은 분홍색 (생각)
+      default:
+        return calmBright;
+    }
+  }
+  
+  /// 감정별 그라데이션 반환
+  static LinearGradient getMoodGradient(String mood) {
+    switch (mood.toLowerCase()) {
+      case 'excited':
+      case 'happy': 
+      case 'good':
+        return LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [joyLight, joyMedium],
+        );
+      case 'normal':
+      case 'thoughtful':
+        return LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [calmLight, calmMedium],
+        );
+      case 'tired':
+      case 'sad':
+      case 'angry':
+        return LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [thoughtLight, thoughtMedium],
+        );
+      default:
+        return LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [calmLight, calmMedium],
+        );
     }
   }
 }

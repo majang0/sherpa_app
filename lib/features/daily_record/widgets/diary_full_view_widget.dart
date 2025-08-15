@@ -392,8 +392,8 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
       backgroundColor = ModernColors.todayPastel;
       textColor = Colors.white;
     } else if (hasDiary && moodInfo != null) {
-      // ModernColors 시스템을 사용한 통일된 감정 색상 적용
-      backgroundColor = ModernColors.getMoodMediumColor(diaryLog.mood).withOpacity(0.4);
+      // ModernColors 파스텔 색상을 사용한 부드러운 감정 색상 적용
+      backgroundColor = ModernColors.getMoodPastelColor(diaryLog.mood);
       textColor = ModernColors.textPrimary;
     }
 

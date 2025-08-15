@@ -37,7 +37,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
   // 감정 데이터 매핑
   final Map<String, Map<String, dynamic>> _emotionData = {
     'happy': {'emoji': '😊', 'label': '기뻤어요', 'color': Color(0xFF4ECDC4), 'gradient': [Color(0xFF4ECDC4), Color(0xFF44A08D)]},
-    'excited': {'emoji': '🤗', 'label': '설렜어요', 'color': Color(0xFFFF6B9D), 'gradient': [Color(0xFFFF6B9D), Color(0xFFF093FB)]},
+    'excited': {'emoji': '🥰', 'label': '설렜어요', 'color': Color(0xFFFF6B9D), 'gradient': [Color(0xFFFF6B9D), Color(0xFFF093FB)]},
     'thoughtful': {'emoji': '🤔', 'label': '생각이 많아졌어요', 'color': Color(0xFF9B59B6), 'gradient': [Color(0xFF9B59B6), Color(0xFF8E44AD)]},
     'moved': {'emoji': '🥺', 'label': '감동적이었어요', 'color': Color(0xFF5DADE2), 'gradient': [Color(0xFF5DADE2), Color(0xFF3498DB)]},
     'surprised': {'emoji': '😮', 'label': '놀라웠어요', 'color': Color(0xFFF39C12), 'gradient': [Color(0xFFF39C12), Color(0xFFE67E22)]},

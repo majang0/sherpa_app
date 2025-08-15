@@ -408,12 +408,15 @@ class MeetingLog {
 
   String get moodIcon {
     switch (mood) {
-      case 'very_happy': return '😄';
-      case 'happy': return '😊';
-      case 'good': return '🙂';
-      case 'normal': return '😐';
-      case 'tired': return '😴';
-      case 'stressed': return '😰';
+      case 'excited': return '🥰';      // 설레요
+      case 'happy': return '😄';        // 기뻐요
+      case 'good': return '😊';         // 좋아요
+      case 'normal': return '😐';       // 보통이에요
+      case 'thoughtful': return '🤔';   // 생각이 많아요
+      case 'tired': return '😴';        // 피곤해요
+      case 'sad': return '😢';          // 슬퍼요
+      case 'angry': return '😠';        // 화나요
+      case 'stressed': return '😰';     // 스트레스(레거시 호환)
       default: return '😊';
     }
   }
@@ -650,39 +653,33 @@ class DiaryLog {
     this.isShared = false,
   });
 
-  /// 기분 이모지 가져오기
+  /// 기분 이모지 가져오기 (diary_write_edit_screen.dart 키 시스템 기준)
   String get moodEmoji {
     switch (mood) {
-      case 'very_happy': return '😄';
-      case 'happy': return '😊';
-      case 'good': return '🙂';
-      case 'normal': return '😐';
-      case 'tired': return '😴';
-      case 'sad': return '😢';
-      case 'angry': return '😠';
-      case 'excited': return '🤩';
-      case 'grateful': return '🥰';
-      case 'anxious': return '😰';
-      case 'confused': return '😵';
+      case 'excited': return '🥰';    // 설레요
+      case 'happy': return '😄';      // 기뻐요
+      case 'good': return '😊';       // 좋아요
+      case 'normal': return '😐';     // 보통이에요
+      case 'thoughtful': return '🤔'; // 생각이 많아요
+      case 'tired': return '😴';      // 피곤해요
+      case 'sad': return '😢';        // 슬퍼요
+      case 'angry': return '😠';      // 화나요
       default: return '😊';
     }
   }
 
-  /// 기분 텍스트 가져오기
+  /// 기분 텍스트 가져오기 (diary_write_edit_screen.dart 키 시스템 기준)
   String get moodText {
     switch (mood) {
-      case 'very_happy': return '매우 기쁨';
-      case 'happy': return '기쁨';
-      case 'good': return '좋음';
-      case 'normal': return '보통';
-      case 'tired': return '피곤';
-      case 'sad': return '슬픔';
-      case 'angry': return '화남';
-      case 'excited': return '신남';
-      case 'grateful': return '감사';
-      case 'anxious': return '불안';
-      case 'confused': return '혼란';
-      default: return '보통';
+      case 'excited': return '설레요';
+      case 'happy': return '기뻐요';
+      case 'good': return '좋아요';
+      case 'normal': return '보통이에요';
+      case 'thoughtful': return '생각이 많아요';
+      case 'tired': return '피곤해요';
+      case 'sad': return '슬퍼요';
+      case 'angry': return '화나요';
+      default: return '보통이에요';
     }
   }
 

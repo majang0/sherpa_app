@@ -55,7 +55,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
 
   final List<Map<String, dynamic>> _emotions = [
     {'id': 'happy', 'emoji': '😊', 'label': '기뻤어요'},
-    {'id': 'excited', 'emoji': '🤗', 'label': '설렜어요'},
+    {'id': 'excited', 'emoji': '🥰', 'label': '설렜어요'},
     {'id': 'thoughtful', 'emoji': '🤔', 'label': '생각이 많아졌어요'},
     {'id': 'moved', 'emoji': '🥺', 'label': '감동적이었어요'},
     {'id': 'surprised', 'emoji': '😮', 'label': '놀라웠어요'},

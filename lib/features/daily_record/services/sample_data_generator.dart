@@ -302,7 +302,7 @@ class SampleDataGenerator {
       '성장하는 하루', '평범한 일상', '의미 있는 시간', '새로운 시작'
     ];
     
-    final moods = ['very_happy', 'happy', 'good', 'normal', 'thoughtful'];
+    final moods = ['excited', 'happy', 'good', 'normal', 'thoughtful', 'tired', 'sad', 'angry'];
     
     return DiaryLog(
       id: 'diary_${date.millisecondsSinceEpoch}',

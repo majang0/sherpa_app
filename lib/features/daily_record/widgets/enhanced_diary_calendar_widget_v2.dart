@@ -1270,28 +1270,28 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
 
   String _getMoodEmoji(String mood) {
     switch (mood) {
-      case 'very_happy': return '😄';
-      case 'happy': return '😊';
-      case 'good': return '🙂';
+      case 'excited': return '🥰';
+      case 'happy': return '😄';
+      case 'good': return '😊';
       case 'normal': return '😐';
       case 'thoughtful': return '🤔';
       case 'tired': return '😴';
       case 'sad': return '😢';
-      case 'excited': return '🤗';
+      case 'angry': return '😠';
       default: return '😊';
     }
   }
 
   String _getMoodLabel(String mood) {
     switch (mood) {
-      case 'very_happy': return '매우 기뻐요';
+      case 'excited': return '설레요';
       case 'happy': return '기뻐요';
       case 'good': return '좋아요';
       case 'normal': return '보통이에요';
       case 'thoughtful': return '생각이 많아요';
       case 'tired': return '피곤해요';
       case 'sad': return '슬퍼요';
-      case 'excited': return '설레요';
+      case 'angry': return '화나요';
       default: return '기뻐요';
     }
   }
