@@ -62,31 +62,31 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: ModernColors.surface,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: ModernColors.getElevationShadow(3),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(context),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             _buildWeeklyCalendar(sortedDiaryLogs),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10),
             _buildFullViewButton(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             
             // 최근 기록들
             if (sortedDiaryLogs.isNotEmpty) ...[
               _buildRecentHeader(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               ...sortedDiaryLogs.take(3).map((diary) => _buildDiaryItem(diary)),
             ] else
               _buildEmptyState(),
             
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
             _buildWriteButton(),
           ],
         ),
@@ -98,23 +98,23 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [ModernColors.diary, ModernColors.diaryAccent],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: ModernColors.getContextShadow('diary', level: 2),
           ),
           child: const Icon(
             Icons.edit_note,
             color: Colors.white,
-            size: 24,
+            size: 20,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,16 +122,16 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               Text(
                 '일기 기록',
                 style: GoogleFonts.notoSans(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.w700,
                   color: ModernColors.textPrimary,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
                 '오늘의 이야기를 남겨보세요',
                 style: GoogleFonts.notoSans(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: ModernColors.textSecondary,
                   height: 1.2,
@@ -151,17 +151,17 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             );
           },
           child: Container(
-            width: 48,
-            height: 48,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: ModernColors.surface,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: ModernColors.getContextShadow('diary', level: 1),
             ),
             child: Icon(
               Icons.add_rounded,
               color: ModernColors.diary,
-              size: 24,
+              size: 20,
             ),
           ),
         ),
@@ -174,15 +174,15 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
     final weekDays = List.generate(7, (index) => now.subtract(Duration(days: 6 - index)));
     
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: ModernColors.background,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
             color: ModernColors.textTertiary.withOpacity(0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -199,11 +199,11 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                   borderRadius: BorderRadius.circular(1.5),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 8),
               Text(
                 '이번 주 기록',
                 style: GoogleFonts.notoSans(
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: ModernColors.textSecondary,
                   letterSpacing: 0.3,
@@ -211,7 +211,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               ),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: weekDays.map((day) => 
@@ -241,7 +241,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
         _showDateDiaryModal(day, dayLogs);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -249,7 +249,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             Text(
               weekdayName,
               style: GoogleFonts.notoSans(
-                fontSize: 9,
+                fontSize: 8,
                 fontWeight: FontWeight.w600,
                 color: isToday 
                     ? ModernColors.diary
@@ -257,19 +257,19 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                 letterSpacing: 0.2,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 3),
             
             // 날짜
             Container(
-              width: 32,
-              height: 32,
+              width: 28,
+              height: 28,
               decoration: BoxDecoration(
                 color: isToday 
                     ? ModernColors.diary
                     : latestDiary != null 
                         ? ModernColors.diaryLight
                         : ModernColors.surface,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   if (isToday) ...[
                     BoxShadow(
@@ -284,7 +284,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                 child: Text(
                   '${day.day}',
                   style: GoogleFonts.notoSans(
-                    fontSize: 13,
+                    fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: isToday 
                         ? Colors.white 
@@ -295,7 +295,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                 ),
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             
             // 감정 이모지 또는 상태 표시
             if (latestDiary != null) ...[
@@ -304,7 +304,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                   children: [
                     Text(
                       _getMoodEmoji(latestDiary.mood),
-                      style: const TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 12),
                     ),
                     const SizedBox(height: 2),
                     Container(
@@ -327,7 +327,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               else
                 Text(
                   _getMoodEmoji(latestDiary.mood),
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 14),
                 ),
             ] else
               Container(
@@ -398,36 +398,36 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: ModernColors.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
               color: ModernColors.textTertiary.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
         child: Row(
           children: [
             Container(
-              width: 36,
-              height: 36,
+              width: 32,
+              height: 32,
               decoration: BoxDecoration(
                 color: ModernColors.diaryLight,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Center(
                 child: Text(
                   _getMoodEmoji(diary.mood),
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 14),
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,36 +445,36 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                         child: Text(
                           _getMoodLabel(diary.mood),
                           style: GoogleFonts.notoSans(
-                            fontSize: 9,
+                            fontSize: 8,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 8),
                       Text(
                         '${diary.date.month}/${diary.date.day}',
                         style: GoogleFonts.notoSans(
-                          fontSize: 10,
+                          fontSize: 9,
                           fontWeight: FontWeight.w500,
                           color: ModernColors.textTertiary,
                         ),
                       ),
                       if (diary.hasAttachments) ...[
-                        const SizedBox(width: 6),
+                        const SizedBox(width: 4),
                         Icon(
                           Icons.attachment_rounded,
-                          size: 14,
+                          size: 12,
                           color: ModernColors.textTertiary,
                         ),
                       ],
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Text(
                     diary.title.isNotEmpty ? diary.title : diary.content,
                     style: GoogleFonts.notoSans(
-                      fontSize: 12,
+                      fontSize: 11,
                       fontWeight: FontWeight.w600,
                       color: ModernColors.textPrimary,
                       height: 1.3,
@@ -486,15 +486,15 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               ),
             ),
             Container(
-              width: 24,
-              height: 24,
+              width: 20,
+              height: 20,
               decoration: BoxDecoration(
                 color: ModernColors.background,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6),
               ),
               child: const Icon(
                 Icons.arrow_forward_ios_rounded,
-                size: 12,
+                size: 10,
                 color: ModernColors.diary,
               ),
             ),
@@ -584,10 +584,10 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
           },
           borderRadius: BorderRadius.circular(14),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             decoration: BoxDecoration(
               color: ModernColors.diaryLight,
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
                   color: ModernColors.diary.withOpacity(0.12),
@@ -600,22 +600,22 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(6),
+                  padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                     color: ModernColors.surface,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(6),
                   ),
                   child: Icon(
                     Icons.calendar_view_month_rounded,
                     color: ModernColors.diary,
-                    size: 16,
+                    size: 14,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
                 Text(
                   '전체 일기 보기',
                   style: GoogleFonts.notoSans(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: ModernColors.diary,
                     letterSpacing: -0.2,
@@ -632,10 +632,10 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
   Widget _buildWriteButton() {
     return Container(
       width: double.infinity,
-      height: 52,
+      height: 44,
       decoration: BoxDecoration(
         color: ModernColors.diary,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(14),
         boxShadow: ModernColors.getContextShadow('diary', level: 4),
       ),
       child: Material(
@@ -650,17 +650,17 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               ),
             );
           },
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(14),
           child: Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.edit_rounded, size: 22, color: Colors.white),
-                const SizedBox(width: 10),
+                const Icon(Icons.edit_rounded, size: 18, color: Colors.white),
+                const SizedBox(width: 8),
                 Text(
                   '일기 작성하기',
                   style: GoogleFonts.notoSans(
-                    fontSize: 17,
+                    fontSize: 15,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
                     letterSpacing: -0.3,
