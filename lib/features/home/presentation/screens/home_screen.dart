@@ -24,7 +24,6 @@ import '../widgets/enhanced_social_feed_widget.dart';
 import '../widgets/personalized_growth_dashboard_widget.dart';
 import '../widgets/university_guild_widget.dart';
 import '../widgets/growth_insights_widget.dart';
-import '../widgets/sherpi_ai_test_card.dart';
 // AI 테스트 위젯 import 제거됨 - 프로덕션 최적화
 
 // Models
@@ -335,9 +334,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
             const SizedBox(height: 20),
 
-            // 🤖 셰르피 AI 테스트 카드 (개발/테스트용)
-            const SherpiAiTestCard(),
-            const SizedBox(height: 20),
+            // 셰르피 AI 테스트 카드 제거됨 - 홈화면 리모델링 준비
 
             // 통합 성장 대시보드
             PersonalizedGrowthDashboardWidget(),
