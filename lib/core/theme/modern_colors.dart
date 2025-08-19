@@ -169,6 +169,119 @@ class ModernColors {
   /// 🎯 퀘스트 - 성취감 있는 앰버
   static const Color quest = Color(0xFFF59E0B);
   static const Color questLight = Color(0xFFFEF3C7);
+  
+  /// 🎁 보상 및 인센티브 색상 시스템
+  static const Color reward = Color(0xFFFFB800);           // 황금 보상
+  static const Color rewardLight = Color(0xFFFFF8DC);      // 연한 황금
+  static const Color rewardGradient1 = Color(0xFFFFD700);  // 골드 그라데이션 시작
+  static const Color rewardGradient2 = Color(0xFFFFA500);  // 골드 그라데이션 끝
+  
+  /// 💫 비활성화 상태 색상 시스템 (사용자 친화적)
+  static const Color inactive = Color(0xFFE5E7EB);         // 비활성 배경
+  static const Color inactiveText = Color(0xFF9CA3AF);     // 비활성 텍스트
+  static const Color inactiveBorder = Color(0xFFF3F4F6);   // 비활성 테두리
+  static const Color inactiveOverlay = Color(0x40000000);  // 비활성 오버레이
+  
+  /// 🔘 상태별 버튼 색상
+  static const Color buttonActive = Color(0xFF10B981);     // 활성 버튼 (초록)
+  static const Color buttonInactive = Color(0xFFD1D5DB);   // 비활성 버튼 (회색)
+  static const Color buttonPending = Color(0xFFEF4444);    // 대기 버튼 (빨강)
+
+  // ==================== 소프트 감성 디자인 추가 색상 ====================
+  
+  /// 💫 소프트 미스틱 계열 (몽환적인 감성)
+  static const Color softLavender = Color(0xFFF0EEFF);     // 연한 라벤더 (몽환적 배경)
+  static const Color softMist = Color(0xFFF8FAFB);         // 은은한 미스트 (부드러운 배경)
+  static const Color softPearl = Color(0xFFFBFCFE);        // 진주빛 (은은한 하이라이트)
+  static const Color softCloud = Color(0xFFF5F7FA);        // 구름빛 (감성적 배경)
+  
+  /// 🌸 소프트 피치 계열 (따뜻하고 포근한 감성)
+  static const Color softPeach = Color(0xFFFEF5F0);        // 소프트 피치 (따뜻한 배경)
+  static const Color softBloom = Color(0xFFFDF2F8);        // 연한 블룸 (로맨틱 배경)
+  static const Color softCream = Color(0xFFFFFBEB);        // 크림빛 (부드러운 하이라이트)
+  
+  /// 🌿 소프트 민트 계열 (자연스럽고 차분한 감성)
+  static const Color softMint = Color(0xFFF0FDFA);         // 소프트 민트 (신선한 배경)
+  static const Color softSage = Color(0xFFF6F8FA);         // 세이지 그린 (차분한 배경)
+  static const Color softDew = Color(0xFFF0FDF4);          // 이슬빛 (자연스러운 하이라이트)
+  
+  /// 🎨 감성적 그라데이션 - 부드럽고 몽환적인 느낌
+  static const LinearGradient dreamyGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFFBFCFE), Color(0xFFF0EEFF)],
+  );
+  
+  static const LinearGradient warmGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [Color(0xFFFFFBEB), Color(0xFFFEF5F0)],
+  );
+  
+  static const LinearGradient freshGradient = LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [Color(0xFFF0FDFA), Color(0xFFF6F8FA)],
+  );
+  
+  /// 🎁 보상 그라데이션 - 황금빛 인센티브
+  static const LinearGradient rewardGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [rewardGradient1, rewardGradient2],
+  );
+  
+  /// 💫 비활성화 그라데이션 - 부드러운 회색톤
+  static const LinearGradient inactiveGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFE5E7EB), Color(0xFFF3F4F6)],
+  );
+
+  // ==================== 스트릭 및 진행 추적 색상 ====================
+  
+  /// 🔥 스트릭 및 연속성 색상 (열정과 동기를 나타내는 따뜻한 톤)
+  static const Color streakFire = Color(0xFFFF6B35);        // 생동감 넘치는 오렌지
+  static const Color streakGold = Color(0xFFFFA726);        // 따뜻한 골드
+  static const Color streakSilver = Color(0xFF90A4AE);      // 시작 단계의 실버
+  static const Color streakMaster = Color(0xFFE91E63);      // 마스터 레벨의 핑크
+  
+  /// 📊 주간 진행 상태 색상 (차분하고 신뢰감 있는 톤)
+  static const Color weeklyExcellent = Color(0xFF4CAF50);   // 완벽한 주간 (초록)
+  static const Color weeklyGood = Color(0xFF2196F3);        // 좋은 진행 (파랑) 
+  static const Color weeklyAverage = Color(0xFFFF9800);     // 평균적 진행 (주황)
+  static const Color weeklyNeedsWork = Color(0xFFE91E63);   // 개선 필요 (핑크)
+  
+  /// 📅 달력 및 일자별 상태 색상
+  static const Color dayCompleted = Color(0xFF66BB6A);      // 완료된 날 (연한 초록)
+  static const Color dayPartial = Color(0xFFFFB74D);        // 부분 완료 (연한 주황)
+  static const Color dayMissed = Color(0xFFE0E0E0);         // 놓친 날 (회색)
+  static const Color dayToday = Color(0xFF5C6BC0);          // 오늘 (인디고)
+  
+  /// 🎯 성과 레벨별 그라데이션
+  static const LinearGradient streakBeginnerGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFE8F5E8), Color(0xFFDCEDC8)],         // 연한 초록 계열
+  );
+  
+  static const LinearGradient streakIntermediateGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFFFF3E0), Color(0xFFFFE0B2)],         // 따뜻한 오렌지 계열
+  );
+  
+  static const LinearGradient streakAdvancedGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],         // 시원한 블루 계열
+  );
+  
+  static const LinearGradient streakMasterGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFFCE4EC), Color(0xFFF8BBD9)],         // 우아한 핑크 계열
+  );
 
   // ==================== 그림자 및 깊이 시스템 ====================
   
@@ -484,6 +597,62 @@ class ModernColors {
           end: Alignment.bottomRight,
           colors: [calmLight, calmMedium],
         );
+    }
+  }
+  
+  /// 스트릭 레벨별 색상 반환 (연속 일수에 따른)
+  static Color getStreakColor(int consecutiveDays) {
+    if (consecutiveDays >= 30) {
+      return streakMaster;     // 30일 이상: 마스터 (핑크)
+    } else if (consecutiveDays >= 14) {
+      return streakFire;       // 14-29일: 파이어 (오렌지)
+    } else if (consecutiveDays >= 7) {
+      return streakGold;       // 7-13일: 골드 (골드)
+    } else if (consecutiveDays >= 3) {
+      return streakSilver;     // 3-6일: 실버 (실버)
+    } else {
+      return modernTextSecondary; // 1-2일: 기본색
+    }
+  }
+  
+  /// 스트릭 레벨별 그라데이션 반환
+  static LinearGradient getStreakGradient(int consecutiveDays) {
+    if (consecutiveDays >= 30) {
+      return streakMasterGradient;        // 마스터 레벨
+    } else if (consecutiveDays >= 14) {
+      return streakAdvancedGradient;      // 고급 레벨
+    } else if (consecutiveDays >= 7) {
+      return streakIntermediateGradient;  // 중급 레벨
+    } else {
+      return streakBeginnerGradient;      // 초급 레벨
+    }
+  }
+  
+  /// 주간 완료율에 따른 색상 반환
+  static Color getWeeklyProgressColor(double completionRate) {
+    if (completionRate >= 0.9) {
+      return weeklyExcellent;      // 90% 이상: 우수
+    } else if (completionRate >= 0.7) {
+      return weeklyGood;           // 70-89%: 양호
+    } else if (completionRate >= 0.4) {
+      return weeklyAverage;        // 40-69%: 평균
+    } else {
+      return weeklyNeedsWork;      // 40% 미만: 개선 필요
+    }
+  }
+  
+  /// 스트릭 레벨 텍스트 반환
+  static String getStreakLevelText(int consecutiveDays) {
+    if (consecutiveDays >= 30) {
+      return '🏆 마스터';
+    } else if (consecutiveDays >= 14) {
+      return '🔥 파이어';
+    } else if (consecutiveDays >= 7) {
+      return '🥇 골드';
+    } else if (consecutiveDays >= 3) {
+      return '🥈 실버';
+    } else {
+      return '🌱 시작';
     }
   }
 }
