@@ -47,10 +47,10 @@ class SampleDataGenerator {
     return 20 + _random.nextInt(131);
   }
 
-  /// 연속 달성일 생성 - 실제 데이터 기반으로 계산
+  /// 연속 달성일 생성 - 랜덤 생성
   static int _generateConsecutiveDays() {
-    // 9일 연속 달성을 위한 고정값 (데모용)
-    return 9;
+    // 0-15일 사이의 랜덤한 연속 달성일
+    return _random.nextInt(16);
   }
   
   /// 실제 연속 달성일 계산 (과거 데이터 기반)
@@ -141,34 +141,19 @@ class SampleDataGenerator {
         meetings.add(meeting);
       }
 
-      // 독서 로그 - 연속 달성을 위해 최근 9일은 보장
-      if (i < 9) {
-        // 최근 9일 (0~8일 전)은 무조건 독서 기록 (연속 달성을 위해)
-        readings.add(_generateReadingLog(date));
-      } else if (_random.nextDouble() < 0.6) {
+      // 독서 로그 - 랜덤 생성 (60% 확률)
+      if (_random.nextDouble() < 0.6) {
         readings.add(_generateReadingLog(date));
       }
 
-      // 운동 데이터 - 연속 달성을 위해 최근 9일은 보장
-      if (i < 9) {
-        // 최근 9일은 무조건 1개 이상의 운동 기록
-        final exerciseCount = math.max(1, _getExerciseCountForDay(i));
-        for (int k = 0; k < exerciseCount; k++) {
-          exercises.add(_generateExerciseLog(date, k));
-        }
-      } else {
-        // 9일 이전은 기존 로직 유지
-        final exerciseCount = _getExerciseCountForDay(i);
-        for (int k = 0; k < exerciseCount; k++) {
-          exercises.add(_generateExerciseLog(date, k));
-        }
+      // 운동 데이터 - 랜덤 생성
+      final exerciseCount = _getExerciseCountForDay(i);
+      for (int k = 0; k < exerciseCount; k++) {
+        exercises.add(_generateExerciseLog(date, k));
       }
 
-      // 일기 로그 - 연속 달성을 위해 최근 9일은 보장
-      if (i < 9) {
-        // 최근 9일 (0~8일 전)은 무조건 일기 작성 (연속 달성을 위해)
-        diaries.add(_generateDiaryLog(date));
-      } else if (_random.nextDouble() < 0.4) {
+      // 일기 로그 - 랜덤 생성 (40% 확률)
+      if (_random.nextDouble() < 0.4) {
         diaries.add(_generateDiaryLog(date));
       }
 

@@ -210,7 +210,7 @@ class _PersonalizedGrowthDashboardWidgetState
               
               // 오른쪽: 진행률 백분율 표시 (진행률 바와 시각적으로 정렬)
               Transform.translate(
-                offset: const Offset(0, -8), // 위로 8픽셀 이동하여 진행률 바와 시각적 균형 맞춤
+                offset: const Offset(0, -15), // 위로 15픽셀 이동하여 진행률 바와 시각적 균형 맞춤
                 child: Container(
                   width: 60,
                   height: 60,
