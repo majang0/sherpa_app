@@ -75,7 +75,7 @@ class _PersonalizedGrowthDashboardWidgetState
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
-          gradient: ModernColors.softGradient,
+          color: ModernColors.surface,
           borderRadius: BorderRadius.circular(24),
           boxShadow: ModernColors.getElevationShadow(2),
         ),
@@ -116,7 +116,7 @@ class _PersonalizedGrowthDashboardWidgetState
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
       decoration: BoxDecoration(
-        gradient: ModernColors.dreamyGradient,
+        color: ModernColors.backgroundElevated,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -170,17 +170,17 @@ class _PersonalizedGrowthDashboardWidgetState
                         widthFactor: progress,
                         child: Container(
                           decoration: BoxDecoration(
-                            gradient: isAllCompleted 
-                                ? ModernColors.rewardGradient
-                                : ModernColors.primaryGradient,
+                            color: isAllCompleted 
+                                ? ModernColors.dayCompleted
+                                : ModernColors.modernPrimary,
                             borderRadius: BorderRadius.circular(4),
                             boxShadow: [
                               BoxShadow(
                                 color: (isAllCompleted 
-                                    ? ModernColors.reward 
-                                    : ModernColors.modernPrimary).withOpacity(0.4),
-                                blurRadius: 4,
-                                offset: const Offset(0, 2),
+                                    ? ModernColors.dayCompleted 
+                                    : ModernColors.modernPrimary).withOpacity(0.3),
+                                blurRadius: 3,
+                                offset: const Offset(0, 1),
                               ),
                             ],
                           ),
@@ -198,7 +198,7 @@ class _PersonalizedGrowthDashboardWidgetState
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: isAllCompleted 
-                            ? ModernColors.reward 
+                            ? ModernColors.dayCompleted 
                             : ModernColors.modernText,
                       ),
                     ),
@@ -215,26 +215,11 @@ class _PersonalizedGrowthDashboardWidgetState
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
+                    color: isAllCompleted 
+                        ? ModernColors.softDew 
+                        : ModernColors.backgroundElevated,
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isAllCompleted 
-                          ? ModernColors.reward.withOpacity(0.3) 
-                          : ModernColors.modernPrimary.withOpacity(0.2),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.white.withOpacity(0.8),
-                        blurRadius: 4,
-                        offset: const Offset(0, -1),
-                      ),
-                      BoxShadow(
-                        color: ModernColors.shadowBase.withOpacity(0.1),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                    boxShadow: ModernColors.getElevationShadow(2),
                   ),
                   child: Center(
                     child: Column(
@@ -246,7 +231,7 @@ class _PersonalizedGrowthDashboardWidgetState
                             fontSize: 16,
                             fontWeight: FontWeight.w900,
                             color: isAllCompleted 
-                                ? ModernColors.reward 
+                                ? ModernColors.dayCompleted 
                                 : ModernColors.modernPrimary,
                             height: 1,
                           ),
@@ -283,7 +268,7 @@ class _PersonalizedGrowthDashboardWidgetState
         height: 58,
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          gradient: ModernColors.warmGradient,
+          color: ModernColors.backgroundSubtle,
           shape: BoxShape.circle,
           boxShadow: ModernColors.getElevationShadow(1),
         ),
@@ -338,7 +323,7 @@ class _PersonalizedGrowthDashboardWidgetState
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              gradient: ModernColors.dreamyGradient,
+              color: ModernColors.backgroundSubtle,
               borderRadius: BorderRadius.circular(20),
               boxShadow: ModernColors.getElevationShadow(1),
             ),
@@ -383,9 +368,9 @@ class _PersonalizedGrowthDashboardWidgetState
       margin: const EdgeInsets.symmetric(horizontal: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: ModernColors.warmGradient,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: ModernColors.getElevationShadow(2),
+        boxShadow: ModernColors.getElevationShadow(3),
       ),
       child: Row(
         children: [
@@ -393,9 +378,15 @@ class _PersonalizedGrowthDashboardWidgetState
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: ModernColors.modernSuccess,
+              color: ModernColors.dayCompleted,
               shape: BoxShape.circle,
-              boxShadow: ModernColors.getElevationShadow(1),
+              boxShadow: [
+                BoxShadow(
+                  color: ModernColors.dayCompleted.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
             child: const Icon(
               Icons.emoji_events,
@@ -417,15 +408,52 @@ class _PersonalizedGrowthDashboardWidgetState
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  '✨200XP + 💰50P + 🔥+0.1 의지력',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: ModernColors.modernTextSecondary,
-                  ),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: [
+                    _buildRewardItem('✨', '200XP'),
+                    _buildRewardItem('💰', '50P'),
+                    _buildRewardItem('🔥', '0.1 의지'),
+                  ],
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 보상 아이템 위젯
+  Widget _buildRewardItem(String emoji, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: ModernColors.dayCompleted.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            emoji,
+            style: const TextStyle(fontSize: 12),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: GoogleFonts.notoSans(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: ModernColors.dayCompleted,
             ),
           ),
         ],
@@ -450,14 +478,14 @@ class _PersonalizedGrowthDashboardWidgetState
     if (isCompleted) {
       // 보상 완료 상태
       buttonText = '보상 완료';
-      backgroundColor = ModernColors.modernSuccess;
+      backgroundColor = ModernColors.dayCompleted;
       foregroundColor = Colors.white;
       emoji = '✅';
       canClick = false;
     } else if (isActive) {
       // 보상 받을 수 있는 상태
       buttonText = '보상 받기';
-      backgroundColor = ModernColors.reward;
+      backgroundColor = ModernColors.dayCompleted;
       foregroundColor = Colors.white;
       emoji = '🎁';
       canClick = true;
@@ -554,13 +582,13 @@ class _PersonalizedGrowthDashboardWidgetState
         height: 72,
         decoration: BoxDecoration(
           color: isCompleted 
-              ? ModernColors.modernSuccess.withOpacity(0.08)
+              ? ModernColors.softDew
               : ModernColors.softPearl,
           borderRadius: BorderRadius.circular(14),
           boxShadow: isCompleted
               ? [
                   BoxShadow(
-                    color: ModernColors.modernSuccess.withOpacity(0.2),
+                    color: ModernColors.dayCompleted.withOpacity(0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -584,7 +612,7 @@ class _PersonalizedGrowthDashboardWidgetState
                 height: 28,
                 decoration: BoxDecoration(
                   color: isCompleted 
-                      ? ModernColors.modernSuccess 
+                      ? ModernColors.dayCompleted 
                       : functionColor.withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
@@ -609,7 +637,7 @@ class _PersonalizedGrowthDashboardWidgetState
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
                   color: isCompleted 
-                      ? ModernColors.modernSuccess 
+                      ? ModernColors.dayCompleted 
                       : ModernColors.modernText,
                 ),
                 textAlign: TextAlign.center,
@@ -700,10 +728,6 @@ class _PersonalizedGrowthDashboardWidgetState
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: ModernColors.getElevationShadow(1),
-        border: Border.all(
-          color: ModernColors.borderLight,
-          width: 1,
-        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
