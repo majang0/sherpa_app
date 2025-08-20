@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../constants/quest_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../models/quest_instance_model.dart';
 import '../../models/quest_template_model.dart';
@@ -38,7 +38,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
       opacity: isCompleted ? 0.7 : 1.0,
       child: Container(
         decoration: BoxDecoration(
-          color: QuestColors.pureWhite,
+          color: ModernColors.surface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: _getBorderColor(quest),
@@ -46,20 +46,20 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
           ),
           boxShadow: quest.canClaim ? [
             BoxShadow(
-              color: QuestColors.accentGold.withOpacity(0.3),
+              color: ModernColors.warning.withOpacity(0.3),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
-          ] : QuestColors.softShadow,
+          ] : [],
         ),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             color: quest.canClaim 
-              ? QuestColors.accentGold.withOpacity(0.05)
+              ? ModernColors.warning.withOpacity(0.05)
               : quest.canComplete 
-                ? QuestColors.accentGreen.withOpacity(0.05)
-                : QuestColors.pureWhite,
+                ? ModernColors.success.withOpacity(0.05)
+                : ModernColors.surface,
           ),
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -172,7 +172,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                             style: GoogleFonts.notoSans(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: QuestColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           
@@ -183,7 +183,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                             quest.description,
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
-                              color: QuestColors.textSecondary,
+                              color: ModernColors.textSecondary,
                               height: 1.3,
                             ),
                           ),
@@ -209,10 +209,10 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: QuestColors.backgroundWhite,
+                    color: ModernColors.background,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: QuestColors.inactive,
+                      color: ModernColors.border,
                       width: 1,
                     ),
                   ),
@@ -223,20 +223,20 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                         _buildRewardItem(
                           icon: Icons.trending_up,
                           value: '+${quest.rewards.experience.toInt()} XP',
-                          color: QuestColors.skyBlue,
+                          color: ModernColors.secondary,
                         ),
                         
                         // 포인트 (있는 경우만)
                         if (quest.rewards.points > 0) ...[
                           Container(
                             width: 1,
-                            color: QuestColors.inactive,
+                            color: ModernColors.border,
                             margin: const EdgeInsets.symmetric(horizontal: 8),
                           ),
                           _buildRewardItem(
                             icon: Icons.monetization_on,
                             value: '+${quest.rewards.points.toInt()} P',
-                            color: QuestColors.accentGold,
+                            color: ModernColors.warning,
                           ),
                         ],
                         
@@ -244,13 +244,13 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                         if (quest.rewards.statChance > 0) ...[
                           Container(
                             width: 1,
-                            color: QuestColors.inactive,
+                            color: ModernColors.border,
                             margin: const EdgeInsets.symmetric(horizontal: 8),
                           ),
                           _buildStatRewardItem(
                             category: quest.category,
                             value: '${(quest.rewards.statChance * 100).toInt()}%',
-                            color: QuestColors.accentGreen,
+                            color: ModernColors.success,
                           ),
                         ],
                       ],
@@ -310,10 +310,10 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: QuestColors.skyBlue.withOpacity(0.1),
+        color: ModernColors.secondary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: QuestColors.skyBlue.withOpacity(0.3),
+          color: ModernColors.secondary.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -323,7 +323,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
           Icon(
             trackingIcon,
             size: 14,
-            color: QuestColors.skyBlue,
+            color: ModernColors.secondary,
           ),
           const SizedBox(width: 6),
           Flexible(
@@ -331,7 +331,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
               trackingText,
               style: GoogleFonts.notoSans(
                 fontSize: 12,
-                color: QuestColors.skyBlue,
+                color: ModernColors.secondary,
                 fontWeight: FontWeight.w600,
               ),
               overflow: TextOverflow.ellipsis,
@@ -352,28 +352,28 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
     
     switch (quest.status) {
       case QuestStatus.notStarted:
-        statusColor = QuestColors.textSecondary;
+        statusColor = ModernColors.textSecondary;
         statusIcon = Icons.info_outline;
         break;
       case QuestStatus.inProgress:
         if (quest.canComplete) {
-          statusColor = QuestColors.accentGreen;
+          statusColor = ModernColors.success;
           statusIcon = Icons.check_circle_outline;
         } else {
-          statusColor = QuestColors.skyBlue;
+          statusColor = ModernColors.secondary;
           statusIcon = Icons.play_circle_outline;
         }
         break;
       case QuestStatus.completed:
-        statusColor = QuestColors.accentGold;
+        statusColor = ModernColors.warning;
         statusIcon = Icons.card_giftcard;
         break;
       case QuestStatus.claimed:
-        statusColor = QuestColors.completed;
+        statusColor = ModernColors.success;
         statusIcon = Icons.check_circle;
         break;
       default:
-        statusColor = QuestColors.textSecondary;
+        statusColor = ModernColors.textSecondary;
         statusIcon = Icons.help_outline;
     }
     
@@ -400,27 +400,27 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
   }
 
   Color _getBorderColor(QuestInstance quest) {
-    if (quest.canClaim) return QuestColors.accentGold;
-    if (quest.canComplete) return QuestColors.accentGreen;
-    if (quest.isInProgress) return QuestColors.skyBlue;
-    if (quest.status == QuestStatus.claimed) return QuestColors.inactive;
-    return QuestColors.inactive;
+    if (quest.canClaim) return ModernColors.warning;
+    if (quest.canComplete) return ModernColors.success;
+    if (quest.isInProgress) return ModernColors.secondary;
+    if (quest.status == QuestStatus.claimed) return ModernColors.border;
+    return ModernColors.border;
   }
 
   Color _getCategoryColor(QuestInstance quest) {
     switch (quest.category) {
       case QuestCategoryV2.stamina:
-        return QuestColors.accentOrange;
+        return ModernColors.warning;
       case QuestCategoryV2.knowledge:
-        return QuestColors.primaryBlue;
+        return ModernColors.primary;
       case QuestCategoryV2.technique:
-        return QuestColors.epicPurple;
+        return ModernColors.accent;
       case QuestCategoryV2.sociality:
-        return QuestColors.accentGreen;
+        return ModernColors.success;
       case QuestCategoryV2.willpower:
-        return QuestColors.hardBlue;
+        return ModernColors.primary;
       default:
-        return QuestColors.skyBlue;
+        return ModernColors.secondary;
     }
   }
 
@@ -449,7 +449,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: QuestColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -458,7 +458,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                   category.displayName,
                   style: GoogleFonts.notoSans(
                     fontSize: 10,
-                    color: QuestColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -494,7 +494,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: QuestColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -504,7 +504,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                     subtitle,
                     style: GoogleFonts.notoSans(
                       fontSize: 10,
-                      color: QuestColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -523,8 +523,8 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
       child: ElevatedButton(
         onPressed: _isProcessing ? null : _handleClaimReward,
         style: ElevatedButton.styleFrom(
-          backgroundColor: QuestColors.accentGold,
-          foregroundColor: QuestColors.textPrimary,
+          backgroundColor: ModernColors.warning,
+          foregroundColor: ModernColors.textPrimary,
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -564,7 +564,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: isCompleted ? QuestColors.completed : QuestColors.textSecondary,
+                color: isCompleted ? ModernColors.success : ModernColors.textSecondary,
               ),
             ),
             Text(
@@ -572,7 +572,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: isCompleted ? QuestColors.completed : QuestColors.skyBlue,
+                color: isCompleted ? ModernColors.success : ModernColors.secondary,
               ),
             ),
           ],
@@ -583,9 +583,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
           child: LinearProgressIndicator(
             value: progress,
             minHeight: 8,
-            backgroundColor: QuestColors.inactive,
+            backgroundColor: ModernColors.border,
             valueColor: AlwaysStoppedAnimation<Color>(
-              isCompleted ? QuestColors.completed : QuestColors.skyBlue,
+              isCompleted ? ModernColors.success : ModernColors.secondary,
             ),
           ),
         ),
@@ -597,10 +597,10 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: QuestColors.completed.withOpacity(0.1),
+        color: ModernColors.success.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: QuestColors.completed.withOpacity(0.3),
+          color: ModernColors.success.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -609,7 +609,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
         children: [
           Icon(
             Icons.check_circle,
-            color: QuestColors.completed,
+            color: ModernColors.success,
             size: 20,
           ),
           const SizedBox(width: 8),
@@ -618,7 +618,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: QuestColors.completed,
+              color: ModernColors.success,
             ),
           ),
         ],
