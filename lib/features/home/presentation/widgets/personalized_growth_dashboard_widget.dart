@@ -941,12 +941,23 @@ class _PersonalizedGrowthDashboardWidgetState
           // 🎁 조건부 컨텐츠 (보상 버튼일 때는 배지 숨김)
           if (!canClaimReward) ...[
             const SizedBox(width: 10),
-            // 일반 상태에서만 보상 배지들 표시
-            _buildMiniRewardBadge(null, '200XP'),
-            const SizedBox(width: 5),
-            _buildMiniRewardBadge(null, '50P'),
-            const SizedBox(width: 5),
-            _buildMiniRewardBadge('🔥', '0.1'),
+            // 일반 상태에서는 "전체 완료 시 보상" 텍스트 표시
+            Text(
+              '전체 완료 시 보상',
+              style: GoogleFonts.notoSans(
+                fontSize: 10,
+                fontWeight: FontWeight.w500,
+                color: Colors.white.withOpacity(0.8),
+                letterSpacing: -0.1,
+                shadows: [
+                  Shadow(
+                    color: Colors.black.withOpacity(0.15),
+                    offset: const Offset(0, 1),
+                    blurRadius: 1,
+                  ),
+                ],
+              ),
+            ),
           ] else ...[
             const SizedBox(width: 8),
             // 보상 버튼 상태에서는 화살표 아이콘 표시
@@ -1379,7 +1390,7 @@ class _PersonalizedGrowthDashboardWidgetState
                 child: Text(
                   goalData['title'] ?? '목표',
                   style: GoogleFonts.notoSans(
-                    fontSize: 9,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     // 🎨 완료: 흰색 텍스트 / 미완료: 프라이머리 통일
                     color: isCompleted 
