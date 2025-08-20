@@ -922,7 +922,7 @@ class _PersonalizedGrowthDashboardWidgetState
           
           // 📝 동적 텍스트 (보상 버튼일 때 "보상 받기"로 변경)
           Text(
-            canClaimReward ? '🎉 보상 받기' : '보상',
+            canClaimReward ? '🎉 보상 받기' : '전체 완료 시 보상',
             style: GoogleFonts.notoSans(
               fontSize: canClaimReward ? 14 : 12,
               fontWeight: FontWeight.w700,
@@ -939,26 +939,7 @@ class _PersonalizedGrowthDashboardWidgetState
           ),
           
           // 🎁 조건부 컨텐츠 (보상 버튼일 때는 배지 숨김)
-          if (!canClaimReward) ...[
-            const SizedBox(width: 10),
-            // 일반 상태에서는 "전체 완료 시 보상" 텍스트 표시
-            Text(
-              '전체 완료 시 보상',
-              style: GoogleFonts.notoSans(
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
-                color: Colors.white.withOpacity(0.8),
-                letterSpacing: -0.1,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.15),
-                    offset: const Offset(0, 1),
-                    blurRadius: 1,
-                  ),
-                ],
-              ),
-            ),
-          ] else ...[
+          if (canClaimReward) ...[
             const SizedBox(width: 8),
             // 보상 버튼 상태에서는 화살표 아이콘 표시
             Icon(
