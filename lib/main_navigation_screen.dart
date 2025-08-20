@@ -27,14 +27,21 @@ class MainNavigationScreen extends ConsumerStatefulWidget {
 class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
   int _selectedIndex = 0;
   int? _pendingSubTabIndex; // 하위 탭 인덱스 전달을 위한 변수
+  bool _argumentsProcessed = false; // arguments 중복 처리 방지 플래그
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     
+    // 🚫 arguments 중복 처리 방지 - 한 번만 처리하고 플래그 설정
+    if (_argumentsProcessed) {
+      return; // 이미 처리했으면 스킵
+    }
+    
     // arguments로 전달된 인덱스를 받아서 해당 탭으로 이동
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is int && args >= 0 && args < 5) {
+      _argumentsProcessed = true; // 처리 완료 플래그 설정
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
           _selectedIndex = args;
@@ -46,6 +53,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
       final subTabIndex = args['subTabIndex'] as int?;
       
       if (tabIndex != null && tabIndex >= 0 && tabIndex < 5) {
+        _argumentsProcessed = true; // 처리 완료 플래그 설정
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             _selectedIndex = tabIndex;

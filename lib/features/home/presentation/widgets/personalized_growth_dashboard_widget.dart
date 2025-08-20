@@ -3,19 +3,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math' as math;
 
 // Core
 import '../../../../core/theme/modern_colors.dart';
 
 // Shared Providers
 import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_point_provider.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
-import '../../../../shared/providers/global_user_title_provider.dart';
 
 // Core Constants
-import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 
 // Shared Utils
@@ -23,6 +19,11 @@ import '../../../../shared/utils/haptic_feedback_manager.dart';
 
 // Shared Models
 import '../../../../shared/models/global_user_model.dart';
+
+// Home Widgets - 보상 모달
+import 'all_goals_reward_modal.dart';
+
+// Home Widgets
 
 class PersonalizedGrowthDashboardWidget extends ConsumerStatefulWidget {
   const PersonalizedGrowthDashboardWidget({super.key});
@@ -38,6 +39,9 @@ class _PersonalizedGrowthDashboardWidgetState
 
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  
+  // 🎉 축하 화면 표시 상태
+  bool _showCelebrationView = false;
 
   @override
   void initState() {
@@ -59,6 +63,21 @@ class _PersonalizedGrowthDashboardWidgetState
     _animationController.forward();
   }
 
+  // 🎉 축하 화면 표시 조건 체크 및 업데이트
+  void _updateCelebrationState(GlobalUser user) {
+    final allGoalsCompleted = _checkAllGoalsCompleted();
+    final rewardClaimed = user.dailyRecords.isAllGoalsRewardClaimed;
+    
+    // 모든 목표 완료 + 보상 받기 완료 = 축하 화면 표시
+    final shouldShowCelebration = allGoalsCompleted && rewardClaimed;
+    
+    if (_showCelebrationView != shouldShowCelebration) {
+      setState(() {
+        _showCelebrationView = shouldShowCelebration;
+      });
+    }
+  }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -69,6 +88,9 @@ class _PersonalizedGrowthDashboardWidgetState
   Widget build(BuildContext context) {
     final user = ref.watch(globalUserProvider);
     final dailyGoals = user.dailyRecords.dailyGoals;
+
+    // 🎉 축하 화면 표시 조건 체크
+    _updateCelebrationState(user);
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -91,19 +113,191 @@ class _PersonalizedGrowthDashboardWidgetState
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildIntegratedHeaderSection(user, dailyGoals),
-            const SizedBox(height: 8), // 10 → 8로 더 타이트하게
-            _buildGoalsGrid(dailyGoals),
-            const SizedBox(height: 8), // 10 → 8로 더 타이트하게
-            // 새로운 스트릭 & 주간 현황 섹션
-            _buildStreakAndWeeklySection(user),
-            const SizedBox(height: 10), // 12 → 10으로 축소
-          ],
-        ),
+        child: _showCelebrationView 
+            ? _buildCelebrationView(user)
+            : _buildNormalView(user, dailyGoals),
       ),
+    );
+  }
+
+  // 🎉 축하 화면 (보상 받기 완료 후)
+  Widget _buildCelebrationView(GlobalUser user) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // 🎊 축하 헤더 섹션
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(20, 32, 20, 24),
+          decoration: BoxDecoration(
+            // 🎨 세련되고 생동감 있는 배경 - 은은한 브랜드 컬러 힌트
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                const Color(0xFFF0F7FF), // 아주 연한 브랜드 블루
+                const Color(0xFFF8FAFC), // 중간 톤
+                Colors.white,
+                const Color(0xFFFAFDFF), // 살짝 따뜻한 화이트
+              ],
+              stops: const [0.0, 0.3, 0.7, 1.0],
+            ),
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
+            ),
+          ),
+          child: Column(
+            children: [
+              // 🏆 대형 셰르피 (생동감 있는 세련된 모드)
+              Container(
+                width: 100,
+                height: 100,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  // 🎨 은은한 그라데이션으로 생동감 추가
+                  gradient: RadialGradient(
+                    colors: [
+                      Colors.white,
+                      const Color(0xFFF8FAFF), // 아주 연한 블루 힌트
+                      const Color(0xFFF5F8FF), // 조금 더 진한 블루 힌트
+                    ],
+                    stops: const [0.0, 0.7, 1.0],
+                  ),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    // 🌟 은은한 브랜드 컬러 테두리
+                    color: ModernColors.modernPrimary.withOpacity(0.15),
+                    width: 2.5,
+                  ),
+                  boxShadow: [
+                    // 🎭 다층 그림자로 깊이감과 생동감
+                    BoxShadow(
+                      color: ModernColors.modernPrimary.withOpacity(0.12),
+                      blurRadius: 20,
+                      offset: const Offset(0, 6),
+                      spreadRadius: 0,
+                    ),
+                    BoxShadow(
+                      color: ModernColors.modernPrimary.withOpacity(0.06),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.03),
+                      blurRadius: 6,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Transform.scale(
+                    scale: 1.8,
+                    child: Image.asset(
+                      SherpiEmotion.special.imagePath,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 24),
+              
+              // 🎊 브랜드 컬러로 강조된 축하 메시지 (RichText 복원)
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '🎉 ',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '완벽해요!',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                        color: ModernColors.modernPrimary, // 브랜드 컬러로 강조
+                        letterSpacing: -0.3,
+                        shadows: [
+                          Shadow(
+                            color: ModernColors.modernPrimary.withOpacity(0.15),
+                            offset: const Offset(0, 2),
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${user.name}님',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: ModernColors.modernPrimary, // 이름을 브랜드 컬러로
+                        letterSpacing: -0.1,
+                        shadows: [
+                          Shadow(
+                            color: ModernColors.modernPrimary.withOpacity(0.1),
+                            offset: const Offset(0, 1),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    TextSpan(
+                      text: ', 수고 많으셨어요!\n오늘의 목표를 모두 달성했어요!',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF64748B), // 부드러운 그레이
+                        height: 1.5,
+                        letterSpacing: -0.1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        
+        const SizedBox(height: 16),
+        
+        // 🔥 연속 달성 카드만 유지
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
+          child: _buildStreakCard(user),
+        ),
+      ],
+    );
+  }
+
+  // 📊 일반 화면 (기존 레이아웃)
+  Widget _buildNormalView(GlobalUser user, List<DailyGoal> dailyGoals) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildIntegratedHeaderSection(user, dailyGoals),
+        const SizedBox(height: 8), // 10 → 8로 더 타이트하게
+        _buildGoalsGrid(dailyGoals),
+        const SizedBox(height: 8), // 10 → 8로 더 타이트하게
+        // 새로운 스트릭 & 주간 현황 섹션
+        _buildStreakAndWeeklySection(user),
+        const SizedBox(height: 10), // 12 → 10으로 축소
+      ],
     );
   }
 
@@ -318,18 +512,6 @@ class _PersonalizedGrowthDashboardWidgetState
     );
   }
 
-  // 🎯 진행 상황에 따른 동적 격려 메시지 생성
-  String _getDynamicMessage(int completedCount, int totalCount, bool isAllCompleted) {
-    if (isAllCompleted) {
-      return '완벽해요! 🎉'; // 모든 목표 완성
-    } else if (completedCount == 0) {
-      return '오늘도 화이팅이에요!'; // 아직 시작 전
-    } else if (completedCount <= 2) {
-      return '좋은 시작이에요!'; // 1-2개 완료
-    } else {
-      return '거의 다 왔어요!'; // 3-4개 완료
-    }
-  }
 
 
   // 🌟 향상된 셰르피 섹션 - 더 완성도 있는 디자인
@@ -474,7 +656,6 @@ class _PersonalizedGrowthDashboardWidgetState
     
     // 완료된 목표 개수 계산 (simple_today_growth_widget 방식)
     int completedCount = 0;
-    final today = DateTime.now();
     
     for (final goalId in allGoals) {
       if (_checkGoalCompletion(goalId, records)) {
@@ -483,9 +664,6 @@ class _PersonalizedGrowthDashboardWidgetState
     }
     
     final totalGoals = allGoals.length;
-    final isAllCompleted = completedCount == totalGoals;
-    final canClaimReward = isAllCompleted && !user.dailyRecords.isAllGoalsRewardClaimed;
-    final isRewardClaimed = user.dailyRecords.isAllGoalsRewardClaimed;
     
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -513,164 +691,181 @@ class _PersonalizedGrowthDashboardWidgetState
             ),
           ),
           
-          // 조건부 받기 버튼 (전체 클리어시에만 표시)
-          if (canClaimReward) ...[
-            const SizedBox(height: 12),
-            _buildClaimRewardButton(),
-          ],
+          // 🚫 보상받기 버튼 제거됨 - 독립 위젯으로 분리
         ],
       ),
     );
   }
 
-  // 🎨 보상 표시 카드 (받기 버튼 제거, 중앙 정렬, 크기 축소)
+  // 🎨 조건부 보상 카드/버튼 (모든 목표 완료 시 황금빛 버튼으로 변환)
   Widget _buildRewardDisplayCard() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // 16,12 → 12,8로 축소
+    final user = ref.watch(globalUserProvider);
+    final canClaimReward = _checkAllGoalsCompleted() && !user.dailyRecords.isAllGoalsRewardClaimed;
+    
+    Widget cardContent = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // 클릭 가능할 때 더 넓게
       decoration: BoxDecoration(
-        // 🔵 강렬한 프라이머리 배경으로 시선 집중
-        color: ModernColors.modernPrimary,
-        borderRadius: BorderRadius.circular(12), // 14 → 12로 축소
-        // 🌟 프라이머리 색상 기반 깊이감 있는 그림자
-        boxShadow: [
-          BoxShadow(
-            color: ModernColors.modernPrimary.withOpacity(0.25),
-            blurRadius: 6, // 8 → 6으로 축소
-            offset: const Offset(0, 3), // 4 → 3으로 축소
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: ModernColors.modernPrimary.withOpacity(0.15),
-            blurRadius: 3, // 4 → 3으로 축소
-            offset: const Offset(0, 1), // 2 → 1로 축소
-            spreadRadius: 0,
-          ),
-        ],
+        // 🏆 모든 퀘스트 완료 시 황금빛, 일반 시에는 프라이머리
+        color: canClaimReward ? ModernColors.streakGold : ModernColors.modernPrimary,
+        borderRadius: BorderRadius.circular(12),
+        // 🌟 동적 그림자 (황금빛일 때 더 강렬하게)
+        boxShadow: canClaimReward 
+          ? [
+              // 황금빛 보상 버튼 그림자
+              BoxShadow(
+                color: ModernColors.streakGold.withOpacity(0.4),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+                spreadRadius: 2,
+              ),
+              BoxShadow(
+                color: ModernColors.streakGold.withOpacity(0.2),
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+              ),
+            ]
+          : [
+              // 일반 카드 그림자
+              BoxShadow(
+                color: ModernColors.modernPrimary.withOpacity(0.25),
+                blurRadius: 6,
+                offset: const Offset(0, 3),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: ModernColors.modernPrimary.withOpacity(0.15),
+                blurRadius: 3,
+                offset: const Offset(0, 1),
+                spreadRadius: 0,
+              ),
+            ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center, // 중앙 정렬
         mainAxisSize: MainAxisSize.min, // 최소 크기로 축소
         children: [
-          // 🏆 트로피 아이콘 - 흰색 배경에 프라이머리 아이콘
+          // 🏆 동적 아이콘 (보상 버튼일 때 더 크고 강렬하게)
           Container(
-            width: 20, // 24 → 20으로 축소
-            height: 20, // 24 → 20으로 축소
+            width: canClaimReward ? 24 : 20,
+            height: canClaimReward ? 24 : 20,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.9),
               shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 2, // 3 → 2로 축소
-                  offset: const Offset(0, 1),
-                ),
-              ],
+              boxShadow: canClaimReward 
+                ? [
+                    // 보상 버튼 상태일 때 더 강한 그림자
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 2,
+                      offset: const Offset(0, 1),
+                    ),
+                  ],
             ),
             child: Icon(
-              Icons.emoji_events,
-              color: ModernColors.modernPrimary,
-              size: 12, // 14 → 12로 축소
+              canClaimReward ? Icons.card_giftcard : Icons.emoji_events,
+              color: canClaimReward ? ModernColors.streakGold : ModernColors.modernPrimary,
+              size: canClaimReward ? 16 : 12,
             ),
           ),
-          const SizedBox(width: 8), // 10 → 8로 축소
+          const SizedBox(width: 8),
           
-          // 📝 보상 타이틀 - 깨끗한 흰색 텍스트
+          // 📝 동적 텍스트 (보상 버튼일 때 "보상 받기"로 변경)
           Text(
-            '보상',
+            canClaimReward ? '🎉 보상 받기' : '보상',
             style: GoogleFonts.notoSans(
-              fontSize: 12, // 13 → 12로 축소
+              fontSize: canClaimReward ? 14 : 12,
               fontWeight: FontWeight.w700,
               color: Colors.white,
               letterSpacing: -0.1,
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withOpacity(0.2),
                   offset: const Offset(0, 1),
                   blurRadius: 2,
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 10), // 12 → 10으로 축소
           
-          // 🎁 보상 배지들 - 투명 흰색 배경으로 조화
-          _buildMiniRewardBadge(null, '200XP'),
-          const SizedBox(width: 5), // 6 → 5로 축소
-          _buildMiniRewardBadge(null, '50P'),
-          const SizedBox(width: 5), // 6 → 5로 축소
-          _buildMiniRewardBadge('🔥', '0.1'),
-        ],
-      ),
-    );
-  }
-
-  // 🎯 조건부 받기 버튼 (전체 클리어시에만 표시)
-  Widget _buildClaimRewardButton() {
-    return Container(
-      width: double.infinity,
-      height: 48,
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: ModernColors.streakGold.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: () {
-          HapticFeedbackManager.heavyImpact();
-          
-          // 보상 받기 실행
-          ref.read(globalUserProvider.notifier).claimAllGoalsReward();
-          
-          // 셰르피 반응
-          ref.read(sherpiProvider.notifier).showInstantMessage(
-            context: SherpiContext.questComplete,
-            customDialogue: '🎉 모든 목표를 달성했어요! 멋져요!',
-            emotion: SherpiEmotion.cheering,
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: ModernColors.streakGold,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 0,
-          shadowColor: Colors.transparent,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.card_giftcard,
-              size: 20,
-              color: Colors.white,
-            ),
+          // 🎁 조건부 컨텐츠 (보상 버튼일 때는 배지 숨김)
+          if (!canClaimReward) ...[
+            const SizedBox(width: 10),
+            // 일반 상태에서만 보상 배지들 표시
+            _buildMiniRewardBadge(null, '200XP'),
+            const SizedBox(width: 5),
+            _buildMiniRewardBadge(null, '50P'),
+            const SizedBox(width: 5),
+            _buildMiniRewardBadge('🔥', '0.1'),
+          ] else ...[
             const SizedBox(width: 8),
-            Text(
-              '보상 받기',
-              style: GoogleFonts.notoSans(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                shadows: [
-                  Shadow(
-                    color: Colors.black.withOpacity(0.2),
-                    offset: const Offset(0, 1),
-                    blurRadius: 2,
-                  ),
-                ],
-              ),
+            // 보상 버튼 상태에서는 화살표 아이콘 표시
+            Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.white,
+              size: 14,
             ),
           ],
-        ),
+        ],
       ),
     );
+    
+    // 🎁 보상 카드/버튼 반환 (애니메이션 및 상태 관리)
+    if (canClaimReward) {
+      return GestureDetector(
+        onTap: () {
+          print('🎁 황금빛 보상 버튼 클릭됨 - 모든 목표 완료');
+          HapticFeedbackManager.lightImpact();
+          
+          // 🎊 먼저 보상 처리를 실행
+          _handleRewardClaim();
+          
+          // 🎉 그 다음에 축하 알림 모달 표시
+          _showCompletionModal();
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.elasticOut,
+          transform: Matrix4.identity()..scale(1.02), // 살짝 확대
+          child: Container(
+            decoration: BoxDecoration(
+              // 🌟 황금빛 보상 버튼을 위한 강렬한 외부 그림자
+              boxShadow: [
+                BoxShadow(
+                  color: ModernColors.streakGold.withOpacity(0.5),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
+                  spreadRadius: 2,
+                ),
+                BoxShadow(
+                  color: ModernColors.streakGold.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: cardContent,
+          ),
+        ),
+      );
+    } else {
+      // 🎨 일반 상태에서는 정적 카드로 표시
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: cardContent,
+      );
+    }
   }
+
+  // 🚫 _buildClaimRewardButton 제거됨 - 독립 위젯으로 분리
 
   // 🎨 완전히 새로운 인라인 보상 섹션 - 프라이머리 배경 디자인 (사용 안 함)
   Widget _buildInlineRewardSection({
@@ -898,20 +1093,38 @@ class _PersonalizedGrowthDashboardWidgetState
   // 컴팩트 목표 카드 (1x5 레이아웃용) - 프라이머리 통일 디자인
   Widget _buildCompactGoalCard(String goalId, DailyRecordData records, bool isCompleted) {
     final goalData = _getGoalData(goalId);
-    final functionColor = ModernColors.getFunctionColor(goalId);
+    
+    // 🛡️ 보상받기 상태 확인
+    final user = ref.read(globalUserProvider);
+    final canClaimReward = _checkAllGoalsCompleted() && !user.dailyRecords.isAllGoalsRewardClaimed;
+    final isRewardClaimed = user.dailyRecords.isAllGoalsRewardClaimed;
+    final shouldDisable = canClaimReward || isRewardClaimed;
     
     return GestureDetector(
       onTap: () {
+        // 🛡️ 보상받기 상태일 때는 목표 버튼 비활성화
+        final user = ref.read(globalUserProvider);
+        final canClaimReward = _checkAllGoalsCompleted() && !user.dailyRecords.isAllGoalsRewardClaimed;
+        
+        // 보상받기 가능한 상태거나 이미 보상받은 상태에서는 목표 버튼 비활성화
+        if (canClaimReward || user.dailyRecords.isAllGoalsRewardClaimed) {
+          HapticFeedbackManager.lightImpact();
+          return; // 🚫 네비게이션 실행하지 않음
+        }
+        
         if (!isCompleted) {
           _navigateToRecordScreen(goalId);
         }
         HapticFeedbackManager.lightImpact();
       },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-        height: 64,
-        decoration: BoxDecoration(
+      child: Opacity(
+        // 🎨 보상받기 상태일 때 시각적 비활성화
+        opacity: shouldDisable ? 0.5 : 1.0,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          height: 64,
+          decoration: BoxDecoration(
           // 🔵 완료 상태: 강렬한 프라이머리 배경으로 통일
           color: isCompleted 
               ? ModernColors.modernPrimary
@@ -1044,8 +1257,9 @@ class _PersonalizedGrowthDashboardWidgetState
             ],
           ),
         ),
-      ),
-    );
+      ), // AnimatedContainer close
+    ), // Opacity close
+  ); // GestureDetector close
   }
   
   // 목표 데이터 반환 (UI 일관성을 위해 모든 제목을 2글자로 통일)
@@ -1067,11 +1281,28 @@ class _PersonalizedGrowthDashboardWidgetState
   }
 
 
-  // 목표별 기록 화면으로 이동
+  // 모든 목표 완료 확인 헬퍼 메서드
+  bool _checkAllGoalsCompleted() {
+    final user = ref.read(globalUserProvider);
+    final records = user.dailyRecords;
+    final allGoals = ['steps', 'focus', 'reading', 'exercise', 'diary'];
+    
+    int completedCount = 0;
+    for (final goalId in allGoals) {
+      if (_checkGoalCompletion(goalId, records)) {
+        completedCount++;
+      }
+    }
+    
+    return completedCount == allGoals.length;
+  }
+
+  // 목표별 기록 화면으로 이동 (안전한 네비게이션 방식으로 수정)
   void _navigateToRecordScreen(String goalId) {
-    Navigator.of(context).pushNamedAndRemoveUntil(
+    // 🚨 기존의 pushNamedAndRemoveUntil는 보상받기 버튼과 충돌을 일으킴
+    // 🔧 일반적인 pushNamed를 사용하여 안전하게 네비게이션
+    Navigator.of(context).pushNamed(
       '/',
-      (route) => false,
       arguments: {
         'tabIndex': 2,    // 퀘스트 탭
         'subTabIndex': 1, // 기록 서브탭
@@ -1377,6 +1608,50 @@ class _PersonalizedGrowthDashboardWidgetState
     final now = DateTime.now();
     final todayWeekday = now.weekday; // 1=월요일, 7=일요일
     return weekdayIndex == (todayWeekday - 1); // 0-based 인덱스로 변환
+  }
+
+  // 🎉 완료 축하 알림 모달 표시 (보상은 이미 처리됨)
+  void _showCompletionModal() {
+    final user = ref.read(globalUserProvider);
+    
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return AllGoalsRewardModal(
+            userName: user.name,
+            onClose: () {
+              Navigator.pop(context);
+            },
+            // 🔄 보상은 이미 처리되었으므로 onRewardClaimed 콜백 제거
+            onRewardClaimed: null, // 단순 알림 용도로 변경
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+        reverseTransitionDuration: const Duration(milliseconds: 300),
+        opaque: false,
+        barrierColor: Colors.transparent,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  // 🎊 실제 보상 처리
+  void _handleRewardClaim() {
+    // 보상 받기 실행
+    ref.read(globalUserProvider.notifier).claimAllGoalsReward();
+    
+    // 셰르피 반응
+    ref.read(sherpiProvider.notifier).showInstantMessage(
+      context: SherpiContext.questComplete,
+      customDialogue: '🎉 모든 목표를 달성했어요! 멋져요!',
+      emotion: SherpiEmotion.cheering,
+    );
   }
 
 }

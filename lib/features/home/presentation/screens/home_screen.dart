@@ -336,7 +336,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
             // 셰르피 AI 테스트 카드 제거됨 - 홈화면 리모델링 준비
 
-            // 통합 성장 대시보드
+            // 통합 성장 대시보드 (조건부 보상 버튼 기능 포함)
             PersonalizedGrowthDashboardWidget(),
             const SizedBox(height: 20),
             
