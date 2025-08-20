@@ -708,20 +708,15 @@ class _PersonalizedGrowthDashboardWidgetState
         // 🏆 모든 퀘스트 완료 시 황금빛, 일반 시에는 프라이머리
         color: canClaimReward ? ModernColors.streakGold : ModernColors.modernPrimary,
         borderRadius: BorderRadius.circular(12),
-        // 🌟 동적 그림자 (황금빛일 때 더 강렬하게)
+        // 🌟 선명한 그림자 (뿌연 느낌 제거)
         boxShadow: canClaimReward 
           ? [
-              // 황금빛 보상 버튼 그림자
+              // 황금빛 보상 버튼 - 선명한 그림자
               BoxShadow(
-                color: ModernColors.streakGold.withOpacity(0.4),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
-                spreadRadius: 2,
-              ),
-              BoxShadow(
-                color: ModernColors.streakGold.withOpacity(0.2),
-                blurRadius: 6,
+                color: ModernColors.streakGold.withOpacity(0.25),
+                blurRadius: 3,
                 offset: const Offset(0, 3),
+                spreadRadius: 0,
               ),
             ]
           : [
@@ -835,18 +830,13 @@ class _PersonalizedGrowthDashboardWidgetState
           transform: Matrix4.identity()..scale(1.02), // 살짝 확대
           child: Container(
             decoration: BoxDecoration(
-              // 🌟 황금빛 보상 버튼을 위한 강렬한 외부 그림자
+              // 🌟 선명한 외부 그림자 (뿌연 느낌 완전 제거)
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.streakGold.withOpacity(0.5),
-                  blurRadius: 16,
-                  offset: const Offset(0, 8),
-                  spreadRadius: 2,
-                ),
-                BoxShadow(
-                  color: ModernColors.streakGold.withOpacity(0.3),
-                  blurRadius: 8,
+                  color: ModernColors.streakGold.withOpacity(0.2),
+                  blurRadius: 4,
                   offset: const Offset(0, 4),
+                  spreadRadius: 0,
                 ),
               ],
               borderRadius: BorderRadius.circular(12),
@@ -1434,7 +1424,6 @@ class _PersonalizedGrowthDashboardWidgetState
             children: weeklyCompletionStatus.asMap().entries.map((entry) {
               final index = entry.key;
               final isCompleted = entry.value;
-              final isToday = _isToday(index);
               
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
@@ -1454,17 +1443,7 @@ class _PersonalizedGrowthDashboardWidgetState
                           end: Alignment.bottomRight,
                         )
                       : null,
-                  color: !isCompleted
-                      ? (isToday 
-                          ? ModernColors.modernPrimary.withOpacity(0.1)
-                          : ModernColors.gray100)
-                      : null,
-                  border: isToday && !isCompleted
-                      ? Border.all(
-                          color: ModernColors.modernPrimary.withOpacity(0.3),
-                          width: 2,
-                        )
-                      : null,
+                  color: !isCompleted ? ModernColors.gray100 : null,
                   // 🎨 완료된 날짜에 그림자 효과
                   boxShadow: isCompleted
                       ? [
@@ -1483,24 +1462,7 @@ class _PersonalizedGrowthDashboardWidgetState
                           size: 18,
                           color: Colors.white,
                         )
-                      : (isToday && !isCompleted
-                          ? Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: ModernColors.modernPrimary.withOpacity(0.6),
-                                // 🎨 현재 날짜 표시 그림자
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: ModernColors.modernPrimary.withOpacity(0.2),
-                                    blurRadius: 2,
-                                    offset: const Offset(0, 1),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : null),
+                      : null,
                 ),
               );
             }).toList(),
@@ -1544,7 +1506,6 @@ class _PersonalizedGrowthDashboardWidgetState
   List<bool> _calculateWeeklyCompletionStatus(GlobalUser user) {
     final now = DateTime.now();
     final startOfWeek = now.subtract(Duration(days: now.weekday - 1)); // 월요일 시작
-    final allGoals = ['steps', 'focus', 'reading', 'exercise', 'diary'];
     
     List<bool> weeklyStatus = [];
     
@@ -1558,19 +1519,20 @@ class _PersonalizedGrowthDashboardWidgetState
         continue;
       }
       
-      // 해당 날짜에 모든 목표를 달성했는지 확인
-      bool allGoalsCompleted = true;
-      for (final goalId in allGoals) {
-        if (!_checkGoalCompletionForDate(goalId, user.dailyRecords, checkDate)) {
-          allGoalsCompleted = false;
-          break;
-        }
-      }
-      
-      weeklyStatus.add(allGoalsCompleted);
+      // 해당 날짜에 전체 클리어 보상을 받았는지 확인
+      weeklyStatus.add(_checkAllGoalsRewardClaimedForDate(user.dailyRecords, checkDate));
     }
     
     return weeklyStatus;
+  }
+
+  // 특정 날짜에 전체 클리어 보상을 받았는지 확인
+  bool _checkAllGoalsRewardClaimedForDate(DailyRecordData records, DateTime checkDate) {
+    // ✅ 실제 보상 받은 날짜 리스트를 확인
+    return records.allGoalsRewardClaimedDates.any((claimedDate) => 
+      claimedDate.year == checkDate.year && 
+      claimedDate.month == checkDate.month && 
+      claimedDate.day == checkDate.day);
   }
   
   // 실제 연속 달성일 계산 (샘플 데이터 기반)
@@ -1603,12 +1565,6 @@ class _PersonalizedGrowthDashboardWidgetState
     return consecutiveDays;
   }
   
-  // 주어진 인덱스(0=월요일, 6=일요일)가 오늘인지 확인
-  bool _isToday(int weekdayIndex) {
-    final now = DateTime.now();
-    final todayWeekday = now.weekday; // 1=월요일, 7=일요일
-    return weekdayIndex == (todayWeekday - 1); // 0-based 인덱스로 변환
-  }
 
   // 🎉 완료 축하 알림 모달 표시 (보상은 이미 처리됨)
   void _showCompletionModal() {

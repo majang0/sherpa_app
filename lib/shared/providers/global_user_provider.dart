@@ -1254,16 +1254,37 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // 통합된 포인트 시스템으로 일일 목표 완료 보너스 직접 지급
     final bonusPoints = ref.read(globalPointProvider.notifier).onDailyGoalAllClear();
 
+    // ✅ 먼저 보상 수령 상태로 변경 및 오늘 날짜를 전체 클리어 보상 받은 날짜 리스트에 추가
+    final updatedClaimedDates = [...records.allGoalsRewardClaimedDates];
+    final todayDate = DateTime(today.year, today.month, today.day); // 시간 정보 제거한 날짜만
+    
+    // 중복 방지: 이미 오늘 날짜가 있는지 확인
+    if (!updatedClaimedDates.any((date) => 
+        date.year == todayDate.year && 
+        date.month == todayDate.month && 
+        date.day == todayDate.day)) {
+      updatedClaimedDates.add(todayDate);
+    }
+    
+    final updatedRecords = records.copyWith(
+      isAllGoalsCompleted: true,  // 실제 데이터 기반으로 확인했으므로 true로 설정
+      isAllGoalsRewardClaimed: true,
+      allGoalsRewardClaimedDates: updatedClaimedDates, // ✅ 보상 받은 날짜 리스트 업데이트
+    );
+
+    state = state.copyWith(dailyRecords: updatedRecords);
+    _saveUserData();
+
     // 달성한 목표 리스트 구성
-    final completedGoals = records.dailyGoals.where((g) => g.isCompleted).toList();
+    final completedGoals = updatedRecords.dailyGoals.where((g) => g.isCompleted).toList();
     final goalDetails = {
       'totalGoals': completedGoals.length,
       'goalList': completedGoals.map((g) => g.title).toList(),
       'bonusPoints': bonusPoints,
-      'consecutiveDays': records.consecutiveDays,
+      'consecutiveDays': updatedRecords.consecutiveDays,
     };
 
-    // 보상 지급 (XP와 능력치만)
+    // 보상 지급 (XP와 능력치만) - 상태 업데이트 후에 호출
     handleActivityCompletion(
       activityType: 'all_goals_reward',
       xp: 200.0,
@@ -1272,15 +1293,6 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       message: '🎉 모든 일일 목표 완료 보상! 대단해요!',
       additionalData: goalDetails, // 목표 상세 정보 전달
     );
-
-    // 보상 수령 상태로 변경 및 isAllGoalsCompleted 플래그 설정
-    final updatedRecords = records.copyWith(
-      isAllGoalsCompleted: true,  // 실제 데이터 기반으로 확인했으므로 true로 설정
-      isAllGoalsRewardClaimed: true,
-    );
-
-    state = state.copyWith(dailyRecords: updatedRecords);
-    _saveUserData();
   }
 
   /// 통합 활동 완료 보상 처리 (모든 앱 활동에서 사용)

@@ -165,6 +165,7 @@ class DailyRecordData {
   final DateTime lastActiveDate;
   final bool isAllGoalsCompleted;
   final bool isAllGoalsRewardClaimed;
+  final List<DateTime> allGoalsRewardClaimedDates; // ✅ 전체 클리어 보상을 받은 날짜들
 
   const DailyRecordData({
     required this.todaySteps,
@@ -181,6 +182,7 @@ class DailyRecordData {
     required this.lastActiveDate,
     this.isAllGoalsCompleted = false,
     this.isAllGoalsRewardClaimed = false,
+    this.allGoalsRewardClaimedDates = const [], // ✅ 전체 클리어 보상 받은 날짜들 초기값
   });
 
   /// 초기 상태 생성
@@ -197,6 +199,7 @@ class DailyRecordData {
     challengeRecords: [], // ✅ 빈 참린지 기록 초기화
     consecutiveDays: 0,
     lastActiveDate: DateTime.now(),
+    allGoalsRewardClaimedDates: [], // ✅ 빈 보상 날짜 리스트 초기화
   );
 
   /// 오늘의 목표 완료률 계산
@@ -284,6 +287,7 @@ class DailyRecordData {
     DateTime? lastActiveDate,
     bool? isAllGoalsCompleted,
     bool? isAllGoalsRewardClaimed,
+    List<DateTime>? allGoalsRewardClaimedDates, // ✅ 전체 클리어 보상 받은 날짜들 추가
   }) {
     return DailyRecordData(
       todaySteps: todaySteps ?? this.todaySteps,
@@ -300,6 +304,7 @@ class DailyRecordData {
       lastActiveDate: lastActiveDate ?? this.lastActiveDate,
       isAllGoalsCompleted: isAllGoalsCompleted ?? this.isAllGoalsCompleted,
       isAllGoalsRewardClaimed: isAllGoalsRewardClaimed ?? this.isAllGoalsRewardClaimed,
+      allGoalsRewardClaimedDates: allGoalsRewardClaimedDates ?? this.allGoalsRewardClaimedDates, // ✅ 전체 클리어 보상 받은 날짜들 추가
     );
   }
 
@@ -319,6 +324,7 @@ class DailyRecordData {
       'lastActiveDate': lastActiveDate.toIso8601String(),
       'isAllGoalsCompleted': isAllGoalsCompleted,
       'isAllGoalsRewardClaimed': isAllGoalsRewardClaimed,
+      'allGoalsRewardClaimedDates': allGoalsRewardClaimedDates.map((date) => date.toIso8601String()).toList(), // ✅ 전체 클리어 보상 받은 날짜들 추가
     };
   }
 
@@ -354,6 +360,9 @@ class DailyRecordData {
       lastActiveDate: DateTime.tryParse(json['lastActiveDate'] ?? '') ?? DateTime.now(),
       isAllGoalsCompleted: json['isAllGoalsCompleted'] ?? false,
       isAllGoalsRewardClaimed: json['isAllGoalsRewardClaimed'] ?? false,
+      allGoalsRewardClaimedDates: (json['allGoalsRewardClaimedDates'] as List?) // ✅ 전체 클리어 보상 받은 날짜들 추가
+          ?.map((dateString) => DateTime.tryParse(dateString) ?? DateTime.now())
+          .toList() ?? [],
     );
   }
 }
