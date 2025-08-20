@@ -130,22 +130,21 @@ class _PersonalizedGrowthDashboardWidgetState
           width: double.infinity,
           padding: const EdgeInsets.fromLTRB(20, 32, 20, 24),
           decoration: BoxDecoration(
-            // 🎨 세련되고 생동감 있는 배경 - 은은한 브랜드 컬러 힌트
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color(0xFFF0F7FF), // 아주 연한 브랜드 블루
-                const Color(0xFFF8FAFC), // 중간 톤
-                Colors.white,
-                const Color(0xFFFAFDFF), // 살짝 따뜻한 화이트
-              ],
-              stops: const [0.0, 0.3, 0.7, 1.0],
-            ),
+            // 🎨 깔끔한 화이트 배경으로 명확한 계층 구조
+            color: Colors.white,
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(24),
               topRight: Radius.circular(24),
             ),
+            // 🌟 부드러운 그림자로 카드 느낌 강화
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, -2),
+                spreadRadius: 0,
+              ),
+            ],
           ),
           child: Column(
             children: [
@@ -155,20 +154,13 @@ class _PersonalizedGrowthDashboardWidgetState
                 height: 100,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  // 🎨 은은한 그라데이션으로 생동감 추가
-                  gradient: RadialGradient(
-                    colors: [
-                      Colors.white,
-                      const Color(0xFFF8FAFF), // 아주 연한 블루 힌트
-                      const Color(0xFFF5F8FF), // 조금 더 진한 블루 힌트
-                    ],
-                    stops: const [0.0, 0.7, 1.0],
-                  ),
+                  // 🎨 깔끔한 흰색 배경으로 통일감
+                  color: Colors.white,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    // 🌟 은은한 브랜드 컬러 테두리
-                    color: ModernColors.modernPrimary.withOpacity(0.15),
-                    width: 2.5,
+                    // 🌟 브랜드 컬러 테두리로 포인트 강조
+                    color: ModernColors.modernPrimary.withOpacity(0.2),
+                    width: 3,
                   ),
                   boxShadow: [
                     // 🎭 다층 그림자로 깊이감과 생동감
@@ -318,25 +310,81 @@ class _PersonalizedGrowthDashboardWidgetState
     final totalCount = allGoals.length;
     final progress = totalCount > 0 ? completedCount / totalCount : 0.0;
     final isAllCompleted = completedCount == totalCount;
+    
+    // 🎁 보상받기 가능 상태 확인 (황금빛 테마 적용용)
+    final canClaimReward = isAllCompleted && !user.dailyRecords.isAllGoalsRewardClaimed;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
       decoration: BoxDecoration(
-        // 🎨 은은한 블루 그라데이션 배경으로 히어로 느낌
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            ModernColors.modernPrimary.withOpacity(0.08),
-            ModernColors.modernPrimary.withOpacity(0.03),
-            Colors.white.withOpacity(0.95),
-          ],
-          stops: const [0.0, 0.6, 1.0],
-        ),
+        // 🎨 조건부 그라데이션 - 보상받기 가능 시 황금빛 테마
+        gradient: canClaimReward 
+          ? LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                ModernColors.rewardGradient1,       // 황금 그라데이션 시작 (#FFD700)
+                ModernColors.rewardGradient2,       // 황금 그라데이션 끝 (#FFA500)
+              ],
+              stops: const [0.0, 1.0],
+            )
+          : LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                ModernColors.modernPrimary,         // 메인 브랜드 색상
+                ModernColors.primaryLight,          // 조화로운 밝은 톤
+              ],
+              stops: const [0.0, 1.0],
+            ),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
+        // 🌟 조건부 그림자 시스템 - 황금빛 테마와 일반 테마
+        boxShadow: canClaimReward
+          ? [
+              // 황금빛 메인 그림자 - 보상받기 가능 상태
+              BoxShadow(
+                color: ModernColors.rewardGradient1.withOpacity(0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+                spreadRadius: 1,
+              ),
+              BoxShadow(
+                color: ModernColors.rewardGradient2.withOpacity(0.2),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+                spreadRadius: 0,
+              ),
+            ]
+          : [
+              // 일반 테마 그림자 시스템
+              BoxShadow(
+                color: ModernColors.modernPrimary.withOpacity(0.25),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: ModernColors.primaryLight.withOpacity(0.15),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 4,
+                offset: const Offset(0, 1),
+                spreadRadius: 0,
+              ),
+            ],
       ),
       child: Column(
         children: [
@@ -347,16 +395,24 @@ class _PersonalizedGrowthDashboardWidgetState
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // 셰르피 (원래 크기로)
-                _buildCompactSherpiSection(),
+                _buildCompactSherpiSection(canClaimReward),
                 const SizedBox(width: 8),
-                // 인사말
+                // 인사말 - 보상받기 가능 시 칭찬 메시지로 변경
                 Text(
-                  _getTimeBasedGreeting(),
+                  _getGreetingMessage(canClaimReward),
                   style: GoogleFonts.notoSans(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: ModernColors.modernText,
+                    color: Colors.white,
                     height: 1.3,
+                    shadows: [
+                      // 🌟 텍스트 가독성을 위한 부드러운 그림자
+                      Shadow(
+                        color: Colors.black.withOpacity(0.2),
+                        offset: const Offset(0, 1),
+                        blurRadius: 2,
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -372,7 +428,36 @@ class _PersonalizedGrowthDashboardWidgetState
     );
   }
 
-  // 🌅 시간대별 개인화된 인사말
+  // 🌅 조건부 인사말 - 보상받기 가능 시 칭찬 메시지
+  String _getGreetingMessage(bool canClaimReward) {
+    if (canClaimReward) {
+      // 🎉 모든 목표 완료 시 칭찬 메시지들
+      final praiseMessages = [
+        '완벽해요! 🌟',
+        '대단하시네요! ✨', 
+        '최고예요! 🏆',
+        '멋져요! 🎉',
+        '훌륭해요! 💫',
+      ];
+      
+      // 시간대별로 다른 칭찬 메시지 선택
+      final hour = DateTime.now().hour;
+      if (hour >= 5 && hour < 12) {
+        return praiseMessages[0]; // 아침: 완벽해요!
+      } else if (hour >= 12 && hour < 17) {
+        return praiseMessages[1]; // 오후: 대단하시네요!
+      } else if (hour >= 17 && hour < 21) {
+        return praiseMessages[2]; // 저녁: 최고예요!
+      } else {
+        return praiseMessages[3]; // 밤: 멋져요!
+      }
+    } else {
+      // 🌅 일반 시간대별 인사말
+      return _getTimeBasedGreeting();
+    }
+  }
+  
+  // 🌅 시간대별 개인화된 인사말 (일반 상황용)
   String _getTimeBasedGreeting() {
     final hour = DateTime.now().hour;
     
@@ -401,34 +486,49 @@ class _PersonalizedGrowthDashboardWidgetState
             color: isAllCompleted 
                 ? ModernColors.streakGold  
                 : Colors.white,
-            // 🌟 임팩트 있는 그림자 효과
+            // 🌟 그라데이션 헤더와 조화로운 진화된 그림자 시스템
             boxShadow: isAllCompleted
                 ? [
-                    // 황금 글로우 효과
+                    // 황금 글로우 효과 - 완성 시
                     BoxShadow(
-                      color: ModernColors.streakGold.withOpacity(0.4),
-                      blurRadius: 20,
+                      color: ModernColors.streakGold.withOpacity(0.3),
+                      blurRadius: 24,
                       offset: const Offset(0, 8),
-                      spreadRadius: 4,
+                      spreadRadius: 2,
                     ),
                     BoxShadow(
-                      color: ModernColors.streakGold.withOpacity(0.6),
+                      color: ModernColors.streakGold.withOpacity(0.5),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                       spreadRadius: 0,
                     ),
-                  ]
-                : [
+                    // 그라데이션 조화 그림자
                     BoxShadow(
-                      color: ModernColors.modernPrimary.withOpacity(0.12),
+                      color: ModernColors.primaryLight.withOpacity(0.2),
                       blurRadius: 16,
                       offset: const Offset(0, 6),
-                      spreadRadius: 2,
+                      spreadRadius: 1,
+                    ),
+                  ]
+                : [
+                    // 🎨 그라데이션과 조화로운 프리미엄 그림자 시스템
+                    BoxShadow(
+                      color: ModernColors.modernPrimary.withOpacity(0.25),
+                      blurRadius: 24,
+                      offset: const Offset(0, 8),
+                      spreadRadius: 1,
                     ),
                     BoxShadow(
-                      color: ModernColors.modernPrimary.withOpacity(0.08),
-                      blurRadius: 8,
+                      color: ModernColors.primaryLight.withOpacity(0.15),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                      spreadRadius: 0,
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.08),
+                      blurRadius: 6,
                       offset: const Offset(0, 2),
+                      spreadRadius: 0,
                     ),
                   ],
           ),
@@ -491,16 +591,12 @@ class _PersonalizedGrowthDashboardWidgetState
               ? '🎉 모든 목표 완성!'
               : '오늘의 목표 ${totalCount}개 중 ${completedCount}개 완료!',
           style: GoogleFonts.notoSans(
-            fontSize: 14, // 16 → 14로 축소
+            fontSize: 14,
             fontWeight: FontWeight.w500, 
-            color: isAllCompleted 
-                ? ModernColors.streakGold
-                : ModernColors.modernTextSecondary,
+            color: Colors.white.withOpacity(0.9),
             shadows: [
               Shadow(
-                color: (isAllCompleted 
-                    ? ModernColors.streakGold 
-                    : ModernColors.modernTextSecondary).withOpacity(0.08),
+                color: Colors.black.withOpacity(0.3),
                 offset: const Offset(0, 1),
                 blurRadius: 2,
               ),
@@ -597,8 +693,8 @@ class _PersonalizedGrowthDashboardWidgetState
     );
   }
 
-  // 컴팩트한 셰르피 섹션 (기존 코드 유지 - 다른 곳에서 사용될 수 있음)
-  Widget _buildCompactSherpiSection() {
+  // 컴팩트한 셰르피 섹션 (조건부 스타일링)
+  Widget _buildCompactSherpiSection(bool canClaimReward) {
     return GestureDetector(
       onTap: () {
         ref.read(sherpiProvider.notifier).showMessage(
@@ -614,21 +710,62 @@ class _PersonalizedGrowthDashboardWidgetState
         height: 48,
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: ModernColors.backgroundSubtle,
+          // 🎨 조건부 배경색 - 보상받기 가능 시 황금빛 틴트
+          color: canClaimReward 
+              ? Colors.white.withOpacity(0.98) // 보상받기 상태에서 더 선명한 배경
+              : Colors.white.withOpacity(0.95),
           shape: BoxShape.circle,
-          // 🎨 브랜드 컬러 그림자 (따뜻한 느낌)
-          boxShadow: [
-            BoxShadow(
-              color: ModernColors.dayCompleted.withOpacity(0.08),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-            BoxShadow(
-              color: ModernColors.dayCompleted.withOpacity(0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 1),
-            ),
-          ],
+          // 🌟 조건부 그림자 시스템 - 황금빛 테마와 조화
+          boxShadow: canClaimReward
+              ? [
+                  // 황금빛 테마 그림자
+                  BoxShadow(
+                    color: ModernColors.rewardGradient1.withOpacity(0.25),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                    spreadRadius: 2,
+                  ),
+                  BoxShadow(
+                    color: ModernColors.rewardGradient2.withOpacity(0.15),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                    spreadRadius: 0,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.08),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                    spreadRadius: 0,
+                  ),
+                ]
+              : [
+                  // 일반 테마 그림자
+                  BoxShadow(
+                    color: ModernColors.primaryLight.withOpacity(0.2),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                    spreadRadius: 1,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.12),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                    spreadRadius: 0,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 3,
+                    offset: const Offset(0, 1),
+                    spreadRadius: 0,
+                  ),
+                ],
+          // 🌈 조건부 테두리 - 황금빛 테마와 조화
+          border: Border.all(
+            color: canClaimReward 
+                ? ModernColors.rewardGradient1.withOpacity(0.3) // 황금빛 테두리
+                : Colors.white.withOpacity(0.9),
+            width: 2.0,
+          ),
         ),
         child: Center(
           child: Transform.scale(
@@ -708,28 +845,40 @@ class _PersonalizedGrowthDashboardWidgetState
         // 🏆 모든 퀘스트 완료 시 황금빛, 일반 시에는 프라이머리
         color: canClaimReward ? ModernColors.streakGold : ModernColors.modernPrimary,
         borderRadius: BorderRadius.circular(12),
-        // 🌟 선명한 그림자 (뿌연 느낌 제거)
+        // 🌟 그라데이션 헤더와 조화로운 고급 그림자 시스템
         boxShadow: canClaimReward 
           ? [
-              // 황금빛 보상 버튼 - 선명한 그림자
+              // 황금빛 보상 버튼 - 임팩트 있는 프리미엄 그림자
               BoxShadow(
-                color: ModernColors.streakGold.withOpacity(0.25),
-                blurRadius: 3,
-                offset: const Offset(0, 3),
+                color: ModernColors.streakGold.withOpacity(0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+                spreadRadius: 1,
+              ),
+              BoxShadow(
+                color: ModernColors.primaryLight.withOpacity(0.12),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
                 spreadRadius: 0,
               ),
             ]
           : [
-              // 일반 카드 그림자
+              // 일반 카드 - 그라데이션과 조화로운 은은한 그림자
               BoxShadow(
-                color: ModernColors.modernPrimary.withOpacity(0.25),
-                blurRadius: 6,
+                color: ModernColors.modernPrimary.withOpacity(0.18),
+                blurRadius: 8,
                 offset: const Offset(0, 3),
                 spreadRadius: 0,
               ),
               BoxShadow(
-                color: ModernColors.modernPrimary.withOpacity(0.15),
-                blurRadius: 3,
+                color: ModernColors.primaryLight.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 2,
                 offset: const Offset(0, 1),
                 spreadRadius: 0,
               ),
@@ -830,13 +979,19 @@ class _PersonalizedGrowthDashboardWidgetState
           transform: Matrix4.identity()..scale(1.02), // 살짝 확대
           child: Container(
             decoration: BoxDecoration(
-              // 🌟 선명한 외부 그림자 (뿌연 느낌 완전 제거)
+              // 🌟 그라데이션과 조화로운 프리미엄 외부 글로우 효과
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.streakGold.withOpacity(0.2),
-                  blurRadius: 4,
-                  offset: const Offset(0, 4),
-                  spreadRadius: 0,
+                  color: ModernColors.streakGold.withOpacity(0.15),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                  spreadRadius: 2,
+                ),
+                BoxShadow(
+                  color: ModernColors.primaryLight.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                  spreadRadius: 1,
                 ),
               ],
               borderRadius: BorderRadius.circular(12),
@@ -1126,32 +1281,42 @@ class _PersonalizedGrowthDashboardWidgetState
                   width: 0.8,
                 )
               : null,
-          // 🎨 완료/미완료 상태별 차별화된 그림자
+          // 🎨 그라데이션 헤더와 조화로운 완성도 높은 그림자 시스템
           boxShadow: isCompleted
               ? [
-                  // 완료 상태: 프라이머리 기반 강렬한 그림자
+                  // 완료 상태: 그라데이션과 조화로운 멀티 레이어 그림자
                   BoxShadow(
-                    color: ModernColors.modernPrimary.withOpacity(0.25),
-                    blurRadius: 6,
-                    offset: const Offset(0, 3),
+                    color: ModernColors.modernPrimary.withOpacity(0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                    spreadRadius: 0,
                   ),
                   BoxShadow(
-                    color: ModernColors.modernPrimary.withOpacity(0.15),
-                    blurRadius: 3,
+                    color: ModernColors.primaryLight.withOpacity(0.12),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                    spreadRadius: 0,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 2,
                     offset: const Offset(0, 1),
+                    spreadRadius: 0,
                   ),
                 ]
               : [
-                  // 미완료 상태: 통일된 프라이머리 색상 기반 은은한 그림자
+                  // 미완료 상태: 서틀하면서도 세련된 그림자
                   BoxShadow(
-                    color: ModernColors.modernPrimary.withOpacity(0.08),
-                    blurRadius: 4,
+                    color: ModernColors.modernPrimary.withOpacity(0.06),
+                    blurRadius: 6,
                     offset: const Offset(0, 2),
+                    spreadRadius: 0,
                   ),
                   BoxShadow(
-                    color: ModernColors.modernPrimary.withOpacity(0.04),
-                    blurRadius: 2,
+                    color: ModernColors.primaryLight.withOpacity(0.04),
+                    blurRadius: 3,
                     offset: const Offset(0, 1),
+                    spreadRadius: 0,
                   ),
                 ],
         ),
@@ -1311,13 +1476,20 @@ class _PersonalizedGrowthDashboardWidgetState
         return records.todayFocusMinutes >= 30;
       case 'reading':
         return records.readingLogs.any((log) => 
-          _isSameDay(log.date, today) && log.pages >= 1);
+          log.date.year == today.year && 
+          log.date.month == today.month && 
+          log.date.day == today.day && 
+          log.pages >= 1);
       case 'exercise':
         return records.exerciseLogs.any((log) =>
-            _isSameDay(log.date, today));
+          log.date.year == today.year && 
+          log.date.month == today.month && 
+          log.date.day == today.day);
       case 'diary':
         return records.diaryLogs.any((log) =>
-            _isSameDay(log.date, today));
+          log.date.year == today.year && 
+          log.date.month == today.month && 
+          log.date.day == today.day);
       default:
         return false;
     }
@@ -1333,9 +1505,9 @@ class _PersonalizedGrowthDashboardWidgetState
   
   // 연속 클리어 스트릭 카드 (이미지 기반 깔끔한 주간 디자인)
   Widget _buildStreakCard(GlobalUser user) {
-    // 실제 데이터 기반으로 연속 달성일 계산
+    // 실제 보상 받은 날짜 기반으로 연속 달성일 계산
     final actualConsecutiveDays = _calculateActualConsecutiveDays(user);
-    final displayConsecutiveDays = actualConsecutiveDays > 0 ? actualConsecutiveDays : user.dailyRecords.consecutiveDays;
+    final displayConsecutiveDays = actualConsecutiveDays; // 실제 보상 데이터만 사용
     
     // 이번 주 날짜별 목표 달성 상태 계산
     final weeklyCompletionStatus = _calculateWeeklyCompletionStatus(user);
@@ -1345,17 +1517,25 @@ class _PersonalizedGrowthDashboardWidgetState
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        // 🎨 명확한 경계를 위한 개선된 그림자
+        // 🎨 그라데이션 헤더와 조화로운 프리미엄 그림자 시스템
         boxShadow: [
           BoxShadow(
-            color: ModernColors.modernPrimary.withOpacity(0.08),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+            color: ModernColors.modernPrimary.withOpacity(0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
           ),
           BoxShadow(
-            color: ModernColors.modernPrimary.withOpacity(0.04),
+            color: ModernColors.primaryLight.withOpacity(0.06),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
             blurRadius: 3,
             offset: const Offset(0, 1),
+            spreadRadius: 0,
           ),
         ],
       ),
@@ -1422,7 +1602,6 @@ class _PersonalizedGrowthDashboardWidgetState
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: weeklyCompletionStatus.asMap().entries.map((entry) {
-              final index = entry.key;
               final isCompleted = entry.value;
               
               return AnimatedContainer(
@@ -1472,35 +1651,6 @@ class _PersonalizedGrowthDashboardWidgetState
     );
   }
   
-  
-  // 특정 날짜의 목표 달성 여부 확인
-  bool _checkGoalCompletionForDate(String goalId, DailyRecordData records, DateTime date) {
-    switch (goalId) {
-      case 'steps':
-        // 걸음수는 현재 데이터에서 오늘 것만 확인 가능 (과거 데이터 제한적)
-        return _isSameDay(date, DateTime.now()) ? records.todaySteps >= 6000 : false;
-      case 'focus':
-        return _isSameDay(date, DateTime.now()) ? records.todayFocusMinutes >= 30 : false;
-      case 'reading':
-        return records.readingLogs.any((log) => 
-          _isSameDay(log.date, date) && log.pages >= 1);
-      case 'exercise':
-        return records.exerciseLogs.any((log) =>
-            _isSameDay(log.date, date));
-      case 'diary':
-        return records.diaryLogs.any((log) =>
-            _isSameDay(log.date, date));
-      default:
-        return false;
-    }
-  }
-
-  // 날짜 비교 헬퍼 메서드
-  bool _isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
-  }
 
   // 이번 주 각 날짜별 목표 달성 상태 계산 (월-일)
   List<bool> _calculateWeeklyCompletionStatus(GlobalUser user) {
@@ -1535,30 +1685,41 @@ class _PersonalizedGrowthDashboardWidgetState
       claimedDate.day == checkDate.day);
   }
   
-  // 실제 연속 달성일 계산 (샘플 데이터 기반)
+  // 실제 연속 달성일 계산 (보상 받은 날짜 기반)
   int _calculateActualConsecutiveDays(GlobalUser user) {
-    final now = DateTime.now();
     final records = user.dailyRecords;
-    final allGoals = ['steps', 'focus', 'reading', 'exercise', 'diary'];
-    int consecutiveDays = 0;
+    final claimedDates = records.allGoalsRewardClaimedDates;
     
-    // 어제부터 거꾸로 확인
-    for (int i = 1; i <= 30; i++) {
-      final checkDate = now.subtract(Duration(days: i));
-      
-      // 해당 날짜에 모든 목표를 달성했는지 확인
-      bool allGoalsCompleted = true;
-      for (final goalId in allGoals) {
-        if (!_checkGoalCompletionForDate(goalId, records, checkDate)) {
-          allGoalsCompleted = false;
-          break;
-        }
+    // 보상 받은 날짜가 없으면 0 반환
+    if (claimedDates.isEmpty) {
+      return 0;
+    }
+    
+    // 날짜를 정렬 (최신 날짜부터)
+    final sortedDates = [...claimedDates];
+    sortedDates.sort((a, b) => b.compareTo(a)); // 내림차순 정렬
+    
+    int consecutiveDays = 0;
+    DateTime? previousDate;
+    
+    for (final claimedDate in sortedDates) {
+      // 첫 번째 날짜인 경우
+      if (previousDate == null) {
+        consecutiveDays = 1;
+        previousDate = claimedDate;
+        continue;
       }
       
-      if (allGoalsCompleted) {
+      // 이전 날짜와 정확히 하루 차이인지 확인
+      final daysDifference = previousDate.difference(claimedDate).inDays;
+      
+      if (daysDifference == 1) {
+        // 연속된 날짜
         consecutiveDays++;
+        previousDate = claimedDate;
       } else {
-        break; // 연속 달성이 끊어진 지점
+        // 연속이 끊어짐
+        break;
       }
     }
     
