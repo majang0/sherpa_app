@@ -73,22 +73,34 @@ class _PersonalizedGrowthDashboardWidgetState
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 0),
         decoration: BoxDecoration(
           color: ModernColors.surface,
           borderRadius: BorderRadius.circular(24),
-          boxShadow: ModernColors.getElevationShadow(2),
+          // 🎨 다층 그림자 효과 (Ambient + Direct Shadow)
+          boxShadow: [
+            BoxShadow(
+              color: ModernColors.modernPrimary.withOpacity(0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 2),
+            ),
+            BoxShadow(
+              color: ModernColors.modernPrimary.withOpacity(0.04),
+              blurRadius: 6,
+              offset: const Offset(0, 1),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildIntegratedHeaderSection(user, dailyGoals),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8), // 10 → 8로 더 타이트하게
             _buildGoalsGrid(dailyGoals),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8), // 10 → 8로 더 타이트하게
             // 새로운 스트릭 & 주간 현황 섹션
             _buildStreakAndWeeklySection(user),
-            const SizedBox(height: 16),
+            const SizedBox(height: 10), // 12 → 10으로 축소
           ],
         ),
       ),
@@ -114,7 +126,7 @@ class _PersonalizedGrowthDashboardWidgetState
     final isAllCompleted = completedCount == totalCount;
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
       decoration: BoxDecoration(
         color: ModernColors.backgroundElevated,
         borderRadius: const BorderRadius.only(
@@ -136,7 +148,7 @@ class _PersonalizedGrowthDashboardWidgetState
               Text(
                 '오늘의 성장',
                 style: GoogleFonts.notoSans(
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.w800,
                   color: ModernColors.modernText,
                   height: 1.2,
@@ -212,8 +224,8 @@ class _PersonalizedGrowthDashboardWidgetState
               Transform.translate(
                 offset: const Offset(0, -15), // 위로 15픽셀 이동하여 진행률 바와 시각적 균형 맞춤
                 child: Container(
-                  width: 60,
-                  height: 60,
+                  width: 52,
+                  height: 52,
                   decoration: BoxDecoration(
                     color: isAllCompleted 
                         ? ModernColors.softDew 
@@ -263,18 +275,32 @@ class _PersonalizedGrowthDashboardWidgetState
         );
         HapticFeedbackManager.lightImpact();
       },
-      child: Container(
-        width: 58,
-        height: 58,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOut,
+        width: 48,
+        height: 48,
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
           color: ModernColors.backgroundSubtle,
           shape: BoxShape.circle,
-          boxShadow: ModernColors.getElevationShadow(1),
+          // 🎨 브랜드 컬러 그림자 (따뜻한 느낌)
+          boxShadow: [
+            BoxShadow(
+              color: ModernColors.dayCompleted.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+            BoxShadow(
+              color: ModernColors.dayCompleted.withOpacity(0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 1),
+            ),
+          ],
         ),
         child: Center(
           child: Transform.scale(
-            scale: 1.6,
+            scale: 1.4,
             child: Image.asset(
               SherpiEmotion.cheering.imagePath,
               fit: BoxFit.contain,
@@ -311,113 +337,175 @@ class _PersonalizedGrowthDashboardWidgetState
     final canClaimReward = isAllCompleted && !user.dailyRecords.isAllGoalsRewardClaimed;
     final isRewardClaimed = user.dailyRecords.isAllGoalsRewardClaimed;
     
-    return Column(
-      children: [
-        // 전체 완료 보상 표시 (항상 표시)
-        _buildRewardInfoCard(),
-        const SizedBox(height: 12),
-          
-        // 1x5 가로 목표 레이아웃
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: ModernColors.backgroundSubtle,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: ModernColors.getElevationShadow(1),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Container(
+        padding: const EdgeInsets.all(12), // 14 → 12로 더 컴팩트하게
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18), // 20 → 18로 약간 축소
+          // 🎨 셰르파 블루 감성 - 통일된 그림자
+          boxShadow: [
+            BoxShadow(
+              color: ModernColors.modernPrimary.withOpacity(0.06),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
             ),
-            child: Column(
-              children: [
-                // 목표들을 1x5 행으로 배치
-                Row(
-                  children: allGoals.map((goalId) {
-                    final isCompleted = _checkGoalCompletion(goalId, records);
-                    final index = allGoals.indexOf(goalId);
-                    return Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          right: index < allGoals.length - 1 ? 8 : 0,
-                        ),
-                        child: _buildCompactGoalCard(goalId, records, isCompleted),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                
-                const SizedBox(height: 14),
-                
-                // 보상받기 버튼 (상태별: 비활성/활성/완료)
-                _buildClaimRewardButton(
-                  isActive: canClaimReward,
-                  isCompleted: isRewardClaimed,
-                  completedCount: completedCount,
-                  totalGoals: totalGoals,
-                ),
-              ],
+            BoxShadow(
+              color: ModernColors.modernPrimary.withOpacity(0.03),
+              blurRadius: 2,
+              offset: const Offset(0, 1),
             ),
-          ),
+          ],
         ),
-      ],
+        child: Column(
+          children: [
+            // 🎨 세련된 인라인 보상 정보 (블루 감성)
+            _buildCompactRewardInfo(),
+            const SizedBox(height: 10), // 12 → 10으로 축소
+            
+            // 목표들을 1x5 행으로 배치 (완전한 크기 일관성 보장)
+            Row(
+              children: allGoals.map((goalId) {
+                final isCompleted = _checkGoalCompletion(goalId, records);
+                final index = allGoals.indexOf(goalId);
+                return Expanded(
+                  flex: 1, // 모든 카드에 동일한 flex 비율 명시적 적용
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      right: index < allGoals.length - 1 ? 8 : 0,
+                    ),
+                    child: _buildCompactGoalCard(goalId, records, isCompleted),
+                  ),
+                );
+              }).toList(),
+            ),
+            
+            const SizedBox(height: 10), // 12 → 10으로 축소
+            
+            // 보상받기 버튼 (상태별: 비활성/활성/완료)
+            _buildClaimRewardButton(
+              isActive: canClaimReward,
+              isCompleted: isRewardClaimed,
+              completedCount: completedCount,
+              totalGoals: totalGoals,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  // 보상 정보 카드 (전체 완료시에만 표시)
-  Widget _buildRewardInfoCard() {
+  // 🎨 세련된 인라인 보상 정보 (블루 감성 + 미니멀 디자인)
+  Widget _buildCompactRewardInfo() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: ModernColors.getElevationShadow(3),
+        // 🔵 셰르파 블루 감성 - 부드러운 블루 배경
+        color: ModernColors.modernPrimary.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: ModernColors.modernPrimary.withOpacity(0.12),
+          width: 0.5,
+        ),
+        // 🎨 미묘한 그림자로 깊이감 조성
+        boxShadow: [
+          BoxShadow(
+            color: ModernColors.modernPrimary.withOpacity(0.04),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
       ),
       child: Row(
         children: [
+          // 🏆 미니 트로피 아이콘 (24x24로 축소)
           Container(
-            width: 48,
-            height: 48,
+            width: 24,
+            height: 24,
             decoration: BoxDecoration(
-              color: ModernColors.dayCompleted,
+              gradient: LinearGradient(
+                colors: [
+                  ModernColors.modernPrimary,
+                  ModernColors.modernPrimary.withOpacity(0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.dayCompleted.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
+                  color: ModernColors.modernPrimary.withOpacity(0.2),
+                  blurRadius: 3,
+                  offset: const Offset(0, 1),
                 ),
               ],
             ),
             child: const Icon(
               Icons.emoji_events,
               color: Colors.white,
-              size: 24,
+              size: 14,
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '전체 완료 보상',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: ModernColors.modernText,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 4,
-                  children: [
-                    _buildRewardItem('✨', '200XP'),
-                    _buildRewardItem('💰', '50P'),
-                    _buildRewardItem('🔥', '0.1 의지'),
-                  ],
-                ),
-              ],
+          const SizedBox(width: 8),
+          
+          // 📝 보상 텍스트 (인라인)
+          Text(
+            '전체 완료 보상',
+            style: GoogleFonts.notoSans(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: ModernColors.modernText,
+              letterSpacing: -0.1,
+            ),
+          ),
+          
+          const Spacer(),
+          
+          // 🎁 미니 보상 배지들 (우측 정렬)
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildMiniRewardBadge('✨', '200XP'),
+              const SizedBox(width: 4),
+              _buildMiniRewardBadge('💰', '50P'),
+              const SizedBox(width: 4),
+              _buildMiniRewardBadge('🔥', '0.1'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 🎨 미니 보상 배지 (인라인용 - 블루 감성)
+  Widget _buildMiniRewardBadge(String emoji, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      decoration: BoxDecoration(
+        // 🔵 셰르파 블루 감성 - 더 진한 블루로 배지 효과
+        color: ModernColors.modernPrimary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: ModernColors.modernPrimary.withOpacity(0.15),
+          width: 0.5,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            emoji,
+            style: const TextStyle(fontSize: 9),
+          ),
+          const SizedBox(width: 2),
+          Text(
+            text,
+            style: GoogleFonts.notoSans(
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+              color: ModernColors.modernPrimary,
+              letterSpacing: -0.05,
             ),
           ),
         ],
@@ -425,17 +513,23 @@ class _PersonalizedGrowthDashboardWidgetState
     );
   }
 
-  // 보상 아이템 위젯
+  // 보상 아이템 위젯 (기존 - 호환성 유지)
   Widget _buildRewardItem(String emoji, String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(8),
+        // 🎨 명확한 경계를 위한 더 진한 배경색 (opacity 30% 이상)
+        color: ModernColors.dayCompleted.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: ModernColors.dayCompleted.withOpacity(0.2),
+          width: 0.5,
+        ),
+        // 🎨 선명한 그림자 (blur 값 감소)
         boxShadow: [
           BoxShadow(
             color: ModernColors.dayCompleted.withOpacity(0.1),
-            blurRadius: 4,
+            blurRadius: 2,
             offset: const Offset(0, 1),
           ),
         ],
@@ -445,15 +539,34 @@ class _PersonalizedGrowthDashboardWidgetState
         children: [
           Text(
             emoji,
-            style: const TextStyle(fontSize: 12),
+            style: const TextStyle(
+              fontSize: 12,
+              // 🎨 텍스트 그림자로 이모지 강조
+              shadows: [
+                Shadow(
+                  color: Colors.black12,
+                  offset: Offset(0, 0.5),
+                  blurRadius: 1,
+                ),
+              ],
+            ),
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 5),
           Text(
             text,
             style: GoogleFonts.notoSans(
               fontSize: 12,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w700,
               color: ModernColors.dayCompleted,
+              letterSpacing: -0.1,
+              // 🎨 텍스트 그림자로 가독성 향상
+              shadows: [
+                Shadow(
+                  color: ModernColors.dayCompleted.withOpacity(0.1),
+                  offset: const Offset(0, 0.5),
+                  blurRadius: 1,
+                ),
+              ],
             ),
           ),
         ],
@@ -476,30 +589,45 @@ class _PersonalizedGrowthDashboardWidgetState
     bool canClick;
 
     if (isCompleted) {
-      // 보상 완료 상태
+      // 보상 완료 상태 - 🔵 셰르파 블루 감성
       buttonText = '보상 완료';
-      backgroundColor = ModernColors.dayCompleted;
+      backgroundColor = ModernColors.modernPrimary;
       foregroundColor = Colors.white;
       emoji = '✅';
       canClick = false;
     } else if (isActive) {
-      // 보상 받을 수 있는 상태
+      // 보상 받을 수 있는 상태 - 🎁 액티브 블루 그라데이션
       buttonText = '보상 받기';
-      backgroundColor = ModernColors.dayCompleted;
+      backgroundColor = ModernColors.modernPrimary;
       foregroundColor = Colors.white;
       emoji = '🎁';
       canClick = true;
     } else {
-      // 아직 목표 미달성 상태
+      // 아직 목표 미달성 상태 - 🔘 미묘한 블루 톤
       buttonText = '보상 받기';
-      backgroundColor = ModernColors.inactive;
-      foregroundColor = ModernColors.inactiveText;
+      backgroundColor = ModernColors.modernPrimary.withOpacity(0.1);
+      foregroundColor = ModernColors.modernPrimary.withOpacity(0.6);
       emoji = '';
       canClick = false;
     }
 
     return Container(
       width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12), // 14 → 12로 일관성 유지
+        border: Border.all(
+          color: backgroundColor.withOpacity(0.3), // 더 미묘한 경계선
+          width: 0.5,
+        ),
+        // 🎨 셰르파 블루 감성 그림자
+        boxShadow: [
+          BoxShadow(
+            color: ModernColors.modernPrimary.withOpacity(0.08),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
       child: ElevatedButton(
         onPressed: canClick ? () {
           HapticFeedbackManager.heavyImpact();
@@ -517,20 +645,20 @@ class _PersonalizedGrowthDashboardWidgetState
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          // 🎨 슬림화: 16 → 12로 높이 25% 축소
+          padding: const EdgeInsets.symmetric(vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12), // 14 → 12로 더 미묘하게
           ),
-          elevation: canClick ? 2 : 0,
-          shadowColor: canClick 
-              ? backgroundColor.withOpacity(0.3) 
-              : Colors.transparent,
+          elevation: 0,
+          shadowColor: Colors.transparent,
         ).copyWith(
           overlayColor: WidgetStateProperty.all(
             canClick 
-                ? Colors.white.withOpacity(0.2)
-                : ModernColors.inactiveText.withOpacity(0.1),
+                ? Colors.white.withOpacity(0.12) // 더 미묘한 터치 효과
+                : Colors.transparent,
           ),
+          shadowColor: WidgetStateProperty.all(Colors.transparent),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -578,43 +706,82 @@ class _PersonalizedGrowthDashboardWidgetState
         }
         HapticFeedbackManager.lightImpact();
       },
-      child: Container(
-        height: 72,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        height: 64,
         decoration: BoxDecoration(
           color: isCompleted 
-              ? ModernColors.softDew
-              : ModernColors.softPearl,
-          borderRadius: BorderRadius.circular(14),
+              ? ModernColors.modernPrimary.withOpacity(0.08) // 🔵 블루 감성으로 변경
+              : Colors.white,
+          borderRadius: BorderRadius.circular(14), // 16 → 14로 일관성 유지
+          border: !isCompleted
+              ? Border.all(
+                  color: Colors.black.withOpacity(0.08),
+                  width: 0.5,
+                )
+              : null,
+          // 🎨 블루 감성 그림자 효과
           boxShadow: isCompleted
               ? [
                   BoxShadow(
-                    color: ModernColors.dayCompleted.withOpacity(0.2),
-                    blurRadius: 8,
+                    color: ModernColors.modernPrimary.withOpacity(0.1),
+                    blurRadius: 4,
                     offset: const Offset(0, 2),
+                  ),
+                  BoxShadow(
+                    color: ModernColors.modernPrimary.withOpacity(0.05),
+                    blurRadius: 2,
+                    offset: const Offset(0, 1),
                   ),
                 ]
               : [
                   BoxShadow(
                     color: functionColor.withOpacity(0.1),
-                    blurRadius: 6,
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                  BoxShadow(
+                    color: functionColor.withOpacity(0.05),
+                    blurRadius: 2,
                     offset: const Offset(0, 1),
                   ),
                 ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // 아이콘
-              Container(
-                width: 28,
-                height: 28,
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 24,
+                height: 24,
                 decoration: BoxDecoration(
-                  color: isCompleted 
-                      ? ModernColors.dayCompleted 
-                      : functionColor.withOpacity(0.15),
+                  // 🎨 완료 상태에 따른 블루 그라데이션 적용
+                  gradient: isCompleted 
+                      ? LinearGradient(
+                          colors: [
+                            ModernColors.modernPrimary,
+                            ModernColors.modernPrimary.withOpacity(0.8),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : null,
+                  color: !isCompleted ? functionColor.withOpacity(0.12) : null,
                   shape: BoxShape.circle,
+                  // 🎨 아이콘 컨테이너 그림자
+                  boxShadow: isCompleted
+                      ? [
+                          BoxShadow(
+                            color: ModernColors.modernPrimary.withOpacity(0.15), // 🔵 블루 감성
+                            blurRadius: 4,
+                            offset: const Offset(0, 1),
+                          ),
+                        ]
+                      : null,
                 ),
                 child: Center(
                   child: isCompleted
@@ -625,24 +792,51 @@ class _PersonalizedGrowthDashboardWidgetState
                         )
                       : Text(
                           goalData['icon'] ?? '🎯',
-                          style: const TextStyle(fontSize: 14),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            // 🎨 이모지 그림자 효과
+                            shadows: [
+                              Shadow(
+                                color: Colors.black12,
+                                offset: Offset(0, 0.5),
+                                blurRadius: 1,
+                              ),
+                            ],
+                          ),
                         ),
                 ),
               ),
               const SizedBox(height: 6),
-              // 텍스트
-              Text(
-                goalData['title'] ?? '목표',
-                style: GoogleFonts.notoSans(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: isCompleted 
-                      ? ModernColors.dayCompleted 
-                      : ModernColors.modernText,
+              // 텍스트 (크기 일관성을 위한 고정 컨테이너)
+              SizedBox(
+                height: 12, // 텍스트 영역 고정 높이
+                child: Center(
+                  child: Text(
+                    goalData['title'] ?? '목표',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 9,
+                      fontWeight: FontWeight.w600,
+                      color: isCompleted 
+                          ? ModernColors.modernPrimary // 🔵 블루 감성 통일
+                          : ModernColors.modernText,
+                      // 🎨 텍스트 그림자로 가독성 향상
+                      shadows: [
+                        Shadow(
+                          color: (isCompleted 
+                              ? ModernColors.modernPrimary 
+                              : ModernColors.modernText).withOpacity(0.1),
+                          offset: const Offset(0, 0.5),
+                          blurRadius: 1,
+                        ),
+                      ],
+                      // 텍스트 기준선 고정으로 정확한 중앙 정렬
+                      height: 1.0,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.clip, // ellipsis 대신 clip으로 정확한 크기 보장
+                  ),
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
@@ -651,11 +845,11 @@ class _PersonalizedGrowthDashboardWidgetState
     );
   }
   
-  // 목표 데이터 반환
+  // 목표 데이터 반환 (UI 일관성을 위해 모든 제목을 2글자로 통일)
   Map<String, String> _getGoalData(String goalId) {
     switch (goalId) {
       case 'steps':
-        return {'icon': '👟', 'title': '걸음수'};
+        return {'icon': '👟', 'title': '걸음'};  // 3글자 → 2글자로 단축
       case 'focus':
         return {'icon': '⏰', 'title': '집중'};
       case 'reading':
@@ -708,7 +902,7 @@ class _PersonalizedGrowthDashboardWidgetState
   // 스트릭 섹션 (단일 카드로 변경)
   Widget _buildStreakAndWeeklySection(GlobalUser user) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: _buildStreakCard(user), // 스트릭 카드만 유지
     );
   }
@@ -723,11 +917,23 @@ class _PersonalizedGrowthDashboardWidgetState
     final weeklyCompletionStatus = _calculateWeeklyCompletionStatus(user);
     
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: ModernColors.getElevationShadow(1),
+        // 🎨 명확한 경계를 위한 개선된 그림자
+        boxShadow: [
+          BoxShadow(
+            color: ModernColors.modernPrimary.withOpacity(0.08),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+          BoxShadow(
+            color: ModernColors.modernPrimary.withOpacity(0.04),
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -735,18 +941,33 @@ class _PersonalizedGrowthDashboardWidgetState
           // 헤더 - 연속 달성 텍스트
           Row(
             children: [
-              Icon(
-                Icons.emoji_events_outlined,
-                size: 18,
-                color: ModernColors.modernPrimary,
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: ModernColors.modernPrimary.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.emoji_events_outlined,
+                  size: 18,
+                  color: ModernColors.modernPrimary,
+                ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Text(
                 '$displayConsecutiveDays일 연속 달성',
                 style: GoogleFonts.notoSans(
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: FontWeight.w700,
                   color: ModernColors.modernText,
+                  // 🎨 텍스트 그림자로 강조
+                  shadows: [
+                    Shadow(
+                      color: ModernColors.modernText.withOpacity(0.1),
+                      offset: const Offset(0, 0.5),
+                      blurRadius: 1,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -781,21 +1002,44 @@ class _PersonalizedGrowthDashboardWidgetState
               final isCompleted = entry.value;
               final isToday = _isToday(index);
               
-              return Container(
-                width: 32,
-                height: 32,
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+                width: 28,
+                height: 28,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isCompleted 
-                      ? ModernColors.modernPrimary
-                      : (isToday 
+                  // 🎨 완료 상태에 따른 그라데이션 적용
+                  gradient: isCompleted 
+                      ? LinearGradient(
+                          colors: [
+                            ModernColors.modernPrimary,
+                            ModernColors.modernPrimary.withOpacity(0.9),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                      : null,
+                  color: !isCompleted
+                      ? (isToday 
                           ? ModernColors.modernPrimary.withOpacity(0.1)
-                          : ModernColors.gray100),
+                          : ModernColors.gray100)
+                      : null,
                   border: isToday && !isCompleted
                       ? Border.all(
                           color: ModernColors.modernPrimary.withOpacity(0.3),
                           width: 2,
                         )
+                      : null,
+                  // 🎨 완료된 날짜에 그림자 효과
+                  boxShadow: isCompleted
+                      ? [
+                          BoxShadow(
+                            color: ModernColors.modernPrimary.withOpacity(0.15),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
                       : null,
                 ),
                 child: Center(
@@ -812,6 +1056,14 @@ class _PersonalizedGrowthDashboardWidgetState
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: ModernColors.modernPrimary.withOpacity(0.6),
+                                // 🎨 현재 날짜 표시 그림자
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: ModernColors.modernPrimary.withOpacity(0.2),
+                                    blurRadius: 2,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ],
                               ),
                             )
                           : null),
