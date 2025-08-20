@@ -14,6 +14,7 @@ import '../../../shared/models/global_user_model.dart';
 import '../../../shared/models/point_system_model.dart';
 import '../../../core/constants/sherpi_dialogues.dart';
 
+
 /// 새로운 퀘스트 시스템 Provider (V2)
 /// quest.md 기반의 완전히 새로운 퀘스트 시스템
 final questProviderV2 = StateNotifierProvider<QuestNotifierV2, AsyncValue<List<QuestInstance>>>((ref) {
@@ -44,10 +45,9 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
   /// 퀘스트 데이터 로드
   Future<void> _loadQuests() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      print('🎮 퀸스트 시스템 V2 로딩 시작...');
       
-      // 임시: 퀘스트 클리어 기록 초기화 (개발용)
-      await _clearDevelopmentData(prefs);
+      final prefs = await SharedPreferences.getInstance();
       
       // 프리미엄 상태 로드
       _isPremiumActive = prefs.getBool('premium_quest_active_v2') ?? false;
@@ -59,7 +59,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       
       final today = DateTime.now();
       final todayString = '${today.year}-${today.month}-${today.day}';
-      final thisWeekString = '${today.year}-${_getWeekOfYear(today)}';
+      final thisWeekString = _getMondayBasedWeekString(today); // 월요일 기준으로 변경
       
       // 저장된 퀘스트 로드
       final savedQuests = prefs.getStringList('saved_quests_v2') ?? [];
@@ -118,11 +118,29 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     }
   }
 
-  /// 개발용 데이터 초기화
+  /// 🛠️ 개발용 데이터 초기화 (월요일 기준 수정)
+  /// 퀸스트 데이터와 보너스 기록을 모두 삭제하여 신선한 상태로 만듬
   Future<void> _clearDevelopmentData(SharedPreferences prefs) async {
+    final today = DateTime.now();
+    
+    // 퀸스트 데이터 삭제
     await prefs.remove('saved_quests_v2');
-    await prefs.remove('daily_bonus_v2_${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day}');
-    await prefs.remove('weekly_bonus_v2_${DateTime.now().year}-${_getWeekOfYear(DateTime.now())}');
+    
+    // 일일 보너스 기록 삭제
+    await prefs.remove('daily_bonus_v2_${today.year}-${today.month}-${today.day}');
+    
+    // 주간 보너스 기록 삭제 (월요일 기준)
+    await prefs.remove('weekly_bonus_v2_${_getMondayBasedWeekString(today)}');
+    
+    // 프리미엄 상태 초기화
+    await prefs.remove('premium_quest_active_v2');
+    
+    // 생성 날짜 기록 삭제
+    await prefs.remove('last_daily_generated_v2');
+    await prefs.remove('last_weekly_generated_v2');
+    await prefs.remove('last_premium_generated_v2');
+    
+    print('🧿 초기화된 데이터: 퀸스트, 보너스, 프리미엄, 생성기록');
   }
 
   /// 모든 퀘스트 생성
@@ -172,7 +190,6 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
 
   /// 글로벌 데이터와 동기화 (public으로 변경 - 등반 완료 시 즉시 호출 가능)
   Future<void> syncWithGlobalData() async {
-    print('🔄 [QuestProvider] 글로벌 데이터와 동기화 시작');
     
     final globalUser = ref.read(globalUserProvider);
     final pointData = ref.read(globalPointProvider);
@@ -197,39 +214,6 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       trackingData['visitedTab'] = lastVisitedTab;
     }
     
-    // 등반 관련 데이터 디버깅
-    print('📊 [QuestProvider] === 추적 데이터 상세 ===');
-    print('  - ClimbingRecord.isSuccess (레거시): ${trackingData['ClimbingRecord.isSuccess']}');
-    print('  - todayClimbingSuccess (신규): ${trackingData['todayClimbingSuccess']}');
-    print('  - 전체 등반 기록 수: ${globalUser.dailyRecords.climbingLogs.length}');
-    
-    // 오늘 등반 기록 상세 확인
-    final today = DateTime.now();
-    final todayClimbingLogs = globalUser.dailyRecords.climbingLogs
-        .where((log) => 
-          log.startTime.year == today.year &&
-          log.startTime.month == today.month &&
-          log.startTime.day == today.day)
-        .toList();
-    
-    print('  - 오늘 등반 기록 수: ${todayClimbingLogs.length}');
-    if (todayClimbingLogs.isNotEmpty) {
-      print('  - 오늘 등반 상세:');
-      for (var log in todayClimbingLogs) {
-        print('    * ${log.mountainName}: ${log.isSuccess ? "✅ 성공" : "❌ 실패"}');
-      }
-    }
-    
-    // 등반 성공하기 퀘스트 상태 확인
-    final climbingQuest = _allQuests.firstWhere(
-      (q) => q.title.contains('등반') && q.title.contains('성공'),
-      orElse: () => _allQuests.first,
-    );
-    if (climbingQuest.title.contains('등반')) {
-      print('🎯 [QuestProvider] 등반 성공하기 퀘스트 현재 상태: ${climbingQuest.status}');
-      print('  - 퀘스트 진행률: ${climbingQuest.currentProgress}/${climbingQuest.targetProgress}');
-    }
-    print('📊 [QuestProvider] ====================');
     
     _lastTrackingData = trackingData;
     
@@ -240,22 +224,14 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       final updatedQuest = QuestTrackingService.updateQuestProgress(quest, trackingData);
       
       if (updatedQuest != null) {
-        print('✅ [QuestProvider] 퀘스트 업데이트됨: ${quest.title}');
-        print('  - 이전 상태: ${quest.status}');
-        print('  - 새 상태: ${updatedQuest.status}');
-        print('  - 진행률: ${updatedQuest.currentProgress}/${updatedQuest.targetProgress}');
         _allQuests[i] = updatedQuest;
         anyUpdated = true;
       }
     }
     
     if (anyUpdated) {
-      print('💾 [QuestProvider] 퀘스트 저장 중...');
       await _saveQuests();
       state = AsyncValue.data(_allQuests);
-      print('✅ [QuestProvider] 동기화 완료 - ${_allQuests.length}개 퀘스트');
-    } else {
-      print('ℹ️ [QuestProvider] 업데이트할 퀘스트 없음');
     }
   }
 
@@ -489,7 +465,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
         key = 'daily_bonus_v2_${today.year}-${today.month}-${today.day}';
         break;
       case 'weekly_bonus_v2_this_week':
-        key = 'weekly_bonus_v2_${today.year}-${_getWeekOfYear(today)}';
+        key = 'weekly_bonus_v2_${_getMondayBasedWeekString(today)}';
         break;
       default:
         key = bonusKey;
@@ -509,7 +485,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
         key = 'daily_bonus_v2_${today.year}-${today.month}-${today.day}';
         break;
       case 'weekly_bonus_v2_this_week':
-        key = 'weekly_bonus_v2_${today.year}-${_getWeekOfYear(today)}';
+        key = 'weekly_bonus_v2_${_getMondayBasedWeekString(today)}';
         break;
       default:
         key = bonusKey;
@@ -518,7 +494,14 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     await prefs.setBool(key, true);
   }
 
-  /// 주차 계산
+  /// 월요일 기준 주차 계산 (주간/프리미엄 퀘스트 갱신용)
+  String _getMondayBasedWeekString(DateTime date) {
+    // 현재 주의 월요일 찾기
+    final mondayOfThisWeek = date.subtract(Duration(days: date.weekday - 1));
+    return '${mondayOfThisWeek.year}-${mondayOfThisWeek.month}-${mondayOfThisWeek.day}';
+  }
+  
+  /// 기존 주차 계산 (단순 주차 번호용)
   int _getWeekOfYear(DateTime date) {
     final firstDayOfYear = DateTime(date.year, 1, 1);
     final dayOfYear = date.difference(firstDayOfYear).inDays + 1;
@@ -536,8 +519,8 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       _claimedBonuses.add('daily_bonus_v2_today');
     }
     
-    // 주간 보너스 확인
-    final weeklyKey = 'weekly_bonus_v2_${today.year}-${_getWeekOfYear(today)}';
+    // 주간 보너스 확인 (월요일 기준)
+    final weeklyKey = 'weekly_bonus_v2_${_getMondayBasedWeekString(today)}';
     if (prefs.getBool(weeklyKey) == true) {
       _claimedBonuses.add('weekly_bonus_v2_today');
     }

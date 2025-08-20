@@ -6,7 +6,7 @@ import 'features/home/presentation/screens/home_screen.dart';
 import 'features/climbing/presentation/screens/climbing_screen.dart'; // 분석 화면
 import 'features/meetings/presentation/screens/meeting_tab_screen.dart'; // 모임 탭 화면
 import 'features/profile/presentation/screens/profile_screen.dart';
-import 'features/quests/presentation/screens/quest_screen_v2.dart';
+import 'features/quests/presentation/screens/quest_screen_redesigned.dart';
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
 import 'features/meetings/presentation/screens/challenge_index_screen.dart';
 
@@ -244,7 +244,7 @@ class _QuestTabScreenState extends State<QuestTabScreen> with SingleTickerProvid
       body: TabBarView(
         controller: _tabController,
         children: [
-          const QuestScreenV2(), // V2 퀘스트 화면
+          const QuestScreenRedesigned(), // 🎮 셰르피 중심 게이미피케이션 퀘스트 화면
           EnhancedDailyRecordScreen(), // 기록 화면
         ],
       ),

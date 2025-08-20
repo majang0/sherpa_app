@@ -5,13 +5,13 @@ import 'dart:math' as math;
 import '../../../../core/constants/app_colors.dart';
 import '../../models/quest_instance_model.dart';
 
-/// 퀘스트 완료 애니메이션 위젯
+/// 퀘스트 완료 애니메이션 위젯 (내부 컨트롤러 사용)
 class QuestCompletionAnimationWidget extends ConsumerStatefulWidget {
-  final AnimationController animationController;
+  final AnimationController? animationController; // 선택사항 (사용안함)
 
   const QuestCompletionAnimationWidget({
     Key? key,
-    required this.animationController,
+    this.animationController, // 선택사항으로 변경
   }) : super(key: key);
 
   @override
@@ -82,8 +82,8 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
       _generateParticles();
     });
     
+    // 내부 컨트롤러만 사용 (외부 컨트롤러 조작 제거)
     _internalController.forward(from: 0.0);
-    widget.animationController.forward(from: 0.0);
   }
 
 
@@ -96,7 +96,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
         });
       }
     });
-    widget.animationController.reverse();
+    // 외부 컨트롤러 조작 제거 (전체 화면 fadeOut 방지)
   }
 
   void _generateParticles() {

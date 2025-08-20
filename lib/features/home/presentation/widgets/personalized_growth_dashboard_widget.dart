@@ -42,50 +42,6 @@ class _Constants {
   static const int readingPagesGoal = 1;
 }
 
-/// 공통 스타일 정의
-class _Styles {
-  static List<BoxShadow> premiumShadow({required Color primaryColor, required Color lightColor}) => [
-    BoxShadow(
-      color: primaryColor.withOpacity(0.25),
-      blurRadius: 16,
-      offset: const Offset(0, 6),
-      spreadRadius: 0,
-    ),
-    BoxShadow(
-      color: lightColor.withOpacity(0.15),
-      blurRadius: 8,
-      offset: const Offset(0, 3),
-      spreadRadius: 0,
-    ),
-    BoxShadow(
-      color: Colors.black.withOpacity(0.08),
-      blurRadius: 4,
-      offset: const Offset(0, 1),
-      spreadRadius: 0,
-    ),
-  ];
-  
-  static List<BoxShadow> softShadow({required Color primaryColor}) => [
-    BoxShadow(
-      color: primaryColor.withOpacity(0.1),
-      blurRadius: 12,
-      offset: const Offset(0, 4),
-      spreadRadius: 0,
-    ),
-    BoxShadow(
-      color: primaryColor.withOpacity(0.06),
-      blurRadius: 6,
-      offset: const Offset(0, 2),
-      spreadRadius: 0,
-    ),
-    BoxShadow(
-      color: Colors.black.withOpacity(0.03),
-      blurRadius: 3,
-      offset: const Offset(0, 1),
-      spreadRadius: 0,
-    ),
-  ];
-}
 
 class PersonalizedGrowthDashboardWidget extends ConsumerStatefulWidget {
   const PersonalizedGrowthDashboardWidget({super.key});
@@ -134,29 +90,6 @@ class _PersonalizedGrowthDashboardWidgetState
     return allGoalsCompleted && rewardClaimed;
   }
   
-  // 황금빛 보상 그림자 스타일
-  List<BoxShadow> _getRewardShadows() {
-    return [
-      BoxShadow(
-        color: ModernColors.rewardGradient1.withOpacity(0.3),
-        blurRadius: 20,
-        offset: const Offset(0, 8),
-        spreadRadius: 1,
-      ),
-      BoxShadow(
-        color: ModernColors.rewardGradient2.withOpacity(0.2),
-        blurRadius: 12,
-        offset: const Offset(0, 4),
-        spreadRadius: 0,
-      ),
-      BoxShadow(
-        color: Colors.black.withOpacity(0.1),
-        blurRadius: 6,
-        offset: const Offset(0, 2),
-        spreadRadius: 0,
-      ),
-    ];
-  }
 
   @override
   void dispose() {
@@ -177,7 +110,7 @@ class _PersonalizedGrowthDashboardWidgetState
           color: ModernColors.surface,
           borderRadius: BorderRadius.circular(24),
           // 🎨 다층 그림자 효과 최적화
-          boxShadow: _Styles.softShadow(primaryColor: ModernColors.modernPrimary),
+          boxShadow: ModernColors.softShadow(primaryColor: ModernColors.modernPrimary),
         ),
         child: _shouldShowCelebrationView(user)
             ? _buildCelebrationView(user)
@@ -401,8 +334,8 @@ class _PersonalizedGrowthDashboardWidgetState
         ),
         // 🌟 조건부 그림자 시스템 최적화
         boxShadow: canClaimReward
-          ? _getRewardShadows()
-          : _Styles.premiumShadow(
+          ? ModernColors.rewardShadow()
+          : ModernColors.premiumShadow(
               primaryColor: ModernColors.modernPrimary,
               lightColor: ModernColors.primaryLight,
             ),
@@ -1145,17 +1078,51 @@ class _PersonalizedGrowthDashboardWidgetState
     return completedCount;
   }
 
-  // 목표별 기록 화면으로 이동 (안전한 네비게이션 방식으로 수정)
+  // 목표별 기록 화면으로 이동 (각 액션카드별로 다른 화면 이동)
   void _navigateToRecordScreen(String goalId) {
-    // 🚨 기존의 pushNamedAndRemoveUntil는 보상받기 버튼과 충돌을 일으킴
-    // 🔧 일반적인 pushNamed를 사용하여 안전하게 네비게이션
-    Navigator.of(context).pushNamed(
-      '/',
-      arguments: {
-        'tabIndex': 2,    // 퀘스트 탭
-        'subTabIndex': 1, // 기록 서브탭
-      },
-    );
+    switch (goalId) {
+      case 'steps':
+        // 걸음 -> 기록탭으로 이동 (기존 동작 유지)
+        Navigator.of(context).pushNamed(
+          '/',
+          arguments: {
+            'tabIndex': 2,    // 퀘스트 탭
+            'subTabIndex': 1, // 기록 서브탭
+          },
+        );
+        break;
+        
+      case 'focus':
+        // 집중 -> 몰입 시간 선택창 띄우기 (집중 타이머 화면)
+        Navigator.of(context).pushNamed('/focus_timer_record');
+        break;
+        
+      case 'reading':
+        // 독서 -> 독서 기록 작성창 띄우기
+        Navigator.of(context).pushNamed('/reading_record');
+        break;
+        
+      case 'exercise':
+        // 운동 -> 운동 기록 선택창 띄우기
+        Navigator.of(context).pushNamed('/exercise_record');
+        break;
+        
+      case 'diary':
+        // 일기 -> 일기 기록 작성창 띄우기
+        Navigator.of(context).pushNamed('/diary_record');
+        break;
+        
+      default:
+        // 기본값으로 기록탭으로 이동
+        Navigator.of(context).pushNamed(
+          '/',
+          arguments: {
+            'tabIndex': 2,
+            'subTabIndex': 1,
+          },
+        );
+        break;
+    }
   }
 
   // 목표 완료 상태 확인 (상수 적용)

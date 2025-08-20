@@ -110,17 +110,6 @@ class QuestTrackingService {
     
     final currentValue = _getValueFromPath(globalData, dataPath);
     
-    // 등반 성공하기 퀘스트 디버깅
-    if (dataPath == 'ClimbingRecord.isSuccess' || dataPath == 'todayClimbingSuccess') {
-      print('🎯 [QuestTracking] === 등반 성공하기 퀘스트 체크 ===');
-      print('  - 퀘스트 제목: ${quest.title}');
-      print('  - 퀘스트 상태: ${quest.status}');
-      print('  - 현재 진행률: ${quest.currentProgress}/${quest.targetProgress}');
-      print('  - 추적 경로: $dataPath');
-      print('  - 현재 값 (등반 성공 여부): $currentValue');
-      print('  - 목표 값: $targetValue');
-      print('  - 값 타입: currentValue=${currentValue.runtimeType}, targetValue=${targetValue.runtimeType}');
-    }
     
     if (quest.status == QuestStatus.inProgress && currentValue != null) {
       bool isCompleted = false;
@@ -130,9 +119,6 @@ class QuestTrackingService {
       if (targetValue is bool) {
         isCompleted = currentValue == targetValue;
         newProgress = isCompleted ? 1 : 0;
-        if (dataPath == 'ClimbingRecord.isSuccess' || dataPath == 'todayClimbingSuccess') {
-          print('  - Bool 비교: $currentValue == $targetValue = $isCompleted');
-        }
       } else if (targetValue is num && currentValue is num) {
         newProgress = currentValue.toInt().clamp(0, targetValue.toInt());
         isCompleted = currentValue >= targetValue;
@@ -141,12 +127,6 @@ class QuestTrackingService {
         newProgress = isCompleted ? 1 : 0;
       }
       
-      if (dataPath == 'ClimbingRecord.isSuccess' || dataPath == 'todayClimbingSuccess') {
-        print('  - 계산된 완료 여부: $isCompleted');
-        print('  - 새 진행률: $newProgress');
-        print('  - 진행률 변경: ${quest.currentProgress} → $newProgress');
-        print('🎯 [QuestTracking] ==========================');
-      }
       
       if (newProgress != quest.currentProgress || isCompleted) {
         return quest.copyWith(
@@ -528,20 +508,6 @@ class QuestTrackingService {
     
     final hasSuccess = todayClimbingLogs.any((log) => log.isSuccess);
     
-    // 디버깅용 로그
-    print('🔍 [QuestTracking] === 등반 성공 체크 ===');
-    print('🔍 [QuestTracking] 전체 등반 기록 수: ${dailyRecords.climbingLogs.length}');
-    print('🔍 [QuestTracking] 오늘 등반 기록 수: ${todayClimbingLogs.length}');
-    print('🔍 [QuestTracking] 성공한 등반 있음: $hasSuccess');
-    if (todayClimbingLogs.isNotEmpty) {
-      print('🔍 [QuestTracking] 오늘의 등반 기록:');
-      for (var log in todayClimbingLogs) {
-        print('  - ${log.mountainName}: ${log.isSuccess ? "✅ 성공" : "❌ 실패"} (${log.startTime.hour}:${log.startTime.minute})');
-      }
-    } else {
-      print('🔍 [QuestTracking] ⚠️ 오늘 등반 기록이 없습니다');
-    }
-    print('🔍 [QuestTracking] ==================');
     
     return hasSuccess;
   }

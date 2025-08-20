@@ -655,6 +655,74 @@ class ModernColors {
       return '🌱 시작';
     }
   }
+  
+  // ==================== 프리미엄 그림자 시스템 (PersonalizedGrowthDashboard 스타일) ====================
+  
+  /// 🌟 프리미엄 그림자 - 고급스러운 다층 그림자 효과
+  static List<BoxShadow> premiumShadow({required Color primaryColor, required Color lightColor}) => [
+    BoxShadow(
+      color: primaryColor.withOpacity(0.25),
+      blurRadius: 16,
+      offset: const Offset(0, 6),
+      spreadRadius: 0,
+    ),
+    BoxShadow(
+      color: lightColor.withOpacity(0.15),
+      blurRadius: 8,
+      offset: const Offset(0, 3),
+      spreadRadius: 0,
+    ),
+    BoxShadow(
+      color: Colors.black.withOpacity(0.08),
+      blurRadius: 4,
+      offset: const Offset(0, 1),
+      spreadRadius: 0,
+    ),
+  ];
+  
+  /// 🌫️ 소프트 그림자 - 부드러운 3단계 그림자 효과
+  static List<BoxShadow> softShadow({required Color primaryColor}) => [
+    BoxShadow(
+      color: primaryColor.withOpacity(0.1),
+      blurRadius: 12,
+      offset: const Offset(0, 4),
+      spreadRadius: 0,
+    ),
+    BoxShadow(
+      color: primaryColor.withOpacity(0.06),
+      blurRadius: 6,
+      offset: const Offset(0, 2),
+      spreadRadius: 0,
+    ),
+    BoxShadow(
+      color: Colors.black.withOpacity(0.03),
+      blurRadius: 3,
+      offset: const Offset(0, 1),
+      spreadRadius: 0,
+    ),
+  ];
+
+  /// 🏆 황금빛 보상 그림자 - 특별한 보상용 다층 그림자 효과
+  static List<BoxShadow> rewardShadow() => [
+    BoxShadow(
+      color: rewardGradient1.withOpacity(0.3),
+      blurRadius: 20,
+      offset: const Offset(0, 8),
+      spreadRadius: 1,
+    ),
+    BoxShadow(
+      color: rewardGradient2.withOpacity(0.2),
+      blurRadius: 12,
+      offset: const Offset(0, 4),
+      spreadRadius: 0,
+    ),
+    BoxShadow(
+      color: Colors.black.withOpacity(0.1),
+      blurRadius: 6,
+      offset: const Offset(0, 2),
+      spreadRadius: 0,
+    ),
+  ];
 }
 
 /// 기존 코드와의 호환성을 위한 별칭

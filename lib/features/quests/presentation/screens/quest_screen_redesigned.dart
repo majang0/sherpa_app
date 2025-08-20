@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'dart:math' as math;
-import 'dart:ui';
 import 'package:confetti/confetti.dart';
-import '../../constants/quest_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_point_provider.dart';
@@ -18,20 +15,25 @@ import '../widgets/compact_quest_header.dart';
 import '../widgets/quest_card_v2_widget.dart';
 import '../widgets/quest_completion_animation_widget.dart';
 
-/// 새로운 퀘스트 화면 (V2) - quest.md 기반
-class QuestScreenV2 extends ConsumerStatefulWidget {
-  const QuestScreenV2({Key? key}) : super(key: key);
+/// 🎮 셰르피 중심의 게이미피케이션 퀘스트 화면 (완전 재설계)
+/// 
+/// ✨ 주요 특징:
+/// - 진행 중/보상 대기/완료 상태는 헤더로 이동 (중복 제거)
+/// - 일일/주간/고급 탭만 유지
+/// - ModernColors 디자인 시스템 적용
+/// - 셰르피 중심의 인터랙티브 게이미피케이션 
+class QuestScreenRedesigned extends ConsumerStatefulWidget {
+  const QuestScreenRedesigned({super.key});
 
   @override
-  ConsumerState<QuestScreenV2> createState() => _QuestScreenV2State();
+  ConsumerState<QuestScreenRedesigned> createState() => _QuestScreenRedesignedState();
 }
 
-class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
-    with TickerProviderStateMixin {
+class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
+    with SingleTickerProviderStateMixin {
   
-  // 애니메이션 컨트롤러들
+  // 필수 애니메이션 컨트롤러만 유지
   late AnimationController _fadeInController;
-  late AnimationController _celebrationController;
   late Animation<double> _fadeInAnimation;
   
   // Confetti 컨트롤러 - 보상 상자 효과용
@@ -40,10 +42,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
   // 현재 선택된 카테고리
   QuestTypeV2 _selectedCategory = QuestTypeV2.daily;
   
-  // 스크롤 컨트롤러
-  final ScrollController _scrollController = ScrollController();
-  
-  // 완료 애니메이션 상태
+  // 완료 애니메이션 상태 (단순화됨)
   final GlobalKey<QuestCompletionAnimationState> _completionAnimationKey = 
       GlobalKey<QuestCompletionAnimationState>();
 
@@ -51,31 +50,26 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
   void initState() {
     super.initState();
     
-    // 애니메이션 컨트롤러 초기화
+    // 필수 애니메이션만 초기화
     _fadeInController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
-    
-    _celebrationController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 800), // 단축
       vsync: this,
     );
     
     // Confetti 컨트롤러 초기화
     _confettiController = ConfettiController(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 2), // 단축
     );
     
     // 애니메이션 설정
     _fadeInAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeInController, curve: Curves.easeOutCubic),
+      CurvedAnimation(parent: _fadeInController, curve: Curves.easeOut),
     );
     
     // 초기 애니메이션 시작
     _fadeInController.forward();
     
-    // 🎯 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
+    // 🎯 탭 방문 기록 (퀘스트 추적용)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(questProviderV2.notifier).recordTabVisit('퀘스트');
     });
@@ -84,9 +78,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
   @override
   void dispose() {
     _fadeInController.dispose();
-    _celebrationController.dispose();
     _confettiController.dispose();
-    _scrollController.dispose();
     super.dispose();
   }
 
@@ -97,36 +89,27 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
         _selectedCategory = category;
       });
       
-      // 부드러운 스크롤 애니메이션
-      _scrollController.animateTo(
-        0,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutCubic,
-      );
-      
       HapticFeedbackManager.lightImpact();
     }
   }
 
-  /// 퀘스트 완료 애니메이션 트리거
+  // 셰르피 카테고리 변경 리액션 제거됨 (불필요한 UX 방해 요소)
+
+  /// 퀘스트 완료 처리 (애니메이션 단순화)
   void _onQuestCompleted(QuestInstance quest) {
     _completionAnimationKey.currentState?.showCompletionAnimation(quest);
-    _celebrationController.forward().then((_) {
-      _celebrationController.reverse();
-    });
     
     // 상태 새로고침으로 UI 업데이트
-    Future.delayed(const Duration(milliseconds: 100), () {
-      if (mounted) {
-        setState(() {});
-      }
-    });
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _onAllClearRewardClaimed() {
-    _celebrationController.forward().then((_) {
-      _celebrationController.reverse();
-    });
+    // 단순한 완료 처리
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   /// 프리미엄 구매 확인 다이얼로그
@@ -148,8 +131,8 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  QuestColors.legendaryGold.withOpacity(0.1),
-                  QuestColors.epicPurple.withOpacity(0.1),
+                  ModernColors.reward.withOpacity(0.1),
+                  ModernColors.modernAccent.withOpacity(0.1),
                 ],
               ),
             ),
@@ -161,17 +144,9 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [QuestColors.legendaryGold, QuestColors.epicPurple],
-                    ),
+                    gradient: ModernColors.rewardGradient,
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: QuestColors.legendaryGold.withOpacity(0.3),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
+                    boxShadow: ModernColors.rewardShadow(),
                   ),
                   child: const Icon(
                     Icons.stars,
@@ -188,7 +163,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                   style: GoogleFonts.notoSans(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
-                    color: QuestColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 
@@ -199,7 +174,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                   '특별한 전설급 퀘스트 3개를 잠금 해제하여\n더욱 큰 보상과 도전을 경험해보세요!',
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: QuestColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     height: 1.4,
                   ),
                   textAlign: TextAlign.center,
@@ -212,13 +187,13 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: currentPoints >= 2000 
-                        ? QuestColors.accentGreen.withOpacity(0.1)
-                        : Colors.red.withOpacity(0.1),
+                        ? ModernColors.modernSuccess.withOpacity(0.1)
+                        : ModernColors.modernError.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: currentPoints >= 2000 
-                          ? QuestColors.accentGreen.withOpacity(0.3)
-                          : Colors.red.withOpacity(0.3),
+                          ? ModernColors.modernSuccess.withOpacity(0.3)
+                          : ModernColors.modernError.withOpacity(0.3),
                       width: 1,
                     ),
                   ),
@@ -232,7 +207,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                             '필요 포인트',
                             style: GoogleFonts.notoSans(
                               fontSize: 12,
-                              color: QuestColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                           Text(
@@ -240,7 +215,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                             style: GoogleFonts.notoSans(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: QuestColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                         ],
@@ -252,7 +227,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                             '보유 포인트',
                             style: GoogleFonts.notoSans(
                               fontSize: 12,
-                              color: QuestColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                           Text(
@@ -261,8 +236,8 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                               color: currentPoints >= 2000 
-                                  ? QuestColors.accentGreen
-                                  : Colors.red,
+                                  ? ModernColors.modernSuccess
+                                  : ModernColors.modernError,
                             ),
                           ),
                         ],
@@ -277,7 +252,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                     '포인트가 부족합니다. 퀘스트를 완료하여 포인트를 획득하세요!',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: Colors.red,
+                      color: ModernColors.modernError,
                       fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.center,
@@ -303,7 +278,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: QuestColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ),
@@ -318,11 +293,11 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                         } : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: currentPoints >= 2000 
-                              ? QuestColors.legendaryGold
-                              : QuestColors.inactive,
+                              ? ModernColors.reward
+                              : ModernColors.inactive,
                           foregroundColor: currentPoints >= 2000 
-                              ? QuestColors.textPrimary
-                              : QuestColors.textSecondary,
+                              ? Colors.white
+                              : ModernColors.inactiveText,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -336,8 +311,8 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                               Icons.stars,
                               size: 18,
                               color: currentPoints >= 2000 
-                                  ? QuestColors.textPrimary
-                                  : QuestColors.textSecondary,
+                                  ? Colors.white
+                                  : ModernColors.inactiveText,
                             ),
                             const SizedBox(width: 6),
                             Text(
@@ -366,15 +341,15 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
     final questsAsync = ref.watch(questProviderV2);
     
     return Scaffold(
-      backgroundColor: QuestColors.backgroundWhite,
+      backgroundColor: ModernColors.background,
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              QuestColors.lightSkyBlue.withOpacity(0.1),
-              QuestColors.backgroundWhite,
+              ModernColors.modernPrimary.withOpacity(0.05),
+              ModernColors.background,
             ],
           ),
         ),
@@ -382,24 +357,8 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
           opacity: _fadeInAnimation,
           child: Stack(
             children: [
-              // 배경 장식
-              Positioned(
-                top: -100,
-                right: -100,
-                child: Container(
-                  width: 300,
-                  height: 300,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        QuestColors.skyBlue.withOpacity(0.1),
-                        QuestColors.skyBlue.withOpacity(0.0),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              // 🎨 동적 배경 장식 - 선택된 카테고리에 따라 변화
+              _buildDynamicBackground(),
               
               // 메인 컨텐츠
               questsAsync.when(
@@ -408,10 +367,10 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                 data: (quests) => _buildMainContent(quests),
               ),
               
-              // 완료 애니메이션 오버레이
+              // 완료 애니메이션 오버레이 (내부 컨트롤러 사용)
               QuestCompletionAnimationWidget(
                 key: _completionAnimationKey,
-                animationController: _celebrationController,
+                // animationController 제거 - 내부 _internalController만 사용
               ),
               
               // 🎉 Confetti 위젯 - 보상 상자 클릭 시 효과
@@ -421,12 +380,12 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                   confettiController: _confettiController,
                   blastDirectionality: BlastDirectionality.explosive,
                   shouldLoop: false,
-                  colors: const [
-                    QuestColors.accentGold,
-                    QuestColors.skyBlue,
-                    QuestColors.completed,
-                    QuestColors.epicPurple,
-                    QuestColors.legendaryGold,
+                  colors: [
+                    ModernColors.reward,
+                    ModernColors.modernPrimary,
+                    ModernColors.modernSuccess,
+                    ModernColors.modernAccent,
+                    ModernColors.quest,
                     Colors.pink,
                     Colors.orange,
                   ],
@@ -452,13 +411,44 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
     );
   }
 
+  /// 🎨 단순한 정적 배경 - 선택된 카테고리에 따라 변화
+  Widget _buildDynamicBackground() {
+    Color primaryColor;
+    
+    switch (_selectedCategory) {
+      case QuestTypeV2.daily:
+        primaryColor = ModernColors.modernPrimary;
+        break;
+      case QuestTypeV2.weekly:
+        primaryColor = ModernColors.modernAccent;
+        break;
+      case QuestTypeV2.premium:
+        primaryColor = ModernColors.reward;
+        break;
+    }
+    
+    return Positioned(
+      top: -100,
+      right: -50,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        width: 200,
+        height: 200,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: primaryColor.withOpacity(0.05),
+        ),
+      ),
+    );
+  }
+
   Widget _buildMainContent(List<QuestInstance> allQuests) {
     // 카테고리별 퀘스트 분류
     final dailyQuests = allQuests.where((q) => q.type == QuestTypeV2.daily).toList();
     final weeklyQuests = allQuests.where((q) => q.type == QuestTypeV2.weekly).toList();
     final premiumQuests = allQuests.where((q) => q.type == QuestTypeV2.premium).toList();
     
-    // 상태별 개수 계산
+    // 상태별 개수 계산 (헤더용)
     final statusCounts = <QuestTypeV2, Map<String, int>>{
       QuestTypeV2.daily: _calculateStatusCounts(dailyQuests),
       QuestTypeV2.weekly: _calculateStatusCounts(weeklyQuests),
@@ -478,36 +468,29 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
         HapticFeedbackManager.lightImpact();
         await ref.read(questProviderV2.notifier).refresh();
       },
-      backgroundColor: QuestColors.pureWhite,
-      color: QuestColors.primaryBlue,
+      backgroundColor: ModernColors.surface,
+      color: ModernColors.modernPrimary,
       strokeWidth: 3,
       child: CustomScrollView(
-        controller: _scrollController,
         physics: const BouncingScrollPhysics(),
         slivers: [
-          // 헤더 영역
+          // 헤더 영역 - 기존 CompactQuestHeader 사용
           const SliverToBoxAdapter(
             child: CompactQuestHeader(),
           ),
           
-          // 카테고리 탭
+          // 🎮 새로운 게이미피케이션 카테고리 탭 
           SliverToBoxAdapter(
             child: Container(
-              margin: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-              child: _buildCategoryTabs(statusCounts),
+              margin: const EdgeInsets.fromLTRB(20, 6, 20, 12),
+              child: _buildGamifiedCategoryTabs(statusCounts),
             ),
           ),
           
-          // 상태별 퀘스트 현황
-          SliverToBoxAdapter(
-            child: _buildStatusSummary(statusCounts[_selectedCategory] ?? {}),
-          ),
-          
-          
-          // 전체 클리어 보너스 섹션
+          // 🎯 완료 보너스 섹션 (ModernColors 적용)
           if (filteredQuests.isNotEmpty)
             SliverToBoxAdapter(
-              child: _buildCompletionBonus(_selectedCategory, allQuests),
+              child: _buildModernCompletionBonus(_selectedCategory, allQuests),
             ),
           
           // 빈 상태 또는 퀘스트 목록
@@ -516,7 +499,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
               child: _buildEmptyStateContent(),
             )
           else
-            // 퀘스트 목록
+            // 퀘스트 목록 - 셰르피 요소 추가
             SliverPadding(
               padding: const EdgeInsets.only(
                 left: 20,
@@ -530,22 +513,9 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                     final quest = filteredQuests[index];
                     
                     return Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      child: QuestCardV2Widget(
-                        quest: quest,
-                        onQuestCompleted: (updatedQuest) => _onQuestCompleted(updatedQuest),
-                      ),
-                    ).animate()
-                      .fadeIn(
-                        duration: Duration(milliseconds: 400 + (index * 100)),
-                        curve: Curves.easeOutCubic,
-                      )
-                      .slideY(
-                        begin: 0.2,
-                        end: 0,
-                        duration: Duration(milliseconds: 400 + (index * 100)),
-                        curve: Curves.easeOutCubic,
-                      );
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: _buildGamifiedQuestCard(quest, index),
+                    );
                   },
                   childCount: filteredQuests.length,
                 ),
@@ -565,16 +535,16 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
     };
   }
 
-  /// 새로운 카테고리 탭 빌더
-  Widget _buildCategoryTabs(
+  /// 🎮 게이미피케이션이 적용된 카테고리 탭
+  Widget _buildGamifiedCategoryTabs(
     Map<QuestTypeV2, Map<String, int>> statusCounts,
   ) {
     return Container(
       height: 50,
       decoration: BoxDecoration(
-        color: QuestColors.pureWhite,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: QuestColors.softShadow,
+        color: ModernColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: ModernColors.softShadow(primaryColor: ModernColors.modernPrimary),
       ),
       child: Row(
         children: QuestTypeV2.values.map((type) {
@@ -582,61 +552,112 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
           final counts = statusCounts[type] ?? {};
           final total = (counts['inProgress'] ?? 0) + (counts['claimable'] ?? 0) + (counts['completed'] ?? 0);
           final claimable = counts['claimable'] ?? 0;
+          final completed = counts['completed'] ?? 0;
+          final progress = total > 0 ? completed / total : 0.0;
+          
+          // ModernColors 매핑
+          Color categoryColor;
+          switch (type) {
+            case QuestTypeV2.daily:
+              categoryColor = ModernColors.modernPrimary;
+              break;
+            case QuestTypeV2.weekly:
+              categoryColor = ModernColors.modernAccent;
+              break;
+            case QuestTypeV2.premium:
+              categoryColor = ModernColors.reward;
+              break;
+          }
           
           return Expanded(
             child: GestureDetector(
               onTap: () => _onCategoryChanged(type),
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutCubic,
                 margin: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: isSelected ? type.color : Colors.transparent,
-                  borderRadius: BorderRadius.circular(21),
+                  gradient: isSelected ? LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [categoryColor, categoryColor.withOpacity(0.8)],
+                  ) : null,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: isSelected 
+                      ? ModernColors.softShadow(primaryColor: categoryColor)
+                      : null,
                 ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            type.icon,
-                            size: 16,
-                            color: isSelected ? Colors.white : type.color,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            type.displayName,
-                            style: GoogleFonts.notoSans(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              color: isSelected ? Colors.white : type.color,
+                child: Stack(
+                  children: [
+                    // 백그라운드 진행률 표시
+                    if (!isSelected && progress > 0)
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              stops: [0, progress, progress, 1],
+                              colors: [
+                                categoryColor.withOpacity(0.1),
+                                categoryColor.withOpacity(0.1),
+                                Colors.transparent,
+                                Colors.transparent,
+                              ],
                             ),
                           ),
-                          if (claimable > 0) ...[
-                            const SizedBox(width: 4),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: isSelected ? Colors.white : QuestColors.accentGold,
-                                borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    
+                    // 메인 컨텐츠
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                type.icon,
+                                size: 18,
+                                color: isSelected ? Colors.white : categoryColor,
                               ),
-                              child: Text(
-                                '$claimable',
+                              const SizedBox(width: 6),
+                              Text(
+                                type.displayName,
                                 style: GoogleFonts.notoSans(
-                                  fontSize: 10,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w700,
-                                  color: isSelected ? type.color : Colors.white,
+                                  color: isSelected ? Colors.white : categoryColor,
                                 ),
                               ),
-                            ),
-                          ],
+                              if (claimable > 0) ...[
+                                const SizedBox(width: 4),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: isSelected ? Colors.white : ModernColors.reward,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    '$claimable',
+                                    style: GoogleFonts.notoSans(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                      color: isSelected ? categoryColor : Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                          
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -646,107 +667,8 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
     );
   }
 
-  /// 상태별 퀘스트 현황
-  Widget _buildStatusSummary(Map<String, int> counts) {
-    final inProgress = counts['inProgress'] ?? 0;
-    final claimable = counts['claimable'] ?? 0;
-    final completed = counts['completed'] ?? 0;
-    
-    if (inProgress == 0 && claimable == 0 && completed == 0) {
-      return const SizedBox.shrink();
-    }
-    
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: QuestColors.pureWhite,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: QuestColors.softShadow,
-      ),
-      child: Row(
-        children: [
-          if (inProgress > 0) ...[
-            Expanded(
-              child: _buildStatusItem(
-                '진행 중',
-                '$inProgress개',
-                QuestColors.skyBlue,
-                Icons.play_circle_outline,
-              ),
-            ),
-          ],
-          if (claimable > 0) ...[
-            if (inProgress > 0) 
-              Container(
-                width: 1,
-                height: 40,
-                color: QuestColors.inactive,
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-            Expanded(
-              child: _buildStatusItem(
-                '보상 대기',
-                '$claimable개',
-                QuestColors.accentGold,
-                Icons.card_giftcard,
-              ),
-            ),
-          ],
-          if (completed > 0) ...[
-            if (inProgress > 0 || claimable > 0)
-              Container(
-                width: 1,
-                height: 40,
-                color: QuestColors.inactive,
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-            Expanded(
-              child: _buildStatusItem(
-                '완료',
-                '$completed개',
-                QuestColors.completed,
-                Icons.check_circle,
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatusItem(String label, String value, Color color, IconData icon) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 16, color: color),
-            const SizedBox(width: 4),
-            Text(
-              value,
-              style: GoogleFonts.notoSans(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: color,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: GoogleFonts.notoSans(
-            fontSize: 12,
-            color: QuestColors.textSecondary,
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// 완료 보너스 정보 (셰르파 앱 테마 적용)
-  Widget _buildCompletionBonus(QuestTypeV2 type, List<QuestInstance> allQuests) {
+  /// 🎁 ModernColors 기반 완료 보너스 (기존 _buildCompletionBonus 개선)
+  Widget _buildModernCompletionBonus(QuestTypeV2 type, List<QuestInstance> allQuests) {
     if (type == QuestTypeV2.premium) return const SizedBox.shrink();
     
     final questProvider = ref.read(questProviderV2.notifier);
@@ -773,42 +695,47 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
     final canClaim = isAllCompleted && !alreadyClaimed;
     final showCompleted = isAllCompleted && alreadyClaimed;
     
+    // ModernColors 적용
+    Color primaryColor = type == QuestTypeV2.daily 
+        ? ModernColors.modernPrimary 
+        : ModernColors.modernAccent;
+    Color rewardColor = canClaim 
+        ? ModernColors.reward
+        : showCompleted
+          ? ModernColors.modernSuccess
+          : primaryColor;
+    
     return Container(
-      margin: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+      margin: const EdgeInsets.fromLTRB(20, 6, 20, 12),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: QuestColors.pureWhite,
+          borderRadius: BorderRadius.circular(12),
+          color: ModernColors.surface,
           border: Border.all(
-            color: canClaim 
-                ? QuestColors.accentGold
-                : showCompleted
-                  ? QuestColors.completed
-                  : QuestColors.skyBlue,
+            color: rewardColor.withOpacity(0.3),
             width: 2,
           ),
-          boxShadow: canClaim ? [
-            BoxShadow(
-              color: QuestColors.accentGold.withOpacity(0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ] : QuestColors.softShadow,
+          boxShadow: canClaim 
+              ? ModernColors.rewardShadow()
+              : ModernColors.softShadow(primaryColor: rewardColor),
         ),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            color: canClaim 
-              ? QuestColors.accentGold.withOpacity(0.05)
-              : showCompleted 
-                ? QuestColors.completed.withOpacity(0.05)
-                : QuestColors.skyBlue.withOpacity(0.02),
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                rewardColor.withOpacity(0.03),
+                rewardColor.withOpacity(0.08),
+              ],
+            ),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // 상단 헤더 섹션
+                // 상단 헤더 섹션 (ModernColors 적용)
                 Row(
                   children: [
                     // 보상 상자 아이콘
@@ -816,20 +743,17 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: canClaim 
-                            ? QuestColors.accentGold.withOpacity(0.1)
-                            : showCompleted
-                              ? QuestColors.completed.withOpacity(0.1)
-                              : QuestColors.skyBlue.withOpacity(0.1),
-                        border: Border.all(
-                          color: canClaim 
-                              ? QuestColors.accentGold.withOpacity(0.3)
-                              : showCompleted
-                                ? QuestColors.completed.withOpacity(0.3)
-                                : QuestColors.skyBlue.withOpacity(0.3),
-                          width: 2,
-                        ),
+                        gradient: canClaim || showCompleted 
+                            ? LinearGradient(
+                                colors: [rewardColor, rewardColor.withOpacity(0.8)],
+                              )
+                            : LinearGradient(
+                                colors: [primaryColor.withOpacity(0.2), primaryColor.withOpacity(0.1)],
+                              ),
                         shape: BoxShape.circle,
+                        boxShadow: canClaim 
+                            ? ModernColors.softShadow(primaryColor: rewardColor)
+                            : null,
                       ),
                       child: Icon(
                         canClaim 
@@ -837,11 +761,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                             : showCompleted
                               ? Icons.check_circle_rounded
                               : Icons.lock_rounded,
-                        color: canClaim 
-                            ? QuestColors.accentGold
-                            : showCompleted
-                              ? QuestColors.completed
-                              : QuestColors.skyBlue,
+                        color: canClaim || showCompleted ? Colors.white : primaryColor,
                         size: 28,
                       ),
                     ),
@@ -862,7 +782,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                             style: GoogleFonts.notoSans(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
-                              color: QuestColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -871,7 +791,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: QuestColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                         ],
@@ -890,14 +810,8 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                             child: CircularProgressIndicator(
                               value: progress,
                               strokeWidth: 5,
-                              backgroundColor: QuestColors.inactive.withOpacity(0.3),
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                canClaim 
-                                    ? QuestColors.accentGold
-                                    : showCompleted
-                                      ? QuestColors.completed
-                                      : QuestColors.skyBlue,
-                              ),
+                              backgroundColor: ModernColors.inactive.withOpacity(0.3),
+                              valueColor: AlwaysStoppedAnimation<Color>(rewardColor),
                             ),
                           ),
                           Center(
@@ -906,11 +820,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                               style: GoogleFonts.notoSans(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w800,
-                                color: canClaim 
-                                    ? QuestColors.accentGold
-                                    : showCompleted
-                                      ? QuestColors.completed
-                                      : QuestColors.skyBlue,
+                                color: rewardColor,
                               ),
                             ),
                           ),
@@ -922,14 +832,14 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                 
                 const SizedBox(height: 20),
                 
-                // 보상 아이템들
+                // 보상 아이템들 (ModernColors 적용)
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: QuestColors.backgroundWhite,
+                    color: ModernColors.backgroundElevated,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
-                      color: QuestColors.inactive.withOpacity(0.3),
+                      color: ModernColors.border,
                       width: 1,
                     ),
                   ),
@@ -943,7 +853,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                             Icon(
                               Icons.trending_up,
                               size: 20,
-                              color: QuestColors.skyBlue,
+                              color: ModernColors.modernPrimary,
                             ),
                             const SizedBox(width: 6),
                             Text(
@@ -951,7 +861,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                               style: GoogleFonts.notoSans(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
-                                color: QuestColors.textPrimary,
+                                color: ModernColors.textPrimary,
                               ),
                             ),
                             const SizedBox(width: 4),
@@ -960,7 +870,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                               style: GoogleFonts.notoSans(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: QuestColors.skyBlue,
+                                color: ModernColors.modernPrimary,
                               ),
                             ),
                           ],
@@ -971,7 +881,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                       Container(
                         width: 1,
                         height: 24,
-                        color: QuestColors.inactive.withOpacity(0.5),
+                        color: ModernColors.border,
                       ),
                       
                       // 포인트 보상
@@ -982,7 +892,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                             Icon(
                               Icons.monetization_on,
                               size: 20,
-                              color: QuestColors.accentGold,
+                              color: ModernColors.reward,
                             ),
                             const SizedBox(width: 6),
                             Text(
@@ -990,7 +900,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                               style: GoogleFonts.notoSans(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
-                                color: QuestColors.textPrimary,
+                                color: ModernColors.textPrimary,
                               ),
                             ),
                             const SizedBox(width: 4),
@@ -999,7 +909,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                               style: GoogleFonts.notoSans(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
-                                color: QuestColors.accentGold,
+                                color: ModernColors.reward,
                               ),
                             ),
                           ],
@@ -1011,7 +921,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                 
                 const SizedBox(height: 16),
                 
-                // 액션 버튼
+                // 액션 버튼 (ModernColors 적용)
                 SizedBox(
                   width: double.infinity,
                   height: 48,
@@ -1022,8 +932,8 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                             await _claimCompletionBonus(type);
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: QuestColors.accentGold,
-                            foregroundColor: QuestColors.pureWhite,
+                            backgroundColor: ModernColors.reward,
+                            foregroundColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -1045,20 +955,14 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                               Text('보상 상자 열기!'),
                             ],
                           ),
-                        ).animate(
-                          onPlay: (controller) => controller.repeat(reverse: true),
-                        ).scale(
-                          begin: const Offset(1, 1),
-                          end: const Offset(1.02, 1.02),
-                          duration: const Duration(milliseconds: 1500),
                         )
                       : showCompleted
                           ? Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
-                                color: QuestColors.completed.withOpacity(0.1),
+                                color: ModernColors.modernSuccess.withOpacity(0.1),
                                 border: Border.all(
-                                  color: QuestColors.completed,
+                                  color: ModernColors.modernSuccess,
                                   width: 2,
                                 ),
                               ),
@@ -1069,7 +973,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                                   children: [
                                     Icon(
                                       Icons.check_circle_rounded,
-                                      color: QuestColors.completed,
+                                      color: ModernColors.modernSuccess,
                                       size: 20,
                                     ),
                                     const SizedBox(width: 8),
@@ -1078,7 +982,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                                       style: GoogleFonts.notoSans(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
-                                        color: QuestColors.completed,
+                                        color: ModernColors.modernSuccess,
                                       ),
                                     ),
                                   ],
@@ -1088,9 +992,9 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                           : Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
-                                color: QuestColors.inactive.withOpacity(0.1),
+                                color: ModernColors.inactive.withOpacity(0.1),
                                 border: Border.all(
-                                  color: QuestColors.inactive,
+                                  color: ModernColors.inactive,
                                   width: 2,
                                 ),
                               ),
@@ -1101,17 +1005,17 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                                   children: [
                                     Icon(
                                       Icons.lock_rounded,
-                                      color: QuestColors.inactive,
+                                      color: ModernColors.inactive,
                                       size: 18,
                                     ),
                                     const SizedBox(width: 8),
                                     Flexible(
                                       child: Text(
-                                        '${completedCount}/${totalCount} 퀘스트 완료 필요',
+                                        '$completedCount/$totalCount 퀘스트 완료 필요',
                                         style: GoogleFonts.notoSans(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
-                                          color: QuestColors.inactive,
+                                          color: ModernColors.inactive,
                                         ),
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -1129,7 +1033,27 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
     );
   }
 
-  /// 완료 보너스 수령
+  /// 🎮 단순한 퀘스트 카드 (과도한 애니메이션 제거)
+  Widget _buildGamifiedQuestCard(QuestInstance quest, int index) {
+    return QuestCardV2Widget(
+      quest: quest,
+      onQuestCompleted: (updatedQuest) => _onQuestCompleted(updatedQuest),
+    );
+  }
+
+  /// 카테고리별 색상 반환
+  Color _getCategoryColor(QuestTypeV2 category) {
+    switch (category) {
+      case QuestTypeV2.daily:
+        return ModernColors.modernPrimary;
+      case QuestTypeV2.weekly:
+        return ModernColors.modernAccent;
+      case QuestTypeV2.premium:
+        return ModernColors.reward;
+    }
+  }
+
+  /// 완료 보너스 수령 (ModernColors 적용)
   Future<void> _claimCompletionBonus(QuestTypeV2 type) async {
     try {
       final questProvider = ref.read(questProviderV2.notifier);
@@ -1142,7 +1066,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
       
       final bonusKey = type == QuestTypeV2.daily ? 'daily_bonus_v2_today' : 'weekly_bonus_v2_today';
       
-      // 🎉 Confetti 효과 시작!
+      // 🎉 간단한 축하 효과
       _confettiController.play();
       
       // 보상 지급
@@ -1166,18 +1090,31 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
         },
       );
       
-      // 완료 애니메이션 트리거
+      // 완료 처리
       _onAllClearRewardClaimed();
       
       // 화면 새로고침
       setState(() {});
       
     } catch (e) {
-      // 에러 처리
+      // 에러 처리 - 사용자에게 알림
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '보상 수령 중 오류가 발생했습니다',
+            style: GoogleFonts.notoSans(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          backgroundColor: ModernColors.modernError,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     }
   }
 
-  /// 퀘스트 정렬 로직
+  /// 퀘스트 정렬 로직 (기존과 동일)
   void _sortQuests(List<QuestInstance> quests) {
     quests.sort((a, b) {
       // 1. 보상 수령 가능한 퀘스트를 맨 위로
@@ -1201,7 +1138,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
     });
   }
 
-  /// 🔄 로딩 상태
+  /// 🔄 로딩 상태 (ModernColors 적용)
   Widget _buildLoadingState() {
     return Container(
       margin: const EdgeInsets.all(20),
@@ -1211,9 +1148,9 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
           Container(
             padding: const EdgeInsets.all(40),
             decoration: BoxDecoration(
-              color: QuestColors.pureWhite,
+              color: ModernColors.surface,
               borderRadius: BorderRadius.circular(24),
-              boxShadow: QuestColors.softShadow,
+              boxShadow: ModernColors.softShadow(primaryColor: ModernColors.modernPrimary),
             ),
             child: Column(
               children: [
@@ -1221,19 +1158,14 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    gradient: QuestColors.skyGradient,
+                    gradient: ModernColors.primaryGradient,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.auto_stories,
-                    color: QuestColors.pureWhite,
+                    color: Colors.white,
                     size: 40,
                   ),
-                ).animate(
-                  onPlay: (controller) => controller.repeat(),
-                ).rotate(
-                  duration: const Duration(seconds: 2),
-                  curve: Curves.easeInOut,
                 ),
                 
                 const SizedBox(height: 24),
@@ -1243,27 +1175,29 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                   style: GoogleFonts.notoSans(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: QuestColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 
                 const SizedBox(height: 8),
                 
                 Text(
-                  'quest.md 기반의 새로운 퀘스트가 곧 펼쳐집니다!',
+                  '셰르피가 특별한 퀘스트를 준비하고 있어요!',
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
-                    color: QuestColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 
                 const SizedBox(height: 24),
                 
-                LinearProgressIndicator(
-                  backgroundColor: QuestColors.inactive,
-                  valueColor: const AlwaysStoppedAnimation<Color>(QuestColors.skyBlue),
-                  borderRadius: BorderRadius.circular(8),
+                const SizedBox(
+                  width: double.infinity,
+                  child: LinearProgressIndicator(
+                    backgroundColor: ModernColors.inactive,
+                    valueColor: AlwaysStoppedAnimation<Color>(ModernColors.modernPrimary),
+                  ),
                 ),
               ],
             ),
@@ -1273,18 +1207,18 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
     );
   }
 
-  /// ❌ 에러 상태
+  /// ❌ 에러 상태 (ModernColors 적용)
   Widget _buildErrorState(String error) {
     return Center(
       child: Container(
         margin: const EdgeInsets.all(24),
         padding: const EdgeInsets.all(40),
         decoration: BoxDecoration(
-          color: QuestColors.pureWhite,
+          color: ModernColors.surface,
           borderRadius: BorderRadius.circular(24),
-          boxShadow: QuestColors.softShadow,
+          boxShadow: ModernColors.softShadow(primaryColor: ModernColors.modernError),
           border: Border.all(
-            color: Colors.red.shade100,
+            color: ModernColors.modernError.withOpacity(0.2),
             width: 2,
           ),
         ),
@@ -1294,13 +1228,13 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.red.shade50,
+                color: ModernColors.modernError.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.error_outline_rounded,
                 size: 48,
-                color: Colors.red.shade400,
+                color: ModernColors.modernError,
               ),
             ),
             
@@ -1311,7 +1245,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
               style: GoogleFonts.notoSans(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: QuestColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             
@@ -1321,7 +1255,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
               '잠시 후 다시 시도해주세요',
               style: GoogleFonts.notoSans(
                 fontSize: 16,
-                color: QuestColors.textSecondary,
+                color: ModernColors.textSecondary,
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
@@ -1343,8 +1277,8 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: QuestColors.primaryBlue,
-                foregroundColor: QuestColors.pureWhite,
+                backgroundColor: ModernColors.modernPrimary,
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -1358,17 +1292,18 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
     );
   }
 
-  /// 📭 빈 상태 컨텐츠
+  /// 📭 빈 상태 컨텐츠 (ModernColors 적용)
   Widget _buildEmptyStateContent() {
     String emoji;
     String title;
     String subtitle;
+    Color categoryColor = _getCategoryColor(_selectedCategory);
     
     switch (_selectedCategory) {
       case QuestTypeV2.daily:
         emoji = '📅';
         title = '오늘의 모험이 준비되고 있어요';
-        subtitle = '매일 새로운 도전이 기다립니다!';
+        subtitle = '셰르피와 함께 매일 새로운 도전을 만나보세요!';
         break;
       case QuestTypeV2.weekly:
         emoji = '📆';
@@ -1387,28 +1322,21 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
         margin: const EdgeInsets.all(20),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: QuestColors.pureWhite,
+          color: ModernColors.surface,
           borderRadius: BorderRadius.circular(24),
-          boxShadow: QuestColors.softShadow,
+          boxShadow: ModernColors.softShadow(primaryColor: categoryColor),
           border: Border.all(
-            color: QuestColors.skyBlue.withOpacity(0.2),
+            color: categoryColor.withOpacity(0.2),
             width: 2,
           ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 애니메이션 이모지
+            // 단순한 이모지
             Text(
               emoji,
               style: const TextStyle(fontSize: 80),
-            ).animate(
-              onPlay: (controller) => controller.repeat(reverse: true),
-            ).scale(
-              begin: const Offset(0.8, 0.8),
-              end: const Offset(1.2, 1.2),
-              duration: const Duration(seconds: 2),
-              curve: Curves.easeInOut,
             ),
             
             const SizedBox(height: 24),
@@ -1418,7 +1346,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
               style: GoogleFonts.notoSans(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: QuestColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -1429,7 +1357,7 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
               subtitle,
               style: GoogleFonts.notoSans(
                 fontSize: 16,
-                color: QuestColors.textSecondary,
+                color: ModernColors.textSecondary,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -1446,8 +1374,8 @@ class _QuestScreenV2State extends ConsumerState<QuestScreenV2>
                     _showPremiumPurchaseDialog();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: QuestColors.legendaryGold,
-                    foregroundColor: QuestColors.textPrimary,
+                    backgroundColor: ModernColors.reward,
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
