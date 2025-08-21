@@ -712,12 +712,25 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
           borderRadius: BorderRadius.circular(12),
           color: ModernColors.surface,
           border: Border.all(
-            color: rewardColor.withOpacity(0.3),
-            width: 2,
+            color: rewardColor.withOpacity(0.15),
+            width: 1,
           ),
-          boxShadow: canClaim 
-              ? ModernColors.rewardShadow()
-              : ModernColors.softShadow(primaryColor: rewardColor),
+          boxShadow: [
+            // Outer glow for card
+            BoxShadow(
+              color: rewardColor.withOpacity(0.1),
+              blurRadius: 12,
+              offset: const Offset(0, 2),
+              spreadRadius: 0,
+            ),
+            // Subtle elevation
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+              spreadRadius: 0,
+            ),
+          ],
         ),
         child: Container(
           decoration: BoxDecoration(
@@ -749,15 +762,12 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                                 end: Alignment.bottomRight,
                                 colors: [ModernColors.reward, ModernColors.rewardGradient2],
                               )
-                            : showCompleted
+                              : !showCompleted
                               ? LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [ModernColors.modernSuccess, ModernColors.successLight],
-                                )
-                              : LinearGradient(
                                   colors: [primaryColor.withOpacity(0.2), primaryColor.withOpacity(0.1)],
-                                ),
+                                )
+                              : null,
+                        color: showCompleted ? ModernColors.modernSuccess : null,
                         shape: BoxShape.circle,
                         boxShadow: canClaim 
                             ? ModernColors.softShadow(primaryColor: rewardColor)
@@ -990,11 +1000,27 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                           ? Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
-                                color: ModernColors.modernSuccess.withOpacity(0.1),
+                                color: ModernColors.modernSuccess.withOpacity(0.08),
                                 border: Border.all(
-                                  color: ModernColors.modernSuccess,
-                                  width: 2,
+                                  color: ModernColors.modernSuccess.withOpacity(0.6),
+                                  width: 1.5,
                                 ),
+                                boxShadow: [
+                                  // Inner glow effect for completed state
+                                  BoxShadow(
+                                    color: ModernColors.modernSuccess.withOpacity(0.15),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 0),
+                                    spreadRadius: -2,
+                                  ),
+                                  // Premium outer shadow
+                                  BoxShadow(
+                                    color: ModernColors.modernSuccess.withOpacity(0.2),
+                                    blurRadius: 16,
+                                    offset: const Offset(0, 4),
+                                    spreadRadius: 0,
+                                  ),
+                                ],
                               ),
                               child: Center(
                                 child: Row(

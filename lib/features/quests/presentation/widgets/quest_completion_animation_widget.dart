@@ -238,12 +238,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  ModernColors.success,
-                  ModernColors.successLight,
-                ],
-              ),
+              color: ModernColors.success,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(

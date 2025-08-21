@@ -31,6 +31,9 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
   
   // 보너스 수령 캐시
   Set<String> _claimedBonuses = {};
+  
+  // SharedPreferences 동시 접근 방지용 락
+  bool _isSaving = false;
 
   QuestNotifierV2(this.ref) : super(const AsyncValue.loading()) {
     _loadQuests();
@@ -192,105 +195,162 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
   }
 
   /// 글로벌 데이터와 동기화 (public으로 변경 - 등반 완료 시 즉시 호출 가능)
+  /// 글로벌 데이터와 동기화 (강화된 에러 처리)
   Future<void> syncWithGlobalData() async {
-    
-    final globalUser = ref.read(globalUserProvider);
-    final pointData = ref.read(globalPointProvider);
-    
-    // 일일 및 주간 포인트 획득량 계산
-    final dailyPointsEarned = _calculateDailyPointsEarned(pointData.transactions);
-    final weeklyPointsEarned = _calculateWeeklyPointsEarned(pointData.transactions);
-    
-    final trackingData = QuestTrackingService.convertGlobalUserToTrackingData(
-      globalUser,
-      dailyPointsEarned: dailyPointsEarned,
-      weeklyPointsEarned: weeklyPointsEarned,
-    );
-    
-    // 주간 데이터 추가
-    final weeklyData = await QuestTrackingService.calculateWeeklyData(globalUser);
-    trackingData.addAll(weeklyData);
-    
-    // 탭 방문 정보 추가
-    final lastVisitedTab = await QuestTrackingService.getLastVisitedTab();
-    if (lastVisitedTab != null) {
-      trackingData['visitedTab'] = lastVisitedTab;
-    }
-    
-    
-    _lastTrackingData = trackingData;
-    
-    // 모든 퀘스트의 진행률 업데이트
-    bool anyUpdated = false;
-    for (int i = 0; i < _allQuests.length; i++) {
-      final quest = _allQuests[i];
-      final updatedQuest = QuestTrackingService.updateQuestProgress(quest, trackingData);
+    try {
+      final globalUser = ref.read(globalUserProvider);
+      final pointData = ref.read(globalPointProvider);
       
-      if (updatedQuest != null) {
-        _allQuests[i] = updatedQuest;
-        anyUpdated = true;
+      // 일일 및 주간 포인트 획득량 계산
+      final dailyPointsEarned = _calculateDailyPointsEarned(pointData.transactions);
+      final weeklyPointsEarned = _calculateWeeklyPointsEarned(pointData.transactions);
+      
+      final trackingData = QuestTrackingService.convertGlobalUserToTrackingData(
+        globalUser,
+        dailyPointsEarned: dailyPointsEarned,
+        weeklyPointsEarned: weeklyPointsEarned,
+      );
+      
+      // 주간 데이터 추가 (안전하게)
+      try {
+        final weeklyData = await QuestTrackingService.calculateWeeklyData(globalUser);
+        trackingData.addAll(weeklyData);
+      } catch (e) {
+        print('⚠️ 주간 데이터 계산 에러: $e');
+        // 주간 데이터 실패해도 계속 진행
       }
-    }
-    
-    if (anyUpdated) {
-      await _saveQuests();
-      state = AsyncValue.data(_allQuests);
+      
+      // 탭 방문 정보 추가 (안전하게)
+      try {
+        final lastVisitedTab = await QuestTrackingService.getLastVisitedTab();
+        if (lastVisitedTab != null) {
+          trackingData['visitedTab'] = lastVisitedTab;
+        }
+      } catch (e) {
+        print('⚠️ 탭 방문 정보 로드 에러: $e');
+        // 탭 정보 실패해도 계속 진행
+      }
+      
+      _lastTrackingData = trackingData;
+      
+      // 모든 퀘스트의 진행률 업데이트 (안전하게)
+      bool anyUpdated = false;
+      for (int i = 0; i < _allQuests.length; i++) {
+        try {
+          final quest = _allQuests[i];
+          final updatedQuest = QuestTrackingService.updateQuestProgress(quest, trackingData);
+          
+          if (updatedQuest != null) {
+            _allQuests[i] = updatedQuest;
+            anyUpdated = true;
+          }
+        } catch (e) {
+          print('⚠️ 퀘스트 ${_allQuests[i].id} 업데이트 에러: $e');
+          // 개별 퀘스트 실패해도 계속 진행
+        }
+      }
+      
+      if (anyUpdated) {
+        try {
+          await _saveQuests();
+          state = AsyncValue.data(_allQuests);
+        } catch (e) {
+          print('⚠️ 퀘스트 저장 에러: $e');
+          // 저장 실패해도 메모리 상태는 업데이트된 상태 유지
+          state = AsyncValue.data(_allQuests);
+        }
+      }
+    } catch (e, stack) {
+      print('⚠️ 글로벌 데이터 동기화 심각한 에러: $e');
+      print('Stack trace: $stack');
+      // 전체 동기화 실패 시에도 기존 상태 유지 (에러 상태로 설정하지 않음)
     }
   }
 
   /// 글로벌 유저 데이터 변경 시 호출
   void _onGlobalUserDataChanged(GlobalUser globalUser) {
-    final pointData = ref.read(globalPointProvider);
-    
-    // 일일 및 주간 포인트 획득량 계산
-    final dailyPointsEarned = _calculateDailyPointsEarned(pointData.transactions);
-    final weeklyPointsEarned = _calculateWeeklyPointsEarned(pointData.transactions);
-    
-    final trackingData = QuestTrackingService.convertGlobalUserToTrackingData(
-      globalUser,
-      dailyPointsEarned: dailyPointsEarned,
-      weeklyPointsEarned: weeklyPointsEarned,
-    );
-    
-    // 변경된 데이터만 체크
-    bool hasChanges = false;
-    for (final key in trackingData.keys) {
-      if (_lastTrackingData[key] != trackingData[key]) {
-        hasChanges = true;
-        break;
+    // 비동기 처리를 안전하게 래핑
+    _handleGlobalUserDataChangeAsync(globalUser);
+  }
+
+  /// 글로벌 유저 데이터 변경 처리 (비동기 안전)
+  Future<void> _handleGlobalUserDataChangeAsync(GlobalUser globalUser) async {
+    try {
+      final pointData = ref.read(globalPointProvider);
+      
+      // 일일 및 주간 포인트 획득량 계산
+      final dailyPointsEarned = _calculateDailyPointsEarned(pointData.transactions);
+      final weeklyPointsEarned = _calculateWeeklyPointsEarned(pointData.transactions);
+      
+      final trackingData = QuestTrackingService.convertGlobalUserToTrackingData(
+        globalUser,
+        dailyPointsEarned: dailyPointsEarned,
+        weeklyPointsEarned: weeklyPointsEarned,
+      );
+      
+      // 변경된 데이터만 체크
+      bool hasChanges = false;
+      for (final key in trackingData.keys) {
+        if (_lastTrackingData[key] != trackingData[key]) {
+          hasChanges = true;
+          break;
+        }
       }
-    }
-    
-    if (hasChanges) {
-      _lastTrackingData = trackingData;
-      syncWithGlobalData();
+      
+      if (hasChanges) {
+        _lastTrackingData = trackingData;
+        await syncWithGlobalData(); // ✅ await 추가!
+      }
+    } catch (e, stack) {
+      // 에러 로깅만 하고 앱 크래시 방지
+      print('⚠️ 글로벌 데이터 동기화 에러: $e');
+      print('Stack trace: $stack');
+      // 상태를 에러로 설정하지 않고 기존 데이터 유지
     }
   }
 
-  /// 탭 방문 기록 및 퀘스트 업데이트
+  /// 탭 방문 기록 및 퀘스트 업데이트 (최적화)
   Future<void> recordTabVisit(String tabName) async {
-    await QuestTrackingService.recordTabVisit(tabName);
-    
-    // 탭 방문 퀘스트가 있는지 확인하고 업데이트
-    final trackingData = Map<String, dynamic>.from(_lastTrackingData);
-    trackingData['visitedTab'] = tabName;
-    
-    bool anyUpdated = false;
-    for (int i = 0; i < _allQuests.length; i++) {
-      final quest = _allQuests[i];
-      if (quest.trackingCondition.type == QuestTrackingType.tabVisit) {
-        final updatedQuest = QuestTrackingService.updateQuestProgress(quest, trackingData);
-        
-        if (updatedQuest != null) {
-          _allQuests[i] = updatedQuest;
-          anyUpdated = true;
+    try {
+      await QuestTrackingService.recordTabVisit(tabName);
+      
+      // 탭 방문 퀘스트가 있는지 미리 확인 (성능 최적화)
+      final hasTabVisitQuests = _allQuests.any((quest) => 
+        quest.trackingCondition.type == QuestTrackingType.tabVisit);
+      
+      if (!hasTabVisitQuests) {
+        return; // 탭 방문 퀘스트가 없으면 바로 리턴
+      }
+      
+      // 탭 방문 퀘스트가 있는 경우에만 업데이트
+      final trackingData = Map<String, dynamic>.from(_lastTrackingData);
+      trackingData['visitedTab'] = tabName;
+      
+      bool anyUpdated = false;
+      for (int i = 0; i < _allQuests.length; i++) {
+        final quest = _allQuests[i];
+        if (quest.trackingCondition.type == QuestTrackingType.tabVisit) {
+          try {
+            final updatedQuest = QuestTrackingService.updateQuestProgress(quest, trackingData);
+            
+            if (updatedQuest != null) {
+              _allQuests[i] = updatedQuest;
+              anyUpdated = true;
+            }
+          } catch (e) {
+            print('⚠️ 탭 방문 퀘스트 ${quest.id} 업데이트 에러: $e');
+          }
         }
       }
-    }
-    
-    if (anyUpdated) {
-      await _saveQuests();
-      state = AsyncValue.data(_allQuests);
+      
+      if (anyUpdated) {
+        await _saveQuests();
+        state = AsyncValue.data(_allQuests);
+      }
+    } catch (e, stack) {
+      print('⚠️ 탭 방문 기록 에러: $e');
+      print('Stack trace: $stack');
+      // 에러가 발생해도 앱이 멈추지 않도록 함
     }
   }
 
@@ -446,14 +506,26 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
   // 💡 _showWelcomeSherpi 메서드는 홈 화면으로 이동하여 중복 호출 방지
 
   /// 퀘스트 데이터 저장
+  /// 퀘스트 저장 (동시 접근 방지)
   Future<void> _saveQuests() async {
+    if (_isSaving) {
+      print('⚠️ 이미 저장 중입니다. 건너뜁니다.');
+      return;
+    }
+    
+    _isSaving = true;
     try {
       final prefs = await SharedPreferences.getInstance();
       final questJsonList = _allQuests.map((quest) => 
         jsonEncode(quest.toJson())
       ).toList();
       await prefs.setStringList('saved_quests_v2', questJsonList);
-    } catch (e) {
+      print('✅ 퀘스트 저장 완료 (${_allQuests.length}개)');
+    } catch (e, stack) {
+      print('⚠️ 퀘스트 저장 에러: $e');
+      print('Stack trace: $stack');
+    } finally {
+      _isSaving = false;
     }
   }
 
@@ -568,9 +640,39 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
   }
 
   /// 새로고침
+  /// 퀘스트 새로고침 (강화된 복구 시스템)
   Future<void> refresh() async {
     state = const AsyncValue.loading();
-    await _loadQuests();
+    
+    // 최대 3번 재시도
+    for (int attempt = 1; attempt <= 3; attempt++) {
+      try {
+        await _loadQuests();
+        print('✅ 퀘스트 새로고침 성공 (${attempt}번째 시도)');
+        return;
+      } catch (e, stack) {
+        print('⚠️ 퀘스트 새로고침 실패 (${attempt}번째 시도): $e');
+        
+        if (attempt == 3) {
+          // 마지막 시도 실패 시 기본 퀘스트라도 생성
+          try {
+            print('🔄 긴급 복구 모드: 기본 퀘스트 생성 중...');
+            _allQuests = [];
+            _generateAllQuests();
+            await _saveQuests();
+            state = AsyncValue.data(_allQuests);
+            print('✅ 긴급 복구 완료');
+            return;
+          } catch (emergencyError) {
+            print('❌ 긴급 복구마저 실패: $emergencyError');
+            state = AsyncValue.error(e, stack);
+          }
+        } else {
+          // 재시도 전 잠시 대기
+          await Future.delayed(Duration(milliseconds: 500 * attempt));
+        }
+      }
+    }
   }
 
   /// 퀘스트 통계
