@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../models/quest_instance_model.dart';
+import '../../models/quest_template_model.dart';
 
 /// 퀘스트 완료 애니메이션 위젯 (내부 컨트롤러 사용)
 class QuestCompletionAnimationWidget extends ConsumerStatefulWidget {
@@ -22,6 +23,8 @@ class QuestCompletionAnimationWidget extends ConsumerStatefulWidget {
 class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimationWidget>
     with SingleTickerProviderStateMixin {
   QuestInstance? _completedQuest;
+  QuestCompletionBonus? _completionBonus;
+  String? _bonusTitle;
   late AnimationController _internalController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
@@ -79,10 +82,24 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
   void showCompletionAnimation(QuestInstance quest) {
     setState(() {
       _completedQuest = quest;
+      _completionBonus = null;
+      _bonusTitle = null;
       _generateParticles();
     });
     
     // 내부 컨트롤러만 사용 (외부 컨트롤러 조작 제거)
+    _internalController.forward(from: 0.0);
+  }
+
+  /// 🎁 보상상자 애니메이션 표시 (일일/주간 퀘스트 마스터 보상)
+  void showBonusAnimation(QuestCompletionBonus bonus, String title) {
+    setState(() {
+      _completedQuest = null;
+      _completionBonus = bonus;
+      _bonusTitle = title;
+      _generateParticles();
+    });
+    
     _internalController.forward(from: 0.0);
   }
 
@@ -92,6 +109,8 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
       if (mounted) {
         setState(() {
           _completedQuest = null;
+          _completionBonus = null;
+          _bonusTitle = null;
           _particles.clear();
         });
       }
@@ -104,10 +123,10 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
     
     // 다양한 색상의 파티클 생성
     final colors = [
-      AppColors.primary,
-      AppColors.accent,
-      AppColors.success,
-      AppColors.warning,
+      ModernColors.primary,
+      ModernColors.accent,
+      ModernColors.success,
+      ModernColors.warning,
       Colors.purple,
       Colors.pink,
     ];
@@ -126,7 +145,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
 
   @override
   Widget build(BuildContext context) {
-    if (_completedQuest == null) {
+    if (_completedQuest == null && _completionBonus == null) {
       return const SizedBox.shrink();
     }
 
@@ -141,7 +160,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
                 child: GestureDetector(
                   onTap: _hideAnimation,
                   child: Container(
-                    color: Colors.black.withOpacity(_fadeAnimation.value * 0.5),
+                    color: Colors.black.withValues(alpha: _fadeAnimation.value * 0.5),
                   ),
                 ),
               ),
@@ -187,7 +206,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
             width: particle.size,
             height: particle.size,
             decoration: BoxDecoration(
-              color: particle.color.withOpacity(opacity),
+              color: particle.color.withValues(alpha: opacity),
               shape: BoxShape.circle,
             ),
           ),
@@ -205,7 +224,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: ModernColors.primary.withValues(alpha: 0.3),
             blurRadius: 30,
             offset: const Offset(0, 10),
           ),
@@ -221,14 +240,14 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.success,
-                  AppColors.successLight,
+                  ModernColors.success,
+                  ModernColors.successLight,
                 ],
               ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.success.withOpacity(0.3),
+                  color: ModernColors.success.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 5),
                 ),
@@ -245,22 +264,22 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
           
           // 퀘스트 완료 메시지
           Text(
-            '퀘스트 완료!',
+            _completionBonus != null ? '보상상자 오픈!' : '퀘스트 완료!',
             style: GoogleFonts.notoSans(
               fontSize: 24,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
           const SizedBox(height: 8),
           
           Text(
-            _getQuestTitle(),
+            _getDisplayTitle(),
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -271,7 +290,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: AppColors.background,
+              color: ModernColors.background,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -281,7 +300,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -290,9 +309,9 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
                   children: [
                     // XP 보상
                     _buildRewardItem(
-                      Icons.star,
+                      Icons.trending_up,
                       '+${_getExperienceReward()} XP',
-                      AppColors.warning,
+                      ModernColors.primary,
                     ),
                     if (_getPointsReward() > 0) ...[
                       const SizedBox(width: 24),
@@ -300,7 +319,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
                       _buildRewardItem(
                         Icons.monetization_on,
                         '+${_getPointsReward()} P',
-                        AppColors.point,
+                        ModernColors.warning,
                       ),
                     ],
                   ],
@@ -313,10 +332,10 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.success.withOpacity(0.1),
+                      color: ModernColors.success.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: AppColors.success.withOpacity(0.3),
+                        color: ModernColors.success.withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),
@@ -326,7 +345,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
                         Icon(
                           Icons.trending_up,
                           size: 16,
-                          color: AppColors.success,
+                          color: ModernColors.success,
                         ),
                         const SizedBox(width: 6),
                         Text(
@@ -334,7 +353,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
                           style: GoogleFonts.notoSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.success,
+                            color: ModernColors.success,
                           ),
                         ),
                       ],
@@ -401,10 +420,12 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
     }
   }
 
-  /// 헬퍼 메서드들 - V1/V2 시스템 호환성
-  String _getQuestTitle() {
+  /// 헬퍼 메서드들 - V1/V2 시스템 호환성 + 보상상자 지원
+  String _getDisplayTitle() {
     if (_completedQuest != null) {
       return _completedQuest!.title;
+    } else if (_completionBonus != null && _bonusTitle != null) {
+      return _bonusTitle!;
     }
     return '';
   }
@@ -412,6 +433,8 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
   int _getExperienceReward() {
     if (_completedQuest != null) {
       return _completedQuest!.rewards.experience.toInt();
+    } else if (_completionBonus != null) {
+      return _completionBonus!.experienceBonus.toInt();
     }
     return 0;
   }
@@ -419,6 +442,8 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
   int _getPointsReward() {
     if (_completedQuest != null) {
       return _completedQuest!.rewards.points.toInt();
+    } else if (_completionBonus != null) {
+      return _completionBonus!.pointsBonus.toInt();
     }
     return 0;
   }
@@ -427,6 +452,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
     if (_completedQuest != null) {
       return _completedQuest!.rewards.statType != null;
     }
+    // 보상상자에는 능력치 보상이 없음
     return false;
   }
 
@@ -434,6 +460,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
     if (_completedQuest != null) {
       return _completedQuest!.statGranted == true;
     }
+    // 보상상자에는 능력치 보상이 없음
     return false;
   }
 

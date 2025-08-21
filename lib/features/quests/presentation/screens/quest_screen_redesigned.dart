@@ -743,23 +743,46 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                       width: 56,
                       height: 56,
                       decoration: BoxDecoration(
-                        gradient: canClaim || showCompleted 
+                        gradient: canClaim 
                             ? LinearGradient(
-                                colors: [rewardColor, rewardColor.withOpacity(0.8)],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [ModernColors.reward, ModernColors.rewardGradient2],
                               )
-                            : LinearGradient(
-                                colors: [primaryColor.withOpacity(0.2), primaryColor.withOpacity(0.1)],
-                              ),
+                            : showCompleted
+                              ? LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [ModernColors.modernSuccess, ModernColors.successLight],
+                                )
+                              : LinearGradient(
+                                  colors: [primaryColor.withOpacity(0.2), primaryColor.withOpacity(0.1)],
+                                ),
                         shape: BoxShape.circle,
                         boxShadow: canClaim 
                             ? ModernColors.softShadow(primaryColor: rewardColor)
-                            : null,
+                            : showCompleted
+                              ? [
+                                  BoxShadow(
+                                    color: ModernColors.modernSuccess.withValues(alpha: 0.3),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                    spreadRadius: 1,
+                                  ),
+                                  BoxShadow(
+                                    color: ModernColors.successLight.withValues(alpha: 0.2),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 2),
+                                    spreadRadius: 0,
+                                  ),
+                                ]
+                              : null,
                       ),
                       child: Icon(
                         canClaim 
                             ? Icons.card_giftcard_rounded
                             : showCompleted
-                              ? Icons.check_circle_rounded
+                              ? Icons.verified_rounded
                               : Icons.lock_rounded,
                         color: canClaim || showCompleted ? Colors.white : primaryColor,
                         size: 28,
@@ -777,21 +800,28 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                             canClaim 
                                 ? '🎉 보상 상자 준비 완료!'
                                 : showCompleted
-                                  ? '✅ 보상 수령 완료'
+                                  ? '✨ 성취를 완료했어요!'
                                   : '🔒 보상 상자 (잠김)',
                             style: GoogleFonts.notoSans(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
-                              color: ModernColors.textPrimary,
+                              color: showCompleted 
+                                  ? ModernColors.modernSuccess 
+                                  : ModernColors.textPrimary,
+                              letterSpacing: showCompleted ? -0.3 : 0,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            type == QuestTypeV2.daily ? '일일 퀘스트 마스터' : '주간 퀘스트 레전드',
+                            showCompleted 
+                                ? (type == QuestTypeV2.daily ? '🏆 일일 퀘스트 마스터 달성' : '👑 주간 퀘스트 레전드 달성')
+                                : (type == QuestTypeV2.daily ? '일일 퀘스트 마스터' : '주간 퀘스트 레전드'),
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: ModernColors.textSecondary,
+                              fontWeight: showCompleted ? FontWeight.w700 : FontWeight.w600,
+                              color: showCompleted 
+                                  ? ModernColors.modernSuccess.withValues(alpha: 0.8)
+                                  : ModernColors.textSecondary,
                             ),
                           ),
                         ],
@@ -1078,6 +1108,13 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
       
       // 보너스 수령 표시
       await questProvider.markBonusAsClaimed(bonusKey);
+      
+      // 🎁 리워드 창 표시
+      final bonusTitle = type == QuestTypeV2.daily 
+          ? '일일 퀘스트 마스터 달성!' 
+          : '주간 퀘스트 레전드 달성!';
+      
+      _completionAnimationKey.currentState?.showBonusAnimation(bonus, bonusTitle);
       
       // 셰르피 메시지
       ref.read(sherpiProvider.notifier).showMessage(
