@@ -497,7 +497,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
 
   Widget _buildWeeklyMeetings(List<MeetingLog> meetingLogs) {
     final now = DateTime.now();
-    final weekDays = List.generate(7, (index) => now.subtract(Duration(days: 6 - index)));
+    // 퀘스트 시스템과 동일한 주간 계산 (월요일~일요일)
+    final weekStart = now.subtract(Duration(days: now.weekday - 1));
+    final weekDays = List.generate(7, (index) => weekStart.add(Duration(days: index)));
     
     return Container(
       padding: const EdgeInsets.all(16),
@@ -512,13 +514,52 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '이번 주 모임 현황',
-            style: GoogleFonts.notoSans(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: ModernColors.textSecondary,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '이번 주 모임 현황',
+                style: GoogleFonts.notoSans(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: ModernColors.textSecondary,
+                ),
+              ),
+              // 주간 모임 수 표시 (퀘스트 디버깅용)
+              Builder(
+                builder: (context) {
+                  final weekStart = now.subtract(Duration(days: now.weekday - 1));
+                  final weekEnd = weekStart.add(Duration(days: 6));
+                  final weekMeetings = meetingLogs.where((log) {
+                    // 이번 주 월요일 0시부터 일요일 23시59분까지만 포함
+                    final logDate = DateTime(log.date.year, log.date.month, log.date.day);
+                    final startDate = DateTime(weekStart.year, weekStart.month, weekStart.day);
+                    final endDate = DateTime(weekEnd.year, weekEnd.month, weekEnd.day);
+                    return !logDate.isBefore(startDate) && !logDate.isAfter(endDate);
+                  }).length;
+                  
+                  return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: ModernColors.textTertiary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: ModernColors.textTertiary.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      '${weekMeetings}개',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: ModernColors.textTertiary,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           Row(

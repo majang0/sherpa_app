@@ -375,8 +375,8 @@ class QuestTemplatesData {
     
     QuestTemplate(
       id: 'W_H_05',
-      title: '2개 모임 동시 참여',
-      description: '서로 다른 2개의 모임에 적극 참여하세요',
+      title: '2개 모임 참여',
+      description: '이번 주에 2개의 모임에 적극 참여하세요',
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.sociality,
       weeklyDifficulty: WeeklyQuestDifficultyV2.hard,

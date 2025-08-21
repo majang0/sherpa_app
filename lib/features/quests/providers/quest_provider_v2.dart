@@ -64,9 +64,13 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       // 저장된 퀘스트 로드
       final savedQuests = prefs.getStringList('saved_quests_v2') ?? [];
       if (savedQuests.isNotEmpty) {
-        _allQuests = savedQuests.map((questJson) => 
-          QuestInstance.fromJson(jsonDecode(questJson))
-        ).toList();
+        try {
+          _allQuests = savedQuests.map((questJson) => 
+            QuestInstance.fromJson(jsonDecode(questJson))
+          ).toList();
+        } catch (e, stack) {
+          _allQuests = [];
+        }
       } else {
         _allQuests = [];
       }
@@ -161,7 +165,6 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     // 새로운 일일 퀘스트 생성 (5개)
     final dailyQuests = QuestGeneratorService.generateDailyQuests();
     _allQuests.addAll(dailyQuests);
-    
   }
 
   /// 주간 퀘스트 생성

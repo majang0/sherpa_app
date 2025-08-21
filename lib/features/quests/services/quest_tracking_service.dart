@@ -287,6 +287,7 @@ class QuestTrackingService {
       'meetingReviews': dailyRecords.meetingLogs.where((log) => log.note != null && log.note!.isNotEmpty).length,
       'weekly_meetingLogs': _calculateWeeklyMeetingLogs(dailyRecords),
       'weekly_meetingReviews': _calculateWeeklyMeetingReviews(dailyRecords),
+      'weekly_differentMeetings': _calculateWeeklyMeetingLogs(dailyRecords), // 2개 모임 동시 참여 퀘스트용
       
       // 독서/영화 관련
       'ReadingLog.pages': todayReadingPages,
@@ -310,7 +311,7 @@ class QuestTrackingService {
       'perfectDays': _calculatePerfectDays(dailyRecords),
       'allActivitiesDays': _calculateAllActivitiesDays(dailyRecords),
       'challengeRecords': dailyRecords.challengeRecords.length,
-      'differentMeetings': weeklyDifferentMeetingCategories,
+      'differentMeetings': _calculateWeeklyMeetingLogs(dailyRecords),
       '모임주최성공': 0, // TODO: 주최한 모임 계산
       '30일챌린지첫주': 0, // TODO: 30일 챌린지 관련
       '모든카테고리퀘스트완료': 0, // TODO: 퀘스트 완료 관련
@@ -553,20 +554,23 @@ class QuestTrackingService {
     return exerciseDays.length;
   }
 
-  /// 이번 주 모임 참여 수 계산
+  /// 이번 주 모임 참여 수 계산 (월요일~일요일)
   static int _calculateWeeklyMeetingLogs(DailyRecordData dailyRecords) {
     final now = DateTime.now();
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
     final weekEnd = weekStart.add(Duration(days: 6));
     
-    return dailyRecords.meetingLogs
-        .where((log) => 
-          log.date.isAfter(weekStart.subtract(Duration(days: 1))) && 
-          log.date.isBefore(weekEnd.add(Duration(days: 1))))
-        .length;
+    return dailyRecords.meetingLogs.where((log) {
+      // 이번 주 월요일 0시부터 일요일 23시59분까지만 포함
+      final logDate = DateTime(log.date.year, log.date.month, log.date.day);
+      final startDate = DateTime(weekStart.year, weekStart.month, weekStart.day);
+      final endDate = DateTime(weekEnd.year, weekEnd.month, weekEnd.day);
+      return !logDate.isBefore(startDate) && !logDate.isAfter(endDate);
+    }).length;
   }
 
-  /// 이번 주 다른 모임 카테고리 수 계산
+
+  /// 이번 주 다른 모임 카테고리 수 계산 (카테고리 기준 - 프리미엄 퀘스트용)
   static int _calculateWeeklyDifferentMeetingCategories(DailyRecordData dailyRecords) {
     final now = DateTime.now();
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
