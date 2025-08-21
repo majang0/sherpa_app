@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 
 // Core
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 
 // Shared Providers
@@ -125,7 +125,7 @@ class _IntegratedQuestSystemWidgetState
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: AppColors.border.withOpacity(0.5),
+              color: ModernColors.border.withOpacity(0.5),
               width: 1,
             ),
           ),
@@ -150,7 +150,7 @@ class _IntegratedQuestSystemWidgetState
   Widget _buildHeader(QuestProgressV2 progress) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.primary,
+        color: ModernColors.primary,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(19),
           topRight: Radius.circular(19),
@@ -216,7 +216,7 @@ class _IntegratedQuestSystemWidgetState
                   children: [
                     Icon(
                       Icons.card_giftcard,
-                      color: AppColors.point,
+                      color: ModernColors.accent,
                       size: 16,
                     ),
                     const SizedBox(width: 4),
@@ -225,7 +225,7 @@ class _IntegratedQuestSystemWidgetState
                       style: GoogleFonts.notoSans(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.point,
+                        color: ModernColors.accent,
                       ),
                     ),
                   ],
@@ -302,13 +302,13 @@ class _IntegratedQuestSystemWidgetState
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.primary.withOpacity(0.08)
+                ? ModernColors.primary.withOpacity(0.08)
                 : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected
-                  ? AppColors.primary
-                  : AppColors.border,
+                  ? ModernColors.primary
+                  : ModernColors.border,
               width: isSelected ? 1.5 : 1,
             ),
           ),
@@ -320,7 +320,7 @@ class _IntegratedQuestSystemWidgetState
                   Icon(
                     icon,
                     size: 16,
-                    color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                    color: isSelected ? ModernColors.primary : ModernColors.textSecondary,
                   ),
                   const SizedBox(width: 6),
                   Text(
@@ -328,7 +328,7 @@ class _IntegratedQuestSystemWidgetState
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: isSelected ? AppColors.primary : AppColors.textSecondary,
+                      color: isSelected ? ModernColors.primary : ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -344,8 +344,8 @@ class _IntegratedQuestSystemWidgetState
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                         color: isAllCompleted
-                            ? AppColors.success
-                            : (isSelected ? AppColors.primary : AppColors.textSecondary),
+                            ? ModernColors.success
+                            : (isSelected ? ModernColors.primary : ModernColors.textSecondary),
                       ),
                     ),
                     if (isAllCompleted) ...[
@@ -353,7 +353,7 @@ class _IntegratedQuestSystemWidgetState
                       Icon(
                         Icons.check_circle,
                         size: 12,
-                        color: AppColors.success,
+                        color: ModernColors.success,
                       ),
                     ],
                   ],
@@ -413,14 +413,14 @@ class _IntegratedQuestSystemWidgetState
                     icon: Icon(
                       Icons.arrow_forward,
                       size: 16,
-                      color: AppColors.primary,
+                      color: ModernColors.primary,
                     ),
                     label: Text(
                       '더 많은 퀘스트 보기',
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
+                        color: ModernColors.primary,
                       ),
                     ),
                   ),
@@ -455,22 +455,22 @@ class _IntegratedQuestSystemWidgetState
         child: InkWell(
           onTap: canClaim ? () => _claimQuestReward(quest) : null,
           borderRadius: BorderRadius.circular(16),
-          splashColor: AppColors.primary.withOpacity(0.1),
-          highlightColor: AppColors.primary.withOpacity(0.05),
+          splashColor: ModernColors.primary.withOpacity(0.1),
+          highlightColor: ModernColors.primary.withOpacity(0.05),
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isClaimed
-                  ? AppColors.background
+                  ? ModernColors.background
                   : canClaim
-                  ? AppColors.point.withOpacity(0.03)
+                  ? ModernColors.accent.withOpacity(0.03)
                   : Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isClaimed
-                    ? AppColors.border.withOpacity(0.3)
+                    ? ModernColors.border.withOpacity(0.3)
                     : canClaim
-                    ? AppColors.point
+                    ? ModernColors.accent
                     : getDifficultyColor().withOpacity(0.3),
                 width: canClaim ? 2 : 1,
               ),
@@ -485,7 +485,7 @@ class _IntegratedQuestSystemWidgetState
                       height: 44,
                       decoration: BoxDecoration(
                         color: isClaimed
-                            ? AppColors.textLight.withOpacity(0.1)
+                            ? ModernColors.textTertiary.withOpacity(0.1)
                             : getDifficultyColor().withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
@@ -511,8 +511,8 @@ class _IntegratedQuestSystemWidgetState
                                     fontSize: 15,
                                     fontWeight: FontWeight.w600,
                                     color: isClaimed
-                                        ? AppColors.textLight
-                                        : AppColors.textPrimary,
+                                        ? ModernColors.textTertiary
+                                        : ModernColors.textPrimary,
                                     decoration: isClaimed
                                         ? TextDecoration.lineThrough
                                         : null,
@@ -549,8 +549,8 @@ class _IntegratedQuestSystemWidgetState
                                   style: GoogleFonts.notoSans(
                                     fontSize: 13,
                                     color: isClaimed
-                                        ? AppColors.textLight
-                                        : AppColors.textSecondary,
+                                        ? ModernColors.textTertiary
+                                        : ModernColors.textSecondary,
                                   ),
                                 ),
                               ),
@@ -562,7 +562,7 @@ class _IntegratedQuestSystemWidgetState
                                     vertical: 3,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primary.withOpacity(0.1),
+                                    color: ModernColors.primary.withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
@@ -570,7 +570,7 @@ class _IntegratedQuestSystemWidgetState
                                     style: GoogleFonts.notoSans(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.primary,
+                                      color: ModernColors.primary,
                                     ),
                                   ),
                                 ),
@@ -588,7 +588,7 @@ class _IntegratedQuestSystemWidgetState
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.point,
+                          color: ModernColors.accent,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -619,10 +619,10 @@ class _IntegratedQuestSystemWidgetState
                             ? Icons.check_circle_outline
                             : Icons.radio_button_unchecked,
                         color: isClaimed
-                            ? AppColors.textLight
+                            ? ModernColors.textTertiary
                             : isCompleted
-                            ? AppColors.success
-                            : AppColors.border,
+                            ? ModernColors.success
+                            : ModernColors.border,
                         size: 24,
                       ),
                   ],
@@ -634,9 +634,9 @@ class _IntegratedQuestSystemWidgetState
                     borderRadius: BorderRadius.circular(4),
                     child: LinearProgressIndicator(
                       value: progress,
-                      backgroundColor: AppColors.divider,
+                      backgroundColor: ModernColors.borderLight,
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        isCompleted ? AppColors.success : getDifficultyColor(),
+                        isCompleted ? ModernColors.success : getDifficultyColor(),
                       ),
                       minHeight: 6,
                     ),
@@ -649,7 +649,7 @@ class _IntegratedQuestSystemWidgetState
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.warning.withOpacity(0.1),
+                          color: ModernColors.warning.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Row(
@@ -657,14 +657,14 @@ class _IntegratedQuestSystemWidgetState
                             Icon(
                               Icons.star_rounded,
                               size: 14,
-                              color: AppColors.warning,
+                              color: ModernColors.warning,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               '+${quest.rewards.experience.toInt()} XP',
                               style: GoogleFonts.notoSans(
                                 fontSize: 12,
-                                color: AppColors.warning,
+                                color: ModernColors.warning,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -677,14 +677,14 @@ class _IntegratedQuestSystemWidgetState
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppColors.point.withOpacity(0.1),
+                            color: ModernColors.accent.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(
                             children: [
                               Icon(
                                 Icons.monetization_on,
-                                color: AppColors.point,
+                                color: ModernColors.accent,
                                 size: 14,
                               ),
                               const SizedBox(width: 4),
@@ -692,7 +692,7 @@ class _IntegratedQuestSystemWidgetState
                                 '+${quest.rewards.points} P',
                                 style: GoogleFonts.notoSans(
                                   fontSize: 12,
-                                  color: AppColors.point,
+                                  color: ModernColors.accent,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -706,7 +706,7 @@ class _IntegratedQuestSystemWidgetState
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.1),
+                            color: ModernColors.primary.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Row(
@@ -720,7 +720,7 @@ class _IntegratedQuestSystemWidgetState
                                 '${(quest.rewards.statChance * 100).toInt()}%',
                                 style: GoogleFonts.notoSans(
                                   fontSize: 12,
-                                  color: AppColors.primary,
+                                  color: ModernColors.primary,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -779,10 +779,10 @@ class _IntegratedQuestSystemWidgetState
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.point.withOpacity(0.05),
+        color: ModernColors.accent.withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.point.withOpacity(0.3),
+          color: ModernColors.accent.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -793,7 +793,7 @@ class _IntegratedQuestSystemWidgetState
             children: [
               Icon(
                 Icons.celebration,
-                color: AppColors.point,
+                color: ModernColors.accent,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -803,7 +803,7 @@ class _IntegratedQuestSystemWidgetState
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ),
@@ -823,7 +823,7 @@ class _IntegratedQuestSystemWidgetState
                 ),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.point,
+                backgroundColor: ModernColors.accent,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
@@ -894,10 +894,10 @@ class _IntegratedQuestSystemWidgetState
         margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.success.withOpacity(0.05),
+          color: ModernColors.success.withOpacity(0.05),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: AppColors.success.withOpacity(0.3),
+            color: ModernColors.success.withOpacity(0.3),
             width: 1,
           ),
         ),
@@ -907,12 +907,12 @@ class _IntegratedQuestSystemWidgetState
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppColors.success.withOpacity(0.1),
+                color: ModernColors.success.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.card_giftcard,
-                color: AppColors.success,
+                color: ModernColors.success,
                 size: 20,
               ),
             ),
@@ -926,7 +926,7 @@ class _IntegratedQuestSystemWidgetState
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -938,7 +938,7 @@ class _IntegratedQuestSystemWidgetState
                           '+${_lastRewardData!['xp'].toInt()} XP',
                           style: GoogleFonts.notoSans(
                             fontSize: 13,
-                            color: AppColors.warning,
+                            color: ModernColors.warning,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -947,7 +947,7 @@ class _IntegratedQuestSystemWidgetState
                           '+${_lastRewardData!['points']} P',
                           style: GoogleFonts.notoSans(
                             fontSize: 13,
-                            color: AppColors.point,
+                            color: ModernColors.accent,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -956,7 +956,7 @@ class _IntegratedQuestSystemWidgetState
                           '${_getStatEmoji(_lastRewardData!['statType'])} ${_getStatName(_lastRewardData!['statType'])} 0.1% 증가!',
                           style: GoogleFonts.notoSans(
                             fontSize: 13,
-                            color: AppColors.primary,
+                            color: ModernColors.primary,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -980,13 +980,13 @@ class _IntegratedQuestSystemWidgetState
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: ModernColors.primary.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.check_circle_outline,
               size: 32,
-              color: AppColors.primary,
+              color: ModernColors.primary,
             ),
           ),
           const SizedBox(height: 16),
@@ -995,7 +995,7 @@ class _IntegratedQuestSystemWidgetState
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 4),
@@ -1003,7 +1003,7 @@ class _IntegratedQuestSystemWidgetState
             '내일 새로운 퀘스트가 기다리고 있어요',
             style: GoogleFonts.notoSans(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
         ],
@@ -1016,7 +1016,7 @@ class _IntegratedQuestSystemWidgetState
       padding: const EdgeInsets.all(40),
       child: Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+          valueColor: AlwaysStoppedAnimation<Color>(ModernColors.primary),
           strokeWidth: 2,
         ),
       ),
@@ -1032,13 +1032,13 @@ class _IntegratedQuestSystemWidgetState
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              color: AppColors.error.withOpacity(0.1),
+              color: ModernColors.error.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.error_outline,
               size: 32,
-              color: AppColors.error,
+              color: ModernColors.error,
             ),
           ),
           const SizedBox(height: 16),
@@ -1047,7 +1047,7 @@ class _IntegratedQuestSystemWidgetState
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 12),
@@ -1060,7 +1060,7 @@ class _IntegratedQuestSystemWidgetState
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.primary,
+                color: ModernColors.primary,
               ),
             ),
           ),

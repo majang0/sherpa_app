@@ -241,6 +241,8 @@ class QuestTrackingService {
     final weeklyExerciseDays = _calculateWeeklyExerciseDays(dailyRecords);
     final weeklyDifferentMeetingCategories = _calculateWeeklyDifferentMeetingCategories(dailyRecords);
     final weeklyDifferentMountains = _calculateWeeklyDifferentMountains(dailyRecords);
+    final weeklyMeetingLogsCount = _calculateWeeklyMeetingLogs(dailyRecords);
+    final meetingReviewsCount = dailyRecords.meetingLogs.where((log) => log.note != null && log.note!.isNotEmpty).length;
     
     return {
       // 기본 데이터
@@ -282,12 +284,12 @@ class QuestTrackingService {
       'todayClimbingSuccess': todayClimbingSuccess,      // 새로운 키 (점 없음)
       
       // 모임/소셜 관련
-      'MeetingReview': dailyRecords.meetingLogs.where((log) => log.note != null && log.note!.isNotEmpty).length,
+      'MeetingReview': meetingReviewsCount,
       'MeetingLog': todayMeetingLogs,
-      'meetingReviews': dailyRecords.meetingLogs.where((log) => log.note != null && log.note!.isNotEmpty).length,
-      'weekly_meetingLogs': _calculateWeeklyMeetingLogs(dailyRecords),
+      'meetingReviews': meetingReviewsCount,
+      'weekly_meetingLogs': weeklyMeetingLogsCount,
       'weekly_meetingReviews': _calculateWeeklyMeetingReviews(dailyRecords),
-      'weekly_differentMeetings': _calculateWeeklyMeetingLogs(dailyRecords), // 2개 모임 동시 참여 퀘스트용
+      'weekly_differentMeetings': weeklyMeetingLogsCount, // 2개 모임 동시 참여 퀘스트용
       
       // 독서/영화 관련
       'ReadingLog.pages': todayReadingPages,
@@ -305,17 +307,17 @@ class QuestTrackingService {
       'differentExerciseTypes': _calculateDifferentExerciseTypes(dailyRecords),
       'differentMountains': weeklyDifferentMountains,
       'differentMeetingCategories': weeklyDifferentMeetingCategories,
-      'meetingLogs': _calculateWeeklyMeetingLogs(dailyRecords),
+      'meetingLogs': weeklyMeetingLogsCount,
       '연속등반성공': _calculateConsecutiveClimbingSuccess(dailyRecords),
-      '연속일일퀘스트완료': 0, // TODO: 퀘스트 완료 연속일 계산
+      '연속일일퀘스트완료': 0, // 나중에 퀘스트 완료 연속일 계산 로직 추가 예정
       'perfectDays': _calculatePerfectDays(dailyRecords),
       'allActivitiesDays': _calculateAllActivitiesDays(dailyRecords),
       'challengeRecords': dailyRecords.challengeRecords.length,
-      'differentMeetings': _calculateWeeklyMeetingLogs(dailyRecords),
-      '모임주최성공': 0, // TODO: 주최한 모임 계산
-      '30일챌린지첫주': 0, // TODO: 30일 챌린지 관련
-      '모든카테고리퀘스트완료': 0, // TODO: 퀘스트 완료 관련
-      '모든주간퀘스트완료': 0, // TODO: 주간 퀘스트 완료 관련
+      'differentMeetings': weeklyMeetingLogsCount,
+      '모임주최성공': 0, // 나중에 모임 주최 기능 추가 시 구현 예정
+      '30일챌린지첫주': 0, // 30일 챌린지 시스템 추가 시 구현 예정
+      '모든카테고리퀘스트완료': 0, // 나중에 카테고리별 퀘스트 완료 추적 기능 추가 예정
+      '모든주간퀘스트완료': 0, // 나중에 주간 퀘스트 완룼 추적 기능 추가 예정
     };
   }
 
@@ -634,13 +636,13 @@ class QuestTrackingService {
     
     // 주간 걸음 수는 현재 todaySteps만 있으므로 임시로 오늘 기준으로 계산
     // 실제로는 각 날짜별 걸음 수 기록이 필요함
-    return dailyRecords.todaySteps * 7; // TODO: 실제 일별 걸음 수 데이터 필요
+    return dailyRecords.todaySteps * 7; // 나중에 일별 걸음 수 데이터 추가 시 수정 예정
   }
   
   /// 주간 집중 시간 계산
   static int _calculateWeeklyFocusMinutes(DailyRecordData dailyRecords) {
     // 현재 DailyRecordData에는 focusLogs가 없으므로 todayFocusMinutes를 기반으로 추정
-    // TODO: 실제 집중 기록 로그가 추가되면 수정 필요
+    // 나중에 집중 기록 로그 추가 시 수정 예정
     return dailyRecords.todayFocusMinutes * 7; // 임시로 오늘 * 7일
   }
   
@@ -681,7 +683,7 @@ class QuestTrackingService {
   /// 주간 앱 실행 횟수 계산
   static int _calculateWeeklyAppLaunches() {
     // 앱 실행 횟수는 별도 추적이 필요하므로 임시로 7일로 설정
-    // TODO: 실제 앱 실행 횟수 추적 로직 필요
+    // 나중에 앱 실행 횟수 추적 시스템 추가 시 구현 예정
     return 7;
   }
   

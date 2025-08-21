@@ -48,7 +48,6 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
   /// 퀘스트 데이터 로드
   Future<void> _loadQuests() async {
     try {
-      print('🎮 퀸스트 시스템 V2 로딩 시작...');
       
       final prefs = await SharedPreferences.getInstance();
       
@@ -117,38 +116,12 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       
       state = AsyncValue.data(_allQuests);
       
-      // 💡 환영 메시지는 홈 화면에서만 표시되므로 여기서는 제거
-      // _showWelcomeSherpi(); // 중복 호출 방지
       
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
     }
   }
 
-  /// 🛠️ 개발용 데이터 초기화 (월요일 기준 수정)
-  /// 퀸스트 데이터와 보너스 기록을 모두 삭제하여 신선한 상태로 만듬
-  Future<void> _clearDevelopmentData(SharedPreferences prefs) async {
-    final today = DateTime.now();
-    
-    // 퀸스트 데이터 삭제
-    await prefs.remove('saved_quests_v2');
-    
-    // 일일 보너스 기록 삭제
-    await prefs.remove('daily_bonus_v2_${today.year}-${today.month}-${today.day}');
-    
-    // 주간 보너스 기록 삭제 (월요일 기준)
-    await prefs.remove('weekly_bonus_v2_${_getMondayBasedWeekString(today)}');
-    
-    // 프리미엄 상태 초기화
-    await prefs.remove('premium_quest_active_v2');
-    
-    // 생성 날짜 기록 삭제
-    await prefs.remove('last_daily_generated_v2');
-    await prefs.remove('last_weekly_generated_v2');
-    await prefs.remove('last_premium_generated_v2');
-    
-    print('🧿 초기화된 데이터: 퀸스트, 보너스, 프리미엄, 생성기록');
-  }
 
   /// 모든 퀘스트 생성
   void _generateAllQuests() {
@@ -194,7 +167,6 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     
   }
 
-  /// 글로벌 데이터와 동기화 (public으로 변경 - 등반 완료 시 즉시 호출 가능)
   /// 글로벌 데이터와 동기화 (강화된 에러 처리)
   Future<void> syncWithGlobalData() async {
     try {
@@ -216,7 +188,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
         final weeklyData = await QuestTrackingService.calculateWeeklyData(globalUser);
         trackingData.addAll(weeklyData);
       } catch (e) {
-        print('⚠️ 주간 데이터 계산 에러: $e');
+        // 주간 데이터 계산 실패 시 무시
         // 주간 데이터 실패해도 계속 진행
       }
       
@@ -227,7 +199,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
           trackingData['visitedTab'] = lastVisitedTab;
         }
       } catch (e) {
-        print('⚠️ 탭 방문 정보 로드 에러: $e');
+        // 탭 방문 정보 로드 실패 시 무시
         // 탭 정보 실패해도 계속 진행
       }
       
@@ -245,7 +217,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
             anyUpdated = true;
           }
         } catch (e) {
-          print('⚠️ 퀘스트 ${_allQuests[i].id} 업데이트 에러: $e');
+          // 개별 퀘스트 업데이트 실패 시 무시
           // 개별 퀘스트 실패해도 계속 진행
         }
       }
@@ -255,14 +227,13 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
           await _saveQuests();
           state = AsyncValue.data(_allQuests);
         } catch (e) {
-          print('⚠️ 퀘스트 저장 에러: $e');
+          // 퀘스트 저장 실패 시 무시
           // 저장 실패해도 메모리 상태는 업데이트된 상태 유지
           state = AsyncValue.data(_allQuests);
         }
       }
     } catch (e, stack) {
-      print('⚠️ 글로벌 데이터 동기화 심각한 에러: $e');
-      print('Stack trace: $stack');
+      // 전체 동기화 실패 시에도 기존 상태 유지
       // 전체 동기화 실패 시에도 기존 상태 유지 (에러 상태로 설정하지 않음)
     }
   }
@@ -303,8 +274,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       }
     } catch (e, stack) {
       // 에러 로깅만 하고 앱 크래시 방지
-      print('⚠️ 글로벌 데이터 동기화 에러: $e');
-      print('Stack trace: $stack');
+      // 글로벌 데이터 동기화 에러 발생
       // 상태를 에러로 설정하지 않고 기존 데이터 유지
     }
   }
@@ -338,7 +308,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
               anyUpdated = true;
             }
           } catch (e) {
-            print('⚠️ 탭 방문 퀘스트 ${quest.id} 업데이트 에러: $e');
+            // 탭 방문 퀘스트 업데이트 실패 시 무시
           }
         }
       }
@@ -348,8 +318,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
         state = AsyncValue.data(_allQuests);
       }
     } catch (e, stack) {
-      print('⚠️ 탭 방문 기록 에러: $e');
-      print('Stack trace: $stack');
+      // 탭 방문 기록 에러 발생
       // 에러가 발생해도 앱이 멈추지 않도록 함
     }
   }
@@ -509,7 +478,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
   /// 퀘스트 저장 (동시 접근 방지)
   Future<void> _saveQuests() async {
     if (_isSaving) {
-      print('⚠️ 이미 저장 중입니다. 건너뜁니다.');
+      // 이미 저장 중이므로 건너뜨
       return;
     }
     
@@ -520,10 +489,8 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
         jsonEncode(quest.toJson())
       ).toList();
       await prefs.setStringList('saved_quests_v2', questJsonList);
-      print('✅ 퀘스트 저장 완료 (${_allQuests.length}개)');
     } catch (e, stack) {
-      print('⚠️ 퀘스트 저장 에러: $e');
-      print('Stack trace: $stack');
+      // 퀘스트 저장 에러 발생
     } finally {
       _isSaving = false;
     }
@@ -648,23 +615,20 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     for (int attempt = 1; attempt <= 3; attempt++) {
       try {
         await _loadQuests();
-        print('✅ 퀘스트 새로고침 성공 (${attempt}번째 시도)');
         return;
       } catch (e, stack) {
-        print('⚠️ 퀘스트 새로고침 실패 (${attempt}번째 시도): $e');
+        // 퀘스트 새로고침 실패
         
         if (attempt == 3) {
           // 마지막 시도 실패 시 기본 퀘스트라도 생성
           try {
-            print('🔄 긴급 복구 모드: 기본 퀘스트 생성 중...');
             _allQuests = [];
             _generateAllQuests();
             await _saveQuests();
             state = AsyncValue.data(_allQuests);
-            print('✅ 긴급 복구 완료');
             return;
           } catch (emergencyError) {
-            print('❌ 긴급 복구마저 실패: $emergencyError');
+            // 긴급 복구마저 실패
             state = AsyncValue.error(e, stack);
           }
         } else {
