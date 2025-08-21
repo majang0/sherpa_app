@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // Core
 import '../../../../core/constants/app_colors.dart';
@@ -17,10 +16,9 @@ import '../../../quests/providers/quest_provider_v2.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
 // Local Widgets
-import '../widgets/enhanced_consecutive_days_reward_widget.dart';
-import '../widgets/integrated_quest_system_widget.dart';
+import '../widgets/compact_quest_widget.dart';
 import '../widgets/smart_meeting_recommendation_widget.dart';
-import '../widgets/enhanced_social_feed_widget.dart';
+import '../widgets/friends_activity_feed_widget.dart';
 import '../widgets/personalized_growth_dashboard_widget.dart';
 import '../widgets/university_guild_widget.dart';
 import '../widgets/growth_insights_widget.dart';
@@ -43,7 +41,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
 
-  bool _isDailyRewardAvailable = false;
   bool _isLoading = true;
   
   // 🎯 세션당 환영 메시지 표시 여부 추적 (static으로 앱 실행 동안 유지)
@@ -78,9 +75,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     _fadeController.forward();
     _scaleController.forward();
     
-    // 일일 보상 확인
-    await _checkDailyReward();
-    
     // 퀘스트 데이터 초기화 및 동기화 (V2)
     // 퀘스트 Provider 초기화 트리거
     ref.read(questProviderV2);
@@ -110,22 +104,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
 
-  Future<void> _checkDailyReward() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final today = DateTime.now();
-      final todayString = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
-      final todayRewardClaimed = prefs.getBool('today_reward_claimed_$todayString') ?? false;
-
-      if (!todayRewardClaimed && mounted) {
-        setState(() {
-          _isDailyRewardAvailable = true;
-        });
-      }
-    } catch (e) {
-      // 일일 보상 확인 중 오류 발생
-    }
-  }
 
   void _showWelcomeSherpi() {
     // 🎯 세션당 한 번만 환영 메시지 표시 (static 변수로 관리)
@@ -243,47 +221,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-            // 일일 보상과 레벨 카드를 AnimatedSwitcher로 감싸서 부드러운 전환
-            SliverToBoxAdapter(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 600),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: SizeTransition(
-                      sizeFactor: animation,
-                      axisAlignment: -1.0,
-                      child: child,
-                    ),
-                  );
-                },
-                child: _isDailyRewardAvailable
-                    ? Padding(
-                        key: const ValueKey('daily_reward'),
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Column(
-                          children: [
-                            EnhancedConsecutiveDaysRewardWidget(
-                              onClaimReward: () {
-                                if (mounted) {
-                                  setState(() => _isDailyRewardAvailable = false);
-                                }
-                              },
-                            ),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      )
-                    : const SizedBox(
-                        key: ValueKey('empty_space'),
-                        height: 0,
-                      ),
-              ),
-            ),
-
-            // 사용자 레벨 카드 (항상 표시)
-
-
             // 개인 성장 영역 (RPG 스타일)
             SliverToBoxAdapter(
               child: _buildPersonalGrowthSection(user),
@@ -346,8 +283,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             
             // AI 테스트 위젯 제거됨 - 프로덕션 모드 최적화
             
-            // 퀘스트 시스템 (V2)
-            IntegratedQuestSystemWidget(),
+            // 퀘스트 시스템 (V2) - 간소화된 버전
+            CompactQuestWidget(),
           ],
         ),
       ),
@@ -367,7 +304,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
           const SizedBox(height: 16),
 
           // 소셜 피드
-          EnhancedSocialFeedWidget(),
+          FriendsActivityFeedWidget(),
           const SizedBox(height: 16),
           
           // 대학 길드

@@ -565,15 +565,39 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
         ),
         SizedBox(height: sizes.itemSpacing),
         Expanded(
-          child: Row(
-            children: cards.map((card) {
-              return Expanded(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: sizes.itemSpacing * 0.5),
-                  child: _buildBrightFrostedCard(card, sizes),
-                ),
-              );
-            }).toList(),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // 화면 너비에 따라 레이아웃 결정
+              final screenWidth = MediaQuery.of(context).size.width;
+              final isVerySmall = screenWidth < 320;
+              
+              if (isVerySmall) {
+                // 매우 작은 화면: 세로 스크롤 가능한 레이아웃
+                return SingleChildScrollView(
+                  child: Column(
+                    children: cards.map((card) {
+                      return Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.only(bottom: sizes.itemSpacing),
+                        child: _buildBrightFrostedCard(card, sizes),
+                      );
+                    }).toList(),
+                  ),
+                );
+              } else {
+                // 일반 화면: 가로 배치
+                return Row(
+                  children: cards.map((card) {
+                    return Expanded(
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: sizes.itemSpacing * 0.5),
+                        child: _buildBrightFrostedCard(card, sizes),
+                      ),
+                    );
+                  }).toList(),
+                );
+              }
+            },
           ),
         ),
       ],
@@ -621,29 +645,38 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
               ),
             ),
             SizedBox(height: sizes.itemSpacing),
-            Text(
-              card['title'] as String,
-              style: GoogleFonts.notoSans(
-                fontSize: sizes.bodyFont,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+            Flexible(
+              child: Text(
+                card['title'] as String,
+                style: GoogleFonts.notoSans(
+                  fontSize: sizes.bodyFont,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                textAlign: TextAlign.center,
               ),
             ),
             SizedBox(height: sizes.itemSpacing * 0.5),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                card['isPercentage'] as bool
-                    ? (card['value'] as double) > 0
-                    ? '+${(card['value'] as double).toStringAsFixed(1)}%'
-                    : '0%'
-                    : (card['value'] as double).toInt().toString(),
-                style: GoogleFonts.notoSans(
-                  fontSize: sizes.subtitleFont,
-                  fontWeight: FontWeight.w800,
-                  color: (card['value'] as double) > 0
-                      ? card['color'] as Color
-                      : AppColors.textSecondary,
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  card['isPercentage'] as bool
+                      ? (card['value'] as double) > 0
+                      ? '+${(card['value'] as double).toStringAsFixed(1)}%'
+                      : '0%'
+                      : (card['value'] as double).toInt().toString(),
+                  style: GoogleFonts.notoSans(
+                    fontSize: sizes.subtitleFont,
+                    fontWeight: FontWeight.w800,
+                    color: (card['value'] as double) > 0
+                        ? card['color'] as Color
+                        : AppColors.textSecondary,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             ),

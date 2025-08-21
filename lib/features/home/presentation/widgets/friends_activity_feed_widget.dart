@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 
 class FriendsActivityFeedWidget extends ConsumerStatefulWidget {
@@ -99,18 +99,25 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    const Color(0xFFFF8A80),
-                    const Color(0xFFFF7043),
+                    ModernColors.modernPrimary,
+                    ModernColors.modernPrimary.withOpacity(0.8),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFFF8A80).withValues(alpha: 0.3),
-                    blurRadius: 15,
+                    color: ModernColors.modernPrimary.withOpacity(0.4),
+                    blurRadius: 20,
                     offset: const Offset(0, 8),
+                    spreadRadius: 0,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                    spreadRadius: 0,
                   ),
                 ],
               ),
@@ -135,61 +142,68 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
   }
 
   Widget _buildHeader() {
-    return Row(
-      children: [
-        Container(
-          width: 50,
-          height: 50,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.2),
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Text('👥', style: TextStyle(fontSize: 24)),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '친구들의 활동',
-                style: GoogleFonts.notoSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
-                ),
-              ),
-              Text(
-                '함께 성장하는 친구들의 소식',
-                style: GoogleFonts.notoSans(
-                  fontSize: 12,
-                  color: Colors.white.withValues(alpha: 0.8),
-                ),
-              ),
-            ],
-          ),
-        ),
-        GestureDetector(
-          onTap: () {
-            HapticFeedbackManager.lightImpact();
-            _refreshFeed();
-          },
-          child: Container(
-            padding: const EdgeInsets.all(8),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.white.withOpacity(0.2),
+              shape: BoxShape.circle,
             ),
-            child: Icon(
-              Icons.refresh,
-              color: Colors.white,
-              size: 20,
+            child: Center(
+              child: Text('👥', style: TextStyle(fontSize: 24)),
             ),
           ),
-        ),
-      ],
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '친구들의 활동',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  '함께 성장하는 친구들의 소식',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 12,
+                    color: Colors.white.withOpacity(0.9),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              HapticFeedbackManager.lightImpact();
+              _refreshFeed();
+            },
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.refresh,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -219,9 +233,8 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +246,14 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  gradient: LinearGradient(
+                    colors: [
+                      ModernColors.modernPrimary.withOpacity(0.8),
+                      ModernColors.modernPrimary.withOpacity(0.6),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -254,21 +274,28 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                           style: GoogleFonts.notoSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: _getActivityColor(activity.activityType).withValues(alpha: 0.3),
+                            gradient: LinearGradient(
+                              colors: [
+                                _getActivityColor(activity.activityType),
+                                _getActivityColor(activity.activityType).withOpacity(0.8),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             _getActivityTypeText(activity.activityType),
                             style: GoogleFonts.notoSans(
                               fontSize: 9,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
                               color: Colors.white,
                             ),
                           ),
@@ -279,7 +306,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                       _getTimeAgo(activity.timestamp),
                       style: GoogleFonts.notoSans(
                         fontSize: 11,
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -288,9 +315,16 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
 
               // 활동 아이콘
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: _getActivityColor(activity.activityType).withValues(alpha: 0.2),
+                  gradient: LinearGradient(
+                    colors: [
+                      _getActivityColor(activity.activityType),
+                      _getActivityColor(activity.activityType).withOpacity(0.8),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -309,7 +343,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
             activity.content,
             style: GoogleFonts.notoSans(
               fontSize: 13,
-              color: Colors.white.withValues(alpha: 0.9),
+              color: ModernColors.textPrimary,
               height: 1.4,
             ),
           ),
@@ -318,14 +352,21 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
           if (activity.meetingTitle != null) ...[
             const SizedBox(height: 8),
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
+                gradient: LinearGradient(
+                  colors: [
+                    ModernColors.modernPrimary.withOpacity(0.15),
+                    ModernColors.modernPrimary.withOpacity(0.1),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 children: [
-                  Icon(Icons.group, color: Colors.white.withValues(alpha: 0.8), size: 14),
+                  Icon(Icons.group, color: ModernColors.modernPrimary, size: 14),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
@@ -333,15 +374,23 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                       style: GoogleFonts.notoSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white.withValues(alpha: 0.8),
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                   ),
-                  Text(
-                    activity.category,
-                    style: GoogleFonts.notoSans(
-                      fontSize: 10,
-                      color: Colors.white.withValues(alpha: 0.6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: ModernColors.modernPrimary,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      activity.category,
+                      style: GoogleFonts.notoSans(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
@@ -357,11 +406,22 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
               GestureDetector(
                 onTap: () => _toggleLike(activity),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: activity.isLiked
-                        ? Colors.red.withValues(alpha: 0.2)
-                        : Colors.white.withValues(alpha: 0.1),
+                    gradient: activity.isLiked
+                        ? LinearGradient(
+                            colors: [ModernColors.error, ModernColors.error.withOpacity(0.8)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          )
+                        : LinearGradient(
+                            colors: [
+                              ModernColors.modernPrimary.withOpacity(0.2),
+                              ModernColors.modernPrimary.withOpacity(0.1),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -369,7 +429,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                     children: [
                       Icon(
                         activity.isLiked ? Icons.favorite : Icons.favorite_border,
-                        color: activity.isLiked ? Colors.red[300] : Colors.white.withValues(alpha: 0.8),
+                        color: activity.isLiked ? Colors.white : ModernColors.modernPrimary,
                         size: 14,
                       ),
                       const SizedBox(width: 4),
@@ -377,8 +437,8 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                         '${activity.likes}',
                         style: GoogleFonts.notoSans(
                           fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: activity.isLiked ? Colors.red[300] : Colors.white.withValues(alpha: 0.8),
+                          fontWeight: FontWeight.w700,
+                          color: activity.isLiked ? Colors.white : ModernColors.modernPrimary,
                         ),
                       ),
                     ],
@@ -390,9 +450,16 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
               GestureDetector(
                 onTap: () => _showComments(activity),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    gradient: LinearGradient(
+                      colors: [
+                        ModernColors.modernPrimary.withOpacity(0.2),
+                        ModernColors.modernPrimary.withOpacity(0.1),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -400,7 +467,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                     children: [
                       Icon(
                         Icons.chat_bubble_outline,
-                        color: Colors.white.withValues(alpha: 0.8),
+                        color: ModernColors.modernPrimary,
                         size: 14,
                       ),
                       const SizedBox(width: 4),
@@ -408,8 +475,8 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                         '댓글',
                         style: GoogleFonts.notoSans(
                           fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white.withValues(alpha: 0.8),
+                          fontWeight: FontWeight.w700,
+                          color: ModernColors.modernPrimary,
                         ),
                       ),
                     ],
@@ -425,15 +492,29 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      gradient: LinearGradient(
+                        colors: [
+                          ModernColors.modernPrimary,
+                          ModernColors.modernPrimary.withOpacity(0.8),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ModernColors.modernPrimary.withOpacity(0.2),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Text(
                       '참여하기',
                       style: GoogleFonts.notoSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        color: const Color(0xFFFF8A80),
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -453,22 +534,21 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
       },
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.2),
+          color: Colors.white.withOpacity(0.2),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.expand_more, color: Colors.white, size: 16),
-            const SizedBox(width: 6),
+            Icon(Icons.expand_more, color: Colors.white, size: 18),
+            const SizedBox(width: 8),
             Text(
               '모든 활동 보기',
               style: GoogleFonts.notoSans(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
                 color: Colors.white,
               ),
             ),
@@ -481,13 +561,13 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
   Color _getActivityColor(ActivityType type) {
     switch (type) {
       case ActivityType.meetingJoined:
-        return Colors.blue;
+        return ModernColors.meeting;
       case ActivityType.levelUp:
-        return Colors.purple;
+        return ModernColors.modernAccent;
       case ActivityType.questCompleted:
-        return Colors.green;
+        return ModernColors.success;
       case ActivityType.meetingCreated:
-        return Colors.orange;
+        return ModernColors.warning;
     }
   }
 
@@ -550,7 +630,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${activity.friendName}님의 활동에 댓글을 남겨보세요!'),
-        backgroundColor: const Color(0xFFFF8A80),
+        backgroundColor: ModernColors.modernPrimary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -568,7 +648,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
             Expanded(child: Text('${activity.meetingTitle}에 참여 신청했습니다!')),
           ],
         ),
-        backgroundColor: const Color(0xFFFF8A80),
+        backgroundColor: ModernColors.modernPrimary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -586,7 +666,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
             Text('친구들의 최신 활동을 불러왔습니다!'),
           ],
         ),
-        backgroundColor: const Color(0xFFFF8A80),
+        backgroundColor: ModernColors.modernPrimary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         duration: const Duration(seconds: 2),
@@ -599,7 +679,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('친구들의 모든 활동을 확인해보세요!'),
-        backgroundColor: const Color(0xFFFF8A80),
+        backgroundColor: ModernColors.modernPrimary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
