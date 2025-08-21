@@ -272,9 +272,9 @@ class QuestConditionFormatter {
       case 'differentmeetings':
         return '이번 주 ${number}개 다른 모임 참여하기';
       case 'perfectdays':
-        return '${number}일간 완벽한 하루 만들기';
+        return '${number}일 이상 오늘의 목표 달성하기';
       case 'allactivitiesdays':
-        return '${number}일간 모든 활동 완료하기';
+        return '7일간 모든 활동 완료하기';
       
       default:
         return '이번 주 ${term} ${number}회 달성';
@@ -675,7 +675,8 @@ class QuestConditionFormatter {
   
   /// 복합 조건 포맷팅
   static String _formatMultipleConditions(QuestTrackingCondition condition) {
-    final conditions = condition.parameters['conditions'] as List<String>;
+    final conditionsRaw = condition.parameters['conditions'] as List<dynamic>;
+    final conditions = conditionsRaw.cast<String>();
     final formattedConditions = conditions.map((cond) {
       final parts = cond.split(':');
       if (parts.length != 2) return cond;

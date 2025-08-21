@@ -51,6 +51,23 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       
       final prefs = await SharedPreferences.getInstance();
       
+      // 🗑️ 앱 시작할 때마다 퀘스트 데이터 초기화 (개발용)
+      await prefs.remove('saved_quests_v2');
+      await prefs.remove('premium_quest_active_v2');
+      await prefs.remove('last_daily_generated_v2');
+      await prefs.remove('last_weekly_generated_v2');
+      await prefs.remove('last_premium_generated_v2');
+      
+      // 보너스 관련 키들도 초기화
+      final allKeys = prefs.getKeys();
+      for (final key in allKeys) {
+        if (key.contains('daily_bonus_v2_') || 
+            key.contains('weekly_bonus_v2_') ||
+            key.contains('premium_bonus_v2_')) {
+          await prefs.remove(key);
+        }
+      }
+      
       // 프리미엄 상태 로드
       _isPremiumActive = prefs.getBool('premium_quest_active_v2') ?? false;
       

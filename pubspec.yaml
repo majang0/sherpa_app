@@ -95,7 +95,6 @@ flutter:
     - assets/images/
     - assets/images/sherpi/
     - assets/images/meeting/
-    - assets/animations/
     - assets/fonts/
     - .env  # 환경변수 파일 포함
 

@@ -332,7 +332,7 @@ class QuestTemplatesData {
     QuestTemplate(
       id: 'W_H_01',
       title: '매일 완벽한 하루',
-      description: '5일 이상 모든 일일 활동을 완료해보세요',
+      description: '5일 이상 오늘의 목표를 달성해보세요',
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.willpower,
       weeklyDifficulty: WeeklyQuestDifficultyV2.hard,
@@ -354,7 +354,7 @@ class QuestTemplatesData {
     QuestTemplate(
       id: 'W_H_03',
       title: '모든 활동 마스터',
-      description: '운동, 독서, 일기, 몰입을 매일 완료해보세요',
+      description: '이번주동안 오늘의 목표를 매일 완료해보세요',
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.willpower,
       weeklyDifficulty: WeeklyQuestDifficultyV2.hard,
@@ -434,11 +434,11 @@ class QuestTemplatesData {
     QuestTemplate(
       id: 'P_R_04',
       title: '지식의 탐구자',
-      description: '독서 200페이지 + 영화 2편 기록',
+      description: '이번주 독서 200페이지 + 영화 2편 기록',
       type: QuestTypeV2.premium,
       category: QuestCategoryV2.knowledge,
       rarity: QuestRarityV2.rare,
-      trackingCondition: QuestTrackingConditionHelper.multipleConditions(['readingPages:200', 'movieLogs:2']),
+      trackingCondition: QuestTrackingConditionHelper.multipleConditions(['weekly_readingPages:200', 'weekly_movieLogs:2']),
       targetProgress: 1,
     ),
   ];

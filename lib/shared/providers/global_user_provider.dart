@@ -1485,12 +1485,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   void _notifyQuestSystem(String activityType, Map<String, dynamic> data) {
     try {
       // 비동기로 퀘스트 시스템 업데이트 (UI 블로킹 방지)
-      Future.microtask(() {
-        // V2에서는 자동 동기화되므로 수동 동기화 불필요
-        // ref.read(questProviderV2.notifier).onGlobalActivityUpdate(activityType, data);
+      Future.microtask(() async {
+        // 즉시 퀘스트 시스템 동기화 실행
+        await ref.read(questProviderV2.notifier).syncWithGlobalData();
       });
-
-      // 디버그 로그
     } catch (e) {
       // 오류가 발생해도 다른 시스템에는 영향 없도록 처리
     }

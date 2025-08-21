@@ -553,6 +553,11 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
     final progress = widget.quest.progressRatio;
     final isCompleted = progress >= 1.0;
     
+    // Check if this is a multiple conditions quest that needs split progress bars
+    if (widget.quest.trackingCondition.type == QuestTrackingType.multipleConditions) {
+      return _buildMultipleConditionsProgress();
+    }
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -583,6 +588,132 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
           child: LinearProgressIndicator(
             value: progress,
             minHeight: 8,
+            backgroundColor: ModernColors.border,
+            valueColor: AlwaysStoppedAnimation<Color>(
+              isCompleted ? ModernColors.success : ModernColors.secondary,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 복수 조건 퀘스트용 분할 진행률 표시
+  Widget _buildMultipleConditionsProgress() {
+    final conditionsRaw = widget.quest.trackingCondition.parameters['conditions'] as List<dynamic>;
+    final conditions = conditionsRaw.cast<String>();
+    final conditionCount = conditions.length;
+    final completedConditions = widget.quest.currentProgress;
+    final allCompleted = completedConditions >= conditionCount;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 전체 진행률 헤더
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              allCompleted ? '완료됨' : '진행률',
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: allCompleted ? ModernColors.success : ModernColors.textSecondary,
+              ),
+            ),
+            Text(
+              '$completedConditions / $conditionCount',
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: allCompleted ? ModernColors.success : ModernColors.secondary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        
+        // 개별 조건들의 진행률
+        ...conditions.asMap().entries.map((entry) {
+          final index = entry.key;
+          final condition = entry.value;
+          return Padding(
+            padding: EdgeInsets.only(bottom: index < conditions.length - 1 ? 12.0 : 0.0),
+            child: _buildSingleConditionProgress(condition, index),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  /// 개별 조건의 진행률 표시
+  Widget _buildSingleConditionProgress(String condition, int index) {
+    final parts = condition.split(':');
+    if (parts.length != 2) return const SizedBox.shrink();
+    
+    final dataKey = parts[0];
+    final targetValue = int.tryParse(parts[1]) ?? 0;
+    
+    // Get current value from quest tracking data
+    final currentValue = widget.quest.trackingData[dataKey] as int? ?? 0;
+    final progress = targetValue > 0 ? (currentValue / targetValue).clamp(0.0, 1.0) : 0.0;
+    final isCompleted = currentValue >= targetValue;
+    
+    String conditionName;
+    String progressText;
+    
+    switch (dataKey) {
+      case 'weekly_readingPages':
+        conditionName = '독서 페이지';
+        progressText = '${currentValue}/${targetValue}페이지';
+        break;
+      case 'weekly_movieLogs':
+        conditionName = '영화 감상';
+        progressText = '${currentValue}/${targetValue}편';
+        break;
+      case 'readingPages':
+        conditionName = '독서 페이지';
+        progressText = '${currentValue}/${targetValue}페이지';
+        break;
+      case 'movieLogs':
+        conditionName = '영화 감상';
+        progressText = '${currentValue}/${targetValue}편';
+        break;
+      default:
+        conditionName = dataKey;
+        progressText = '${currentValue}/${targetValue}';
+    }
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              conditionName,
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: isCompleted ? ModernColors.success : ModernColors.textSecondary,
+              ),
+            ),
+            Text(
+              progressText,
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: isCompleted ? ModernColors.success : ModernColors.secondary,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 6),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: LinearProgressIndicator(
+            value: progress,
+            minHeight: 6,
             backgroundColor: ModernColors.border,
             valueColor: AlwaysStoppedAnimation<Color>(
               isCompleted ? ModernColors.success : ModernColors.secondary,
