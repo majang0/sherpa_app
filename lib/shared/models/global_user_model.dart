@@ -1,6 +1,7 @@
 // lib/shared/models/global_user_model.dart
 
 import 'package:flutter/material.dart';
+import '../../core/constants/meeting_categories.dart';
 
 class GlobalUser {
   final String id;
@@ -405,14 +406,8 @@ class MeetingLog {
   }
 
   String get categoryIcon {
-    switch (category) {
-      case '스터디': return '📚';
-      case '운동': return '💪';
-      case '독서': return '📖';
-      case '취미': return '🎨';
-      case '네트워킹': return '🤝';
-      default: return '👥';
-    }
+    // 🎯 중앙집중식 카테고리 시스템 사용
+    return MeetingCategories.getEmoji(category);
   }
 
   String get moodIcon {

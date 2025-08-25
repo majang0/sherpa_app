@@ -8,6 +8,7 @@ import '../presentation/screens/meeting_detail_screen.dart';
 import '../presentation/screens/meeting_edit_screen.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
+import '../../../core/constants/meeting_categories.dart';
 import '../../../shared/models/global_user_model.dart';
 
 class MeetingFullViewWidget extends ConsumerStatefulWidget {
@@ -1025,18 +1026,9 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
   }
 
   String _getCategoryEmoji(String category) {
-    switch (category) {
-      case '스터디': return '📚';
-      case '운동': return '🏃';
-      case '독서': return '📖';
-      case '취미': return '🎨';
-      case '네트워킹': return '🤝';
-      case '업무': return '💼';
-      case '친목': return '🍻';
-      case '종교': return '🙏';
-      case '봉사': return '❤️';
-      default: return '👥';
-    }
+    // 🎯 중앙집중식 카테고리 시스템 사용
+    return MeetingCategories.getEmoji(category);
+  }
   }
 
   /// 카테고리 색상 범례 위젯

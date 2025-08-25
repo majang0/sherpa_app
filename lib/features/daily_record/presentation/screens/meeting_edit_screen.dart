@@ -7,6 +7,7 @@ import '../../constants/record_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
+import '../../../../core/constants/meeting_categories.dart';
 
 class MeetingEditScreen extends ConsumerStatefulWidget {
   final MeetingLog meeting;
@@ -42,18 +43,8 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
     {'id': 'stressed', 'emoji': '😰', 'label': '스트레스'},
   ];
 
-  // 카테고리별 색상 매핑
-  final Map<String, Map<String, dynamic>> _categoryData = {
-    '스터디': {'emoji': '📚', 'color': Color(0xFF3B82F6), 'gradient': [Color(0xFF3B82F6), Color(0xFF1E3A8A)]},
-    '운동': {'emoji': '🏃', 'color': Color(0xFF10B981), 'gradient': [Color(0xFF10B981), Color(0xFF047857)]},
-    '독서': {'emoji': '📖', 'color': Color(0xFF8B5CF6), 'gradient': [Color(0xFF8B5CF6), Color(0xFF7C3AED)]},
-    '취미': {'emoji': '🎨', 'color': Color(0xFFF59E0B), 'gradient': [Color(0xFFF59E0B), Color(0xFFD97706)]},
-    '네트워킹': {'emoji': '🤝', 'color': Color(0xFFEC4899), 'gradient': [Color(0xFFEC4899), Color(0xFFDB2777)]},
-    '업무': {'emoji': '💼', 'color': Color(0xFF6B7280), 'gradient': [Color(0xFF6B7280), Color(0xFF4B5563)]},
-    '친목': {'emoji': '🍻', 'color': Color(0xFFEF4444), 'gradient': [Color(0xFFEF4444), Color(0xFFDC2626)]},
-    '종교': {'emoji': '🙏', 'color': Color(0xFF06B6D4), 'gradient': [Color(0xFF06B6D4), Color(0xFF0891B2)]},
-    '봉사': {'emoji': '❤️', 'color': Color(0xFF84CC16), 'gradient': [Color(0xFF84CC16), Color(0xFF65A30D)]},
-  };
+  // 🎯 중앙집중식 카테고리 시스템 사용 (레거시 호환성 유지)
+  Map<String, Map<String, dynamic>> get _categoryData => MeetingCategories.legacyFormat;
 
   @override
   void initState() {
