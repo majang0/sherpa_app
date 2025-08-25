@@ -1,22 +1,35 @@
 // lib/features/meetings/models/available_meeting_model.dart
 
 import 'package:flutter/material.dart';
+import '../../../core/constants/meeting_categories.dart';
 
-/// 🏷️ 모임 카테고리
+/// 🏷️ 모임 카테고리 (🎯 중앙집중식 카테고리 시스템 연동)
+/// 
+/// 중앙집중식 MeetingCategories와 완전 통합된 enum 시스템
+/// 모든 UI 데이터(색상, 아이콘, 그라데이션)는 중앙에서 가져옴
 enum MeetingCategory {
-  all('전체', '🌟', Color(0xFF6366F1)),
-  exercise('운동/스포츠', '💪', Color(0xFF10B981)),
-  study('스터디', '📚', Color(0xFF3B82F6)),
-  reading('책/독서', '📖', Color(0xFF8B5CF6)),
-  networking('사교/네트워킹', '🤝', Color(0xFFF59E0B)),
-  culture('문화/영화', '🎭', Color(0xFFEC4899)),
-  outdoor('아웃도어/여행', '🏔️', Color(0xFF06B6D4));
+  all('all'),
+  exercise('exercise'),
+  study('study'),
+  reading('reading'),
+  networking('networking'),
+  culture('culture'),
+  outdoor('outdoor');
 
-  final String displayName;
-  final String emoji;
-  final Color color;
-
-  const MeetingCategory(this.displayName, this.emoji, this.color);
+  final String englishName;
+  const MeetingCategory(this.englishName);
+  
+  /// 🎨 중앙집중식 시스템에서 displayName 가져오기
+  String get displayName => MeetingCategories.enumToDisplayName(englishName);
+  
+  /// 🎭 중앙집중식 시스템에서 emoji 가져오기
+  String get emoji => MeetingCategories.getEmoji(displayName);
+  
+  /// 🌈 중앙집중식 시스템에서 color 가져오기
+  Color get color => MeetingCategories.getColor(displayName);
+  
+  /// 🎨 중앙집중식 시스템에서 gradient 가져오기
+  List<Color> get gradient => MeetingCategories.getGradient(displayName);
 }
 
 /// 모임 유형 (포인트 시스템과 연동)

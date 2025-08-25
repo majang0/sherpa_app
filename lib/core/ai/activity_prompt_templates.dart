@@ -1,4 +1,4 @@
-import '../../core/constants/sherpi_dialogues.dart';
+import '../../core/constants/meeting_categories.dart';
 import '../../shared/models/sherpi_relationship_model.dart';
 
 /// 🎯 Phase 2: 활동별 전문 프롬프트 템플릿 시스템
@@ -337,14 +337,31 @@ ${userName}님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로
     }
   }
 
+  /// 🎯 모임 유형 번역 (중앙집중식 카테고리 시스템 사용)
   static String _translateMeetingType(String type) {
-    switch (type.toLowerCase()) {
-      case 'study': return '스터디 📚';
-      case 'exercise': return '운동 💪';
-      case 'hobby': return '취미 🎨';
-      case 'networking': return '네트워킹 🤝';
-      case 'social': return '친목 ☕';
-      default: return type;
+    // 영어 → 한국어 매핑 후 중앙집중식 포맷 적용
+    final koreanCategory = _englishToKoreanCategory(type.toLowerCase());
+    if (MeetingCategories.isValidCategory(koreanCategory)) {
+      return MeetingCategories.getPromptFormat(koreanCategory);
+    }
+    return type; // fallback
+  }
+  
+  /// 영어 카테고리를 한국어로 매핑
+  static String _englishToKoreanCategory(String englishType) {
+    switch (englishType) {
+      case 'study': return '스터디';
+      case 'exercise': return '운동';
+      case 'hobby': return '취미';
+      case 'networking': return '네트워킹';
+      case 'social': return '친목';
+      case 'reading': return '독서';
+      case 'work': return '업무';
+      case 'religion': return '종교';
+      case 'volunteer': return '봉사';
+      case 'culture': return '문화';
+      case 'outdoor': return '아웃도어';
+      default: return englishType;
     }
   }
 

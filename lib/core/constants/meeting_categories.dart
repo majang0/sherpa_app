@@ -85,58 +85,121 @@ class MeetingCategories {
     ),
   };
 
-  /// 📝 모든 카테고리 목록
-  static List<String> get allCategories => _categoryMap.keys.toList();
+  /// 🆕 Missing 카테고리들 추가 (available_meeting_model.dart 호환성)
+  static const Map<String, MeetingCategoryData> _additionalCategories = {
+    '전체': MeetingCategoryData(
+      name: '전체',
+      emoji: '🌟',
+      color: Color(0xFF6366F1),
+      gradient: [Color(0xFF6366F1), Color(0xFF4F46E5)],
+      englishName: 'all',
+    ),
+    '문화': MeetingCategoryData(
+      name: '문화',
+      emoji: '🎭',
+      color: Color(0xFFEC4899),
+      gradient: [Color(0xFFEC4899), Color(0xFFDB2777)],
+      englishName: 'culture',
+    ),
+    '아웃도어': MeetingCategoryData(
+      name: '아웃도어',
+      emoji: '🏔️',
+      color: Color(0xFF06B6D4),
+      gradient: [Color(0xFF06B6D4), Color(0xFF0891B2)],
+      englishName: 'outdoor',
+    ),
+  };
 
-  /// 🎨 카테고리별 이모지 가져오기
+  /// 📝 모든 카테고리 목록 (통합)
+  static List<String> get allCategories => [
+    ..._categoryMap.keys.toList(),
+    ..._additionalCategories.keys.toList(),
+  ];
+
+  /// 🎨 카테고리별 이모지 가져오기 (확장 지원)
   static String getEmoji(String category) {
-    return _categoryMap[category]?.emoji ?? '📋';
+    return _categoryMap[category]?.emoji ?? 
+           _additionalCategories[category]?.emoji ?? '📋';
   }
 
-  /// 🌈 카테고리별 색상 가져오기
+  /// 🌈 카테고리별 색상 가져오기 (확장 지원)
   static Color getColor(String category) {
-    return _categoryMap[category]?.color ?? const Color(0xFF6B7280);
+    return _categoryMap[category]?.color ?? 
+           _additionalCategories[category]?.color ?? 
+           const Color(0xFF6B7280);
   }
 
-  /// 🎨 카테고리별 그라데이션 가져오기
+  /// 🎨 카테고리별 그라데이션 가져오기 (확장 지원)
   static List<Color> getGradient(String category) {
     return _categoryMap[category]?.gradient ?? 
+           _additionalCategories[category]?.gradient ??
            [const Color(0xFF6B7280), const Color(0xFF4B5563)];
   }
 
-  /// 🔤 카테고리별 영문명 가져오기
+  /// 🔤 카테고리별 영문명 가져오기 (확장 지원)
   static String getEnglishName(String category) {
-    return _categoryMap[category]?.englishName ?? 'general';
+    return _categoryMap[category]?.englishName ?? 
+           _additionalCategories[category]?.englishName ?? 
+           'general';
   }
 
-  /// 📊 카테고리별 완전한 데이터 가져오기
+  /// 📊 카테고리별 완전한 데이터 가져오기 (확장 지원)
   static MeetingCategoryData? getCategoryData(String category) {
-    return _categoryMap[category];
+    return _categoryMap[category] ?? _additionalCategories[category];
   }
 
-  /// ✅ 유효한 카테고리인지 확인
+  /// ✅ 유효한 카테고리인지 확인 (확장 지원)
   static bool isValidCategory(String category) {
-    return _categoryMap.containsKey(category);
+    return _categoryMap.containsKey(category) || 
+           _additionalCategories.containsKey(category);
   }
 
-  /// 🔄 레거시 호환성을 위한 Map 형태 데이터 (기존 코드 마이그레이션용)
+  /// 🔄 레거시 호환성을 위한 Map 형태 데이터 (확장 지원)
   static Map<String, Map<String, dynamic>> get legacyFormat {
-    return _categoryMap.map((key, value) => MapEntry(
-      key,
-      {
+    final combined = <String, Map<String, dynamic>>{};
+    
+    // 기본 카테고리 추가
+    _categoryMap.forEach((key, value) {
+      combined[key] = {
         'emoji': value.emoji,
         'color': value.color,
         'gradient': value.gradient,
         'english': value.englishName,
-      },
-    ));
+      };
+    });
+    
+    // 확장 카테고리 추가
+    _additionalCategories.forEach((key, value) {
+      combined[key] = {
+        'emoji': value.emoji,
+        'color': value.color,
+        'gradient': value.gradient,
+        'english': value.englishName,
+      };
+    });
+    
+    return combined;
   }
 
-  /// 🎯 AI 프롬프트용 포맷 (activity_prompt_templates.dart 호환)
+  /// 🎯 AI 프롬프트용 포맷 (확장 지원)
   static String getPromptFormat(String category) {
-    final data = _categoryMap[category];
+    final data = _categoryMap[category] ?? _additionalCategories[category];
     if (data == null) return category;
     return '${data.name} ${data.emoji}';
+  }
+
+  /// 🔗 Enum 매핑 헬퍼 (available_meeting_model.dart용)
+  static String enumToDisplayName(String enumName) {
+    switch (enumName) {
+      case 'all': return '전체';
+      case 'exercise': return '운동';
+      case 'study': return '스터디';
+      case 'reading': return '독서';
+      case 'networking': return '네트워킹';
+      case 'culture': return '문화';
+      case 'outdoor': return '아웃도어';
+      default: return enumName;
+    }
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../../../core/constants/meeting_categories.dart';
 
 /// 걸음수 데이터 모델
 class StepData {
@@ -44,16 +45,9 @@ class MeetingLog {
     this.note,
   });
 
-  /// 카테고리별 아이콘
+  /// 카테고리별 아이콘 (🎯 중앙집중식 카테고리 시스템 사용)
   String get categoryIcon {
-    switch (category) {
-      case '스터디': return '📚';
-      case '운동': return '💪';
-      case '독서': return '📖';
-      case '취미': return '🎨';
-      case '네트워킹': return '🤝';
-      default: return '👥';
-    }
+    return MeetingCategories.getEmoji(category);
   }
 
   /// 기분별 아이콘

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/modern_colors.dart';
+import '../../../core/constants/meeting_categories.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
@@ -413,8 +414,8 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
         categoryStats[category] = {
           'count': 0,
           'totalSatisfaction': 0.0,
-          'emoji': _getCategoryEmoji(category),
-          'color': _getCategoryColor(category),
+          'emoji': MeetingCategories.getEmoji(category),
+          'color': MeetingCategories.getColor(category),
         };
       }
       categoryStats[category]!['count'] += 1;
@@ -679,16 +680,16 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: _getCategoryColor(meeting.category).withOpacity(0.1),
+                color: MeetingCategories.getColor(meeting.category).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: _getCategoryColor(meeting.category).withOpacity(0.3),
+                  color: MeetingCategories.getColor(meeting.category).withOpacity(0.3),
                   width: 1,
                 ),
               ),
               child: Center(
                 child: Text(
-                  _getCategoryEmoji(meeting.category),
+                  MeetingCategories.getEmoji(meeting.category),
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
@@ -843,35 +844,6 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
   }
 
 
-  Color _getCategoryColor(String category) {
-    switch (category) {
-      case '스터디': return const Color(0xFF3B82F6);
-      case '운동': return const Color(0xFF10B981);
-      case '독서': return const Color(0xFF8B5CF6);
-      case '취미': return const Color(0xFFF59E0B);
-      case '네트워킹': return const Color(0xFFEC4899);
-      case '업무': return const Color(0xFF6B7280);
-      case '친목': return const Color(0xFFEF4444);
-      case '종교': return const Color(0xFF06B6D4);
-      case '봉사': return const Color(0xFF84CC16);
-      default: return const Color(0xFF9CA3AF);
-    }
-  }
-
-  String _getCategoryEmoji(String category) {
-    switch (category) {
-      case '스터디': return '📚';
-      case '운동': return '🏃';
-      case '독서': return '📖';
-      case '취미': return '🎨';
-      case '네트워킹': return '🤝';
-      case '업무': return '💼';
-      case '친목': return '🍻';
-      case '종교': return '🙏';
-      case '봉사': return '❤️';
-      default: return '👥';
-    }
-  }
 
   bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
@@ -1233,12 +1205,12 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: _getCategoryColor(meeting.category).withOpacity(0.1),
+                      color: MeetingCategories.getColor(meeting.category).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
                       child: Text(
-                        _getCategoryEmoji(meeting.category),
+                        MeetingCategories.getEmoji(meeting.category),
                         style: const TextStyle(fontSize: 20),
                       ),
                     ),
@@ -1436,12 +1408,12 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: _getCategoryColor(meeting.category).withOpacity(0.1),
+                        color: MeetingCategories.getColor(meeting.category).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
                         child: Text(
-                          _getCategoryEmoji(meeting.category),
+                          MeetingCategories.getEmoji(meeting.category),
                           style: const TextStyle(fontSize: 18),
                         ),
                       ),
