@@ -887,36 +887,46 @@ class _PersonalizedGrowthDashboardWidgetState
         HapticFeedbackManager.lightImpact();
       },
       child: Opacity(
-        // 🎨 보상받기 상태일 때 시각적 비활성화
-        opacity: shouldDisable ? 0.5 : 1.0,
+        // 🎨 전체 퀘스트 완료 시에도 불투명도 1.0 유지 (오버플로우 방지)
+        opacity: 1.0,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeOut,
           height: 64,
           decoration: BoxDecoration(
-          // 🔵 완료 상태: 강렬한 프라이머리 배경으로 통일
-          color: isCompleted 
-              ? ModernColors.modernPrimary
-              : Colors.white,
+          // 🔵 완료 상태: 강렬한 프라이머리 배경으로 통일, 전체 클리어 시 황금색
+          color: shouldDisable
+              ? (isCompleted 
+                  ? ModernColors.streakGold  // 전체 클리어 시 완료된 버튼은 황금색
+                  : ModernColors.rewardGradient2.withOpacity(0.8))  // 전체 클리어 시 미완료 버튼도 황금 틴트
+              : (isCompleted 
+                  ? ModernColors.modernPrimary 
+                  : Colors.white),
           borderRadius: BorderRadius.circular(14),
           border: !isCompleted
               ? Border.all(
-                  color: ModernColors.modernPrimary.withOpacity(0.15), // 🎨 통일된 프라이머리 색상으로 테두리
-                  width: 0.8,
+                  color: shouldDisable 
+                      ? ModernColors.streakGold.withOpacity(0.15)  // 전체 클리어 시 황금색 테두리 
+                      : ModernColors.modernPrimary.withOpacity(0.15), // 기본 프라이머리 테두리
+                  width: 0.8, // 동일한 테두리 두께 유지
                 )
               : null,
           // 🎨 그라데이션 헤더와 조화로운 완성도 높은 그림자 시스템
           boxShadow: isCompleted
               ? [
-                  // 완료 상태: 그라데이션과 조화로운 멀티 레이어 그림자
+                  // 완료 상태: 그라데이션과 조화로운 멀티 레이어 그림자 (색상만 조건부 변경)
                   BoxShadow(
-                    color: ModernColors.modernPrimary.withOpacity(0.2),
+                    color: shouldDisable 
+                        ? ModernColors.streakGold.withOpacity(0.2)  // 전체 클리어 시 황금 그림자
+                        : ModernColors.modernPrimary.withOpacity(0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                     spreadRadius: 0,
                   ),
                   BoxShadow(
-                    color: ModernColors.primaryLight.withOpacity(0.12),
+                    color: shouldDisable 
+                        ? ModernColors.rewardGradient1.withOpacity(0.12)  // 전체 클리어 시 황금 그림자
+                        : ModernColors.primaryLight.withOpacity(0.12),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                     spreadRadius: 0,
@@ -929,15 +939,19 @@ class _PersonalizedGrowthDashboardWidgetState
                   ),
                 ]
               : [
-                  // 미완료 상태: 서틀하면서도 세련된 그림자
+                  // 미완료 상태: 서틀하면서도 세련된 그림자 (색상만 조건부 변경)
                   BoxShadow(
-                    color: ModernColors.modernPrimary.withOpacity(0.06),
+                    color: shouldDisable 
+                        ? ModernColors.streakGold.withOpacity(0.06)  // 전체 클리어 시 황금 그림자
+                        : ModernColors.modernPrimary.withOpacity(0.06),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                     spreadRadius: 0,
                   ),
                   BoxShadow(
-                    color: ModernColors.primaryLight.withOpacity(0.04),
+                    color: shouldDisable 
+                        ? ModernColors.rewardGradient1.withOpacity(0.04)  // 전체 클리어 시 황금 그림자
+                        : ModernColors.primaryLight.withOpacity(0.04),
                     blurRadius: 3,
                     offset: const Offset(0, 1),
                     spreadRadius: 0,
@@ -975,7 +989,9 @@ class _PersonalizedGrowthDashboardWidgetState
                   child: isCompleted
                       ? Icon(
                           Icons.check,
-                          color: ModernColors.modernPrimary, // 🔵 프라이머리 체크마크
+                          color: shouldDisable 
+                              ? ModernColors.streakGold  // 전체 클리어 시 황금색 체크마크
+                              : ModernColors.modernPrimary, // 🔵 프라이머리 체크마크
                           size: 16,
                         )
                       : Text(
@@ -985,7 +1001,9 @@ class _PersonalizedGrowthDashboardWidgetState
                             // 🎨 통일된 프라이머리 색상 기반 이모지 그림자
                             shadows: [
                               Shadow(
-                                color: ModernColors.modernPrimary.withOpacity(0.15),
+                                color: shouldDisable
+                                    ? ModernColors.streakGold.withOpacity(0.15)
+                                    : ModernColors.modernPrimary.withOpacity(0.15),
                                 offset: const Offset(0, 0.5),
                                 blurRadius: 1,
                               ),
@@ -1006,9 +1024,13 @@ class _PersonalizedGrowthDashboardWidgetState
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     // 🎨 완료: 흰색 텍스트 / 미완료: 프라이머리 통일
-                    color: isCompleted 
-                        ? Colors.white
-                        : ModernColors.modernPrimary,
+                    color: shouldDisable
+                        ? (isCompleted 
+                            ? Colors.white  // 전체 클리어 시 완료된 버튼: 흰색
+                            : ModernColors.streakGold)  // 전체 클리어 시 미완료 버튼: 황금색
+                        : (isCompleted 
+                            ? Colors.white
+                            : ModernColors.modernPrimary),
                     // 🎨 완료 상태에 텍스트 그림자로 가독성 보장
                     shadows: isCompleted
                         ? [
@@ -1020,7 +1042,9 @@ class _PersonalizedGrowthDashboardWidgetState
                           ]
                         : [
                             Shadow(
-                              color: ModernColors.modernPrimary.withOpacity(0.1),
+                              color: shouldDisable
+                                  ? ModernColors.streakGold.withOpacity(0.1)
+                                  : ModernColors.modernPrimary.withOpacity(0.1),
                               offset: const Offset(0, 0.5),
                               blurRadius: 1,
                             ),

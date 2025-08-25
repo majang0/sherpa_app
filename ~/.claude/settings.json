@@ -1,0 +1,6 @@
+{
+  "statusLine": {
+    "type": "command", 
+    "command": "input=$(cat); cwd=$(echo \"$input\" | jq -r '.workspace.current_dir // .cwd // empty' 2>/dev/null || echo $(pwd)); user=$(whoami); hostname=$(hostname -s); msystem=${MSYSTEM:-}; git_branch=\"\"; if git rev-parse --git-dir >/dev/null 2>&1; then branch=$(git branch --show-current 2>/dev/null); [ -n \"$branch\" ] && git_branch=\" ($branch)\"; fi; status=\"${user}@${hostname}\"; [ -n \"$msystem\" ] && status=\"${status} ${msystem}\"; short_cwd=$(basename \"$cwd\"); printf \"%s %s%s\" \"$status\" \"$short_cwd\" \"$git_branch\""
+  }
+}
