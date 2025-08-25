@@ -160,8 +160,8 @@ class MeetingCategoryData {
   Map<String, dynamic> toJson() => {
     'name': name,
     'emoji': emoji,
-    'color': color.value,
-    'gradient': gradient.map((c) => c.value).toList(),
+    'color': color.toARGB32(),
+    'gradient': gradient.map((c) => c.toARGB32()).toList(),
     'englishName': englishName,
   };
 }
