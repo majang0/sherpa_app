@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../constants/record_colors.dart';
-import '../presentation/screens/meeting_detail_screen.dart';
+import '../presentation/screens/meeting_log_detail_screen.dart';
 import '../presentation/screens/meeting_edit_screen.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
@@ -724,7 +724,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MeetingDetailScreen(meeting: dayMeetings.first),
+          builder: (context) => MeetingLogDetailScreen(meeting: dayMeetings.first),
         ),
       );
     } else if (dayMeetings.length > 1) {
@@ -828,7 +828,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MeetingDetailScreen(meeting: meeting),
+                              builder: (context) => MeetingLogDetailScreen(meeting: meeting),
                             ),
                           );
                         },

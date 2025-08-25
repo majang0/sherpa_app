@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_point_provider.dart';
@@ -91,7 +91,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
     final currentPoints = ref.watch(globalTotalPointsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ModernColors.background,
       appBar: SherpaCleanAppBar(
         title: '모험 참여 신청',
       ),
@@ -199,7 +199,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -207,7 +207,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                   '아래 정보를 확인하고 모험에 참여해보세요!',
                   style: GoogleFonts.notoSans(
                     fontSize: 13,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     height: 1.3,
                   ),
                 ),
@@ -242,7 +242,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -254,7 +254,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.w800,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -293,14 +293,14 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
         Icon(
           icon,
           size: 16,
-          color: AppColors.textSecondary,
+          color: ModernColors.textSecondary,
         ),
         const SizedBox(width: 8),
         Text(
           '$label: ',
           style: GoogleFonts.notoSans(
             fontSize: 13,
-            color: AppColors.textSecondary,
+            color: ModernColors.textSecondary,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -309,7 +309,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
             value,
             style: GoogleFonts.notoSans(
               fontSize: 13,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -328,16 +328,16 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: hasEnough
-              ? [AppColors.success.withValues(alpha: 0.1), AppColors.success.withValues(alpha: 0.05)]
-              : [AppColors.warning.withValues(alpha: 0.1), AppColors.warning.withValues(alpha: 0.05)],
+              ? [ModernColors.success.withValues(alpha: 0.1), ModernColors.success.withValues(alpha: 0.05)]
+              : [ModernColors.warning.withValues(alpha: 0.1), ModernColors.warning.withValues(alpha: 0.05)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: hasEnough
-              ? AppColors.success.withValues(alpha: 0.3)
-              : AppColors.warning.withValues(alpha: 0.3),
+              ? ModernColors.success.withValues(alpha: 0.3)
+              : ModernColors.warning.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -348,7 +348,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
             children: [
               Icon(
                 Icons.account_balance_wallet_rounded,
-                color: hasEnough ? AppColors.success : AppColors.warning,
+                color: hasEnough ? ModernColors.success : ModernColors.warning,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -357,7 +357,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -381,7 +381,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                       '참여 수수료',
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                     Text(
@@ -389,7 +389,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                       style: GoogleFonts.notoSans(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                   ],
@@ -404,7 +404,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                       '보유 포인트',
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                     Text(
@@ -412,7 +412,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                   ],
@@ -428,7 +428,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     Text(
@@ -436,7 +436,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                       style: GoogleFonts.notoSans(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
-                        color: hasEnough ? AppColors.success : AppColors.warning,
+                        color: hasEnough ? ModernColors.success : ModernColors.warning,
                       ),
                     ),
                   ],
@@ -450,14 +450,14 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.warning.withValues(alpha: 0.1),
+                color: ModernColors.warning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 children: [
                   Icon(
                     Icons.error_outline_rounded,
-                    color: AppColors.warning,
+                    color: ModernColors.warning,
                     size: 16,
                   ),
                   const SizedBox(width: 8),
@@ -466,7 +466,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                       '포인트가 부족합니다. 퀘스트나 일일 목표 완료로 포인트를 획득해보세요!',
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
-                        color: AppColors.warning,
+                        color: ModernColors.warning,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -491,15 +491,15 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withValues(alpha: 0.1),
-            AppColors.accent.withValues(alpha: 0.05),
+            ModernColors.primary.withValues(alpha: 0.1),
+            ModernColors.accent.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.2),
+          color: ModernColors.primary.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -510,7 +510,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
             children: [
               Icon(
                 Icons.emoji_events_rounded,
-                color: AppColors.primary,
+                color: ModernColors.primary,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -519,7 +519,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -535,7 +535,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                   icon: '⭐',
                   label: '경험치',
                   value: '+${expReward.toStringAsFixed(0)}',
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                 ),
               ),
               const SizedBox(width: 12),
@@ -544,7 +544,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                   icon: '💎',
                   label: '포인트',
                   value: '+${pointReward.toStringAsFixed(0)}',
-                  color: AppColors.accent,
+                  color: ModernColors.accent,
                 ),
               ),
             ],
@@ -557,7 +557,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
@@ -567,7 +567,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
               children: statRewards.entries.map((entry) => Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.success.withValues(alpha: 0.1),
+                  color: ModernColors.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -575,7 +575,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                   style: GoogleFonts.notoSans(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.success,
+                    color: ModernColors.success,
                   ),
                 ),
               )).toList(),
@@ -606,7 +606,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
             label,
             style: GoogleFonts.notoSans(
               fontSize: 11,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           Text(
@@ -655,7 +655,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                 _agreementChecked = value ?? false;
               });
             },
-            activeColor: AppColors.primary,
+            activeColor: ModernColors.primary,
           ),
           
           Expanded(
@@ -671,7 +671,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                   '모임 참여 규칙을 읽고 동의하며, 포인트 결제에 동의합니다.',
                   style: GoogleFonts.notoSans(
                     fontSize: 13,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                     height: 1.4,
                   ),
                 ),
@@ -773,7 +773,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('모임 참여에 실패했습니다. 다시 시도해주세요.'),
-              backgroundColor: AppColors.warning,
+              backgroundColor: ModernColors.warning,
             ),
           );
         }
@@ -783,7 +783,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('오류가 발생했습니다: $e'),
-            backgroundColor: AppColors.warning,
+            backgroundColor: ModernColors.warning,
           ),
         );
       }

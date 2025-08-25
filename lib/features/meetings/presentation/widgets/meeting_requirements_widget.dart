@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../models/available_meeting_model.dart';
 
 /// 📝 모임 참여 조건 및 준비물 위젯
@@ -35,7 +35,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -69,13 +69,13 @@ class MeetingRequirementsWidget extends StatelessWidget {
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: ModernColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 Icons.backpack_rounded,
                 size: 16,
-                color: AppColors.primary,
+                color: ModernColors.primary,
               ),
             ),
             const SizedBox(width: 10),
@@ -84,7 +84,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
           ],
@@ -107,7 +107,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
               children: [
                 Icon(
                   Icons.check_circle_outline_rounded,
-                  color: AppColors.success,
+                  color: ModernColors.success,
                   size: 16,
                 ),
                 const SizedBox(width: 8),
@@ -115,7 +115,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
                   '특별한 준비물이 필요하지 않아요',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -133,7 +133,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
                   height: 6,
                   margin: const EdgeInsets.only(top: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.primary,
+                    color: ModernColors.primary,
                     shape: BoxShape.circle,
                   ),
                 ),
@@ -143,7 +143,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
                     requirement,
                     style: GoogleFonts.notoSans(
                       fontSize: 13,
-                      color: AppColors.textPrimary,
+                      color: ModernColors.textPrimary,
                       height: 1.4,
                     ),
                   ),
@@ -168,13 +168,13 @@ class MeetingRequirementsWidget extends StatelessWidget {
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: AppColors.accent.withValues(alpha: 0.1),
+                color: ModernColors.accent.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 Icons.rule_rounded,
                 size: 16,
-                color: AppColors.accent,
+                color: ModernColors.accent,
               ),
             ),
             const SizedBox(width: 10),
@@ -183,7 +183,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
           ],
@@ -198,7 +198,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
             children: [
               Icon(
                 Icons.check_rounded,
-                color: AppColors.success,
+                color: ModernColors.success,
                 size: 16,
               ),
               const SizedBox(width: 8),
@@ -207,7 +207,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
                   condition,
                   style: GoogleFonts.notoSans(
                     fontSize: 13,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                     height: 1.4,
                   ),
                 ),
@@ -232,13 +232,13 @@ class MeetingRequirementsWidget extends StatelessWidget {
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: AppColors.warning.withValues(alpha: 0.1),
+                color: ModernColors.warning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 Icons.info_outline_rounded,
                 size: 16,
-                color: AppColors.warning,
+                color: ModernColors.warning,
               ),
             ),
             const SizedBox(width: 10),
@@ -247,7 +247,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
           ],
@@ -262,7 +262,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
             children: [
               Icon(
                 Icons.warning_amber_rounded,
-                color: AppColors.warning,
+                color: ModernColors.warning,
                 size: 16,
               ),
               const SizedBox(width: 8),
@@ -271,7 +271,7 @@ class MeetingRequirementsWidget extends StatelessWidget {
                   notice,
                   style: GoogleFonts.notoSans(
                     fontSize: 13,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                     height: 1.4,
                   ),
                 ),

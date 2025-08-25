@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/available_meeting_model.dart';
+import '../utils/meeting_image_utils.dart';
 
 /// 🏗️ 모임 생성 단계별 데이터 모델
 class MeetingCreationData {
@@ -135,13 +136,24 @@ class MeetingCreationData {
            isStep4Valid();
   }
 
-  /// AvailableMeeting 객체로 변환
-  AvailableMeeting toAvailableMeeting({
+  /// AvailableMeeting 객체로 변환 (이미지 저장 포함)
+  Future<AvailableMeeting> toAvailableMeeting({
     required String hostId,
     required String hostName,
-  }) {
+  }) async {
+    // 고유한 모임 ID 생성
+    final meetingId = DateTime.now().millisecondsSinceEpoch.toString();
+    
+    // 이미지 파일들을 영구 저장소에 저장
+    final savedImageFileNames = await MeetingImageUtils.saveMeetingImages(
+      tempFiles: photos,
+      meetingId: meetingId,
+    );
+    
+    print('📷 Saved ${savedImageFileNames.length} images for meeting $meetingId');
+    
     return AvailableMeeting(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: meetingId,
       title: title,
       description: description,
       category: selectedCategory!,
@@ -158,6 +170,7 @@ class MeetingCreationData {
       tags: tags,
       requirements: requirements,
       preparationItems: preparationItems,
+      imageFileNames: savedImageFileNames, // 🆕 이미지 파일명들 추가
     );
   }
 }

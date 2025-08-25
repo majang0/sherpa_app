@@ -1,4 +1,4 @@
-// lib/features/daily_record/presentation/screens/meeting_detail_screen.dart
+// lib/features/daily_record/presentation/screens/meeting_log_detail_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,16 +11,16 @@ import '../../../../core/constants/meeting_categories.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import 'meeting_edit_screen.dart';
 
-class MeetingDetailScreen extends ConsumerStatefulWidget {
+class MeetingLogDetailScreen extends ConsumerStatefulWidget {
   final MeetingLog meeting;
   
-  const MeetingDetailScreen({required this.meeting});
+  const MeetingLogDetailScreen({required this.meeting});
 
   @override
-  ConsumerState<MeetingDetailScreen> createState() => _MeetingDetailScreenState();
+  ConsumerState<MeetingLogDetailScreen> createState() => _MeetingLogDetailScreenState();
 }
 
-class _MeetingDetailScreenState extends ConsumerState<MeetingDetailScreen>
+class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late AnimationController _slideController;

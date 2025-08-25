@@ -640,6 +640,43 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
     ).toList();
   }
 
+  /// 새 모임 추가 (모임 개설 시 사용)
+  Future<bool> addMeeting(AvailableMeeting newMeeting) async {
+    try {
+      // 1. 중복 ID 체크
+      if (state.availableMeetings.any((meeting) => meeting.id == newMeeting.id)) {
+        ref.read(sherpiProvider.notifier).showInstantMessage(
+          context: SherpiContext.encouragement,
+          customDialogue: '이미 존재하는 모임입니다! 😅',
+          emotion: SherpiEmotion.thinking,
+        );
+        return false;
+      }
+
+      // 2. 새 모임을 기존 목록에 추가 (최신 모임이 맨 앞에 오도록)
+      final updatedMeetings = [newMeeting, ...state.availableMeetings];
+
+      // 3. 상태 업데이트
+      state = state.copyWith(availableMeetings: updatedMeetings);
+
+      // 4. 성공 피드백
+      ref.read(sherpiProvider.notifier).showInstantMessage(
+        context: SherpiContext.achievement,
+        customDialogue: '🎉 "${newMeeting.title}" 모임이 성공적으로 개설되었습니다!\n다른 사용자들이 참가할 수 있도록 모임을 홍보해보세요.',
+        emotion: SherpiEmotion.cheering,
+      );
+
+      return true;
+    } catch (e) {
+      ref.read(sherpiProvider.notifier).showInstantMessage(
+        context: SherpiContext.encouragement,
+        customDialogue: '모임 개설 중 오류가 발생했어요. 다시 시도해주세요! 😅',
+        emotion: SherpiEmotion.thinking,
+      );
+      return false;
+    }
+  }
+
   /// 데이터 새로고침
   void refresh() {
     _loadInitialData();

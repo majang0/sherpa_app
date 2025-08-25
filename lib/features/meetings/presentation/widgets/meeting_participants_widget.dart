@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../models/available_meeting_model.dart';
 
 /// 👥 모임 참가자 정보 위젯
@@ -35,7 +35,7 @@ class MeetingParticipantsWidget extends StatelessWidget {
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -141,14 +141,14 @@ class MeetingParticipantsWidget extends StatelessWidget {
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 Text(
                   '모임 주최자',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -162,13 +162,13 @@ class MeetingParticipantsWidget extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('${meeting.hostName} 프로필 보기 (구현 예정)'),
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: ModernColors.primary,
                 ),
               );
             },
             icon: const Icon(Icons.arrow_forward_ios_rounded),
             iconSize: 16,
-            color: AppColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ],
       ),
@@ -190,7 +190,7 @@ class MeetingParticipantsWidget extends StatelessWidget {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             Text(
@@ -198,7 +198,7 @@ class MeetingParticipantsWidget extends StatelessWidget {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: ratio >= 0.8 ? AppColors.warning : AppColors.success,
+                color: ratio >= 0.8 ? ModernColors.warning : ModernColors.success,
               ),
             ),
           ],
@@ -219,8 +219,8 @@ class MeetingParticipantsWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: ratio >= 0.8 
-                      ? [AppColors.warning, AppColors.warning.withValues(alpha: 0.7)]
-                      : [AppColors.success, AppColors.success.withValues(alpha: 0.7)],
+                      ? [ModernColors.warning, ModernColors.warning.withValues(alpha: 0.7)]
+                      : [ModernColors.success, ModernColors.success.withValues(alpha: 0.7)],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),
@@ -241,7 +241,7 @@ class MeetingParticipantsWidget extends StatelessWidget {
           style: GoogleFonts.notoSans(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: ratio >= 0.8 ? AppColors.warning : AppColors.success,
+            color: ratio >= 0.8 ? ModernColors.warning : ModernColors.success,
           ),
         ),
       ],
@@ -264,7 +264,7 @@ class MeetingParticipantsWidget extends StatelessWidget {
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         
@@ -327,7 +327,7 @@ class MeetingParticipantsWidget extends StatelessWidget {
                       style: GoogleFonts.notoSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ),

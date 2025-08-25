@@ -9,7 +9,7 @@ import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 import 'meeting_full_view_widget.dart';
-import '../presentation/screens/meeting_detail_screen.dart';
+import '../presentation/screens/meeting_log_detail_screen.dart';
 import '../presentation/screens/meeting_edit_screen.dart';
 
 class EnhancedMeetingCalendarWidget extends ConsumerStatefulWidget {
@@ -658,7 +658,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MeetingDetailScreen(meeting: meeting),
+            builder: (context) => MeetingLogDetailScreen(meeting: meeting),
           ),
         );
       },
@@ -1291,7 +1291,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MeetingDetailScreen(meeting: meeting),
+                        builder: (context) => MeetingLogDetailScreen(meeting: meeting),
                       ),
                     );
                   },
@@ -1387,7 +1387,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MeetingDetailScreen(meeting: meeting),
+                    builder: (context) => MeetingLogDetailScreen(meeting: meeting),
                   ),
                 );
               },

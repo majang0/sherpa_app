@@ -5,10 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
-import '../../models/available_meeting_model.dart';
+import '../../../../shared/providers/global_user_provider.dart';
+import '../../../../shared/providers/global_meeting_provider.dart';
 import '../../providers/meeting_creation_provider.dart';
 import 'meeting_creation_steps/quick_category_selector.dart';
 import 'meeting_creation_steps/quick_details_form.dart';
@@ -32,8 +33,6 @@ class _MeetingCreationDialogState
   final PageController _pageController = PageController();
   int _currentStep = 0;
   
-  late AnimationController _progressAnimationController;
-  late Animation<double> _progressAnimation;
   
   // 단계별 타이틀
   final List<String> _stepTitles = [
@@ -55,18 +54,6 @@ class _MeetingCreationDialogState
   void initState() {
     super.initState();
     
-    // 진행률 애니메이션
-    _progressAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _progressAnimation = Tween<double>(
-      begin: 0.25,
-      end: 0.25,
-    ).animate(CurvedAnimation(
-      parent: _progressAnimationController,
-      curve: Curves.easeInOut,
-    ));
     
     // 모임 생성 시작 시 셰르피 안내
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -81,7 +68,6 @@ class _MeetingCreationDialogState
   @override
   void dispose() {
     _pageController.dispose();
-    _progressAnimationController.dispose();
     super.dispose();
   }
 
@@ -180,13 +166,13 @@ class _MeetingCreationDialogState
                       height: 36,
                       decoration: BoxDecoration(
                         color: isActive 
-                          ? AppColors.primary 
+                          ? ModernColors.primary 
                           : Colors.grey.shade200,
                         shape: BoxShape.circle,
                       ),
                       child: Center(
                         child: isCompleted
-                          ? Icon(
+                          ? const Icon(
                               Icons.check_rounded,
                               color: Colors.white,
                               size: 18,
@@ -198,7 +184,7 @@ class _MeetingCreationDialogState
                                 fontWeight: FontWeight.w700,
                                 color: isActive 
                                   ? Colors.white 
-                                  : AppColors.textSecondary,
+                                  : ModernColors.textSecondary,
                               ),
                             ),
                       ),
@@ -212,7 +198,7 @@ class _MeetingCreationDialogState
                           margin: const EdgeInsets.symmetric(horizontal: 4),
                           decoration: BoxDecoration(
                             color: isCompleted 
-                              ? AppColors.primary 
+                              ? ModernColors.primary 
                               : Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(1),
                           ),
@@ -233,7 +219,7 @@ class _MeetingCreationDialogState
             children: [
               Icon(
                 _stepIcons[_currentStep],
-                color: AppColors.primary,
+                color: ModernColors.primary,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -242,7 +228,7 @@ class _MeetingCreationDialogState
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -272,7 +258,7 @@ class _MeetingCreationDialogState
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -297,7 +283,7 @@ class _MeetingCreationDialogState
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ),
@@ -313,7 +299,7 @@ class _MeetingCreationDialogState
                 ? (_currentStep == 3 ? _createMeeting : _goToNextStep)
                 : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: ModernColors.primary,
                 disabledBackgroundColor: Colors.grey.shade300,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 elevation: 0,
@@ -363,10 +349,6 @@ class _MeetingCreationDialogState
         curve: Curves.easeInOut,
       );
       
-      // 진행률 애니메이션 업데이트
-      _progressAnimationController.animateTo(
-        (_currentStep + 2) / 4,
-      );
       
       // 햅틱 피드백
       HapticFeedback.lightImpact();
@@ -384,10 +366,6 @@ class _MeetingCreationDialogState
         curve: Curves.easeInOut,
       );
       
-      // 진행률 애니메이션 업데이트
-      _progressAnimationController.animateTo(
-        _currentStep / 4,
-      );
       
       // 햅틱 피드백
       HapticFeedback.lightImpact();
@@ -425,18 +403,72 @@ class _MeetingCreationDialogState
 
   /// ✅ 모임 생성
   void _createMeeting() async {
-    // TODO: 실제 모임 생성 로직
-    
-    // 성공 피드백
+    try {
+      final meetingData = ref.read(meetingCreationProvider);
+      final user = ref.read(globalUserProvider);
+      
+      // 데이터 유효성 검사
+      if (!meetingData.isAllDataValid()) {
+        _showError('모임 정보를 모두 입력해주세요.');
+        return;
+      }
+      
+      // AvailableMeeting으로 변환 (async 메서드)
+      final newMeeting = await meetingData.toAvailableMeeting(
+        hostId: user.id,
+        hostName: user.name,
+      );
+      
+      // GlobalMeetingProvider에 추가
+      final success = await ref.read(globalMeetingProvider.notifier).addMeeting(newMeeting);
+      
+      if (success) {
+        // 성공 피드백
+        ref.read(sherpiProvider.notifier).showInstantMessage(
+          context: SherpiContext.levelUp,
+          customDialogue: '모임이 성공적으로 만들어졌어요! 🎉 많은 사람들이 참여할 거예요!',
+          emotion: SherpiEmotion.cheering,
+        );
+        
+        // MeetingCreationData 초기화
+        ref.read(meetingCreationProvider.notifier).reset();
+        
+        // 다이얼로그 닫기
+        if (mounted) Navigator.pop(context);
+        
+        // 생성된 모임 상세 화면으로 이동
+        if (mounted) {
+          Navigator.pushNamed(
+            context,
+            '/meeting_detail',
+            arguments: newMeeting,
+          );
+        }
+      } else {
+        _showError('모임 생성에 실패했습니다. 다시 시도해주세요.');
+      }
+      
+    } catch (e) {
+      // Error creating meeting: $e
+      _showError('모임 생성 중 오류가 발생했습니다.');
+    }
+  }
+  
+  /// 에러 메시지 표시
+  void _showError(String message) {
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.levelUp,
-      customDialogue: '모임이 성공적으로 만들어졌어요! 🎉 많은 사람들이 참여할 거예요!',
-      emotion: SherpiEmotion.cheering,
+      context: SherpiContext.tiredWarning,
+      customDialogue: message,
+      emotion: SherpiEmotion.warning,
     );
     
-    // 다이얼로그 닫기
-    Navigator.pop(context);
-    
-    // TODO: 생성된 모임 상세 화면으로 이동
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
@@ -102,7 +102,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
     final user = ref.watch(globalUserProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ModernColors.background,
       appBar: SherpaCleanAppBar(
         title: '참여 완료',
       ),
@@ -113,9 +113,9 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             controller: _confettiController,
             colors: [
               widget.meeting.category.color,
-              AppColors.primary,
-              AppColors.accent,
-              AppColors.success,
+              ModernColors.primary,
+              ModernColors.accent,
+              ModernColors.success,
             ],
           ),
           
@@ -226,7 +226,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 24,
                 fontWeight: FontWeight.w900,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -249,7 +249,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
               '모임에 성공적으로 참여했어요!\n새로운 경험과 인연을 만나보세요.',
               style: GoogleFonts.notoSans(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -282,7 +282,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             children: [
               Icon(
                 Icons.event_note_rounded,
-                color: AppColors.primary,
+                color: ModernColors.primary,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -291,7 +291,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -304,7 +304,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             icon: Icons.schedule_rounded,
             label: '일시',
             value: widget.meeting.formattedDate,
-            color: AppColors.primary,
+            color: ModernColors.primary,
           ),
           
           const SizedBox(height: 12),
@@ -313,7 +313,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             icon: Icons.location_on_rounded,
             label: '장소',
             value: widget.meeting.location,
-            color: AppColors.accent,
+            color: ModernColors.accent,
           ),
           
           const SizedBox(height: 12),
@@ -322,7 +322,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             icon: Icons.person_rounded,
             label: '호스트',
             value: widget.meeting.hostName,
-            color: AppColors.success,
+            color: ModernColors.success,
           ),
           
           const SizedBox(height: 16),
@@ -331,14 +331,14 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: ModernColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.notifications_active_rounded,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                   size: 16,
                 ),
                 const SizedBox(width: 8),
@@ -347,7 +347,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
                     '모임 시작 1시간 전에 알림을 보내드릴게요!',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: AppColors.primary,
+                      color: ModernColors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -390,7 +390,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
                 label,
                 style: GoogleFonts.notoSans(
                   fontSize: 11,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
               Text(
@@ -398,7 +398,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -431,7 +431,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -447,7 +447,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('캘린더 추가 기능 (구현 예정)'),
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: ModernColors.primary,
                 ),
               );
             },
@@ -465,7 +465,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('공유 기능 (구현 예정)'),
-                  backgroundColor: AppColors.accent,
+                  backgroundColor: ModernColors.accent,
                 ),
               );
             },
@@ -487,7 +487,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: ModernColors.background,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: Colors.grey.shade200,
@@ -500,12 +500,12 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: ModernColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
                 icon,
-                color: AppColors.primary,
+                color: ModernColors.primary,
                 size: 20,
               ),
             ),
@@ -521,14 +521,14 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                   Text(
                     subtitle,
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -537,7 +537,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             
             Icon(
               Icons.arrow_forward_ios_rounded,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
               size: 16,
             ),
           ],
@@ -615,7 +615,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
                   );
                 },
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.textSecondary,
+                  foregroundColor: ModernColors.textSecondary,
                   side: BorderSide(color: Colors.grey.shade300),
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(

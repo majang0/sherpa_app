@@ -58,6 +58,8 @@ dependencies:
   uuid: ^4.2.1
   fl_chart: ^0.65.0
   path_drawing: ^1.0.1
+  path_provider: ^2.1.2  # 파일 시스템 경로 제공
+  path: ^1.9.0  # 경로 조작 유틸리티
   logger: ^2.0.2+1
 
   countup: ^0.1.4

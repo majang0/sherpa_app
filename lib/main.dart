@@ -21,11 +21,10 @@ import 'features/sherpi_relationship/providers/relationship_provider.dart';
 import 'features/sherpi_emotion/providers/emotion_analysis_provider.dart';
 
 // Screens - Meetings
-import 'features/meetings/presentation/screens/meeting_detail_screen.dart';
+import 'features/meetings/presentation/screens/available_meeting_detail_screen.dart';
 import 'features/meetings/presentation/screens/meeting_application_screen.dart';
 import 'features/meetings/presentation/screens/meeting_success_screen.dart';
 import 'features/meetings/presentation/screens/meeting_review_screen.dart';
-import 'features/meetings/presentation/screens/meeting_create_multi_step_screen.dart';
 
 // Screens - Daily Record
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
@@ -44,6 +43,10 @@ import 'shared/presentation/screens/meeting_list_all_screen.dart';
 
 // Screens - Sherpi Chat
 import 'features/sherpi_chat/presentation/screens/sherpi_message_history_screen.dart';
+
+// Test Widgets (개발용)
+import 'features/meetings/presentation/widgets/meeting_image_test_widget.dart';
+import 'features/meetings/presentation/widgets/meeting_creation_debug_widget.dart';
 
 // Models
 import 'features/meetings/models/available_meeting_model.dart';
@@ -133,7 +136,7 @@ class MyApp extends ConsumerWidget {
         '/': (context) => MainNavigationScreen(),
         '/meeting_detail': (context) {
           final meeting = ModalRoute.of(context)!.settings.arguments as AvailableMeeting;
-          return MeetingDetailScreen(meeting: meeting);
+          return AvailableMeetingDetailScreen(meeting: meeting);
         },
         '/meeting_application': (context) {
           final meeting = ModalRoute.of(context)!.settings.arguments as AvailableMeeting;
@@ -147,7 +150,6 @@ class MyApp extends ConsumerWidget {
           final meeting = ModalRoute.of(context)!.settings.arguments as AvailableMeeting;
           return MeetingReviewScreen(meeting: meeting);
         },
-        '/meeting_create': (context) => MeetingCreateMultiStepScreen(),
         // ✅ 일일 기록 화면들 추가
         '/daily_record': (context) => EnhancedDailyRecordScreen(), // 메인 기록 화면
         '/diary_record': (context) => DiaryWriteEditScreen(),
@@ -185,6 +187,10 @@ class MyApp extends ConsumerWidget {
           );
         },
         '/sherpi_message_history': (context) => SherpiMessageHistoryScreen(),
+        
+        // 🧪 개발/테스트 전용 화면들
+        '/meeting_image_test': (context) => MeetingImageTestWidget(),
+        '/meeting_creation_debug': (context) => MeetingCreationDebugWidget(),
 
       },
       initialRoute: '/',

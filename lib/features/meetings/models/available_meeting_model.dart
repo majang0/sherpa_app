@@ -72,6 +72,7 @@ class AvailableMeeting {
   final List<String> tags;
   final List<String> requirements;
   final List<String> preparationItems;
+  final List<String> imageFileNames; // 저장된 이미지 파일명들
 
   const AvailableMeeting({
     required this.id,
@@ -93,6 +94,7 @@ class AvailableMeeting {
     this.tags = const [],
     this.requirements = const [],
     this.preparationItems = const [],
+    this.imageFileNames = const [],
   });
 
   /// copyWith 메서드 추가
@@ -116,6 +118,7 @@ class AvailableMeeting {
     List<String>? tags,
     List<String>? requirements,
     List<String>? preparationItems,
+    List<String>? imageFileNames,
   }) {
     return AvailableMeeting(
       id: id ?? this.id,
@@ -137,6 +140,7 @@ class AvailableMeeting {
       tags: tags ?? this.tags,
       requirements: requirements ?? this.requirements,
       preparationItems: preparationItems ?? this.preparationItems,
+      imageFileNames: imageFileNames ?? this.imageFileNames,
     );
   }
 
@@ -247,6 +251,12 @@ class AvailableMeeting {
     return '${title.substring(0, 10)}...';
   }
 
+  /// 이미지가 있는지 확인
+  bool get hasImages => imageFileNames.isNotEmpty;
+
+  /// 첫 번째 이미지 파일명 (썸네일용)
+  String? get firstImageFileName => imageFileNames.isNotEmpty ? imageFileNames.first : null;
+
   /// 날짜 포맷 (한국어 UI용)
   String get formattedDate {
     final now = DateTime.now();
@@ -295,6 +305,7 @@ class AvailableMeeting {
       'tags': tags,
       'requirements': requirements,
       'preparationItems': preparationItems,
+      'imageFileNames': imageFileNames,
     };
   }
 
@@ -328,6 +339,7 @@ class AvailableMeeting {
       tags: List<String>.from(json['tags'] ?? []),
       requirements: List<String>.from(json['requirements'] ?? []),
       preparationItems: List<String>.from(json['preparationItems'] ?? []),
+      imageFileNames: List<String>.from(json['imageFileNames'] ?? []),
     );
   }
 }

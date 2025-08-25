@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // 🎨 2025 디자인 시스템
-import '../../../../core/constants/app_colors_2025.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
 // 📱 화면들
@@ -39,14 +39,14 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
       icon: Icons.groups_rounded,
       selectedIcon: Icons.groups,
       label: '모임',
-      color: AppColors2025.primary,
+      color: ModernColors.primary,
       semanticLabel: '모임 탭, 다른 사용자들과 만날 수 있는 모임을 찾아보세요',
     ),
     TabInfo(
       icon: Icons.emoji_events_outlined,
       selectedIcon: Icons.emoji_events,
       label: '챌린지',
-      color: AppColors2025.primary,
+      color: ModernColors.primary,
       semanticLabel: '챌린지 탭, 재미있는 도전과 경쟁에 참여해보세요',
     ),
   ];
@@ -112,12 +112,47 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors2025.background,
+      backgroundColor: ModernColors.background,
       
       // 🎯 SherpaCleanAppBar 사용
-      appBar: const SherpaCleanAppBar(
+      appBar: SherpaCleanAppBar(
         title: '모임',
-        backgroundColor: AppColors2025.surface,
+        backgroundColor: ModernColors.surface,
+        // 🧪 개발자 테스트 버튼 (임시)
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.bug_report, color: Colors.red),
+            tooltip: '개발자 테스트 도구',
+            onSelected: (String value) {
+              switch (value) {
+                case 'image_test':
+                  Navigator.pushNamed(context, '/meeting_image_test');
+                  break;
+                case 'creation_debug':
+                  Navigator.pushNamed(context, '/meeting_creation_debug');
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'image_test',
+                child: ListTile(
+                  leading: Icon(Icons.image, size: 20),
+                  title: Text('이미지 시스템 테스트'),
+                  dense: true,
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'creation_debug',
+                child: ListTile(
+                  leading: Icon(Icons.settings, size: 20),
+                  title: Text('모임 개설 디버거'),
+                  dense: true,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       
       // 🎨 클린 모던 탭바와 바디
@@ -201,7 +236,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
         ),
         margin: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors2025.primary : Colors.transparent,
+          color: isSelected ? ModernColors.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -211,7 +246,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
             Icon(
               isSelected ? tab.selectedIcon : tab.icon,
               size: isSmallScreen ? 18 : 20,
-              color: isSelected ? Colors.white : AppColors2025.textTertiary,
+              color: isSelected ? Colors.white : ModernColors.textTertiary,
             ),
             SizedBox(height: isSmallScreen ? 2 : 4),
             FittedBox(
@@ -221,7 +256,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: isSmallScreen ? 10 : 12,
                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected ? Colors.white : AppColors2025.textTertiary,
+                  color: isSelected ? Colors.white : ModernColors.textTertiary,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

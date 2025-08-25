@@ -8,7 +8,7 @@ import '../../providers/meeting_recommendation_provider.dart';
 import '../../../meetings/models/available_meeting_model.dart';
 import '../../../meetings/models/available_challenge_model.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../meetings/presentation/screens/meeting_detail_screen.dart';
+import '../../../meetings/presentation/screens/available_meeting_detail_screen.dart';
 import '../../../meetings/presentation/screens/meeting_application_screen.dart';
 
 class SmartMeetingRecommendationWidget extends ConsumerStatefulWidget {
@@ -81,7 +81,7 @@ class _SmartMeetingRecommendationWidgetState
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MeetingDetailScreen(meeting: meeting),
+        builder: (context) => AvailableMeetingDetailScreen(meeting: meeting),
       ),
     );
   }

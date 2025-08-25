@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../models/available_meeting_model.dart';
 
 /// 📋 모임 기본 정보 카드 위젯
@@ -35,7 +35,7 @@ class MeetingInfoCardWidget extends StatelessWidget {
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -46,7 +46,7 @@ class MeetingInfoCardWidget extends StatelessWidget {
             icon: Icons.event_rounded,
             label: '일시',
             value: meeting.formattedDate,
-            color: AppColors.primary,
+            color: ModernColors.primary,
           ),
           
           const SizedBox(height: 12),
@@ -59,7 +59,7 @@ class MeetingInfoCardWidget extends StatelessWidget {
                   icon: Icons.repeat_rounded,
                   label: '반복',
                   value: '정기 모임',
-                  color: AppColors.accent,
+                  color: ModernColors.accent,
                 ),
                 const SizedBox(height: 12),
               ],
@@ -73,8 +73,8 @@ class MeetingInfoCardWidget extends StatelessWidget {
             label: '유형',
             value: meeting.type.displayName,
             color: meeting.type == MeetingType.free 
-                ? AppColors.success 
-                : AppColors.warning,
+                ? ModernColors.success 
+                : ModernColors.warning,
           ),
           
           const SizedBox(height: 12),
@@ -87,7 +87,7 @@ class MeetingInfoCardWidget extends StatelessWidget {
                   icon: Icons.payments_rounded,
                   label: '참가비',
                   value: '${meeting.price!.toStringAsFixed(0)}원',
-                  color: AppColors.warning,
+                  color: ModernColors.warning,
                 ),
                 const SizedBox(height: 12),
               ],
@@ -99,8 +99,8 @@ class MeetingInfoCardWidget extends StatelessWidget {
             label: '참가자',
             value: '${meeting.currentParticipants}/${meeting.maxParticipants}명',
             color: meeting.participationRate >= 0.8 
-                ? AppColors.warning 
-                : AppColors.success,
+                ? ModernColors.warning 
+                : ModernColors.success,
           ),
           
           // 태그 정보
@@ -111,7 +111,7 @@ class MeetingInfoCardWidget extends StatelessWidget {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
@@ -170,7 +170,7 @@ class MeetingInfoCardWidget extends StatelessWidget {
                 label,
                 style: GoogleFonts.notoSans(
                   fontSize: 12,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -179,7 +179,7 @@ class MeetingInfoCardWidget extends StatelessWidget {
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],

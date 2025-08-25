@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 /// - global_user_model.dart
 /// - meeting_full_view_widget.dart  
 /// - meeting_edit_screen.dart
-/// - meeting_detail_screen.dart
+/// - available_meeting_detail_screen.dart, meeting_log_detail_screen.dart
 /// - enhanced_meeting_calendar_widget.dart
 /// - activity_prompt_templates.dart
 /// - record_models.dart
