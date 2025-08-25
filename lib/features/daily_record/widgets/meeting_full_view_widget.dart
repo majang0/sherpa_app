@@ -1029,7 +1029,6 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
     // 🎯 중앙집중식 카테고리 시스템 사용
     return MeetingCategories.getEmoji(category);
   }
-  }
 
   /// 카테고리 색상 범례 위젯
   Widget _buildCategoryLegend() {
