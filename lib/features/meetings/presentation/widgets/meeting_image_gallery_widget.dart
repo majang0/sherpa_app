@@ -33,7 +33,7 @@ class MeetingImageGalleryWidget extends StatefulWidget {
 class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
     with TickerProviderStateMixin, MeetingAnimationMixin {
   
-  List<File?> _loadedImages = [];
+  List<dynamic> _loadedImages = []; // File 또는 String(asset path) 저장
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -53,16 +53,25 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
     }
 
     try {
-      final loadedFiles = <File?>[];
+      final loadedImages = <dynamic>[];
       
       for (final fileName in widget.imageFileNames) {
-        final imageFile = await MeetingImageUtils.getMeetingImageFile(fileName);
-        loadedFiles.add(imageFile);
+        // asset: 플래그로 시작하면 assets 폴더 경로 저장
+        if (fileName.startsWith('asset:')) {
+          final assetPath = 'assets/images/meeting/${fileName.substring(6)}';
+          loadedImages.add(assetPath); // String으로 저장
+        } else {
+          // 일반 이미지 파일은 MeetingImageUtils 사용
+          final imageFile = await MeetingImageUtils.getMeetingImageFile(fileName);
+          if (imageFile != null) {
+            loadedImages.add(imageFile); // File로 저장
+          }
+        }
       }
 
       if (mounted) {
         setState(() {
-          _loadedImages = loadedFiles;
+          _loadedImages = loadedImages;
           _isLoading = false;
         });
       }
@@ -95,20 +104,19 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
     }
 
     // 실제로 로딩된 이미지가 없는 경우
-    final validImages = _loadedImages.where((img) => img != null).toList();
-    if (validImages.isEmpty) {
+    if (_loadedImages.isEmpty) {
       return _buildNoImagesPlaceholder();
     }
 
     return AnimatedMeetingCard(
       fadeAnimation: fadeAnimation,
       slideAnimation: slideAnimation,
-      child: _buildImageGallery(validImages.cast<File>()),
+      child: _buildImageGallery(_loadedImages),
     );
   }
 
   /// 🖼️ 이미지 갤러리 빌드
-  Widget _buildImageGallery(List<File> images) {
+  Widget _buildImageGallery(List<dynamic> images) {
     final displayCount = (images.length > widget.maxDisplayCount) 
         ? widget.maxDisplayCount 
         : images.length;
@@ -149,7 +157,7 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
   }
 
   /// 📐 이미지 그리드 레이아웃
-  Widget _buildImageGrid(List<File> images) {
+  Widget _buildImageGrid(List<dynamic> images) {
     switch (images.length) {
       case 1:
         return _buildSingleImage(images.first);
@@ -164,54 +172,59 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
     }
   }
 
-  /// 단일 이미지 레이아웃
-  Widget _buildSingleImage(File image) {
-    return GestureDetector(
-      onTap: () => _showImageViewer([image], 0),
-      child: Container(
+  /// 이미지 위젯 생성 (File 또는 Asset)
+  Widget _createImageWidget(dynamic imageData) {
+    if (imageData is File) {
+      return Image.file(
+        imageData,
+        fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: FileImage(image),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
+      );
+    } else if (imageData is String) {
+      return Image.asset(
+        imageData,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: ModernColors.surface,
+            child: Icon(
+              Icons.broken_image,
+              color: ModernColors.textTertiary,
+              size: 48,
+            ),
+          );
+        },
+      );
+    }
+    return Container();
+  }
+
+  /// 단일 이미지 레이아웃
+  Widget _buildSingleImage(dynamic image) {
+    return GestureDetector(
+      onTap: () => _showImageViewer([image], 0),
+      child: _createImageWidget(image),
     );
   }
 
   /// 2개 이미지 레이아웃 (세로 분할)
-  Widget _buildTwoImages(List<File> images) {
+  Widget _buildTwoImages(List<dynamic> images) {
     return Row(
       children: [
         Expanded(
           child: GestureDetector(
             onTap: () => _showImageViewer(images, 0),
-            child: Container(
-              height: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: FileImage(images[0]),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            child: _createImageWidget(images[0]),
           ),
         ),
         const SizedBox(width: 2),
         Expanded(
           child: GestureDetector(
             onTap: () => _showImageViewer(images, 1),
-            child: Container(
-              height: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: FileImage(images[1]),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            child: _createImageWidget(images[1]),
           ),
         ),
       ],
@@ -219,7 +232,7 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
   }
 
   /// 3개 이미지 레이아웃 (1:2 비율)
-  Widget _buildThreeImages(List<File> images) {
+  Widget _buildThreeImages(List<dynamic> images) {
     return Row(
       children: [
         // 왼쪽 큰 이미지
@@ -227,15 +240,7 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
           flex: 2,
           child: GestureDetector(
             onTap: () => _showImageViewer(images, 0),
-            child: Container(
-              height: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: FileImage(images[0]),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+            child: _createImageWidget(images[0]),
           ),
         ),
         const SizedBox(width: 2),
@@ -247,30 +252,14 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
               Expanded(
                 child: GestureDetector(
                   onTap: () => _showImageViewer(images, 1),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: FileImage(images[1]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  child: _createImageWidget(images[1]),
                 ),
               ),
               const SizedBox(height: 2),
               Expanded(
                 child: GestureDetector(
                   onTap: () => _showImageViewer(images, 2),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: FileImage(images[2]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  child: _createImageWidget(images[2]),
                 ),
               ),
             ],
@@ -281,7 +270,7 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
   }
 
   /// 4개 이미지 레이아웃 (2x2 그리드)
-  Widget _buildFourImages(List<File> images) {
+  Widget _buildFourImages(List<dynamic> images) {
     return Column(
       children: [
         Expanded(
@@ -290,28 +279,14 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
               Expanded(
                 child: GestureDetector(
                   onTap: () => _showImageViewer(images, 0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: FileImage(images[0]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  child: _createImageWidget(images[0]),
                 ),
               ),
               const SizedBox(width: 2),
               Expanded(
                 child: GestureDetector(
                   onTap: () => _showImageViewer(images, 1),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: FileImage(images[1]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  child: _createImageWidget(images[1]),
                 ),
               ),
             ],
@@ -324,29 +299,15 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
               Expanded(
                 child: GestureDetector(
                   onTap: () => _showImageViewer(images, 2),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: FileImage(images[2]),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  child: _createImageWidget(images[2]),
                 ),
               ),
               const SizedBox(width: 2),
               if (images.length > 3)
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => _showImageViewer(_loadedImages.cast<File>(), 3),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: FileImage(images[3]),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                    onTap: () => _showImageViewer(_loadedImages, 3),
+                    child: _createImageWidget(images[3]),
                   ),
                 ),
             ],
@@ -488,7 +449,7 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
   }
 
   /// 이미지 뷰어 표시 (전체화면)
-  void _showImageViewer(List<File> images, int initialIndex) {
+  void _showImageViewer(List<dynamic> images, int initialIndex) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) => _FullScreenImageViewer(
@@ -503,7 +464,7 @@ class _MeetingImageGalleryWidgetState extends State<MeetingImageGalleryWidget>
 
 /// 🔍 전체화면 이미지 뷰어
 class _FullScreenImageViewer extends StatelessWidget {
-  final List<File> images;
+  final List<dynamic> images;
   final int initialIndex;
 
   const _FullScreenImageViewer({
@@ -531,12 +492,35 @@ class _FullScreenImageViewer extends StatelessWidget {
         controller: PageController(initialPage: initialIndex),
         itemCount: images.length,
         itemBuilder: (context, index) {
+          final imageData = images[index];
+          Widget imageWidget;
+          
+          if (imageData is File) {
+            imageWidget = Image.file(
+              imageData,
+              fit: BoxFit.contain,
+            );
+          } else if (imageData is String) {
+            imageWidget = Image.asset(
+              imageData,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return Center(
+                  child: Icon(
+                    Icons.broken_image,
+                    color: Colors.white54,
+                    size: 64,
+                  ),
+                );
+              },
+            );
+          } else {
+            imageWidget = Container();
+          }
+          
           return InteractiveViewer(
             child: Center(
-              child: Image.file(
-                images[index],
-                fit: BoxFit.contain,
-              ),
+              child: imageWidget,
             ),
           );
         },

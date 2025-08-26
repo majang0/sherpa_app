@@ -1,8 +1,10 @@
 // lib/shared/widgets/components/molecules/meeting_card_2025.dart
 
 import 'dart:ui';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../features/meetings/models/available_meeting_model.dart';
+import '../../../../features/meetings/utils/meeting_image_utils.dart';
 import 'participant_avatars_2025.dart';
 
 /// 2025 트렌드 모임 카드 - Glassmorphism 효과 적용
@@ -130,31 +132,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                           Positioned.fill(
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(24),
-                              child: Image.asset(
-                                widget.imageAsset ?? 'assets/images/meeting/1.jpg',
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          widget.meeting.category.color.withOpacity(0.3),
-                                          widget.meeting.category.color.withOpacity(0.1),
-                                        ],
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.image_outlined,
-                                        size: 48,
-                                        color: Colors.white.withOpacity(0.5),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                              child: _buildImageWidget(),
                             ),
                           ),
                           
@@ -421,6 +399,104 @@ class _MeetingCard2025State extends State<MeetingCard2025>
           fontSize: fontSize,
           fontWeight: FontWeight.w600,
           color: isLowFee ? Colors.green[100] : Colors.orange[100],
+        ),
+      ),
+    );
+  }
+
+  /// 이미지 위젯 생성 - 실제 모임 이미지 우선, 없으면 이모지 표시
+  Widget _buildImageWidget() {
+    // 모임에 이미지가 있으면 확인
+    if (widget.meeting.hasImages && widget.meeting.imageFileNames.isNotEmpty) {
+      final firstImage = widget.meeting.imageFileNames.first;
+      
+      // asset: 플래그로 시작하면 assets 폴더에서 로드
+      if (firstImage.startsWith('asset:')) {
+        final assetPath = 'assets/images/meeting/${firstImage.substring(6)}';
+        return Image.asset(
+          assetPath,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+        );
+      }
+      
+      // 일반 이미지 파일은 MeetingImageUtils를 사용하여 로드
+      return FutureBuilder<File?>(
+        future: MeetingImageUtils.getMeetingImageFile(firstImage),
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            return Image.file(
+              snapshot.data!,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+            );
+          }
+          return _buildEmojiPlaceholder();
+        },
+      );
+    }
+    
+    // imageAsset이 제공된 경우 (하위 호환성)
+    if (widget.imageAsset != null) {
+      final imagePath = widget.imageAsset!;
+      // 동적 이미지인지 확인 (파일 경로 형태)
+      if (_isDynamicImagePath(imagePath)) {
+        return _buildDynamicImage(imagePath);
+      } else {
+        // 정적 애셋 이미지
+        return _buildAssetImage(imagePath);
+      }
+    }
+    
+    // 이미지가 없으면 카테고리 이모지 표시
+    return _buildEmojiPlaceholder();
+  }
+
+  /// 동적 이미지 경로인지 확인
+  bool _isDynamicImagePath(String path) {
+    return !path.startsWith('assets/') && (path.contains('/') || path.endsWith('.jpg') || path.endsWith('.png'));
+  }
+
+  /// 동적 이미지 위젯 생성 (파일 시스템)
+  Widget _buildDynamicImage(String filePath) {
+    return Image.file(
+      File(filePath),
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+    );
+  }
+
+  /// 정적 애셋 이미지 위젯 생성
+  Widget _buildAssetImage(String assetPath) {
+    return Image.asset(
+      assetPath,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+    );
+  }
+
+  /// 이미지 로드 실패 시 이모지 플레이스홀더
+  Widget _buildErrorPlaceholder() {
+    return _buildEmojiPlaceholder();
+  }
+  
+  /// 이모지 플레이스홀더 (이미지가 없거나 로드 실패시)
+  Widget _buildEmojiPlaceholder() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            widget.meeting.category.color.withOpacity(0.8),
+            widget.meeting.category.color.withOpacity(0.6),
+          ],
+        ),
+      ),
+      child: Center(
+        child: Text(
+          widget.meeting.category.emoji,
+          style: const TextStyle(fontSize: 48),
         ),
       ),
     );

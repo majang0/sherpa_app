@@ -118,41 +118,6 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
       appBar: SherpaCleanAppBar(
         title: '모임',
         backgroundColor: ModernColors.surface,
-        // 🧪 개발자 테스트 버튼 (임시)
-        actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.bug_report, color: Colors.red),
-            tooltip: '개발자 테스트 도구',
-            onSelected: (String value) {
-              switch (value) {
-                case 'image_test':
-                  Navigator.pushNamed(context, '/meeting_image_test');
-                  break;
-                case 'creation_debug':
-                  Navigator.pushNamed(context, '/meeting_creation_debug');
-                  break;
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'image_test',
-                child: ListTile(
-                  leading: Icon(Icons.image, size: 20),
-                  title: Text('이미지 시스템 테스트'),
-                  dense: true,
-                ),
-              ),
-              const PopupMenuItem<String>(
-                value: 'creation_debug',
-                child: ListTile(
-                  leading: Icon(Icons.settings, size: 20),
-                  title: Text('모임 개설 디버거'),
-                  dense: true,
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
       
       // 🎨 클린 모던 탭바와 바디

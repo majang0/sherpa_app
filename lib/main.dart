@@ -44,9 +44,6 @@ import 'shared/presentation/screens/meeting_list_all_screen.dart';
 // Screens - Sherpi Chat
 import 'features/sherpi_chat/presentation/screens/sherpi_message_history_screen.dart';
 
-// Test Widgets (개발용)
-import 'features/meetings/presentation/widgets/meeting_image_test_widget.dart';
-import 'features/meetings/presentation/widgets/meeting_creation_debug_widget.dart';
 
 // Models
 import 'features/meetings/models/available_meeting_model.dart';
@@ -187,10 +184,6 @@ class MyApp extends ConsumerWidget {
           );
         },
         '/sherpi_message_history': (context) => SherpiMessageHistoryScreen(),
-        
-        // 🧪 개발/테스트 전용 화면들
-        '/meeting_image_test': (context) => MeetingImageTestWidget(),
-        '/meeting_creation_debug': (context) => MeetingCreationDebugWidget(),
 
       },
       initialRoute: '/',

@@ -82,6 +82,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         isRecurring: true,
         tags: ['러닝', '새벽', '초보환영', '아침식사'],
         requirements: ['편한 운동복', '러닝화', '물병'],
+        // Assets 이미지 추가 (운동 카테고리 - 이미지 1-6)
+        imageFileNames: ['asset:1.jpg'],
       ),
       AvailableMeeting(
         id: 'meeting_002',
@@ -100,6 +102,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         universityName: '영남이공대학교',
         tags: ['홈트', '온라인', '저녁'],
         requirements: ['매트', '수건', '물'],
+        // Assets 이미지 추가
+        imageFileNames: ['asset:2.jpg'],
       ),
 
       // 📚 스터디 모임들
@@ -120,6 +124,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_003',
         tags: ['개발', 'React Native', '실습', '프로젝트'],
         requirements: ['노트북', '개발환경 세팅', '기본지식'],
+        // Assets 이미지 추가 (스터디 카테고리 - 이미지 7-10)
+        imageFileNames: ['asset:7.jpg'],
       ),
       AvailableMeeting(
         id: 'meeting_004',
@@ -137,6 +143,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_004',
         universityName: '영남이공대학교',
         tags: ['영어', '회화', '원어민', '레벨별'],
+        // Assets 이미지 추가
+        imageFileNames: ['asset:8.jpg'],
       ),
 
       // 📖 독서 모임들
@@ -156,6 +164,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_005',
         tags: ['독서', '토론', '자기계발', '주말'],
         requirements: ['해당 책 읽고 오기', '토론 주제 준비'],
+        // Assets 이미지 추가 (독서 카테고리 - 이미지 11-13)
+        imageFileNames: ['asset:11.jpg'],
       ),
 
       // 🏔️ 아웃도어/여행 모임들
@@ -175,6 +185,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_006',
         tags: ['사진', '출사', '단풍', '주말'],
         requirements: ['카메라(스마트폰 가능)', '편한 신발'],
+        // Assets 이미지 추가 (아웃도어 카테고리 - 이미지 18-20)
+        imageFileNames: ['asset:18.jpg'],
       ),
 
       // 💪 운동/스포츠 모임들 (요가)
@@ -195,6 +207,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         universityName: '영남이공대학교',
         tags: ['요가', '힐링', '스트레칭', '저녁'],
         requirements: ['매트', '편한 옷', '수건'],
+        // Assets 이미지 추가
+        imageFileNames: ['asset:3.jpg'],
       ),
 
       // 🤝 네트워킹 모임들
@@ -215,6 +229,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_008',
         tags: ['창업', '네트워킹', '아이디어', '투자'],
         requirements: ['명함', '간단한 자기소개 준비'],
+        // Assets 이미지 추가 (네트워킹 카테고리 - 이미지 21-23)
+        imageFileNames: ['asset:21.jpg'],
       ),
 
       // 📖 추가 독서 모임 (중간 가격대)
@@ -235,6 +251,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_009',
         tags: ['독서', '비즈니스', '경영', '토론'],
         requirements: ['이번 주 지정도서', '노트'],
+        // Assets 이미지 추가
+        imageFileNames: ['asset:12.jpg'],
       ),
 
       // 🏔️ 아웃도어 모임 (저가격대)
@@ -255,6 +273,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_010',
         tags: ['산책', '건강', '소통', '한강'],
         requirements: ['편한 신발', '물병'],
+        // Assets 이미지 추가
+        imageFileNames: ['asset:19.jpg'],
       ),
 
       // 🎭 문화 모임 (고가격대)
@@ -275,6 +295,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_011',
         tags: ['뮤지컬', '문화', '토론', '예술'],
         requirements: ['뮤지컬 관람료 별도', '토론 참여 의지'],
+        // Assets 이미지 추가 (문화 카테고리 - 이미지 14-17)
+        imageFileNames: ['asset:14.jpg'],
       ),
 
       // 💪 추가 운동 모임 (무료)
@@ -294,6 +316,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_012',
         tags: ['축구', '운동', '주말', '동호회'],
         requirements: ['축구화', '운동복', '개인 물병'],
+        // Assets 이미지 추가
+        imageFileNames: ['asset:5.jpg'],
       ),
 
       // 💻 온라인 모임 (스터디)
@@ -313,6 +337,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_016',
         tags: ['Python', '온라인', '코딩', '프로그래밍'],
         requirements: ['노트북', '파이썬 설치', '안정적인 인터넷'],
+        // Assets 이미지 추가
+        imageFileNames: ['asset:9.jpg'],
       ),
 
       // 📚 추가 스터디 모임 (무료)
@@ -333,6 +359,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         universityName: '부산대학교',
         tags: ['토익', '영어', '시험', '스터디'],
         requirements: ['토익 교재', '노트북'],
+        // Assets 이미지 추가
+        imageFileNames: ['asset:10.jpg'],
       ),
 
       // 🤝 추가 네트워킹 모임 (중간가격)
@@ -353,6 +381,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_014',
         tags: ['네트워킹', '직장인', '커리어', '소통'],
         requirements: ['명함', '자기소개서 준비'],
+        // Assets 이미지 추가
+        imageFileNames: ['asset:23.jpg'],
       ),
 
       // 🏔️ 추가 아웃도어 모임 (고가격)
@@ -373,6 +403,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         hostId: 'host_015',
         tags: ['여행', '제주도', '관광', '맛집'],
         requirements: ['여권 또는 신분증', '편한 신발', '카메라'],
+        // Assets 이미지 추가
+        imageFileNames: ['asset:20.jpg'],
       ),
     ];
 

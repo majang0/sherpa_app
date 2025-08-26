@@ -1,7 +1,9 @@
 // lib/shared/widgets/components/molecules/meeting_card_list_2025.dart
 
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../../features/meetings/models/available_meeting_model.dart';
+import '../../../../features/meetings/utils/meeting_image_utils.dart';
 import 'participant_avatars_2025.dart';
 
 /// 2025 트렌드 리스트형 모임 카드 - 미니멀리스트 디자인
@@ -249,30 +251,92 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
-        child: Image.asset(
-          widget.imageAsset ?? 'assets/images/meeting/4.jpg',
+        child: _buildImageContent(),
+      ),
+    );
+  }
+  
+  /// 이미지 컨텐츠 생성 (실제 이미지 또는 이모지)
+  Widget _buildImageContent() {
+    // 모임에 이미지가 있으면 확인
+    if (widget.meeting.hasImages && widget.meeting.imageFileNames.isNotEmpty) {
+      final firstImage = widget.meeting.imageFileNames.first;
+      
+      // asset: 플래그로 시작하면 assets 폴더에서 로드
+      if (firstImage.startsWith('asset:')) {
+        final assetPath = 'assets/images/meeting/${firstImage.substring(6)}';
+        return Image.asset(
+          assetPath,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    widget.meeting.category.color.withOpacity(0.8),
-                    widget.meeting.category.color.withOpacity(0.6),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                child: Text(
-                  widget.meeting.category.emoji,
-                  style: const TextStyle(fontSize: 24),
-                ),
-              ),
+          errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+        );
+      }
+      
+      // 일반 이미지 파일은 MeetingImageUtils를 사용하여 로드
+      return FutureBuilder<File?>(
+        future: MeetingImageUtils.getMeetingImageFile(firstImage),
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            return Image.file(
+              snapshot.data!,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
             );
-          },
+          }
+          return _buildEmojiPlaceholder();
+        },
+      );
+    }
+    
+    // imageAsset이 제공된 경우 (하위 호환성)
+    if (widget.imageAsset != null) {
+      return _buildRealImage(widget.imageAsset!);
+    }
+    
+    return _buildEmojiPlaceholder();
+  }
+  
+  /// 실제 이미지 표시
+  Widget _buildRealImage(String imagePath) {
+    // 동적 이미지인지 확인
+    if (_isDynamicImagePath(imagePath)) {
+      return Image.file(
+        File(imagePath),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+      );
+    } else {
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+      );
+    }
+  }
+  
+  /// 동적 이미지 경로인지 확인
+  bool _isDynamicImagePath(String path) {
+    return !path.startsWith('assets/') && (path.contains('/') || path.endsWith('.jpg') || path.endsWith('.png'));
+  }
+  
+  /// 이모지 플레이스홀더 (이미지가 없거나 로드 실패시)
+  Widget _buildEmojiPlaceholder() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            widget.meeting.category.color.withOpacity(0.8),
+            widget.meeting.category.color.withOpacity(0.6),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Center(
+        child: Text(
+          widget.meeting.category.emoji,
+          style: const TextStyle(fontSize: 24),
         ),
       ),
     );

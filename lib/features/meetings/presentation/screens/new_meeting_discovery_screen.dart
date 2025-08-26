@@ -1,6 +1,7 @@
 // lib/features/meetings/presentation/screens/new_meeting_discovery_screen.dart
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +19,8 @@ import '../../../../shared/providers/global_meeting_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../models/available_meeting_model.dart';
-import '../../../../shared/utils/meeting_image_manager.dart';
+import '../../utils/meeting_image_utils.dart';
+// MeetingImageManager 제거됨 - 실제 모임 데이터 기반으로 직접 이미지 처리
 import '../../../../shared/widgets/components/molecules/meeting_card_2025.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_list_2025.dart';
 import '../widgets/meeting_creation_dialog.dart';
@@ -68,6 +70,8 @@ class _NewMeetingDiscoveryScreenState
   
   // 필터링된 모임 리스트
   List<AvailableMeeting> _filteredMeetings = [];
+  
+  // 이미지 매니저 제거됨
 
   // 활성 필터 개수 계산
   int get _activeFilterCount {
@@ -86,6 +90,8 @@ class _NewMeetingDiscoveryScreenState
   @override
   void initState() {
     super.initState();
+    
+    // 이미지 매니저 제거됨
     
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -584,22 +590,33 @@ class _NewMeetingDiscoveryScreenState
     ).animate().fadeIn(duration: const Duration(milliseconds: 300));
   }
   
-  /// 인기 모임 카드 (기존 유지)
+  /// 인기 모임 카드 - 실제 모임 데이터 이미지 사용
   Widget _buildPopularMeetingCard(AvailableMeeting meeting, int index) {
-    return GestureDetector(
-      onTap: () => _handleMeetingTap(meeting),
-      child: Container(
-        width: 200,
-        margin: const EdgeInsets.only(right: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          image: DecorationImage(
-            image: AssetImage(_getMeetingImage(index + 5)),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Stack(
-          children: [
+    return FutureBuilder<String?>(
+      future: _getImagePathForMeeting(meeting),
+      builder: (context, snapshot) {
+        final imagePath = snapshot.data;
+        
+        return GestureDetector(
+          onTap: () => _handleMeetingTap(meeting),
+          child: Container(
+            width: 200,
+            margin: const EdgeInsets.only(right: 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Stack(
+              children: [
+                // 배경 이미지 - 실제 모임 이미지 또는 이모지
+                Positioned.fill(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: imagePath != null
+                      ? _buildRealImageWidget(imagePath)
+                      : _buildEmojiPlaceholderWidget(meeting),
+                  ),
+                ),
+            
             // 그라데이션 오버레이
             Container(
               decoration: BoxDecoration(
@@ -669,12 +686,13 @@ class _NewMeetingDiscoveryScreenState
         ),
       ),
     );
+      },
+    );
   }
   
   /// 🎯 나에게 딱 맞는 모임 섹션 (MeetingCard2025 컴포넌트 사용)
   Widget _buildPerfectMatchMeetingsSection(GlobalUser user) {
     final recommendedMeetings = ref.watch(globalRecommendedMeetingsProvider);
-    final imageManager = MeetingImageManager();
     
     if (recommendedMeetings.isEmpty) return const SizedBox();
     
@@ -725,7 +743,7 @@ class _NewMeetingDiscoveryScreenState
             padding: const EdgeInsets.only(bottom: 16),
             child: MeetingCard2025(
               meeting: recommendedMeetings[index],
-              imageAsset: imageManager.getImageForMeeting(recommendedMeetings[index]),
+              // imageAsset 제거 - MeetingCard가 직접 이미지를 로드함
               onTap: () => _handleMeetingTap(recommendedMeetings[index]),
               onBookmark: () => _handleBookmarkTap(recommendedMeetings[index]),
               isBookmarked: _isBookmarked(recommendedMeetings[index]),
@@ -1519,7 +1537,6 @@ class _NewMeetingDiscoveryScreenState
   /// 📋 전체 모임 섹션 (컴포넌트창 가상모임탭 디자인) - 반응형 최적화
   Widget _buildMustSeeMeetingsSection() {
     final allMeetings = ref.watch(globalAvailableMeetingsProvider);
-    final imageManager = MeetingImageManager();
     
     // 검색이나 필터가 활성화된 경우 숨김
     if (_searchQuery.isNotEmpty) {
@@ -1603,7 +1620,7 @@ class _NewMeetingDiscoveryScreenState
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: MeetingCardList2025(
                   meeting: meeting,
-                  imageAsset: imageManager.getImageForMeeting(meeting),
+                  // imageAsset 제거 - MeetingCardList가 직접 이미지를 로드함
                   onTap: () => _handleMeetingTap(meeting),
                   onBookmark: () => _handleBookmarkTap(meeting),
                   isBookmarked: _isBookmarked(meeting),
@@ -1716,10 +1733,87 @@ class _NewMeetingDiscoveryScreenState
   
   // ==================== 유틸리티 메서드들 ====================
   
-  String _getMeetingImage(int index) {
-    final imageNumber = (index % 23) + 1;
-    return 'assets/images/meeting/$imageNumber.jpg';
+  /// 실제 모임 데이터에서 이미지 경로 가져오기 (비동기)
+  Future<String?> _getImagePathForMeeting(AvailableMeeting meeting) async {
+    // 실제 이미지가 있으면 해당 이미지 사용
+    if (meeting.hasImages && meeting.imageFileNames.isNotEmpty) {
+      final firstImage = meeting.imageFileNames.first;
+      
+      // asset: 플래그로 시작하면 assets 폴더 경로 반환
+      if (firstImage.startsWith('asset:')) {
+        return 'assets/images/meeting/${firstImage.substring(6)}';
+      }
+      
+      // 일반 이미지 파일은 MeetingImageUtils를 사용하여 전체 경로 가져오기
+      final imageFile = await MeetingImageUtils.getMeetingImageFile(firstImage);
+      return imageFile?.path;
+    }
+    
+    // 이미지가 없으면 null 반환 (UI에서 이모지 표시하도록)
+    return null;
   }
+  
+  /// 실제 이미지 위젯 생성
+  Widget _buildRealImageWidget(String imagePath) {
+    // 동적 이미지인지 확인
+    if (_isDynamicImagePath(imagePath)) {
+      return Image.file(
+        File(imagePath),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => 
+          _buildEmojiPlaceholderWidget(null),
+      );
+    } else {
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => 
+          _buildEmojiPlaceholderWidget(null),
+      );
+    }
+  }
+  
+  /// 동적 이미지 경로인지 확인
+  bool _isDynamicImagePath(String path) {
+    return !path.startsWith('assets/') && (path.contains('/') || path.endsWith('.jpg') || path.endsWith('.png'));
+  }
+  
+  /// 이모지 플레이스홀더 위젯
+  Widget _buildEmojiPlaceholderWidget(AvailableMeeting? meeting) {
+    // meeting이 null이면 기본 캬러 사용
+    final categoryColor = meeting?.category.color ?? AppColors2025.primary;
+    final categoryEmoji = meeting?.category.emoji ?? '👥';
+    
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            categoryColor.withOpacity(0.8),
+            categoryColor.withOpacity(0.6),
+          ],
+        ),
+      ),
+      child: Center(
+        child: Text(
+          categoryEmoji,
+          style: const TextStyle(fontSize: 48),
+        ),
+      ),
+    );
+  }
+  
+  /// 레거시 이미지 처리 메서드들 - 더 이상 사용되지 않음
+  /// 이제 MeetingCard2025와 MeetingCardList2025에서 직접 처리함
+  @deprecated
+  Widget _buildImageWidget(String imagePath) {
+    // 레거시 메서드 - 사용하지 말 것
+    throw UnimplementedError('더 이상 사용되지 않음. MeetingCard에서 직접 처리함.');
+  }
+  
+  // 레거시 이미지 메서드들 완전 제거됨
+  // 이제 MeetingCard 컴포넌트에서 직접 실제 모임 이미지를 처리합니다.
   
   List<AvailableMeeting> _applyFilters(List<AvailableMeeting> meetings) {
     var filtered = meetings;

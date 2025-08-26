@@ -26,9 +26,28 @@ class MeetingImageManager {
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
   ];
 
-  /// 모임 카테고리에 맞는 랜덤 이미지 경로 반환
-  String getImageForMeeting(AvailableMeeting meeting) {
-    return getImageForCategory(meeting.category, meeting.id);
+  /// 모임에 적절한 이미지 경로 반환 (실제 이미지만 반환, 없으면 null)
+  String? getImageForMeeting(AvailableMeeting meeting) {
+    // 실제 이미지가 있으면 해당 이미지 사용
+    if (meeting.hasImages && meeting.imageFileNames.isNotEmpty) {
+      final dynamicPath = _getDynamicImagePath(meeting.imageFileNames.first);
+      return dynamicPath;
+    }
+    
+    // 이미지가 없으면 null 반환 (UI에서 이모지 표시하도록)
+    return null;
+  }
+
+  /// 동적 이미지 경로 생성 (앱 문서 디렉토리 기반)
+  String _getDynamicImagePath(String fileName) {
+    // 동적 이미지는 파일 경로를 직접 반환
+    // 실제 파일 존재 여부는 UI에서 처리
+    return fileName;
+  }
+
+  /// 모임이 동적 이미지를 가지고 있는지 확인
+  bool hasDynamicImage(AvailableMeeting meeting) {
+    return meeting.hasImages && meeting.imageFileNames.isNotEmpty;
   }
 
   /// 카테고리별 랜덤 이미지 경로 반환
@@ -59,11 +78,9 @@ class MeetingImageManager {
     // 1-23 범위의 이미지만 허용
     if (imageNumber >= 1 && imageNumber <= 23) {
       final path = 'assets/images/meeting/$imageNumber.jpg';
-      print('🖼️ 이미지 경로 생성: $path');
       return path;
     }
     // 범위를 벗어나면 첫 번째 이미지 반환
-    print('⚠️ 잘못된 이미지 번호 ($imageNumber), 기본 이미지 사용');
     return 'assets/images/meeting/1.jpg';
   }
 
@@ -105,12 +122,13 @@ class MeetingImageManager {
 
 /// 이미지 매니저 확장 - 더미 데이터와 함께 사용
 extension MeetingImageManagerExtension on MeetingImageManager {
-  /// 더미 모임 데이터용 이미지 시퀀스 생성
-  List<String> generateImageSequence(List<AvailableMeeting> meetings) {
+  /// 더미 모임 데이터용 이미지 시퀀스 생성 (null 값 포함 가능)
+  List<String?> generateImageSequence(List<AvailableMeeting> meetings) {
     return meetings.map((meeting) => getImageForMeeting(meeting)).toList();
   }
 
-  /// 특정 섹션용 이미지 배치 최적화
+  /// 카테고리별 이모지 fallback 지원을 위한 레거시 메서드 (deprecated)
+  @deprecated
   String getOptimizedImageForSection(MeetingCategory category, int sectionIndex, int itemIndex) {
     final imageNumbers = MeetingImageManager._categoryImageMap[category] ?? MeetingImageManager._allImages;
     
