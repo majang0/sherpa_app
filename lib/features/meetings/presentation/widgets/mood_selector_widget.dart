@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 
 /// 😊 기분 선택 위젯
 class MoodSelectorWidget extends StatelessWidget {
@@ -88,7 +88,7 @@ class MoodSelectorWidget extends StatelessWidget {
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     color: isSelected 
                         ? (moodData['color'] as Color)
-                        : AppColors.textSecondary,
+                        : ModernColors.textSecondary,
                   ),
                 ),
               ],

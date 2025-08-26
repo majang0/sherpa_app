@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 // 🎨 디자인 시스템
-import '../../../../core/constants/app_colors_2025.dart';
+import '../../../../core/theme/modern_colors.dart';
 
 // 📦 모델 및 프로바이더
 import '../../../../shared/providers/global_user_provider.dart';
@@ -67,6 +67,7 @@ class _NewMeetingDiscoveryScreenState
   
   // 성능 최적화
   Timer? _searchDebouncer;
+  final Map<String, String?> _imagePathCache = {}; // 이미지 경로 캐시
   
   // 필터링된 모임 리스트
   List<AvailableMeeting> _filteredMeetings = [];
@@ -104,18 +105,8 @@ class _NewMeetingDiscoveryScreenState
     // 검색 컨트롤러 리스너 추가
     _searchController.addListener(_onSearchChanged);
     
-    // 🚫 환영 메시지 제거 - 단순 화면 진입은 조용히 처리
+    // 초기 필터링 실행
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // ref.read(sherpiProvider.notifier).showMessage(
-      //   context: SherpiContext.welcome,
-      //   emotion: SherpiEmotion.cheering,
-      //   userContext: {
-      //     'screen': 'new_meeting_discovery',
-      //     'feature': 'meeting_tab_redesign',
-      //   },
-      // );
-      
-      // 초기 필터링 실행
       _updateFilteredMeetings();
     });
   }
@@ -155,7 +146,7 @@ class _NewMeetingDiscoveryScreenState
     final screenWidth = MediaQuery.of(context).size.width;
     
     return Scaffold(
-      backgroundColor: AppColors2025.background,
+      backgroundColor: ModernColors.background,
       floatingActionButton: _buildCreateMeetingFAB(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: SafeArea(
@@ -165,7 +156,9 @@ class _NewMeetingDiscoveryScreenState
           slivers: [
             // 🔥 인기 모임 (실제 메소드)
             SliverToBoxAdapter(
-              child: _buildPopularMeetingsSection(),
+              child: RepaintBoundary(
+                child: _buildPopularMeetingsSection(),
+              ),
             ),
             
             // 💎 나에게 딱 맞는 모임 섹션
@@ -177,7 +170,9 @@ class _NewMeetingDiscoveryScreenState
             
             // 📂 카테고리별 모임 탐색
             SliverToBoxAdapter(
-              child: _buildCategoryAndSearchSection(),
+              child: RepaintBoundary(
+                child: _buildCategoryAndSearchSection(),
+              ),
             ),
             
             // 📋 전체 모임 섹션
@@ -211,7 +206,7 @@ class _NewMeetingDiscoveryScreenState
             Icon(
               Icons.search_off,
               size: 48,
-              color: AppColors2025.textTertiary,
+              color: ModernColors.textTertiary,
             ),
             const SizedBox(height: 12),
             Text(
@@ -219,7 +214,7 @@ class _NewMeetingDiscoveryScreenState
               style: GoogleFonts.notoSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppColors2025.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
             const SizedBox(height: 4),
@@ -227,7 +222,7 @@ class _NewMeetingDiscoveryScreenState
               '다른 키워드로 검색해보세요',
               style: GoogleFonts.notoSans(
                 fontSize: 14,
-                color: AppColors2025.textTertiary,
+                color: ModernColors.textTertiary,
               ),
             ),
           ],
@@ -250,14 +245,14 @@ class _NewMeetingDiscoveryScreenState
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppColors2025.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: AppColors2025.primary.withOpacity(0.1),
+                    color: ModernColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -265,7 +260,7 @@ class _NewMeetingDiscoveryScreenState
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: AppColors2025.primary,
+                      color: ModernColors.primary,
                     ),
                   ),
                 ),
@@ -316,7 +311,7 @@ class _NewMeetingDiscoveryScreenState
                     '${_filteredMeetings.length - 5}개 더 보기',
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
-                      color: AppColors2025.primary,
+                      color: ModernColors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -366,7 +361,7 @@ class _NewMeetingDiscoveryScreenState
             '적용된 필터',
             style: GoogleFonts.notoSans(
               fontSize: 12,
-              color: AppColors2025.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -377,10 +372,10 @@ class _NewMeetingDiscoveryScreenState
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors2025.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: AppColors2025.primary.withOpacity(0.3),
+                    color: ModernColors.primary.withOpacity(0.3),
                     width: 1,
                   ),
                 ),
@@ -392,7 +387,7 @@ class _NewMeetingDiscoveryScreenState
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: AppColors2025.primary,
+                        color: ModernColors.primary,
                       ),
                     ),
                     const SizedBox(width: 4),
@@ -417,7 +412,7 @@ class _NewMeetingDiscoveryScreenState
                       child: Icon(
                         Icons.close,
                         size: 14,
-                        color: AppColors2025.primary,
+                        color: ModernColors.primary,
                       ),
                     ),
                   ],
@@ -454,20 +449,20 @@ class _NewMeetingDiscoveryScreenState
           gradient: isActive 
             ? LinearGradient(
                 colors: [
-                  AppColors2025.primary,
-                  AppColors2025.primary.withOpacity(0.8),
+                  ModernColors.primary,
+                  ModernColors.primary.withOpacity(0.8),
                 ],
               )
             : null,
           color: isActive ? null : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isActive ? AppColors2025.primary : AppColors2025.glassBorder,
+            color: isActive ? ModernColors.primary : ModernColors.border,
             width: 1,
           ),
           boxShadow: isActive ? [
             BoxShadow(
-              color: AppColors2025.primary.withOpacity(0.3),
+              color: ModernColors.primary.withOpacity(0.3),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -478,7 +473,7 @@ class _NewMeetingDiscoveryScreenState
           style: GoogleFonts.notoSans(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: isActive ? Colors.white : AppColors2025.textPrimary,
+            color: isActive ? Colors.white : ModernColors.textPrimary,
           ),
         ),
       ),
@@ -503,10 +498,10 @@ class _NewMeetingDiscoveryScreenState
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isActive ? AppColors2025.primary : Colors.white,
+          color: isActive ? ModernColors.primary : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isActive ? AppColors2025.primary : AppColors2025.glassBorder,
+            color: isActive ? ModernColors.primary : ModernColors.border,
             width: 1,
           ),
         ),
@@ -515,7 +510,7 @@ class _NewMeetingDiscoveryScreenState
           style: GoogleFonts.notoSans(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: isActive ? Colors.white : AppColors2025.textPrimary,
+            color: isActive ? Colors.white : ModernColors.textPrimary,
           ),
         ),
       ),
@@ -528,94 +523,99 @@ class _NewMeetingDiscoveryScreenState
     
     if (popularMeetings.isEmpty) return const SizedBox();
     
-    return Container(
-      margin: const EdgeInsets.only(top: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 헤더
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '🔥 지금 인기있는 모임',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors2025.textPrimary,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/meeting_list_all',
-                      arguments: {
-                        'sectionTitle': '인기 모임',
-                        'category': null,
-                      },
-                    );
-                  },
-                  child: Text(
-                    '전체보기',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      color: AppColors2025.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // 인기 모임 리스트
-          SizedBox(
-            height: 180,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: math.min(popularMeetings.length, 5),
-              itemBuilder: (context, index) {
-                final meeting = popularMeetings[index];
-                return _buildPopularMeetingCard(meeting, index);
-              },
-            ),
-          ),
-        ],
+    return FutureBuilder<List<String?>>(
+      future: Future.wait(
+        popularMeetings.take(5).map((meeting) => _getImagePathForMeeting(meeting)),
       ),
-    ).animate().fadeIn(duration: const Duration(milliseconds: 300));
+      builder: (context, snapshot) {
+        final imagePaths = snapshot.data ?? List.filled(math.min(popularMeetings.length, 5), null);
+        
+        return Container(
+          margin: const EdgeInsets.only(top: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 헤더
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '🔥 지금 인기있는 모임',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: ModernColors.textPrimary,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/meeting_list_all',
+                          arguments: {
+                            'sectionTitle': '인기 모임',
+                            'category': null,
+                          },
+                        );
+                      },
+                      child: Text(
+                        '전체보기',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 14,
+                          color: ModernColors.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // 인기 모임 리스트
+              SizedBox(
+                height: 180,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  itemCount: math.min(popularMeetings.length, 5),
+                  itemBuilder: (context, index) {
+                    final meeting = popularMeetings[index];
+                    final imagePath = imagePaths[index];
+                    return _buildOptimizedPopularCard(meeting, imagePath, index);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ).animate().fadeIn(duration: const Duration(milliseconds: 300));
+      },
+    );
   }
   
-  /// 인기 모임 카드 - 실제 모임 데이터 이미지 사용
-  Widget _buildPopularMeetingCard(AvailableMeeting meeting, int index) {
-    return FutureBuilder<String?>(
-      future: _getImagePathForMeeting(meeting),
-      builder: (context, snapshot) {
-        final imagePath = snapshot.data;
-        
-        return GestureDetector(
-          onTap: () => _handleMeetingTap(meeting),
-          child: Container(
-            width: 200,
-            margin: const EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+  /// 최적화된 인기 모임 카드
+  Widget _buildOptimizedPopularCard(AvailableMeeting meeting, String? imagePath, int index) {
+    return GestureDetector(
+      onTap: () => _handleMeetingTap(meeting),
+      child: Container(
+        width: 200,
+        margin: const EdgeInsets.only(right: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Stack(
+          children: [
+            // 배경 이미지 - 실제 모임 이미지 또는 이모지
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: imagePath != null
+                  ? _buildRealImageWidget(imagePath)
+                  : _buildEmojiPlaceholderWidget(meeting),
+              ),
             ),
-            child: Stack(
-              children: [
-                // 배경 이미지 - 실제 모임 이미지 또는 이모지
-                Positioned.fill(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: imagePath != null
-                      ? _buildRealImageWidget(imagePath)
-                      : _buildEmojiPlaceholderWidget(meeting),
-                  ),
-                ),
             
             // 그라데이션 오버레이
             Container(
@@ -686,8 +686,6 @@ class _NewMeetingDiscoveryScreenState
         ),
       ),
     );
-      },
-    );
   }
   
   /// 🎯 나에게 딱 맞는 모임 섹션 (MeetingCard2025 컴포넌트 사용)
@@ -728,7 +726,7 @@ class _NewMeetingDiscoveryScreenState
                   '전체보기',
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: AppColors2025.primary,
+                    color: ModernColors.primary,
                   ),
                 ),
               ),
@@ -791,7 +789,7 @@ class _NewMeetingDiscoveryScreenState
               style: GoogleFonts.notoSans(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors2025.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
           ),
@@ -831,7 +829,7 @@ class _NewMeetingDiscoveryScreenState
                       color: isSelected ? null : Colors.white,
                       borderRadius: BorderRadius.circular(17), // 14 * 1.2 ≈ 17
                       border: Border.all(
-                        color: isSelected ? category.color : AppColors2025.glassBorder,
+                        color: isSelected ? category.color : ModernColors.border,
                         width: isSelected ? 2 : 1,
                       ),
                       boxShadow: [
@@ -860,7 +858,7 @@ class _NewMeetingDiscoveryScreenState
                           style: GoogleFonts.notoSans(
                             fontSize: 11, // 9 * 1.2 ≈ 11
                             fontWeight: FontWeight.w600,
-                            color: isSelected ? Colors.white : AppColors2025.textPrimary,
+                            color: isSelected ? Colors.white : ModernColors.textPrimary,
                           ),
                           textAlign: TextAlign.center,
                           maxLines: 2,
@@ -910,18 +908,18 @@ class _NewMeetingDiscoveryScreenState
                             hintText: '모임 이름, 지역, 키워드로 검색',
                             hintStyle: GoogleFonts.notoSans(
                               fontSize: 14,
-                              color: AppColors2025.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                             prefixIcon: Icon(
                               Icons.search_rounded,
-                              color: AppColors2025.textSecondary,
+                              color: ModernColors.textSecondary,
                               size: 20,
                             ),
                             suffixIcon: _searchQuery.isNotEmpty
                               ? IconButton(
                                   icon: Icon(
                                     Icons.clear_rounded,
-                                    color: AppColors2025.textSecondary,
+                                    color: ModernColors.textSecondary,
                                     size: 20,
                                   ),
                                   onPressed: () {
@@ -954,17 +952,17 @@ class _NewMeetingDiscoveryScreenState
                         height: 48,
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         decoration: BoxDecoration(
-                          color: _showOnlineOnly ? AppColors2025.primary : Colors.white,
+                          color: _showOnlineOnly ? ModernColors.primary : Colors.white,
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
                             color: _showOnlineOnly 
-                              ? AppColors2025.primary 
+                              ? ModernColors.primary 
                               : Colors.grey.shade300,
                           ),
                           boxShadow: [
                             BoxShadow(
                               color: (_showOnlineOnly 
-                                ? AppColors2025.primary 
+                                ? ModernColors.primary 
                                 : Colors.black
                               ).withOpacity(0.05),
                               blurRadius: 10,
@@ -976,7 +974,7 @@ class _NewMeetingDiscoveryScreenState
                           children: [
                             Icon(
                               Icons.videocam_rounded,
-                              color: _showOnlineOnly ? Colors.white : AppColors2025.textSecondary,
+                              color: _showOnlineOnly ? Colors.white : ModernColors.textSecondary,
                               size: 18,
                             ),
                             const SizedBox(width: 6),
@@ -987,7 +985,7 @@ class _NewMeetingDiscoveryScreenState
                                 fontWeight: FontWeight.w600,
                                 color: _showOnlineOnly 
                                   ? Colors.white 
-                                  : AppColors2025.textSecondary,
+                                  : ModernColors.textSecondary,
                               ),
                             ),
                           ],
@@ -1010,18 +1008,18 @@ class _NewMeetingDiscoveryScreenState
                             width: 48,
                             decoration: BoxDecoration(
                               color: _showFilters || _activeFilterCount > 0 
-                                ? AppColors2025.primary 
+                                ? ModernColors.primary 
                                 : Colors.white,
                               borderRadius: BorderRadius.circular(24),
                               border: Border.all(
                                 color: _showFilters || _activeFilterCount > 0
-                                  ? AppColors2025.primary 
+                                  ? ModernColors.primary 
                                   : Colors.grey.shade300,
                               ),
                               boxShadow: [
                                 BoxShadow(
                                   color: (_showFilters || _activeFilterCount > 0
-                                    ? AppColors2025.primary 
+                                    ? ModernColors.primary 
                                     : Colors.black
                                   ).withOpacity(0.05),
                                   blurRadius: 10,
@@ -1033,7 +1031,7 @@ class _NewMeetingDiscoveryScreenState
                               _showFilters ? Icons.filter_list_off_rounded : Icons.filter_list_rounded,
                               color: _showFilters || _activeFilterCount > 0 
                                 ? Colors.white 
-                                : AppColors2025.textSecondary,
+                                : ModernColors.textSecondary,
                               size: 20,
                             ),
                           ),
@@ -1046,7 +1044,7 @@ class _NewMeetingDiscoveryScreenState
                             child: Container(
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
-                                color: AppColors2025.error,
+                                color: ModernColors.error,
                                 shape: BoxShape.circle,
                               ),
                               constraints: const BoxConstraints(
@@ -1101,7 +1099,7 @@ class _NewMeetingDiscoveryScreenState
               Icon(
                 Icons.flash_on_rounded,
                 size: 16,
-                color: AppColors2025.primary,
+                color: ModernColors.primary,
               ),
               const SizedBox(width: 4),
               Text(
@@ -1109,7 +1107,7 @@ class _NewMeetingDiscoveryScreenState
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors2025.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -1175,7 +1173,7 @@ class _NewMeetingDiscoveryScreenState
                           size: 16,
                           color: isActive 
                             ? (filter['color'] as Color)
-                            : AppColors2025.textSecondary,
+                            : ModernColors.textSecondary,
                         ),
                         const SizedBox(width: 6),
                         Text(
@@ -1185,7 +1183,7 @@ class _NewMeetingDiscoveryScreenState
                             fontWeight: FontWeight.w600,
                             color: isActive 
                               ? (filter['color'] as Color)
-                              : AppColors2025.textSecondary,
+                              : ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -1208,7 +1206,7 @@ class _NewMeetingDiscoveryScreenState
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors2025.glassBorder,
+          color: ModernColors.border,
           width: 1,
         ),
       ),
@@ -1220,7 +1218,7 @@ class _NewMeetingDiscoveryScreenState
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: AppColors2025.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 16),
@@ -1327,7 +1325,7 @@ class _NewMeetingDiscoveryScreenState
                   },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    side: BorderSide(color: AppColors2025.glassBorder),
+                    side: BorderSide(color: ModernColors.border),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -1337,7 +1335,7 @@ class _NewMeetingDiscoveryScreenState
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: AppColors2025.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ),
@@ -1352,7 +1350,7 @@ class _NewMeetingDiscoveryScreenState
                     HapticFeedback.lightImpact();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors2025.primary,
+                    backgroundColor: ModernColors.primary,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -1390,7 +1388,7 @@ class _NewMeetingDiscoveryScreenState
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors2025.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
         const SizedBox(height: 8),
@@ -1408,13 +1406,13 @@ class _NewMeetingDiscoveryScreenState
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: isSelected 
-                    ? AppColors2025.primary.withOpacity(0.1)
+                    ? ModernColors.primary.withOpacity(0.1)
                     : Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: isSelected 
-                      ? AppColors2025.primary 
-                      : AppColors2025.glassBorder,
+                      ? ModernColors.primary 
+                      : ModernColors.border,
                     width: isSelected ? 1.5 : 1,
                   ),
                 ),
@@ -1424,8 +1422,8 @@ class _NewMeetingDiscoveryScreenState
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                     color: isSelected 
-                      ? AppColors2025.primary 
-                      : AppColors2025.textSecondary,
+                      ? ModernColors.primary 
+                      : ModernColors.textSecondary,
                   ),
                 ),
               ),
@@ -1446,7 +1444,7 @@ class _NewMeetingDiscoveryScreenState
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors2025.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
         const SizedBox(height: 8),
@@ -1461,7 +1459,7 @@ class _NewMeetingDiscoveryScreenState
                 return Theme(
                   data: Theme.of(context).copyWith(
                     colorScheme: ColorScheme.light(
-                      primary: AppColors2025.primary,
+                      primary: ModernColors.primary,
                     ),
                   ),
                   child: child!,
@@ -1479,13 +1477,13 @@ class _NewMeetingDiscoveryScreenState
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
               color: _selectedDateRange != null 
-                ? AppColors2025.primary.withOpacity(0.1)
+                ? ModernColors.primary.withOpacity(0.1)
                 : Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: _selectedDateRange != null
-                  ? AppColors2025.primary
-                  : AppColors2025.glassBorder,
+                  ? ModernColors.primary
+                  : ModernColors.border,
                 width: _selectedDateRange != null ? 1.5 : 1,
               ),
             ),
@@ -1495,8 +1493,8 @@ class _NewMeetingDiscoveryScreenState
                   Icons.calendar_today,
                   size: 16,
                   color: _selectedDateRange != null
-                    ? AppColors2025.primary
-                    : AppColors2025.textSecondary,
+                    ? ModernColors.primary
+                    : ModernColors.textSecondary,
                 ),
                 const SizedBox(width: 8),
                 Text(
@@ -1507,8 +1505,8 @@ class _NewMeetingDiscoveryScreenState
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                     color: _selectedDateRange != null
-                      ? AppColors2025.primary
-                      : AppColors2025.textSecondary,
+                      ? ModernColors.primary
+                      : ModernColors.textSecondary,
                   ),
                 ),
                 const Spacer(),
@@ -1523,7 +1521,7 @@ class _NewMeetingDiscoveryScreenState
                     child: Icon(
                       Icons.clear,
                       size: 16,
-                      color: AppColors2025.primary,
+                      color: ModernColors.primary,
                     ),
                   ),
               ],
@@ -1602,7 +1600,7 @@ class _NewMeetingDiscoveryScreenState
                     '전체보기',
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
-                      color: AppColors2025.primary,
+                      color: ModernColors.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -1643,7 +1641,7 @@ class _NewMeetingDiscoveryScreenState
           Icon(
             Icons.search_off,
             size: 64,
-            color: AppColors2025.textTertiary,
+            color: ModernColors.textTertiary,
           ),
           const SizedBox(height: 16),
           Text(
@@ -1651,7 +1649,7 @@ class _NewMeetingDiscoveryScreenState
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: AppColors2025.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
         ],
@@ -1664,14 +1662,14 @@ class _NewMeetingDiscoveryScreenState
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppColors2025.primary, AppColors2025.primary.withOpacity(0.8)],
+          colors: [ModernColors.primary, ModernColors.primary.withOpacity(0.8)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors2025.primary.withOpacity(0.3),
+            color: ModernColors.primary.withOpacity(0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -1735,22 +1733,31 @@ class _NewMeetingDiscoveryScreenState
   
   /// 실제 모임 데이터에서 이미지 경로 가져오기 (비동기)
   Future<String?> _getImagePathForMeeting(AvailableMeeting meeting) async {
+    // 캐시에서 먼저 확인
+    final cacheKey = meeting.id;
+    if (_imagePathCache.containsKey(cacheKey)) {
+      return _imagePathCache[cacheKey];
+    }
+    
+    String? imagePath;
+    
     // 실제 이미지가 있으면 해당 이미지 사용
     if (meeting.hasImages && meeting.imageFileNames.isNotEmpty) {
       final firstImage = meeting.imageFileNames.first;
       
       // asset: 플래그로 시작하면 assets 폴더 경로 반환
       if (firstImage.startsWith('asset:')) {
-        return 'assets/images/meeting/${firstImage.substring(6)}';
+        imagePath = 'assets/images/meeting/${firstImage.substring(6)}';
+      } else {
+        // 일반 이미지 파일은 MeetingImageUtils를 사용하여 전체 경로 가져오기
+        final imageFile = await MeetingImageUtils.getMeetingImageFile(firstImage);
+        imagePath = imageFile?.path;
       }
-      
-      // 일반 이미지 파일은 MeetingImageUtils를 사용하여 전체 경로 가져오기
-      final imageFile = await MeetingImageUtils.getMeetingImageFile(firstImage);
-      return imageFile?.path;
     }
     
-    // 이미지가 없으면 null 반환 (UI에서 이모지 표시하도록)
-    return null;
+    // 캐시에 저장
+    _imagePathCache[cacheKey] = imagePath;
+    return imagePath;
   }
   
   /// 실제 이미지 위젯 생성
@@ -1781,7 +1788,7 @@ class _NewMeetingDiscoveryScreenState
   /// 이모지 플레이스홀더 위젯
   Widget _buildEmojiPlaceholderWidget(AvailableMeeting? meeting) {
     // meeting이 null이면 기본 캬러 사용
-    final categoryColor = meeting?.category.color ?? AppColors2025.primary;
+    final categoryColor = meeting?.category.color ?? ModernColors.primary;
     final categoryEmoji = meeting?.category.emoji ?? '👥';
     
     return Container(
@@ -1803,17 +1810,6 @@ class _NewMeetingDiscoveryScreenState
       ),
     );
   }
-  
-  /// 레거시 이미지 처리 메서드들 - 더 이상 사용되지 않음
-  /// 이제 MeetingCard2025와 MeetingCardList2025에서 직접 처리함
-  @deprecated
-  Widget _buildImageWidget(String imagePath) {
-    // 레거시 메서드 - 사용하지 말 것
-    throw UnimplementedError('더 이상 사용되지 않음. MeetingCard에서 직접 처리함.');
-  }
-  
-  // 레거시 이미지 메서드들 완전 제거됨
-  // 이제 MeetingCard 컴포넌트에서 직접 실제 모임 이미지를 처리합니다.
   
   List<AvailableMeeting> _applyFilters(List<AvailableMeeting> meetings) {
     var filtered = meetings;

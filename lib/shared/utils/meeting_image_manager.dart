@@ -127,15 +127,4 @@ extension MeetingImageManagerExtension on MeetingImageManager {
     return meetings.map((meeting) => getImageForMeeting(meeting)).toList();
   }
 
-  /// 카테고리별 이모지 fallback 지원을 위한 레거시 메서드 (deprecated)
-  @deprecated
-  String getOptimizedImageForSection(MeetingCategory category, int sectionIndex, int itemIndex) {
-    final imageNumbers = MeetingImageManager._categoryImageMap[category] ?? MeetingImageManager._allImages;
-    
-    // 섹션과 아이템 인덱스를 조합해서 중복 방지
-    final combinedIndex = (sectionIndex * 10 + itemIndex) % imageNumbers.length;
-    final imageNumber = imageNumbers[combinedIndex];
-    
-    return getSafeImagePath(imageNumber);
-  }
 }

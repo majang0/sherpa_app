@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 
 /// ⭐ 만족도 평가 위젯
 class SatisfactionRatingWidget extends StatefulWidget {
@@ -51,9 +51,9 @@ class _SatisfactionRatingWidgetState extends State<SatisfactionRatingWidget>
         // 별점 슬라이더
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            activeTrackColor: AppColors.warning,
+            activeTrackColor: ModernColors.warning,
             inactiveTrackColor: Colors.grey.shade200,
-            thumbColor: AppColors.warning,
+            thumbColor: ModernColors.warning,
             thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
             overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
             trackHeight: 6,
@@ -94,7 +94,7 @@ class _SatisfactionRatingWidgetState extends State<SatisfactionRatingWidget>
                               : Icons.star_outline_rounded,
                       size: 32,
                       color: starValue <= widget.rating + 0.5
-                          ? AppColors.warning
+                          ? ModernColors.warning
                           : Colors.grey.shade300,
                     ),
                   );
@@ -112,7 +112,7 @@ class _SatisfactionRatingWidgetState extends State<SatisfactionRatingWidget>
           style: GoogleFonts.notoSans(
             fontSize: 18,
             fontWeight: FontWeight.w800,
-            color: AppColors.warning,
+            color: ModernColors.warning,
           ),
         ),
       ],

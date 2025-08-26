@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
@@ -124,7 +124,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
     final levelProgress = ref.watch(userLevelProgressProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ModernColors.background,
       body: DefaultTabController(
         length: 2,
         child: NestedScrollView(
@@ -174,13 +174,13 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: AppColors.warning.withOpacity(0.08), // 챌린지 - 주황색 액센트
+                color: ModernColors.warning.withOpacity(0.08), // 챌린지 - 주황색 액센트
                 blurRadius: 24,
                 offset: const Offset(0, 8),
                 spreadRadius: 0,
               ),
               BoxShadow(
-                color: AppColors.textLight.withOpacity(0.05),
+                color: ModernColors.textTertiary.withOpacity(0.05),
                 blurRadius: 12,
                 offset: const Offset(0, 2),
                 spreadRadius: 0,
@@ -201,7 +201,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                   ),
                   child: CustomPaint(
                     painter: ChallengeTrophyPainter(
-                      color: AppColors.warning.withOpacity(0.05),
+                      color: ModernColors.warning.withOpacity(0.05),
                     ),
                   ),
                 ),
@@ -251,14 +251,14 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  AppColors.warning,
-                                  AppColors.warningLight,
+                                  ModernColors.warning,
+                                  ModernColors.warning.withOpacity(0.8),
                                 ],
                               ),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.warning.withOpacity(0.25),
+                                  color: ModernColors.warning.withOpacity(0.25),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -298,7 +298,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -309,10 +309,10 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.warningLight.withOpacity(0.1),
+                              color: ModernColors.warning.withOpacity(0.8).withOpacity(0.1),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: AppColors.warning.withOpacity(0.1),
+                                color: ModernColors.warning.withOpacity(0.1),
                                 width: 1,
                               ),
                             ),
@@ -329,7 +329,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                                   style: GoogleFonts.notoSans(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
-                                    color: AppColors.warning,
+                                    color: ModernColors.warning,
                                   ),
                                 ),
                               ],
@@ -366,7 +366,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                 Icon(
                   Icons.trending_up,
                   size: 14,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -374,7 +374,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -384,7 +384,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
           ],
@@ -396,7 +396,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
             Container(
               height: 8,
               decoration: BoxDecoration(
-                color: AppColors.dividerLight,
+                color: ModernColors.borderLight,
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -407,14 +407,14 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.warning,
-                      AppColors.warningLight,
+                      ModernColors.warning,
+                      ModernColors.warning.withOpacity(0.8),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(4),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.warning.withOpacity(0.3),
+                      color: ModernColors.warning.withOpacity(0.3),
                       blurRadius: 4,
                       offset: const Offset(0, 1),
                     ),
@@ -433,14 +433,14 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: AppColors.warning,
+                color: ModernColors.warning,
               ),
             ),
             if (levelProgress.progress > 0.8)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppColors.warningLight.withOpacity(0.1),
+                  color: ModernColors.warning.withOpacity(0.8).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -448,7 +448,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.warning,
+                    color: ModernColors.warning,
                   ),
                 ),
               ),
@@ -478,13 +478,13 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.warning.withOpacity(0.05),
-                  AppColors.warningLight.withOpacity(0.03),
+                  ModernColors.warning.withOpacity(0.05),
+                  ModernColors.warning.withOpacity(0.8).withOpacity(0.03),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: AppColors.warning.withOpacity(0.1),
+                color: ModernColors.warning.withOpacity(0.1),
                 width: 1,
               ),
             ),
@@ -502,7 +502,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.warning.withOpacity(0.1),
+                          color: ModernColors.warning.withOpacity(0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -515,7 +515,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                           fontSize: 32,
                           shadows: [
                             Shadow(
-                              color: AppColors.warning.withOpacity(0.2),
+                              color: ModernColors.warning.withOpacity(0.2),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -530,7 +530,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                   _getChallengeMessage(willpower),
                   style: GoogleFonts.notoSans(
                     fontSize: 13,
-                    color: AppColors.warning,
+                    color: ModernColors.warning,
                     fontWeight: FontWeight.w600,
                     height: 1.2,
                   ),
@@ -551,9 +551,9 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.divider.withOpacity(0),
-            AppColors.divider,
-            AppColors.divider.withOpacity(0),
+            ModernColors.border.withOpacity(0),
+            ModernColors.border,
+            ModernColors.border.withOpacity(0),
           ],
         ),
       ),
@@ -572,7 +572,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               Icon(
                 Icons.emoji_events,
                 size: 16,
-                color: AppColors.warning,
+                color: ModernColors.warning,
               ),
               const SizedBox(width: 6),
               Text(
@@ -580,7 +580,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -594,21 +594,21 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                 icon: Icons.rocket_launch_rounded,
                 value: '${challengeStats.totalParticipated}',
                 label: '참가 챌린지',
-                color: AppColors.warning,
+                color: ModernColors.warning,
                 description: '누적 참여 횟수',
               ),
               _buildChallengeStatItem(
                 icon: Icons.local_fire_department_rounded,
                 value: '${user.stats.willpower.toStringAsFixed(1)}',
                 label: '의지력',
-                color: AppColors.error,
+                color: ModernColors.error,
                 description: '현재 능력치',
               ),
               _buildChallengeStatItem(
                 icon: Icons.workspace_premium_rounded,
                 value: '${challengeStats.completionRate}%',
                 label: '완주율',
-                color: AppColors.success,
+                color: ModernColors.success,
                 description: '챌린지 성공률',
               ),
             ],
@@ -665,7 +665,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
           label,
           style: GoogleFonts.notoSans(
             fontSize: 12,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -674,7 +674,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
           description,
           style: GoogleFonts.notoSans(
             fontSize: 10,
-            color: AppColors.textSecondary,
+            color: ModernColors.textSecondary,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -738,7 +738,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.08),
+              color: ModernColors.primary.withOpacity(0.08),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -802,7 +802,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.dividerLight,
+                          color: ModernColors.borderLight,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -815,7 +815,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                               style: GoogleFonts.notoSans(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
-                                color: AppColors.textSecondary,
+                                color: ModernColors.textSecondary,
                               ),
                             ),
                           ],
@@ -851,7 +851,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
+                      color: ModernColors.textPrimary,
                       height: 1.3,
                     ),
                   ),
@@ -861,7 +861,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                     challenge.description,
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                       height: 1.4,
                     ),
                     maxLines: 2,
@@ -875,21 +875,21 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                       _buildInfoChip(
                         icon: Icons.schedule,
                         text: challenge.durationText,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                       const SizedBox(width: 12),
                       // 참가자
                       _buildInfoChip(
                         icon: Icons.people,
                         text: '${challenge.currentParticipants}/${challenge.maxParticipants}명',
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                       const SizedBox(width: 12),
                       // 보상 포인트
                       _buildInfoChip(
                         icon: Icons.star,
                         text: '${challenge.completionReward.toInt()}P',
-                        color: AppColors.warning,
+                        color: ModernColors.warning,
                       ),
                       const Spacer(),
                       // 참여 버튼
@@ -899,14 +899,14 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                AppColors.warning,
-                                AppColors.warningLight,
+                                ModernColors.warning,
+                                ModernColors.warning.withOpacity(0.8),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.warning.withOpacity(0.3),
+                                color: ModernColors.warning.withOpacity(0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -925,7 +925,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
-                            color: AppColors.dividerLight,
+                            color: ModernColors.borderLight,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -933,7 +933,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                         ),
@@ -947,7 +947,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                         Container(
                           height: 4,
                           decoration: BoxDecoration(
-                            color: AppColors.dividerLight,
+                            color: ModernColors.borderLight,
                             borderRadius: BorderRadius.circular(2),
                           ),
                         ),
@@ -1018,14 +1018,14 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.warning,
-                    AppColors.warningLight,
+                    ModernColors.warning,
+                    ModernColors.warning.withOpacity(0.8),
                   ],
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.warning.withOpacity(0.3),
+                    color: ModernColors.warning.withOpacity(0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 5),
                   ),
@@ -1041,7 +1041,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 12),
@@ -1049,7 +1049,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               subtitle,
               style: GoogleFonts.notoSans(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
@@ -1091,7 +1091,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               challenge.description,
               style: GoogleFonts.notoSans(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
                 height: 1.4,
               ),
             ),
@@ -1109,14 +1109,14 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
             child: Text(
               '취소',
               style: GoogleFonts.notoSans(
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ),
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [AppColors.warning, AppColors.warningLight],
+                colors: [ModernColors.warning, ModernColors.warning.withOpacity(0.8)],
               ),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1130,7 +1130,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('🎉 ${challenge.title} 챌린지에 참여했습니다!'),
-                        backgroundColor: AppColors.success,
+                        backgroundColor: ModernColors.success,
                       ),
                     );
                   }
@@ -1170,7 +1170,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
             label,
             style: GoogleFonts.notoSans(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           Text(
@@ -1178,7 +1178,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
             style: GoogleFonts.notoSans(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
         ],
@@ -1196,7 +1196,7 @@ class _ScopeSelectorDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      color: AppColors.background,
+      color: ModernColors.background,
       child: Container(
         margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
         decoration: BoxDecoration(
@@ -1215,7 +1215,7 @@ class _ScopeSelectorDelegate extends SliverPersistentHeaderDelegate {
           child: TabBar(
             controller: controller,
             labelColor: Colors.white,
-            unselectedLabelColor: AppColors.textSecondary,
+            unselectedLabelColor: ModernColors.textSecondary,
             labelStyle: GoogleFonts.notoSans(
               fontSize: 14,
               fontWeight: FontWeight.w700,
@@ -1227,14 +1227,14 @@ class _ScopeSelectorDelegate extends SliverPersistentHeaderDelegate {
             indicator: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.warning,
-                  AppColors.warningLight,
+                  ModernColors.warning,
+                  ModernColors.warning.withOpacity(0.8),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.warning.withOpacity(0.3),
+                  color: ModernColors.warning.withOpacity(0.3),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),

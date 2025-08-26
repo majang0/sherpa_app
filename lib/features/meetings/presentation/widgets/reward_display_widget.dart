@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../models/available_meeting_model.dart';
 
 /// 📊 보상 표시 위젯
@@ -102,7 +102,7 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.w800,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -124,7 +124,7 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
                           title: '경험치',
                           value: '+${expReward.toStringAsFixed(0)}',
                           subtitle: '성장의 힘',
-                          color: AppColors.primary,
+                          color: ModernColors.primary,
                         ),
                       ),
                     );
@@ -147,7 +147,7 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
                           title: '포인트',
                           value: '+${pointReward.toStringAsFixed(0)}',
                           subtitle: '모험의 대가',
-                          color: AppColors.accent,
+                          color: ModernColors.accent,
                         ),
                       ),
                     );
@@ -284,7 +284,7 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
             style: GoogleFonts.notoSans(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -295,7 +295,7 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
             subtitle,
             style: GoogleFonts.notoSans(
               fontSize: 11,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
         ],
@@ -308,10 +308,10 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.success.withValues(alpha: 0.05),
+        color: ModernColors.success.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.success.withValues(alpha: 0.2),
+          color: ModernColors.success.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -322,7 +322,7 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
             children: [
               Icon(
                 Icons.trending_up_rounded,
-                color: AppColors.success,
+                color: ModernColors.success,
                 size: 16,
               ),
               const SizedBox(width: 8),
@@ -331,7 +331,7 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -346,10 +346,10 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
             children: statRewards.entries.map((entry) => Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: AppColors.success.withValues(alpha: 0.1),
+                color: ModernColors.success.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: AppColors.success.withValues(alpha: 0.3),
+                  color: ModernColors.success.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -366,7 +366,7 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.success,
+                      color: ModernColors.success,
                     ),
                   ),
                   const SizedBox(width: 4),
@@ -375,7 +375,7 @@ class _RewardDisplayWidgetState extends State<RewardDisplayWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.success,
+                      color: ModernColors.success,
                     ),
                   ),
                 ],

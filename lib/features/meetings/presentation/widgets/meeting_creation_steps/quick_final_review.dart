@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../../../../core/constants/sherpi_emotions.dart';
 import '../../../providers/meeting_creation_provider.dart';
 
@@ -70,13 +70,13 @@ class QuickFinalReview extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.primary.withOpacity(0.1),
-            AppColors.secondary.withOpacity(0.1),
+            ModernColors.primary.withOpacity(0.1),
+            ModernColors.secondary.withOpacity(0.1),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.2),
+          color: ModernColors.primary.withOpacity(0.2),
         ),
       ),
       child: Row(
@@ -90,7 +90,7 @@ class QuickFinalReview extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.2),
+                  color: ModernColors.primary.withOpacity(0.2),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -116,7 +116,7 @@ class QuickFinalReview extends StatelessWidget {
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -124,7 +124,7 @@ class QuickFinalReview extends StatelessWidget {
                   '마지막으로 한 번 확인하고 모임을 만들어볼까요?',
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -219,7 +219,7 @@ class QuickFinalReview extends StatelessWidget {
                   style: GoogleFonts.notoSans(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 
@@ -230,7 +230,7 @@ class QuickFinalReview extends StatelessWidget {
                   data.description,
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -244,14 +244,14 @@ class QuickFinalReview extends StatelessWidget {
                     Icon(
                       Icons.calendar_today_outlined,
                       size: 16,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                     const SizedBox(width: 4),
                     Text(
                       _formatDateTime(data.dateTime!),
                       style: GoogleFonts.notoSans(
                         fontSize: 13,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                     
@@ -261,7 +261,7 @@ class QuickFinalReview extends StatelessWidget {
                     Icon(
                       Icons.payments_outlined,
                       size: 16,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -272,8 +272,8 @@ class QuickFinalReview extends StatelessWidget {
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color: data.price == null || data.price == 0
-                          ? AppColors.success
-                          : AppColors.primary,
+                          ? ModernColors.success
+                          : ModernColors.primary,
                       ),
                     ),
                   ],
@@ -309,7 +309,7 @@ class QuickFinalReview extends StatelessWidget {
               children: [
                 Icon(
                   Icons.checklist_rounded,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                   size: 24,
                 ),
                 const SizedBox(width: 12),
@@ -318,7 +318,7 @@ class QuickFinalReview extends StatelessWidget {
                   style: GoogleFonts.notoSans(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -343,14 +343,14 @@ class QuickFinalReview extends StatelessWidget {
             value: data.isOnline 
               ? '온라인 모임' 
               : (data.locationName ?? '미정'),
-            color: AppColors.secondary,
+            color: ModernColors.secondary,
           ),
           
           _buildDetailItem(
             icon: Icons.group_outlined,
             label: '최대 참가 인원',
             value: '${data.maxParticipants}명',
-            color: AppColors.success,
+            color: ModernColors.success,
           ),
           
           _buildDetailItem(
@@ -360,8 +360,8 @@ class QuickFinalReview extends StatelessWidget {
               ? '무료 (수수료 1,000P)'
               : '${data.price!.toInt()}P',
             color: data.price == null || data.price == 0
-              ? AppColors.success
-              : AppColors.warning,
+              ? ModernColors.success
+              : ModernColors.warning,
           ),
           
           const SizedBox(height: 8),
@@ -405,7 +405,7 @@ class QuickFinalReview extends StatelessWidget {
                   label,
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -414,7 +414,7 @@ class QuickFinalReview extends StatelessWidget {
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -432,7 +432,7 @@ class QuickFinalReview extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onComplete,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: ModernColors.primary,
           padding: const EdgeInsets.symmetric(vertical: 20),
           elevation: 0,
           shape: RoundedRectangleBorder(

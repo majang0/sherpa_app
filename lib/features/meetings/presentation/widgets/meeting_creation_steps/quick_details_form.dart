@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../../models/available_meeting_model.dart';
 import '../../../providers/meeting_creation_provider.dart';
 
@@ -188,7 +188,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 8),
@@ -199,13 +199,13 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           onChanged: onChanged,
           style: GoogleFonts.notoSans(
             fontSize: 14,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: GoogleFonts.notoSans(
               fontSize: 14,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
             filled: true,
             fillColor: Colors.grey.shade50,
@@ -220,14 +220,14 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: AppColors.primary,
+                color: ModernColors.primary,
                 width: 2,
               ),
             ),
             contentPadding: const EdgeInsets.all(16),
             counterStyle: GoogleFonts.notoSans(
               fontSize: 12,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
         ),
@@ -245,7 +245,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 12),
@@ -290,7 +290,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 12),
@@ -337,7 +337,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
               hintText: '예: 강남역 스타벅스',
               hintStyle: GoogleFonts.notoSans(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
               filled: true,
               fillColor: Colors.grey.shade50,
@@ -352,7 +352,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                   width: 2,
                 ),
               ),
@@ -374,7 +374,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 16),
@@ -387,7 +387,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
               '최소 참가 인원',
               style: GoogleFonts.notoSans(
                 fontSize: 13,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
             Container(
@@ -396,7 +396,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                 vertical: 6,
               ),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: ModernColors.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
@@ -404,7 +404,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                 ),
               ),
             ),
@@ -415,10 +415,10 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
         // 최소 인원 슬라이더
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            activeTrackColor: AppColors.primary,
-            inactiveTrackColor: AppColors.primary.withOpacity(0.2),
-            thumbColor: AppColors.primary,
-            overlayColor: AppColors.primary.withOpacity(0.1),
+            activeTrackColor: ModernColors.primary,
+            inactiveTrackColor: ModernColors.primary.withOpacity(0.2),
+            thumbColor: ModernColors.primary,
+            overlayColor: ModernColors.primary.withOpacity(0.1),
             trackHeight: 4,
             thumbShape: const RoundSliderThumbShape(
               enabledThumbRadius: 8,
@@ -447,7 +447,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
               '최대 참가 인원',
               style: GoogleFonts.notoSans(
                 fontSize: 13,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
             Container(
@@ -456,7 +456,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                 vertical: 6,
               ),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: ModernColors.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
@@ -464,7 +464,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                 ),
               ),
             ),
@@ -475,10 +475,10 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
         // 최대 인원 슬라이더
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            activeTrackColor: AppColors.primary,
-            inactiveTrackColor: AppColors.primary.withOpacity(0.2),
-            thumbColor: AppColors.primary,
-            overlayColor: AppColors.primary.withOpacity(0.1),
+            activeTrackColor: ModernColors.primary,
+            inactiveTrackColor: ModernColors.primary.withOpacity(0.2),
+            thumbColor: ModernColors.primary,
+            overlayColor: ModernColors.primary.withOpacity(0.1),
             trackHeight: 4,
             thumbShape: const RoundSliderThumbShape(
               enabledThumbRadius: 8,
@@ -539,7 +539,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 12),
@@ -579,7 +579,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                 '참가비 금액',
                 style: GoogleFonts.notoSans(
                   fontSize: 13,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
               Container(
@@ -588,7 +588,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -599,7 +599,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.primary,
+                    color: ModernColors.primary,
                   ),
                 ),
               ),
@@ -610,10 +610,10 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           // 가격 슬라이더
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: AppColors.primary,
-              inactiveTrackColor: AppColors.primary.withOpacity(0.2),
-              thumbColor: AppColors.primary,
-              overlayColor: AppColors.primary.withOpacity(0.1),
+              activeTrackColor: ModernColors.primary,
+              inactiveTrackColor: ModernColors.primary.withOpacity(0.2),
+              thumbColor: ModernColors.primary,
+              overlayColor: ModernColors.primary.withOpacity(0.1),
               trackHeight: 6,
               thumbShape: const RoundSliderThumbShape(
                 enabledThumbRadius: 10,
@@ -636,7 +636,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.warning.withOpacity(0.1),
+              color: ModernColors.warning.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -644,7 +644,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                 Icon(
                   Icons.info_outline_rounded,
                   size: 16,
-                  color: AppColors.warning,
+                  color: ModernColors.warning,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -652,7 +652,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                     '참가자는 설정한 금액 전체를 결제합니다',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: AppColors.warning,
+                      color: ModernColors.warning,
                     ),
                   ),
                 ),
@@ -678,11 +678,11 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary : Colors.grey.shade100,
+            color: isSelected ? ModernColors.primary : Colors.grey.shade100,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected 
-                ? AppColors.primary 
+                ? ModernColors.primary 
                 : Colors.grey.shade300,
             ),
           ),
@@ -691,7 +691,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
             children: [
               Icon(
                 icon,
-                color: isSelected ? Colors.white : AppColors.textSecondary,
+                color: isSelected ? Colors.white : ModernColors.textSecondary,
                 size: 20,
               ),
               const SizedBox(width: 8),
@@ -702,7 +702,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                   fontWeight: FontWeight.w600,
                   color: isSelected 
                     ? Colors.white 
-                    : AppColors.textSecondary,
+                    : ModernColors.textSecondary,
                 ),
               ),
             ],
@@ -727,12 +727,12 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected 
-              ? AppColors.primary.withOpacity(0.1)
+              ? ModernColors.primary.withOpacity(0.1)
               : Colors.grey.shade50,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected 
-                ? AppColors.primary 
+                ? ModernColors.primary 
                 : Colors.grey.shade300,
               width: isSelected ? 2 : 1,
             ),
@@ -745,8 +745,8 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                   color: isSelected 
-                    ? AppColors.primary 
-                    : AppColors.textPrimary,
+                    ? ModernColors.primary 
+                    : ModernColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 4),
@@ -755,8 +755,8 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                 style: GoogleFonts.notoSans(
                   fontSize: 12,
                   color: isSelected 
-                    ? AppColors.primary 
-                    : AppColors.textSecondary,
+                    ? ModernColors.primary 
+                    : ModernColors.textSecondary,
                 ),
               ),
             ],
@@ -782,12 +782,12 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected 
-              ? AppColors.primary.withOpacity(0.1)
+              ? ModernColors.primary.withOpacity(0.1)
               : Colors.grey.shade50,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected 
-                ? AppColors.primary 
+                ? ModernColors.primary 
                 : Colors.grey.shade300,
               width: isSelected ? 2 : 1,
             ),
@@ -797,8 +797,8 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
               Icon(
                 icon,
                 color: isSelected 
-                  ? AppColors.primary 
-                  : AppColors.textSecondary,
+                  ? ModernColors.primary 
+                  : ModernColors.textSecondary,
                 size: 28,
               ),
               const SizedBox(height: 8),
@@ -808,8 +808,8 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: isSelected 
-                    ? AppColors.primary 
-                    : AppColors.textPrimary,
+                    ? ModernColors.primary 
+                    : ModernColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 4),
@@ -818,8 +818,8 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                 style: GoogleFonts.notoSans(
                   fontSize: 12,
                   color: isSelected 
-                    ? AppColors.primary 
-                    : AppColors.textSecondary,
+                    ? ModernColors.primary 
+                    : ModernColors.textSecondary,
                 ),
               ),
             ],
@@ -842,14 +842,14 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             Text(
               '${_tags.length}/10',
               style: GoogleFonts.notoSans(
                 fontSize: 12,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ],
@@ -868,7 +868,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                   hintText: '태그를 입력하세요 (예: 초보환영, 주말)',
                   hintStyle: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade50,
@@ -883,7 +883,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                      color: AppColors.primary,
+                      color: ModernColors.primary,
                       width: 2,
                     ),
                   ),
@@ -898,7 +898,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
             ElevatedButton(
               onPressed: () => _addTag(_tagController.text, notifier),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: ModernColors.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -930,20 +930,20 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                 tag,
                 style: GoogleFonts.notoSans(
                   fontSize: 13,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                 ),
               ),
-              backgroundColor: AppColors.primary.withOpacity(0.1),
+              backgroundColor: ModernColors.primary.withOpacity(0.1),
               deleteIcon: Icon(
                 Icons.close_rounded,
                 size: 16,
-                color: AppColors.primary,
+                color: ModernColors.primary,
               ),
               onDeleted: () => _removeTag(tag, notifier),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
                 side: BorderSide(
-                  color: AppColors.primary.withOpacity(0.2),
+                  color: ModernColors.primary.withOpacity(0.2),
                 ),
               ),
             )).toList(),
@@ -966,14 +966,14 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             Text(
               '${_preparationItems.length}/10',
               style: GoogleFonts.notoSans(
                 fontSize: 12,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ],
@@ -992,7 +992,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                   hintText: '준비물을 입력하세요 (예: 운동화, 물병)',
                   hintStyle: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                   filled: true,
                   fillColor: Colors.grey.shade50,
@@ -1007,7 +1007,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(
-                      color: AppColors.primary,
+                      color: ModernColors.primary,
                       width: 2,
                     ),
                   ),
@@ -1022,7 +1022,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
             ElevatedButton(
               onPressed: () => _addPreparationItem(_preparationController.text, notifier),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: ModernColors.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -1171,14 +1171,14 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             Text(
               '${data.photos.length}/5',
               style: GoogleFonts.notoSans(
                 fontSize: 12,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ],
@@ -1390,7 +1390,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: ModernColors.primary,
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
@@ -1453,7 +1453,7 @@ class _QuickDetailsFormState extends ConsumerState<QuickDetailsForm> {
               color: Colors.white,
             ),
           ),
-          backgroundColor: AppColors.primary,
+          backgroundColor: ModernColors.primary,
           duration: const Duration(seconds: 2),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(

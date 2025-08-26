@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 
 /// 📅 빠른 날짜/시간 선택 - Step 3
 /// 직관적인 캘린더와 시간 선택 UI
@@ -69,7 +69,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
             '모임 날짜와 시간을 선택해주세요',
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           
@@ -93,7 +93,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
                   '또는 직접 선택',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ),
@@ -139,7 +139,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 12),
@@ -184,12 +184,12 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.1),
+                          color: ModernColors.primary.withOpacity(0.1),
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.schedule_rounded,
-                          color: AppColors.primary,
+                          color: ModernColors.primary,
                           size: 20,
                         ),
                       ),
@@ -200,13 +200,13 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                       ),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                         size: 16,
                       ),
                     ],
@@ -240,7 +240,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 12),
@@ -262,7 +262,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
                 children: [
                   Icon(
                     Icons.calendar_today_rounded,
-                    color: AppColors.primary,
+                    color: ModernColors.primary,
                     size: 20,
                   ),
                   const SizedBox(width: 12),
@@ -271,13 +271,13 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
                     style: GoogleFonts.notoSans(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                   const Spacer(),
                   Icon(
                     Icons.arrow_drop_down_rounded,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ],
               ),
@@ -298,7 +298,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 12),
@@ -348,12 +348,12 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
             ),
             decoration: BoxDecoration(
               color: isSelected || isCustom
-                ? AppColors.primary
+                ? ModernColors.primary
                 : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: isSelected || isCustom
-                  ? AppColors.primary
+                  ? ModernColors.primary
                   : Colors.grey.shade300,
               ),
             ),
@@ -364,7 +364,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
                 fontWeight: FontWeight.w600,
                 color: isSelected || isCustom
                   ? Colors.white
-                  : AppColors.textSecondary,
+                  : ModernColors.textSecondary,
               ),
             ),
           ),
@@ -391,13 +391,13 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.primary.withOpacity(0.1),
-            AppColors.secondary.withOpacity(0.1),
+            ModernColors.primary.withOpacity(0.1),
+            ModernColors.secondary.withOpacity(0.1),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.2),
+          color: ModernColors.primary.withOpacity(0.2),
         ),
       ),
       child: Column(
@@ -408,7 +408,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -426,7 +426,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
                       '모임 일정',
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                     Text(
@@ -434,7 +434,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
                       style: GoogleFonts.notoSans(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                   ],
@@ -451,7 +451,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
             child: ElevatedButton(
               onPressed: () => widget.onDateTimeSelected(dateTime),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: ModernColors.primary,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -485,7 +485,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: AppColors.primary,
+              primary: ModernColors.primary,
               onPrimary: Colors.white,
             ),
           ),
@@ -509,7 +509,7 @@ class _QuickDateTimePickerState extends State<QuickDateTimePicker> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: AppColors.primary,
+              primary: ModernColors.primary,
               onPrimary: Colors.white,
             ),
           ),

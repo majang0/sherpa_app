@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
@@ -82,7 +82,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ModernColors.background,
       appBar: SherpaCleanAppBar(
         title: '모험 후기',
       ),
@@ -184,7 +184,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
             style: GoogleFonts.notoSans(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -206,7 +206,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
             '여러분의 소중한 후기가 다른 모험가들에게 큰 도움이 돼요!',
             style: GoogleFonts.notoSans(
               fontSize: 13,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
               height: 1.4,
             ),
             textAlign: TextAlign.center,
@@ -239,7 +239,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -293,7 +293,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -335,7 +335,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           
@@ -345,7 +345,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
             '모임에 대한 소감을 자유롭게 적어주세요 (선택사항)',
             style: GoogleFonts.notoSans(
               fontSize: 12,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           
@@ -367,7 +367,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: AppColors.primary, width: 2),
+                borderSide: BorderSide(color: ModernColors.primary, width: 2),
               ),
               filled: true,
               fillColor: Colors.grey.shade50,
@@ -375,7 +375,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
             ),
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
         ],
@@ -390,15 +390,15 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.success.withValues(alpha: 0.1),
-            AppColors.success.withValues(alpha: 0.05),
+            ModernColors.success.withValues(alpha: 0.1),
+            ModernColors.success.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.success.withValues(alpha: 0.2),
+          color: ModernColors.success.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -410,12 +410,12 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: AppColors.success.withValues(alpha: 0.2),
+                  color: ModernColors.success.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.card_giftcard_rounded,
-                  color: AppColors.success,
+                  color: ModernColors.success,
                   size: 20,
                 ),
               ),
@@ -431,14 +431,14 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     Text(
                       '후기를 작성하면 추가 경험치와 능력치를 받아요!',
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -481,7 +481,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
             label,
             style: GoogleFonts.notoSans(
               fontSize: 10,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           Text(
@@ -489,7 +489,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w800,
-              color: AppColors.success,
+              color: ModernColors.success,
             ),
           ),
         ],
@@ -583,7 +583,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('후기 작성 완료! 추가 보상을 받았어요! 🎉'),
-            backgroundColor: AppColors.success,
+            backgroundColor: ModernColors.success,
           ),
         );
       }
@@ -592,7 +592,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('후기 제출에 실패했습니다: $e'),
-            backgroundColor: AppColors.warning,
+            backgroundColor: ModernColors.warning,
           ),
         );
       }
@@ -615,8 +615,8 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
   }
 
   Color _getSatisfactionColor(double rating) {
-    if (rating >= 4.0) return AppColors.success;
-    if (rating >= 3.0) return AppColors.warning;
-    return AppColors.error;
+    if (rating >= 4.0) return ModernColors.success;
+    if (rating >= 3.0) return ModernColors.warning;
+    return ModernColors.error;
   }
 }

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../../models/available_meeting_model.dart';
 
 /// 🎯 빠른 카테고리 선택 - Step 1
@@ -35,7 +35,7 @@ class QuickCategorySelector extends StatelessWidget {
             '모임의 종류를 선택해주세요',
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           
@@ -111,7 +111,7 @@ class QuickCategorySelector extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                             color: isSelected 
                               ? Colors.white 
-                              : AppColors.textPrimary,
+                              : ModernColors.textPrimary,
                           ),
                         ),
                         
@@ -151,7 +151,7 @@ class QuickCategorySelector extends StatelessWidget {
             margin: const EdgeInsets.only(top: 16),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.05),
+              color: ModernColors.primary.withOpacity(0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -159,7 +159,7 @@ class QuickCategorySelector extends StatelessWidget {
                 Icon(
                   Icons.lightbulb_outline_rounded,
                   size: 16,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -167,7 +167,7 @@ class QuickCategorySelector extends StatelessWidget {
                     '카테고리에 맞는 사람들이 모임을 발견하기 쉬워져요',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: AppColors.primary,
+                      color: ModernColors.primary,
                     ),
                   ),
                 ),

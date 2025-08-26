@@ -39,7 +39,6 @@ import 'features/daily_record/presentation/screens/focus_timer_record_screen.dar
 
 // Screens - Shared
 import 'shared/presentation/screens/component_viewer_screen.dart';
-import 'shared/presentation/screens/meeting_list_all_screen.dart';
 
 // Screens - Sherpi Chat
 import 'features/sherpi_chat/presentation/screens/sherpi_message_history_screen.dart';
@@ -176,13 +175,6 @@ class MyApp extends ConsumerWidget {
         '/focus_timer': (context) => EnhancedDailyRecordScreen(), // 집중 타이머는 기록 화면에서 접근
         '/focus_timer_record': (context) => FocusTimerRecordScreen(),
         '/component_viewer': (context) => ComponentViewerScreen(),
-        '/meeting_list_all': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-          return MeetingListAllScreen(
-            initialCategory: args?['category'],
-            sectionTitle: args?['sectionTitle'],
-          );
-        },
         '/sherpi_message_history': (context) => SherpiMessageHistoryScreen(),
 
       },
