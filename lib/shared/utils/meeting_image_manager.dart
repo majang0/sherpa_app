@@ -40,7 +40,13 @@ class MeetingImageManager {
 
   /// 동적 이미지 경로 생성 (앱 문서 디렉토리 기반)
   String _getDynamicImagePath(String fileName) {
-    // 동적 이미지는 파일 경로를 직접 반환
+    // asset: 플래그로 시작하면 assets 폴더 경로 반환
+    if (fileName.startsWith('asset:')) {
+      // asset:1.jpg -> assets/images/meeting/1.jpg
+      return 'assets/images/meeting/${fileName.substring(6)}';
+    }
+    
+    // 일반 동적 이미지는 파일 경로를 직접 반환
     // 실제 파일 존재 여부는 UI에서 처리
     return fileName;
   }

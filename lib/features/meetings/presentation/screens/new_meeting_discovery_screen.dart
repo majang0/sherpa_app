@@ -12,6 +12,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 // 🎨 디자인 시스템
 import '../../../../core/theme/modern_colors.dart';
 
+// 🖼️ 이미지 캐싱
+import '../../../../shared/widgets/cached_meeting_image.dart';
+import '../../../../shared/utils/meeting_image_cache_manager.dart';
+
 // 📦 모델 및 프로바이더
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
@@ -20,7 +24,7 @@ import '../../../../shared/models/global_user_model.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../models/available_meeting_model.dart';
 import '../../utils/meeting_image_utils.dart';
-// MeetingImageManager 제거됨 - 실제 모임 데이터 기반으로 직접 이미지 처리
+import '../../../../shared/utils/meeting_image_manager.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_2025.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_list_2025.dart';
 import '../widgets/meeting_creation_dialog.dart';
@@ -108,6 +112,7 @@ class _NewMeetingDiscoveryScreenState
     // 초기 필터링 실행
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _updateFilteredMeetings();
+      _preloadPopularMeetingImages();
     });
   }
   
@@ -128,6 +133,35 @@ class _NewMeetingDiscoveryScreenState
     setState(() {
       _filteredMeetings = _applyFilters(allMeetings);
     });
+  }
+  
+  /// 인기있는 모임의 이미지를 미리 로드하여 캐싱
+  Future<void> _preloadPopularMeetingImages() async {
+    try {
+      final allMeetings = ref.read(globalAvailableMeetingsProvider);
+      final popularMeetings = allMeetings
+          .where((meeting) => meeting.participationRate >= 0.5)
+          .take(10) // 상위 10개만 프리로드
+          .toList();
+      
+      final imagePaths = <String>[];
+      final imageManager = MeetingImageManager();
+      
+      for (final meeting in popularMeetings) {
+        final imagePath = imageManager.getImageForMeeting(meeting);
+        if (imagePath != null) {
+          imagePaths.add(imagePath);
+        }
+      }
+      
+      if (imagePaths.isNotEmpty) {
+        final cacheManager = MeetingImageCacheManager();
+        await cacheManager.preloadImages(imagePaths);
+        debugPrint('Preloaded ${imagePaths.length} popular meeting images');
+      }
+    } catch (e) {
+      debugPrint('Failed to preload images: $e');
+    }
   }
 
   @override
@@ -154,28 +188,28 @@ class _NewMeetingDiscoveryScreenState
           controller: _mainScrollController,
           physics: const BouncingScrollPhysics(),
           slivers: [
-            // 🔥 인기 모임 (실제 메소드)
+            // 인기 모임
             SliverToBoxAdapter(
               child: RepaintBoundary(
                 child: _buildPopularMeetingsSection(),
               ),
             ),
             
-            // 💎 나에게 딱 맞는 모임 섹션
+            // 나에게 딱 맞는 모임 섹션
             SliverToBoxAdapter(
               child: RepaintBoundary(
                 child: _buildPerfectMatchMeetingsSection(user),
               ),
             ),
             
-            // 📂 카테고리별 모임 탐색
+            // 카테고리별 모임 탐색
             SliverToBoxAdapter(
               child: RepaintBoundary(
                 child: _buildCategoryAndSearchSection(),
               ),
             ),
             
-            // 📋 전체 모임 섹션
+            // 전체 모임 섹션
             SliverToBoxAdapter(
               child: RepaintBoundary(
                 child: _buildMustSeeMeetingsSection(),
@@ -194,7 +228,61 @@ class _NewMeetingDiscoveryScreenState
   
   // ==================== UI 컴포넌트들 ====================
   
-
+  /// 섹션 헤더 공통 위젯
+  Widget _buildSectionHeader({
+    required String title,
+    required VoidCallback onViewAll,
+    bool showViewAll = true,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.notoSans(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: ModernColors.textPrimary,
+              height: 1.2,
+            ),
+          ),
+          if (showViewAll)
+            Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(8),
+              child: InkWell(
+                onTap: onViewAll,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Row(
+                    children: [
+                      Text(
+                        '전체보기',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: ModernColors.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 12,
+                        color: ModernColors.primary,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
   
   /// 검색 결과 위젯
   Widget _buildSearchResults() {
@@ -517,85 +605,148 @@ class _NewMeetingDiscoveryScreenState
     );
   }
   
-  /// 🔥 인기 모임 섹션 (기존 유지)
+  /// 인기 모임 섹션
   Widget _buildPopularMeetingsSection() {
     final popularMeetings = ref.watch(globalPopularMeetingsProvider);
     
     if (popularMeetings.isEmpty) return const SizedBox();
     
-    return FutureBuilder<List<String?>>(
-      future: Future.wait(
-        popularMeetings.take(5).map((meeting) => _getImagePathForMeeting(meeting)),
+    return Container(
+      margin: const EdgeInsets.only(top: 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 헤더
+          _buildSectionHeader(
+            title: '지금 인기있는 모임',
+            onViewAll: () {
+              Navigator.pushNamed(
+                context,
+                '/meeting_list_all',
+                arguments: {
+                  'sectionTitle': '인기 모임',
+                  'category': null,
+                },
+              );
+            },
+          ),
+          
+          const SizedBox(height: 20),
+          
+          // 인기 모임 리스트 (캐시된 이미지 사용)
+          SizedBox(
+            height: 180,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: math.min(popularMeetings.length, 5),
+              itemBuilder: (context, index) {
+                final meeting = popularMeetings[index];
+                return _buildOptimizedPopularCardWithCache(meeting, index);
+              },
+            ),
+          ),
+        ],
       ),
-      builder: (context, snapshot) {
-        final imagePaths = snapshot.data ?? List.filled(math.min(popularMeetings.length, 5), null);
-        
-        return Container(
-          margin: const EdgeInsets.only(top: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // 헤더
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '🔥 지금 인기있는 모임',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: ModernColors.textPrimary,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/meeting_list_all',
-                          arguments: {
-                            'sectionTitle': '인기 모임',
-                            'category': null,
-                          },
-                        );
-                      },
-                      child: Text(
-                        '전체보기',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 14,
-                          color: ModernColors.primary,
-                        ),
-                      ),
-                    ),
+    ).animate().fadeIn(duration: const Duration(milliseconds: 300));
+  }
+  
+  /// 캐시된 이미지를 사용하는 최적화된 인기 모임 카드
+  Widget _buildOptimizedPopularCardWithCache(AvailableMeeting meeting, int index) {
+    return GestureDetector(
+      onTap: () => _handleMeetingTap(meeting),
+      child: Container(
+        width: 200,
+        margin: const EdgeInsets.only(right: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Stack(
+          children: [
+            // 배경 이미지 - 캐시된 이미지 사용
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: CachedMeetingImage(
+                  meeting: meeting,
+                  fit: BoxFit.cover,
+                  showShimmer: true,
+                ),
+              ),
+            ),
+            
+            // 그라데이션 오버레이
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withOpacity(0.7),
                   ],
                 ),
               ),
-              
-              const SizedBox(height: 16),
-              
-              // 인기 모임 리스트
-              SizedBox(
-                height: 180,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  itemCount: math.min(popularMeetings.length, 5),
-                  itemBuilder: (context, index) {
-                    final meeting = popularMeetings[index];
-                    final imagePath = imagePaths[index];
-                    return _buildOptimizedPopularCard(meeting, imagePath, index);
-                  },
+            ),
+            // 콘텐츠
+            Positioned(
+              bottom: 16,
+              left: 16,
+              right: 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    meeting.title,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    meeting.location,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 12,
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            // 카테고리 뱃지
+            Positioned(
+              top: 12,
+              left: 12,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: meeting.category.color,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  meeting.category.displayName,
+                  style: GoogleFonts.notoSans(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-            ],
-          ),
-        ).animate().fadeIn(duration: const Duration(milliseconds: 300));
-      },
+            ),
+          ],
+        ),
+      ),
     );
   }
   
-  /// 최적화된 인기 모임 카드
+  /// 최적화된 인기 모임 카드 (이전 버전 - 호환성을 위해 유지)
   Widget _buildOptimizedPopularCard(AvailableMeeting meeting, String? imagePath, int index) {
     return GestureDetector(
       onTap: () => _handleMeetingTap(meeting),
@@ -688,67 +839,49 @@ class _NewMeetingDiscoveryScreenState
     );
   }
   
-  /// 🎯 나에게 딱 맞는 모임 섹션 (MeetingCard2025 컴포넌트 사용)
+  /// 나에게 딱 맞는 모임 섹션 (MeetingCard2025 컴포넌트 사용)
   Widget _buildPerfectMatchMeetingsSection(GlobalUser user) {
     final recommendedMeetings = ref.watch(globalRecommendedMeetingsProvider);
     
     if (recommendedMeetings.isEmpty) return const SizedBox();
     
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 헤더
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '🎯 나에게 딱 맞는 모임',
-                style: GoogleFonts.notoSans(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/meeting_list_all',
-                    arguments: {
-                      'sectionTitle': '나에게 딱 맞는 모임',
-                      'category': null,
-                    },
-                  );
+    return Container(
+      margin: const EdgeInsets.only(top: 48),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 헤더
+          _buildSectionHeader(
+            title: '나에게 딱 맞는 모임',
+            onViewAll: () {
+              Navigator.pushNamed(
+                context,
+                '/meeting_list_all',
+                arguments: {
+                  'sectionTitle': '나에게 딱 맞는 모임',
+                  'category': null,
                 },
-                child: Text(
-                  '전체보기',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    color: ModernColors.primary,
-                  ),
-                ),
-              ),
-            ],
+              );
+            },
           ),
-        ),
-        
-        // MeetingCard2025 컴포넌트 사용 (최대 2개까지 표시)
-        ...List.generate(
-          math.min(recommendedMeetings.length, 2),
-          (index) => Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: MeetingCard2025(
-              meeting: recommendedMeetings[index],
-              // imageAsset 제거 - MeetingCard가 직접 이미지를 로드함
-              onTap: () => _handleMeetingTap(recommendedMeetings[index]),
-              onBookmark: () => _handleBookmarkTap(recommendedMeetings[index]),
-              isBookmarked: _isBookmarked(recommendedMeetings[index]),
+          const SizedBox(height: 20),
+          
+          // MeetingCard2025 컴포넌트 사용 (최대 2개까지 표시)
+          ...List.generate(
+            math.min(recommendedMeetings.length, 2),
+            (index) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: MeetingCard2025(
+                meeting: recommendedMeetings[index],
+                // imageAsset 제거 - MeetingCard가 직접 이미지를 로드함
+                onTap: () => _handleMeetingTap(recommendedMeetings[index]),
+                onBookmark: () => _handleBookmarkTap(recommendedMeetings[index]),
+                isBookmarked: _isBookmarked(recommendedMeetings[index]),
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   
@@ -774,30 +907,31 @@ class _NewMeetingDiscoveryScreenState
     }
   }
   
-  /// 🏷️ 카테고리 선택, 검색, 필터 섹션 (이미지2 기준 - 모임2탭 디자인으로 완전 재구현)
+  /// 카테고리 선택, 검색, 필터 섹션
   Widget _buildCategoryAndSearchSection() {
     return Container(
-      margin: const EdgeInsets.only(top: 40),
+      margin: const EdgeInsets.only(top: 48),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 🏷️ 카테고리 선택 영역 (좌우 스크롤)
+          // 카테고리 선택 영역 (좌우 스크롤)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              '카테고리',
+              '카테고리별 탐색',
               style: GoogleFonts.notoSans(
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w700,
                 color: ModernColors.textPrimary,
+                height: 1.2,
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           
-          // 카테고리 버튼들 (정사각형 + 좌우 스크롤, 20% 크기 증가)
+          // 카테고리 버튼들 (정사각형 + 좌우 스크롤)
           SizedBox(
-            height: 90, // 75 * 1.2 = 90
+            height: 72,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -815,53 +949,36 @@ class _NewMeetingDiscoveryScreenState
                     HapticFeedback.lightImpact();
                   },
                   child: Container(
-                    width: 78, // 65 * 1.2 = 78
-                    height: 78,
-                    margin: const EdgeInsets.only(right: 14, top: 6, bottom: 6), // 간격도 비례 증가
+                    width: 72,
+                    height: 72,
+                    margin: const EdgeInsets.only(right: 12),
                     decoration: BoxDecoration(
-                      gradient: isSelected 
-                        ? LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [category.color, category.color.withOpacity(0.8)]
-                          )
-                        : null,
-                      color: isSelected ? null : Colors.white,
-                      borderRadius: BorderRadius.circular(17), // 14 * 1.2 ≈ 17
+                      color: isSelected ? category.color.withOpacity(0.1) : ModernColors.surface,
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: isSelected ? category.color : ModernColors.border,
+                        color: isSelected ? category.color : ModernColors.borderLight,
                         width: isSelected ? 2 : 1,
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: isSelected 
-                            ? category.color.withOpacity(0.25) 
-                            : Colors.black.withOpacity(0.04),
-                          blurRadius: isSelected ? 12 : 8, // 버튼 크기에 맞게 그림자도 증가
-                          offset: const Offset(0, 3), // 그림자 오프셋도 약간 증가
-                          spreadRadius: isSelected ? 0.5 : 0,
-                        ),
-                      ],
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // 이모지 (버튼 크기에 비례해서 증가)
+                        // 이모지
                         Text(
                           category.emoji,
-                          style: const TextStyle(fontSize: 22), // 18 * 1.2 ≈ 22
+                          style: const TextStyle(fontSize: 24),
                         ),
-                        const SizedBox(height: 8), // 6 * 1.3 ≈ 8
+                        const SizedBox(height: 6),
                         // 카테고리 이름
                         Text(
                           category.displayName,
                           style: GoogleFonts.notoSans(
-                            fontSize: 11, // 9 * 1.2 ≈ 11
+                            fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: isSelected ? Colors.white : ModernColors.textPrimary,
+                            color: isSelected ? category.color : ModernColors.textSecondary,
                           ),
                           textAlign: TextAlign.center,
-                          maxLines: 2,
+                          maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -874,7 +991,7 @@ class _NewMeetingDiscoveryScreenState
           
           const SizedBox(height: 32),
           
-          // 🔍 검색 및 필터 영역 (모임2탭 디자인 적용)
+          // 검색 및 필터 영역
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -1087,7 +1204,88 @@ class _NewMeetingDiscoveryScreenState
   }
   
   
-  /// 쉽게 찾기 (빠른 필터)
+  /// 단순화된 빠른 필터
+  Widget _buildSimplifiedQuickFilters() {
+    return SizedBox(
+      height: 32,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        children: [
+          _buildQuickFilterChip('이번 주말', 'weekend', Icons.weekend_rounded),
+          const SizedBox(width: 8),
+          _buildQuickFilterChip('무료', 'free', Icons.money_off_rounded),
+          const SizedBox(width: 8),
+          _buildQuickFilterChip('온라인', 'online', Icons.videocam_rounded),
+          const SizedBox(width: 8),
+          _buildQuickFilterChip('내 주변', 'nearby', Icons.near_me_rounded),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildQuickFilterChip(String label, String key, IconData icon) {
+    final isActive = _activeQuickFilters.contains(key) || 
+                     (key == 'online' && _showOnlineOnly);
+    
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          if (key == 'online') {
+            _showOnlineOnly = !_showOnlineOnly;
+          } else {
+            if (isActive) {
+              _activeQuickFilters.remove(key);
+            } else {
+              _activeQuickFilters.add(key);
+            }
+          }
+        });
+        HapticFeedback.lightImpact();
+        _updateFilteredMeetings();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: isActive 
+            ? ModernColors.primary.withOpacity(0.1)
+            : ModernColors.surface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isActive 
+              ? ModernColors.primary 
+              : ModernColors.borderLight,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: isActive 
+                ? ModernColors.primary
+                : ModernColors.textSecondary,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: isActive 
+                  ? ModernColors.primary
+                  : ModernColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  /// 쉽게 찾기 (빠른 필터) - 기존 메서드 유지
   Widget _buildQuickFiltersSection() {
     return Container(
       child: Column(
@@ -1194,6 +1392,144 @@ class _NewMeetingDiscoveryScreenState
             ),
           ),
         ],
+      ),
+    );
+  }
+  
+  /// 단순화된 확장 필터
+  Widget _buildSimplifiedExpandedFilters() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: ModernColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: ModernColors.borderLight,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // 지역 필터
+          Text(
+            '지역',
+            style: GoogleFonts.notoSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: ModernColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _buildSimpleFilterChip('서울', 'seoul'),
+              _buildSimpleFilterChip('경기', 'gyeonggi'),
+              _buildSimpleFilterChip('인천', 'incheon'),
+              _buildSimpleFilterChip('부산', 'busan'),
+              _buildSimpleFilterChip('대구', 'daegu'),
+              _buildSimpleFilterChip('광주', 'gwangju'),
+            ],
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // 가격 필터
+          Text(
+            '가격',
+            style: GoogleFonts.notoSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: ModernColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _buildSimpleFilterChip('무료', 'free'),
+              _buildSimpleFilterChip('1만원 이하', 'under_10k'),
+              _buildSimpleFilterChip('1-4만원', '10k_40k'),
+              _buildSimpleFilterChip('4만원 이상', 'over_40k'),
+            ],
+          ),
+          
+          const SizedBox(height: 20),
+          
+          // 필터 초기화 버튼
+          Center(
+            child: TextButton(
+              onPressed: () {
+                setState(() {
+                  _activeFilters.clear();
+                  _activeQuickFilters.clear();
+                  _selectedCategory = MeetingCategory.all;
+                  _selectedLocation = null;
+                  _selectedPriceRange = null;
+                  _showFilters = false;
+                  _updateFilteredMeetings();
+                });
+                HapticFeedback.lightImpact();
+              },
+              child: Text(
+                '필터 초기화',
+                style: GoogleFonts.notoSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: ModernColors.primary,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildSimpleFilterChip(String label, String key) {
+    final isActive = _selectedLocation == key || _selectedPriceRange == key;
+    
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          if (key.contains('k') || key == 'free') {
+            // 가격 필터
+            _selectedPriceRange = isActive ? null : key;
+          } else {
+            // 지역 필터
+            _selectedLocation = isActive ? null : key;
+          }
+          _updateFilteredMeetings();
+        });
+        HapticFeedback.lightImpact();
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isActive 
+            ? ModernColors.primary.withOpacity(0.1)
+            : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isActive 
+              ? ModernColors.primary 
+              : ModernColors.borderLight,
+            width: 1,
+          ),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.notoSans(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: isActive 
+              ? ModernColors.primary 
+              : ModernColors.textSecondary,
+          ),
+        ),
       ),
     );
   }
@@ -1532,7 +1868,7 @@ class _NewMeetingDiscoveryScreenState
     );
   }
   
-  /// 📋 전체 모임 섹션 (컴포넌트창 가상모임탭 디자인) - 반응형 최적화
+  /// 전체 모임 섹션
   Widget _buildMustSeeMeetingsSection() {
     final allMeetings = ref.watch(globalAvailableMeetingsProvider);
     
@@ -1557,57 +1893,25 @@ class _NewMeetingDiscoveryScreenState
     }
     
     return Container(
-      margin: const EdgeInsets.only(top: 32),
+      margin: const EdgeInsets.only(top: 48),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 헤더
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    '📋 전체 모임',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.bodyLarge?.color,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                const SizedBox(width: 16), // 최소 간격 보장
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      '/meeting_list_all',
-                      arguments: {
-                        'sectionTitle': '전체 모임',
-                        'category': _selectedCategory == MeetingCategory.all ? null : _selectedCategory,
-                      },
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Text(
-                    '전체보기',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      color: ModernColors.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          _buildSectionHeader(
+            title: '전체 모임',
+            onViewAll: () {
+              Navigator.pushNamed(
+                context,
+                '/meeting_list_all',
+                arguments: {
+                  'sectionTitle': '전체 모임',
+                  'category': _selectedCategory == MeetingCategory.all ? null : _selectedCategory,
+                },
+              );
+            },
           ),
+          const SizedBox(height: 20),
           
           // MeetingCardList2025 컴포넌트들을 세로로 나열
           ...List.generate(
@@ -1657,21 +1961,17 @@ class _NewMeetingDiscoveryScreenState
     );
   }
   
-  /// 🎯 모임 개설 FAB
+  /// 모임 개설 FAB  
   Widget _buildCreateMeetingFAB() {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [ModernColors.primary, ModernColors.primary.withOpacity(0.8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
+        color: ModernColors.primary,
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: ModernColors.primary.withOpacity(0.25),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -1679,24 +1979,25 @@ class _NewMeetingDiscoveryScreenState
         color: Colors.transparent,
         child: InkWell(
           onTap: _handleCreateMeeting,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(28),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(
                   Icons.add_rounded,
                   color: Colors.white,
-                  size: 24,
+                  size: 22,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  '모임 개설',
+                  '모임 만들기',
                   style: GoogleFonts.notoSans(
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w700,
                     color: Colors.white,
+                    letterSpacing: -0.2,
                   ),
                 ),
               ],
@@ -1760,24 +2061,14 @@ class _NewMeetingDiscoveryScreenState
     return imagePath;
   }
   
-  /// 실제 이미지 위젯 생성
+  /// 실제 이미지 위젯 생성 (캐시 사용)
   Widget _buildRealImageWidget(String imagePath) {
-    // 동적 이미지인지 확인
-    if (_isDynamicImagePath(imagePath)) {
-      return Image.file(
-        File(imagePath),
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => 
-          _buildEmojiPlaceholderWidget(null),
-      );
-    } else {
-      return Image.asset(
-        imagePath,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => 
-          _buildEmojiPlaceholderWidget(null),
-      );
-    }
+    final cacheManager = MeetingImageCacheManager();
+    return cacheManager.getCachedImage(
+      imagePath,
+      fit: BoxFit.cover,
+      errorWidget: _buildEmojiPlaceholderWidget(null),
+    );
   }
   
   /// 동적 이미지 경로인지 확인

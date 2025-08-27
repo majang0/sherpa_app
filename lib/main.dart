@@ -25,6 +25,7 @@ import 'features/meetings/presentation/screens/available_meeting_detail_screen.d
 import 'features/meetings/presentation/screens/meeting_application_screen.dart';
 import 'features/meetings/presentation/screens/meeting_success_screen.dart';
 import 'features/meetings/presentation/screens/meeting_review_screen.dart';
+import 'features/meetings/presentation/screens/meeting_list_all_screen.dart';
 
 // Screens - Daily Record
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
@@ -146,6 +147,7 @@ class MyApp extends ConsumerWidget {
           final meeting = ModalRoute.of(context)!.settings.arguments as AvailableMeeting;
           return MeetingReviewScreen(meeting: meeting);
         },
+        '/meeting_list_all': (context) => MeetingListAllScreen(),
         // ✅ 일일 기록 화면들 추가
         '/daily_record': (context) => EnhancedDailyRecordScreen(), // 메인 기록 화면
         '/diary_record': (context) => DiaryWriteEditScreen(),
