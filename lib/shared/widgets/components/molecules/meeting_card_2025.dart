@@ -79,6 +79,17 @@ class _MeetingCard2025State extends State<MeetingCard2025>
     _animationController.reverse();
   }
 
+  /// 위치 텍스트 처리 헬퍼 함수
+  /// 9글자까지는 그대로 표시, 10글자 이상은 7글자 + "..." 표시
+  String _formatLocationText(String location) {
+    if (location.length <= 9) {
+      return location;
+    } else {
+      // 10글자 이상인 경우 7글자만 표시하고 ... 추가
+      return '${location.substring(0, 7)}...';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -199,7 +210,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                       SizedBox(width: widget.compact ? 3 : 4),
                                       Expanded(
                                         child: Text(
-                                          widget.meeting.location,
+                                          _formatLocationText(widget.meeting.location),
                                           style: TextStyle(
                                             fontSize: widget.compact ? 12 : 14,
                                             color: Colors.white.withOpacity(0.8),

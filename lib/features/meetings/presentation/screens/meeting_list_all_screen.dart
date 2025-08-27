@@ -553,7 +553,13 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
         return MeetingCardList2025(
           meeting: meeting,
           imageAsset: imageManager.getImageForMeeting(meeting),
-          onTap: () => _showToast('${meeting.title} 상세보기'),
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              '/meeting_detail',
+              arguments: meeting,
+            );
+          },
           onBookmark: () => _toggleBookmark(meeting.id),
           isBookmarked: isBookmarked,
           showDivider: index < filteredMeetings.length - 1,
@@ -579,7 +585,13 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
         return MeetingCard2025(
           meeting: meeting,
           imageAsset: imageManager.getImageForMeeting(meeting),
-          onTap: () => _showToast('${meeting.title} 상세보기'),
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              '/meeting_detail',
+              arguments: meeting,
+            );
+          },
           onBookmark: () => _toggleBookmark(meeting.id),
           isBookmarked: isBookmarked,
           compact: true,

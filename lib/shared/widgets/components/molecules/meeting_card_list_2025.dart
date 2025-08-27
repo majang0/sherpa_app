@@ -59,6 +59,17 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
     super.dispose();
   }
 
+  /// 위치 텍스트 처리 헬퍼 함수
+  /// 9글자까지는 그대로 표시, 10글자 이상은 7글자 + "..." 표시
+  String _formatLocationText(String location) {
+    if (location.length <= 9) {
+      return location;
+    } else {
+      // 10글자 이상인 경우 7글자만 표시하고 ... 추가
+      return '${location.substring(0, 7)}...';
+    }
+  }
+
   void _handleHoverEnter() {
     setState(() => _isHovered = true);
     _animationController.forward();
@@ -196,6 +207,7 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
                                 text: widget.meeting.location,
                                 isDark: isDark,
                                 flex: true,
+                                isLocation: true,
                               ),
                             ],
                           ),
@@ -382,7 +394,11 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
     required String text,
     required bool isDark,
     bool flex = false,
+    bool isLocation = false,
   }) {
+    // 위치 텍스트인 경우 포맷팅 적용
+    final displayText = isLocation ? _formatLocationText(text) : text;
+    
     final child = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -393,7 +409,7 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
         ),
         const SizedBox(width: 4),
         Text(
-          text,
+          displayText,
           style: TextStyle(
             fontSize: 12,
             color: isDark ? Colors.white54 : Colors.black45,

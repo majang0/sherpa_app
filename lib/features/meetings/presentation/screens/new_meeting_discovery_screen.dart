@@ -228,11 +228,13 @@ class _NewMeetingDiscoveryScreenState
   
   // ==================== UI 컴포넌트들 ====================
   
-  /// 섹션 헤더 공통 위젯
+  /// 섹션 헤더 공통 위젯 - 모던하고 깔끔한 디자인
   Widget _buildSectionHeader({
     required String title,
     required VoidCallback onViewAll,
     bool showViewAll = true,
+    String? subtitle,
+    IconData? leadingIcon,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -240,44 +242,133 @@ class _NewMeetingDiscoveryScreenState
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            title,
-            style: GoogleFonts.notoSans(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: ModernColors.textPrimary,
-              height: 1.2,
-            ),
-          ),
-          if (showViewAll)
-            Material(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
-              child: InkWell(
-                onTap: onViewAll,
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: Row(
+          // 제목 영역
+          Expanded(
+            child: Row(
+              children: [
+                // 선택적 리딩 아이콘 또는 장식 요소
+                if (leadingIcon != null) ...[
+                  Container(
+                    width: 4,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          ModernColors.primary,
+                          ModernColors.primary.withOpacity(0.6),
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                ],
+                
+                // 제목과 부제목
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '전체보기',
+                        title,
                         style: GoogleFonts.notoSans(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: ModernColors.primary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          color: ModernColors.textPrimary,
+                          letterSpacing: -0.3,
+                          height: 1.2,
                         ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        size: 12,
-                        color: ModernColors.primary,
-                      ),
+                      ).animate()
+                        .fadeIn(duration: const Duration(milliseconds: 300))
+                        .slideX(begin: -0.05, end: 0, duration: const Duration(milliseconds: 300)),
+                      
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: GoogleFonts.notoSans(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: ModernColors.textSecondary,
+                            letterSpacing: -0.1,
+                          ),
+                        ).animate()
+                          .fadeIn(
+                            duration: const Duration(milliseconds: 300),
+                            delay: const Duration(milliseconds: 100),
+                          ),
+                      ],
                     ],
                   ),
                 ),
-              ),
+              ],
+            ),
+          ),
+          
+          // 전체보기 버튼 - 명확한 색상 대비와 그림자
+          if (showViewAll)
+            GestureDetector(
+              onTap: () {
+                HapticFeedback.lightImpact();
+                onViewAll();
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: ModernColors.primary,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: ModernColors.primary.withOpacity(0.3),
+                      offset: const Offset(0, 4),
+                      blurRadius: 8,
+                      spreadRadius: -2,
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      offset: const Offset(0, 2),
+                      blurRadius: 4,
+                      spreadRadius: -1,
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '전체보기',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ).animate()
+                .fadeIn(duration: const Duration(milliseconds: 400))
+                .scale(
+                  begin: const Offset(0.95, 0.95),
+                  end: const Offset(1, 1),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                ),
             ),
         ],
       ),
@@ -618,7 +709,9 @@ class _NewMeetingDiscoveryScreenState
         children: [
           // 헤더
           _buildSectionHeader(
-            title: '지금 인기있는 모임',
+            title: '🔥 지금 인기있는 모임',
+            subtitle: '실시간으로 많은 관심을 받고 있어요',
+            leadingIcon: Icons.local_fire_department,
             onViewAll: () {
               Navigator.pushNamed(
                 context,
@@ -852,7 +945,9 @@ class _NewMeetingDiscoveryScreenState
         children: [
           // 헤더
           _buildSectionHeader(
-            title: '나에게 딱 맞는 모임',
+            title: '✨ 나에게 딱 맞는 모임',
+            subtitle: 'AI가 분석한 맞춤 추천',
+            leadingIcon: Icons.auto_awesome,
             onViewAll: () {
               Navigator.pushNamed(
                 context,
