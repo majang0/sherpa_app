@@ -229,282 +229,116 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
     final currentColor = _getCurrentColor(todayMinutes);
 
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: 400, // 전체 섹션 높이 제한
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white, // 순수 흰색 배경
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              currentColor.withOpacity(0.12), 
-              currentColor.withOpacity(0.04)
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: currentColor.withOpacity(0.15),
-            width: 1.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: currentColor.withOpacity(0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
+      child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Simple focus header - 30분 목표 기반
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      // Focus icon
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          gradient: RadialGradient(
-                            colors: [
-                              currentColor.withOpacity(0.2),
-                              currentColor.withOpacity(0.05),
-                            ],
-                            radius: 1.0,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: currentColor.withOpacity(0.1),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          Icons.psychology_outlined,
-                          color: currentColor,
-                          size: 22,
+          Container(
+            width: 180,
+            height: 180,
+            alignment: Alignment.center,
+            child: Stack(
+                  alignment: Alignment.center,
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Background circle (failsafe rendering)
+                    Container(
+                      width: 160,
+                      height: 160,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.grey[300]!,
+                          width: 4,
                         ),
                       ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  '집중 목표',
-                                  style: GoogleFonts.notoSans(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.grey[900],
-                                    letterSpacing: -0.3,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: currentColor.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: Text(
-                                    '30분',
-                                    style: GoogleFonts.notoSans(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w700,
-                                      color: currentColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                    ),
+                    
+                    // Simple focus progress with absolute positioning
+                    Positioned.fill(
+                      child: AnimatedBuilder(
+                        animation: _gaugeAnimation,
+                        builder: (context, child) {
+                          return CustomPaint(
+                            painter: SimpleFocusProgressPainter(
+                              minutes: todayMinutes,
+                              animationValue: _gaugeAnimation.value,
+                              pulseValue: _pulseAnimation.value,
+                              strokeWidth: 16,
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '하루 30분 깊은 집중이 목표입니다',
-                              style: GoogleFonts.notoSans(
-                                fontSize: 13,
-                                color: Colors.grey[600],
-                                fontWeight: FontWeight.w500,
+                          );
+                        },
+                      ),
+                    ),
+                    
+                    // Perfect center content with proper alignment
+                    Positioned.fill(
+                      child: Center(
+                        child: Container(
+                          width: 125,  // 100에서 125로 확대 (테두리 안쪽 공간에 맞춤)
+                          height: 125, // 100에서 125로 확대 (테두리 안쪽 공간에 맞춤)
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: _getCurrentColor(todayMinutes).withOpacity(0.12),
+                                blurRadius: 20,
+                                offset: const Offset(0, 4),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Current time display
+                              Text(
+                                _formatTimeSimple(todayMinutes),
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 24,  // 글씨 크기는 그대로 유지
+                                  fontWeight: FontWeight.w900,
+                                  color: _getCurrentColor(todayMinutes),
+                                  letterSpacing: -0.8,
+                                  height: 0.9,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              
+                              const SizedBox(height: 4),
+                              
+                              // Simple status text  
+                              Text(
+                                '오늘의 몰입',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey[600],
+                                  letterSpacing: -0.2,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                // Simple progress indicator
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        currentColor.withOpacity(0.15),
-                        currentColor.withOpacity(0.08),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
                     ),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: currentColor.withOpacity(0.2),
-                      width: 1.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: currentColor.withOpacity(0.1),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        _getGoalProgressText(todayMinutes),
-                        style: GoogleFonts.notoSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
-                          color: currentColor,
-                          letterSpacing: -0.3,
-                        ),
-                      ),
-                      Text(
-                        '${todayMinutes}/30분',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
-            
-            const SizedBox(height: 16),
-            
-            // Circular Gauge with bulletproof constraints
-            Container(
-              width: 180,
-              height: 180,
-              alignment: Alignment.center,
-              child: Stack(
-                alignment: Alignment.center,
-                clipBehavior: Clip.none,
-                children: [
-                  // Background circle (failsafe rendering)
-                  Container(
-                    width: 160,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.grey[300]!,
-                        width: 4,
-                      ),
-                    ),
-                  ),
-                  
-                  // Simple focus progress with absolute positioning
-                  Positioned.fill(
-                    child: AnimatedBuilder(
-                      animation: _gaugeAnimation,
-                      builder: (context, child) {
-                        return CustomPaint(
-                          painter: SimpleFocusProgressPainter(
-                            minutes: todayMinutes,
-                            animationValue: _gaugeAnimation.value,
-                            pulseValue: _pulseAnimation.value,
-                            strokeWidth: 16,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  
-                  // Perfect center content with proper alignment
-                  Positioned.fill(
-                    child: Center(
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: _getCurrentColor(todayMinutes).withOpacity(0.12),
-                              blurRadius: 20,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            // Current time display
-                            Text(
-                              _formatTimeSimple(todayMinutes),
-                              style: GoogleFonts.notoSans(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w900,
-                                color: _getCurrentColor(todayMinutes),
-                                letterSpacing: -0.8,
-                                height: 0.9,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            
-                            const SizedBox(height: 4),
-                            
-                            // Goal-based progress text
-                            Text(
-                              _getGoalProgressText(todayMinutes),
-                              style: GoogleFonts.notoSans(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: _getCurrentColor(todayMinutes),
-                                letterSpacing: -0.2,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            
-                            const SizedBox(height: 2),
-                            
-                            // Next milestone or achievement
-                            Text(
-                              _getStatusMessage(todayMinutes),
-                              style: GoogleFonts.notoSans(
-                                fontSize: 9,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey[600],
-                                letterSpacing: -0.1,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 20),
+          _buildMotivationMessage(todayMinutes),
+        ],
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildStatItem({
@@ -776,6 +610,59 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
             fontWeight: FontWeight.w500,
             color: Colors.grey[700],
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMotivationMessage(int minutes) {
+    String mainMessage;
+    String subMessage;
+    Color subMessageColor;
+    
+    if (minutes < 30) {
+      // 30분 미만
+      final remaining = 30 - minutes;
+      mainMessage = '목표 달성까지 ${remaining}분';
+      subMessage = '힘내세요!';
+      subMessageColor = _levelTwoColor; // 파란색
+    } else if (minutes < 120) {
+      // 30분 이상 120분 미만
+      final remaining = 120 - minutes;
+      mainMessage = '초월 달성까지 ${remaining}분';
+      subMessage = '해냈어요!';
+      subMessageColor = _levelTwoColor; // 파란색
+    } else {
+      // 120분 이상
+      mainMessage = '초월 달성!!';
+      subMessage = '대단해요!';
+      subMessageColor = _levelThreeColor; // 금색
+    }
+    
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          mainMessage,
+          style: GoogleFonts.notoSans(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey[900], // 검은색으로 변경
+            letterSpacing: -0.3,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 6),
+        Text(
+          subMessage,
+          style: GoogleFonts.notoSans(
+            fontSize: 18, // 12에서 18로 증가
+            fontWeight: FontWeight.w800, // w600에서 w800으로 증가
+            color: subMessageColor,
+            letterSpacing: -0.3,
+            height: 1.2,
+          ),
+          textAlign: TextAlign.center,
         ),
       ],
     );

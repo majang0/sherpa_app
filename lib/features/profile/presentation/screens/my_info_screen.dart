@@ -8,7 +8,9 @@ import 'dart:io';
 // ✅ 글로벌 데이터 시스템 Import
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
+import '../../../../shared/providers/notification_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
+import '../../../../shared/models/notification_model.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_card.dart';
@@ -860,20 +862,66 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
     });
     
     try {
+      // 현재 사용자 데이터 가져오기 (비교용)
+      final currentUser = ref.read(globalUserProvider);
+      final oldName = currentUser.name;
+      final oldProfileUrl = currentUser.profileImageUrl;
+      
       // 닉네임 업데이트
       ref.read(globalUserProvider.notifier).updateUserName(newName);
       
       // 프로필 이미지 업데이트
+      String? finalImageUrl = oldProfileUrl;
       if (_isImageDeleted) {
         // 이미지 삭제 요청 (null을 전달하면 빈 문자열로 저장됨)
         print('프로필 이미지 삭제 요청');
         ref.read(globalUserProvider.notifier).updateProfileImage(null);
+        finalImageUrl = null;
       } else if (_selectedImage != null) {
         // 새 이미지 선택된 경우
         // 실제 구현에서는 이미지를 서버에 업로드하고 URL을 받아와야 함
         // 현재는 로컬 파일 경로를 저장 (임시)
         print('새 프로필 이미지 설정: ${_selectedImage!.path}');
         ref.read(globalUserProvider.notifier).updateProfileImage(_selectedImage!.path);
+        finalImageUrl = _selectedImage!.path;
+      }
+      
+      // 알림 트리거
+      final notifier = ref.read(notificationProvider.notifier);
+      
+      // 프로필 사진 변경 알림
+      if (oldProfileUrl != finalImageUrl) {
+        if (finalImageUrl == null && oldProfileUrl != null && oldProfileUrl.isNotEmpty) {
+          // 사진 삭제
+          notifier.notifyProfileUpdate(
+            ProfileUpdateType.photo,
+            oldValue: '이전 프로필 사진',
+            newValue: '기본 프로필',
+          );
+        } else if (finalImageUrl != null && (oldProfileUrl == null || oldProfileUrl.isEmpty)) {
+          // 사진 추가
+          notifier.notifyProfileUpdate(
+            ProfileUpdateType.photo,
+            oldValue: '기본 프로필',
+            newValue: '새 프로필 사진',
+          );
+        } else if (finalImageUrl != oldProfileUrl) {
+          // 사진 변경
+          notifier.notifyProfileUpdate(
+            ProfileUpdateType.photo,
+            oldValue: '이전 프로필 사진',
+            newValue: '새 프로필 사진',
+          );
+        }
+      }
+      
+      // 닉네임 변경 알림
+      if (oldName != newName) {
+        notifier.notifyProfileUpdate(
+          ProfileUpdateType.nickname,
+          oldValue: oldName,
+          newValue: newName,
+        );
       }
       
       // 성공 메시지

@@ -766,6 +766,8 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
     try {
       await ref.read(questProviderV2.notifier).claimReward(widget.quest.instanceId);
       
+      // 개별 퀘스트 완료 알림은 제거 (전체 완료 시에만 알림)
+      
       // 업데이트된 퀘스트 데이터를 가져와서 전달
       final questsAsync = ref.read(questProviderV2);
       questsAsync.whenData((quests) {

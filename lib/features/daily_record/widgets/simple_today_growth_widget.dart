@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/modern_colors.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../shared/providers/global_user_provider.dart';
+import '../../../shared/providers/notification_provider.dart';
 import 'enhanced_daily_quest_widget.dart';
 
 class SimpleTodayGrowthWidget extends ConsumerStatefulWidget {
@@ -462,6 +463,13 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
           
           // 보상 받기 실행
           ref.read(globalUserProvider.notifier).claimAllGoalsReward();
+          
+          // 알림 생성 (실제 보상대로 표시)
+          ref.read(notificationProvider.notifier).notifyGoalComplete(
+            '오늘의 목표',
+            xp: 200,  // 실제 XP
+            points: 50,  // 실제 포인트
+          );
           
           // 성공 피드백
           ScaffoldMessenger.of(context).showSnackBar(

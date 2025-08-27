@@ -6,11 +6,16 @@ import 'dart:io';
 
 // ✅ 글로벌 데이터 시스템 Import
 import '../../core/constants/app_colors.dart';
+import '../../core/theme/modern_colors.dart';
 import '../providers/global_user_provider.dart';
 import '../providers/global_point_provider.dart';
 import '../providers/global_user_title_provider.dart';
+import '../providers/notification_provider.dart';
+import '../models/notification_model.dart';
+import '../widgets/notification_item_widget.dart';
 import '../../features/profile/presentation/screens/my_info_screen.dart';
 import '../../features/shop/presentation/screens/enhanced_point_shop_screen.dart';
+import '../../features/notification/screens/notification_screen.dart';
 
 class SherpaCleanAppBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
   final String? title;
@@ -82,6 +87,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
     final user = ref.watch(globalUserProvider);
     final pointData = ref.watch(globalPointProvider);
     final userTitle = ref.watch(globalUserTitleProvider);
+    final unreadCount = ref.watch(unreadNotificationCountProvider);
 
     return AppBar(
       backgroundColor: Colors.white,
@@ -256,7 +262,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
               IconButton(
                 onPressed: () {
                   HapticFeedback.lightImpact();
-                  _showNotificationDialog(context);
+                  _showNotificationPreview(context);
                 },
                 icon: Icon(
                   Icons.notifications_outlined,
@@ -265,31 +271,32 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                 ),
               ),
 
-              // ✅ 빨간 알림 불빛 (애니메이션)
-              Positioned(
-                right: 8,
-                top: 8,
-                child: AnimatedBuilder(
-                  animation: _notificationAnimation,
-                  builder: (context, child) {
-                    return Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: AppColors.error,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.error.withValues(alpha: _notificationAnimation.value),
-                            blurRadius: 6,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+              // ✅ 빨간 알림 불빛 (읽지 않은 알림이 있을 때만)
+              if (unreadCount > 0)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: AnimatedBuilder(
+                    animation: _notificationAnimation,
+                    builder: (context, child) {
+                      return Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: AppColors.error,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.error.withValues(alpha: _notificationAnimation.value),
+                              blurRadius: 6,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -354,86 +361,6 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
     );
   }
 
-  void _showNotificationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Stack(
-              children: [
-                Icon(Icons.notifications, color: AppColors.primary, size: 24),
-                // 빨간 불빛 표시
-                Positioned(
-                  right: 2,
-                  top: 2,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: AppColors.error,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '알림',
-              style: GoogleFonts.notoSans(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const Spacer(),
-            // 새 알림 개수 배지
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: AppColors.error,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                '3',
-                style: GoogleFonts.notoSans(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildNotificationItem('🎉', '레벨업!', 'Level 12에 도달했습니다!', '방금 전', true),
-            _buildNotificationItem('💪', '퀘스트 완료', '운동 퀘스트를 완료했습니다', '1시간 전', true),
-            _buildNotificationItem('👥', '모임 알림', '아침 운동 모임이 곧 시작됩니다', '2시간 전', false),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              '닫기',
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            child: Text('전체보기', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-  }
 
   // 프로필 이미지 처리 헬퍼 메서드
   ImageProvider? _getProfileImage(String? profileImageUrl) {
@@ -457,70 +384,222 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
     }
   }
 
-  Widget _buildNotificationItem(String emoji, String title, String content, String time, bool isNew) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: isNew
-            ? AppColors.primary.withValues(alpha: 0.1)
-            : Colors.grey.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(8),
-        border: isNew
-            ? Border.all(color: AppColors.primary.withValues(alpha: 0.3), width: 1)
-            : null,
-      ),
-      child: Row(
-        children: [
-          Text(emoji, style: const TextStyle(fontSize: 20)),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        title,
-                        style: GoogleFonts.notoSans(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                        ),
-                      ),
+  // 알림 미리보기 다이얼로그 표시
+  void _showNotificationPreview(BuildContext context) {
+    final notifications = ref.read(notificationProvider);
+    final unreadNotifications = notifications.where((n) => !n.isRead).take(3).toList();
+    
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+        elevation: 2,
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.6,
+            maxWidth: MediaQuery.of(context).size.width * 0.9,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: ModernColors.borderLight,
+              width: 1,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 헤더
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: ModernColors.background,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: ModernColors.borderLight,
+                      width: 1,
                     ),
-                    // 새 알림 표시
-                    if (isNew)
-                      Container(
-                        width: 6,
-                        height: 6,
-                        decoration: BoxDecoration(
-                          color: AppColors.error,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                  ],
-                ),
-                Text(
-                  content,
-                  style: GoogleFonts.notoSans(
-                    fontSize: 10,
-                    color: Colors.grey[600],
+                  ),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
                   ),
                 ),
-              ],
-            ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: ModernColors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.notifications_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '알림',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              color: ModernColors.textPrimary,
+                            ),
+                          ),
+                          if (unreadNotifications.isNotEmpty)
+                            Text(
+                              '읽지 않은 알림 ${unreadNotifications.length}개',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 12,
+                                color: ModernColors.textSecondary,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.close_rounded,
+                        color: ModernColors.textTertiary,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              
+              // 알림 목록
+              if (unreadNotifications.isEmpty)
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 40),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: ModernColors.gray100,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.notifications_none_rounded,
+                          size: 40,
+                          color: ModernColors.textTertiary,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        '새로운 알림이 없습니다',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: ModernColors.textSecondary,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '활동을 완료하면 여기에 알림이 표시됩니다',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 13,
+                          color: ModernColors.textTertiary,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Flexible(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(16),
+                    itemCount: unreadNotifications.length,
+                    itemBuilder: (context, index) {
+                      final notification = unreadNotifications[index];
+                      return NotificationItemWidget(
+                        notification: notification,
+                        onTap: () {
+                          // 읽음 처리
+                          ref.read(notificationProvider.notifier).markAsRead(notification.id);
+                          // 다이얼로그 닫고 전체보기로 이동
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NotificationScreen(),
+                            ),
+                          );
+                        },
+                        // 미리보기에서는 스와이프 삭제 비활성화
+                        onDismiss: null,
+                      );
+                    },
+                  ),
+                ),
+              
+              // 전체보기 버튼
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: ModernColors.borderLight,
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: ModernColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.view_list_rounded, size: 18),
+                        const SizedBox(width: 8),
+                        Text(
+                          '전체 알림 보기',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-          Text(
-            time,
-            style: GoogleFonts.notoSans(
-              fontSize: 8,
-              color: Colors.grey[500],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
+
 }

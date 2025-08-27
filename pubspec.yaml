@@ -61,6 +61,7 @@ dependencies:
   path_provider: ^2.1.2  # 파일 시스템 경로 제공
   path: ^1.9.0  # 경로 조작 유틸리티
   logger: ^2.0.2+1
+  timeago: ^3.6.0  # 상대 시간 표시 (예: 5분 전, 1시간 전)
 
   countup: ^0.1.4
   simple_animation_progress_bar: ^1.9.2

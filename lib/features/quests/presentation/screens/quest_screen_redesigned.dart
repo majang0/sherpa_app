@@ -6,6 +6,7 @@ import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_point_provider.dart';
+import '../../../../shared/providers/notification_provider.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../models/quest_instance_model.dart';
@@ -1141,6 +1142,21 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
           : '주간 퀘스트 레전드 달성!';
       
       _completionAnimationKey.currentState?.showBonusAnimation(bonus, bonusTitle);
+      
+      // 알림 생성 (경험치와 포인트 구분)
+      if (type == QuestTypeV2.daily) {
+        ref.read(notificationProvider.notifier).notifyDailyQuestReward(
+          '일일 퀘스트 마스터',
+          xp: bonus.experienceBonus.toInt(),
+          points: bonus.pointsBonus.toInt(),
+        );
+      } else if (type == QuestTypeV2.weekly) {
+        ref.read(notificationProvider.notifier).notifyWeeklyQuestReward(
+          '주간 퀘스트 레전드',
+          xp: bonus.experienceBonus.toInt(),
+          points: bonus.pointsBonus.toInt(),
+        );
+      }
       
       // 셰르피 메시지
       ref.read(sherpiProvider.notifier).showMessage(

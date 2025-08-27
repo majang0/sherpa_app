@@ -8,6 +8,7 @@ import 'global_user_provider.dart';
 import 'global_point_provider.dart';
 import 'global_sherpi_provider.dart';
 import '../../core/constants/sherpi_dialogues.dart';
+import 'notification_provider.dart';
 
 /// 🌍 글로벌 모임 관리 Provider
 /// 모든 모임 관련 데이터와 로직을 중앙에서 관리
@@ -442,6 +443,13 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         );
         return false;
       }
+
+      // 모임 참가 결제 알림 생성
+      ref.read(notificationProvider.notifier).notifyMeetingComplete(
+        meeting.title,
+        meeting.currentParticipants + 1,
+        fee: fee.toInt(),
+      );
 
       // 3. 글로벌 사용자 데이터에 기록 추가
       final userNotifier = ref.read(globalUserProvider.notifier);

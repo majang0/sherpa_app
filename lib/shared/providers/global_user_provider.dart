@@ -15,6 +15,7 @@ import 'global_point_provider.dart';
 import 'global_game_provider.dart';
 import 'global_badge_provider.dart'; // 뱃지 Provider 추가
 import '../../features/quests/providers/quest_provider_v2.dart'; // 퀘스트 Provider 추가
+import 'notification_provider.dart'; // 알림 Provider 추가
 
 /// 글로벌 사용자 데이터 관리 Provider (완전 독립형)
 final globalUserProvider = StateNotifierProvider<GlobalUserNotifier, GlobalUser>((ref) {
@@ -465,6 +466,27 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       rewards: rewards,
       failureReason: isSuccess ? null : _getRandomFailureReason(),
     );
+
+    // 오늘의 첫 등반 성공인지 확인 (새 기록 추가 전에 확인)
+    if (isSuccess) {
+      final today = DateTime.now();
+      final todayStart = DateTime(today.year, today.month, today.day);
+      
+      // 오늘의 등반 기록 중 성공한 기록이 있는지 확인 (현재 state 기준)
+      final todaySuccessfulClimbs = state.dailyRecords.climbingLogs.where((log) {
+        return log.startTime.isAfter(todayStart) && 
+               log.isSuccess;
+      }).toList();
+      
+      // 현재 등반이 오늘의 첫 성공이면 알림 생성
+      if (todaySuccessfulClimbs.isEmpty) {
+        ref.read(notificationProvider.notifier).notifyFirstClimb(
+          session.mountainName,
+          xp: rewards.experience.toInt(),  // 실제 경험치
+          points: rewards.points,  // 실제 포인트
+        );
+      }
+    }
 
     // 등반 기록 추가
     final updatedClimbingLogs = [
@@ -1290,6 +1312,13 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     state = state.copyWith(dailyRecords: updatedRecords);
     _saveUserData();
+
+    // 오늘의 목표 완료 알림 생성
+    ref.read(notificationProvider.notifier).notifyGoalComplete(
+      '오늘의 목표 전체 완료',
+      xp: 200,  // 실제 XP 보상
+      points: bonusPoints,  // 실제 포인트 보상 (50P)
+    );
 
     // 달성한 목표 리스트 구성
     final completedGoals = updatedRecords.dailyGoals.where((g) => g.isCompleted).toList();
