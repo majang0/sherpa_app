@@ -6,6 +6,7 @@ import '../../core/constants/meeting_categories.dart';
 class GlobalUser {
   final String id;
   final String name;
+  final String? profileImageUrl;  // 프로필 이미지 URL 추가
   final int level;
   final double experience;
   final GlobalStats stats;
@@ -18,6 +19,7 @@ class GlobalUser {
   const GlobalUser({
     required this.id,
     required this.name,
+    this.profileImageUrl,
     required this.level,
     required this.experience,
     required this.stats,
@@ -38,6 +40,7 @@ class GlobalUser {
   GlobalUser copyWith({
     String? id,
     String? name,
+    String? profileImageUrl,
     int? level,
     double? experience,
     GlobalStats? stats,
@@ -50,6 +53,7 @@ class GlobalUser {
     return GlobalUser(
       id: id ?? this.id,
       name: name ?? this.name,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
       level: level ?? this.level,
       experience: experience ?? this.experience,
       stats: stats ?? this.stats,
@@ -65,6 +69,7 @@ class GlobalUser {
     return {
       'id': id,
       'name': name,
+      'profileImageUrl': profileImageUrl,
       'level': level,
       'experience': experience,
       'stats': stats.toJson(),
@@ -80,6 +85,7 @@ class GlobalUser {
     return GlobalUser(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
+      profileImageUrl: json['profileImageUrl'],
       level: json['level'] ?? 1,
       experience: (json['experience'] ?? 0).toDouble(),
       stats: GlobalStats.fromJson(json['stats'] ?? {}),

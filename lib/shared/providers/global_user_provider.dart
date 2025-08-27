@@ -169,6 +169,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     final user = GlobalUser(
       id: 'user_001',
       name: '박지호',
+      profileImageUrl: null,
       level: 12,
       experience: currentXp,
       // ✅ 능력치 0-10 범위로 복원
@@ -273,6 +274,20 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     );
 
     state = state.copyWith(stats: newStats);
+    _saveUserData();
+  }
+  
+  /// 사용자 이름 업데이트
+  void updateUserName(String newName) {
+    if (newName.trim().isNotEmpty) {
+      state = state.copyWith(name: newName.trim());
+      _saveUserData();
+    }
+  }
+  
+  /// 프로필 이미지 업데이트
+  void updateProfileImage(String? imageUrl) {
+    state = state.copyWith(profileImageUrl: imageUrl);
     _saveUserData();
   }
 
