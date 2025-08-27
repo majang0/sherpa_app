@@ -49,10 +49,17 @@ class MyInfoScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    ProfileAvatarWidget(
-                      user: user, // ✅ GlobalUser 사용
-                      size: 100,
-                      showLevelBadge: true,
+                    GestureDetector(
+                      onTap: () {
+                        if (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty) {
+                          _showImageViewer(context, user.profileImageUrl!);
+                        }
+                      },
+                      child: ProfileAvatarWidget(
+                        user: user, // ✅ GlobalUser 사용
+                        size: 100,
+                        showLevelBadge: true,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -146,6 +153,16 @@ class MyInfoScreen extends ConsumerWidget {
       ),
     );
   }
+  
+  // ✅ 이미지 뷰어 다이얼로그 표시
+  void _showImageViewer(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black87,
+      builder: (context) => _ImageViewerDialog(imageUrl: imageUrl),
+    );
+  }
 
   Widget _buildUserStat(String label, String value, Color color) {
     return Column(
@@ -235,6 +252,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = false;
+  bool _isImageDeleted = false; // 이미지 삭제 플래그
   
   @override
   void initState() {
@@ -246,6 +264,13 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+  
+  // 프로필 이미지가 있는지 확인하는 헬퍼 메서드
+  bool get _hasProfileImage {
+    if (_selectedImage != null) return true;
+    if (_isImageDeleted) return false;
+    return widget.user.profileImageUrl != null && widget.user.profileImageUrl!.isNotEmpty;
   }
   
   // 이미지 선택 메소드
@@ -261,6 +286,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       if (image != null) {
         setState(() {
           _selectedImage = File(image.path);
+          _isImageDeleted = false; // 새 이미지 선택 시 삭제 플래그 리셋
         });
       }
     } catch (e) {
@@ -331,7 +357,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                     _pickImage(ImageSource.gallery);
                   },
                 ),
-                if (_selectedImage != null || widget.user.profileImageUrl != null)
+                if (_hasProfileImage)
                   _buildImageOption(
                     icon: Icons.delete,
                     label: '삭제',
@@ -340,6 +366,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                       Navigator.pop(context);
                       setState(() {
                         _selectedImage = null;
+                        _isImageDeleted = true; // 이미지 삭제 플래그 설정
                       });
                     },
                   ),
@@ -448,79 +475,44 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
               padding: const EdgeInsets.all(24),
               child: Column(
                 children: [
-                  // 프로필 이미지 (현재 화면과 동일한 디자인)
+                  // 프로필 이미지 - CircleAvatar 방식으로 개선
                   Stack(
                     children: [
-                      // 메인 아바타 (ProfileAvatarWidget과 동일한 스타일)
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [
-                              ModernColors.primary,
-                              ModernColors.primary.withValues(alpha: 0.7),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          border: Border.all(
-                            color: ModernColors.primary.withValues(alpha: 0.3),
-                            width: 3,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: ModernColors.primary.withValues(alpha: 0.2),
-                              blurRadius: 12,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: ClipOval(
-                          child: _selectedImage != null
-                              ? Image.file(
-                                  _selectedImage!,
-                                  fit: BoxFit.cover,
-                                )
-                              : widget.user.profileImageUrl != null
-                                  ? Image.network(
-                                      widget.user.profileImageUrl!,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) =>
-                                          _buildProfileAvatar(),
-                                    )
-                                  : _buildProfileAvatar(),
+                      // 메인 아바타 - 단순한 CircleAvatar (클릭 시 확대)
+                      GestureDetector(
+                        onTap: () {
+                          // 이미지가 있을 때만 뷰어 표시
+                          if (_selectedImage != null) {
+                            _showImageViewerForFile(context, _selectedImage!);
+                          } else if (!_isImageDeleted && 
+                                   widget.user.profileImageUrl != null && 
+                                   widget.user.profileImageUrl!.isNotEmpty) {
+                            _showImageViewerForUrl(context, widget.user.profileImageUrl!);
+                          }
+                        },
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: ModernColors.primary,
+                          backgroundImage: _getEditProfileImageProvider(),
+                          child: _getEditProfileImageProvider() == null ? _buildProfileAvatar() : null,
                         ),
                       ),
                       
-                      // 레벨 배지 (현재 화면처럼 표시)
+                      // 레벨 배지 - CircleAvatar 방식
                       Positioned(
                         bottom: -2,
                         right: -2,
                         child: Container(
                           width: 42,
                           height: 42,
+                          padding: EdgeInsets.all(3), // 흰색 테두리를 위한 패딩
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                ModernColors.primary,
-                                ModernColors.primaryLight,
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
                             shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white, width: 3),
-                            boxShadow: [
-                              BoxShadow(
-                                color: ModernColors.primary.withValues(alpha: 0.4),
-                                blurRadius: 6,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
+                            color: Colors.white, // 테두리 색상
                           ),
-                          child: Center(
+                          child: CircleAvatar(
+                            radius: 18,
+                            backgroundColor: ModernColors.primary,
                             child: Text(
                               '${widget.user.level}',
                               style: GoogleFonts.notoSans(
@@ -573,15 +565,18 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                   
                   const SizedBox(height: 32),
                   
-                  // 닉네임 입력 필드
+                  // 닉네임 입력 필드 - 깨끗한 디자인 (테두리 없음)
                   Container(
                     decoration: BoxDecoration(
-                      color: ModernColors.gray50,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: ModernColors.gray200,
-                        width: 1,
-                      ),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: ModernColors.primary.withValues(alpha: 0.08),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: TextField(
                       controller: _nameController,
@@ -593,10 +588,20 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                         labelText: '닉네임',
                         labelStyle: GoogleFonts.notoSans(
                           color: ModernColors.textSecondary,
+                          fontSize: 14,
                         ),
-                        prefixIcon: Icon(
-                          Icons.person_outline,
+                        floatingLabelStyle: GoogleFonts.notoSans(
                           color: ModernColors.primary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        prefixIcon: Container(
+                          margin: const EdgeInsets.only(left: 4),
+                          child: Icon(
+                            Icons.person_outline,
+                            color: ModernColors.primary,
+                            size: 22,
+                          ),
                         ),
                         border: InputBorder.none,
                         contentPadding: const EdgeInsets.symmetric(
@@ -608,7 +613,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                           color: ModernColors.textTertiary,
                         ),
                       ),
-                      maxLength: 20,
+                      maxLength: 12,
                       buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
                         return Padding(
                           padding: const EdgeInsets.only(right: 12, top: 4),
@@ -628,31 +633,42 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                   
                   const SizedBox(height: 12),
                   
-                  // 정보 텍스트
+                  // 정보 텍스트 - 부드러운 배경 (테두리 없음)
                   Container(
-                    padding: const EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      color: ModernColors.primary.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: ModernColors.primary.withValues(alpha: 0.2),
-                        width: 1,
+                      gradient: LinearGradient(
+                        colors: [
+                          ModernColors.primary.withValues(alpha: 0.04),
+                          ModernColors.primaryLight.withValues(alpha: 0.02),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.info_outline,
-                          size: 16,
-                          color: ModernColors.primary,
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: ModernColors.primary.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.info_outline,
+                            size: 14,
+                            color: ModernColors.primary,
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            '프로필 사진과 닉네임은 다른 사용자에게 보여집니다.',
+                            '프로필은 다른 사용자에게 보여집니다',
                             style: GoogleFonts.notoSans(
                               fontSize: 12,
                               color: ModernColors.textSecondary,
+                              height: 1.4,
                             ),
                           ),
                         ),
@@ -732,16 +748,96 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
     );
   }
   
+  // 프로필 편집 다이얼로그용 ImageProvider 반환
+  ImageProvider? _getEditProfileImageProvider() {
+    // 1. 새로 선택한 이미지가 있으면 표시
+    if (_selectedImage != null) {
+      return FileImage(_selectedImage!);
+    }
+    
+    // 2. 이미지가 삭제된 경우 null 반환
+    if (_isImageDeleted) {
+      return null;
+    }
+    
+    // 3. 기존 프로필 이미지가 있으면 표시
+    if (widget.user.profileImageUrl != null && widget.user.profileImageUrl!.isNotEmpty) {
+      // 로컬 파일 경로인지 확인
+      if (widget.user.profileImageUrl!.startsWith('/') || 
+          widget.user.profileImageUrl!.contains(':\\') ||
+          !widget.user.profileImageUrl!.startsWith('http')) {
+        // 로컬 파일 이미지
+        final file = File(widget.user.profileImageUrl!);
+        if (file.existsSync()) {
+          return FileImage(file);
+        }
+      } else {
+        // 네트워크 이미지
+        return NetworkImage(widget.user.profileImageUrl!);
+      }
+    }
+    
+    return null;
+  }
+  
+  // 프로필 편집 다이얼로그용 이미지 빌드 (구버전 - 제거 예정)
+  Widget _buildEditProfileImage() {
+    // 1. 새로 선택한 이미지가 있으면 표시
+    if (_selectedImage != null) {
+      return Image.file(
+        _selectedImage!,
+        fit: BoxFit.cover,
+        width: 120,
+        height: 120,
+      );
+    }
+    
+    // 2. 이미지가 삭제된 경우 기본 아바타 표시
+    if (_isImageDeleted) {
+      return _buildProfileAvatar();
+    }
+    
+    // 3. 기존 프로필 이미지가 있으면 표시
+    if (widget.user.profileImageUrl != null && widget.user.profileImageUrl!.isNotEmpty) {
+      // 로컬 파일 경로인지 확인
+      if (widget.user.profileImageUrl!.startsWith('/') || 
+          widget.user.profileImageUrl!.contains(':\\') ||
+          !widget.user.profileImageUrl!.startsWith('http')) {
+        // 로컬 파일 이미지
+        final file = File(widget.user.profileImageUrl!);
+        if (file.existsSync()) {
+          return Image.file(
+            file,
+            fit: BoxFit.cover,
+            width: 120,
+            height: 120,
+            errorBuilder: (context, error, stackTrace) => _buildProfileAvatar(),
+          );
+        }
+      } else {
+        // 네트워크 이미지
+        return Image.network(
+          widget.user.profileImageUrl!,
+          fit: BoxFit.cover,
+          width: 120,
+          height: 120,
+          errorBuilder: (context, error, stackTrace) => _buildProfileAvatar(),
+        );
+      }
+    }
+    
+    // 3. 이미지가 없으면 기본 아바타
+    return _buildProfileAvatar();
+  }
+  
   Widget _buildProfileAvatar() {
-    // ProfileAvatarWidget과 동일한 스타일의 기본 아바타
-    return Center(
-      child: Text(
-        widget.user.name.isNotEmpty ? widget.user.name[0].toUpperCase() : '셰',
-        style: GoogleFonts.notoSans(
-          fontSize: 48,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
+    // CircleAvatar의 child로 사용할 기본 텍스트
+    return Text(
+      widget.user.name.isNotEmpty ? widget.user.name[0].toUpperCase() : '셰',
+      style: GoogleFonts.notoSans(
+        fontSize: 48,
+        fontWeight: FontWeight.w700,
+        color: Colors.white,
       ),
     );
   }
@@ -767,10 +863,16 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       // 닉네임 업데이트
       ref.read(globalUserProvider.notifier).updateUserName(newName);
       
-      // 프로필 이미지 업데이트 (선택된 경우)
-      if (_selectedImage != null) {
+      // 프로필 이미지 업데이트
+      if (_isImageDeleted) {
+        // 이미지 삭제 요청 (null을 전달하면 빈 문자열로 저장됨)
+        print('프로필 이미지 삭제 요청');
+        ref.read(globalUserProvider.notifier).updateProfileImage(null);
+      } else if (_selectedImage != null) {
+        // 새 이미지 선택된 경우
         // 실제 구현에서는 이미지를 서버에 업로드하고 URL을 받아와야 함
         // 현재는 로컬 파일 경로를 저장 (임시)
+        print('새 프로필 이미지 설정: ${_selectedImage!.path}');
         ref.read(globalUserProvider.notifier).updateProfileImage(_selectedImage!.path);
       }
       
@@ -810,5 +912,221 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
         });
       }
     }
+  }
+  
+  // ✅ 파일 이미지 뷰어 표시
+  void _showImageViewerForFile(BuildContext context, File imageFile) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black87,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // 배경 터치로 닫기
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                color: Colors.transparent,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+            ),
+            
+            // 이미지 뷰어
+            InteractiveViewer(
+              panEnabled: true,
+              minScale: 0.5,
+              maxScale: 4.0,
+              child: Image.file(
+                imageFile,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => _buildViewerErrorWidget(),
+              ),
+            ),
+            
+            // 닫기 버튼
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 20,
+              right: 20,
+              child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  // ✅ URL 이미지 뷰어 표시
+  void _showImageViewerForUrl(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black87,
+      builder: (context) => _ImageViewerDialog(imageUrl: imageUrl),
+    );
+  }
+  
+  Widget _buildViewerErrorWidget() {
+    return Container(
+      padding: const EdgeInsets.all(40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: Colors.white54,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '이미지를 불러올 수 없습니다',
+            style: GoogleFonts.notoSans(
+              color: Colors.white54,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ✅ 이미지 뷰어 다이얼로그 위젯
+class _ImageViewerDialog extends StatelessWidget {
+  final String imageUrl;
+  
+  const _ImageViewerDialog({required this.imageUrl});
+  
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.zero,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // 배경 터치로 닫기
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              color: Colors.transparent,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+          
+          // 이미지 뷰어
+          InteractiveViewer(
+            panEnabled: true, // 패닝 활성화
+            minScale: 0.5, // 최소 스케일
+            maxScale: 4.0, // 최대 스케일
+            child: _buildImage(),
+          ),
+          
+          // 닫기 버튼
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 20,
+            right: 20,
+            child: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildImage() {
+    // 로컬 파일 경로인지 확인
+    if (imageUrl.startsWith('/') || 
+        imageUrl.contains(':\\') ||
+        imageUrl.startsWith('C:\\') ||
+        !imageUrl.startsWith('http')) {
+      // 로컬 파일 이미지
+      final file = File(imageUrl);
+      if (file.existsSync()) {
+        return Image.file(
+          file,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) => _buildErrorWidget(),
+        );
+      }
+      return _buildErrorWidget();
+    } else {
+      // 네트워크 이미지
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.contain,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+              color: ModernColors.primary,
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) => _buildErrorWidget(),
+      );
+    }
+  }
+  
+  Widget _buildErrorWidget() {
+    return Container(
+      padding: const EdgeInsets.all(40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: Colors.white54,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '이미지를 불러올 수 없습니다',
+            style: GoogleFonts.notoSans(
+              color: Colors.white54,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

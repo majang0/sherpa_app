@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
+import 'dart:io';
 
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
@@ -39,13 +40,20 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            // 프로필 아바타
-            Hero(
-              tag: 'profile_avatar',
-              child: ProfileAvatarWidget(
-                user: user,
-                size: 100,
-                showLevelBadge: true,
+            // 프로필 아바타 (클릭 시 전체 화면 이미지 뷰어)
+            GestureDetector(
+              onTap: () {
+                if (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty) {
+                  _showImageViewer(context, user.profileImageUrl!);
+                }
+              },
+              child: Hero(
+                tag: 'profile_avatar',
+                child: ProfileAvatarWidget(
+                  user: user,
+                  size: 100,
+                  showLevelBadge: true,
+                ),
               ),
             ),
             
@@ -305,5 +313,136 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
     if (level >= 20) return '숙련자';
     if (level >= 10) return '중급자';
     return '초보자';
+  }
+  
+  // ✅ 이미지 뷰어 다이얼로그 표시
+  void _showImageViewer(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black87,
+      builder: (context) => _ImageViewerDialog(imageUrl: imageUrl),
+    );
+  }
+}
+
+// ✅ 이미지 뷰어 다이얼로그 위젯
+class _ImageViewerDialog extends StatelessWidget {
+  final String imageUrl;
+  
+  const _ImageViewerDialog({required this.imageUrl});
+  
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.zero,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // 배경 터치로 닫기
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              color: Colors.transparent,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+          
+          // 이미지 뷰어
+          InteractiveViewer(
+            panEnabled: true, // 패닝 활성화
+            minScale: 0.5, // 최소 스케일
+            maxScale: 4.0, // 최대 스케일
+            child: _buildImage(),
+          ),
+          
+          // 닫기 버튼
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 20,
+            right: 20,
+            child: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildImage() {
+    // 로컬 파일 경로인지 확인
+    if (imageUrl.startsWith('/') || 
+        imageUrl.contains(':\\') ||
+        imageUrl.startsWith('C:\\') ||
+        !imageUrl.startsWith('http')) {
+      // 로컬 파일 이미지
+      final file = File(imageUrl);
+      if (file.existsSync()) {
+        return Image.file(
+          file,
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) => _buildErrorWidget(),
+        );
+      }
+      return _buildErrorWidget();
+    } else {
+      // 네트워크 이미지
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.contain,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+              color: Color(0xFF3B82F6),
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) => _buildErrorWidget(),
+      );
+    }
+  }
+  
+  Widget _buildErrorWidget() {
+    return Container(
+      padding: const EdgeInsets.all(40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: Colors.white54,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '이미지를 불러올 수 없습니다',
+            style: GoogleFonts.notoSans(
+              color: Colors.white54,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

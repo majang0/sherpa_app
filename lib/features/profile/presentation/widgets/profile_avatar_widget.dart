@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:io';
 
 // ✅ 글로벌 데이터 시스템 Import
 import '../../../../shared/models/global_user_model.dart';
@@ -29,33 +30,12 @@ class ProfileAvatarWidget extends ConsumerWidget {
       onTap: onTap,
       child: Stack(
         children: [
-          // 메인 아바타
-          Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.primary,
-                  AppColors.primary.withValues(alpha: 0.7),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.3),
-                width: 2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.2),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: _buildDefaultAvatar(),
+          // 메인 아바타 - sherpa_clean_app_bar와 동일한 방식
+          CircleAvatar(
+            radius: size / 2,
+            backgroundColor: AppColors.primary,
+            backgroundImage: _getProfileImageProvider(),
+            child: _getProfileImageProvider() == null ? _buildDefaultAvatar() : null,
           ),
 
           // 레벨 배지
@@ -66,19 +46,14 @@ class ProfileAvatarWidget extends ConsumerWidget {
               child: Container(
                 width: size * 0.35,
                 height: size * 0.35,
+                padding: EdgeInsets.all(2), // 흰색 테두리를 위한 패딩
                 decoration: BoxDecoration(
-                  gradient: AppColors.primaryGradient,
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.4),
-                      blurRadius: 4,
-                      offset: const Offset(0, 1),
-                    ),
-                  ],
+                  color: Colors.white, // 테두리 색상
                 ),
-                child: Center(
+                child: CircleAvatar(
+                  radius: (size * 0.35 - 4) / 2,
+                  backgroundColor: AppColors.primary,
                   child: Text(
                     '${user.level}', // ✅ GlobalUser.level 사용
                     style: GoogleFonts.notoSans(
@@ -99,10 +74,14 @@ class ProfileAvatarWidget extends ConsumerWidget {
               child: Container(
                 width: size * 0.2,
                 height: size * 0.2,
+                padding: EdgeInsets.all(1), // 흰색 테두리를 위한 패딩
                 decoration: BoxDecoration(
-                  color: AppColors.success,
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 1),
+                  color: Colors.white, // 테두리 색상
+                ),
+                child: CircleAvatar(
+                  radius: (size * 0.2 - 2) / 2,
+                  backgroundColor: AppColors.success,
                 ),
               ),
             ),
@@ -111,15 +90,85 @@ class ProfileAvatarWidget extends ConsumerWidget {
     );
   }
 
+  // 프로필 이미지 Provider 반환 (CircleAvatar용)
+  ImageProvider? _getProfileImageProvider() {
+    if (user.profileImageUrl == null || user.profileImageUrl!.isEmpty) {
+      return null;
+    }
+    
+    // 로컬 파일 경로인지 확인
+    if (user.profileImageUrl!.startsWith('/') || 
+        user.profileImageUrl!.contains(':\\') ||
+        user.profileImageUrl!.startsWith('C:\\') ||
+        !user.profileImageUrl!.startsWith('http')) {
+      // 로컬 파일
+      final file = File(user.profileImageUrl!);
+      if (file.existsSync()) {
+        return FileImage(file);
+      }
+      return null;
+    } else {
+      // 네트워크 이미지
+      return NetworkImage(user.profileImageUrl!);
+    }
+  }
+  
+  // 프로필 이미지 또는 기본 아바타 빌드 (구버전 - 참고용으로 유지)
+  Widget _buildAvatarContent() {
+    // profileImageUrl이 있는 경우 이미지 표시
+    if (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty) {
+      // 로컬 파일 경로인지 확인 (윈도우 경로 또는 Unix 경로)
+      if (user.profileImageUrl!.startsWith('/') || 
+          user.profileImageUrl!.contains(':\\') ||
+          user.profileImageUrl!.startsWith('C:\\') ||
+          !user.profileImageUrl!.startsWith('http')) {
+        // 로컬 파일 이미지
+        final file = File(user.profileImageUrl!);
+        if (file.existsSync()) {
+          return Image.file(
+            file,
+            fit: BoxFit.cover,
+            width: size,
+            height: size,
+            errorBuilder: (context, error, stackTrace) => _buildDefaultAvatar(),
+          );
+        }
+      } else {
+        // 네트워크 이미지 (URL)
+        return Image.network(
+          user.profileImageUrl!,
+          fit: BoxFit.cover,
+          width: size,
+          height: size,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) => _buildDefaultAvatar(),
+        );
+      }
+    }
+    
+    // 이미지가 없으면 기본 아바타 표시
+    return _buildDefaultAvatar();
+  }
+  
   Widget _buildDefaultAvatar() {
-    return Center(
-      child: Text(
-        user.name.isNotEmpty ? user.name[0].toUpperCase() : '셰', // ✅ GlobalUser.name 사용
-        style: GoogleFonts.notoSans(
-          fontSize: size * 0.4,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
-        ),
+    return Text(
+      user.name.isNotEmpty ? user.name[0].toUpperCase() : '셰', // ✅ GlobalUser.name 사용
+      style: GoogleFonts.notoSans(
+        fontSize: size * 0.4,
+        fontWeight: FontWeight.w700,
+        color: Colors.white,
       ),
     );
   }

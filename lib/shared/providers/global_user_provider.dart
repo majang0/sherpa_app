@@ -287,7 +287,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   
   /// 프로필 이미지 업데이트
   void updateProfileImage(String? imageUrl) {
-    state = state.copyWith(profileImageUrl: imageUrl);
+    // null을 빈 문자열로 변환하여 copyWith가 확실히 값을 업데이트하도록 함
+    state = state.copyWith(profileImageUrl: imageUrl ?? '');
     _saveUserData();
   }
 

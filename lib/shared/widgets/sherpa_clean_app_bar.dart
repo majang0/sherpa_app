@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:io';
 
 // ✅ 글로벌 데이터 시스템 Import
 import '../../core/constants/app_colors.dart';
@@ -108,20 +109,23 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
           },
           child: Stack(
             children: [
-              // 프로필 아바타
+              // 프로필 아바타 (이미지 지원 추가)
               CircleAvatar(
                 radius: 20,
                 backgroundColor: AppColors.primary,
-                child: Text(
-                  user.name.isNotEmpty
-                      ? user.name[0].toUpperCase()
-                      : '셰',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-                ),
+                backgroundImage: _getProfileImage(user.profileImageUrl),
+                child: _getProfileImage(user.profileImageUrl) == null
+                    ? Text(
+                        user.name.isNotEmpty
+                            ? user.name[0].toUpperCase()
+                            : '셰',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      )
+                    : null,
               ),
 
               // ✅ 초록색 온라인 불빛 (애니메이션)
@@ -429,6 +433,28 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
         ],
       ),
     );
+  }
+
+  // 프로필 이미지 처리 헬퍼 메서드
+  ImageProvider? _getProfileImage(String? profileImageUrl) {
+    if (profileImageUrl == null || profileImageUrl.isEmpty) {
+      return null;
+    }
+    
+    // 로컬 파일 경로인지 확인
+    if (profileImageUrl.startsWith('/') || 
+        profileImageUrl.contains(':\\') ||
+        !profileImageUrl.startsWith('http')) {
+      // 로컬 파일
+      final file = File(profileImageUrl);
+      if (file.existsSync()) {
+        return FileImage(file);
+      }
+      return null;
+    } else {
+      // 네트워크 이미지
+      return NetworkImage(profileImageUrl);
+    }
   }
 
   Widget _buildNotificationItem(String emoji, String title, String content, String time, bool isNew) {
