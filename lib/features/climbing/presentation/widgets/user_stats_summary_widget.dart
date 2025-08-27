@@ -618,223 +618,245 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                 ),
               ],
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            child: Stack(
               children: [
-                // ✅ 개선된 헤더 - RPG 스타일
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        gradeColor.withOpacity(0.1),
-                        gradeColor.withOpacity(0.05),
-                      ],
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(18),
-                      topRight: Radius.circular(18),
-                    ),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: gradeColor.withOpacity(0.2),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      // ✅ 개선된 아이콘 컨테이너
-                      Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              gradeColor.withOpacity(0.2),
-                              gradeColor.withOpacity(0.1),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: gradeColor.withOpacity(0.4),
-                            width: 2,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: gradeColor.withOpacity(0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // ✅ 개선된 헤더 - RPG 스타일
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            gradeColor.withOpacity(0.1),
+                            gradeColor.withOpacity(0.05),
                           ],
                         ),
-                        child: Center(
-                          child: Text(
-                            statDetails['icon'],
-                            style: const TextStyle(fontSize: 28),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(18),
+                          topRight: Radius.circular(18),
+                        ),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: gradeColor.withOpacity(0.2),
+                            width: 1,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // ✅ 능력치 이름
-                            Text(
-                              '$statName 상세정보',
-                              style: GoogleFonts.notoSans(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.textPrimary,
-                                letterSpacing: -0.5,
+                      child: Row(
+                        children: [
+                          // ✅ 개선된 아이콘 컨테이너
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  gradeColor.withOpacity(0.2),
+                                  gradeColor.withOpacity(0.1),
+                                ],
                               ),
-                            ),
-                            const SizedBox(height: 8),
-                            // ✅ 수치와 등급 - 개선된 디자인
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    color: gradeColor.withOpacity(0.15),
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      color: gradeColor.withOpacity(0.3),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        value.toStringAsFixed(1),
-                                        style: GoogleFonts.notoSans(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w800,
-                                          color: gradeColor,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        'POINT',
-                                        style: GoogleFonts.notoSans(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600,
-                                          color: gradeColor.withOpacity(0.8),
-                                          letterSpacing: 1,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: gradeColor.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                      color: gradeColor.withOpacity(0.3),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    grade,
-                                    style: GoogleFonts.notoSans(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w700,
-                                      color: gradeColor,
-                                    ),
-                                  ),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: gradeColor.withOpacity(0.4),
+                                width: 2,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: gradeColor.withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                      // 닫기 버튼
-                      IconButton(
-                        onPressed: () => Navigator.of(dialogContext).pop(),
-                        icon: Icon(
-                          Icons.close,
-                          color: AppColors.textSecondary,
-                          size: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // ✅ 개선된 컨텐츠 영역
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      _buildRPGInfoSection(
-                        '핵심 역할',
-                        statDetails['role'],
-                        Icons.star_rounded,
-                        AppColors.warning,
-                      ),
-                      const SizedBox(height: 16),
-                      _buildRPGInfoSection(
-                        '성장 방법',
-                        statDetails['growth'],
-                        Icons.trending_up_rounded,
-                        AppColors.success,
-                      ),
-                      const SizedBox(height: 16),
-                      _buildRPGInfoSection(
-                        '등반에서의 의미',
-                        statDetails['meaning'],
-                        Icons.terrain_rounded,
-                        AppColors.primary,
-                      ),
-                    ],
-                  ),
-                ),
-
-                // ✅ 개선된 버튼 영역
-                Container(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [gradeColor, gradeColor.withOpacity(0.8)],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: gradeColor.withOpacity(0.4),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
+                            child: Center(
+                              child: Text(
+                                statDetails['icon'],
+                                style: const TextStyle(fontSize: 28),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // ✅ 능력치 이름
+                                Text(
+                                  '$statName 상세정보',
+                                  style: GoogleFonts.notoSans(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.textPrimary,
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                // ✅ 수치와 등급 - 개선된 디자인 (오버플로우 방지)
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 6,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: gradeColor.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: gradeColor.withOpacity(0.3),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            value.toStringAsFixed(1),
+                                            style: GoogleFonts.notoSans(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w800,
+                                              color: gradeColor,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            'POINT',
+                                            style: GoogleFonts.notoSans(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600,
+                                              color: gradeColor.withOpacity(0.8),
+                                              letterSpacing: 1,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: gradeColor.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                          color: gradeColor.withOpacity(0.3),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        grade,
+                                        style: GoogleFonts.notoSans(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w700,
+                                          color: gradeColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.of(dialogContext).pop(),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
+                    ),
+                    // ✅ 개선된 컨텐츠 영역
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        children: [
+                          _buildRPGInfoSection(
+                            '핵심 역할',
+                            statDetails['role'],
+                            Icons.star_rounded,
+                            AppColors.warning,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildRPGInfoSection(
+                            '성장 방법',
+                            statDetails['growth'],
+                            Icons.trending_up_rounded,
+                            AppColors.success,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildRPGInfoSection(
+                            '등반에서의 의미',
+                            statDetails['meaning'],
+                            Icons.terrain_rounded,
+                            AppColors.primary,
+                          ),
+                        ],
+                      ),
+                    ),
+                    // ✅ 개선된 버튼 영역
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [gradeColor, gradeColor.withOpacity(0.8)],
+                            ),
                             borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: gradeColor.withOpacity(0.4),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.of(dialogContext).pop(),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Text(
+                              '확인',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
                           ),
                         ),
-                        child: Text(
-                          '확인',
-                          style: GoogleFonts.notoSans(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            letterSpacing: -0.2,
+                      ),
+                    ),
+                  ],
+                ),
+                // ✅ 닫기 버튼 - Stack의 Positioned로 우측 상단에 고정
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: IconButton(
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                    icon: Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
                           ),
-                        ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.close,
+                        color: AppColors.textSecondary,
+                        size: 18,
                       ),
                     ),
                   ),
