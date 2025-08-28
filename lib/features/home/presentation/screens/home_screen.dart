@@ -17,7 +17,7 @@ import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
 // Local Widgets
 import '../widgets/compact_quest_widget.dart';
-import '../widgets/smart_meeting_recommendation_widget.dart';
+import '../widgets/enhanced_meeting_recommendation_widget.dart';
 import '../widgets/friends_activity_feed_widget.dart';
 import '../widgets/personalized_growth_dashboard_widget.dart';
 import '../widgets/university_guild_widget.dart';
@@ -300,7 +300,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
 
           // 모임 추천
-          SmartMeetingRecommendationWidget(),
+          const EnhancedMeetingRecommendationWidget(),
           const SizedBox(height: 16),
 
           // 소셜 피드

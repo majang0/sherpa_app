@@ -11,6 +11,16 @@ class NotificationItemWidget extends StatelessWidget {
   final VoidCallback? onDismiss;
   final bool showDetail;
 
+  // 정적 초기화 블록에서 한 번만 설정
+  static bool _isTimeagoInitialized = false;
+  
+  static void _initializeTimeago() {
+    if (!_isTimeagoInitialized) {
+      timeago.setLocaleMessages('ko', timeago.KoMessages());
+      _isTimeagoInitialized = true;
+    }
+  }
+
   const NotificationItemWidget({
     Key? key,
     required this.notification,
@@ -19,10 +29,17 @@ class NotificationItemWidget extends StatelessWidget {
     this.showDetail = false,
   }) : super(key: key);
 
+  // 헬퍼 메서드: 컨테이너 스타일링
+  double get _itemMargin => showDetail ? 12 : 8;
+  double get _itemPadding => showDetail ? 16 : 12;
+  double get _iconSize => showDetail ? 40 : 36;
+  double get _iconInnerSize => showDetail ? 20 : 18;
+  double get _itemSpacing => showDetail ? 4 : 2;
+  double get _bottomSpacing => showDetail ? 8 : 6;
+
   @override
   Widget build(BuildContext context) {
-    // timeago 한국어 설정
-    timeago.setLocaleMessages('ko', timeago.KoMessages());
+    _initializeTimeago();
     
     return Dismissible(
       key: Key(notification.id),
@@ -47,7 +64,7 @@ class NotificationItemWidget extends StatelessWidget {
           onTap?.call();
         },
         child: Container(
-          margin: EdgeInsets.only(bottom: showDetail ? 12 : 8),  // 프리뷰에서는 마진 축소
+          margin: EdgeInsets.only(bottom: _itemMargin),
           decoration: BoxDecoration(
             color: notification.isRead 
                 ? Colors.white
@@ -77,7 +94,7 @@ class NotificationItemWidget extends StatelessWidget {
                 ],
           ),
           child: Padding(
-            padding: EdgeInsets.all(showDetail ? 16 : 12),  // 프리뷰에서는 패딩 축소
+            padding: EdgeInsets.all(_itemPadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -89,8 +106,8 @@ class NotificationItemWidget extends StatelessWidget {
                     Stack(
                       children: [
                         Container(
-                          width: showDetail ? 40 : 36,  // 프리뷰에서는 크기 축소
-                          height: showDetail ? 40 : 36,
+                          width: _iconSize,
+                          height: _iconSize,
                           decoration: BoxDecoration(
                             color: notification.isRead 
                                 ? notification.type.color.withValues(alpha: 0.08)
@@ -108,7 +125,7 @@ class NotificationItemWidget extends StatelessWidget {
                             color: notification.isRead
                                 ? notification.type.color.withValues(alpha: 0.8)
                                 : notification.type.color,
-                            size: showDetail ? 20 : 18,  // 프리뷰에서는 크기 축소
+                            size: _iconInnerSize,
                           ),
                         ),
                         if (!notification.isRead)
@@ -171,7 +188,7 @@ class NotificationItemWidget extends StatelessWidget {
                               ],
                             ],
                           ),
-                          SizedBox(height: showDetail ? 4 : 2),  // 프리뷰에서는 간격 축소
+                          SizedBox(height: _itemSpacing),
                           
                           // 메시지
                           Text(
@@ -223,7 +240,7 @@ class NotificationItemWidget extends StatelessWidget {
                 ),
                 
                 // 시간 표시
-                SizedBox(height: showDetail ? 8 : 6),  // 프리뷰에서는 간격 축소
+                SizedBox(height: _bottomSpacing),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

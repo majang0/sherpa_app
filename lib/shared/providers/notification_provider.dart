@@ -20,6 +20,19 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
     _loadNotifications();
   }
 
+  // 유틸리티 메서드: 고유 ID 생성
+  String _generateNotificationId() {
+    return DateTime.now().millisecondsSinceEpoch.toString();
+  }
+
+  // 유틸리티 메서드: 보상 텍스트 생성
+  String _generateRewardText({int? xp, int? points}) {
+    final rewards = <String>[];
+    if (xp != null && xp > 0) rewards.add('${xp} XP');
+    if (points != null && points > 0) rewards.add('${points}P');
+    return rewards.isNotEmpty ? rewards.join(' + ') : '';
+  }
+
   // SharedPreferences에서 알림 로드
   Future<void> _loadNotifications() async {
     try {
@@ -54,7 +67,7 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
   void _createInitialNotifications() {
     state = [
       NotificationItem(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        id: _generateNotificationId(),
         type: NotificationType.goalComplete,
         title: '오늘의 목표 달성! 🎉',
         message: '운동 30분 목표를 완료했습니다',
@@ -129,17 +142,15 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
 
   // 오늘의 목표 완료 알림
   void notifyGoalComplete(String goalName, {int? xp, int? points}) {
-    final rewards = <String>[];
-    if (xp != null && xp > 0) rewards.add('${xp} XP');
-    if (points != null && points > 0) rewards.add('${points}P');
-    final rewardText = rewards.isNotEmpty ? rewards.join(' + ') : '보상';
+    final rewardText = _generateRewardText(xp: xp, points: points);
+    final displayReward = rewardText.isNotEmpty ? rewardText : '보상';
     
     addNotification(NotificationItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: _generateNotificationId(),
       type: NotificationType.goalComplete,
       title: '오늘의 목표 달성! 🎉',
-      message: '$goalName 목표를 완료했습니다 ($rewardText)',
-      detail: '축하합니다! "$goalName" 목표를 성공적으로 달성했습니다. $rewardText를 획득했습니다!',
+      message: '$goalName 목표를 완료했습니다 ($displayReward)',
+      detail: '축하합니다! "$goalName" 목표를 성공적으로 달성했습니다. $displayReward를 획득했습니다!',
       createdAt: DateTime.now(),
       metadata: {'goalName': goalName, 'xp': xp, 'points': points},
     ));
@@ -147,17 +158,15 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
 
   // 일일 퀘스트 보상 알림
   void notifyDailyQuestReward(String questName, {int? xp, int? points}) {
-    final rewards = <String>[];
-    if (xp != null && xp > 0) rewards.add('${xp} XP');
-    if (points != null && points > 0) rewards.add('${points}P');
-    final rewardText = rewards.isNotEmpty ? rewards.join(' + ') : '보상 상자';
+    final rewardText = _generateRewardText(xp: xp, points: points);
+    final displayReward = rewardText.isNotEmpty ? rewardText : '보상 상자';
     
     addNotification(NotificationItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: _generateNotificationId(),
       type: NotificationType.dailyQuestReward,
       title: '일일 퀘스트 마스터! 📦',
-      message: '일일 퀘스트 보상 획득 ($rewardText)',
-      detail: '"$questName"를 달성했습니다! $rewardText를 획득했습니다.',
+      message: '일일 퀘스트 보상 획득 ($displayReward)',
+      detail: '"$questName"를 달성했습니다! $displayReward를 획득했습니다.',
       createdAt: DateTime.now(),
       metadata: {'questName': questName, 'xp': xp, 'points': points},
     ));
@@ -165,17 +174,15 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
 
   // 주간 퀘스트 보상 알림
   void notifyWeeklyQuestReward(String questName, {int? xp, int? points}) {
-    final rewards = <String>[];
-    if (xp != null && xp > 0) rewards.add('${xp} XP');
-    if (points != null && points > 0) rewards.add('${points}P');
-    final rewardText = rewards.isNotEmpty ? rewards.join(' + ') : '특별 보상';
+    final rewardText = _generateRewardText(xp: xp, points: points);
+    final displayReward = rewardText.isNotEmpty ? rewardText : '특별 보상';
     
     addNotification(NotificationItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: _generateNotificationId(),
       type: NotificationType.weeklyQuestReward,
       title: '주간 퀘스트 레전드! 🏆',
-      message: '주간 퀘스트 보상 획득 ($rewardText)',
-      detail: '"$questName"를 달성했습니다! $rewardText가 지급되었습니다.',
+      message: '주간 퀘스트 보상 획득 ($displayReward)',
+      detail: '"$questName"를 달성했습니다! $displayReward가 지급되었습니다.',
       createdAt: DateTime.now(),
       metadata: {'questName': questName, 'xp': xp, 'points': points},
     ));
@@ -183,16 +190,14 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
 
   // 첫 등반 성공 알림
   void notifyFirstClimb(String mountainName, {int? xp, int? points}) {
-    final rewards = <String>[];
-    if (xp != null && xp > 0) rewards.add('${xp} XP');
-    if (points != null && points > 0) rewards.add('${points}P');
-    final rewardText = rewards.isNotEmpty ? ' ($rewards.join(' + ')})' : '';
+    final rewardText = _generateRewardText(xp: xp, points: points);
+    final rewardDisplay = rewardText.isNotEmpty ? ' ($rewardText)' : '';
     
     addNotification(NotificationItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: _generateNotificationId(),
       type: NotificationType.firstClimb,
       title: '오늘의 첫 등반 성공! 🏔️',
-      message: '$mountainName 정복$rewardText',
+      message: '$mountainName 정복$rewardDisplay',
       detail: '오늘의 첫 등반을 성공적으로 완료했습니다! $mountainName 정상 도달${rewardText.isNotEmpty ? '로 $rewardText를 획득했습니다' : ''}!',
       createdAt: DateTime.now(),
       metadata: {'mountain': mountainName, 'xp': xp, 'points': points},
@@ -203,7 +208,7 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
   void notifyMeetingComplete(String meetingName, int participants, {int? fee}) {
     final feeText = fee != null ? ' (${fee}P 결제 완료)' : '';
     addNotification(NotificationItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: _generateNotificationId(),
       type: NotificationType.meetingComplete,
       title: '모임 참가 완료! 👥',
       message: '$meetingName 모임에 참가했습니다$feeText',
@@ -233,7 +238,7 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
     }
 
     addNotification(NotificationItem(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: _generateNotificationId(),
       type: NotificationType.profileUpdate,
       title: title,
       message: message,
