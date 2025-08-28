@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
@@ -18,9 +17,9 @@ import '../../../../shared/providers/global_meeting_provider.dart';
 import '../../../../shared/widgets/components/molecules/participant_avatars_2025.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 
-/// 🎯 향상된 모임 추천 위젯 - 2024 모던 디자인
-/// 홈 화면의 다른 위젯들과 동일한 스타일로 감싸져 있으며
-/// 카테고리 필터와 프리미엄 헤더 디자인이 적용됨
+/// 🎯 향상된 모임 추천 위젯
+/// 7개 카테고리 필터와 프리미엄 헤더 디자인이 적용된 모임 추천 위젯
+/// 홈 화면의 표준 스타일을 따르며 사진 배경 카드로 모임을 표시
 class EnhancedMeetingRecommendationWidget extends ConsumerStatefulWidget {
   const EnhancedMeetingRecommendationWidget({super.key});
 
@@ -38,8 +37,6 @@ class _EnhancedMeetingRecommendationWidgetState
   
   // 애니메이션 컨트롤러
   late AnimationController _fadeController;
-  late AnimationController _slideController;
-  late AnimationController _scaleController;
   late ScrollController _categoryScrollController;
   
   // 카테고리 맵핑 (UI 표시용)
@@ -62,28 +59,15 @@ class _EnhancedMeetingRecommendationWidgetState
       vsync: this,
     );
     
-    _slideController = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-    
-    _scaleController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-    
     _categoryScrollController = ScrollController();
     
     // 초기 애니메이션
     _fadeController.forward();
-    _slideController.forward();
   }
 
   @override
   void dispose() {
     _fadeController.dispose();
-    _slideController.dispose();
-    _scaleController.dispose();
     _categoryScrollController.dispose();
     super.dispose();
   }
@@ -100,11 +84,6 @@ class _EnhancedMeetingRecommendationWidgetState
         });
         // 페이드 인
         _fadeController.forward();
-      });
-      
-      // 스케일 애니메이션
-      _scaleController.forward().then((_) {
-        _scaleController.reverse();
       });
     }
   }
@@ -178,7 +157,7 @@ class _EnhancedMeetingRecommendationWidgetState
                     gradient: LinearGradient(
                       colors: [
                         ModernColors.primary,
-                        ModernColors.primary.withOpacity(0.8),
+                        ModernColors.primary.withValues(alpha: 0.8),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -186,7 +165,7 @@ class _EnhancedMeetingRecommendationWidgetState
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: ModernColors.primary.withOpacity(0.3),
+                        color: ModernColors.primary.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -252,7 +231,7 @@ class _EnhancedMeetingRecommendationWidgetState
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Icon(
+                  const Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 12,
                     color: ModernColors.primary,
@@ -398,7 +377,7 @@ class _EnhancedMeetingRecommendationWidgetState
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -422,7 +401,7 @@ class _EnhancedMeetingRecommendationWidgetState
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withOpacity(0.7),
+                        Colors.black.withValues(alpha: 0.7),
                       ],
                       stops: const [0.4, 1.0],
                     ),
@@ -463,7 +442,7 @@ class _EnhancedMeetingRecommendationWidgetState
                           Icon(
                             Icons.location_on_outlined,
                             size: 14,
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                           ),
                           const SizedBox(width: 4),
                           Expanded(
@@ -471,7 +450,7 @@ class _EnhancedMeetingRecommendationWidgetState
                               '${meeting.location} · ${meeting.formattedDate}',
                               style: GoogleFonts.notoSans(
                                 fontSize: 12,
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -514,11 +493,11 @@ class _EnhancedMeetingRecommendationWidgetState
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: meeting.category.color.withOpacity(0.9),
+        color: meeting.category.color.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: meeting.category.color.withOpacity(0.3),
+            color: meeting.category.color.withValues(alpha: 0.3),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -553,13 +532,13 @@ class _EnhancedMeetingRecommendationWidgetState
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isLowFee 
-            ? Colors.green.withOpacity(0.2)
-            : Colors.orange.withOpacity(0.2),
+            ? Colors.green.withValues(alpha: 0.2)
+            : Colors.orange.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isLowFee 
-              ? Colors.green.withOpacity(0.3)
-              : Colors.orange.withOpacity(0.3),
+              ? Colors.green.withValues(alpha: 0.3)
+              : Colors.orange.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -641,7 +620,7 @@ class _EnhancedMeetingRecommendationWidgetState
             Icon(
               Icons.search_off_rounded,
               size: 48,
-              color: ModernColors.textTertiary.withOpacity(0.5),
+              color: ModernColors.textTertiary.withValues(alpha: 0.5),
             ),
             const SizedBox(height: 12),
             Text(
@@ -662,7 +641,7 @@ class _EnhancedMeetingRecommendationWidgetState
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
