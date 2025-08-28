@@ -399,7 +399,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
         elevation: 2,
         child: Container(
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.6,
+            maxHeight: MediaQuery.of(context).size.height * 0.5,  // 0.6 → 0.5로 축소
             maxWidth: MediaQuery.of(context).size.width * 0.9,
           ),
           decoration: BoxDecoration(
@@ -527,6 +527,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                       final notification = unreadNotifications[index];
                       return NotificationItemWidget(
                         notification: notification,
+                        showDetail: false,  // 프리뷰에서는 상세 내용 숨김
                         onTap: () {
                           // 읽음 처리
                           ref.read(notificationProvider.notifier).markAsRead(notification.id);

@@ -47,7 +47,7 @@ class NotificationItemWidget extends StatelessWidget {
           onTap?.call();
         },
         child: Container(
-          margin: const EdgeInsets.only(bottom: 12),
+          margin: EdgeInsets.only(bottom: showDetail ? 12 : 8),  // 프리뷰에서는 마진 축소
           decoration: BoxDecoration(
             color: notification.isRead 
                 ? Colors.white
@@ -77,7 +77,7 @@ class NotificationItemWidget extends StatelessWidget {
                 ],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(showDetail ? 16 : 12),  // 프리뷰에서는 패딩 축소
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -89,8 +89,8 @@ class NotificationItemWidget extends StatelessWidget {
                     Stack(
                       children: [
                         Container(
-                          width: 40,
-                          height: 40,
+                          width: showDetail ? 40 : 36,  // 프리뷰에서는 크기 축소
+                          height: showDetail ? 40 : 36,
                           decoration: BoxDecoration(
                             color: notification.isRead 
                                 ? notification.type.color.withValues(alpha: 0.08)
@@ -108,7 +108,7 @@ class NotificationItemWidget extends StatelessWidget {
                             color: notification.isRead
                                 ? notification.type.color.withValues(alpha: 0.8)
                                 : notification.type.color,
-                            size: 20,
+                            size: showDetail ? 20 : 18,  // 프리뷰에서는 크기 축소
                           ),
                         ),
                         if (!notification.isRead)
@@ -171,7 +171,7 @@ class NotificationItemWidget extends StatelessWidget {
                               ],
                             ],
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: showDetail ? 4 : 2),  // 프리뷰에서는 간격 축소
                           
                           // 메시지
                           Text(
@@ -223,7 +223,7 @@ class NotificationItemWidget extends StatelessWidget {
                 ),
                 
                 // 시간 표시
-                const SizedBox(height: 8),
+                SizedBox(height: showDetail ? 8 : 6),  // 프리뷰에서는 간격 축소
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
