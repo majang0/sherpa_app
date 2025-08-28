@@ -8,6 +8,7 @@ import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../presentation/screens/diary_write_edit_screen.dart';
+import '../../home/presentation/widgets/all_goals_reward_modal.dart';
 
 class EnhancedDailyQuestWidget extends ConsumerStatefulWidget {
   const EnhancedDailyQuestWidget({Key? key}) : super(key: key);
@@ -859,36 +860,40 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
 
   void _claimReward() {
     HapticFeedbackManager.heavyImpact();
+    
+    final user = ref.read(globalUserProvider);
+    
+    // 보상 받기 실행 (내부에서 셰르피 메시지 자동 호출됨)
     ref.read(globalUserProvider.notifier).claimAllGoalsReward();
     
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.celebration, color: Colors.white, size: 20),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                '보상을 받았어요!',
-                style: TextStyle(
-                  fontFamily: 'Pretendard',
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: ModernColors.success,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        margin: const EdgeInsets.all(20),
+    // 현재 bottom sheet 닫기
+    Navigator.pop(context);
+    
+    // AllGoalsRewardModal 표시 (오버레이 방식)
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return AllGoalsRewardModal(
+            userName: user.name,
+            onClose: () {
+              Navigator.pop(context);
+            },
+            onRewardClaimed: null, // 보상은 이미 처리됨
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+        reverseTransitionDuration: const Duration(milliseconds: 300),
+        opaque: false, // 배경 투명하게
+        barrierColor: Colors.transparent, // 배경색 제거
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
       ),
     );
-    
-    Navigator.pop(context);
   }
 
   // Helper methods (same functionality as original)

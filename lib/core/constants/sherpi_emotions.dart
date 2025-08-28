@@ -2,6 +2,7 @@
 /// 
 /// 10개의 감정 이미지를 활용한 상황별 감정 표현 시스템
 
+import 'dart:math' as math;
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 
 /// 🎨 셰르피의 10가지 감정 상태
@@ -52,7 +53,18 @@ enum SherpiEmotion {
   final String fileName;
   
   /// 전체 이미지 경로 반환
-  String get imagePath => 'assets/images/sherpi/$fileName';
+  /// sad 감정의 경우 sherpi_sad.png와 sherpi_sad2.png 중 랜덤 선택
+  String get imagePath {
+    // sad 감정일 때 랜덤하게 두 이미지 중 선택
+    if (this == SherpiEmotion.sad) {
+      final random = math.Random();
+      final useSad2 = random.nextBool(); // 50% 확률로 true/false
+      final selectedFile = useSad2 ? 'sherpi_sad2.png' : 'sherpi_sad.png';
+      return 'assets/images/sherpi/$selectedFile';
+    }
+    // 다른 감정들은 기본 파일명 사용
+    return 'assets/images/sherpi/$fileName';
+  }
 }
 
 /// 🎯 상황별 감정 상태 자동 선택 시스템
@@ -92,8 +104,11 @@ class SherpiEmotionMapper {
       case SherpiContext.specialEvent:
         return SherpiEmotion.special;
         
-      // 😔 위로/격려가 필요한 상황
+      // 😊 격려/응원 상황 (웃으며 격려)
       case SherpiContext.encouragement:
+        return SherpiEmotion.smile;  // sad -> smile 변경: 격려는 웃으며 해야 함
+        
+      // 😔 실패/위로가 필요한 상황
       case SherpiContext.climbingFailure:
         return SherpiEmotion.sad;
         

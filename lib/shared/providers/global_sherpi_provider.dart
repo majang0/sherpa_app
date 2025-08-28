@@ -440,29 +440,33 @@ void initializeSherpi() {
     String finalMessage = customDialogue;
     String responseSource = 'instant';
     
-    try {
-      // 🔌 실제 사용자 데이터 연결
-      final realUserContext = _dataConnector.buildRealUserContext(
-        context: context,
-        additionalData: userContext,
-      );
-      final realGameContext = _dataConnector.buildRealGameContext();
-      
-      // 🧠 스마트 매니저를 통한 AI 메시지 시도 (빠른 응답만)
-      final sherpiResponse = await Future.any([
-        _smartManager.getMessage(context, realUserContext, realGameContext),
-        Future.delayed(const Duration(milliseconds: 500), () => null), // 500ms 타임아웃
-      ]);
-      
-      if (sherpiResponse != null) {
-        // AI 메시지가 빠르게 반환된 경우 (캐시 히트)
-        if (sherpiResponse.isFastResponse) {
-          finalMessage = sherpiResponse.message;
-          responseSource = sherpiResponse.source.name;
+    // 🚨 중요: allGoalsComplete 컨텍스트는 AI를 사용하지 않고 customDialogue를 그대로 사용
+    // 이미 정확한 메시지가 전달되므로 AI 개입 불필요
+    if (context != SherpiContext.allGoalsComplete) {
+      try {
+        // 🔌 실제 사용자 데이터 연결
+        final realUserContext = _dataConnector.buildRealUserContext(
+          context: context,
+          additionalData: userContext,
+        );
+        final realGameContext = _dataConnector.buildRealGameContext();
+        
+        // 🧠 스마트 매니저를 통한 AI 메시지 시도 (빠른 응답만)
+        final sherpiResponse = await Future.any([
+          _smartManager.getMessage(context, realUserContext, realGameContext),
+          Future.delayed(const Duration(milliseconds: 500), () => null), // 500ms 타임아웃
+        ]);
+        
+        if (sherpiResponse != null) {
+          // AI 메시지가 빠르게 반환된 경우 (캐시 히트)
+          if (sherpiResponse.isFastResponse) {
+            finalMessage = sherpiResponse.message;
+            responseSource = sherpiResponse.source.name;
+          }
         }
+      } catch (e) {
+        // AI 실패 시 정적 메시지 사용
       }
-    } catch (e) {
-      // AI 실패 시 정적 메시지 사용
     }
     
     // 메시지 표시 (중복 방지 통과한 경우만)

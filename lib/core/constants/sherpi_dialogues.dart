@@ -48,6 +48,7 @@ enum SherpiContext {
   achievement,          // 특별 성취
   milestone,            // 마일스톤 달성
   seasonalGreeting,     // 계절 인사
+  allGoalsComplete,     // 오늘의 모든 목표 완료
 }
 
 // 감성적이고 개인화된 대화 데이터 
@@ -263,6 +264,20 @@ const Map<SherpiContext, List<String>> sherpiDialogues = {
     '자연의 변화처럼 당신도 끊임없이 새로워지고 계시네요. 정말 아름다워요!',
     '새로운 계절, 새로운 마음으로! 이번에는 어떤 멋진 모험이 기다리고 있을까요?',
   ],
+  
+  SherpiContext.allGoalsComplete: [
+    '''🎊 축하드려요! 오늘의 모든 목표를 완벽하게 달성하셨네요! 🏆
+
+✅ 6000걸음 걷기 완료
+✅ 일기 작성 완료
+✅ 운동 기록 완료
+✅ 독서 1페이지 이상 완료
+✅ 몰입 시간 달성
+
+🎁 보상: 200 경험치 + 보너스 포인트 + 의지력 0.1 증가!
+
+정말 대단한 하루였어요! 이런 꾸준함이 큰 변화를 만들어냅니다! 💪✨''',
+  ],
 };
 
 // 상황별 추천 감정 매핑 (백엔드에서 AI 판단 시 참고용)
@@ -294,7 +309,7 @@ final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
 
   // 경고 및 안내
   SherpiContext.tiredWarning: SherpiEmotion.warning,
-  SherpiContext.encouragement: SherpiEmotion.cheering,
+  SherpiContext.encouragement: SherpiEmotion.smile,  // cheering -> smile 변경: 격려는 웃으며
   SherpiContext.guidance: SherpiEmotion.guiding,
   SherpiContext.tutorial: SherpiEmotion.guiding,
 
@@ -308,6 +323,7 @@ final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
   SherpiContext.achievement: SherpiEmotion.cheering,
   SherpiContext.milestone: SherpiEmotion.special,
   SherpiContext.seasonalGreeting: SherpiEmotion.defaults,
+  SherpiContext.allGoalsComplete: SherpiEmotion.special,
 };
 
 // 백엔드 연동을 위한 대화 소스 인터페이스

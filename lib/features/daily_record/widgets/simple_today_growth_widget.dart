@@ -8,6 +8,7 @@ import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/providers/notification_provider.dart';
 import 'enhanced_daily_quest_widget.dart';
+import '../../home/presentation/widgets/all_goals_reward_modal.dart';
 
 class SimpleTodayGrowthWidget extends ConsumerStatefulWidget {
   @override
@@ -461,32 +462,32 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
         onPressed: () {
           HapticFeedbackManager.heavyImpact();
           
-          // 보상 받기 실행
+          // 보상 받기 실행 (내부에서 셰르피 메시지 자동 호출됨)
           ref.read(globalUserProvider.notifier).claimAllGoalsReward();
           
-          // 알림 생성 (실제 보상대로 표시)
-          ref.read(notificationProvider.notifier).notifyGoalComplete(
-            '오늘의 목표',
-            xp: 200,  // 실제 XP
-            points: 50,  // 실제 포인트
-          );
-          
-          // 성공 피드백
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                '🎉 보상을 받았습니다! ✨200XP + 💰50P + 🔥+0.1 의지력',
-                style: GoogleFonts.notoSans(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-              backgroundColor: ModernColors.success,
-              duration: const Duration(seconds: 3),
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+          // AllGoalsRewardModal 표시 (오버레이 방식)
+          Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return AllGoalsRewardModal(
+                  userName: user.name,
+                  onClose: () {
+                    Navigator.pop(context);
+                  },
+                  onRewardClaimed: null, // 보상은 이미 처리됨
+                );
+              },
+              transitionDuration: const Duration(milliseconds: 300),
+              reverseTransitionDuration: const Duration(milliseconds: 300),
+              opaque: false, // 배경 투명하게
+              barrierColor: Colors.transparent, // 배경색 제거
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
             ),
           );
         },

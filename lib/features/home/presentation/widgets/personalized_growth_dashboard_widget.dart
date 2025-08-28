@@ -1443,15 +1443,10 @@ class _PersonalizedGrowthDashboardWidgetState
 
   // 🎊 실제 보상 처리
   void _handleRewardClaim() {
-    // 보상 받기 실행
+    // 보상 받기 실행 (내부에서 셰르피 메시지 자동 호출됨)
     ref.read(globalUserProvider.notifier).claimAllGoalsReward();
     
-    // 셰르피 반응
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.questComplete,
-      customDialogue: '🎉 모든 목표를 달성했어요! 멋져요!',
-      emotion: SherpiEmotion.cheering,
-    );
+    // 중복 셰르피 메시지 제거 - claimAllGoalsReward 내부에서 이미 처리됨
   }
 
 }

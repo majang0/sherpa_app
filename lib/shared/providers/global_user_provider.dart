@@ -1685,7 +1685,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       // 📚 독서 완료
       case 'reading':
         context = SherpiContext.studyComplete;
-        emotion = SherpiEmotion.thinking;
+        emotion = SherpiEmotion.cheering;  // thinking -> cheering 변경
         break;
         
       // 💪 운동 완료
@@ -1697,7 +1697,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       // 📝 일기 작성
       case 'diary':
         context = SherpiContext.diaryWritten;
-        emotion = SherpiEmotion.defaults;
+        emotion = SherpiEmotion.defaults;  // thinking -> defaults로 복원
         break;
         
       // 🎯 퀘스트 완료 (단순 탭 방문 퀘스트 제외)
@@ -1744,20 +1744,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         
       // 🎊 일일 목표 전체 달성 - 가장 특별한 성취!
       case 'all_goals_reward':
-        context = SherpiContext.achievement;
+        context = SherpiContext.allGoalsComplete;
         emotion = SherpiEmotion.special;
-        // 전체 목표 달성은 특별한 메시지 (AI가 아닌 커스텀 메시지로 즉시 표시)
-        customMessage = '''🎊 축하드려요! 오늘의 모든 목표를 완벽하게 달성하셨네요! 🏆
-
-✅ 6000걸음 걷기 완료
-✅ 일기 작성 완료  
-✅ 운동 기록 완료
-✅ 독서 1페이지 이상 완료
-✅ 몰입 시간 달성
-
-🎁 보상: 200 경험치 + 보너스 포인트 + 의지력 0.1 증가!
-
-정말 대단한 하루였어요! 이런 꾸준함이 큰 변화를 만들어냅니다! 💪✨''';
         break;
         
       // 🎉 높은 경험치 획득 (레벨업이 아닌 경우)
@@ -1784,7 +1772,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     final isLevelUp = _checkIfLeveledUp(xp);
     if (isLevelUp) {
       context = SherpiContext.levelUp;
-      emotion = SherpiEmotion.cheering;
+      emotion = SherpiEmotion.special;  // cheering -> special 변경
       customMessage = '🎉 레벨업! ${state.level}레벨 달성! 축하해요!';
     }
 
@@ -1827,18 +1815,34 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     
     // 셰르피 메시지 표시 + 빠른 응답 자동 트리거
     Future.delayed(const Duration(milliseconds: 500), () {
-      if (customMessage != null) {
-        // 일일 목표 전체 달성은 특별히 긴 시간 표시
-        final displayDuration = activityType == 'all_goals_reward' 
-            ? const Duration(seconds: 8)  // 전체 목표 달성은 8초간 표시
-            : const Duration(seconds: 5);
-            
+      // all_goals_reward는 특별 처리 - 정적 메시지 사용
+      if (activityType == 'all_goals_reward') {
+        // sherpi_dialogues에서 정적 메시지 직접 가져오기
+        const allGoalsMessage = '''🎊 축하드려요! 오늘의 모든 목표를 완벽하게 달성하셨네요! 🏆
+
+✅ 6000걸음 걷기 완료
+✅ 일기 작성 완료
+✅ 운동 기록 완료
+✅ 독서 1페이지 이상 완료
+✅ 몰입 시간 달성
+
+🎁 보상: 200 경험치 + 보너스 포인트 + 의지력 0.1 증가!
+
+정말 대단한 하루였어요! 이런 꾸준함이 큰 변화를 만들어냅니다! 💪✨''';
+        
+        ref.read(sherpiProvider.notifier).showInstantMessage(
+          context: context,  // SherpiContext.allGoalsComplete
+          customDialogue: allGoalsMessage,
+          emotion: emotion,  // SherpiEmotion.special
+          duration: const Duration(seconds: 8),
+        );
+      } else if (customMessage != null) {
         // 레벨업이나 특별 상황: 커스텀 메시지 표시
         ref.read(sherpiProvider.notifier).showInstantMessage(
           context: context,
           customDialogue: customMessage!,
           emotion: emotion,
-          duration: displayDuration,
+          duration: const Duration(seconds: 5),
         );
       } else {
         // 일반 활동 완료: Phase 2 강화된 데이터로 AI 메시지 표시
