@@ -32,7 +32,7 @@ class SherpiMessageCard extends ConsumerStatefulWidget {
   const SherpiMessageCard({
     super.key,
     this.bottomOffset = 140, // BottomNavigationBar 위 약간의 여백
-    this.duration = const Duration(seconds: 4),
+    this.duration = const Duration(seconds: 5),
     this.autoHide = true,
     this.onTap,
     this.showCloseButton = true,

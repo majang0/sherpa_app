@@ -21,7 +21,7 @@ handleActivityCompletion() 함수를 통해 자동 실행
 | 활동 유형             | 트리거 시점       | 컨텍스트                           | 기본 감정 |
 | --------------------- | ----------------- | ---------------------------------- | --------- |
 | **운동 완료**   | 운동 기록 저장 시 | `SherpiContext.exerciseComplete` | happy     |
-| **독서 완료**   | 독서 기록 저장 시 | `SherpiContext.studyComplete`    | cheering  |
+| **독서 완료**   | 독서 기록 저장 시 | `SherpiContext.studyComplete`    | thinking  |
 | **일기 작성**   | 일기 저장 시      | `SherpiContext.diaryWritten`     | defaults  |
 | **등반 성공**   | 산 정상 도달 시   | `SherpiContext.climbingSuccess`  | happy     |
 | **등반 실패**   | 등반 실패 시      | `SherpiContext.climbingFailure`  | sad       |

@@ -1046,6 +1046,7 @@ class _UnifiedExerciseRecordFormState
               'exerciseType': widget.exerciseType,
               'duration': _durationMinutes,
               'difficulty': _selectedDifficulty.name,
+              'calories': _calculateCalories(),
               'details': _detailsController.text,
               'isShared': _isShared,
               'hasPhoto': _selectedImage != null,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Core
 import '../../../../core/constants/app_colors.dart';
@@ -43,8 +44,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   bool _isLoading = true;
   
-  // 🎯 세션당 환영 메시지 표시 여부 추적 (static으로 앱 실행 동안 유지)
-  static bool _hasShownWelcomeInSession = false;
+  // 🎯 메시지 표시 여부 추적 (static으로 앱 실행 동안 유지)
+  static bool _hasShownWelcomeMessage = false;
+  static String? _lastGreetingDate; // 마지막 인사 날짜 추적
 
   @override
   void initState() {
@@ -105,30 +107,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
 
 
-  void _showWelcomeSherpi() {
-    // 🎯 세션당 한 번만 환영 메시지 표시 (static 변수로 관리)
-    if (_hasShownWelcomeInSession) {
-      return; // 이미 이번 세션에서 환영 메시지를 보았으면 표시하지 않음
-    }
+  void _showWelcomeSherpi() async {
+    // SharedPreferences를 통해 첫 실행 여부 확인
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+    final today = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD 형식
     
-    // 세션에서 첫 환영 메시지 표시 완료로 마킹
-    _hasShownWelcomeInSession = true;
-    
-    final hour = DateTime.now().hour;
     SherpiContext context;
-
-    if (hour < 12) {
+    
+    // 앱 첫 실행인 경우
+    if (isFirstLaunch) {
+      context = SherpiContext.welcome;
+      await prefs.setBool('isFirstLaunch', false);
+      _hasShownWelcomeMessage = true;
+    } 
+    // 오늘 첫 접속인 경우 (날짜가 바뀐 경우)
+    else if (_lastGreetingDate != today) {
       context = SherpiContext.dailyGreeting;
-    } else if (hour < 18) {
-      context = SherpiContext.encouragement; // welcome 대신 격려 메시지 사용
-    } else {
+      _lastGreetingDate = today;
+      _hasShownWelcomeMessage = true;
+    }
+    // 같은 날 재접속인 경우 메시지 표시하지 않음
+    else if (_hasShownWelcomeMessage) {
+      return;
+    }
+    // 앱 재시작 후 같은 날 첫 접속
+    else {
       context = SherpiContext.dailyGreeting;
+      _hasShownWelcomeMessage = true;
     }
 
-    // 🚨 중복 방지: forceShow를 false로 설정하여 중복 메시지 방지 적용
+    // contextEmotionMap에 정의된 감정이 자동으로 적용됨
+    // welcome → happy, dailyGreeting → defaults
     ref.read(sherpiProvider.notifier).showMessage(
       context: context,
-      emotion: SherpiEmotion.happy,
       forceShow: false, // 중복 방지 활성화
     );
   }
@@ -211,12 +223,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       child: RefreshIndicator(
         onRefresh: () async {
           await ref.read(globalUserProvider.notifier).refresh();
-          // 🚨 중복 방지: forceShow false로 설정
-          ref.read(sherpiProvider.notifier).showMessage(
-            context: SherpiContext.encouragement,
-            emotion: SherpiEmotion.cheering,
-            forceShow: false, // 중복 방지 활성화
-          );
+          // 새로고침 시 셰르피 메시지는 표시하지 않음 (불필요한 반복 방지)
         },
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),

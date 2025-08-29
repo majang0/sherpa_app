@@ -827,6 +827,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         'bookTitle': readingLog.bookTitle,
         'pages': readingLog.pages,
         'rating': readingLog.rating,
+        'category': readingLog.category,  // 카테고리 정보 추가
       },
     );
 
@@ -866,18 +867,9 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
 
-    // 🎯 셰르피 메시지만 표시 (보상 없음)
-    _triggerSherpiReaction(
-      'exercise',
-      '운동 완료! 💪',
-      0.0,  // 경험치 없음
-      0,    // 포인트 없음
-      {
-        'exerciseType': exerciseLog.exerciseType,
-        'durationMinutes': exerciseLog.durationMinutes,
-        'intensity': exerciseLog.intensity,
-      },
-    );
+    // 🎯 셰르피 메시지 제거 - handleActivityCompletion에서 처리됨
+    // unified_exercise_record_form.dart에서 handleActivityCompletion을 호출하므로
+    // 여기서 중복으로 _triggerSherpiReaction을 호출하지 않음
 
     // 🔄 퀘스트 시스템과 연동
     _notifyQuestSystem('exercise', {'duration': exerciseLog.durationMinutes});
@@ -1696,19 +1688,19 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       // 📚 독서 완료
       case 'reading':
         context = SherpiContext.studyComplete;
-        emotion = SherpiEmotion.cheering;  // thinking -> cheering 변경
+        emotion = SherpiEmotion.thinking;  // 독서는 thinking 감정이 적절
         break;
         
       // 💪 운동 완료
       case 'exercise':
         context = SherpiContext.exerciseComplete;
-        emotion = SherpiEmotion.happy;
+        emotion = SherpiEmotion.surprised;
         break;
         
       // 📝 일기 작성
       case 'diary':
         context = SherpiContext.diaryWritten;
-        emotion = SherpiEmotion.defaults;  // thinking -> defaults로 복원
+        emotion = SherpiEmotion.guiding;  // 일기 작성 시 guiding 감정
         break;
         
       // 🎯 퀘스트 완료 (단순 탭 방문 퀘스트 제외)
@@ -1801,13 +1793,20 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     switch (activityType) {
       case 'exercise':
         enrichedUserContext['exerciseType'] = additionalData?['exerciseType'] ?? 'general';
-        enrichedUserContext['durationMinutes'] = additionalData?['durationMinutes'] ?? 30;
-        enrichedUserContext['intensity'] = additionalData?['intensity'] ?? 'medium';
+        enrichedUserContext['duration'] = additionalData?['duration'] ?? 30;
+        enrichedUserContext['difficulty'] = additionalData?['difficulty'] ?? 'moderate';
+        enrichedUserContext['calories'] = additionalData?['calories'] ?? 0;
+        print('[DEBUG] Exercise data in handleActivityCompletion:');
+        print('  exerciseType: ${enrichedUserContext['exerciseType']}');
+        print('  duration: ${enrichedUserContext['duration']}');
+        print('  difficulty: ${enrichedUserContext['difficulty']}');
+        print('  calories: ${enrichedUserContext['calories']}');
         break;
       case 'reading':
         enrichedUserContext['bookTitle'] = additionalData?['bookTitle'] ?? 'Unknown Book';
         enrichedUserContext['pages'] = additionalData?['pages'] ?? 10;
         enrichedUserContext['rating'] = additionalData?['rating'];
+        enrichedUserContext['category'] = additionalData?['category'] ?? '기타';  // 카테고리 추가
         break;
       case 'diary':
         enrichedUserContext['mood'] = additionalData?['mood'] ?? 'normal';

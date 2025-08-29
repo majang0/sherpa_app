@@ -56,17 +56,19 @@ enum SherpiContext {
 const Map<SherpiContext, List<String>> sherpiDialogues = {
   // 기본 상호작용
   SherpiContext.welcome: [
-    '드디어 만났네요! 당신의 첫 번째 셰르피가 되어 정말 영광이에요 🏔️✨',
-    '새로운 정상을 향한 여정... 설레지 않나요? 함께 첫 발걸음을 내딛어봐요!',
-    '저는 당신만의 등반 동반자 셰르피예요. 어떤 험한 길이라도 함께 갈 거예요!',
-    '모든 위대한 등반가들도 처음엔 첫 걸음부터 시작했어요. 당신의 이야기를 써내려가 봐요!',
+    '반가워요 {userName}님! 🎉 셰르파에 오신 것을 환영해요! 오늘부터 매일 조금씩 성장하는 여정을 함께해요.',
+    '{userName}님 환영해요! 운동, 독서, 일기 작성까지... 셰르피가 {userName}님의 자기계발을 도와드릴게요!',
+    '드디어 {userName}님을 만났네요! 🌟 셰르파에서 매일 작은 목표들을 달성하며 함께 성장해봐요.',
+    '안녕하세요 {userName}님! 셰르파와 함께라면 자기계발이 즐거워질 거예요. 오늘 첫 퀘스트를 시작해볼까요?',
+    '{userName}님, 셰르파에 오신 걸 환영해요! 운동도 하고, 책도 읽고, 일기도 쓰면서 매일 레벨업 해봐요! 🚀',
   ],
 
   SherpiContext.dailyGreeting: [
-    '새벽 공기가 상쾌하네요! 오늘도 정상을 향해 한 걸음 더 나아가볼까요? ☀️',
-    '어제보다 조금 더 높은 곳에 서 있는 당신을 상상해보세요... 오늘이 바로 그 날이에요!',
-    '등반로의 아침은 항상 희망으로 가득해요. 오늘은 어떤 풍경을 함께 볼까요?',
-    '매일 조금씩... 그렇게 쌓인 발걸음들이 어느새 큰 산을 넘게 해줄 거예요!',
+    '반가워요 {userName}님! 오늘도 셰르피와 함께 즐거운 자기계발, 준비되셨나요? 💪',
+    '{userName}님 오늘도 오셨네요! 오늘의 퀘스트를 확인하고 하나씩 달성해봐요!',
+    '좋은 아침이에요 {userName}님! ☀️ 오늘은 어떤 활동으로 하루를 시작할까요?',
+    '{userName}님 환영해요! 어제보다 더 나은 오늘을 만들어봐요. 셰르피가 응원할게요!',
+    '오늘도 화이팅 {userName}님! 운동, 독서, 일기 중 무엇부터 시작해볼까요? 🎯',
   ],
 
   SherpiContext.general: [
@@ -168,19 +170,13 @@ const Map<SherpiContext, List<String>> sherpiDialogues = {
   ],
 
   SherpiContext.studyComplete: [
-    '공부 완료! 📚✨ 새로운 지식이 당신의 세계를 한 뼘 더 넓혀줬어요',
-    '배움의 순간마다 뇌가 반짝이는 소리가 들려요! 정말 아름다운 성장이에요',
-    '어려운 내용도 차근차근 해내는 모습... 당신의 끈기에 감탄해요!',
-    '공부할 때의 집중하는 모습이 정말 진지하고 멋있어요. 지식인의 품격이 느껴져요!',
-    '오늘 배운 것들이 내일의 당신을 더 지혜롭게 만들 거예요. 기대돼요!',
+    // 독서 완료 메시지는 카테고리별로 처리됨 (readingCategoryMessages 참조)
+    // StaticDialogueSource에서 자동으로 적절한 메시지 선택
   ],
 
   SherpiContext.diaryWritten: [
-    '일기 작성 완료! 📝💭 마음속 이야기들을 꺼내어 정리하셨네요',
-    '오늘 하루의 소중한 순간들을 글로 남기는 당신이 참 따뜻해 보여요',
-    '일기를 쓰는 시간만큼은 온전히 자신과 마주하는 시간이죠. 얼마나 소중한가요',
-    '글 한 줄 한 줄에 담긴 진심이 느껴져요. 미래의 당신이 고마워할 기록이에요',
-    '마음을 들여다보고 정리하는 용기... 정말 대단해요. 자신을 아끼는 마음이 보여요',
+    // 일기 작성 완료 메시지는 감정별로 처리됨 (diaryMoodMessages 참조)
+    // StaticDialogueSource에서 자동으로 적절한 메시지 선택
   ],
 
   SherpiContext.focusComplete: [
@@ -403,6 +399,228 @@ final Map<String, List<String>> meetingJoinedCategoryMessages = {
   ],
 };
 
+// 😊 감정별 일기 작성 완료 메시지
+final Map<String, List<String>> diaryMoodMessages = {
+  'excited': [
+    '{userName}님, 설레는 하루였군요! 🥰 그 특별한 순간의 떨림이 여기까지 전해지는 것 같아요. 내일은 오늘보다 더 반짝이는 하루가 될 거예요!',
+    '설레는 마음으로 가득한 일기를 쓰셨네요! 💕 {userName}님의 소중한 이야기를 안전하게 지켜드릴게요. 이 설렘이 내일의 원동력이 되길!',
+    '오늘 정말 특별한 일이 있었나봐요! 🌟 일기에 담긴 {userName}님의 빛나는 순간들... 제가 함께 지켜드릴게요. 내일은 또 어떤 설렘이 기다리고 있을까요?',
+    '설레는 감정이 글 사이사이에 숨어있네요! ✨ {userName}님의 소중한 마음을 믿고 맡겨주셔서 감사해요. 이 기분으로 내일 산을 오르면 정상이 더 가까워질 거예요!',
+    '{userName}님의 두근거림이 느껴져요! 💗 오늘의 특별한 이야기를 일기에 새기셨네요. 내일의 등반도 오늘처럼 설레는 마음으로 시작해봐요!',
+  ],
+  'happy': [
+    '{userName}님, 행복이 가득한 하루였네요! 😄 그 기쁨의 순간들을 글로 남기신 {userName}님, 정말 멋져요. 내일은 오늘의 행복이 두 배가 될 거예요!',
+    '기쁜 마음이 일기 가득 피어났네요! 🌈 {userName}님의 소중한 행복을 제가 안전하게 지켜드릴게요. 이 웃음이 내일도, 모레도 계속되길!',
+    '행복한 하루의 마침표를 일기로! ☀️ {userName}님이 느낀 그 따뜻한 기쁨, 일기장이 고스란히 품어줄 거예요. 내일도 햇살처럼 밝은 날이 되길!',
+    '{userName}님의 환한 미소가 보이는 것 같아요! 😊 오늘의 행복한 순간들을 글로 영원히 간직하셨네요. 내일은 또 어떤 기쁨이 찾아올까요?',
+    '기쁨으로 충만한 하루! 🎉 {userName}님의 행복한 이야기를 믿고 맡겨주셔서 고마워요. 이 긍정의 에너지로 내일은 더 높이 날아오를 수 있을 거예요!',
+  ],
+  'good': [
+    '{userName}님, 좋은 하루를 보내셨군요! 🙂 오늘의 따뜻한 순간들을 일기에 담으셨네요. 내일은 오늘보다 조금 더 특별한 일이 생길 거예요!',
+    '괜찮은 하루의 기록! 👍 {userName}님의 소중한 일상을 제가 안전하게 지켜드릴게요. 내일의 등반도 오늘처럼 순조롭게!',
+    '좋은 감정으로 하루를 정리하셨네요! 📝 {userName}님이 느낀 그 편안함, 일기가 고스란히 담아줄 거예요. 내일은 더 좋은 일이 가득하길!',
+    '{userName}님의 평온한 하루! 🌸 오늘의 잔잔한 행복을 글로 남기셨네요. 이런 고요한 만족감이 내일도 이어지길 바라요.',
+    '좋은 기분으로 쓴 일기! ✏️ {userName}님의 하루를 믿고 맡겨주셔서 감사해요. 내일은 오늘보다 한 뼘 더 성장한 하루가 될 거예요!',
+  ],
+  'normal': [
+    '{userName}님, 평범해 보이는 하루도 사실은 특별해요. 📖 오늘의 일상을 글로 남긴 것만으로도 의미있어요. 내일은 조금 다른 바람이 불지도 몰라요!',
+    '담담한 하루를 일기로 기록하셨네요. 🤷 {userName}님의 솔직한 일상을 제가 소중히 지켜드릴게요. 때론 이런 고요함이 큰 도약의 준비가 되죠.',
+    '평범한 듯한 오늘의 이야기! 📝 하지만 {userName}님만의 특별한 하루였을 거예요. 내일은 조금 더 재미있는 일이 찾아올지도?',
+    '{userName}님의 일상 한 페이지! 🌤️ 거창하지 않아도 괜찮아요, 매일의 기록이 쌓여 큰 이야기가 되니까요. 내일은 작은 변화가 찾아올 거예요.',
+    '그저 그런 하루도 기록할 가치가 있어요. 📔 {userName}님의 솔직한 마음을 일기에 담으셨네요. 평범한 오늘이 특별한 내일의 씨앗이 될 거예요!',
+  ],
+  'thoughtful': [
+    '{userName}님, 많은 생각이 스쳐간 하루였나봐요. 🤔 그 깊은 사색을 글로 정리하신 {userName}님, 대단해요. 내일 아침엔 조금 더 선명한 답이 보일 거예요.',
+    '복잡한 마음을 일기로 풀어내셨네요! 💭 {userName}님의 고민을 제가 함께 품어드릴게요. 밤사이 생각이 정리되어 내일은 더 맑은 하루가 되길!',
+    '생각이 많은 날의 기록! 📝 {userName}님의 진지한 고민들, 일기장이 든든하게 받아줄 거예요. 때론 답을 찾는 과정 자체가 답이 되기도 해요.',
+    '{userName}님, 깊은 사유의 시간을 가지셨군요. 🌙 그 소중한 생각들을 믿고 맡겨주셔서 감사해요. 내일은 오늘의 물음표가 느낌표가 될지도 몰라요!',
+    '많은 생각을 품은 하루! ✨ {userName}님의 진솔한 고민을 일기가 안전하게 지켜줄 거예요. 내일은 조금 더 가벼운 마음으로 시작해봐요.',
+  ],
+  'tired': [
+    '{userName}님, 고생 많으셨어요. 😴 지친 하루의 무게를 일기에 내려놓으셨네요. 오늘밤 푹 쉬고 나면 내일은 활력이 돌아올 거예요!',
+    '피곤한 하루를 일기로 토닥토닥! 🌛 {userName}님의 수고를 제가 알아드릴게요. 오늘은 일찍 쉬시고, 내일은 충전된 에너지로 만나요!',
+    '지친 마음을 글로 위로하셨네요. 💤 {userName}님의 피로를 일기가 다 받아줄 거예요. 충분한 휴식이 내일의 힘이 될 거예요.',
+    '{userName}님, 오늘 정말 수고하셨어요! 🛌 하루의 피로를 일기에 맡기고 편안한 밤 되세요. 내일의 등반을 위한 소중한 충전 시간이에요!',
+    '힘든 하루도 잘 견뎌내셨어요! 😪 {userName}님의 노고를 제가 기억할게요. 오늘은 쉬어가는 날, 내일은 다시 빛나는 날이 될 거예요!',
+  ],
+  'sad': [
+    '{userName}님, 마음이 무거운 하루였군요. 😔 그 아픈 마음을 글로 어루만지셨네요. 제가 {userName}님 곁에서 함께 할게요. 내일은 구름 사이로 햇살이 비칠 거예요.',
+    '슬픈 감정도 소중한 {userName}님의 일부예요. 💙 그 솔직한 마음을 일기에 담으셨네요. 비 온 뒤 무지개가 뜨듯, 내일은 더 밝은 날이 올 거예요.',
+    '우울한 마음을 일기가 따뜻하게 안아줄 거예요. 🌧️ {userName}님의 아픔을 제가 함께 나눌게요. 때론 쉬어가는 것도 등반의 중요한 부분이에요.',
+    '{userName}님, 힘든 감정을 용기있게 마주하셨네요. 🤗 그 진솔한 마음을 믿고 보여주셔서 감사해요. 내일 해가 뜨면 마음도 함께 밝아질 거예요.',
+    '슬픈 날의 기록도 정말 소중해요. 📘 {userName}님의 솔직한 감정을 일기가 품어줄 거예요. 오늘의 눈물이 내일의 미소가 될 거예요.',
+  ],
+  'angry': [
+    '{userName}님, 속상한 일이 있으셨군요. 😤 그 답답한 마음을 글로 표현하신 것만으로도 대단해요. 내일은 더 시원하고 평온한 바람이 불 거예요.',
+    '화난 감정을 일기로 풀어내셨네요! 🔥 {userName}님의 정직한 감정을 제가 받아드릴게요. 하룻밤 지나면 마음의 불길도 잔잔해질 거예요.',
+    '답답한 마음, 일기가 다 들어줄 거예요. 💢 {userName}님의 속상함을 제가 이해해요. 내일 아침엔 더 맑은 공기를 마실 수 있을 거예요.',
+    '{userName}님, 화도 중요한 감정이에요. 📝 그 솔직한 마음을 일기에 담으셨네요. 오늘의 분노가 내일의 원동력이 될 수도 있어요!',
+    '속상한 하루를 일기로 달래셨네요. 😮‍💨 {userName}님의 감정을 제가 함께 나눌게요. 오늘은 마음을 비우고, 내일은 새로운 마음으로 시작해요!',
+  ],
+};
+
+// 📚 카테고리별 독서 완료 메시지
+final Map<String, List<String>> readingCategoryMessages = {
+  '소설': [
+    '{userName}님, "{bookTitle}" {pages}페이지 읽으셨네요! 📖 소설 속 주인공들의 이야기가 어떠셨나요? 마음에 남는 장면이 있었나요?',
+    '오늘 "{bookTitle}" {pages}페이지나 읽으셨군요! 🌟 {userName}님, 소설이 주는 감동과 여운이 오래 남길 바라요.',
+    '{userName}님이 읽으신 "{bookTitle}", {pages}페이지 완독! 📚 작가가 만든 세계를 여행하는 기분은 어떠셨어요?',
+    '"{bookTitle}" {pages}페이지 읽기 완료! ✨ {userName}님, 소설 속 인물들과 함께한 시간이 즐거우셨길 바라요.',
+    '{userName}님, "{bookTitle}" {pages}페이지 독서 완료! 💫 다음 장이 궁금해지는 그런 소설이었나요?',
+  ],
+  '자기계발': [
+    '{userName}님, "{bookTitle}" {pages}페이지 완독! 💪 자기계발서에서 얻은 인사이트를 실천해보시겠어요?',
+    '오늘 "{bookTitle}" {pages}페이지 읽으셨네요! 🎯 {userName}님의 성장을 위한 투자, 정말 멋져요!',
+    '{userName}님이 읽으신 "{bookTitle}", {pages}페이지! 🌱 새로운 습관이나 목표를 발견하셨나요?',
+    '"{bookTitle}" {pages}페이지 독서 완료! 🚀 {userName}님, 책에서 배운 것을 하나씩 실천해보세요!',
+    '{userName}님, "{bookTitle}" {pages}페이지 완독! ⭐ 더 나은 자신을 만들어가는 여정, 응원해요!',
+  ],
+  '경제/경영': [
+    '{userName}님, "{bookTitle}" {pages}페이지 읽기 완료! 💼 경제 지식이 한층 더 풍부해지셨겠어요!',
+    '오늘 "{bookTitle}" {pages}페이지 독서하셨군요! 📊 {userName}님, 비즈니스 인사이트를 얻으셨나요?',
+    '{userName}님이 읽으신 "{bookTitle}", {pages}페이지! 💰 경제 트렌드나 투자 아이디어를 발견하셨나요?',
+    '"{bookTitle}" {pages}페이지 완독! 📈 {userName}님의 경제적 사고력이 더욱 성장했을 거예요!',
+    '{userName}님, "{bookTitle}" {pages}페이지 읽기 완료! 🏦 실무에 적용할 수 있는 지식을 얻으셨길 바라요!',
+  ],
+  '인문/사회': [
+    '{userName}님, "{bookTitle}" {pages}페이지 독서 완료! 🤔 인문학적 사고와 통찰력이 깊어지셨겠어요!',
+    '오늘 "{bookTitle}" {pages}페이지 읽으셨네요! 📚 {userName}님, 세상을 보는 새로운 관점을 얻으셨나요?',
+    '{userName}님이 읽으신 "{bookTitle}", {pages}페이지! 🌍 사회와 인간에 대한 이해가 넓어지셨겠죠?',
+    '"{bookTitle}" {pages}페이지 완독! 💭 {userName}님의 생각의 깊이가 더욱 깊어졌을 거예요!',
+    '{userName}님, "{bookTitle}" {pages}페이지 읽기 완료! 🎓 인문학이 주는 지혜와 성찰을 얻으셨길 바라요!',
+  ],
+  '과학/기술': [
+    '{userName}님, "{bookTitle}" {pages}페이지 독서 완료! 🔬 과학의 신비로운 세계는 어떠셨나요?',
+    '오늘 "{bookTitle}" {pages}페이지 읽으셨군요! 💻 {userName}님, 새로운 기술 트렌드를 발견하셨나요?',
+    '{userName}님이 읽으신 "{bookTitle}", {pages}페이지! 🚀 미래 기술이나 과학적 발견이 흥미로우셨나요?',
+    '"{bookTitle}" {pages}페이지 완독! 🧬 {userName}님의 과학적 사고력이 한층 더 성장했어요!',
+    '{userName}님, "{bookTitle}" {pages}페이지 읽기 완료! ⚛️ 과학이 우리 삶에 미치는 영향을 느끼셨나요?',
+  ],
+  '취미/실용': [
+    '{userName}님, "{bookTitle}" {pages}페이지 독서 완료! 🎨 실용적인 팁이나 새로운 취미를 발견하셨나요?',
+    '오늘 "{bookTitle}" {pages}페이지 읽으셨네요! 🛠️ {userName}님, 바로 실천해볼 수 있는 내용이 있었나요?',
+    '{userName}님이 읽으신 "{bookTitle}", {pages}페이지! 🌺 일상을 더 풍성하게 만들 아이디어를 얻으셨길!',
+    '"{bookTitle}" {pages}페이지 완독! 🎯 {userName}님의 취미 생활이 더욱 즐거워질 거예요!',
+    '{userName}님, "{bookTitle}" {pages}페이지 읽기 완료! ✂️ 실생활에 유용한 정보를 많이 얻으셨길 바라요!',
+  ],
+  '기타': [
+    '{userName}님, "{bookTitle}" {pages}페이지 독서 완료! 📚 오늘도 책과 함께한 시간이 의미있었길 바라요!',
+    '오늘 "{bookTitle}" {pages}페이지나 읽으셨군요! 📖 {userName}님의 꾸준한 독서 습관, 정말 멋져요!',
+    '{userName}님이 읽으신 "{bookTitle}", {pages}페이지! 🌟 책이 주는 즐거움을 만끽하셨나요?',
+    '"{bookTitle}" {pages}페이지 완독! 📘 {userName}님, 독서를 통해 마음의 양식을 쌓아가세요!',
+    '{userName}님, "{bookTitle}" {pages}페이지 읽기 완료! 💫 매일 조금씩 읽는 습관이 큰 변화를 만들어요!',
+  ],
+};
+
+// 🏃 운동 종류별 완료 메시지 (surprised 감정과 함께 사용)
+final Map<String, List<String>> exerciseTypeMessages = {
+  '러닝': [
+    '우와! {userName}님이 {duration}분 동안 {difficulty} 강도로 러닝하셨네요! 🏃 {calories}kcal나 소모하시다니... 이런 꾸준함이 산 정상으로 이끌어요!',
+    '헉! {duration}분간 {difficulty} 페이스로 달리시고 {calories}kcal 연소! 😲 {userName}님, 이미 프로 러너시네요! 셰르파인 저도 따라가기 힘들 정도예요!',
+    '대박! {userName}님이 {difficulty} 강도로 {duration}분간 러닝하셨어요? 🏃‍♂️ {calories}kcal 소모! 이런 체력이면 에베레스트도 정복하실 것 같아요!',
+    '{duration}분간 {difficulty} 러닝으로 {calories}kcal 정복! 💨 {userName}님, 바람을 가르며 달리는 모습이 정말 멋있었을 것 같아요!',
+    '와... {userName}님이 {difficulty} 강도로 {duration}분 동안 쉬지 않고 달려서 {calories}kcal 소모! 🌟 이 정도면 울트라 마라톤도 가능하실 것 같은데요?',
+  ],
+  '수영': [
+    '놀라워요! {userName}님이 {duration}분간 {difficulty} 강도로 수영하셨다니! 🏊 물 속에서 {calories}kcal나 태우셨네요! 인어처럼 우아하셨겠어요!',
+    '우와! {difficulty} 페이스로 {duration}분 수영이요? 😮 {userName}님, {calories}kcal 소모! 물고기도 놀랄 실력이에요!',
+    '대단해요! {userName}님 {duration}분 동안 {difficulty} 강도로 수영장을 정복! 💦 {calories}kcal 연소! 물 위를 나는 것 같으셨겠어요!',
+    '{duration}분간 {difficulty} 수영 완료! 🌊 {userName}님의 영법이 정말 궁금해요! {calories}kcal나 소모하시다니 프로 스위머 같아요!',
+    '헉! {userName}님이 {difficulty} 강도로 {duration}분간 수영해서 {calories}kcal 태우셨어요! 🏊‍♀️ 올림픽 나가실 건가요?',
+  ],
+  '자전거': [
+    '놀랍네요! {userName}님이 {duration}분간 {difficulty} 강도로 자전거 타셨어요! 🚴 {calories}kcal 소모! 바람을 가르며 달리는 기분이 최고였죠?',
+    '와! {difficulty} 페이스로 {duration}분 라이딩이라니! 🚲 {userName}님, {calories}kcal나 태우시고 다리가 강철이 되셨겠어요!',
+    '대박! {userName}님 {duration}분 동안 {difficulty} 강도로 페달링! 🚴‍♂️ {calories}kcal 연소! 투르 드 프랑스 준비하시는 건가요?',
+    '{difficulty} 강도로 {duration}분 자전거 완주! 😲 {userName}님, {calories}kcal 소모하시고 기분도 상쾌하시죠?',
+    '헉! {userName}님이 {difficulty} 페이스로 {duration}분간 사이클링해서 {calories}kcal 태우셨네요! 🌟 언덕도 거뜬히 오르셨을 것 같아요!',
+  ],
+  '걷기': [
+    '우와! {userName}님이 {duration}분간 {difficulty} 페이스로 걸으셨네요! 🚶 {calories}kcal 소모! 걸으면서 본 풍경이 아름다웠을 것 같아요!',
+    '{difficulty} 강도로 {duration}분 걷기 완료! 😊 {userName}님, {calories}kcal 태우시고 마음도 가벼워지셨죠? 산책의 즐거움을 아시는군요!',
+    '대단해요! {userName}님 {duration}분 동안 {difficulty} 페이스로 꾸준히 걸어서 {calories}kcal 소모! 🌿 건강한 습관의 시작이에요!',
+    '놀라워요! {difficulty} 강도로 {duration}분 산책이라니! 🚶‍♀️ {userName}님, {calories}kcal 연소하시고 스트레스도 날아갔겠어요!',
+    '헉! {userName}님이 {difficulty} 페이스로 {duration}분간 걷기 운동해서 {calories}kcal 소모! 💚 매일 이렇게 걸으시면 건강 만점이에요!',
+  ],
+  '헬스': [
+    '대박! {userName}님이 {duration}분간 {difficulty} 강도로 웨이트 트레이닝해서 {calories}kcal 연소! 💪 근육이 울부짖는 소리가 들려요!',
+    '우와! {difficulty} 강도로 {duration}분 헬스장 정복! 🏋️ {userName}님, {calories}kcal 태우시고 몸이 단단해진 게 느껴지시나요?',
+    '놀라워요! {userName}님 {duration}분 동안 {difficulty} 강도로 철봉과 씨름해서 {calories}kcal 소모! 😮 헐크가 되어가고 계세요!',
+    '{difficulty} 강도로 {duration}분 근력운동 완료! 💯 {userName}님, {calories}kcal 연소하시고 성취감도 최고죠?',
+    '헉! {userName}님이 {difficulty} 강도로 {duration}분간 무게를 들어서 {calories}kcal 소모! 🔥 거울에 비친 모습이 달라 보이실 거예요!',
+  ],
+  '요가': [
+    '와! {userName}님이 {duration}분간 {difficulty} 강도로 요가 수련해서 {calories}kcal 소모! 🧘 몸과 마음이 평온해지셨겠어요!',
+    '놀라워요! {difficulty} 강도로 {duration}분 요가라니! 🕉️ {userName}님, {calories}kcal 태우시고 유연성도 늘어나셨을 것 같아요!',
+    '대단해요! {userName}님 {duration}분 동안 {difficulty} 강도로 요가 자세를 유지해서 {calories}kcal 연소! ✨ 내면의 평화를 찾으셨나요?',
+    '{difficulty} 강도로 {duration}분 요가 완료! 🌸 {userName}님, {calories}kcal 소모하시고 스트레스도 해소되셨죠?',
+    '헉! {userName}님이 {difficulty} 강도로 {duration}분간 요가해서 {calories}kcal 태우셨어요! 💫 몸의 균형이 완벽해지셨겠어요!',
+  ],
+  '필라테스': [
+    '놀랍네요! {userName}님이 {duration}분간 {difficulty} 강도로 필라테스해서 {calories}kcal 소모! 🤸 코어가 불타오르는 느낌이었죠?',
+    '우와! {difficulty} 강도로 {duration}분 필라테스 완료! 💪 {userName}님, {calories}kcal 태우시고 자세가 더 좋아지셨을 거예요!',
+    '대박! {userName}님 {duration}분 동안 {difficulty} 강도로 필라테스 동작을 완벽하게 해서 {calories}kcal 연소! 🌟 몸의 중심이 탄탄해졌어요!',
+    '{difficulty} 강도로 {duration}분 필라테스 수련! 😲 {userName}님, {calories}kcal 소모하시고 집중력과 근력이 대단해요!',
+    '헉! {userName}님이 {difficulty} 강도로 {duration}분간 필라테스 마스터해서 {calories}kcal 태우셨어요! ✨ 몸이 가벼워지셨겠어요!',
+  ],
+  '클라이밍': [
+    '와! {userName}님이 {duration}분간 암벽을 정복하셨네요! 🧗 {calories}kcal 소모! 정상에서의 기분이 최고였겠어요!',
+    '놀라워요! {duration}분 클라이밍이라니! 🏔️ {userName}님, {calories}kcal 태우시고 성취감도 정상급이시죠?',
+    '대단해요! {userName}님 {duration}분 동안 중력을 거스르셨네요! 💪 {calories}kcal 연소! 스파이더맨이 부럽지 않으시겠어요!',
+    '{duration}분 암벽 등반 완료! 😮 {userName}님의 악력과 체력이 정말 대단해요! {calories}kcal 정복!',
+    '헉! {userName}님이 {duration}분간 절벽을 오르셨다니! 🌟 {calories}kcal 소모! 진짜 셰르파가 되어가고 계세요!',
+  ],
+  '등산': [
+    '대박! {userName}님이 {duration}분간 산을 오르셨어요! ⛰️ {calories}kcal 소모! 저 셰르피도 함께 오른 기분이에요!',
+    '우와! {duration}분 등산이라니! 🥾 {userName}님, {calories}kcal 태우시고 정상에서의 뷰가 최고였겠어요!',
+    '놀라워요! {userName}님 {duration}분 동안 산길을 정복하셨네요! 🏔️ {calories}kcal 연소! 진정한 등반가시네요!',
+    '{duration}분 트레킹 완료! 😲 {userName}님과 함께 산을 오르고 싶어요! {calories}kcal 소모하셨네요!',
+    '헉! {userName}님이 {duration}분간 산행을! 🌲 {calories}kcal 태우시고 자연과 하나가 되셨겠어요!',
+  ],
+  '배드민턴': [
+    '놀랍네요! {userName}님이 {duration}분간 배드민턴을! 🏸 {calories}kcal 소모! 스매싱이 정말 멋있었을 것 같아요!',
+    '우와! {duration}분 랠리를 이어가셨네요! 😮 {userName}님, {calories}kcal 태우시고 반사신경도 향상되셨겠어요!',
+    '대박! {userName}님 {duration}분 동안 셔틀콕과 춤을! 💫 {calories}kcal 연소! 프로 선수 못지않으시네요!',
+    '{duration}분 배드민턴 완료! 🌟 {userName}님의 민첩성이 대단해요! {calories}kcal 정복하셨네요!',
+    '헉! {userName}님이 {duration}분간 코트를 지배! 🏸 {calories}kcal 소모! 상대방이 힘들어했겠어요!',
+  ],
+  '테니스': [
+    '와! {userName}님이 {duration}분간 {difficulty} 강도로 테니스 경기해서 {calories}kcal 소모! 🎾 서브 에이스가 몇 개나 나왔나요?',
+    '놀라워요! {difficulty} 페이스로 {duration}분 테니스라니! 🏆 {userName}님, {calories}kcal 태우시고 윔블던 준비하시는 건가요?',
+    '대단해요! {userName}님 {duration}분 동안 {difficulty} 강도로 코트를 누비며 {calories}kcal 연소! 💪 포핸드가 강력하셨겠어요!',
+    '{difficulty} 강도로 {duration}분 랠리 완료! 😲 {userName}님, {calories}kcal 정복! 체력과 기술이 프로급이에요!',
+    '헉! {userName}님이 {difficulty} 페이스로 {duration}분간 테니스해서 {calories}kcal 소모! 🌟 그랜드슬램도 노려볼만 하시네요!',
+  ],
+  '골프': [
+    '우와! {userName}님이 {duration}분간 {difficulty} 강도로 골프를! ⛳ {calories}kcal 소모! 홀인원 하셨나요?',
+    '놀랍네요! {duration}분 동안 {difficulty} 라운딩이라니! 🏌️ {userName}님, {calories}kcal 태우시고 스윙도 완벽하셨겠어요!',
+    '대박! {userName}님 {duration}분 동안 {difficulty} 강도로 필드를 정복! 💚 {calories}kcal 연소! 버디는 몇 개나 잡으셨어요?',
+    '{duration}분 {difficulty} 골프 완료! 😮 {userName}님의 집중력이 대단해요! {calories}kcal 소모하셨네요!',
+    '헉! {userName}님이 {duration}분간 {difficulty} 강도로 그린 위에서! 🌟 {calories}kcal 태우시고 스코어도 최고였겠어요!',
+  ],
+  '농구': [
+    '놀라워요! {userName}님이 {duration}분간 {difficulty} 강도로 농구를! 🏀 {calories}kcal 소모! 3점슛이 들어갔나요?',
+    '우와! {duration}분 동안 {difficulty} 페이스로 코트 위의 전사! 😮 {userName}님, {calories}kcal 태우시고 덩크슛도 성공하셨겠어요!',
+    '대박! {userName}님 {duration}분 동안 {difficulty} 강도로 농구 경기를! 🔥 {calories}kcal 연소! MVP감이시네요!',
+    '{duration}분 {difficulty} 농구 완료! 💪 {userName}님의 드리블 실력이 대단할 것 같아요! {calories}kcal 정복!',
+    '헉! {userName}님이 {duration}분간 {difficulty} 강도로 코트를 지배! 🌟 {calories}kcal 소모! NBA도 가능하실 것 같아요!',
+  ],
+  '축구': [
+    '와! {userName}님이 {duration}분간 {difficulty} 강도로 축구를! ⚽ {calories}kcal 소모! 골은 넣으셨나요?',
+    '놀랍네요! {duration}분 동안 {difficulty} 페이스로 필드 위에서! 🥅 {userName}님, {calories}kcal 태우시고 해트트릭도 가능하셨겠어요!',
+    '대단해요! {userName}님 {duration}분 동안 {difficulty} 강도로 그라운드를 누비셨네요! 💚 {calories}kcal 연소! 메시가 부럽지 않으시겠어요!',
+    '{duration}분 {difficulty} 축구 완료! 😲 {userName}님의 체력이 정말 대단해요! {calories}kcal 정복하셨네요!',
+    '헉! {userName}님이 {duration}분간 {difficulty} 강도로 공을 차셨다니! 🌟 {calories}kcal 소모! 월드컵 준비하시는 건가요?',
+  ],
+  '배구': [
+    '놀라워요! {userName}님이 {duration}분간 {difficulty} 강도로 배구를! 🏐 {calories}kcal 소모! 스파이크가 멋있었겠어요!',
+    '우와! {duration}분 동안 {difficulty} 페이스로 네트 앞에서! 😮 {userName}님, {calories}kcal 태우시고 블로킹도 완벽하셨겠죠?',
+    '대박! {userName}님 {duration}분 동안 {difficulty} 강도로 배구 경기를! 💪 {calories}kcal 연소! 서브 에이스 몇 개나 넣으셨어요?',
+    '{duration}분 {difficulty} 배구 완료! 🌟 {userName}님의 팀워크가 빛났겠어요! {calories}kcal 정복!',
+    '헉! {userName}님이 {duration}분간 {difficulty} 강도로 코트에서! 🔥 {calories}kcal 소모! 리베로도 놀랄 실력이시네요!',
+  ],
+};
+
 // 카테고리별 모임 메시지 선택 함수
 String getCategorySpecificMeetingMessage({
   required String category,
@@ -517,9 +735,9 @@ final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
   SherpiContext.firstClimb: SherpiEmotion.special,
 
   // 일상 기록 관련
-  SherpiContext.exerciseComplete: SherpiEmotion.happy,
+  SherpiContext.exerciseComplete: SherpiEmotion.surprised,
   SherpiContext.studyComplete: SherpiEmotion.thinking,
-  SherpiContext.diaryWritten: SherpiEmotion.defaults,
+  SherpiContext.diaryWritten: SherpiEmotion.guiding,
   SherpiContext.focusComplete: SherpiEmotion.thinking,
 
   // 경고 및 안내
@@ -551,6 +769,68 @@ abstract class SherpiDialogueSource {
       );
 }
 
+// 😊 감정별 일기 작성 완료 메시지 선택 함수
+String getDiaryCompletionMessage({
+  required String mood,
+  required String userName,
+}) {
+  // 디버그: 감정 확인
+  print('[DEBUG] Diary Completion - Mood: "$mood", User: "$userName"');
+  
+  // 해당 감정의 메시지 리스트 가져오기
+  final messages = diaryMoodMessages[mood];
+  
+  if (messages == null || messages.isEmpty) {
+    // 감정을 찾을 수 없는 경우 기본 메시지 반환
+    print('[DEBUG] No diary messages found for mood: "$mood", using default');
+    return '$userName님, 오늘의 이야기를 일기에 담으셨네요! 📝 일기 내용은 비밀로 할게요. 내일은 더 좋은 하루가 되길!';
+  }
+  
+  // 랜덤으로 메시지 선택
+  final randomIndex = Random().nextInt(messages.length);
+  var selectedMessage = messages[randomIndex];
+  
+  // 플레이스홀더 치환
+  selectedMessage = selectedMessage.replaceAll('{userName}', userName);
+  
+  print('[DEBUG] Selected diary message: "$selectedMessage"');
+  return selectedMessage;
+}
+
+// 📚 카테고리별 독서 완료 메시지 선택 함수
+String getReadingCompletionMessage({
+  required String category,
+  required String userName,
+  required String bookTitle,
+  required int pages,
+}) {
+  // 디버그: 독서 정보 확인
+  print('[DEBUG] Reading Completion - Category: "$category", Book: "$bookTitle", Pages: $pages');
+  print('[DEBUG] User: "$userName"');
+  
+  // 해당 카테고리의 메시지 리스트 가져오기
+  final messages = readingCategoryMessages[category];
+  
+  if (messages == null || messages.isEmpty) {
+    // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
+    print('[DEBUG] No reading messages found for category: "$category", using default');
+    return '$userName님, "$bookTitle" $pages페이지 독서 완료! 📚 오늘도 책과 함께한 시간이 의미있었길 바라요!';
+  }
+  
+  // 랜덤으로 메시지 선택
+  final randomIndex = Random().nextInt(messages.length);
+  var selectedMessage = messages[randomIndex];
+  
+  // 플레이스홀더 치환
+  selectedMessage = selectedMessage
+      .replaceAll('{userName}', userName)
+      .replaceAll('{bookTitle}', bookTitle)
+      .replaceAll('{pages}', pages.toString());
+  
+  print('[DEBUG] Selected reading message: "$selectedMessage"');
+  return selectedMessage;
+}
+
 // 현재 정적 데이터 소스 (백엔드 API 준비 전까지 사용)
 class StaticDialogueSource implements SherpiDialogueSource {
   @override
@@ -559,16 +839,131 @@ class StaticDialogueSource implements SherpiDialogueSource {
       Map<String, dynamic>? userContext,
       Map<String, dynamic>? gameContext,
       ) async {
+    // 사용자 이름 가져오기 (공통)
+    final userName = gameContext?['userPreferredName'] ?? 
+                     gameContext?['userName'] ?? 
+                     '친구';
+    
+    // welcome과 dailyGreeting 메시지 처리 (사용자 이름 치환)
+    if (context == SherpiContext.welcome || context == SherpiContext.dailyGreeting) {
+      final dialogues = sherpiDialogues[context] ?? ['안녕하세요!'];
+      final randomIndex = Random().nextInt(dialogues.length);
+      String message = dialogues[randomIndex];
+      
+      // {userName} 플레이스홀더를 실제 이름으로 치환
+      message = message.replaceAll('{userName}', userName);
+      return message;
+    }
+    
+    // 일기 작성 완료 시 감정별 메시지 처리
+    if (context == SherpiContext.diaryWritten && userContext != null) {
+      // 감정 정보가 있으면 감정별 메시지 생성
+      final mood = userContext['mood'] as String?;
+      if (mood != null && mood.isNotEmpty) {
+        print('[DEBUG StaticDialogueSource] Diary completion detected');
+        print('[DEBUG StaticDialogueSource] userContext: $userContext');
+        print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
+        
+        print('[DEBUG StaticDialogueSource] Extracted - userName: "$userName", mood: "$mood"');
+        
+        // 감정별 메시지 생성
+        return getDiaryCompletionMessage(
+          mood: mood,
+          userName: userName,
+        );
+      }
+    }
+    
+    // 독서 완료 시 카테고리별 메시지 처리
+    if (context == SherpiContext.studyComplete && userContext != null) {
+      // 독서 활동인지 확인 (additionalData에서 bookTitle이 있으면 독서)
+      final bookTitle = userContext['bookTitle'] as String?;
+      if (bookTitle != null) {
+        print('[DEBUG StaticDialogueSource] Reading completion detected');
+        print('[DEBUG StaticDialogueSource] userContext: $userContext');
+        print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
+        
+        // 독서 정보 가져오기
+        final pages = userContext['pages'] as int? ?? 0;
+        final category = userContext['category'] as String? ?? '기타';
+        
+        print('[DEBUG StaticDialogueSource] Extracted - userName: "$userName", bookTitle: "$bookTitle", pages: $pages, category: "$category"');
+        
+        // 카테고리별 메시지 생성
+        return getReadingCompletionMessage(
+          category: category,
+          userName: userName,
+          bookTitle: bookTitle,
+          pages: pages,
+        );
+      }
+    }
+    
+    // 운동 완료 시 메시지 처리
+    if (context == SherpiContext.exerciseComplete && userContext != null) {
+      print('[DEBUG StaticDialogueSource] Exercise completion detected');
+      print('[DEBUG StaticDialogueSource] userContext: $userContext');
+      print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
+      
+      // 운동 정보 가져오기
+      final exerciseType = userContext['exerciseType'] as String? ?? '운동';
+      final duration = userContext['duration'] as int? ?? 0;
+      final difficulty = userContext['difficulty'] as String? ?? 'moderate';
+      final calories = userContext['calories'] as int? ?? 0;
+      
+      print('[DEBUG StaticDialogueSource] Extracted - userName: "$userName", exerciseType: "$exerciseType", duration: $duration, difficulty: "$difficulty", calories: $calories');
+      
+      // 난이도를 한국어로 변환 (DifficultyLevel.name 형식과 intensity 형식 모두 지원)
+      String difficultyKr;
+      switch (difficulty) {
+        case 'easy':
+        case 'low':
+          difficultyKr = '편안한';
+          break;
+        case 'moderate':
+        case 'medium':
+          difficultyKr = '적당한';
+          break;
+        case 'hard':
+        case 'high':
+          difficultyKr = '힘든';
+          break;
+        case 'veryHard':
+        case 'very_high':
+          difficultyKr = '매우 힘든';
+          break;
+        default:
+          difficultyKr = '적당한';
+      }
+      
+      // 운동 종류별 메시지 선택 (모든 데이터 포함)
+      final messages = exerciseTypeMessages[exerciseType] ?? exerciseTypeMessages['기타'] ?? [];
+      
+      String selectedMessage;
+      if (messages.isEmpty) {
+        selectedMessage = '$userName님, $duration분 동안 $difficultyKr 강도로 운동하셔서 ${calories}kcal 소모! 🏃 정말 대단해요!';
+      } else {
+        final random = Random();
+        selectedMessage = messages[random.nextInt(messages.length)];
+      }
+      
+      // 플레이스홀더 치환
+      selectedMessage = selectedMessage
+          .replaceAll('{userName}', userName)
+          .replaceAll('{duration}', duration.toString())
+          .replaceAll('{difficulty}', difficultyKr)
+          .replaceAll('{calories}', calories.toString())
+          .replaceAll('{exerciseType}', exerciseType);
+      
+      print('[DEBUG StaticDialogueSource] Selected exercise message: "$selectedMessage"');
+      return selectedMessage;
+    }
+    
     // 모임 개설 시 카테고리별 메시지 처리
     if (context == SherpiContext.meetingCreated && userContext != null) {
       print('[DEBUG StaticDialogueSource] meetingCreated context detected');
       print('[DEBUG StaticDialogueSource] userContext: $userContext');
       print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
-      
-      // 사용자 이름 가져오기
-      final userName = gameContext?['userPreferredName'] ?? 
-                       gameContext?['userName'] ?? 
-                       '친구';
       
       // 모임 정보 가져오기
       final meetingTitle = userContext['meetingTitle'] ?? '새로운 모임';
@@ -589,11 +984,6 @@ class StaticDialogueSource implements SherpiDialogueSource {
       print('[DEBUG StaticDialogueSource] meetingJoined context detected');
       print('[DEBUG StaticDialogueSource] userContext: $userContext');
       print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
-      
-      // 사용자 이름 가져오기
-      final userName = gameContext?['userPreferredName'] ?? 
-                       gameContext?['userName'] ?? 
-                       '친구';
       
       // 모임 정보 가져오기
       final meetingTitle = userContext['meeting_title'] ?? 
