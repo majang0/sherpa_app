@@ -23,8 +23,8 @@ class GameConstants {
     double bonus = 0.0;
     for (final badge in equippedBadges) {
       final effectType = badge.effectType.toLowerCase();
-      if (effectType == 'climbing_power_multiply' || 
-          effectType == 'power_boost' || 
+      if (effectType == 'climbing_power_multiply' ||
+          effectType == 'power_boost' ||
           effectType == 'stamina_boost' ||
           effectType.contains('power') ||
           effectType.contains('climbing')) {
@@ -155,8 +155,8 @@ class GameConstants {
     double badgeBonus = 0.0;
     for (final badge in equippedBadges) {
       final effectType = badge.effectType.toLowerCase();
-      if (effectType == 'success_rate' || 
-          effectType == 'climbing_success' || 
+      if (effectType == 'success_rate' ||
+          effectType == 'climbing_success' ||
           effectType == 'luck_boost' ||
           effectType.contains('success')) {
         badgeBonus += badge.effectValue / 100;
@@ -323,7 +323,7 @@ class GameConstants {
     // 사교성 1마다 등반 시간 1% 단축, 최대 10% 단축
     final reductionRate = math.min(socialityLevel * 0.002, 0.10);
     final adjustedTime = originalTimeHours * (1.0 - reductionRate);
-    
+
     // 최소 시간은 원래 시간의 50%로 제한
     return math.max(adjustedTime, originalTimeHours * 0.5);
   }
@@ -354,7 +354,7 @@ class GameConstants {
     }
 
     final totalChance = baseChance + difficultyBonus + levelBonus + badgeBonus;
-    
+
     // 최대 20%로 제한
     return math.min(totalChance, 0.20);
   }
@@ -373,37 +373,4 @@ class GameConstants {
     }
   }
 
-  // ==================== 실패 메시지 ====================
-
-  /// 실패 시 표시할 메시지 목록
-  static const List<String> failureMessages = [
-    "예상치 못한 폭설로 인해 아쉽게 발걸음을 돌렸습니다. 다음 도전을 위해 지형을 파악했습니다.",
-    "강한 바람으로 인해 안전을 위해 하산했습니다. 경험이 쌓였습니다.",
-    "날씨 변화로 인해 등반을 중단했습니다. 자연의 힘을 배웠습니다.",
-    "체력 부족으로 목표에 도달하지 못했습니다. 더 강해져서 돌아오겠습니다.",
-    "장비 문제로 인해 등반을 포기했습니다. 준비의 중요성을 깨달았습니다.",
-  ];
-
-  /// 랜덤 실패 메시지 반환
-  static String getRandomFailureMessage() {
-    final random = math.Random();
-    return failureMessages[random.nextInt(failureMessages.length)];
-  }
-
-  // ==================== 성공 메시지 ====================
-
-  /// 성공 시 표시할 메시지 목록
-  static const List<String> successMessages = [
-    "훌륭한 등반이었습니다! 정상에서 바라본 경치가 모든 고생을 보상해줍니다.",
-    "완벽한 등반 기술로 정상 정복에 성공했습니다!",
-    "끈질긴 노력 끝에 목표를 달성했습니다. 성장이 느껴집니다.",
-    "날씨와 지형을 완벽히 파악한 전략적 등반이었습니다!",
-    "팀워크와 개인 실력이 조화를 이룬 멋진 등반이었습니다.",
-  ];
-
-  /// 랜덤 성공 메시지 반환
-  static String getRandomSuccessMessage() {
-    final random = math.Random();
-    return successMessages[random.nextInt(successMessages.length)];
-  }
 }

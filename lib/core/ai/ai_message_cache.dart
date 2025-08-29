@@ -47,48 +47,21 @@ class CachedMessage {
   }
 }
 
-/// 🧠 단순화된 AI 메시지 캐시 시스템
+/// 🧠 단순화된 AI 메시지 캐시 시스템 (비활성화됨)
 /// 
-/// 핵심 기능만 유지하여 성능과 메모리를 최적화합니다.
+/// AI 시스템이 비활성화되어 캐시 기능도 사용하지 않습니다.
 class AiMessageCache {
   static const String _cacheKey = 'ai_message_cache';
   static const Duration _cacheExpiry = Duration(hours: 24); // 24시간 후 만료 (더 짧게)
   
   
-  /// 🚀 핵심 메시지만 백그라운드 생성 (단순화)
+  /// 🚀 핵심 메시지만 백그라운드 생성 (비활성화됨)
   Future<void> pregenerateImportantMessages({
     required Map<String, dynamic> currentUserContext,
     required Map<String, dynamic> currentGameContext,
   }) async {
-    
-    final cache = await _loadCache();
-    
-    // 핵심 컨텍스트만 선별 (3개로 제한)
-    final coreContexts = [
-      SherpiContext.welcome,
-      SherpiContext.levelUp,
-      SherpiContext.encouragement
-    ];
-    
-    for (final context in coreContexts) {
-      final cacheKey = '${context.name}_${_getUserHash(currentUserContext)}';
-      
-      // 캐시 확인
-      if (cache.containsKey(cacheKey)) {
-        final cached = cache[cacheKey]!;
-        if (!cached.isExpired) {
-          continue; // 유효한 캐시가 있음
-        }
-      }
-      
-      // 캐시 생성 비활성화 상태
-      continue;
-    }
-    
-    // 캐시 정리 및 저장
-    await _cleanupExpired(cache);
-    await _saveCache(cache);
-    
+    // AI 시스템 비활성화 - 아무 작업도 하지 않음
+    return;
   }
   
   /// 🧹 만료된 캐시 정리 (단순화)
@@ -104,20 +77,13 @@ class AiMessageCache {
     
   }
   
-  /// ⚡ 캐시된 AI 메시지 즉시 반환 (단순화)
+  /// ⚡ 캐시된 AI 메시지 즉시 반환 (비활성화됨)
   Future<String?> getCachedMessage(
     SherpiContext context,
     Map<String, dynamic> userContext,
   ) async {
-    final cache = await _loadCache();
-    final cacheKey = '${context.name}_${_getUserHash(userContext)}';
-    
-    final cachedMessage = cache[cacheKey];
-    if (cachedMessage != null && !cachedMessage.isExpired) {
-      return cachedMessage.message;
-    }
-    
-    return null; // 캐시 없음
+    // AI 시스템 비활성화 - 항상 null 반환
+    return null;
   }
   
   /// 💾 캐시 로드
@@ -152,17 +118,15 @@ class AiMessageCache {
     return '${level}_$days'.hashCode.toString();
   }
   
-  /// 📊 캐시 상태 정보
+  /// 📊 캐시 상태 정보 (비활성화됨)
   Future<Map<String, dynamic>> getCacheStatus() async {
-    final cache = await _loadCache();
-    final validCount = cache.values.where((msg) => !msg.isExpired).length;
-    final expiredCount = cache.values.where((msg) => msg.isExpired).length;
-    
+    // AI 시스템 비활성화 - 빈 상태 반환
     return {
-      'total': cache.length,
-      'valid': validCount,
-      'expired': expiredCount,
-      'contexts': cache.keys.toList(),
+      'total': 0,
+      'valid': 0,
+      'expired': 0,
+      'contexts': [],
+      'cache_enabled': false,
     };
   }
 }

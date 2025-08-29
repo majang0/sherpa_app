@@ -353,40 +353,44 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
   Widget _buildEmptyState() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Column(
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: ModernColors.success.withOpacity(0.1),
-              shape: BoxShape.circle,
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: ModernColors.success.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.check_circle_outline,
+                size: 32,
+                color: ModernColors.success,
+              ),
             ),
-            child: Icon(
-              Icons.check_circle_outline,
-              size: 32,
-              color: ModernColors.success,
+            const SizedBox(height: 12),
+            Text(
+              '훌륭해요!',
+              style: GoogleFonts.notoSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: ModernColors.textPrimary,
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            '훌륭해요!',
-            style: GoogleFonts.notoSans(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: ModernColors.textPrimary,
+            const SizedBox(height: 4),
+            Text(
+              '모든 퀘스트를 완료했습니다',
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                color: ModernColors.textSecondary,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '모든 퀘스트를 완료했습니다',
-            style: GoogleFonts.notoSans(
-              fontSize: 13,
-              color: ModernColors.textSecondary,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

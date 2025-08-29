@@ -259,7 +259,7 @@ class ClimbingRecord {
     if (isSuccess) {
       return '🎉 $mountainName 등반 성공!';
     } else {
-      return '💪 $mountainName 등반 실패 (${failureReason ?? '다음에 다시 도전!'})';
+      return '💪 $mountainName 등반 실패 (다음에 다시 도전!)';
     }
   }
 

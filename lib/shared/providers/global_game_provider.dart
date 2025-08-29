@@ -151,15 +151,6 @@ class GameSystem {
 
   // ==================== 메시지 시스템 ====================
 
-  /// 랜덤 성공 메시지
-  String getRandomSuccessMessage() {
-    return GameConstants.getRandomSuccessMessage();
-  }
-
-  /// 랜덤 실패 메시지
-  String getRandomFailureMessage() {
-    return GameConstants.getRandomFailureMessage();
-  }
 
   // ==================== 뱃지 시스템 통합 ====================
 

@@ -464,7 +464,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       mountainPower: session.mountainPower,
       successProbability: session.successProbability,
       rewards: rewards,
-      failureReason: isSuccess ? null : _getRandomFailureReason(),
+      failureReason: null,
     );
 
     // 오늘의 첫 등반 성공인지 확인 (새 기록 추가 전에 확인)
@@ -568,11 +568,32 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     }
     
     // 셀르피 결과 메시지
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.general,
-      customDialogue: record.resultMessage + '\n' + rewards.summaryText,
-      emotion: isSuccess ? SherpiEmotion.cheering : SherpiEmotion.happy,
-    );
+    // 성공 시에는 성공 메시지를 직접 표시, 실패 시에는 sherpi_dialogues에서 랜덤 선택
+    if (isSuccess) {
+      ref.read(sherpiProvider.notifier).showInstantMessage(
+        context: SherpiContext.climbingSuccess,
+        customDialogue: '등반 성공!\n' + rewards.summaryText,
+        emotion: SherpiEmotion.cheering,
+      );
+    } else {
+      // 실패 시: sherpi_dialogues.dart의 메시지 중 랜덤 선택 + 보상 요약
+      final failureMessages = sherpiDialogues[SherpiContext.climbingFailure] ?? [];
+      final randomMessage = failureMessages.isNotEmpty 
+          ? failureMessages[math.Random().nextInt(failureMessages.length)]
+          : '아쉽지만 실패했습니다';
+      
+      // 보상 요약이 있을 때만 추가
+      final summaryText = rewards.summaryText;
+      final messageToShow = summaryText.isNotEmpty 
+          ? randomMessage + '\n' + summaryText
+          : randomMessage;
+      
+      ref.read(sherpiProvider.notifier).showInstantMessage(
+        context: SherpiContext.climbingFailure,
+        customDialogue: messageToShow,
+        emotion: SherpiEmotion.happy,
+      );
+    }
   }
 
   /// 등반 취소
@@ -590,12 +611,6 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     );
 
     _saveUserData();
-
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.general,
-      customDialogue: '등반을 취소했어요. 다음에 다시 도전해보세요! 🙌',
-      emotion: SherpiEmotion.happy,
-    );
   }
 
   /// 등반 세션 상태 업데이트 (주기적 호출)
@@ -668,8 +683,15 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         }
       }
     } else {
-      // 실패 시 보상
-      experience = gameSystem.calculateFailureXp(difficulty, durationHours);
+      // 실패 시 보상 (성공 시의 25%)
+      // playerLevel을 전달하지 않으면 레벨 1로 계산되어 경험치가 너무 작아짐
+      final failXp = GameConstants.calculateFailureXp(
+        difficulty, 
+        durationHours, 
+        playerLevel: state.level,
+      );
+      
+      experience = failXp;
       points = 0;
       statIncreases = {};
     }
@@ -692,12 +714,6 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       orElse: () => allBadges.first, // 기본값으로 첫 번째 뱃지 반환
     ))
         .toList();
-  }
-
-  /// 랜덤 실패 사유 생성
-  String _getRandomFailureReason() {
-    final gameSystem = ref.read(globalGameProvider);
-    return gameSystem.getRandomFailureMessage();
   }
 
   /// 등반 기록 조회
@@ -1232,12 +1248,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         _notifyQuestSystem('daily_goal_completed', {'goalId': goalId});
       }
 
-      // 자동 완료 알림
-      ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.achievement,
-        customDialogue: '🎉 목표가 자동으로 완료되었어요!',
-        emotion: SherpiEmotion.cheering,
-      );
+      // 자동 완료 알림 제거 - 개별 목표별로 정해진 메시지가 있음
     }
   }
 
@@ -1748,16 +1759,18 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         emotion = SherpiEmotion.special;
         break;
         
-      // 🎉 높은 경험치 획득 (레벨업이 아닌 경우)
+      // 🎉 높은 경험치 획득 (레벨업이 아닌 경우) - 메시지 비활성화
       case String() when xp >= 100:
-        context = SherpiContext.achievement;
+        // achievement 메시지가 나오지 않도록 기본 격려로 변경
+        context = SherpiContext.encouragement;
         emotion = SherpiEmotion.cheering;
         customMessage = '대단해요! 🎉 ${xp.toInt()} 경험치를 획득했어요!';
         break;
         
-      // 🌟 높은 포인트 획득
+      // 🌟 높은 포인트 획득 - 메시지 비활성화  
       case String() when points >= 100:
-        context = SherpiContext.achievement;
+        // achievement 메시지가 나오지 않도록 기본 격려로 변경
+        context = SherpiContext.encouragement;
         emotion = SherpiEmotion.special;
         customMessage = '대박 포인트 획득! ✨ ${points}P를 얻었어요!';
         break;

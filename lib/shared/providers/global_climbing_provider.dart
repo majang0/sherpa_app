@@ -166,7 +166,7 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
       mountainPower: session.mountainPower,
       successProbability: session.successProbability,
       rewards: rewards,
-      failureReason: isSuccess ? null : _getRandomFailureReason(),
+
     );
 
     // 등반 기록 추가 및 통계 업데이트
@@ -349,11 +349,7 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
         .toList();
   }
 
-  /// 랜덤 실패 사유 생성
-  String _getRandomFailureReason() {
-    final gameSystem = ref.read(globalGameProvider);
-    return gameSystem.getRandomFailureMessage();
-  }
+
 
   /// 등반 기록 조회
   List<ClimbingRecord> getClimbingHistory({int? limit}) {

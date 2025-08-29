@@ -3,13 +3,40 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/constants/sherpi_emotions.dart';
-import '../../core/ai/smart_sherpi_manager.dart';
+// import '../../core/ai/smart_sherpi_manager.dart'; // AI 시스템 비활성화
 import '../../core/ai/real_data_connector.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 import '../../features/sherpi_emotion/providers/emotion_analysis_provider.dart';
 import '../models/sherpi_message_history.dart';
 import '../models/sherpi_relationship_model.dart';
 import 'global_user_provider.dart'; // Phase 1: 실제 사용자 이름을 가져오기 위해 추가
+
+/// 📝 메시지 소스 타입 (AI 시스템 비활성화로 static만 사용)
+enum MessageSource {
+  static,      // 정적 메시지 (유일한 소스)
+  aiCached,    // 사용하지 않음 (호환성 유지용)
+  aiRealtime,  // 사용하지 않음 (호환성 유지용)
+}
+
+/// 📨 셰르피 응답 데이터 (AI 시스템 비활성화 버전)
+class SherpiResponse {
+  final String message;
+  final MessageSource source;
+  final DateTime responseTime;
+  final Duration? generationDuration;
+  final Map<String, dynamic> metadata;
+  
+  SherpiResponse({
+    required this.message,
+    required this.source,
+    required this.responseTime,
+    this.generationDuration,
+    this.metadata = const {},
+  });
+  
+  /// ⚡ 빠른 응답인지 확인 (항상 true - 정적 메시지만 사용)
+  bool get isFastResponse => true;
+}
 
 enum SherpiDisplayMode {
   floating,      // 우하단 플로팅 (기본)
@@ -160,7 +187,7 @@ class SherpiState {
 class SherpiNotifier extends StateNotifier<SherpiState> {
   final SherpiDialogueSource _dialogueSource;
   late final RealDataConnector _dataConnector;
-  final SmartSherpiManager _smartManager = SmartSherpiManager();
+  // final SmartSherpiManager _smartManager = SmartSherpiManager(); // AI 시스템 비활성화
   final Ref _ref;
   Timer? _hideTimer;
   
@@ -186,8 +213,8 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
     // 친밀도 레벨 초기화
     _updateIntimacyLevel();
     
-    // 🎯 Phase 2: SmartSherpiManager에 데이터 수집기 초기화
-    _smartManager.initDataCollector(_ref);
+    // 🎯 Phase 2: SmartSherpiManager에 데이터 수집기 초기화 - AI 시스템 비활성화
+    // _smartManager.initDataCollector(_ref);
   }
   
 
@@ -195,7 +222,7 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
   void _updateIntimacyLevel() {
     try {
       final relationship = _ref.read(relationshipProvider);
-      _smartManager.setIntimacyLevel(relationship.intimacyLevel);
+      // _smartManager.setIntimacyLevel(relationship.intimacyLevel); // AI 시스템 비활성화
       
       // 🎯 Phase 1 개선: 실제 사용자 이름을 PersonalizationSettings에 반영
       final user = _ref.read(globalUserProvider);
@@ -205,7 +232,7 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
       final updatedSettings = relationship.personalizationSettings.copyWith(
         userPreferredName: userName, // 실제 사용자 이름으로 업데이트
       );
-      _smartManager.setPersonalizationSettings(updatedSettings);
+      // _smartManager.setPersonalizationSettings(updatedSettings); // AI 시스템 비활성화
       
     } catch (e) {
       // 관계 프로바이더가 아직 초기화되지 않은 경우
@@ -333,8 +360,16 @@ void initializeSherpi() {
       );
       final realGameContext = _dataConnector.buildRealGameContext();
       
-      // 🧠 스마트 매니저를 통한 지능적 메시지 선택
-      final sherpiResponse = await _smartManager.getMessage(context, realUserContext, realGameContext);
+      // 🧠 스마트 매니저를 통한 지능적 메시지 선택 - AI 시스템 비활성화, 정적 메시지 사용
+      // final sherpiResponse = await _smartManager.getMessage(context, realUserContext, realGameContext);
+      
+      // 정적 메시지 직접 가져오기
+      final staticDialogue = await _dialogueSource.getDialogue(context, realUserContext, realGameContext);
+      final sherpiResponse = SherpiResponse(
+        message: staticDialogue,
+        source: MessageSource.static,
+        responseTime: DateTime.now(),
+      );
       
       final metadata = {
         'context': context.name,
@@ -451,18 +486,19 @@ void initializeSherpi() {
         );
         final realGameContext = _dataConnector.buildRealGameContext();
         
-        // 🧠 스마트 매니저를 통한 AI 메시지 시도 (빠른 응답만)
-        final sherpiResponse = await Future.any([
-          _smartManager.getMessage(context, realUserContext, realGameContext),
-          Future.delayed(const Duration(milliseconds: 500), () => null), // 500ms 타임아웃
-        ]);
-        
-        if (sherpiResponse != null) {
-          // AI 메시지가 빠르게 반환된 경우 (캐시 히트)
-          if (sherpiResponse.isFastResponse) {
-            finalMessage = sherpiResponse.message;
-            responseSource = sherpiResponse.source.name;
+        // 🧠 스마트 매니저를 통한 AI 메시지 시도 (빠른 응답만) - AI 시스템 비활성화
+        // 정적 메시지를 시도하되, customDialogue를 우선 사용
+        try {
+          final staticDialogue = await _dialogueSource.getDialogue(context, realUserContext, realGameContext);
+          // customDialogue가 더 구체적이면 그것을 사용, 아니면 정적 메시지 사용
+          if (customDialogue.length > 10 && !customDialogue.contains('!')) {
+            finalMessage = customDialogue;
+          } else if (staticDialogue.isNotEmpty) {
+            finalMessage = staticDialogue;
+            responseSource = 'static';
           }
+        } catch (e) {
+          // 정적 메시지 가져오기 실패 시 customDialogue 사용
         }
       } catch (e) {
         // AI 실패 시 정적 메시지 사용
@@ -484,7 +520,7 @@ void initializeSherpi() {
     state = state.copyWith(
       emotion: selectedEmotion,
       dialogue: finalMessage,
-      isVisible: isNewMessage, // 새로운 메시지일 때만 알림 표시
+      isVisible: true, // 항상 메시지 표시
       lastShownTime: DateTime.now(),
       currentContext: context,
       metadata: metadata,
@@ -603,34 +639,25 @@ void initializeSherpi() {
     _hideTimer = Timer(const Duration(seconds: 3), hideMessage);
   }
 
-  /// 🚀 백그라운드 캐시 초기화 (앱 시작 시 한 번 실행)
+  /// 🚀 백그라운드 캐시 초기화 (앱 시작 시 한 번 실행) - AI 시스템 비활성화
+  /*
   Future<void> initializeBackgroundCaching({
     Map<String, dynamic>? userContext,
     Map<String, dynamic>? gameContext,
   }) async {
-    final defaultUserContext = userContext ?? {
-      '사용자명': '사용자',
-      '레벨': '1',
-      '연속 접속일': '1',
-    };
-    
-    final defaultGameContext = gameContext ?? {
-      '현재 산': '한라산',
-      '등반 성공률': '50%',
-      '최근 활동': '앱 사용 중',
-    };
-
-    // 백그라운드에서 중요한 메시지들 사전 생성 시작  
-    await _smartManager.startBackgroundCaching(
-      defaultUserContext,
-      defaultGameContext,
-    );
+    // AI 시스템 비활성화 - 더 이상 백그라운드 캐싱 사용하지 않음
   }
+  */
 
-  /// 📊 시스템 상태 조회
+  /// 📊 시스템 상태 조회 - AI 시스템 비활성화
   Future<Map<String, dynamic>> getSystemStatus() async {
-    final systemStatus = await _smartManager.getSystemStatus();
-    return systemStatus;
+    // final systemStatus = await _smartManager.getSystemStatus();
+    // AI 시스템 비활성화 - 기본 상태 반환
+    return {
+      'ai_enabled': false,
+      'message_source': 'static_only',
+      'cache_enabled': false,
+    };
   }
 
   void _logInteraction(
@@ -805,8 +832,8 @@ void initializeSherpi() {
       // 직접 상태 업데이트 (관계 프로바이더에 업데이트 메서드가 있다면 그것을 사용)
       relationshipNotifier.updateRelationship(updatedRelationship);
       
-      // SmartSherpiManager에도 즉시 반영
-      _smartManager.setPersonalizationSettings(newSettings);
+      // SmartSherpiManager에도 즉시 반영 - AI 시스템 비활성화
+      // _smartManager.setPersonalizationSettings(newSettings);
       
       
       // 설정 변경을 알리는 메시지 표시 (선택사항)
