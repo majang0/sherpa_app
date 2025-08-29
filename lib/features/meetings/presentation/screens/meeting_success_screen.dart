@@ -74,14 +74,15 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
     _mainAnimationController.forward();
     _confettiController.repeat();
 
-    // 🎯 성공 셰르피 메시지
+    // 🎯 성공 셰르피 메시지 (카테고리별 맞춤 메시지)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(sherpiProvider.notifier).showMessage(
         context: SherpiContext.meetingJoined,  // levelUp이 아닌 meetingJoined 사용
-        emotion: SherpiEmotion.cheering,
+        emotion: SherpiEmotion.talking,  // talking 감정 사용 (카테고리별 메시지와 어울림)
         userContext: {
           'screen': 'meeting_success',
           'meeting_title': widget.meeting.title,
+          'category': widget.meeting.category.name,  // 카테고리 정보 추가
           'experience_gained': widget.meeting.experienceReward,
           'points_gained': widget.meeting.participationReward,
         },

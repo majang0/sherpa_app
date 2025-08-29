@@ -120,6 +120,13 @@ class SherpiEmotionMapper {
       case SherpiContext.general:
         return SherpiEmotion.happy;
         
+      // 🌟 모임 관련 상황
+      case SherpiContext.meetingCreated:
+        return SherpiEmotion.special;  // 모임 개설은 특별한 순간
+        
+      case SherpiContext.meetingJoined:
+        return SherpiEmotion.talking;  // 모임 참가 시 대화 상태
+        
       // 😊 기본 상황
       default:
         return SherpiEmotion.defaults;

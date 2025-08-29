@@ -415,7 +415,7 @@ class _MeetingCreationDialogState
         // 성공 피드백 - 모임 개설 전용 컨텍스트 사용
         ref.read(sherpiProvider.notifier).showMessage(
           context: SherpiContext.meetingCreated,  // 모임 개설 전용 컨텍스트
-          emotion: SherpiEmotion.cheering,
+          // emotion 파라미터 제거 - contextEmotionMap에서 자동으로 special 감정 사용
           userContext: {
             'meetingTitle': newMeeting.title,
             'category': newMeeting.category.displayName,

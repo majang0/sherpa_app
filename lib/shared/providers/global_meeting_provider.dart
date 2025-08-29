@@ -502,11 +502,17 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         myJoinedMeetings: updatedJoinedMeetings,
       );
 
-      // 9. 성공 피드백
-      ref.read(sherpiProvider.notifier).showInstantMessage(
+      // 9. 성공 피드백 (카테고리별 맞춤 메시지)
+      ref.read(sherpiProvider.notifier).showMessage(
         context: SherpiContext.meetingJoined,
-        customDialogue: '🎉 "${meeting.title}" 모임 참여 완료!\n경험치 +${meeting.experienceReward.toInt()}, 포인트 +${meeting.participationReward.toInt()}',
-        emotion: SherpiEmotion.cheering,
+        emotion: SherpiEmotion.talking,  // talking 감정 사용
+        userContext: {
+          'meeting_title': meeting.title,
+          'category': meeting.category.name,  // 카테고리 정보 추가
+          'experience_gained': meeting.experienceReward,
+          'points_gained': meeting.participationReward,
+        },
+        duration: const Duration(seconds: 5),
       );
 
       return true;

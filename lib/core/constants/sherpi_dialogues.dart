@@ -350,6 +350,59 @@ final Map<String, List<String>> meetingCategoryMessages = {
   ],
 };
 
+// 모임 카테고리별 참가 메시지 (talking 감정과 함께 사용)
+final Map<String, List<String>> meetingJoinedCategoryMessages = {
+  '운동': [
+    '{userName}님, "{meetingTitle}" 모임을 참가하셨군요! 💪 함께 운동하면서 건강한 에너지를 충전해보세요! 운동은 몸도 마음도 강하게 만들어주니까요!',
+    '오, "{meetingTitle}" 운동 모임에 참가하셨네요! 🏃 {userName}님, 땀 흘리는 즐거움과 함께 새로운 운동 친구들을 만나보세요!',
+    '{userName}님이 "{meetingTitle}"에 참가! 🔥 운동을 통해 한계를 넘어서는 경험, 정말 짜릿할 거예요! 화이팅!',
+    '"{meetingTitle}" 모임 참가 확정! 💯 {userName}님, 함께 운동하면 더 재미있고 동기부여도 되죠! 오늘도 건강한 하루 보내세요!',
+    '{userName}님, "{meetingTitle}" 운동 모임! 🎯 몸을 움직이면 스트레스도 날아가고 활력이 생겨요! 즐거운 운동 시간 되세요!',
+  ],
+  '스터디': [
+    '{userName}님, "{meetingTitle}" 스터디에 참가하셨군요! 📚 함께 공부하면 더 많이 배울 수 있어요! 지식의 시너지를 느껴보세요!',
+    '"{meetingTitle}" 스터디 참가! 🎓 {userName}님, 같은 목표를 가진 동료들과 함께라면 어려운 공부도 즐거워질 거예요!',
+    '{userName}님이 "{meetingTitle}"에 합류! 📖 서로 가르치고 배우면서 성장하는 기쁨을 느껴보세요! 스터디 파이팅!',
+    '스터디 "{meetingTitle}" 참가 완료! ✏️ {userName}님, 함께 목표를 향해 달려갈 동료들이 기다리고 있어요! 오늘도 열공하세요!',
+    '{userName}님의 "{meetingTitle}" 스터디 참가! 💡 지식을 나누고 서로를 이끌어주는 멋진 학습 여정이 될 거예요!',
+  ],
+  '독서': [
+    '{userName}님, "{meetingTitle}" 독서 모임에 참가하셨네요! 📚 책 속의 지혜를 함께 나누면 더 깊은 통찰을 얻을 수 있어요!',
+    '"{meetingTitle}" 독서 모임 참가! 📖 {userName}님, 책을 통해 새로운 세계를 탐험하고 생각을 나누는 즐거움을 만끽하세요!',
+    '{userName}님이 "{meetingTitle}"에 참가! 🌟 독서 토론을 통해 다양한 관점을 배우고 시야를 넓혀보세요!',
+    '독서 모임 "{meetingTitle}" 참가 확정! 📕 {userName}님, 책 읽는 즐거움을 함께 나눌 친구들과 만나보세요!',
+    '{userName}님의 "{meetingTitle}" 독서 클럽 참가! 📗 함께 읽고 토론하면서 생각의 깊이를 더해가세요!',
+  ],
+  '네트워킹': [
+    '{userName}님, "{meetingTitle}" 네트워킹에 참가하셨어요! 🤝 새로운 인연을 만나고 가치있는 관계를 만들어보세요!',
+    '"{meetingTitle}" 네트워킹 참가! 💼 {userName}님, 다양한 배경의 사람들과 교류하면서 시야를 넓혀보세요!',
+    '{userName}님이 "{meetingTitle}"에 합류! 🌐 서로의 경험을 나누고 함께 성장하는 네트워크를 만들어가세요!',
+    '네트워킹 "{meetingTitle}" 참가 완료! 🎯 {userName}님, 의미있는 만남과 협력의 기회가 기다리고 있어요!',
+    '{userName}님의 "{meetingTitle}" 네트워킹! ✨ 새로운 아이디어와 영감을 얻을 수 있는 특별한 시간이 될 거예요!',
+  ],
+  '문화': [
+    '{userName}님, "{meetingTitle}" 문화 모임에 참가하셨네요! 🎨 예술과 문화를 함께 즐기면 더 풍부한 경험이 될 거예요!',
+    '"{meetingTitle}" 문화 모임 참가! 🎭 {userName}님, 문화적 감성을 나누고 새로운 영감을 받아보세요!',
+    '{userName}님이 "{meetingTitle}"에 참가! 🎪 다양한 문화 활동을 통해 일상에 특별함을 더해보세요!',
+    '문화 모임 "{meetingTitle}" 참가 확정! 🎬 {userName}님, 문화를 사랑하는 사람들과 함께 즐거운 시간 보내세요!',
+    '{userName}님의 "{meetingTitle}" 문화 클럽 참가! 🎵 함께 문화를 즐기고 창조하는 특별한 경험을 만들어가세요!',
+  ],
+  '아웃도어': [
+    '{userName}님, "{meetingTitle}" 아웃도어 모임에 참가! 🏔️ 대자연 속에서 진정한 자유와 모험을 느껴보세요!',
+    '"{meetingTitle}" 아웃도어 참가! 🌲 {userName}님, 자연과 함께하는 특별한 경험이 기다리고 있어요!',
+    '{userName}님이 "{meetingTitle}"에 합류! ⛺ 야외 활동을 통해 스트레스를 날리고 새로운 에너지를 충전하세요!',
+    '아웃도어 "{meetingTitle}" 참가 완료! 🏕️ {userName}님, 자연 속에서 함께할 동료들과 멋진 추억을 만드세요!',
+    '{userName}님의 "{meetingTitle}" 아웃도어! 🚵 도시를 벗어나 자연과 하나되는 특별한 시간을 즐겨보세요!',
+  ],
+  '취미': [
+    '{userName}님, "{meetingTitle}" 취미 모임에 참가하셨어요! 🎯 같은 관심사를 가진 사람들과 함께 즐거운 시간 보내세요!',
+    '"{meetingTitle}" 취미 모임 참가! 🎨 {userName}님, 취미를 함께 즐기면 더 재미있고 의미있어요!',
+    '{userName}님이 "{meetingTitle}"에 참가! ✨ 취미 활동을 통해 일상의 스트레스를 날리고 행복을 충전하세요!',
+    '취미 모임 "{meetingTitle}" 참가 확정! 🌟 {userName}님, 같은 취미를 가진 친구들과 즐거운 시간 보내세요!',
+    '{userName}님의 "{meetingTitle}" 취미 클럽 참가! 🎪 함께 취미를 즐기면서 새로운 즐거움을 발견해보세요!',
+  ],
+};
+
 // 카테고리별 모임 메시지 선택 함수
 String getCategorySpecificMeetingMessage({
   required String category,
@@ -396,6 +449,52 @@ String getCategorySpecificMeetingMessage({
   return message;
 }
 
+// 카테고리별 모임 참가 메시지 선택 함수
+String getCategorySpecificMeetingJoinedMessage({
+  required String category,
+  required String userName,
+  required String meetingTitle,
+}) {
+  // 카테고리 매핑 (영어 -> 한글)
+  final categoryMap = {
+    'exercise': '운동',
+    'study': '스터디',
+    'reading': '독서',
+    'networking': '네트워킹',
+    'culture': '문화',
+    'outdoor': '아웃도어',
+    'hobby': '취미',
+  };
+  
+  // 영어 카테고리를 한글로 변환 (이미 한글인 경우 그대로 사용)
+  final koreanCategory = categoryMap[category.toLowerCase()] ?? category;
+  
+  // 디버그: 카테고리 확인
+  print('[DEBUG] Meeting Joined Category - Original: "$category", Korean: "$koreanCategory"');
+  print('[DEBUG] User: "$userName", Title: "$meetingTitle"');
+  
+  // 해당 카테고리의 메시지 리스트 가져오기
+  final messages = meetingJoinedCategoryMessages[koreanCategory];
+  
+  if (messages == null || messages.isEmpty) {
+    // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
+    print('[DEBUG] No joined messages found for category: "$koreanCategory"');
+    return '$userName님, "$meetingTitle" 모임에 참가하셨어요! 🎉 함께 성장하는 즐거움을 느껴보세요!';
+  }
+  
+  // 랜덤으로 메시지 선택
+  final randomIndex = Random().nextInt(messages.length);
+  var message = messages[randomIndex];
+  
+  // 플레이스홀더 치환
+  message = message.replaceAll('{userName}', userName);
+  message = message.replaceAll('{meetingTitle}', meetingTitle);
+  
+  print('[DEBUG] Selected joined message: "$message"');
+  
+  return message;
+}
+
 // 상황별 추천 감정 매핑 (백엔드에서 AI 판단 시 참고용)
 final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
   // 기본 상호작용
@@ -430,8 +529,8 @@ final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
   SherpiContext.tutorial: SherpiEmotion.guiding,
 
   // 커뮤니티 관련
-  SherpiContext.meetingJoined: SherpiEmotion.happy,
-  SherpiContext.meetingCreated: SherpiEmotion.cheering,
+  SherpiContext.meetingJoined: SherpiEmotion.talking,  // happy -> talking 변경 (카테고리별 메시지와 함께)
+  SherpiContext.meetingCreated: SherpiEmotion.special,  // cheering -> special 변경 (모임 개설은 특별한 순간)
   SherpiContext.friendActivity: SherpiEmotion.defaults,
   SherpiContext.guildRankUp: SherpiEmotion.cheering,
 
@@ -479,6 +578,33 @@ class StaticDialogueSource implements SherpiDialogueSource {
       
       // 카테고리별 메시지 생성
       return getCategorySpecificMeetingMessage(
+        category: category,
+        userName: userName,
+        meetingTitle: meetingTitle,
+      );
+    }
+    
+    // 모임 참가 시 카테고리별 메시지 처리
+    if (context == SherpiContext.meetingJoined && userContext != null) {
+      print('[DEBUG StaticDialogueSource] meetingJoined context detected');
+      print('[DEBUG StaticDialogueSource] userContext: $userContext');
+      print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
+      
+      // 사용자 이름 가져오기
+      final userName = gameContext?['userPreferredName'] ?? 
+                       gameContext?['userName'] ?? 
+                       '친구';
+      
+      // 모임 정보 가져오기
+      final meetingTitle = userContext['meeting_title'] ?? 
+                          userContext['meetingTitle'] ?? 
+                          '새로운 모임';
+      final category = userContext['category'] ?? '';
+      
+      print('[DEBUG StaticDialogueSource] Extracted - userName: "$userName", title: "$meetingTitle", category: "$category"');
+      
+      // 카테고리별 메시지 생성
+      return getCategorySpecificMeetingJoinedMessage(
         category: category,
         userName: userName,
         meetingTitle: meetingTitle,
