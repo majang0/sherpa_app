@@ -2107,12 +2107,7 @@ class _NewMeetingDiscoveryScreenState
   void _handleCreateMeeting() {
     HapticFeedback.mediumImpact();
     
-    // Sherpi 격려 메시지
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: '모임을 만들어볼까요? 간단하게 만들 수 있어요! 🎯',
-      emotion: SherpiEmotion.guiding,
-    );
+    // Sherpi 격려 메시지 제거 - 최종 완료 시에만 표시
     
     // 모달 띄우기
     showModalBottomSheet(

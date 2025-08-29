@@ -77,7 +77,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
     // 🎯 성공 셰르피 메시지
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(sherpiProvider.notifier).showMessage(
-        context: SherpiContext.levelUp,
+        context: SherpiContext.meetingJoined,  // levelUp이 아닌 meetingJoined 사용
         emotion: SherpiEmotion.cheering,
         userContext: {
           'screen': 'meeting_success',

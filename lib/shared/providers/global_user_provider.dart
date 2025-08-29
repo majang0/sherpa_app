@@ -1781,13 +1781,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         emotion = SherpiEmotion.cheering;
     }
 
-    // 레벨업 감지 (현재 레벨과 경험치로 판단)
-    final isLevelUp = _checkIfLeveledUp(xp);
-    if (isLevelUp) {
-      context = SherpiContext.levelUp;
-      emotion = SherpiEmotion.special;  // cheering -> special 변경
-      customMessage = '🎉 레벨업! ${state.level}레벨 달성! 축하해요!';
-    }
+    // 레벨업 감지 제거 - addExperience에서 이미 처리함
+    // 레벨업 메시지는 _handleLevelUp에서 직접 처리되므로 여기서는 불필요
 
     // 🎯 Phase 2: 활동별 상세 데이터 준비
     final enrichedUserContext = <String, dynamic>{
@@ -1878,17 +1873,6 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
 
 
-  /// 레벨업 여부 확인
-  bool _checkIfLeveledUp(double xp) {
-    final currentLevel = state.level;
-    final currentExp = state.experience;
-    final newExp = currentExp + xp;
-    
-    // 간단한 레벨업 공식 (1000 XP당 1레벨)
-    final newLevel = (newExp / 1000).floor() + 1;
-    
-    return newLevel > currentLevel;
-  }
 
   /// 총 활동 수 계산
   int _getTotalActivitiesCount() {

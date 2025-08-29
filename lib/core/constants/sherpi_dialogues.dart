@@ -40,6 +40,7 @@ enum SherpiContext {
 
   // 커뮤니티 관련
   meetingJoined,        // 모임 참가
+  meetingCreated,       // 모임 개설 성공
   friendActivity,       // 친구 활동 알림
   guildRankUp,          // 길드 랭킹 상승
 
@@ -229,6 +230,14 @@ const Map<SherpiContext, List<String>> sherpiDialogues = {
     '모임에서 만나는 모든 사람들이 당신의 인생에 새로운 색깔을 더해줄 거예요!',
   ],
 
+  SherpiContext.meetingCreated: [
+    '모임이 성공적으로 만들어졌어요! 🎉 당신이 만든 공간에서 많은 사람들이 함께 성장할 거예요!',
+    '새로운 커뮤니티의 시작! 🌟 리더십을 발휘하여 멋진 모임으로 이끌어주세요!',
+    '모임 개설 완료! 👏 함께할 동료들을 기다리는 설렘이 느껴지네요!',
+    '당신이 만든 이 모임이 많은 사람들에게 영감과 동기를 줄 거예요! 정말 멋져요!',
+    '모임을 만드는 용기와 리더십! 🚀 이제 함께 성장할 동료들이 모일 거예요!',
+  ],
+
   SherpiContext.friendActivity: [
     '친구의 소식이 들려와요! 👥 함께 성장하는 동료가 있다는 건 정말 소중해요',
     '친구의 성공을 진심으로 기뻐해주는 당신의 마음이 아름다워요!',
@@ -287,6 +296,106 @@ const Map<SherpiContext, List<String>> sherpiDialogues = {
   ],
 };
 
+// 모임 카테고리별 개설 메시지
+final Map<String, List<String>> meetingCategoryMessages = {
+  '운동': [
+    '{userName}님, "{meetingTitle}" 모임을 개설하셨군요! 💪 함께 땀 흘리며 건강한 에너지를 나눌 동료들이 곧 모일 거예요!',
+    '운동 모임 "{meetingTitle}"이(가) 시작됐어요! 🏃 {userName}님의 열정이 많은 사람들에게 운동의 즐거움을 전할 거예요!',
+    '{userName}님이 만든 "{meetingTitle}"! 🔥 이제 함께 몸과 마음을 단련할 운동 메이트들이 모일 거예요!',
+    '"{meetingTitle}" 운동 모임 개설 완료! 💯 {userName}님과 함께 건강한 라이프스타일을 만들어갈 동료들을 기다려요!',
+    '{userName}님의 "{meetingTitle}" 모임! 🎯 운동을 통해 서로를 동기부여하는 멋진 커뮤니티가 될 거예요!',
+  ],
+  '스터디': [
+    '{userName}님, "{meetingTitle}" 스터디를 개설하셨네요! 📚 함께 공부하며 성장할 동료들이 곧 합류할 거예요!',
+    '"{meetingTitle}" 스터디 모임 시작! 🎓 {userName}님의 학구열이 많은 사람들에게 영감을 줄 거예요!',
+    '{userName}님이 만든 "{meetingTitle}"! 📖 지식을 나누고 함께 배워갈 멋진 학습 공동체가 될 거예요!',
+    '스터디 모임 "{meetingTitle}" 개설 완료! ✏️ {userName}님과 함께 목표를 향해 달려갈 동료들을 기다려요!',
+    '{userName}님의 "{meetingTitle}" 스터디! 💡 서로를 이끌어주며 함께 성장하는 특별한 모임이 될 거예요!',
+  ],
+  '독서': [
+    '{userName}님, "{meetingTitle}" 독서 모임을 만드셨군요! 📚 책을 통해 마음이 통하는 동료들이 모일 거예요!',
+    '"{meetingTitle}" 독서 모임 시작! 📖 {userName}님과 함께 책 속 지혜를 나눌 친구들이 곧 합류할 거예요!',
+    '{userName}님이 개설한 "{meetingTitle}"! 🌟 독서를 통해 새로운 세계를 탐험할 동료들을 기다려요!',
+    '독서 모임 "{meetingTitle}" 개설 완료! 📕 {userName}님의 책 사랑이 많은 이들에게 영감을 줄 거예요!',
+    '{userName}님의 "{meetingTitle}" 독서 클럽! 📗 함께 읽고 토론하며 성장하는 지적 공동체가 될 거예요!',
+  ],
+  '네트워킹': [
+    '{userName}님, "{meetingTitle}" 네트워킹 모임을 개설하셨어요! 🤝 새로운 인연과 기회가 만들어질 거예요!',
+    '"{meetingTitle}" 네트워킹 시작! 💼 {userName}님이 만든 이 공간에서 많은 사람들이 연결될 거예요!',
+    '{userName}님의 "{meetingTitle}" 모임! 🌐 서로의 성장을 돕는 가치있는 네트워크가 형성될 거예요!',
+    '네트워킹 모임 "{meetingTitle}" 개설 완료! 🎯 {userName}님과 함께 의미있는 관계를 만들어갈 동료들을 기다려요!',
+    '{userName}님이 만든 "{meetingTitle}"! ✨ 다양한 배경의 사람들이 모여 시너지를 만들 거예요!',
+  ],
+  '문화': [
+    '{userName}님, "{meetingTitle}" 문화 모임을 개설하셨네요! 🎨 예술과 문화를 사랑하는 동료들이 모일 거예요!',
+    '"{meetingTitle}" 문화 모임 시작! 🎭 {userName}님과 함께 문화적 감성을 나눌 친구들이 곧 합류할 거예요!',
+    '{userName}님이 만든 "{meetingTitle}"! 🎪 다양한 문화 활동을 즐길 멋진 커뮤니티가 될 거예요!',
+    '문화 모임 "{meetingTitle}" 개설 완료! 🎬 {userName}님의 문화적 열정이 많은 이들에게 영감을 줄 거예요!',
+    '{userName}님의 "{meetingTitle}" 문화 클럽! 🎵 함께 문화를 즐기고 창조하는 특별한 모임이 될 거예요!',
+  ],
+  '아웃도어': [
+    '{userName}님, "{meetingTitle}" 아웃도어 모임을 만드셨어요! 🏔️ 자연과 함께하는 모험이 시작될 거예요!',
+    '"{meetingTitle}" 아웃도어 모임 시작! 🌲 {userName}님과 함께 대자연을 탐험할 동료들이 모일 거예요!',
+    '{userName}님이 개설한 "{meetingTitle}"! ⛺ 야외 활동을 사랑하는 사람들의 베이스캠프가 될 거예요!',
+    '아웃도어 모임 "{meetingTitle}" 개설 완료! 🏕️ {userName}님의 모험 정신이 많은 이들을 이끌 거예요!',
+    '{userName}님의 "{meetingTitle}" 아웃도어 클럽! 🚵 자연 속에서 함께 성장하는 특별한 커뮤니티가 될 거예요!',
+  ],
+  // hobby 카테고리 추가 (일부 모임 모델에서 사용)
+  '취미': [
+    '{userName}님, "{meetingTitle}" 취미 모임을 개설하셨어요! 🎯 같은 관심사를 가진 동료들이 모일 거예요!',
+    '"{meetingTitle}" 취미 모임 시작! 🎨 {userName}님과 함께 즐거운 취미 생활을 할 친구들이 곧 합류할 거예요!',
+    '{userName}님이 만든 "{meetingTitle}"! ✨ 취미를 통해 일상에 활력을 더할 멋진 모임이 될 거예요!',
+    '취미 모임 "{meetingTitle}" 개설 완료! 🌟 {userName}님의 열정이 많은 사람들에게 즐거움을 줄 거예요!',
+    '{userName}님의 "{meetingTitle}" 취미 클럽! 🎪 함께 취미를 즐기며 행복을 나누는 공간이 될 거예요!',
+  ],
+};
+
+// 카테고리별 모임 메시지 선택 함수
+String getCategorySpecificMeetingMessage({
+  required String category,
+  required String userName,
+  required String meetingTitle,
+}) {
+  // 카테고리 매핑 (영어 -> 한글)
+  final categoryMap = {
+    'exercise': '운동',
+    'study': '스터디',
+    'reading': '독서',
+    'networking': '네트워킹',
+    'culture': '문화',
+    'outdoor': '아웃도어',
+    'hobby': '취미',
+  };
+  
+  // 영어 카테고리를 한글로 변환 (이미 한글인 경우 그대로 사용)
+  final koreanCategory = categoryMap[category.toLowerCase()] ?? category;
+  
+  // 디버그: 카테고리 확인
+  print('[DEBUG] Meeting Category - Original: "$category", Korean: "$koreanCategory"');
+  print('[DEBUG] User: "$userName", Title: "$meetingTitle"');
+  
+  // 해당 카테고리의 메시지 리스트 가져오기
+  final messages = meetingCategoryMessages[koreanCategory];
+  
+  if (messages == null || messages.isEmpty) {
+    // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
+    print('[DEBUG] No messages found for category: "$koreanCategory"');
+    return '$userName님, "$meetingTitle" 모임을 개설하셨어요! 🎉 함께 성장할 동료들이 곧 모일 거예요!';
+  }
+  
+  // 랜덤으로 메시지 선택
+  final randomIndex = Random().nextInt(messages.length);
+  var message = messages[randomIndex];
+  
+  // 플레이스홀더 치환
+  message = message.replaceAll('{userName}', userName);
+  message = message.replaceAll('{meetingTitle}', meetingTitle);
+  
+  print('[DEBUG] Selected message: "$message"');
+  
+  return message;
+}
+
 // 상황별 추천 감정 매핑 (백엔드에서 AI 판단 시 참고용)
 final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
   // 기본 상호작용
@@ -322,6 +431,7 @@ final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
 
   // 커뮤니티 관련
   SherpiContext.meetingJoined: SherpiEmotion.happy,
+  SherpiContext.meetingCreated: SherpiEmotion.cheering,
   SherpiContext.friendActivity: SherpiEmotion.defaults,
   SherpiContext.guildRankUp: SherpiEmotion.cheering,
 
@@ -350,6 +460,32 @@ class StaticDialogueSource implements SherpiDialogueSource {
       Map<String, dynamic>? userContext,
       Map<String, dynamic>? gameContext,
       ) async {
+    // 모임 개설 시 카테고리별 메시지 처리
+    if (context == SherpiContext.meetingCreated && userContext != null) {
+      print('[DEBUG StaticDialogueSource] meetingCreated context detected');
+      print('[DEBUG StaticDialogueSource] userContext: $userContext');
+      print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
+      
+      // 사용자 이름 가져오기
+      final userName = gameContext?['userPreferredName'] ?? 
+                       gameContext?['userName'] ?? 
+                       '친구';
+      
+      // 모임 정보 가져오기
+      final meetingTitle = userContext['meetingTitle'] ?? '새로운 모임';
+      final category = userContext['category'] ?? '';
+      
+      print('[DEBUG StaticDialogueSource] Extracted - userName: "$userName", title: "$meetingTitle", category: "$category"');
+      
+      // 카테고리별 메시지 생성
+      return getCategorySpecificMeetingMessage(
+        category: category,
+        userName: userName,
+        meetingTitle: meetingTitle,
+      );
+    }
+    
+    // 일반 메시지 처리
     final dialogues = sherpiDialogues[context] ?? ['안녕하세요!'];
     final randomIndex = Random().nextInt(dialogues.length);
     return dialogues[randomIndex];

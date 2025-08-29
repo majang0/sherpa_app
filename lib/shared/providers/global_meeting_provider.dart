@@ -699,12 +699,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
       // 3. 상태 업데이트
       state = state.copyWith(availableMeetings: updatedMeetings);
 
-      // 4. 성공 피드백
-      ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.achievement,
-        customDialogue: '🎉 "${newMeeting.title}" 모임이 성공적으로 개설되었습니다!\n다른 사용자들이 참가할 수 있도록 모임을 홍보해보세요.',
-        emotion: SherpiEmotion.cheering,
-      );
+      // 4. 성공 피드백 제거 - meeting_creation_dialog.dart에서 처리
 
       return true;
     } catch (e) {

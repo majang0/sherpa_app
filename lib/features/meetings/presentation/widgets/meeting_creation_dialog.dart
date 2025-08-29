@@ -55,14 +55,7 @@ class _MeetingCreationDialogState
     super.initState();
     
     
-    // 모임 생성 시작 시 셰르피 안내
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.encouragement,
-        customDialogue: '모임을 만들어볼까요? 간단하게 4단계만 거치면 돼요! 🎯',
-        emotion: SherpiEmotion.guiding,
-      );
-    });
+    // 모임 생성 시작 시 셰르피 안내 제거 - 최종 완료 시에만 메시지 표시
   }
 
   @override
@@ -394,11 +387,7 @@ class _MeetingCreationDialogState
         return;
     }
     
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: message,
-      emotion: emotion,
-    );
+    // 단계 전환 시 셰르피 메시지 제거 - 최종 완료 시에만 표시
   }
 
   /// ✅ 모임 생성
@@ -423,11 +412,16 @@ class _MeetingCreationDialogState
       final success = await ref.read(globalMeetingProvider.notifier).addMeeting(newMeeting);
       
       if (success) {
-        // 성공 피드백
-        ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: SherpiContext.levelUp,
-          customDialogue: '모임이 성공적으로 만들어졌어요! 🎉 많은 사람들이 참여할 거예요!',
+        // 성공 피드백 - 모임 개설 전용 컨텍스트 사용
+        ref.read(sherpiProvider.notifier).showMessage(
+          context: SherpiContext.meetingCreated,  // 모임 개설 전용 컨텍스트
           emotion: SherpiEmotion.cheering,
+          userContext: {
+            'meetingTitle': newMeeting.title,
+            'category': newMeeting.category.displayName,
+            'maxParticipants': newMeeting.maxParticipants,
+          },
+          duration: const Duration(seconds: 5),
         );
         
         // MeetingCreationData 초기화

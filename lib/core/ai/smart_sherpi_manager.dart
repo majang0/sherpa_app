@@ -34,14 +34,34 @@ class SmartSherpiManager {
     Map<String, dynamic>? userContext,
     Map<String, dynamic>? gameContext,
   ) {
-    // 성격 유형별 기본 메시지 템플릿
-    final baseMessages = _getPersonalizedStaticMessages(context);
+    String message;
     
-    String message = baseMessages[context] ?? '멋진 하루 보내세요!';
-    
-    // 사용자 이름으로 개인화
-    if (_personalizationSettings.userPreferredName != '친구') {
-      message = message.replaceAll('친구', _personalizationSettings.userPreferredName);
+    // 모임 개설 시 카테고리별 메시지 사용
+    if (context == SherpiContext.meetingCreated && userContext != null) {
+      // 사용자 이름 가져오기
+      final userName = gameContext?['userPreferredName'] ?? 
+                       _personalizationSettings.userPreferredName ?? 
+                       '친구';
+      
+      // 모임 정보 가져오기
+      final meetingTitle = userContext['meetingTitle'] ?? '새로운 모임';
+      final category = userContext['category'] ?? '';
+      
+      // 카테고리별 메시지 생성
+      message = getCategorySpecificMeetingMessage(
+        category: category,
+        userName: userName,
+        meetingTitle: meetingTitle,
+      );
+    } else {
+      // 일반적인 메시지 처리
+      final baseMessages = _getPersonalizedStaticMessages(context);
+      message = baseMessages[context] ?? '멋진 하루 보내세요!';
+      
+      // 사용자 이름으로 개인화
+      if (_personalizationSettings.userPreferredName != '친구') {
+        message = message.replaceAll('친구', _personalizationSettings.userPreferredName);
+      }
     }
     
     // 이모지 사용 설정에 따른 조정
