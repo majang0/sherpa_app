@@ -15,16 +15,34 @@ class SampleDataGenerator {
     final now = DateTime.now();
     final sampleLogs = _generateSampleLogs(now);
 
-    final meetingCount = (sampleLogs['meetings'] as List<MeetingLog>).length;
+    // 오늘 날짜의 모든 데이터를 필터링하여 제거
+    final today = DateTime.now();
+    final filteredMeetings = (sampleLogs['meetings'] as List<MeetingLog>)
+        .where((log) => !_isSameDay(log.date, today))
+        .toList();
+    final filteredReadings = (sampleLogs['readings'] as List<ReadingLog>)
+        .where((log) => !_isSameDay(log.date, today))
+        .toList();
+    final filteredExercises = (sampleLogs['exercises'] as List<ExerciseLog>)
+        .where((log) => !_isSameDay(log.date, today))
+        .toList();
+    final filteredDiaries = (sampleLogs['diaries'] as List<DiaryLog>)
+        .where((log) => !_isSameDay(log.date, today))
+        .toList();
+    final filteredMovies = (sampleLogs['movies'] as List<MovieLog>)
+        .where((log) => !_isSameDay(log.date, today))
+        .toList();
+
+    final meetingCount = filteredMeetings.length;
 
     final result = DailyRecordData(
       todaySteps: _generateTodaySteps(),
       todayFocusMinutes: _generateTodayFocus(),
-      meetingLogs: sampleLogs['meetings'] as List<MeetingLog>,
-      readingLogs: sampleLogs['readings'] as List<ReadingLog>,
-      exerciseLogs: sampleLogs['exercises'] as List<ExerciseLog>,
-      diaryLogs: sampleLogs['diaries'] as List<DiaryLog>,
-      movieLogs: sampleLogs['movies'] as List<MovieLog>,
+      meetingLogs: filteredMeetings,
+      readingLogs: filteredReadings,
+      exerciseLogs: filteredExercises,
+      diaryLogs: filteredDiaries,
+      movieLogs: filteredMovies,
       dailyGoals: _generateTodayGoals(),
       climbingLogs: [], // 등반 기록 추가 (빈 리스트),
       challengeRecords: [],
@@ -132,9 +150,6 @@ class SampleDataGenerator {
     final movies = <MovieLog>[];
 
     for (int i = 0; i < 60; i++) {
-      // 오늘(i = 0)은 샘플 데이터 생성 건너뛰기 - 사용자가 직접 입력하도록
-      if (i == 0) continue;
-      
       final date = now.subtract(Duration(days: i));
 
       // 모임 생성 - 더 다양한 패턴으로 생성
