@@ -54,7 +54,7 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
             model: ChatCompletionModel.modelId('gpt-5-chat-latest'), // GPT-5 사용
             messages: [
               ChatCompletionMessage.system(
-                content: '당신은 셰르피(Sherpi)입니다. 사용자의 성장을 함께하는 친근하고 따뜻한 AI 동반자입니다.',
+                content: '당신은 셰르피입니다. 사용자의 성장을 함께하는 친근하고 따뜻한 AI 동반자입니다.',
               ),
               ChatCompletionMessage.user(
                 content: ChatCompletionUserMessageContent.string(prompt),

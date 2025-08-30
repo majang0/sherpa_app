@@ -1,16 +1,17 @@
-import 'dart:ui';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/constants/app_colors.dart';
+import '../../../core/theme/modern_colors.dart';
 import '../../../core/ai/activity_analysis_service.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
+import '../../../core/constants/sherpi_emotions.dart';
 
-/// 오늘의 분석 다이얼로그
+/// 🌟 오늘의 분석 다이얼로그 - 감성적이고 모던한 디자인
 /// 
-/// ChatGPT API를 통해 하루 동안의 활동을 분석하고 개인화된 피드백을 제공합니다.
+/// 셰르피와 함께하는 따뜻한 하루 분석 경험을 제공합니다.
 class TodayAnalysisDialog extends ConsumerStatefulWidget {
   const TodayAnalysisDialog({super.key});
 
@@ -18,17 +19,51 @@ class TodayAnalysisDialog extends ConsumerStatefulWidget {
   ConsumerState<TodayAnalysisDialog> createState() => _TodayAnalysisDialogState();
 }
 
-class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
+class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> 
+    with TickerProviderStateMixin {
   final ActivityAnalysisService _analysisService = ActivityAnalysisService.instance;
   TodayAnalysisData? _analysisData;
   bool _isLoading = true;
   bool _hasAllActivities = false;
   String _missingActivities = '';
-
+  
+  // 애니메이션 컨트롤러
+  late AnimationController _sherpiFloatController;
+  late AnimationController _cardRevealController;
+  late AnimationController _glowController;
+  
+  // 현재 감정 상태 (일기 기분 기반)
+  String _currentMood = 'normal';
+  
   @override
   void initState() {
     super.initState();
+    
+    // 애니메이션 초기화
+    _sherpiFloatController = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    )..repeat(reverse: true);
+    
+    _cardRevealController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    
+    _glowController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    
     _loadAnalysisData();
+  }
+  
+  @override
+  void dispose() {
+    _sherpiFloatController.dispose();
+    _cardRevealController.dispose();
+    _glowController.dispose();
+    super.dispose();
   }
 
   /// 분석 데이터 로드
@@ -36,9 +71,11 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
     setState(() => _isLoading = true);
     
     try {
-      // 오늘의 활동 데이터 확인
       final globalUser = ref.read(globalUserProvider);
       final todayRecord = globalUser.todayRecord;
+      
+      // 강제로 캐시 클리어하여 항상 최신 데이터 사용
+      await _analysisService.clearTodayCache();
       
       // 모든 활동이 완료되었는지 확인
       final hasExercise = todayRecord?.exerciseLog != null;
@@ -48,13 +85,25 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
       if (hasExercise && hasReading && hasDiary) {
         _hasAllActivities = true;
         
-        // 캐시에서 분석 데이터 로드
+        // 일기 기분 설정
+        if (todayRecord!.diaryLog != null) {
+          _currentMood = _translateMood(todayRecord.diaryLog!.mood);
+        }
+        
+        // 캐시에서 분석 데이터 먼저 확인
         _analysisData = await _analysisService.getTodayAnalyses();
         
-        // 캐시에 데이터가 없으면 새로 생성
-        if (_analysisData == null) {
+        // 캐시가 없거나 종합 분석이 비어있으면 새로 생성
+        if (_analysisData == null || 
+            _analysisData!.summaryAnalysis.isEmpty ||
+            _analysisData!.summaryAnalysis.contains('종합 분석을 준비 중')) {
           await _generateAllAnalyses();
+          _analysisData = await _analysisService.getTodayAnalyses();
         }
+        
+        // 카드 애니메이션 시작
+        _cardRevealController.forward();
+        _glowController.repeat(reverse: true);
       } else {
         _hasAllActivities = false;
         
@@ -66,7 +115,7 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
         _missingActivities = missing.join(', ');
       }
     } catch (e) {
-      print('❌ 분석 데이터 로드 실패: $e');
+      // 분석 데이터 로드 실패
     } finally {
       if (mounted) {
         setState(() => _isLoading = false);
@@ -98,7 +147,7 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
       // 운동 분석
       final exerciseData = {
         'type': todayRecord.exerciseLog!.exerciseType,
-        'intensity': todayRecord.exerciseLog!.intensity,
+        'intensity': _translateIntensity(todayRecord.exerciseLog!.intensity),
         'duration': todayRecord.exerciseLog!.durationMinutes,
         'calories': todayRecord.caloriesBurned,
         'steps': todayRecord.stepCount,
@@ -108,7 +157,7 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
       if (previousExerciseLog != null) {
         previousExercise = {
           'type': previousExerciseLog.exerciseType,
-          'intensity': previousExerciseLog.intensity,
+          'intensity': _translateIntensity(previousExerciseLog.intensity),
           'duration': previousExerciseLog.durationMinutes,
           'calories': _calculateCalories(previousExerciseLog.durationMinutes, previousExerciseLog.intensity),
         };
@@ -144,9 +193,10 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
       }
       
       // 일기 분석
+      final translatedMood = _translateMood(todayRecord.diaryLog!.mood);
       final diaryData = {
-        'mood': todayRecord.diaryLog!.mood,
-        'moodEmoji': _getMoodEmoji(todayRecord.diaryLog!.mood),
+        'mood': translatedMood,
+        'moodEmoji': _getMoodEmoji(translatedMood),
         'content': todayRecord.diaryLog!.content,
         'keywords': _extractKeywords(todayRecord.diaryLog!.content),
       };
@@ -163,9 +213,10 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
       
       Map<String, dynamic>? previousDiary;
       if (previousDiaryLog != null) {
+        final previousTranslatedMood = _translateMood(previousDiaryLog.mood);
         previousDiary = {
-          'mood': previousDiaryLog.mood,
-          'moodEmoji': _getMoodEmoji(previousDiaryLog.mood),
+          'mood': previousTranslatedMood,
+          'moodEmoji': _getMoodEmoji(previousTranslatedMood),
           'content': previousDiaryLog.content,
         };
       }
@@ -199,8 +250,13 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
       
       // 캐시에서 다시 로드
       _analysisData = await _analysisService.getTodayAnalyses();
+      
+      // UI 업데이트
+      if (mounted) {
+        setState(() {});
+      }
     } catch (e) {
-      print('❌ 분석 생성 실패: $e');
+      // 분석 생성 실패
     }
   }
   
@@ -225,7 +281,6 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
   List<String> _extractKeywords(String content) {
     if (content.isEmpty) return [];
     
-    // 간단한 키워드 추출 (실제로는 더 정교한 알고리즘 필요)
     final words = content.split(' ');
     final keywords = <String>[];
     
@@ -248,122 +303,139 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
   
   /// 칼로리 계산 헬퍼 메서드
   int _calculateCalories(int durationMinutes, String intensity) {
-    final caloriesPerMinute = switch (intensity) {
+    final koreanIntensity = _translateIntensity(intensity);
+    final caloriesPerMinute = switch (koreanIntensity) {
       '낮음' => 3,
       '중간' => 5,
       '높음' => 8,
+      '매우 높음' => 10,
       _ => 5,
     };
     return durationMinutes * caloriesPerMinute;
   }
+  
+  /// 운동 강도를 영어에서 한국어로 변환
+  String _translateIntensity(String intensity) {
+    switch (intensity.toLowerCase()) {
+      case 'low':
+        return '낮음';
+      case 'medium':
+      case 'moderate':
+        return '중간';
+      case 'high':
+        return '높음';
+      case 'very_high':
+      case 'veryhigh':
+        return '매우 높음';
+      default:
+        if (['낮음', '중간', '높음', '매우 높음'].contains(intensity)) {
+          return intensity;
+        }
+        return '중간';
+    }
+  }
+  
+  /// 감정을 영어에서 한국어로 변환
+  String _translateMood(String mood) {
+    switch (mood.toLowerCase()) {
+      case 'excited':
+        return '설레요';
+      case 'happy':
+        return '행복해요';
+      case 'peaceful':
+        return '평온해요';
+      case 'normal':
+        return '보통이에요';
+      case 'tired':
+        return '피곤해요';
+      case 'sad':
+        return '우울해요';
+      case 'anxious':
+        return '불안해요';
+      case 'angry':
+        return '화나요';
+      case 'stressed':
+        return '스트레스받아요';
+      default:
+        if (['설레요', '행복해요', '평온해요', '보통이에요', '피곤해요', 
+             '우울해요', '불안해요', '화나요', '스트레스받아요'].contains(mood)) {
+          return mood;
+        }
+        return '보통이에요';
+    }
+  }
+  
+  /// 감정에 따른 셰르피 이모션 반환
+  SherpiEmotion _getSherpiEmotion() {
+    switch (_currentMood) {
+      case '설레요':
+      case '행복해요':
+        return SherpiEmotion.happy;
+      case '평온해요':
+        return SherpiEmotion.smile;
+      case '피곤해요':
+        return SherpiEmotion.sleeping;
+      case '우울해요':
+      case '불안해요':
+        return SherpiEmotion.sad;
+      case '화나요':
+      case '스트레스받아요':
+        return SherpiEmotion.warning;
+      default:
+        return SherpiEmotion.defaults;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    
     return Dialog(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       insetPadding: const EdgeInsets.all(16),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: 420,
-              maxHeight: MediaQuery.sizeOf(context).height * 0.85,
-            ),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.white.withOpacity(0.95),
-                  Colors.white.withOpacity(0.85),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(32),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.5),
-                width: 2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
-                  blurRadius: 30,
-                  offset: const Offset(0, 20),
-                ),
-                BoxShadow(
-                  color: Colors.indigo.shade400.withOpacity(0.1),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                // 헤더
-                _buildHeader(context),
-                
-                // 컨텐츠 영역
-                Expanded(
-                  child: _isLoading
-                      ? _buildLoadingState()
-                      : _hasAllActivities
-                          ? _buildAnalysisContent()
-                          : _buildRequirementsMessage(),
-                ),
-              ],
-            ),
-          ),
-        ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
-    ).animate()
-      .scale(
-        begin: const Offset(0.98, 0.98),
-        curve: Curves.easeOut,
-        duration: 200.ms,
-      )
-      .fade(
-        curve: Curves.easeOut,
-        duration: 150.ms,
-      );
+      child: Container(
+        constraints: BoxConstraints(
+          maxWidth: 500,
+          minHeight: size.height * 0.5,
+          maxHeight: size.height * 0.95,
+        ),
+        child: _buildMainContent(context),
+      ),
+    );
   }
-
-  /// 헤더 빌드
-  Widget _buildHeader(BuildContext context) {
+  
+  /// 메인 컨텐츠 빌드
+  Widget _buildMainContent(BuildContext context) {
+    return Column(
+      children: [
+        // 헤더
+        _buildSimpleHeader(context),
+        
+        // 구분선
+        const Divider(height: 1, color: ModernColors.borderLight),
+        
+        // 컨텐츠
+        Expanded(
+          child: _isLoading
+              ? _buildLoadingState()
+              : _hasAllActivities
+                  ? _buildAnalysisContent()
+                  : _buildWarmRequirementsMessage(),
+        ),
+      ],
+    );
+  }
+  
+  /// 심플한 헤더
+  Widget _buildSimpleHeader(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(28, 24, 28, 20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.indigo.shade400.withOpacity(0.08),
-            Colors.indigo.shade400.withOpacity(0.04),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(32),
-          topRight: Radius.circular(32),
-        ),
-      ),
+      padding: const EdgeInsets.all(20),
       child: Row(
         children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.indigo.shade400, Colors.indigo.shade600],
-              ),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const Icon(
-              Icons.analytics,
-              color: Colors.white,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
+          // 제목 섹션
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -372,28 +444,29 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
                   '오늘의 분석',
                   style: GoogleFonts.notoSans(
                     fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
-                    letterSpacing: -0.5,
+                    fontWeight: FontWeight.w700,
+                    color: ModernColors.modernText,
                   ),
                 ),
+                const SizedBox(height: 4),
                 Text(
-                  'ChatGPT가 분석한 오늘의 활동',
+                  '셰르피가 분석한 오늘의 활동',
                   style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondary,
-                    letterSpacing: -0.2,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    color: ModernColors.modernTextSecondary,
                   ),
                 ),
               ],
             ),
           ),
+          
+          // 닫기 버튼
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(
-              Icons.close,
-              color: AppColors.textSecondary,
+            icon: const Icon(
+              Icons.close_rounded,
+              color: ModernColors.modernTextSecondary,
               size: 24,
             ),
           ),
@@ -402,22 +475,67 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
     );
   }
   
+  /// 플로팅 셰르피
+  Widget _buildFloatingSherpi() {
+    return AnimatedBuilder(
+      animation: _sherpiFloatController,
+      builder: (context, child) {
+        return Positioned(
+          top: 100 + (math.sin(_sherpiFloatController.value * 2 * math.pi) * 10),
+          right: 20,
+          child: IgnorePointer(
+            child: Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  ModernColors.getMoodLightColor(_currentMood).withOpacity(0.3),
+                  Colors.transparent,
+                ],
+              ),
+            ),
+            child: Center(
+              child: Image.asset(
+                _getSherpiEmotion().imagePath,
+                width: 60,
+                height: 60,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ).animate(
+            onPlay: (controller) => controller.repeat(reverse: true),
+          )
+          .scale(
+            begin: const Offset(1, 1),
+            end: const Offset(1.1, 1.1),
+            duration: 2.seconds,
+            curve: Curves.easeInOut,
+          ),
+          ),
+        );
+      },
+    );
+  }
+  
   /// 로딩 상태
   Widget _buildLoadingState() {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.indigo.shade400),
+            color: ModernColors.modernPrimary,
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 20),
           Text(
-            '분석 데이터를 불러오는 중...',
-            style: GoogleFonts.notoSans(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
+            '셰르피가 오늘의 활동을 분석하고 있어요! 🤔\n잠시만 기다려주세요~',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 14,
+              color: ModernColors.modernTextSecondary,
+              height: 1.5,
             ),
           ),
         ],
@@ -425,79 +543,126 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
     );
   }
   
-  /// 요구사항 메시지
-  Widget _buildRequirementsMessage() {
+  /// 따뜻한 요구사항 메시지
+  Widget _buildWarmRequirementsMessage() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
+          // 셰르피 일러스트
           Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(32),
+            width: 120,
+            height: 120,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.orange.shade50.withOpacity(0.9),
-                  Colors.orange.shade50.withOpacity(0.7),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+              shape: BoxShape.circle,
+              gradient: ModernColors.warmGradient,
+              boxShadow: ModernColors.softShadow(
+                primaryColor: ModernColors.modernWarning,
               ),
+            ),
+            child: Center(
+              child: Image.asset(
+                SherpiEmotion.guiding.imagePath,
+                width: 80,
+                height: 80,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ).animate()
+            .scale(
+              begin: const Offset(0, 0),
+              end: const Offset(1, 1),
+              duration: 600.ms,
+              curve: Curves.elasticOut,
+            ),
+          
+          const SizedBox(height: 32),
+          
+          // 메시지
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.6),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
-                color: Colors.orange.shade200.withOpacity(0.5),
+                color: ModernColors.modernWarning.withOpacity(0.2),
                 width: 1,
               ),
             ),
             child: Column(
               children: [
-                Icon(
-                  Icons.info_outline,
-                  size: 64,
-                  color: Colors.orange.shade400,
-                ),
-                const SizedBox(height: 24),
                 Text(
-                  '📝 모든 활동을 완료해주세요',
+                  '조금만 더 힘내세요! 💪',
                   style: GoogleFonts.notoSans(
                     fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w700,
+                    color: ModernColors.modernText,
                     letterSpacing: -0.5,
                   ),
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '오늘의 분석을 보려면\n운동, 독서, 일기를 모두 기록해야 해요.',
+                  '오늘의 분석을 보려면\n모든 활동을 완료해주세요',
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.modernTextSecondary,
                     height: 1.6,
                     letterSpacing: -0.2,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
+                
+                // 누락된 활동 표시
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.shade100,
-                    borderRadius: BorderRadius.circular(20),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
                   ),
-                  child: Text(
-                    '아직 기록하지 않은 활동: $_missingActivities',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.orange.shade800,
-                      letterSpacing: -0.2,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        ModernColors.modernWarning.withOpacity(0.1),
+                        ModernColors.modernWarning.withOpacity(0.05),
+                      ],
                     ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.assignment_late_rounded,
+                        color: ModernColors.modernWarning,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '남은 활동: $_missingActivities',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: ModernColors.modernWarning,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-          ),
+          ).animate()
+            .slideY(
+              begin: 0.1,
+              end: 0,
+              duration: 400.ms,
+              delay: 200.ms,
+            )
+            .fadeIn(
+              duration: 400.ms,
+              delay: 200.ms,
+            ),
         ],
       ),
     );
@@ -505,204 +670,388 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog> {
   
   /// 분석 컨텐츠
   Widget _buildAnalysisContent() {
-    if (_analysisData == null) {
+    // 분석 데이터가 없거나 종합 분석이 없으면 로딩 상태 표시
+    if (_analysisData == null || 
+        _analysisData!.summaryAnalysis.isEmpty ||
+        _analysisData!.summaryAnalysis == '종합 분석을 준비 중입니다...') {
       return _buildLoadingState();
     }
     
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(20),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // 운동 분석
-          _buildAnalysisCard(
-            title: '🏃 운동 분석',
+          // 운동 카드
+          _buildSimpleCard(
+            title: '🏃 운동',
             content: _analysisData!.exerciseAnalysis,
-            gradient: [Colors.blue.shade50, Colors.blue.shade100],
-            borderColor: Colors.blue.shade200,
-            icon: Icons.fitness_center,
-            iconColor: Colors.blue.shade600,
+            color: ModernColors.exercise,
           ),
           const SizedBox(height: 16),
           
-          // 독서 분석
-          _buildAnalysisCard(
-            title: '📚 독서 분석',
+          // 독서 카드
+          _buildSimpleCard(
+            title: '📚 독서',
             content: _analysisData!.readingAnalysis,
-            gradient: [Colors.green.shade50, Colors.green.shade100],
-            borderColor: Colors.green.shade200,
-            icon: Icons.menu_book,
-            iconColor: Colors.green.shade600,
+            color: ModernColors.reading,
           ),
           const SizedBox(height: 16),
           
-          // 일기 분석
-          _buildAnalysisCard(
-            title: '📝 일기 분석',
+          // 일기 카드
+          _buildSimpleCard(
+            title: '📝 일기',
             content: _analysisData!.diaryAnalysis,
-            gradient: [Colors.purple.shade50, Colors.purple.shade100],
-            borderColor: Colors.purple.shade200,
-            icon: Icons.edit_note,
-            iconColor: Colors.purple.shade600,
+            color: ModernColors.diary,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
           
-          // 종합 요약
-          _buildSummaryCard(),
+          // 셰르피의 종합 메시지
+          _buildSimpleSummaryCard(),
         ],
       ),
     );
   }
   
-  /// 분석 카드
-  Widget _buildAnalysisCard({
+  /// 시각적 활동 카드
+  Widget _buildVisualActivityCard({
+    required String title,
+    required IconData icon,
+    required Color color,
+    required Color lightColor,
+    required String content,
+    required int delay,
+    bool isFullWidth = false,
+  }) {
+    return AnimatedBuilder(
+      animation: _cardRevealController,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(
+            0,
+            (1 - _cardRevealController.value) * 50,
+          ),
+          child: Opacity(
+            opacity: _cardRevealController.value,
+            child: Container(
+              height: isFullWidth ? null : 200,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withOpacity(0.9),
+                    lightColor.withOpacity(0.3),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: color.withOpacity(0.2),
+                  width: 1,
+                ),
+                boxShadow: ModernColors.softShadow(
+                  primaryColor: color,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 헤더
+                  Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [color, color.withOpacity(0.8)],
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          icon,
+                          color: Colors.white,
+                          size: 22,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        title,
+                        style: GoogleFonts.notoSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: ModernColors.modernText,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // 컨텐츠
+                  if (!isFullWidth)
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Text(
+                          content,
+                          style: GoogleFonts.notoSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: ModernColors.modernTextSecondary,
+                            height: 1.6,
+                            letterSpacing: -0.2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (isFullWidth)
+                    Text(
+                      content,
+                      style: GoogleFonts.notoSans(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: ModernColors.modernTextSecondary,
+                        height: 1.6,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    ).animate()
+      .slideY(
+        begin: 0.2,
+        end: 0,
+        duration: 600.ms,
+        delay: delay.ms,
+        curve: Curves.easeOutCubic,
+      );
+  }
+  
+  /// 심플한 카드
+  Widget _buildSimpleCard({
     required String title,
     required String content,
-    required List<Color> gradient,
-    required Color borderColor,
-    required IconData icon,
-    required Color iconColor,
+    required Color color,
   }) {
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: gradient.map((c) => c.withOpacity(0.9)).toList(),
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: borderColor.withOpacity(0.3),
+          color: ModernColors.borderLight,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: borderColor.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 헤더
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.notoSans(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: ModernColors.modernText,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // 컨텐츠 - 패딩 증가 및 전체 내용 표시
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text(
+              content,
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: ModernColors.modernText,
+                height: 1.7,
+                letterSpacing: -0.2,
+              ),
+              softWrap: true,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  /// 심플한 종합 메시지 카드
+  Widget _buildSimpleSummaryCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: ModernColors.modernPrimary.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: ModernColors.modernPrimary.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  icon,
-                  size: 20,
-                  color: iconColor,
-                ),
+              Image.asset(
+                SherpiEmotion.happy.imagePath,
+                width: 40,
+                height: 40,
               ),
               const SizedBox(width: 12),
               Text(
-                title,
+                '셰르피의 종합 분석',
                 style: GoogleFonts.notoSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
-                  letterSpacing: -0.3,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: ModernColors.modernText,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
           Text(
-            content,
+            _analysisData?.summaryAnalysis ?? '종합 분석을 준비 중입니다...',
             style: GoogleFonts.notoSans(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: ModernColors.modernText,
               height: 1.6,
-              letterSpacing: -0.2,
             ),
+            softWrap: true,
           ),
         ],
       ),
-    ).animate()
-      .fadeIn(duration: 300.ms)
-      .slideY(begin: 0.1, end: 0, duration: 300.ms);
+    );
   }
   
-  /// 종합 요약 카드
-  Widget _buildSummaryCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.indigo.shade100.withOpacity(0.9),
-            Colors.indigo.shade200.withOpacity(0.7),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: Colors.indigo.shade300.withOpacity(0.5),
-          width: 2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.indigo.shade400.withOpacity(0.15),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.indigo.shade400, Colors.indigo.shade600],
+  /// 셰르피의 종합 메시지 카드 (기존 - 사용하지 않음)
+  Widget _buildSherpiSummaryCard() {
+    return AnimatedBuilder(
+      animation: _glowController,
+      builder: (context, child) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                ModernColors.modernPrimary.withOpacity(0.1),
+                ModernColors.modernAccent.withOpacity(0.05),
+              ],
+            ),
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color: ModernColors.modernPrimary.withOpacity(
+                0.2 + (_glowController.value * 0.1),
               ),
-              borderRadius: BorderRadius.circular(16),
+              width: 2,
             ),
-            child: const Icon(
-              Icons.star,
-              color: Colors.white,
-              size: 28,
-            ),
+            boxShadow: [
+              BoxShadow(
+                color: ModernColors.modernPrimary.withOpacity(
+                  0.2 + (_glowController.value * 0.1),
+                ),
+                blurRadius: 20 + (_glowController.value * 10),
+                spreadRadius: 2,
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          Text(
-            '🌟 셰르피의 종합 분석',
-            style: GoogleFonts.notoSans(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-              color: AppColors.textPrimary,
-              letterSpacing: -0.5,
-            ),
+          child: Column(
+            children: [
+              // 셰르피 아이콘
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      ModernColors.modernPrimary,
+                      ModernColors.modernAccent,
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: ModernColors.modernPrimary.withOpacity(0.3),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.auto_awesome_rounded,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              
+              const SizedBox(height: 20),
+              
+              Text(
+                '✨ 셰르피의 종합 분석',
+                style: GoogleFonts.notoSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: ModernColors.modernText,
+                  letterSpacing: -0.5,
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              Text(
+                _analysisData!.summaryAnalysis,
+                style: GoogleFonts.notoSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: ModernColors.modernTextSecondary,
+                  height: 1.7,
+                  letterSpacing: -0.2,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            _analysisData!.summaryAnalysis,
-            style: GoogleFonts.notoSans(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
-              height: 1.7,
-              letterSpacing: -0.2,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+        );
+      },
     ).animate()
-      .fadeIn(duration: 400.ms, delay: 200.ms)
-      .scale(begin: const Offset(0.95, 0.95), end: const Offset(1, 1), duration: 400.ms);
+      .slideY(
+        begin: 0.2,
+        end: 0,
+        duration: 800.ms,
+        delay: 400.ms,
+        curve: Curves.easeOutBack,
+      )
+      .fadeIn(
+        duration: 800.ms,
+        delay: 400.ms,
+      );
   }
 }

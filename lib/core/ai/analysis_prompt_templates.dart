@@ -11,8 +11,8 @@ class AnalysisPromptTemplates {
     required String userName,
   }) {
     // 오늘 운동 데이터 추출
-    final exerciseType = todayExercise['type'] ?? '운동';
-    final intensity = todayExercise['intensity'] ?? '보통';
+    final exerciseType = _translateExerciseType(todayExercise['type'] ?? '운동');
+    final intensity = _ensureKorean(todayExercise['intensity'] ?? '보통');
     final duration = todayExercise['duration'] ?? 0;
     final calories = todayExercise['calories'] ?? 0;
     final steps = todayExercise['steps'] ?? 0;
@@ -20,13 +20,15 @@ class AnalysisPromptTemplates {
     // 이전 운동 데이터 추출 (있는 경우)
     String previousContext = '';
     if (previousExercise != null) {
-      final prevType = previousExercise['type'] ?? '';
+      final prevType = _translateExerciseType(previousExercise['type'] ?? '');
+      final prevIntensity = _ensureKorean(previousExercise['intensity'] ?? '');
       final prevCalories = previousExercise['calories'] ?? 0;
       final prevDuration = previousExercise['duration'] ?? 0;
       
       previousContext = '''
 이전 운동 정보:
 - 운동 종류: $prevType
+- 운동 강도: $prevIntensity
 - 소모 칼로리: ${prevCalories}kcal
 - 운동 시간: ${prevDuration}분
 
@@ -54,6 +56,7 @@ $previousContext
 3. 이전 운동과 비교 (데이터가 있는 경우):
    - 칼로리 소모가 증가했다면: "와! 지난번보다 XXkcal 더 소모하셨네요! 정말 대단해요!"
    - 칼로리 소모가 감소했다면: "지난번보다 조금 적게 소모하셨지만, 꾸준함이 더 중요해요! 운동은 급할수록 천천히!"
+   - 중요: 이전 기록을 언급할 때는 "어제"가 아닌 "지난번"이라고 표현
 4. 운동의 긍정적 효과 언급 (건강, 활력, 스트레스 해소 등)
 5. 따뜻한 격려와 응원으로 마무리
 6. 적절한 이모지 사용 (💪, 🏃, 🔥, ⚡, 🎯 등)
@@ -116,6 +119,7 @@ $previousContext
 3. 이전 독서와 연결 (데이터가 있는 경우):
    - 이전 카테고리와 자연스럽게 연결하여 언급
    - 이전 카테고리와 관련된 실생활 적용이나 감상 물어보기
+   - 중요: 이전 기록을 언급할 때는 "어제"가 아닌 "지난번"이라고 표현
 4. 독서의 긍정적 효과 언급 (지식 확장, 사고력 향상, 정서적 안정 등)
 5. 부담 없고 친근한 격려로 마무리
 6. 적절한 이모지 사용 (📚, 📖, 🌟, 💡, 🎯 등)
@@ -131,7 +135,7 @@ $previousContext
     required String userName,
   }) {
     // 오늘 일기 데이터 추출
-    final mood = todayDiary['mood'] ?? '평온한';
+    final mood = _ensureKorean(todayDiary['mood'] ?? '평온한');
     final moodEmoji = todayDiary['moodEmoji'] ?? '';
     final content = todayDiary['content'] ?? '';
     final keywords = todayDiary['keywords'] ?? [];
@@ -142,7 +146,7 @@ $previousContext
     // 이전 일기 데이터 추출 (있는 경우)
     String previousContext = '';
     if (previousDiary != null) {
-      final prevMood = previousDiary['mood'] ?? '';
+      final prevMood = _ensureKorean(previousDiary['mood'] ?? '');
       final prevMoodEmoji = previousDiary['moodEmoji'] ?? '';
       
       previousContext = '''
@@ -175,6 +179,7 @@ $previousContext
 3. 이전 감정과 비교 (데이터가 있는 경우):
    - 이전 감정과 오늘 감정을 자연스럽게 비교
    - 감정 변화에 대한 자연스러운 코멘트
+   - 중요: 이전 기록을 언급할 때는 "어제"가 아닌 "지난번"이라고 표현
 4. 일기 쓰기 습관의 가치 강조 (자기 성찰, 감정 정리, 성장 기록)
 5. 셰르피가 늘 곁에 있다는 따뜻한 메시지로 마무리
 6. 적절한 이모지 사용 (💝, 🤗, 🌈, ✨, 🌸 등)
@@ -308,5 +313,66 @@ $synergy
 - $readingMoodSynergy
 - 운동, 독서, 감정 기록이 조화롭게 어우러져 균형잡힌 하루를 만들었어요.
 - 몸(운동), 마음(독서), 감정(일기)을 모두 돌보는 통합적인 자기 관리가 인상적이에요.''';
+  }
+  
+  /// 운동 타입 번역
+  static String _translateExerciseType(String type) {
+    switch (type.toLowerCase()) {
+      case 'running':
+        return '러닝';
+      case 'walking':
+        return '걷기';
+      case 'cycling':
+        return '자전거';
+      case 'swimming':
+        return '수영';
+      case 'yoga':
+        return '요가';
+      case 'gym':
+        return '헬스';
+      case 'hiking':
+        return '하이킹';
+      default:
+        return type;
+    }
+  }
+  
+  /// 영어를 한국어로 확실히 변환
+  static String _ensureKorean(String text) {
+    // 강도 번역
+    switch (text.toLowerCase()) {
+      case 'low':
+        return '낮음';
+      case 'medium':
+      case 'moderate':
+        return '보통';
+      case 'high':
+        return '높음';
+      case 'very_high':
+      case 'very high':
+      case 'veryhigh':
+        return '매우 높음';
+      // 감정 번역
+      case 'excited':
+        return '설레요';
+      case 'happy':
+        return '행복해요';
+      case 'peaceful':
+        return '평온해요';
+      case 'normal':
+        return '보통이에요';
+      case 'tired':
+        return '피곤해요';
+      case 'sad':
+        return '우울해요';
+      case 'anxious':
+        return '불안해요';
+      case 'angry':
+        return '화나요';
+      case 'stressed':
+        return '스트레스받아요';
+      default:
+        return text;
+    }
   }
 }

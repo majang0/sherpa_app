@@ -152,7 +152,8 @@ class ActivityAnalysisService {
         userName: userName,
       );
       
-      final response = await _callOpenAI(prompt);
+      // 종합 분석은 더 긴 응답이 필요하므로 직접 처리
+      final response = await _callOpenAIForSummary(prompt);
       
       // 캐시에 저장
       await _saveToCache('summary_analysis', response, {
@@ -177,7 +178,7 @@ class ActivityAnalysisService {
           model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
           messages: [
             ChatCompletionMessage.system(
-              content: '''당신은 셰르피(Sherpi)입니다. 사용자의 일상 활동을 분석하고 
+              content: '''당신은 셰르피입니다. 사용자의 일상 활동을 분석하고 
               따뜻한 격려와 응원을 제공하는 친근한 AI 동반자입니다.
               
               지침:
@@ -221,13 +222,114 @@ class ActivityAnalysisService {
     }
   }
   
+  /// 종합 분석용 OpenAI 호출 (글자 수 제한 없음)
+  Future<String> _callOpenAIForSummary(String prompt) async {
+    try {
+      final client = OpenAIClient(
+        apiKey: ApiConfig.openAIApiKey,
+        baseUrl: 'https://api.openai.com/v1',
+      );
+      
+      final chatCompletion = await client.createChatCompletion(
+        request: CreateChatCompletionRequest(
+          model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
+          messages: [
+            ChatCompletionMessage.system(
+              content: '당신은 셰르피입니다. 사용자의 하루 활동을 종합적으로 분석하고 깊이 있는 통찰을 제공하는 AI 동반자입니다.',
+            ),
+            ChatCompletionMessage.user(
+              content: ChatCompletionUserMessageContent.string(prompt),
+            ),
+          ],
+          temperature: 0.8,
+          maxTokens: 500,  // 종합 분석은 충분히 긴 응답 허용
+        ),
+      ).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw Exception('API 호출 타임아웃'),
+      );
+      
+      final responseText = chatCompletion.choices.firstOrNull?.message.content;
+      
+      if (responseText != null && responseText.isNotEmpty) {
+        print('✅ 종합 분석 생성 성공');
+        // 종합 분석은 마크다운만 제거하고 글자 수 제한 없음
+        return _processResponseForSummary(responseText);
+      }
+      
+      throw Exception('Empty response from OpenAI');
+    } catch (e) {
+      print('❌ OpenAI API 호출 실패: $e');
+      rethrow;
+    }
+  }
+  
+  /// 종합 분석용 응답 후처리 (글자 수 제한 없음)
+  String _processResponseForSummary(String rawResponse) {
+    String processed = rawResponse.trim();
+    
+    // 마크다운 제거
+    processed = processed.replaceAllMapped(
+      RegExp(r'\*\*([^\*]+)\*\*'), 
+      (match) => match.group(1) ?? ''
+    );
+    processed = processed.replaceAllMapped(
+      RegExp(r'\*([^\*]+)\*'), 
+      (match) => match.group(1) ?? ''
+    );
+    processed = processed.replaceAllMapped(
+      RegExp(r'__([^_]+)__'), 
+      (match) => match.group(1) ?? ''
+    );
+    processed = processed.replaceAllMapped(
+      RegExp(r'_([^_]+)_'), 
+      (match) => match.group(1) ?? ''
+    );
+    processed = processed.replaceAll(RegExp(r'#{1,6}\s+'), '');
+    processed = processed.replaceAll(RegExp(r'^[\-\*]\s+', multiLine: true), '');
+    
+    // 종합 분석은 글자 수 제한 없음
+    return processed;
+  }
+  
   /// 응답 후처리
   String _processResponse(String rawResponse) {
     String processed = rawResponse.trim();
     
-    // 길이 제한 (250자)
-    if (processed.length > 250) {
-      processed = '${processed.substring(0, 247)}...';
+    // 마크다운 제거
+    // **굵은 텍스트** -> 굵은 텍스트
+    processed = processed.replaceAllMapped(
+      RegExp(r'\*\*([^\*]+)\*\*'), 
+      (match) => match.group(1) ?? ''
+    );
+    
+    // *기울임 텍스트* -> 기울임 텍스트
+    processed = processed.replaceAllMapped(
+      RegExp(r'\*([^\*]+)\*'), 
+      (match) => match.group(1) ?? ''
+    );
+    
+    // __밑줄__ -> 밑줄
+    processed = processed.replaceAllMapped(
+      RegExp(r'__([^_]+)__'), 
+      (match) => match.group(1) ?? ''
+    );
+    
+    // _기울임_ -> 기울임
+    processed = processed.replaceAllMapped(
+      RegExp(r'_([^_]+)_'), 
+      (match) => match.group(1) ?? ''
+    );
+    
+    // ### 제목 -> 제목
+    processed = processed.replaceAll(RegExp(r'#{1,6}\s+'), '');
+    
+    // - 또는 * 리스트 마커 제거 (줄 시작 부분만)
+    processed = processed.replaceAll(RegExp(r'^[\-\*]\s+', multiLine: true), '');
+    
+    // 길이 제한 대폭 증가 (800자)
+    if (processed.length > 800) {
+      processed = '${processed.substring(0, 797)}...';
     }
     
     return processed;
@@ -276,6 +378,24 @@ class ActivityAnalysisService {
   String _getTodayDateKey() {
     final now = DateTime.now();
     return '${now.year}_${now.month.toString().padLeft(2, '0')}_${now.day.toString().padLeft(2, '0')}';
+  }
+  
+  /// 오늘의 캐시 클리어
+  Future<void> clearTodayCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final dateKey = _getTodayDateKey();
+      
+      // 오늘의 모든 분석 캐시 삭제
+      final keys = ['exercise_analysis', 'reading_analysis', 'diary_analysis', 'summary_analysis'];
+      for (final key in keys) {
+        final fullKey = 'analysis_${dateKey}_$key';
+        await prefs.remove(fullKey);
+        print('🗑️ 캐시 삭제: $fullKey');
+      }
+    } catch (e) {
+      print('❌ 캐시 클리어 실패: $e');
+    }
   }
   
   /// 모든 분석이 완료되었는지 확인
