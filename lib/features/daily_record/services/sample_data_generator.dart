@@ -132,6 +132,9 @@ class SampleDataGenerator {
     final movies = <MovieLog>[];
 
     for (int i = 0; i < 60; i++) {
+      // 오늘(i = 0)은 샘플 데이터 생성 건너뛰기 - 사용자가 직접 입력하도록
+      if (i == 0) continue;
+      
       final date = now.subtract(Duration(days: i));
 
       // 모임 생성 - 더 다양한 패턴으로 생성
@@ -265,7 +268,7 @@ class SampleDataGenerator {
   /// 날짜별 운동 개수 결정 (거의 매일 1-3개 운동)
   static int _getExerciseCountForDay(int dayIndex) {
     // 특정 날짜에 더 많은 운동이 있도록 설정
-    if (dayIndex == 0) return 2; // 오늘 - 활발한 운동
+    if (dayIndex == 0) return 0; // 오늘 - 샘플 데이터 생성 안함
     if (dayIndex == 2) return 3; // 2일 전 - 매우 활발한 날
     if (dayIndex == 5) return 3; // 5일 전 - 주말 운동
     if (dayIndex == 8) return 4; // 8일 전 - 최대 운동량
