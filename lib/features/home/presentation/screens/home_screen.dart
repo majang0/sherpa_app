@@ -18,6 +18,7 @@ import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
 // Local Widgets
 import '../widgets/compact_quest_widget.dart';
+import '../widgets/sherpi_personalized_meeting_widget.dart';
 import '../widgets/enhanced_meeting_recommendation_widget.dart';
 import '../widgets/friends_activity_feed_widget.dart';
 import '../widgets/personalized_growth_dashboard_widget.dart';
@@ -232,24 +233,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             SliverToBoxAdapter(
               child: _buildPersonalGrowthSection(user),
             ),
-
-            // 구분선
-            SliverToBoxAdapter(
-              child: Container(
-                height: 32,
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                child: Center(
-                  child: Container(
-                    width: 60,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: AppColors.divider,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ),
-              ),
-            ),
             
             // 소셜 영역 (클린 스타일)
             SliverToBoxAdapter(
@@ -304,7 +287,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
+          // 셰르피가 추천하는 맞춤 모임
+          const SherpiPersonalizedMeetingWidget(),
+          const SizedBox(height: 20),
 
           // 모임 추천
           const EnhancedMeetingRecommendationWidget(),
