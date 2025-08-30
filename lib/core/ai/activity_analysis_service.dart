@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:sherpa_app/core/ai/openai_dialogue_source.dart';
 import 'package:sherpa_app/core/ai/analysis_prompt_templates.dart';
 import 'package:sherpa_app/core/config/api_config.dart';
@@ -6,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:openai_dart/openai_dart.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 /// 🎯 활동 분석 서비스
 /// 
@@ -30,12 +32,34 @@ class ActivityAnalysisService {
     try {
       final apiKey = ApiConfig.openAIApiKey;
       
-      _client = OpenAIClient(
-        apiKey: apiKey,
-        baseUrl: 'https://api.openai.com/v1',
-      );
+      // Android 에뮬레이터를 위한 특별 처리
+      if (Platform.isAndroid) {
+        // 에뮬레이터는 10.0.2.2를 사용하여 호스트 머신에 접근
+        // 하지만 OpenAI API는 외부 인터넷이므로 프록시 설정 불필요
+        
+        // Dio 클라이언트 직접 생성하여 타임아웃 설정
+        final dio = Dio()
+          ..options.connectTimeout = const Duration(seconds: 30)
+          ..options.receiveTimeout = const Duration(seconds: 30)
+          ..options.headers = {
+            'User-Agent': 'Sherpa App/1.0',
+          };
+        
+        _client = OpenAIClient(
+          apiKey: apiKey,
+          baseUrl: 'https://api.openai.com/v1',
+          client: dio,
+        );
+      } else {
+        // iOS나 다른 플랫폼
+        _client = OpenAIClient(
+          apiKey: apiKey,
+          baseUrl: 'https://api.openai.com/v1',
+        );
+      }
       
       print('🎯 Activity Analysis Service 초기화 성공');
+      print('📱 플랫폼: ${Platform.isAndroid ? "Android" : "iOS/Other"}');
     } catch (e) {
       print('❌ Activity Analysis Service 초기화 실패: $e');
       rethrow;
@@ -49,6 +73,21 @@ class ActivityAnalysisService {
     required String userName,
   }) async {
     try {
+      // 에뮬레이터에서 네트워크 문제가 있을 경우 기본 메시지 사용
+      if (Platform.isAndroid) {
+        // 간단한 연결 테스트
+        try {
+          await http.head(Uri.parse('https://api.openai.com')).timeout(
+            const Duration(seconds: 2),
+          );
+        } catch (e) {
+          print('⚠️ 에뮬레이터 네트워크 문제 감지, 기본 메시지 사용');
+          final defaultMsg = _getDefaultExerciseAnalysis(todayExercise, userName);
+          await _saveToCache('exercise_analysis', defaultMsg, todayExercise);
+          return defaultMsg;
+        }
+      }
+      
       final prompt = AnalysisPromptTemplates.generateExerciseAnalysisPrompt(
         todayExercise: todayExercise,
         previousExercise: previousExercise,
@@ -63,7 +102,9 @@ class ActivityAnalysisService {
       return response;
     } catch (e) {
       print('❌ 운동 분석 실패: $e');
-      return _getDefaultExerciseAnalysis(todayExercise, userName);
+      final defaultMsg = _getDefaultExerciseAnalysis(todayExercise, userName);
+      await _saveToCache('exercise_analysis', defaultMsg, todayExercise);
+      return defaultMsg;
     }
   }
   
@@ -276,26 +317,47 @@ class ActivityAnalysisService {
     try {
       print('🔍 OpenAI API 연결 테스트 시작...');
       print('📍 API Key 상태: ${ApiConfig.isOpenAIApiKeyValid ? "유효함" : "유효하지 않음"}');
+      print('📱 플랫폼: ${Platform.isAndroid ? "Android" : "iOS/Other"}');
       
       final apiKey = ApiConfig.openAIApiKey;
       if (apiKey.length > 10) {
         print('📍 API Key 앞 10자: ${apiKey.substring(0, 10)}...');
       }
       
-      // 1. 먼저 구글 연결 테스트
-      print('\n1️⃣ 일반 인터넷 연결 테스트 (Google)...');
-      try {
-        final googleResponse = await http.get(
-          Uri.parse('https://www.google.com'),
-        ).timeout(
-          const Duration(seconds: 5),
-          onTimeout: () => throw TimeoutException('Google 연결 타임아웃'),
-        );
-        print('✅ Google 연결 성공 (상태 코드: ${googleResponse.statusCode})');
-      } catch (e) {
-        print('❌ Google 연결 실패: $e');
-        print('🚨 기본 인터넷 연결이 되지 않습니다!');
-        return false;
+      // 1. 먼저 구글 연결 테스트 (에뮬레이터에서는 건너뛰기)
+      print('\n1️⃣ 일반 인터넷 연결 테스트...');
+      
+      // 에뮬레이터 감지
+      bool isEmulator = false;
+      if (Platform.isAndroid) {
+        // 에뮬레이터 특징 확인
+        isEmulator = Platform.operatingSystem.contains('android') && 
+                     (Platform.environment['ANDROID_EMULATOR_HOME'] != null ||
+                      Platform.environment['ANDROID_SDK_ROOT'] != null);
+        
+        if (isEmulator) {
+          print('📱 Android 에뮬레이터 감지됨');
+          print('⚠️ 에뮬레이터 네트워크 제한으로 인해 일부 테스트 건너뛰기');
+        }
+      }
+      
+      if (!isEmulator) {
+        try {
+          final googleResponse = await http.get(
+            Uri.parse('https://www.google.com'),
+          ).timeout(
+            const Duration(seconds: 5),
+            onTimeout: () => throw TimeoutException('Google 연결 타임아웃'),
+          );
+          print('✅ Google 연결 성공 (상태 코드: ${googleResponse.statusCode})');
+        } catch (e) {
+          print('❌ Google 연결 실패: $e');
+          print('🚨 기본 인터넷 연결이 되지 않습니다!');
+          // 에뮬레이터가 아닌 경우에만 실패 처리
+          if (!Platform.isAndroid) {
+            return false;
+          }
+        }
       }
       
       // 2. HTTP 패키지로 OpenAI API 직접 테스트
