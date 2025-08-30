@@ -1743,3 +1743,121 @@ class UserGoal {
     );
   }
 }
+
+/// 오늘의 활동 기록 데이터
+class TodayActivityRecord {
+  final ExerciseLog? exerciseLog;
+  final ReadingLog? readingLog;
+  final DiaryLog? diaryLog;
+  final MeetingLog? meetingLog;
+  final MovieLog? movieLog;
+  final int stepCount;
+  final int focusMinutes;
+  
+  const TodayActivityRecord({
+    this.exerciseLog,
+    this.readingLog,
+    this.diaryLog,
+    this.meetingLog,
+    this.movieLog,
+    this.stepCount = 0,
+    this.focusMinutes = 0,
+  });
+  
+  /// 칼로리 계산 (운동 기록이 있을 때)
+  int get caloriesBurned {
+    if (exerciseLog == null) return 0;
+    
+    final caloriesPerMinute = switch (exerciseLog!.intensity) {
+      '낮음' => 3,
+      '중간' => 5,
+      '높음' => 8,
+      _ => 5,
+    };
+    return exerciseLog!.durationMinutes * caloriesPerMinute;
+  }
+  
+  /// 독서 페이지 수 (호환성을 위한 별칭)
+  int get pagesRead => readingLog?.pages ?? 0;
+  
+  /// 독서 전체 페이지 수 (가정값)
+  int get totalPages => 300; // 기본값
+}
+
+/// GlobalUser 확장 메서드
+extension GlobalUserExtensions on GlobalUser {
+  /// 오늘의 활동 기록 가져오기
+  TodayActivityRecord? get todayRecord {
+    final today = DateTime.now();
+    
+    // 오늘 날짜와 같은 기록들 찾기
+    ExerciseLog? todayExercise;
+    ReadingLog? todayReading;
+    DiaryLog? todayDiary;
+    MeetingLog? todayMeeting;
+    MovieLog? todayMovie;
+    
+    // 운동 기록 찾기
+    for (final log in dailyRecords.exerciseLogs) {
+      if (_isSameDay(log.date, today)) {
+        todayExercise = log;
+        break;
+      }
+    }
+    
+    // 독서 기록 찾기
+    for (final log in dailyRecords.readingLogs) {
+      if (_isSameDay(log.date, today)) {
+        todayReading = log;
+        break;
+      }
+    }
+    
+    // 일기 기록 찾기
+    for (final log in dailyRecords.diaryLogs) {
+      if (_isSameDay(log.date, today)) {
+        todayDiary = log;
+        break;
+      }
+    }
+    
+    // 모임 기록 찾기
+    for (final log in dailyRecords.meetingLogs) {
+      if (_isSameDay(log.date, today)) {
+        todayMeeting = log;
+        break;
+      }
+    }
+    
+    // 영화 기록 찾기
+    for (final log in dailyRecords.movieLogs) {
+      if (_isSameDay(log.date, today)) {
+        todayMovie = log;
+        break;
+      }
+    }
+    
+    // 하나라도 있으면 TodayActivityRecord 반환
+    if (todayExercise != null || todayReading != null || todayDiary != null || 
+        todayMeeting != null || todayMovie != null) {
+      return TodayActivityRecord(
+        exerciseLog: todayExercise,
+        readingLog: todayReading,
+        diaryLog: todayDiary,
+        meetingLog: todayMeeting,
+        movieLog: todayMovie,
+        stepCount: dailyRecords.todaySteps,
+        focusMinutes: dailyRecords.todayFocusMinutes,
+      );
+    }
+    
+    return null;
+  }
+  
+  /// 날짜 비교 헬퍼 메서드
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+           date1.month == date2.month &&
+           date1.day == date2.day;
+  }
+}

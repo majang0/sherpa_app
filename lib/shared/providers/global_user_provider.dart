@@ -16,6 +16,7 @@ import 'global_game_provider.dart';
 import 'global_badge_provider.dart'; // 뱃지 Provider 추가
 import '../../features/quests/providers/quest_provider_v2.dart'; // 퀘스트 Provider 추가
 import 'notification_provider.dart'; // 알림 Provider 추가
+import '../../core/ai/activity_analysis_service.dart'; // 활동 분석 서비스 추가
 
 /// 글로벌 사용자 데이터 관리 Provider (완전 독립형)
 final globalUserProvider = StateNotifierProvider<GlobalUserNotifier, GlobalUser>((ref) {
@@ -1820,6 +1821,9 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         break;
     }
     
+    // 🎯 백그라운드 활동 분석 생성 (운동, 독서, 일기)
+    _triggerBackgroundAnalysis(activityType, enrichedUserContext);
+    
     // 셰르피 메시지 표시 + 빠른 응답 자동 트리거
     Future.delayed(const Duration(milliseconds: 500), () {
       // all_goals_reward는 특별 처리 - 정적 메시지 사용
@@ -1886,6 +1890,261 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 현재 연속 기록 계산
   int _getCurrentStreak() {
     return state.dailyRecords.consecutiveDays;
+  }
+
+  /// 백그라운드 활동 분석 트리거
+  Future<void> _triggerBackgroundAnalysis(String activityType, Map<String, dynamic> userContext) async {
+    // 운동, 독서, 일기 활동에 대해서만 분석 생성
+    if (!['exercise', 'reading', 'diary'].contains(activityType)) {
+      return;
+    }
+
+    try {
+      final analysisService = ActivityAnalysisService.instance;
+      final userName = state.name;
+      final records = state.dailyRecords;
+      final today = DateTime.now();
+      
+      // 오늘의 활동 데이터 찾기
+      ExerciseLog? todayExercise;
+      ReadingLog? todayReading;
+      DiaryLog? todayDiary;
+      
+      // 오늘 운동 기록 찾기
+      for (final log in records.exerciseLogs) {
+        if (_isSameDay(log.date, today)) {
+          todayExercise = log;
+          break;
+        }
+      }
+      
+      // 오늘 독서 기록 찾기
+      for (final log in records.readingLogs) {
+        if (_isSameDay(log.date, today)) {
+          todayReading = log;
+          break;
+        }
+      }
+      
+      // 오늘 일기 기록 찾기
+      for (final log in records.diaryLogs) {
+        if (_isSameDay(log.date, today)) {
+          todayDiary = log;
+          break;
+        }
+      }
+      
+      // 각 활동 타입에 따라 분석 생성 (백그라운드)
+      switch (activityType) {
+        case 'exercise':
+          if (todayExercise != null) {
+            // 이전 운동 기록 찾기 (최근 7일 이내)
+            final previousExercise = _findPreviousActivity('exercise');
+            
+            // caloriesBurned 계산 (임시 - 실제로는 다른 곳에서 계산됨)
+            final calories = _calculateCalories(
+              todayExercise.durationMinutes, 
+              todayExercise.intensity
+            );
+            
+            final exerciseData = {
+              'type': todayExercise.exerciseType,
+              'duration': todayExercise.durationMinutes,
+              'intensity': todayExercise.intensity,
+              'calories': calories,
+            };
+            
+            // 백그라운드에서 분석 생성
+            analysisService.analyzeExercise(
+              todayExercise: exerciseData,
+              previousExercise: previousExercise,
+              userName: userName,
+            ).catchError((e) {
+              print('❌ 운동 분석 백그라운드 생성 실패: $e');
+              return ''; // Return empty string for catchError
+            });
+          }
+          break;
+          
+        case 'reading':
+          if (todayReading != null) {
+            // 이전 독서 기록 찾기
+            final previousReading = _findPreviousActivity('reading');
+            
+            final readingData = {
+              'title': todayReading.bookTitle,
+              'pages': todayReading.pages,
+              'category': todayReading.category,
+              'rating': todayReading.rating,
+            };
+            
+            // 백그라운드에서 분석 생성
+            analysisService.analyzeReading(
+              todayReading: readingData,
+              previousReading: previousReading,
+              userName: userName,
+            ).catchError((e) {
+              print('❌ 독서 분석 백그라운드 생성 실패: $e');
+              return ''; // Return empty string for catchError
+            });
+          }
+          break;
+          
+        case 'diary':
+          if (todayDiary != null) {
+            // 이전 일기 기록 찾기
+            final previousDiary = _findPreviousActivity('diary');
+            
+            final diaryData = {
+              'mood': todayDiary.mood,
+              'content': todayDiary.content,
+            };
+            
+            // 백그라운드에서 분석 생성
+            analysisService.analyzeDiary(
+              todayDiary: diaryData,
+              previousDiary: previousDiary,
+              userName: userName,
+            ).catchError((e) {
+              print('❌ 일기 분석 백그라운드 생성 실패: $e');
+              return ''; // Return empty string for catchError
+            });
+          }
+          break;
+      }
+      
+      // 모든 활동이 완료되었는지 확인하고 종합 분석 생성
+      if (todayExercise != null && todayReading != null && todayDiary != null) {
+        
+        // 종합 분석이 아직 생성되지 않았다면 생성
+        analysisService.getFromCache('summary_analysis').then((cached) {
+          if (cached == null) {
+            final calories = _calculateCalories(
+              todayExercise!.durationMinutes, 
+              todayExercise.intensity
+            );
+            
+            final exerciseData = {
+              'type': todayExercise.exerciseType,
+              'duration': todayExercise.durationMinutes,
+              'intensity': todayExercise.intensity,
+              'calories': calories,
+            };
+            
+            final readingData = {
+              'title': todayReading!.bookTitle,
+              'pages': todayReading.pages,
+              'category': todayReading.category,
+              'rating': todayReading.rating,
+            };
+            
+            final diaryData = {
+              'mood': todayDiary!.mood,
+              'content': todayDiary.content,
+            };
+            
+            // 백그라운드에서 종합 분석 생성
+            analysisService.generateSummaryAnalysis(
+              todayExercise: exerciseData,
+              todayReading: readingData,
+              todayDiary: diaryData,
+              userName: userName,
+            ).catchError((e) {
+              print('❌ 종합 분석 백그라운드 생성 실패: $e');
+              return ''; // Return empty string for catchError
+            });
+          }
+        });
+      }
+      
+    } catch (e) {
+      print('❌ 백그라운드 분석 트리거 실패: $e');
+    }
+  }
+  
+  /// 칼로리 계산 헬퍼 메서드
+  int _calculateCalories(int durationMinutes, String intensity) {
+    // 강도별 분당 칼로리 소모량
+    final caloriesPerMinute = switch (intensity) {
+      '낮음' => 3,
+      '중간' => 5,
+      '높음' => 8,
+      _ => 5,
+    };
+    return durationMinutes * caloriesPerMinute;
+  }
+
+  /// 이전 활동 기록 찾기 (최근 7일 이내)
+  Map<String, dynamic>? _findPreviousActivity(String activityType) {
+    final records = state.dailyRecords;
+    final today = DateTime.now();
+    
+    switch (activityType) {
+      case 'exercise':
+        // 최근 7일 이내의 운동 기록 찾기
+        for (int i = 1; i <= 7; i++) {
+          final targetDate = today.subtract(Duration(days: i));
+          final log = records.exerciseLogs.where((log) {
+            return _isSameDay(log.date, targetDate);
+          }).firstOrNull;
+          
+          if (log != null) {
+            final calories = _calculateCalories(
+              log.durationMinutes, 
+              log.intensity
+            );
+            
+            return {
+              'type': log.exerciseType,
+              'duration': log.durationMinutes,
+              'intensity': log.intensity,
+              'calories': calories,
+              'date': log.date.toIso8601String(),
+            };
+          }
+        }
+        break;
+        
+      case 'reading':
+        // 최근 7일 이내의 독서 기록 찾기
+        for (int i = 1; i <= 7; i++) {
+          final targetDate = today.subtract(Duration(days: i));
+          final log = records.readingLogs.where((log) {
+            return _isSameDay(log.date, targetDate);
+          }).firstOrNull;
+          
+          if (log != null) {
+            return {
+              'title': log.bookTitle,
+              'pages': log.pages,
+              'category': log.category,
+              'rating': log.rating,
+              'date': log.date.toIso8601String(),
+            };
+          }
+        }
+        break;
+        
+      case 'diary':
+        // 최근 7일 이내의 일기 기록 찾기
+        for (int i = 1; i <= 7; i++) {
+          final targetDate = today.subtract(Duration(days: i));
+          final log = records.diaryLogs.where((log) {
+            return _isSameDay(log.date, targetDate);
+          }).firstOrNull;
+          
+          if (log != null) {
+            return {
+              'mood': log.mood,
+              'content': log.content,
+              'date': log.date.toIso8601String(),
+            };
+          }
+        }
+        break;
+    }
+    
+    return null;
   }
 
   // ==================== 계획 관리 시스템 ====================
