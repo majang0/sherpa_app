@@ -311,8 +311,7 @@ class _SherpiPersonalizedMeetingWidgetState
     // 가장 활발한 활동 파악
     if (exercises.length >= readings.length && exercises.length >= meetings.length) {
       // 운동이 주요 활동인 경우
-      final totalMinutes = exercises.fold(0, (sum, e) => sum + (e.durationMinutes as int));
-      primaryActivity = '💪 최근 2주간 총 $totalMinutes분 운동하셨네요!';
+      primaryActivity = '💪 최근 2주간 운동을 열심히 하셨네요!';
       
       switch (recommendedCategory) {
         case MeetingCategory.exercise:
@@ -613,34 +612,34 @@ class _SherpiPersonalizedMeetingWidgetState
           Expanded(
             child: Row(
               children: [
-                // 🎯 셰르피 아이콘 (다른 위젯들과 동일한 스타일)
+                // 🎯 셰르피 아이콘 (compact_quest_widget 스타일)
                 Container(
-                  width: 40,
-                  height: 40,
+                  width: 48,
+                  height: 48,
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        ModernColors.primary,
-                        ModernColors.primary.withValues(alpha: 0.8),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+                    color: Colors.white.withOpacity(0.9),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: ModernColors.primary.withValues(alpha: 0.3),
+                        color: ModernColors.modernPrimary.withOpacity(0.15),
                         blurRadius: 8,
-                        offset: const Offset(0, 2),
+                        offset: const Offset(0, 3),
+                        spreadRadius: 1,
                       ),
                     ],
+                    border: Border.all(
+                      color: ModernColors.modernPrimary.withOpacity(0.2),
+                      width: 2.0,
+                    ),
                   ),
                   child: Center(
-                    child: Image.asset(
-                      emotion.imagePath,
-                      width: 24,
-                      height: 24,
-                      fit: BoxFit.contain,
+                    child: Transform.scale(
+                      scale: 1.95,
+                      child: Image.asset(
+                        'assets/images/sherpi/sherpi_smile.png',
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
@@ -662,7 +661,7 @@ class _SherpiPersonalizedMeetingWidgetState
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        '당신의 활동 패턴 기반 맞춤 추천',
+                        '활동 패턴 기반 AI 맞춤 추천',
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -677,32 +676,18 @@ class _SherpiPersonalizedMeetingWidgetState
             ),
           ),
           
-          // 🔗 "모든 모임 보기" 링크
+          // 🔗 "모든 모임 보기" 링크 (compact_quest_widget 스타일)
           GestureDetector(
             onTap: () {
               HapticFeedbackManager.lightImpact();
               Navigator.pushNamed(context, '/', arguments: 3);
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '모든 모임',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: ModernColors.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 12,
-                    color: ModernColors.primary,
-                  ),
-                ],
+              padding: const EdgeInsets.all(8),
+              child: Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: ModernColors.modernPrimary,
               ),
             ),
           ),
@@ -720,10 +705,6 @@ class _SherpiPersonalizedMeetingWidgetState
         // 🎨 부드러운 배경색으로 구분
         color: ModernColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: ModernColors.primary.withValues(alpha: 0.1),
-          width: 1,
-        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -762,23 +743,85 @@ class _SherpiPersonalizedMeetingWidgetState
           const SizedBox(height: 12),
           
           // 인사이트 메시지
-          Text(
-            insight,
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: ModernColors.textPrimary,
-              height: 1.5,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '이런 모임은 어때요? $userName님이 좋아하실 것 같아요! 😊',
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: ModernColors.textSecondary,
-              height: 1.5,
+          RichText(
+            text: TextSpan(
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                color: ModernColors.textPrimary,
+                height: 1.5,
+              ),
+              children: [
+                if (insight.contains('💪 최근 2주간 운동을 열심히 하셨네요!')) ...[
+                  TextSpan(
+                    text: '💪 최근 2주간 운동을 열심히 하셨네요! ',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: ModernColors.textPrimary,
+                      height: 1.5,
+                    ),
+                  ),
+                  TextSpan(
+                    text: insight.substring('💪 최근 2주간 운동을 열심히 하셨네요! '.length),
+                    style: GoogleFonts.notoSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: ModernColors.textPrimary,
+                      height: 1.5,
+                    ),
+                  ),
+                ] else if (insight.contains('📚')) ...[
+                  TextSpan(
+                    text: insight.split('!')[0] + '! ',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: ModernColors.textPrimary,
+                      height: 1.5,
+                    ),
+                  ),
+                  if (insight.split('!').length > 1)
+                    TextSpan(
+                      text: insight.split('!').sublist(1).join('!'),
+                      style: GoogleFonts.notoSans(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: ModernColors.textPrimary,
+                        height: 1.5,
+                      ),
+                    ),
+                ] else if (insight.contains('🤝')) ...[
+                  TextSpan(
+                    text: insight.split('!')[0] + '! ',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: ModernColors.textPrimary,
+                      height: 1.5,
+                    ),
+                  ),
+                  if (insight.split('!').length > 1)
+                    TextSpan(
+                      text: insight.split('!').sublist(1).join('!'),
+                      style: GoogleFonts.notoSans(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: ModernColors.textPrimary,
+                        height: 1.5,
+                      ),
+                    ),
+                ] else ...[
+                  TextSpan(
+                    text: insight,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: ModernColors.textPrimary,
+                      height: 1.5,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
         ],

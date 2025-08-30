@@ -178,7 +178,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
               ),
               child: Center(
                 child: Transform.scale(
-                  scale: 1.3,
+                  scale: 1.95,
                   child: Image.asset(
                     emotion.imagePath,
                     fit: BoxFit.contain,
@@ -223,10 +223,6 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
             },
             child: Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: ModernColors.modernPrimary.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
               child: Icon(
                 Icons.arrow_forward_ios,
                 size: 16,

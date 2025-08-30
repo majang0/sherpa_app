@@ -580,7 +580,6 @@ class _PersonalizedGrowthDashboardWidgetState
         curve: Curves.easeOut,
         width: 48,
         height: 48,
-        padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
           // 🎨 조건부 배경색 - 보상받기 가능 시 황금빛 틴트
           color: canClaimReward 
@@ -631,20 +630,23 @@ class _PersonalizedGrowthDashboardWidgetState
                     spreadRadius: 0,
                   ),
                 ],
-          // 🌈 조건부 테두리 - 황금빛 테마와 조화
+          // 🌈 조건부 테두리 - compact_quest_widget 스타일
           border: Border.all(
             color: canClaimReward 
                 ? ModernColors.rewardGradient1.withOpacity(0.3) // 황금빛 테두리
-                : Colors.white.withOpacity(0.9),
+                : ModernColors.modernPrimary.withOpacity(0.2), // compact_quest_widget과 동일
             width: 2.0,
           ),
         ),
-        child: Center(
-          child: Transform.scale(
-            scale: 1.4,
-            child: Image.asset(
-              SherpiEmotion.cheering.imagePath,
-              fit: BoxFit.contain,
+        child: ClipOval(
+          child: Transform.translate(
+            offset: const Offset(0, 13), // 이미지를 아래로 이동하여 얼굴이 중앙에 오도록
+            child: Transform.scale(
+              scale: 3.0,
+              child: Image.asset(
+                SherpiEmotion.cheering.imagePath,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),

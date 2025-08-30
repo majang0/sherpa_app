@@ -178,8 +178,8 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
             child: ClipOval(
               child: Image.asset(
                 currentEmotion.imagePath,
-                width: 60,   // 이미지 크기도 증가 (48→60)
-                height: 60,
+                width: 90,   // 셰르피 이미지만 90x90 유지
+                height: 90,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Icon(
