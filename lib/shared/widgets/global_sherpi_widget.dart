@@ -425,7 +425,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final sherpiState = ref.watch(sherpiProvider);
     final currentEmotion = sherpiState.emotion;
     
@@ -622,7 +622,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                                     Row(
                                       children: [
                                         // 설정 버튼 (셰르피 개인화)
-                                        _buildSettingsButton(context, ref),
+                                        _buildSettingsButton(context),
                                         const SizedBox(width: 8),
                                         // 전체보기 버튼
                                         _buildViewAllButton(context),
@@ -682,56 +682,65 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                         ],
             
                         // 액션 버튼들 - Modern card design with staggered animations
+                        // 오늘의 분석 버튼 (새로 추가 - 첫 번째)
                         _buildModernActionButton(
                           context,
-                          ref,
+                          icon: Icons.analytics_outlined,
+                          title: '오늘의 분석',
+                          subtitle: '하루를 돌아보며 성장하기',
+                          gradient: LinearGradient(
+                            colors: [Colors.indigo.shade400, Colors.indigo.shade600],
+                          ),
+                          onTap: () => _showTodayAnalysis(context),
+                          index: 0,
+                        ),
+                        const SizedBox(height: 12),
+                        _buildModernActionButton(
+                          context,
                           icon: Icons.chat_bubble_outline,
                           title: '자세한 대화하기',
                           subtitle: '셰르피와 깊이 있는 대화',
                           gradient: LinearGradient(
                             colors: [Colors.blue.shade400, Colors.blue.shade600],
                           ),
-                          onTap: () => _openChatScreen(context, ref),
-                          index: 0,
+                          onTap: () => _openChatScreen(context),
+                          index: 1,
                         ),
                         const SizedBox(height: 12),
                         _buildModernActionButton(
                           context,
-                          ref,
                           icon: Icons.insights_outlined,
                           title: '분석하기',
                           subtitle: '나의 패턴을 분석',
                           gradient: LinearGradient(
                             colors: [Colors.purple.shade400, Colors.purple.shade600],
                           ),
-                          onTap: () => _showPatternAnalysis(context, ref),
-                          index: 1,
+                          onTap: () => _showPatternAnalysis(context),
+                          index: 2,
                         ),
                         const SizedBox(height: 12),
                         _buildModernActionButton(
                           context,
-                          ref,
                           icon: Icons.event_note_outlined,
                           title: '계획하기',
                           subtitle: '목표 달성을 위한 계획',
                           gradient: LinearGradient(
                             colors: [Colors.orange.shade400, Colors.orange.shade600],
                           ),
-                          onTap: () => _showPlanningMode(context, ref),
-                          index: 2,
+                          onTap: () => _showPlanningMode(context),
+                          index: 3,
                         ),
                         const SizedBox(height: 12),
                         _buildModernActionButton(
                           context,
-                          ref,
                           icon: Icons.favorite_outline,
                           title: '격려 받기',
                           subtitle: '응원 메시지',
                           gradient: LinearGradient(
                             colors: [Colors.pink.shade400, Colors.pink.shade600],
                           ),
-                          onTap: () => _showEncouragement(context, ref),
-                          index: 3,
+                          onTap: () => _showEncouragement(context),
+                          index: 4,
                         ),
                         const SizedBox(height: 24),
                         
@@ -808,8 +817,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
   
   /// 모던 액션 버튼 위젯 구성 - Glassmorphism style
   Widget _buildModernActionButton(
-    BuildContext context,
-    WidgetRef ref, {
+    BuildContext context, {
     required IconData icon,
     required String title,
     required String subtitle,
@@ -966,7 +974,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
   }
   
   /// 채팅 화면 열기
-  void _openChatScreen(BuildContext context, WidgetRef ref) {
+  void _openChatScreen(BuildContext context) {
     Navigator.of(context).pop();
     
     // 지연 없이 즉시 화면 전환
@@ -985,7 +993,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
   }
 
   /// 패턴 분석 표시
-  void _showPatternAnalysis(BuildContext context, WidgetRef ref) async {
+  void _showPatternAnalysis(BuildContext context) async {
     // ✅ ref 사용을 Widget dispose 전에 미리 실행
     late final globalUser;
     try {
@@ -1251,7 +1259,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
             action: SnackBarAction(
               label: '다시 시도',
               textColor: Colors.white,
-              onPressed: () => _showPatternAnalysis(context, ref),
+              onPressed: () => _showPatternAnalysis(context),
             ),
           ),
         );
@@ -1260,7 +1268,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
   }
   
   /// 계획 모드 표시 - 즉시 입력 화면으로 이동
-  void _showPlanningMode(BuildContext context, WidgetRef ref) async {
+  void _showPlanningMode(BuildContext context) async {
     // 다이얼로그 닫기
     Navigator.of(context).pop();
     
@@ -1303,7 +1311,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
   }
   
   /// 격려 메시지 표시
-  void _showEncouragement(BuildContext context, WidgetRef ref) {
+  void _showEncouragement(BuildContext context) {
     Navigator.of(context).pop();
     
     // 격려 메시지 표시 (다이얼로그 버튼은 항상 새 메시지 생성)
@@ -1314,8 +1322,21 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
     );
   }
   
+  /// 오늘의 분석 화면 표시
+  void _showTodayAnalysis(BuildContext context) {
+    Navigator.of(context).pop();
+    
+    // 오늘의 분석 다이얼로그 표시
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      builder: (dialogContext) => _TodayAnalysisDialog(),
+    );
+  }
+  
   /// 개인화 설정 화면 표시 - 오버레이 방식으로 기존 다이얼로그 위에 표시
-  void _showPersonalizationSettings(BuildContext context, WidgetRef ref) {
+  void _showPersonalizationSettings(BuildContext context) {
     // 기존 다이얼로그는 닫지 않고 그 위에 설정창을 오버레이로 표시
     showDialog(
       context: context,
@@ -1332,7 +1353,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
   }
 
   /// ⚙️ 셰르피 설정 버튼 (메시지 카드 내)
-  Widget _buildSettingsButton(BuildContext context, WidgetRef ref) {
+  Widget _buildSettingsButton(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
@@ -1368,7 +1389,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: () => _showPersonalizationSettings(context, ref),
+          onTap: () => _showPersonalizationSettings(context),
           child: Container(
             width: 24,
             height: 24,
@@ -1450,5 +1471,241 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
         ),
       ),
     );
+  }
+}
+
+/// 오늘의 분석 다이얼로그
+class _TodayAnalysisDialog extends ConsumerWidget {
+  const _TodayAnalysisDialog();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.all(16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            constraints: BoxConstraints(
+              maxWidth: 420,
+              maxHeight: MediaQuery.sizeOf(context).height * 0.85,
+            ),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.white.withOpacity(0.95),
+                  Colors.white.withOpacity(0.85),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(32),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.5),
+                width: 2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: 30,
+                  offset: const Offset(0, 20),
+                ),
+                BoxShadow(
+                  color: Colors.indigo.shade400.withOpacity(0.1),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                // 헤더
+                Container(
+                  padding: const EdgeInsets.fromLTRB(28, 24, 28, 20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.indigo.shade400.withOpacity(0.08),
+                        Colors.indigo.shade400.withOpacity(0.04),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(32),
+                      topRight: Radius.circular(32),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Colors.indigo.shade400, Colors.indigo.shade600],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Icon(
+                          Icons.analytics,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '오늘의 분석',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.textPrimary,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                            Text(
+                              '하루를 돌아보며 성장하기',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.textSecondary,
+                                letterSpacing: -0.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Icon(
+                          Icons.close,
+                          color: AppColors.textSecondary,
+                          size: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // 컨텐츠 영역
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        // Coming Soon 플레이스홀더
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(32),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.white.withOpacity(0.9),
+                                Colors.white.withOpacity(0.7),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.3),
+                              width: 1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.indigo.shade400.withOpacity(0.08),
+                                blurRadius: 20,
+                                offset: const Offset(0, 8),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.insights,
+                                size: 64,
+                                color: Colors.indigo.shade400.withOpacity(0.5),
+                              ),
+                              const SizedBox(height: 24),
+                              Text(
+                                '🎉 곧 출시됩니다!',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.textPrimary,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                '오늘 하루의 활동을 분석하고\n의미 있는 인사이트를 제공하는\n기능이 곧 추가될 예정입니다.',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.textSecondary,
+                                  height: 1.6,
+                                  letterSpacing: -0.2,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 24),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [Colors.indigo.shade400, Colors.indigo.shade600],
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.schedule,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      'Coming Soon',
+                                      style: GoogleFonts.notoSans(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ).animate()
+      .scale(
+        begin: const Offset(0.98, 0.98),
+        curve: Curves.easeOut,
+        duration: 200.ms,
+      )
+      .fade(
+        curve: Curves.easeOut,
+        duration: 150.ms,
+      );
   }
 }

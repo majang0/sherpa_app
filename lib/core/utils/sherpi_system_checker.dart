@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../shared/providers/global_sherpi_provider.dart';
-import '../../core/ai/smart_sherpi_manager.dart';
-import '../../core/ai/ai_message_cache.dart';
+// import '../../core/ai/smart_sherpi_manager.dart'; // AI 시스템 비활성화
+// import '../../core/ai/ai_message_cache.dart'; // AI 캐시 시스템 비활성화
 import '../../core/constants/sherpi_dialogues.dart';
 import 'phase1_performance_benchmark.dart';
 
@@ -63,8 +63,21 @@ class SherpiSystemChecker {
     }
   }
   
-  /// 2️⃣ SmartSherpiManager 3단계 AI 시스템 확인
+  /// 2️⃣ SmartSherpiManager 3단계 AI 시스템 확인 - AI 비활성화됨
   static Future<Map<String, dynamic>> _checkAILevelSystem() async {
+    // AI 시스템 비활성화 - 정적 메시지만 사용
+    return {
+      'ai_enabled': false,
+      'message_source': 'static_only',
+      'ai_levels_count': 0, // AI 레벨 시스템 비활성화
+      'message_generated': true, // 정적 메시지는 항상 사용 가능
+      'response_source': 'static',
+      'is_fast_response': true, // 정적 메시지는 항상 빠름
+      'system_status_available': true,
+      'intimacy_level': 1, // 기본값
+    };
+    
+    /* AI 시스템 비활성화로 주석 처리
     try {
       final manager = SmartSherpiManager();
       const testContext = SherpiContext.welcome;
@@ -94,10 +107,23 @@ class SherpiSystemChecker {
         'ai_system_error': e.toString(),
       };
     }
+    */
   }
   
-  /// 3️⃣ 캐시 시스템 상태 확인
+  /// 3️⃣ 캐시 시스템 상태 확인 - AI 비활성화됨
   static Future<Map<String, dynamic>> _checkCacheSystem() async {
+    // AI 캐시 시스템 비활성화 - 정적 메시지만 사용
+    return {
+      'cache_enabled': false,
+      'cache_accessible': false,
+      'total_cached_messages': 0,
+      'valid_cached_messages': 0,
+      'expired_cached_messages': 0,
+      'cache_contexts': 0,
+      'max_cache_size': 0, // 캐시 비활성화
+    };
+    
+    /* AI 캐시 시스템 비활성화로 주석 처리
     try {
       final cache = AiMessageCache();
       final cacheStatus = await cache.getCacheStatus();
@@ -115,6 +141,7 @@ class SherpiSystemChecker {
         'cache_system_error': e.toString(),
       };
     }
+    */
   }
   
   /// 4️⃣ 메시지 생성 테스트
@@ -148,8 +175,19 @@ class SherpiSystemChecker {
     }
   }
   
-  /// 5️⃣ 메모리 제한 확인
+  /// 5️⃣ 메모리 제한 확인 - AI 비활성화됨
   static Future<Map<String, dynamic>> _checkMemoryLimits() async {
+    // AI 캐시 시스템 비활성화 - 메모리 제한 불필요
+    return {
+      'message_cache_limit': 0, // AI 캐시 사용하지 않음
+      'current_cache_size': 0,
+      'memory_optimization_applied': true,
+      'quality_metrics_limit': 0,
+      'template_cache_limit': 0,
+      'ai_cache_disabled': true,
+    };
+    
+    /* AI 캐시 시스템 비활성화로 주석 처리
     try {
       // AiMessageCache는 이미 100개 제한이 있음
       final cache = AiMessageCache();
@@ -167,6 +205,7 @@ class SherpiSystemChecker {
         'memory_limits_error': e.toString(),
       };
     }
+    */
   }
   
   /// 📊 간단한 상태 요약

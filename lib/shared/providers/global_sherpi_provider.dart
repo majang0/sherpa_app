@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/constants/sherpi_emotions.dart';
-import '../../core/ai/smart_sherpi_manager_openai.dart'; // OpenAI GPT-5 시스템
+// import '../../core/ai/smart_sherpi_manager_openai.dart'; // OpenAI GPT-5 시스템 (DISABLED)
 import '../../core/ai/real_data_connector.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 import '../../features/sherpi_emotion/providers/emotion_analysis_provider.dart';
@@ -187,7 +187,8 @@ class SherpiState {
 class SherpiNotifier extends StateNotifier<SherpiState> {
   final SherpiDialogueSource _dialogueSource;
   late final RealDataConnector _dataConnector;
-  final SmartSherpiManager _smartManager = SmartSherpiManager(); // OpenAI GPT-5 시스템
+  // SmartSherpiManager 비활성화 - 정적 메시지만 사용
+  // final SmartSherpiManager _smartManager = SmartSherpiManager(); // OpenAI GPT-5 시스템 (DISABLED)
   final Ref _ref;
   Timer? _hideTimer;
   
@@ -232,7 +233,7 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
       final updatedSettings = relationship.personalizationSettings.copyWith(
         userPreferredName: userName, // 실제 사용자 이름으로 업데이트
       );
-      _smartManager.setPersonalizationSettings(updatedSettings); // OpenAI GPT-5 개인화 설정
+      // _smartManager.setPersonalizationSettings(updatedSettings); // AI 시스템 비활성화
       
     } catch (e) {
       // 관계 프로바이더가 아직 초기화되지 않은 경우
@@ -360,13 +361,18 @@ void initializeSherpi() {
       );
       final realGameContext = _dataConnector.buildRealGameContext();
       
-      // 🧠 스마트 매니저를 통한 지능적 메시지 선택 - OpenAI GPT-5 시스템
-      final sherpiResponse = await _smartManager.getMessage(context, realUserContext, realGameContext);
+      // 💬 정적 메시지만 사용 (AI 비활성화)
+      // SmartSherpiManager를 사용하지 않고 직접 정적 메시지 가져오기
+      final staticDialogue = await _dialogueSource.getDialogue(context, realUserContext, realGameContext);
       
-      // OpenAI 응답 사용 (실패 시 정적 메시지로 fallback)
-      // sherpiResponse는 이미 위에서 SmartSherpiManager를 통해 가져왔음
-      // 추가 fallback 로직이 필요한 경우 아래 주석 해제
-      // final staticDialogue = await _dialogueSource.getDialogue(context, realUserContext, realGameContext);
+      // 정적 메시지를 SherpiResponse로 래핑
+      final sherpiResponse = SherpiResponse(
+        message: staticDialogue,
+        source: MessageSource.static,
+        responseTime: DateTime.now(),
+        generationDuration: Duration.zero,
+      );
+      
       
       final metadata = {
         'context': context.name,
@@ -468,39 +474,10 @@ void initializeSherpi() {
     _hideTimer?.cancel();
     final selectedEmotion = emotion ?? SherpiEmotionMapper.getEmotionForContext(context);
     
-    // 🎯 Phase 2: AI 메시지 시도 (빠른 경로만 - 캐시된 메시지)
+    // 💬 customDialogue를 그대로 사용 (정적 메시지 모드)
+    // AI나 조건부 메시지 선택 없이 전달받은 customDialogue를 그대로 사용
     String finalMessage = customDialogue;
     String responseSource = 'instant';
-    
-    // 🚨 중요: allGoalsComplete 컨텍스트는 AI를 사용하지 않고 customDialogue를 그대로 사용
-    // 이미 정확한 메시지가 전달되므로 AI 개입 불필요
-    if (context != SherpiContext.allGoalsComplete) {
-      try {
-        // 🔌 실제 사용자 데이터 연결
-        final realUserContext = _dataConnector.buildRealUserContext(
-          context: context,
-          additionalData: userContext,
-        );
-        final realGameContext = _dataConnector.buildRealGameContext();
-        
-        // 🧠 스마트 매니저를 통한 AI 메시지 시도 (빠른 응답만) - AI 시스템 비활성화
-        // 정적 메시지를 시도하되, customDialogue를 우선 사용
-        try {
-          final staticDialogue = await _dialogueSource.getDialogue(context, realUserContext, realGameContext);
-          // customDialogue가 더 구체적이면 그것을 사용, 아니면 정적 메시지 사용
-          if (customDialogue.length > 10 && !customDialogue.contains('!')) {
-            finalMessage = customDialogue;
-          } else if (staticDialogue.isNotEmpty) {
-            finalMessage = staticDialogue;
-            responseSource = 'static';
-          }
-        } catch (e) {
-          // 정적 메시지 가져오기 실패 시 customDialogue 사용
-        }
-      } catch (e) {
-        // AI 실패 시 정적 메시지 사용
-      }
-    }
     
     // 메시지 표시 (중복 방지 통과한 경우만)
     final isNewMessage = state.dialogue != finalMessage;
@@ -646,14 +623,14 @@ void initializeSherpi() {
   }
   */
 
-  /// 📊 시스템 상태 조회 - OpenAI GPT-5 시스템
+  /// 📊 시스템 상태 조회 - 정적 메시지 시스템
   Future<Map<String, dynamic>> getSystemStatus() async {
-    final systemStatus = await _smartManager.getSystemStatus();
-    // OpenAI GPT-5 시스템 상태 반환
+    // 정적 메시지 시스템 상태 반환
     return {
-      ...systemStatus,
       'message_source': 'static_only',
       'cache_enabled': false,
+      'ai_enabled': false,
+      'static_messages_count': 50, // 예상 정적 메시지 수
     };
   }
 
@@ -829,8 +806,8 @@ void initializeSherpi() {
       // 직접 상태 업데이트 (관계 프로바이더에 업데이트 메서드가 있다면 그것을 사용)
       relationshipNotifier.updateRelationship(updatedRelationship);
       
-      // SmartSherpiManager에도 즉시 반영 - OpenAI GPT-5 시스템
-      _smartManager.setPersonalizationSettings(newSettings);
+      // SmartSherpiManager 비활성화 - 정적 메시지만 사용
+      // _smartManager.setPersonalizationSettings(newSettings); // DISABLED
       
       
       // 설정 변경을 알리는 메시지 표시 (선택사항)

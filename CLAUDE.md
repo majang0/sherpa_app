@@ -379,18 +379,16 @@ lib/
 └── sherpi/                                # Documentation & roadmap
 ```
 
-#### 2. AI Integration (🎉 OpenAI GPT-5 통합 - 2025.08.30)
+#### 2. AI Integration (🎉 OpenAI GPT-5 통합 - 수동 모드 - 2025.08.30)
 
 **Setup Requirements**:
 ```dart
 // lib/core/config/api_config.dart
 class ApiConfig {
+  static const String openAIApiKey = 'YOUR_OPENAI_API_KEY';
+  static const String openAIModel = 'gpt-5-chat-latest';
   static const String geminiApiKey = 'YOUR_GEMINI_API_KEY';
-  static const String geminiModel = 'gemini-2.5-flash'; // 고정 모델 (변경 금지)
-  
-  // 🛡️ 보안 개선: 하드코딩된 API 키 완전 제거
-  // 이전: static const String _developmentApiKey = '실제키값';
-  // 현재: static const String _placeholderApiKey = 'YOUR_GEMINI_API_KEY_HERE';
+  static const String geminiModel = 'gemini-2.5-flash';
 }
 ```
 
@@ -411,10 +409,10 @@ class ApiConfig {
    - ✅ `.env.example` 템플릿 파일로 팀원들에게 가이드 제공
    - ✅ 2단계 우선순위: .env 파일 → 컴파일타임 환경변수 → 플레이스홀더
 
-**Smart Hybrid System** (90% Static + 10% AI) - **대폭 최적화 완료**:
-- **Static Messages (⚡)**: Instant responses for common scenarios
-- **Cached AI (🚀)**: Pre-generated AI responses stored locally  
-- **Realtime AI (🤖)**: Live API calls for personalized experiences
+**Smart Hybrid System** (100% Static by Default) - **수동 AI 모드**:
+- **Static Messages (⚡)**: Default for all scenarios (100%)
+- **Manual AI (🤖)**: API calls only when explicitly requested by user
+- **No Automatic AI**: All probabilistic API calls removed
 
 **Major Performance Optimization** ⚡:
 - **Enhanced Gemini 대폭 단순화**: 600+ lines → 120 lines (80% 코드 감소)
@@ -428,16 +426,18 @@ class ApiConfig {
 - **Automatic fallback** to static messages on API failure
 - **Context-based AI usage** criteria (only for valuable scenarios)
 
-**Smart AI Manager Decision Logic** (`lib/core/ai/smart_sherpi_manager.dart`):
+**Smart AI Manager Decision Logic** (`lib/core/ai/smart_sherpi_manager_openai.dart`):
 ```dart
-// AI Usage Criteria (10% of interactions)
-final useAI = (
-  isSignificantMoment ||      // Level up, achievement unlock
-  isPersonalizedContext ||    // User-specific data available
-  hasLongUserHistory ||       // User has 30+ days of data
-  isComplexScenario ||        // Multiple context variables
-  isEmotionalMoment          // High emotional significance
-) && !isRepetitiveAction;    // Avoid AI for repetitive tasks
+// Manual AI Usage Only
+// AI는 오직 사용자가 명시적으로 요청한 경우에만 사용됩니다
+void enableAIForNextMessage() {
+  _useAIManually = true; // 다음 메시지에 대해서만 AI 활성화
+}
+
+// 또는 특정 메시지에 대해 직접 AI 사용
+Future<SherpiResponse> getMessageWithAI(context, userContext, gameContext) {
+  // 이 메서드를 호출하면 해당 메시지에 대해 AI 사용
+}
 ```
 
 **Message Source Priority**:
@@ -924,17 +924,34 @@ claude mcp remove youtube-mcp
 
 ## AI 시스템 통합 가이드 (2025년 8월 30일 업데이트)
 
-### 🎉 OpenAI GPT-5 통합 완료
+### 🎉 OpenAI GPT-5 통합 완료 (수동 모드)
 
-**현재 상태**: OpenAI GPT-5로 메인 AI 시스템 교체 완료
+**현재 상태**: OpenAI GPT-5 통합 완료 - 수동 호출 모드
+- **기본 동작**: 100% 정적 메시지 사용 (sherpi_dialogues.dart)
+- **AI 사용**: 사용자가 명시적으로 요청한 경우에만
 - **메인 AI**: OpenAI GPT-5 (`gpt-5-chat-latest`)
 - **Fallback**: Gemini 2.5 Flash
 - **가격**: 입력 $1.25/1M tokens, 출력 $10/1M tokens
 
 **주요 파일**:
 - `lib/core/ai/openai_dialogue_source.dart` - OpenAI GPT-5 통합
-- `lib/core/ai/smart_sherpi_manager_openai.dart` - 하이브리드 매니저
+- `lib/core/ai/smart_sherpi_manager_openai.dart` - 수동 AI 매니저
 - `lib/core/config/api_config.dart` - API 설정 관리
+
+**AI 수동 호출 방법**:
+```dart
+// 방법 1: 다음 메시지에 대해서만 AI 활성화
+ref.read(sherpiProvider.notifier).enableAIForNextMessage();
+ref.read(sherpiProvider.notifier).showMessage(context, userContext, gameContext);
+
+// 방법 2: 특정 메시지에 대해 직접 AI 사용 강제
+ref.read(sherpiProvider.notifier).showMessageWithAI(context, userContext, gameContext);
+```
+
+**변경 사항 (2025.08.30)**:
+- ❌ 확률적 AI 호출 완전 제거 (30% 확률, 중요 순간 100% 등)
+- ✅ 100% 정적 메시지 사용이 기본값
+- ✅ AI는 오직 수동으로 활성화된 경우에만 사용
 
 ## Gemini AI 시스템 트러블슈팅 가이드 (2025년 8월 업데이트)
 

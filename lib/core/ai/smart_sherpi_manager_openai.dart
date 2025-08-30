@@ -17,6 +17,9 @@ class SmartSherpiManager {
   // 캐시 시스템  
   final AiMessageCache _cache = AiMessageCache();
   
+  // 수동 AI 사용 플래그 (사용자가 명시적으로 요청할 때만 true)
+  bool _useAIManually = false;
+  
   /// 생성자
   SmartSherpiManager() {
     _initializeAI();
@@ -109,6 +112,7 @@ class SmartSherpiManager {
   }
   
   /// AI 사용 여부 결정 로직
+  /// 이제는 수동으로 활성화된 경우에만 AI를 사용합니다.
   bool _shouldUseAI(
     SherpiContext context,
     Map<String, dynamic>? userContext,
@@ -119,38 +123,38 @@ class SmartSherpiManager {
       return false;
     }
     
-    // 중요한 순간에만 AI 사용 (10% 규칙)
-    final importantContexts = [
-      SherpiContext.levelUp,
-      SherpiContext.achievement,
-      SherpiContext.allGoalsComplete,
-      SherpiContext.longTimeNoSee,
-      SherpiContext.milestone,
-      SherpiContext.specialEvent,
-    ];
-    
-    if (importantContexts.contains(context)) {
-      print('🎯 중요한 순간 감지 - AI 사용');
+    // 수동으로 AI 사용이 활성화된 경우에만 사용
+    if (_useAIManually) {
+      print('🎯 수동 AI 사용 활성화됨 - OpenAI GPT-5 사용');
+      // 한 번 사용 후 자동으로 비활성화
+      _useAIManually = false;
       return true;
     }
     
-    // 활동 완료 시 30% 확률로 AI 사용
-    final activityContexts = [
-      SherpiContext.exerciseComplete,
-      SherpiContext.studyComplete,
-      SherpiContext.questComplete,
-      SherpiContext.diaryWritten,
-    ];
-    
-    if (activityContexts.contains(context)) {
-      final useAI = DateTime.now().millisecond % 100 < 30;
-      if (useAI) {
-        print('🎲 활동 완료 - AI 사용 (30% 확률)');
-        return true;
-      }
-    }
-    
+    // 기본적으로 항상 정적 메시지 사용 (100%)
     return false;
+  }
+  
+  /// 다음 메시지에 대해 AI 사용을 수동으로 활성화
+  /// 사용자가 명시적으로 AI 응답을 원할 때 호출
+  void enableAIForNextMessage() {
+    if (_openaiSource != null) {
+      _useAIManually = true;
+      print('✅ 다음 메시지에 AI 사용이 활성화되었습니다.');
+    } else {
+      print('❌ OpenAI가 초기화되지 않아 AI를 사용할 수 없습니다.');
+    }
+  }
+  
+  /// AI 사용 강제 활성화 (특정 컨텍스트에 대해)
+  Future<SherpiResponse> getMessageWithAI(
+    SherpiContext context,
+    Map<String, dynamic>? userContext,
+    Map<String, dynamic>? gameContext,
+  ) async {
+    // 일시적으로 AI 사용 활성화
+    _useAIManually = true;
+    return await getMessage(context, userContext, gameContext);
   }
 
   /// ⚡ 동기식 정적 메시지 (0ms - 즉시 응답)
