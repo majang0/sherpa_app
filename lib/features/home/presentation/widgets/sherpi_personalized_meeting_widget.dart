@@ -612,30 +612,13 @@ class _SherpiPersonalizedMeetingWidgetState
           Expanded(
             child: Row(
               children: [
-                // 🎯 셰르피 아이콘 (compact_quest_widget 스타일)
-                Container(
+                // 🎯 셰르피 아이콘
+                SizedBox(
                   width: 48,
                   height: 48,
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: ModernColors.modernPrimary.withOpacity(0.15),
-                        blurRadius: 8,
-                        offset: const Offset(0, 3),
-                        spreadRadius: 1,
-                      ),
-                    ],
-                    border: Border.all(
-                      color: ModernColors.modernPrimary.withOpacity(0.2),
-                      width: 2.0,
-                    ),
-                  ),
                   child: Center(
                     child: Transform.scale(
-                      scale: 1.95,
+                      scale: 1.7,
                       child: Image.asset(
                         'assets/images/sherpi/sherpi_smile.png',
                         fit: BoxFit.contain,
@@ -643,7 +626,7 @@ class _SherpiPersonalizedMeetingWidgetState
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 2), // 7 - 5 = 2픽셀로 더 줄여서 텍스트를 좌측으로 추가 이동
                 
                 // 📝 타이틀 + 서브타이틀
                 Expanded(

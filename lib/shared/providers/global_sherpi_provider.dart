@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/constants/sherpi_emotions.dart';
-// import '../../core/ai/smart_sherpi_manager.dart'; // AI 시스템 비활성화
+import '../../core/ai/smart_sherpi_manager_openai.dart'; // OpenAI GPT-5 시스템
 import '../../core/ai/real_data_connector.dart';
 import '../../features/sherpi_relationship/providers/relationship_provider.dart';
 import '../../features/sherpi_emotion/providers/emotion_analysis_provider.dart';
@@ -187,7 +187,7 @@ class SherpiState {
 class SherpiNotifier extends StateNotifier<SherpiState> {
   final SherpiDialogueSource _dialogueSource;
   late final RealDataConnector _dataConnector;
-  // final SmartSherpiManager _smartManager = SmartSherpiManager(); // AI 시스템 비활성화
+  final SmartSherpiManager _smartManager = SmartSherpiManager(); // OpenAI GPT-5 시스템
   final Ref _ref;
   Timer? _hideTimer;
   
@@ -213,8 +213,8 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
     // 친밀도 레벨 초기화
     _updateIntimacyLevel();
     
-    // 🎯 Phase 2: SmartSherpiManager에 데이터 수집기 초기화 - AI 시스템 비활성화
-    // _smartManager.initDataCollector(_ref);
+    // 🎯 Phase 2: SmartSherpiManager에 데이터 수집기 초기화 - OpenAI GPT-5 시스템
+    // _smartManager.initDataCollector(_ref); // 데이터 수집기는 현재 비활성화
   }
   
 
@@ -222,7 +222,7 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
   void _updateIntimacyLevel() {
     try {
       final relationship = _ref.read(relationshipProvider);
-      // _smartManager.setIntimacyLevel(relationship.intimacyLevel); // AI 시스템 비활성화
+      // _smartManager.setIntimacyLevel(relationship.intimacyLevel); // 친밀도 레벨 설정 (현재 미사용)
       
       // 🎯 Phase 1 개선: 실제 사용자 이름을 PersonalizationSettings에 반영
       final user = _ref.read(globalUserProvider);
@@ -232,7 +232,7 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
       final updatedSettings = relationship.personalizationSettings.copyWith(
         userPreferredName: userName, // 실제 사용자 이름으로 업데이트
       );
-      // _smartManager.setPersonalizationSettings(updatedSettings); // AI 시스템 비활성화
+      _smartManager.setPersonalizationSettings(updatedSettings); // OpenAI GPT-5 개인화 설정
       
     } catch (e) {
       // 관계 프로바이더가 아직 초기화되지 않은 경우
@@ -360,16 +360,13 @@ void initializeSherpi() {
       );
       final realGameContext = _dataConnector.buildRealGameContext();
       
-      // 🧠 스마트 매니저를 통한 지능적 메시지 선택 - AI 시스템 비활성화, 정적 메시지 사용
-      // final sherpiResponse = await _smartManager.getMessage(context, realUserContext, realGameContext);
+      // 🧠 스마트 매니저를 통한 지능적 메시지 선택 - OpenAI GPT-5 시스템
+      final sherpiResponse = await _smartManager.getMessage(context, realUserContext, realGameContext);
       
-      // 정적 메시지 직접 가져오기
-      final staticDialogue = await _dialogueSource.getDialogue(context, realUserContext, realGameContext);
-      final sherpiResponse = SherpiResponse(
-        message: staticDialogue,
-        source: MessageSource.static,
-        responseTime: DateTime.now(),
-      );
+      // OpenAI 응답 사용 (실패 시 정적 메시지로 fallback)
+      // sherpiResponse는 이미 위에서 SmartSherpiManager를 통해 가져왔음
+      // 추가 fallback 로직이 필요한 경우 아래 주석 해제
+      // final staticDialogue = await _dialogueSource.getDialogue(context, realUserContext, realGameContext);
       
       final metadata = {
         'context': context.name,
@@ -649,12 +646,12 @@ void initializeSherpi() {
   }
   */
 
-  /// 📊 시스템 상태 조회 - AI 시스템 비활성화
+  /// 📊 시스템 상태 조회 - OpenAI GPT-5 시스템
   Future<Map<String, dynamic>> getSystemStatus() async {
-    // final systemStatus = await _smartManager.getSystemStatus();
-    // AI 시스템 비활성화 - 기본 상태 반환
+    final systemStatus = await _smartManager.getSystemStatus();
+    // OpenAI GPT-5 시스템 상태 반환
     return {
-      'ai_enabled': false,
+      ...systemStatus,
       'message_source': 'static_only',
       'cache_enabled': false,
     };
@@ -832,8 +829,8 @@ void initializeSherpi() {
       // 직접 상태 업데이트 (관계 프로바이더에 업데이트 메서드가 있다면 그것을 사용)
       relationshipNotifier.updateRelationship(updatedRelationship);
       
-      // SmartSherpiManager에도 즉시 반영 - AI 시스템 비활성화
-      // _smartManager.setPersonalizationSettings(newSettings);
+      // SmartSherpiManager에도 즉시 반영 - OpenAI GPT-5 시스템
+      _smartManager.setPersonalizationSettings(newSettings);
       
       
       // 설정 변경을 알리는 메시지 표시 (선택사항)

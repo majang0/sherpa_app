@@ -149,33 +149,12 @@ class _EnhancedMeetingRecommendationWidgetState
           Expanded(
             child: Row(
               children: [
-                // 🎯 섹션 아이콘
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        ModernColors.primary,
-                        ModernColors.primary.withValues(alpha: 0.8),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: ModernColors.primary.withValues(alpha: 0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.groups_rounded,
-                    color: Colors.white,
-                    size: 20,
-                  ),
+                const SizedBox(width: 4), // 아이콘을 우측으로 4픽셀 이동
+                // 🎯 섹션 아이콘 - 배경 없이 아이콘만
+                Icon(
+                  Icons.explore_rounded,  // 탐험/발견을 의미하는 아이콘
+                  color: ModernColors.modernPrimary,
+                  size: 40,
                 ),
                 const SizedBox(width: 12),
                 
@@ -185,7 +164,7 @@ class _EnhancedMeetingRecommendationWidgetState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '나에게 딱 맞는 모임',
+                        '이런 모임은 어떠신가요?',
                         style: GoogleFonts.notoSans(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -195,7 +174,7 @@ class _EnhancedMeetingRecommendationWidgetState
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'AI가 추천하는 맞춤 모임',
+                        '요즘 이런 게 유행하고 있어요!',
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -210,7 +189,7 @@ class _EnhancedMeetingRecommendationWidgetState
             ),
           ),
           
-          // 🔗 "모든 모임 보기" 링크
+          // 🔗 "모든 모임 보기" 링크 (compact_quest_widget 스타일)
           GestureDetector(
             onTap: () {
               HapticFeedbackManager.lightImpact();
@@ -218,25 +197,11 @@ class _EnhancedMeetingRecommendationWidgetState
               Navigator.pushNamed(context, '/', arguments: 3);
             },
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '모든 모임',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: ModernColors.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 12,
-                    color: ModernColors.primary,
-                  ),
-                ],
+              padding: const EdgeInsets.all(8),
+              child: Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: ModernColors.modernPrimary,
               ),
             ),
           ),
@@ -289,7 +254,7 @@ class _EnhancedMeetingRecommendationWidgetState
     
     // 카테고리별 색상
     final color = category == MeetingCategory.all 
-        ? ModernColors.primary 
+        ? ModernColors.modernPrimary 
         : category.color;
 
     return GestureDetector(
@@ -301,7 +266,7 @@ class _EnhancedMeetingRecommendationWidgetState
         decoration: BoxDecoration(
           // 🎨 깔끔하게 색상 변화만으로 구분
           color: isSelected 
-              ? color  // 선택 시: 카테고리 색상
+              ? ModernColors.modernPrimary  // 선택 시: 모든 카테고리 통일된 프라이머리 색상
               : Colors.grey.shade100,  // 미선택 시: 연한 회색
           borderRadius: BorderRadius.circular(18),
           // 그림자 효과 완전 제거

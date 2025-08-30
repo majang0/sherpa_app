@@ -8,6 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/animation/micro_interactions.dart';
+import '../../core/theme/modern_colors.dart';
+import '../widgets/components/molecules/sherpa_tab_bar_2025.dart';
 
 // Features
 import '../../features/sherpi_chat/presentation/screens/sherpi_chat_screen.dart';
@@ -397,8 +399,30 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
 }
 
 /// 🎭 확장 대화 다이얼로그
-class SherpiExpandedDialog extends ConsumerWidget {
+class SherpiExpandedDialog extends ConsumerStatefulWidget {
   const SherpiExpandedDialog({super.key});
+
+  @override
+  ConsumerState<SherpiExpandedDialog> createState() => _SherpiExpandedDialogState();
+}
+
+class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
+    with TickerProviderStateMixin {
+  
+  int _currentTabIndex = 0;
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 5, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

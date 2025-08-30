@@ -360,8 +360,9 @@ The app implements a sophisticated RPG-style progression system:
 lib/
 ├── core/
 │   ├── ai/
-│   │   ├── gemini_dialogue_source.dart    # Gemini API integration
-│   │   ├── smart_sherpi_manager.dart      # Hybrid message management
+│   │   ├── openai_dialogue_source.dart    # OpenAI GPT-5 integration
+│   │   ├── gemini_dialogue_source.dart    # Gemini API (fallback)
+│   │   ├── smart_sherpi_manager_openai.dart # Hybrid message management
 │   │   ├── ai_message_cache.dart          # Performance caching system
 │   │   └── AI_MESSAGE_DECISION_CRITERIA.md # AI usage criteria
 │   ├── config/
@@ -378,7 +379,7 @@ lib/
 └── sherpi/                                # Documentation & roadmap
 ```
 
-#### 2. Gemini AI Integration (🚀 대폭 최적화 완료 - 2024.08.08)
+#### 2. AI Integration (🎉 OpenAI GPT-5 통합 - 2025.08.30)
 
 **Setup Requirements**:
 ```dart
@@ -920,6 +921,20 @@ Be aware of these differences between dependencies and actual usage:
 		
 ** MCP 서버 제거가 필요할 때 예시: **
 claude mcp remove youtube-mcp
+
+## AI 시스템 통합 가이드 (2025년 8월 30일 업데이트)
+
+### 🎉 OpenAI GPT-5 통합 완료
+
+**현재 상태**: OpenAI GPT-5로 메인 AI 시스템 교체 완료
+- **메인 AI**: OpenAI GPT-5 (`gpt-5-chat-latest`)
+- **Fallback**: Gemini 2.5 Flash
+- **가격**: 입력 $1.25/1M tokens, 출력 $10/1M tokens
+
+**주요 파일**:
+- `lib/core/ai/openai_dialogue_source.dart` - OpenAI GPT-5 통합
+- `lib/core/ai/smart_sherpi_manager_openai.dart` - 하이브리드 매니저
+- `lib/core/config/api_config.dart` - API 설정 관리
 
 ## Gemini AI 시스템 트러블슈팅 가이드 (2025년 8월 업데이트)
 

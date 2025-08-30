@@ -229,14 +229,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-            // 개인 성장 영역 (RPG 스타일)
+            // 모든 위젯을 하나의 Container에서 관리
             SliverToBoxAdapter(
-              child: _buildPersonalGrowthSection(user),
-            ),
-            
-            // 소셜 영역 (클린 스타일)
-            SliverToBoxAdapter(
-              child: _buildSocialSection(),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 개인 성장 영역 위젯들
+                    const SizedBox(height: 20),
+                    PersonalizedGrowthDashboardWidget(),
+                    const SizedBox(height: 20),
+                    GrowthInsightsWidget(),
+                    const SizedBox(height: 20),
+                    CompactQuestWidget(),
+                    const SizedBox(height: 20),
+                    
+                    // 소셜 영역 위젯들
+                    const SherpiPersonalizedMeetingWidget(),
+                    const SizedBox(height: 20),
+                    const EnhancedMeetingRecommendationWidget(),
+                    const SizedBox(height: 20),
+                    FriendsActivityFeedWidget(),
+                    const SizedBox(height: 20),
+                    UniversityGuildWidget(),
+                  ],
+                ),
+              ),
             ),
             
             // 하단 여백
@@ -250,61 +269,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
 
 
-  Widget _buildPersonalGrowthSection(GlobalUser user) {
-    return Container(
-
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-
-            const SizedBox(height: 20),
-
-            // 셰르피 AI 테스트 카드 제거됨 - 홈화면 리모델링 준비
-
-            // 통합 성장 대시보드 (조건부 보상 버튼 기능 포함)
-            PersonalizedGrowthDashboardWidget(),
-            const SizedBox(height: 20),
-            
-            // 성장 인사이트 위젯 (새로운 시각적 위젯)
-            GrowthInsightsWidget(),
-            const SizedBox(height: 20),
-            
-            // AI 테스트 위젯 제거됨 - 프로덕션 모드 최적화
-            
-            // 퀘스트 시스템 (V2) - 간소화된 버전
-            CompactQuestWidget(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSocialSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 셰르피가 추천하는 맞춤 모임
-          const SherpiPersonalizedMeetingWidget(),
-          const SizedBox(height: 20),
-
-          // 모임 추천
-          const EnhancedMeetingRecommendationWidget(),
-          const SizedBox(height: 16),
-
-          // 소셜 피드
-          FriendsActivityFeedWidget(),
-          const SizedBox(height: 16),
-          
-          // 대학 길드
-          UniversityGuildWidget(),
-        ],
-      ),
-    );
-  }
 
 
 

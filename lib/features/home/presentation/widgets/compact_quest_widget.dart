@@ -147,6 +147,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
+          const SizedBox(width: 3), // 셰르피를 우측으로 3픽셀 이동
           // 셰르피 캐릭터
           GestureDetector(
             onTap: () {
@@ -156,29 +157,12 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
               );
               HapticFeedbackManager.lightImpact();
             },
-            child: Container(
+            child: SizedBox(
               width: 48,
               height: 48,
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: ModernColors.modernPrimary.withOpacity(0.15),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                    spreadRadius: 1,
-                  ),
-                ],
-                border: Border.all(
-                  color: ModernColors.modernPrimary.withOpacity(0.2),
-                  width: 2.0,
-                ),
-              ),
               child: Center(
                 child: Transform.scale(
-                  scale: 1.95,
+                  scale: 1.8,
                   child: Image.asset(
                     emotion.imagePath,
                     fit: BoxFit.contain,
@@ -187,7 +171,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
               ),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 4), // 6 - 2 = 4픽셀로 더 줄임
           
           // 텍스트 섹션
           Expanded(
@@ -197,18 +181,20 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
                 Text(
                   '퀘스트 알림',
                   style: GoogleFonts.notoSans(
-                    fontSize: 16,
+                    fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: ModernColors.textPrimary,
+                    height: 1.2,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 2),
                 Text(
                   message,
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                     color: ModernColors.textSecondary,
+                    height: 1.2,
                   ),
                 ),
               ],

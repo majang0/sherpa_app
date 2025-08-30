@@ -1074,6 +1074,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  openai_dart:
+    dependency: "direct main"
+    description:
+      name: openai_dart
+      sha256: "947b4b1cd1f0eb8fe8d706d22becd0fcf1647f96a0a4062c70b30bb5e10dce2b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.4+1"
   package_config:
     dependency: transitive
     description:
