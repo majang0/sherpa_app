@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:openai_dart/openai_dart.dart';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
 
 /// 🎯 활동 분석 서비스
 /// 
@@ -32,31 +31,11 @@ class ActivityAnalysisService {
     try {
       final apiKey = ApiConfig.openAIApiKey;
       
-      // Android 에뮬레이터를 위한 특별 처리
-      if (Platform.isAndroid) {
-        // 에뮬레이터는 10.0.2.2를 사용하여 호스트 머신에 접근
-        // 하지만 OpenAI API는 외부 인터넷이므로 프록시 설정 불필요
-        
-        // Dio 클라이언트 직접 생성하여 타임아웃 설정
-        final dio = Dio()
-          ..options.connectTimeout = const Duration(seconds: 30)
-          ..options.receiveTimeout = const Duration(seconds: 30)
-          ..options.headers = {
-            'User-Agent': 'Sherpa App/1.0',
-          };
-        
-        _client = OpenAIClient(
-          apiKey: apiKey,
-          baseUrl: 'https://api.openai.com/v1',
-          client: dio,
-        );
-      } else {
-        // iOS나 다른 플랫폼
-        _client = OpenAIClient(
-          apiKey: apiKey,
-          baseUrl: 'https://api.openai.com/v1',
-        );
-      }
+      // 모든 플랫폼에서 동일하게 처리 (Dio 제거)
+      _client = OpenAIClient(
+        apiKey: apiKey,
+        baseUrl: 'https://api.openai.com/v1',
+      );
       
       print('🎯 Activity Analysis Service 초기화 성공');
       print('📱 플랫폼: ${Platform.isAndroid ? "Android" : "iOS/Other"}');
