@@ -13,7 +13,7 @@ class ApiConfig {
   
   // 🎯 AI 모델 설정
   static const String geminiModel = 'gemini-2.5-flash';  // Gemini 모델
-  static const String openAIModel = 'gpt-4-turbo';  // OpenAI GPT-4 Turbo 모델
+  static const String openAIModel = 'gpt-5-chat-latest';  // OpenAI GPT-5 Chat 모델 (2025년 8월 출시)
   
   /// Gemini API 키를 반환합니다.
   /// 

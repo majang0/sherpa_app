@@ -152,7 +152,7 @@ class ActivityAnalysisService {
     try {
       final chatCompletion = await _client.createChatCompletion(
         request: CreateChatCompletionRequest(
-          model: ChatCompletionModel.modelId('gpt-4-turbo'),
+          model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
           messages: [
             ChatCompletionMessage.system(
               content: '''당신은 셰르피(Sherpi)입니다. 사용자의 일상 활동을 분석하고 
