@@ -55,14 +55,14 @@ class SampleDataGenerator {
     return result;
   }
 
-  /// 오늘의 걸음수 생성 (4000~15000 사이)
+  /// 오늘의 걸음수 생성 (6000~15000 사이 - 목표 달성 보장)
   static int _generateTodaySteps() {
-    return 4000 + _random.nextInt(11001);
+    return 6000 + _random.nextInt(9001);
   }
 
-  /// 오늘의 집중 시간 생성 (20~150분)
+  /// 오늘의 집중 시간 생성 (30~150분 - 목표 달성 보장)
   static int _generateTodayFocus() {
-    return 20 + _random.nextInt(131);
+    return 30 + _random.nextInt(121);
   }
 
   /// 연속 달성일 생성 - 랜덤 생성
