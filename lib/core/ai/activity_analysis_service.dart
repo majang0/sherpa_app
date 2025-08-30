@@ -273,23 +273,47 @@ class ActivityAnalysisService {
   /// 네트워크 연결 테스트
   Future<bool> testNetworkConnection() async {
     try {
-      // OpenAI API 엔드포인트에 간단한 요청 보내기
-      final response = await _client.listModels().timeout(
-        const Duration(seconds: 5),
-        onTimeout: () => throw Exception('Connection timeout'),
-      );
+      print('🔍 OpenAI API 연결 테스트 시작...');
+      print('📍 API Key 상태: ${ApiConfig.isOpenAIApiKeyValid ? "유효함" : "유효하지 않음"}');
+      print('📍 API Key 앞 10자: ${ApiConfig.openAIApiKey.substring(0, 10)}...');
       
-      print('✅ OpenAI API 연결 성공');
-      return true;
+      // HTTP 클라이언트로 직접 테스트
+      try {
+        final testUri = Uri.parse('https://api.openai.com/v1/models');
+        print('📍 테스트 URL: $testUri');
+        
+        // OpenAI API 엔드포인트에 간단한 요청 보내기
+        final response = await _client.listModels().timeout(
+          const Duration(seconds: 10),
+          onTimeout: () => throw Exception('Connection timeout (10초 초과)'),
+        );
+        
+        print('✅ OpenAI API 연결 성공');
+        return true;
+      } catch (innerError) {
+        print('🔴 내부 에러: $innerError');
+        throw innerError;
+      }
     } catch (e) {
       print('❌ OpenAI API 연결 실패: $e');
       
-      if (e.toString().contains('Failed host lookup')) {
+      if (e.toString().contains('Failed host lookup') || 
+          e.toString().contains('SocketException')) {
+        print('🌐 네트워크 연결 문제 감지');
         print('💡 해결 방법:');
         print('  1. 인터넷 연결 확인');
-        print('  2. VPN이 켜져 있다면 끄기');
-        print('  3. DNS 설정 확인 (8.8.8.8 사용 권장)');
-        print('  4. 방화벽 설정 확인');
+        print('  2. 모바일 데이터/WiFi 연결 상태 확인');
+        print('  3. VPN이 켜져 있다면 끄기');
+        print('  4. DNS 설정 확인 (8.8.8.8 사용 권장)');
+        print('  5. 방화벽/안티바이러스 설정 확인');
+        print('  6. 에뮬레이터의 경우 인터넷 설정 확인');
+      } else if (e.toString().contains('401') || 
+                 e.toString().contains('Unauthorized')) {
+        print('🔑 API 키 인증 실패');
+        print('💡 해결 방법:');
+        print('  1. OpenAI 대시보드에서 API 키 확인');
+        print('  2. API 키가 만료되지 않았는지 확인');
+        print('  3. API 키가 올바르게 설정되었는지 확인');
       }
       
       return false;
