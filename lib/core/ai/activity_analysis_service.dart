@@ -5,6 +5,7 @@ import 'package:sherpa_app/core/config/api_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:openai_dart/openai_dart.dart';
+import 'package:http/http.dart' as http;
 
 /// 🎯 활동 분석 서비스
 /// 
@@ -275,47 +276,86 @@ class ActivityAnalysisService {
     try {
       print('🔍 OpenAI API 연결 테스트 시작...');
       print('📍 API Key 상태: ${ApiConfig.isOpenAIApiKeyValid ? "유효함" : "유효하지 않음"}');
-      print('📍 API Key 앞 10자: ${ApiConfig.openAIApiKey.substring(0, 10)}...');
       
-      // HTTP 클라이언트로 직접 테스트
+      final apiKey = ApiConfig.openAIApiKey;
+      if (apiKey.length > 10) {
+        print('📍 API Key 앞 10자: ${apiKey.substring(0, 10)}...');
+      }
+      
+      // 1. 먼저 구글 연결 테스트
+      print('\n1️⃣ 일반 인터넷 연결 테스트 (Google)...');
       try {
-        final testUri = Uri.parse('https://api.openai.com/v1/models');
-        print('📍 테스트 URL: $testUri');
-        
-        // OpenAI API 엔드포인트에 간단한 요청 보내기
-        final response = await _client.listModels().timeout(
+        final googleResponse = await http.get(
+          Uri.parse('https://www.google.com'),
+        ).timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => throw TimeoutException('Google 연결 타임아웃'),
+        );
+        print('✅ Google 연결 성공 (상태 코드: ${googleResponse.statusCode})');
+      } catch (e) {
+        print('❌ Google 연결 실패: $e');
+        print('🚨 기본 인터넷 연결이 되지 않습니다!');
+        return false;
+      }
+      
+      // 2. HTTP 패키지로 OpenAI API 직접 테스트
+      print('\n2️⃣ HTTP 패키지로 OpenAI API 테스트...');
+      try {
+        final response = await http.get(
+          Uri.parse('https://api.openai.com/v1/models'),
+          headers: {
+            'Authorization': 'Bearer $apiKey',
+            'Content-Type': 'application/json',
+          },
+        ).timeout(
           const Duration(seconds: 10),
-          onTimeout: () => throw Exception('Connection timeout (10초 초과)'),
+          onTimeout: () => throw TimeoutException('OpenAI API 타임아웃'),
         );
         
-        print('✅ OpenAI API 연결 성공');
+        print('📍 응답 상태 코드: ${response.statusCode}');
+        print('📍 응답 헤더: ${response.headers}');
+        
+        if (response.statusCode == 200) {
+          print('✅ OpenAI API HTTP 연결 성공!');
+          final models = jsonDecode(response.body);
+          print('📍 사용 가능한 모델 수: ${models['data']?.length ?? 0}');
+        } else if (response.statusCode == 401) {
+          print('🔑 API 키 인증 실패 (401)');
+          print('📍 응답 본문: ${response.body}');
+        } else {
+          print('❌ 예상치 못한 응답: ${response.statusCode}');
+          print('📍 응답 본문: ${response.body}');
+        }
+      } catch (e) {
+        print('❌ HTTP 테스트 실패: $e');
+      }
+      
+      // 3. OpenAI 클라이언트로 테스트
+      print('\n3️⃣ OpenAI 클라이언트로 테스트...');
+      try {
+        final response = await _client.listModels().timeout(
+          const Duration(seconds: 10),
+          onTimeout: () => throw TimeoutException('클라이언트 타임아웃'),
+        );
+        
+        print('✅ OpenAI 클라이언트 연결 성공!');
         return true;
-      } catch (innerError) {
-        print('🔴 내부 에러: $innerError');
-        throw innerError;
+      } catch (e) {
+        print('❌ OpenAI 클라이언트 실패: $e');
+        
+        if (e.toString().contains('Failed host lookup') || 
+            e.toString().contains('SocketException')) {
+          print('\n🌐 네트워크 연결 문제 해결 방법:');
+          print('  1. 에뮬레이터 재시작');
+          print('  2. 에뮬레이터 네트워크 설정 확인');
+          print('  3. flutter clean && flutter pub get');
+          print('  4. Android Studio에서 Cold Boot Now');
+        }
       }
+      
+      return false;
     } catch (e) {
-      print('❌ OpenAI API 연결 실패: $e');
-      
-      if (e.toString().contains('Failed host lookup') || 
-          e.toString().contains('SocketException')) {
-        print('🌐 네트워크 연결 문제 감지');
-        print('💡 해결 방법:');
-        print('  1. 인터넷 연결 확인');
-        print('  2. 모바일 데이터/WiFi 연결 상태 확인');
-        print('  3. VPN이 켜져 있다면 끄기');
-        print('  4. DNS 설정 확인 (8.8.8.8 사용 권장)');
-        print('  5. 방화벽/안티바이러스 설정 확인');
-        print('  6. 에뮬레이터의 경우 인터넷 설정 확인');
-      } else if (e.toString().contains('401') || 
-                 e.toString().contains('Unauthorized')) {
-        print('🔑 API 키 인증 실패');
-        print('💡 해결 방법:');
-        print('  1. OpenAI 대시보드에서 API 키 확인');
-        print('  2. API 키가 만료되지 않았는지 확인');
-        print('  3. API 키가 올바르게 설정되었는지 확인');
-      }
-      
+      print('❌ 전체 테스트 실패: $e');
       return false;
     }
   }
