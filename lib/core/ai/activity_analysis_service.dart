@@ -150,6 +150,7 @@ class ActivityAnalysisService {
   /// OpenAI API 호출
   Future<String> _callOpenAI(String prompt) async {
     try {
+      // 타임아웃 설정으로 네트워크 문제 빠르게 감지
       final chatCompletion = await _client.createChatCompletion(
         request: CreateChatCompletionRequest(
           model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
@@ -173,6 +174,9 @@ class ActivityAnalysisService {
           maxTokens: 250,
           topP: 0.95,
         ),
+      ).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => throw Exception('API 호출 타임아웃'),
       );
       
       final responseText = chatCompletion.choices.firstOrNull?.message.content;
@@ -185,6 +189,13 @@ class ActivityAnalysisService {
       throw Exception('Empty response from OpenAI');
     } catch (e) {
       print('❌ OpenAI API 호출 실패: $e');
+      
+      // 네트워크 오류인 경우 더 명확한 메시지 제공
+      if (e.toString().contains('Failed host lookup') || 
+          e.toString().contains('SocketException')) {
+        print('🌐 네트워크 연결 문제 감지됨. 기본 메시지를 사용합니다.');
+      }
+      
       rethrow;
     }
   }
@@ -257,6 +268,32 @@ class ActivityAnalysisService {
            readingAnalysis != null && 
            diaryAnalysis != null &&
            summaryAnalysis != null;
+  }
+  
+  /// 네트워크 연결 테스트
+  Future<bool> testNetworkConnection() async {
+    try {
+      // OpenAI API 엔드포인트에 간단한 요청 보내기
+      final response = await _client.listModels().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () => throw Exception('Connection timeout'),
+      );
+      
+      print('✅ OpenAI API 연결 성공');
+      return true;
+    } catch (e) {
+      print('❌ OpenAI API 연결 실패: $e');
+      
+      if (e.toString().contains('Failed host lookup')) {
+        print('💡 해결 방법:');
+        print('  1. 인터넷 연결 확인');
+        print('  2. VPN이 켜져 있다면 끄기');
+        print('  3. DNS 설정 확인 (8.8.8.8 사용 권장)');
+        print('  4. 방화벽 설정 확인');
+      }
+      
+      return false;
+    }
   }
   
   /// 오늘의 모든 분석 결과 가져오기
