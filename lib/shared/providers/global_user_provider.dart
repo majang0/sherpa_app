@@ -8,6 +8,7 @@ import '../../features/daily_record/models/detailed_exercise_models.dart' as det
 import '../models/user_level_progress.dart';
 import '../models/point_system_model.dart';
 import '../models/global_badge_model.dart';
+import '../utils/calorie_calculator.dart';
 import 'global_sherpi_provider.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/constants/game_constants.dart';
@@ -868,9 +869,27 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
 
-    // 🎯 셰르피 메시지 제거 - handleActivityCompletion에서 처리됨
-    // unified_exercise_record_form.dart에서 handleActivityCompletion을 호출하므로
-    // 여기서 중복으로 _triggerSherpiReaction을 호출하지 않음
+    // 칼로리 계산 (기존 로직 활용)
+    final calories = CalorieCalculator.calculateCalories(
+      exerciseType: exerciseLog.exerciseType,
+      durationMinutes: exerciseLog.durationMinutes,
+      intensity: exerciseLog.intensity,
+    );
+
+    // 🎯 셰르피 메시지 표시 (보상 없음) - handleActivityCompletion이 주석 처리되어 여기서 직접 호출
+    _triggerSherpiReaction(
+      'exercise',
+      '운동 기록 완료! 💪',
+      0.0,  // 경험치 없음
+      0,    // 포인트 없음
+      {
+        'exerciseType': exerciseLog.exerciseType,
+        'duration': exerciseLog.durationMinutes,
+        'difficulty': exerciseLog.intensity,  // difficulty로 전달 (intensity -> difficulty 매핑)
+        'calories': calories,  // 계산된 칼로리 정보
+        'intensity': exerciseLog.intensity,  // 원본 intensity도 유지
+      },
+    );
 
     // 🔄 퀘스트 시스템과 연동
     _notifyQuestSystem('exercise', {'duration': exerciseLog.durationMinutes});

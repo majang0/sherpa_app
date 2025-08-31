@@ -16,7 +16,6 @@ import '../widgets/notification_item_widget.dart';
 import '../../features/profile/presentation/screens/my_info_screen.dart';
 import '../../features/shop/presentation/screens/enhanced_point_shop_screen.dart';
 import '../../features/notification/screens/notification_screen.dart';
-import '../../core/ai/activity_analysis_service.dart';
 
 class SherpaCleanAppBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
   final String? title;
@@ -240,106 +239,8 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
         ),
       ),
 
-      // ✅ 오른쪽: API 테스트 + 컴포넌트 뷰어 + 알림 + 포인트 + 네비게이션
+      // ✅ 오른쪽: 컴포넌트 뷰어 + 알림 + 포인트 + 네비게이션
       actions: [
-        // ✅ API 테스트 버튼
-        IconButton(
-          onPressed: () async {
-            HapticFeedback.lightImpact();
-            
-            // 로딩 다이얼로그 표시
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) => Center(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircularProgressIndicator(
-                        color: ModernColors.primary,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'OpenAI API 연결 테스트 중...',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 14,
-                          color: ModernColors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-            
-            // API 연결 테스트
-            final service = ActivityAnalysisService.instance;
-            final isConnected = await service.testNetworkConnection();
-            
-            // 로딩 다이얼로그 닫기
-            Navigator.pop(context);
-            
-            // 결과 표시
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                title: Row(
-                  children: [
-                    Icon(
-                      isConnected ? Icons.check_circle : Icons.error,
-                      color: isConnected ? ModernColors.success : ModernColors.error,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      isConnected ? 'API 연결 성공' : 'API 연결 실패',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                content: Text(
-                  isConnected 
-                    ? 'OpenAI API와 정상적으로 연결되었습니다.\nGPT-5 모델을 사용할 준비가 되었습니다.'
-                    : '네트워크 연결을 확인해주세요.\n\n가능한 해결 방법:\n• 인터넷 연결 확인\n• VPN 끄기\n• 방화벽 설정 확인',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    color: ModernColors.textSecondary,
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(
-                      '확인',
-                      style: GoogleFonts.notoSans(
-                        color: ModernColors.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-          icon: Icon(
-            Icons.api,
-            color: Colors.grey[600],
-            size: 22,
-          ),
-          tooltip: 'API 테스트',
-        ),
-        
         // ✅ 컴포넌트 뷰어 버튼
         IconButton(
           onPressed: () {

@@ -1006,17 +1006,6 @@ class _UnifiedExerciseRecordFormState
     HapticFeedbackManager.heavyImpact();
 
     try {
-      // Calculate XP and points based on duration and difficulty
-      final baseXP = _durationMinutes * 2;
-      final difficultyMultiplier =
-          ExerciseUtils.getDifficultyMultiplier(_selectedDifficulty);
-      final totalXP = (baseXP * difficultyMultiplier).round();
-      final points = (_durationMinutes * 5 * difficultyMultiplier).round();
-
-      // Handle activity completion - cast doubles to ints where needed
-      final xpInt = totalXP.toInt();
-      final pointsInt = points.toInt();
-
       // Create ExerciseLog entry to persist the exercise data
       final exerciseLog = ExerciseLog(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -1032,27 +1021,28 @@ class _UnifiedExerciseRecordFormState
       // Add exercise to user's records
       ref.read(globalUserProvider.notifier).addExerciseLog(exerciseLog);
 
-      // Handle additional rewards and notifications  
-      ref.read(globalUserProvider.notifier).handleActivityCompletion(
-            activityType: 'exercise',
-            xp: xpInt.toDouble(),
-            points: pointsInt,
-            statIncreases: {
-              'stamina': _durationMinutes * 0.01 * difficultyMultiplier,
-              'willpower': _durationMinutes * 0.005 * difficultyMultiplier,
-            },
-            message: '${widget.exerciseType} 기록이 완료되었습니다!',
-            additionalData: {
-              'exerciseType': widget.exerciseType,
-              'duration': _durationMinutes,
-              'difficulty': _selectedDifficulty.name,
-              'calories': _calculateCalories(),
-              'details': _detailsController.text,
-              'isShared': _isShared,
-              'hasPhoto': _selectedImage != null,
-              'achievementScore': _achievementScore,
-            },
-          );
+      // 운동 기록 생성시 보상 완전 제거
+      // handleActivityCompletion 호출 자체를 제거하여 어떤 보상도 지급되지 않도록 함
+      // 퀘스트 추적은 addExerciseLog 내부의 _notifyQuestSystem에서 처리됨
+      
+      // 아래 코드 주석 처리 - 운동 기록 생성시 보상 없음
+      // ref.read(globalUserProvider.notifier).handleActivityCompletion(
+      //       activityType: 'exercise',
+      //       xp: 0,
+      //       points: 0,
+      //       statIncreases: {},
+      //       message: '${widget.exerciseType} 기록이 완료되었습니다!',
+      //       additionalData: {
+      //         'exerciseType': widget.exerciseType,
+      //         'duration': _durationMinutes,
+      //         'difficulty': _selectedDifficulty.name,
+      //         'calories': _calculateCalories(),
+      //         'details': _detailsController.text,
+      //         'isShared': _isShared,
+      //         'hasPhoto': _selectedImage != null,
+      //         'achievementScore': _achievementScore,
+      //       },
+      //     );
 
       // Show success animation and navigate back
       if (mounted) {
