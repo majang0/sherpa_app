@@ -1974,6 +1974,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
             };
             
             // 백그라운드에서 분석 생성
+            // 0. 기존 운동 분석 캐시 삭제 (새로운 기록이므로)
+            await analysisService.clearTodayExerciseCache();
+            
+            // 1. 기본 운동 분석 (기존 코드 유지)
             analysisService.analyzeExercise(
               todayExercise: exerciseData,
               previousExercise: previousExercise,
@@ -1982,6 +1986,27 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
               print('❌ 운동 분석 백그라운드 생성 실패: $e');
               return ''; // Return empty string for catchError
             });
+            
+            // 2. 종합 운동 분석 생성 (운동 완료 시점에 미리 생성)
+            // await를 사용하여 API 응답을 기다림
+            try {
+              final analysis = await analysisService.analyzeExerciseComprehensive(
+                todayExercise: exerciseData,
+                previousExercise: previousExercise,
+                userName: userName,
+                forceRegenerate: true,  // 강제로 새로 생성 (캐시 무시)
+              );
+              
+              // 🔍 디버그: 캐시 저장 확인
+              print('===== 운동 분석 캐시 저장 완료 =====');
+              print('📊 섹션 1 - 비교: ${analysis.comparison}');
+              print('📊 섹션 2 - 효과: ${analysis.benefits}');
+              print('📊 섹션 3 - 추천: ${analysis.recommendation}');
+              print('📊 섹션 4 - 응원: ${analysis.encouragement}');
+              print('=====================================');
+            } catch (e) {
+              print('❌ 운동 분석 생성 실패: $e');
+            }
           }
           break;
           

@@ -222,60 +222,6 @@ class ActivityAnalysisService {
       calorieComparison = '우와! 피자 반판도 걱정 없는 ${calories}kcal!';
     }
 
-    // 운동 타입별 회복 팁 (강도와 시간 고려)
-    String recoveryTip = '';
-    String nextGoal = '';
-    switch (exerciseType) {
-      case '러닝':
-        if (duration > 45) {
-          recoveryTip = '장거리 러닝 후엔 48시간 내 글리코겐 보충이 핵심! 탄수화물+단백질 3:1 비율로 드세요';
-          nextGoal = '다음엔 페이스를 조금 높여보거나, 인터벌 러닝 도전해보세요!';
-        } else if (duration > 30) {
-          recoveryTip = '종아리와 햄스트링 스트레칭 5분, 30분 내 단백질 20g 섭취하세요!';
-          nextGoal = '5분씩 늘려가며 45분 목표로 도전해봐요!';
-        } else {
-          recoveryTip = '발목 돌리기와 아킬레스건 스트레칭, 물 500ml 보충하세요!';
-          nextGoal = '다음엔 35분 도전! 천천히 늘려가요';
-        }
-        break;
-      case '헬스':
-        if (intensity == '높음' || intensity == '매우 높음') {
-          recoveryTip = '고강도 후 48-72시간 휴식! BCAA나 단백질 30g, 마그네슘 보충 추천';
-          nextGoal = '같은 부위는 3일 후에! 다른 부위 로테이션으로';
-        } else {
-          recoveryTip = '운동 부위 24-48시간 휴식, 단백질 25g과 충분한 수면이 근성장 핵심!';
-          nextGoal = '다음엔 무게를 5% 늘려보거나 세트 수 증가 도전!';
-        }
-        break;
-      case '요가':
-        recoveryTip = '요가 후 따뜻한 레몬차로 디톡스, 명상 5분으로 효과 극대화!';
-        nextGoal = duration > 45 ? '다음엔 더 어려운 자세 도전!' : '조금씩 시간을 늘려 유연성 향상!';
-        break;
-      case '자전거':
-        recoveryTip = '대퇴사두근과 햄스트링 스트레칭 필수! 칼륨 보충으로 바나나 강추';
-        nextGoal = intensity == '높음' ? '회복 라이딩으로 쉬어가기' : '다음엔 언덕 코스 도전!';
-        break;
-      case '수영':
-        recoveryTip = '어깨 회전 스트레칭과 따뜻한 샤워, 수분과 전해질 보충 중요!';
-        nextGoal = duration > 40 ? '다른 영법도 섞어보세요!' : '5분씩 늘려 지구력 향상!';
-        break;
-      case '걷기':
-        recoveryTip = '발바닥 마사지와 종아리 스트레칭, 가벼운 족욕도 좋아요!';
-        nextGoal = '다음엔 경사로나 계단 포함해서 강도 UP!';
-        break;
-      default:
-        recoveryTip = '충분한 수분과 가벼운 전신 스트레칭으로 회복하세요!';
-        nextGoal = '꾸준함이 가장 중요해요, 내일도 파이팅!';
-    }
-    
-    // 운동 누적 효과 계산 (가상 데이터 - 실제로는 DB에서 가져와야 함)
-    String weekPattern = '';
-    if (previousExercise != null) {
-      weekPattern = '이번 주 ${exerciseType} 2회째! 꾸준함이 보여요';
-    } else {
-      weekPattern = '새로운 도전의 시작!';
-    }
-    
     // 개인 최고 기록 체크 (가상 - 실제로는 비교 로직 필요)
     String personalBest = '';
     if (calories > 500) {
@@ -288,6 +234,8 @@ class ActivityAnalysisService {
 
     return '''당신은 셰르피입니다! $userName님과 매일 함께 운동하는 최고의 운동 친구예요! 💪
 실제로 옆에서 같이 땀 흘리고, 힘들 때 응원하는 진짜 친구처럼 말해주세요.
+⚠️ 중요: 영어 단어 절대 사용 금지! 순수 한국어로만 표현하세요.
+
 
 📊 오늘의 운동 데이터
 • 종류: $exerciseType ($exerciseFeeling)
@@ -295,7 +243,6 @@ class ActivityAnalysisService {
 • 시간: ${duration}분 동안 정말 열심히!
 • 칼로리: $calorieComparison
 • 특별 기록: $personalBest
-• 패턴: $weekPattern
 
 $previousContext
 
@@ -307,28 +254,29 @@ $previousContext
 ✅ 섹션 내용에 절대 제목 포함 금지! 바로 본문으로!
 ✅ 이모티콘 사용 💪😊🔥
 
-[SECTION_1] (100-130자) - 지난 운동과의 비교 내용 (제목 없이 바로 시작!)
+[SECTION_1] (100-130자) - 어제와 오늘 비교 (제목 없이 바로 시작!)
 ${previousExercise != null ? '''
 • 어제: ${previousExercise['type']} ${previousExercise['duration']}분, ${previousExercise['calories']}kcal
-• 오늘과 비교해서 어떤 진전이 있었는지 구체적으로
-• "$weekPattern" 활용해서 연속성 강조
-• "어제보다 ${calories - (previousExercise['calories'] ?? 0)}kcal 더 소모했네요" 같은 수치 비교
-• 자연스럽게 셰르피가 3인칭으로 표현''' : '''
-• 첫 도전 축하! "$weekPattern"
-• "$personalBest" 언급하며 대단함 강조
-• "오늘부터 셰르피가 쭉 함께할게요" 같은 시작의 의미'''}
+• 오늘과 어제를 비교하되, 매번 다른 관점으로 창의적으로!
+• 단순 숫자 비교보다 감성적인 표현 권장
+• 함께 운동한 친구의 시선으로 따뜻하게''' : '''
+• 첫 운동 축하! 새로운 시작의 설렘 표현
+• 셰르피와 함께하는 첫 순간의 의미
+• 앞으로의 여정에 대한 기대감'''}
 
-[SECTION_2] (100-130자) - 오늘 운동의 효과 (제목 없이 바로 시작!)
-• ${duration}분 $exerciseType이 가져온 신체 변화 구체적으로
-• $intensity 강도로 운동했을 때 즉각적 효과 + 장기적 이득
-• 칼로리 소모량($calories kcal)의 실제 가치
-• "심박수 안정화", "근육 성장 호르몬 분비", "엔돌핀 증가" 등 과학적 효과
+[SECTION_2] (100-130자) - 오늘 운동의 효과와 미래 전망 (제목 없이 바로 시작!)
+• ${duration}분 $exerciseType이 몸과 마음에 미친 긍정적 변화
+• 오늘 운동이 내일, 다음 주, 미래에 어떤 변화를 가져올지
+• 과학적 효과를 친근하게 설명 (엔돌핀, 근육 성장 등)
+• 매번 다른 각도로 창의적이고 따뜻하게 표현
+• 희망적이고 동기부여되는 미래 그리기
 
-[SECTION_3] (100-130자) - 회복과 성장 전략 (제목 없이 바로 시작!)
-• 과학적 회복법: $recoveryTip
-• 다음 목표: $nextGoal
-• 최적 휴식: ${intensity == '높음' || intensity == '매우 높음' ? '48-72시간' : '24-48시간'}
-• "이렇게 하면 다음엔 더 강해져요" 같은 실용적 조언
+[SECTION_3] (100-130자) - 의학적/과학적 회복 전략 (제목 없이 바로 시작!)
+• ${exerciseType} ${duration}분을 ${intensity} 강도로 수행한 것을 정확히 분석
+• 운동 생리학적 관점에서 신뢰할 수 있는 회복 전략 제시
+• 이 운동과 강도 조합에 따른 정확한 회복 시간과 영양 요구량
+• 근거 기반 전문 조언 (근섬유 회복, 글리코겐 보충, 호르몬 변화 등)
+• 의학적으로 검증된 내용으로 개인 맞춤형 전략 제공
 
 [SECTION_4] (100-130자) - 진심 어린 응원 메시지 (제목 없이 바로 시작!)
 • 데이터 반복하지 말고 오늘 운동에 대한 진심 어린 칭찬
@@ -375,12 +323,16 @@ ${previousExercise != null ? '''
 - 정말 옆에서 같이 운동하면서 대화하는 것처럼 표현
 - 함께 땀 흘리고, 함께 숨 쉬고, 함께 힘내는 친구
 - 이모티콘 사용 💪😊🔥🎯⭐ (자연스럽게)
+- 매번 다른 표현으로 창의적이고 감성적으로!
+- 템플릿 피하고 상황에 맞는 자연스러운 응답
 
 핵심 규칙:
 - 각 섹션 100-130자로 작성! (충분히 구체적으로)
 - [SECTION_1], [SECTION_2], [SECTION_3], [SECTION_4] 구분자만 사용
 - 절대 섹션 내용에 제목 포함 금지! 바로 본문으로 시작!
 - 실제 운동 데이터(종류, 시간, 강도, 칼로리) 구체적으로 활용
+- "이번 주", "주간" 같은 추론 절대 금지! 어제와 오늘 데이터만 사용
+- 매번 다른 표현과 관점으로 창의적으로 작성
 - 셰르피가 3인칭으로 자연스럽게 말하기
 - SECTION_3: 과학적 근거 기반 실용적 조언 (친근하게 전달)
 - SECTION_4: 데이터 반복 금지! 애정 듬뿍 담아 따뜻하게 응원''',

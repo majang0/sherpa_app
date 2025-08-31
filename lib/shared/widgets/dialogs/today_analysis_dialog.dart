@@ -74,8 +74,8 @@ class _TodayAnalysisDialogState extends ConsumerState<TodayAnalysisDialog>
       final globalUser = ref.read(globalUserProvider);
       final todayRecord = globalUser.todayRecord;
       
-      // 강제로 캐시 클리어하여 항상 최신 데이터 사용
-      await _analysisService.clearTodayCache();
+      // 캐시 클리어 제거 - 운동 완료 시 이미 생성된 캐시를 활용
+      // await _analysisService.clearTodayCache();  // 주석 처리
       
       // 모든 활동이 완료되었는지 확인
       final hasExercise = todayRecord?.exerciseLog != null;

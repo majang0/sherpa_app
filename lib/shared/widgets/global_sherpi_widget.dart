@@ -25,7 +25,7 @@ import '../../features/sherpi_relationship/providers/relationship_provider.dart'
 import '../../features/sherpi_relationship/presentation/widgets/intimacy_level_widget.dart';
 import 'sherpi_relationship_growth_widget.dart';
 import 'sherpi_personalization_dialog.dart';
-import 'dialogs/today_analysis_dialog.dart';
+import 'dialogs/enhanced_today_analysis_dialog.dart';
 
 /// 🌟 전역 셰르피 위젯
 /// 
@@ -1332,7 +1332,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
       context: context,
       barrierDismissible: true,
       barrierColor: Colors.black.withOpacity(0.5),
-      builder: (dialogContext) => const TodayAnalysisDialog(),
+      builder: (dialogContext) => const EnhancedTodayAnalysisDialog(),
     );
   }
   
