@@ -10,14 +10,12 @@ import '../../../../core/ai/activity_analysis_service.dart';
 class ExerciseAnalysisPage extends StatefulWidget {
   final Map<String, dynamic>? todayData;
   final Map<String, dynamic>? previousData;
-  final String? analysisText;
   final String userName;
   
   const ExerciseAnalysisPage({
     super.key,
     this.todayData,
     this.previousData,
-    this.analysisText,
     required this.userName,
   });
   

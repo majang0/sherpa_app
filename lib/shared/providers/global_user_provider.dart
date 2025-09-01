@@ -1977,17 +1977,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
             // 0. 기존 운동 분석 캐시 삭제 (새로운 기록이므로)
             await analysisService.clearTodayExerciseCache();
             
-            // 1. 기본 운동 분석 (기존 코드 유지)
-            analysisService.analyzeExercise(
-              todayExercise: exerciseData,
-              previousExercise: previousExercise,
-              userName: userName,
-            ).catchError((e) {
-              print('❌ 운동 분석 백그라운드 생성 실패: $e');
-              return ''; // Return empty string for catchError
-            });
-            
-            // 2. 종합 운동 분석 생성 (운동 완료 시점에 미리 생성)
+            // 종합 운동 분석 생성 (운동 완료 시점에 미리 생성)
             // await를 사용하여 API 응답을 기다림
             try {
               final analysis = await analysisService.analyzeExerciseComprehensive(
@@ -2011,95 +2001,15 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           break;
           
         case 'reading':
-          if (todayReading != null) {
-            // 이전 독서 기록 찾기
-            final previousReading = _findPreviousActivity('reading');
-            
-            final readingData = {
-              'title': todayReading.bookTitle,
-              'pages': todayReading.pages,
-              'category': todayReading.category,
-              'rating': todayReading.rating,
-            };
-            
-            // 백그라운드에서 분석 생성
-            analysisService.analyzeReading(
-              todayReading: readingData,
-              previousReading: previousReading,
-              userName: userName,
-            ).catchError((e) {
-              print('❌ 독서 분석 백그라운드 생성 실패: $e');
-              return ''; // Return empty string for catchError
-            });
-          }
+          // 독서 AI 분석 제거됨 - 리소스 최적화
           break;
           
         case 'diary':
-          if (todayDiary != null) {
-            // 이전 일기 기록 찾기
-            final previousDiary = _findPreviousActivity('diary');
-            
-            final diaryData = {
-              'mood': todayDiary.mood,
-              'content': todayDiary.content,
-            };
-            
-            // 백그라운드에서 분석 생성
-            analysisService.analyzeDiary(
-              todayDiary: diaryData,
-              previousDiary: previousDiary,
-              userName: userName,
-            ).catchError((e) {
-              print('❌ 일기 분석 백그라운드 생성 실패: $e');
-              return ''; // Return empty string for catchError
-            });
-          }
+          // 일기 AI 분석 제거됨 - 리소스 최적화
           break;
       }
       
-      // 모든 활동이 완료되었는지 확인하고 종합 분석 생성
-      if (todayExercise != null && todayReading != null && todayDiary != null) {
-        
-        // 종합 분석이 아직 생성되지 않았다면 생성
-        analysisService.getFromCache('summary_analysis').then((cached) {
-          if (cached == null) {
-            final calories = _calculateCalories(
-              todayExercise!.durationMinutes, 
-              todayExercise.intensity
-            );
-            
-            final exerciseData = {
-              'type': todayExercise.exerciseType,
-              'duration': todayExercise.durationMinutes,
-              'intensity': todayExercise.intensity,
-              'calories': calories,
-            };
-            
-            final readingData = {
-              'title': todayReading!.bookTitle,
-              'pages': todayReading.pages,
-              'category': todayReading.category,
-              'rating': todayReading.rating,
-            };
-            
-            final diaryData = {
-              'mood': todayDiary!.mood,
-              'content': todayDiary.content,
-            };
-            
-            // 백그라운드에서 종합 분석 생성
-            analysisService.generateSummaryAnalysis(
-              todayExercise: exerciseData,
-              todayReading: readingData,
-              todayDiary: diaryData,
-              userName: userName,
-            ).catchError((e) {
-              print('❌ 종합 분석 백그라운드 생성 실패: $e');
-              return ''; // Return empty string for catchError
-            });
-          }
-        });
-      }
+      // 종합 AI 분석 제거됨 - 리소스 최적화
       
     } catch (e) {
       print('❌ 백그라운드 분석 트리거 실패: $e');

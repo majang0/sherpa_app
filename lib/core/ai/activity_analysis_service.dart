@@ -42,45 +42,7 @@ class ActivityAnalysisService {
     }
   }
   
-  /// 🏃 운동 분석
-  Future<String> analyzeExercise({
-    required Map<String, dynamic> todayExercise,
-    Map<String, dynamic>? previousExercise,
-    required String userName,
-  }) async {
-    try {
-      // 에뮬레이터에서 네트워크 문제가 있을 경우 기본 메시지 사용
-      if (Platform.isAndroid) {
-        // 간단한 연결 테스트
-        try {
-          await http.head(Uri.parse('https://api.openai.com')).timeout(
-            const Duration(seconds: 2),
-          );
-        } catch (e) {
-          final defaultMsg = _getDefaultExerciseAnalysis(todayExercise, userName);
-          await _saveToCache('exercise_analysis', defaultMsg, todayExercise);
-          return defaultMsg;
-        }
-      }
-      
-      final prompt = AnalysisPromptTemplates.generateExerciseAnalysisPrompt(
-        todayExercise: todayExercise,
-        previousExercise: previousExercise,
-        userName: userName,
-      );
-      
-      final response = await _callOpenAI(prompt);
-      
-      // 캐시에 저장
-      await _saveToCache('exercise_analysis', response, todayExercise);
-      
-      return response;
-    } catch (e) {
-      final defaultMsg = _getDefaultExerciseAnalysis(todayExercise, userName);
-      await _saveToCache('exercise_analysis', defaultMsg, todayExercise);
-      return defaultMsg;
-    }
-  }
+  // 개별 운동 분석 메서드 제거됨 - 종합 운동 분석만 사용
   
   /// 🏃 종합 운동 분석 (4개 섹션 한번에 생성)
   Future<ComprehensiveExerciseAnalysis> analyzeExerciseComprehensive({
@@ -575,84 +537,12 @@ ${previousExercise != null ? '''
     }
   }
   
-  /// 📚 독서 분석
-  Future<String> analyzeReading({
-    required Map<String, dynamic> todayReading,
-    Map<String, dynamic>? previousReading,
-    required String userName,
-  }) async {
-    try {
-      final prompt = AnalysisPromptTemplates.generateReadingAnalysisPrompt(
-        todayReading: todayReading,
-        previousReading: previousReading,
-        userName: userName,
-      );
-      
-      final response = await _callOpenAI(prompt);
-      
-      // 캐시에 저장
-      await _saveToCache('reading_analysis', response, todayReading);
-      
-      return response;
-    } catch (e) {
-      return _getDefaultReadingAnalysis(todayReading, userName);
-    }
-  }
-  
-  /// 📝 일기 분석
-  Future<String> analyzeDiary({
-    required Map<String, dynamic> todayDiary,
-    Map<String, dynamic>? previousDiary,
-    required String userName,
-  }) async {
-    try {
-      final prompt = AnalysisPromptTemplates.generateDiaryAnalysisPrompt(
-        todayDiary: todayDiary,
-        previousDiary: previousDiary,
-        userName: userName,
-      );
-      
-      final response = await _callOpenAI(prompt);
-      
-      // 캐시에 저장
-      await _saveToCache('diary_analysis', response, todayDiary);
-      
-      return response;
-    } catch (e) {
-      return _getDefaultDiaryAnalysis(todayDiary, userName);
-    }
-  }
-  
-  /// 🌟 종합 요약 분석
-  Future<String> generateSummaryAnalysis({
-    required Map<String, dynamic> todayExercise,
-    required Map<String, dynamic> todayReading,
-    required Map<String, dynamic> todayDiary,
-    required String userName,
-  }) async {
-    try {
-      final prompt = AnalysisPromptTemplates.generateSummaryAnalysisPrompt(
-        todayExercise: todayExercise,
-        todayReading: todayReading,
-        todayDiary: todayDiary,
-        userName: userName,
-      );
-      
-      // 종합 분석은 더 긴 응답이 필요하므로 직접 처리
-      final response = await _callOpenAIForSummary(prompt);
-      
-      // 캐시에 저장
-      await _saveToCache('summary_analysis', response, {
-        'exercise': todayExercise,
-        'reading': todayReading,
-        'diary': todayDiary,
-      });
-      
-      return response;
-    } catch (e) {
-      return _getDefaultSummaryAnalysis(todayExercise, todayReading, todayDiary, userName);
-    }
-  }
+  // 개별 활동 분석 메서드들 제거 완료
+  // - analyzeReading: 독서 분석 (삭제됨)
+  // - analyzeDiary: 일기 분석 (삭제됨)
+  // - generateSummaryAnalysis: 종합 요약 분석 (삭제됨)
+  // 
+  // 종합 운동 분석 (analyzeExerciseComprehensive) 메서드만 유지
   
   /// OpenAI API 호출
   Future<String> _callOpenAI(String prompt) async {
@@ -699,73 +589,7 @@ ${previousExercise != null ? '''
     }
   }
   
-  /// 종합 분석용 OpenAI 호출 (글자 수 제한 없음)
-  Future<String> _callOpenAIForSummary(String prompt) async {
-    try {
-      final client = OpenAIClient(
-        apiKey: ApiConfig.openAIApiKey,
-        baseUrl: 'https://api.openai.com/v1',
-      );
-      
-      final chatCompletion = await client.createChatCompletion(
-        request: CreateChatCompletionRequest(
-          model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
-          messages: [
-            ChatCompletionMessage.system(
-              content: '당신은 셰르피입니다. 사용자의 하루 활동을 종합적으로 분석하고 깊이 있는 통찰을 제공하는 AI 동반자입니다.',
-            ),
-            ChatCompletionMessage.user(
-              content: ChatCompletionUserMessageContent.string(prompt),
-            ),
-          ],
-          temperature: 0.8,
-          maxTokens: 500,  // 종합 분석은 충분히 긴 응답 허용
-        ),
-      ).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw Exception('API 호출 타임아웃'),
-      );
-      
-      final responseText = chatCompletion.choices.firstOrNull?.message.content;
-      
-      if (responseText != null && responseText.isNotEmpty) {
-        // 종합 분석은 마크다운만 제거하고 글자 수 제한 없음
-        return _processResponseForSummary(responseText);
-      }
-      
-      throw Exception('Empty response from OpenAI');
-    } catch (e) {
-      rethrow;
-    }
-  }
-  
-  /// 종합 분석용 응답 후처리 (글자 수 제한 없음)
-  String _processResponseForSummary(String rawResponse) {
-    String processed = rawResponse.trim();
-    
-    // 마크다운 제거
-    processed = processed.replaceAllMapped(
-      RegExp(r'\*\*([^\*]+)\*\*'), 
-      (match) => match.group(1) ?? ''
-    );
-    processed = processed.replaceAllMapped(
-      RegExp(r'\*([^\*]+)\*'), 
-      (match) => match.group(1) ?? ''
-    );
-    processed = processed.replaceAllMapped(
-      RegExp(r'__([^_]+)__'), 
-      (match) => match.group(1) ?? ''
-    );
-    processed = processed.replaceAllMapped(
-      RegExp(r'_([^_]+)_'), 
-      (match) => match.group(1) ?? ''
-    );
-    processed = processed.replaceAll(RegExp(r'#{1,6}\s+'), '');
-    processed = processed.replaceAll(RegExp(r'^[\-\*]\s+', multiLine: true), '');
-    
-    // 종합 분석은 글자 수 제한 없음
-    return processed;
-  }
+  // 종합 분석용 OpenAI 호출 메서드 제거됨 - 사용하지 않음
   
   /// 응답 후처리
   String _processResponse(String rawResponse) {
@@ -810,65 +634,7 @@ ${previousExercise != null ? '''
     return processed;
   }
   
-  /// 캐시에 저장
-  Future<void> _saveToCache(String key, String content, Map<String, dynamic> data) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      
-      // DateTime 객체를 문자열로 변환하는 헬퍼 함수
-      Map<String, dynamic> sanitizeData(Map<String, dynamic> input) {
-        final sanitized = <String, dynamic>{};
-        input.forEach((key, value) {
-          if (value is DateTime) {
-            sanitized[key] = value.toIso8601String();
-          } else if (value is Map<String, dynamic>) {
-            sanitized[key] = sanitizeData(value);
-          } else if (value is List) {
-            sanitized[key] = value.map((item) {
-              if (item is DateTime) {
-                return item.toIso8601String();
-              } else if (item is Map<String, dynamic>) {
-                return sanitizeData(item);
-              }
-              return item;
-            }).toList();
-          } else {
-            sanitized[key] = value;
-          }
-        });
-        return sanitized;
-      }
-      
-      final cacheData = {
-        'content': content,
-        'data': sanitizeData(data),  // DateTime 객체를 안전하게 변환
-        'timestamp': DateTime.now().toIso8601String(),
-      };
-      
-      final dateKey = _getTodayDateKey();
-      final fullKey = 'analysis_${dateKey}_$key';
-      
-      await prefs.setString(fullKey, jsonEncode(cacheData));
-    } catch (e) {
-    }
-  }
-  
-  /// 캐시에서 읽기
-  Future<String?> getFromCache(String key) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final dateKey = _getTodayDateKey();
-      final fullKey = 'analysis_${dateKey}_$key';
-      
-      final cached = prefs.getString(fullKey);
-      if (cached != null) {
-        final cacheData = jsonDecode(cached);
-        return cacheData['content'] as String;
-      }
-    } catch (e) {
-    }
-    return null;
-  }
+  // _saveToCache와 getFromCache 메서드 제거됨 - 사용하지 않음
   
   /// 오늘 날짜 키 생성
   String _getTodayDateKey() {
@@ -876,38 +642,20 @@ ${previousExercise != null ? '''
     return '${now.year}_${now.month.toString().padLeft(2, '0')}_${now.day.toString().padLeft(2, '0')}';
   }
   
-  /// 오늘의 캐시 클리어
+  /// 오늘의 캐시 클리어 (종합 운동 분석만)
   Future<void> clearTodayCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
       
-      // 오늘의 모든 분석 캐시 삭제
-      final keys = ['exercise_analysis', 'reading_analysis', 'diary_analysis', 'summary_analysis'];
-      for (final key in keys) {
-        final fullKey = 'analysis_${dateKey}_$key';
-        await prefs.remove(fullKey);
-      }
-      
-      // 종합 운동 분석 캐시도 삭제
+      // 종합 운동 분석 캐시만 삭제
       final comprehensiveKey = 'comprehensive_exercise_${dateKey}';
       await prefs.remove(comprehensiveKey);
     } catch (e) {
     }
   }
   
-  /// 모든 분석이 완료되었는지 확인
-  Future<bool> areAllAnalysesComplete() async {
-    final exerciseAnalysis = await getFromCache('exercise_analysis');
-    final readingAnalysis = await getFromCache('reading_analysis');
-    final diaryAnalysis = await getFromCache('diary_analysis');
-    final summaryAnalysis = await getFromCache('summary_analysis');
-    
-    return exerciseAnalysis != null && 
-           readingAnalysis != null && 
-           diaryAnalysis != null &&
-           summaryAnalysis != null;
-  }
+  // areAllAnalysesComplete 메서드 제거됨 - 개별 활동 분석을 사용하지 않음
   
   /// 네트워크 연결 테스트
   Future<bool> testNetworkConnection() async {
@@ -981,112 +729,11 @@ ${previousExercise != null ? '''
     }
   }
   
-  /// 오늘의 모든 분석 결과 가져오기
-  Future<TodayAnalysisData?> getTodayAnalyses() async {
-    final exerciseAnalysis = await getFromCache('exercise_analysis');
-    final readingAnalysis = await getFromCache('reading_analysis');
-    final diaryAnalysis = await getFromCache('diary_analysis');
-    final summaryAnalysis = await getFromCache('summary_analysis');
-    
-    if (exerciseAnalysis != null && 
-        readingAnalysis != null && 
-        diaryAnalysis != null &&
-        summaryAnalysis != null) {
-      return TodayAnalysisData(
-        exerciseAnalysis: exerciseAnalysis,
-        readingAnalysis: readingAnalysis,
-        diaryAnalysis: diaryAnalysis,
-        summaryAnalysis: summaryAnalysis,
-        createdAt: DateTime.now(),
-      );
-    }
-    
-    return null;
-  }
-  
-  // 기본 분석 메시지 (API 실패 시 사용)
-  String _getDefaultExerciseAnalysis(Map<String, dynamic> data, String userName) {
-    final type = data['type'] ?? '운동';
-    final duration = data['duration'] ?? 0;
-    final calories = data['calories'] ?? 0;
-    
-    return '''오늘 $type을(를) ${duration}분 동안 하셨네요! 
-${calories}kcal를 소모하셨어요! 💪
-꾸준한 운동이 $userName님을 더 건강하게 만들고 있어요.
-오늘도 수고 많으셨어요!''';
-  }
-  
-  String _getDefaultReadingAnalysis(Map<String, dynamic> data, String userName) {
-    final title = data['title'] ?? '책';
-    final pages = data['pages'] ?? 0;
-    final category = data['category'] ?? '독서';
-    
-    return '''『$title』을(를) ${pages}페이지 읽으셨군요! 📚
-$category 분야의 지식을 쌓는 유익한 시간이 되셨길 바라요.
-$userName님의 꾸준한 독서 습관이 정말 멋져요!''';
-  }
-  
-  String _getDefaultDiaryAnalysis(Map<String, dynamic> data, String userName) {
-    final mood = data['mood'] ?? '평온한';
-    
-    return '''오늘 $userName님의 기분이 $mood 상태시군요! 
-하루를 기록하는 습관이 $userName님의 성장에 큰 도움이 될 거예요.
-셰르피가 늘 곁에서 응원할게요! 💝''';
-  }
-  
-  String _getDefaultSummaryAnalysis(
-    Map<String, dynamic> exercise,
-    Map<String, dynamic> reading,
-    Map<String, dynamic> diary,
-    String userName,
-  ) {
-    final exerciseType = exercise['type'] ?? '운동';
-    final readingCategory = reading['category'] ?? '독서';
-    final mood = diary['mood'] ?? '평온한';
-    
-    return '''오늘 $exerciseType, $readingCategory 독서, 그리고 $mood 감정을 기록하셨네요! 🌟
-
-몸과 마음, 지성을 모두 돌보는 $userName님의 균형잡힌 하루가 정말 인상적이에요.
-이런 꾸준한 노력이 모여 더 나은 내일을 만들어갈 거예요.
-$userName님과 함께하는 매일이 셰르피에게도 큰 기쁨이에요. 
-오늘도 정말 수고 많으셨어요! 💪📚💝''';
-  }
+  // getTodayAnalyses 메서드 제거됨 - 개별 활동 분석을 사용하지 않음
+  // 기본 분석 메시지 메서드들 제거됨 - 사용하지 않음
 }
 
-/// 오늘의 분석 데이터 모델
-class TodayAnalysisData {
-  final String exerciseAnalysis;
-  final String readingAnalysis;
-  final String diaryAnalysis;
-  final String summaryAnalysis;
-  final DateTime createdAt;
-  
-  TodayAnalysisData({
-    required this.exerciseAnalysis,
-    required this.readingAnalysis,
-    required this.diaryAnalysis,
-    required this.summaryAnalysis,
-    required this.createdAt,
-  });
-  
-  Map<String, dynamic> toJson() => {
-    'exerciseAnalysis': exerciseAnalysis,
-    'readingAnalysis': readingAnalysis,
-    'diaryAnalysis': diaryAnalysis,
-    'summaryAnalysis': summaryAnalysis,
-    'createdAt': createdAt.toIso8601String(),
-  };
-  
-  factory TodayAnalysisData.fromJson(Map<String, dynamic> json) {
-    return TodayAnalysisData(
-      exerciseAnalysis: json['exerciseAnalysis'] as String,
-      readingAnalysis: json['readingAnalysis'] as String,
-      diaryAnalysis: json['diaryAnalysis'] as String,
-      summaryAnalysis: json['summaryAnalysis'] as String,
-      createdAt: DateTime.parse(json['createdAt'] as String),
-    );
-  }
-}
+// TodayAnalysisData 모델 제거됨 - 개별 활동 분석을 사용하지 않음
 
 /// 종합 운동 분석 데이터 모델
 class ComprehensiveExerciseAnalysis {

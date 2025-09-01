@@ -28,8 +28,7 @@ class _EnhancedTodayAnalysisDialogState
     extends ConsumerState<EnhancedTodayAnalysisDialog> 
     with TickerProviderStateMixin {
   final ActivityAnalysisService _analysisService = ActivityAnalysisService.instance;
-  TodayAnalysisData? _analysisData;
-  bool _isLoading = true;
+  bool _isLoading = false;  // 종합 분석 대기 없이 바로 열림
   bool _hasAllActivities = false;
   String _missingActivities = '';
   
@@ -82,14 +81,9 @@ class _EnhancedTodayAnalysisDialogState
 
   /// 분석 데이터 로드 및 준비
   Future<void> _loadAnalysisData() async {
-    setState(() => _isLoading = true);
-    
     try {
       final globalUser = ref.read(globalUserProvider);
       final todayRecord = globalUser.todayRecord;
-      
-      // 캐시 클리어 제거 - 운동 완료 시 이미 생성된 캐시를 활용
-      // await _analysisService.clearTodayCache();  // 주석 처리
       
       // 모든 활동이 완료되었는지 확인
       final hasExercise = todayRecord?.exerciseLog != null;
@@ -101,10 +95,6 @@ class _EnhancedTodayAnalysisDialogState
         
         // 오늘의 데이터 준비
         _prepareActivityData(globalUser, todayRecord!);
-        
-        // 분석 생성
-        await _generateAllAnalyses();
-        _analysisData = await _analysisService.getTodayAnalyses();
         
         // 애니메이션 시작
         _pageIndicatorController.forward();
@@ -120,15 +110,12 @@ class _EnhancedTodayAnalysisDialogState
       }
     } catch (e) {
       // 에러 처리
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
     }
   }
   
   /// 활동 데이터 준비
   void _prepareActivityData(GlobalUser globalUser, TodayActivityRecord todayRecord) {
+    _userName = globalUser.name;  // 사용자 이름 저장
     final today = DateTime.now();
     final sevenDaysAgo = today.subtract(const Duration(days: 7));
     
@@ -214,49 +201,8 @@ class _EnhancedTodayAnalysisDialogState
     }
   }
   
-  /// 모든 분석 생성
-  Future<void> _generateAllAnalyses() async {
-    try {
-      final globalUser = ref.read(globalUserProvider);
-      _userName = globalUser.name;  // 클래스 멤버 변수에 저장
-      
-      // 분석 생성 (백그라운드)
-      await Future.wait([
-        if (_todayExerciseData != null)
-          _analysisService.analyzeExercise(
-            todayExercise: _todayExerciseData!,
-            previousExercise: _previousExerciseData,
-            userName: _userName,
-          ),
-        if (_todayReadingData != null)
-          _analysisService.analyzeReading(
-            todayReading: _todayReadingData!,
-            previousReading: _previousReadingData,
-            userName: _userName,
-          ),
-        if (_todayDiaryData != null)
-          _analysisService.analyzeDiary(
-            todayDiary: _todayDiaryData!,
-            previousDiary: _previousDiaryData,
-            userName: _userName,
-          ),
-      ]);
-      
-      // 종합 분석 생성
-      if (_todayExerciseData != null && 
-          _todayReadingData != null && 
-          _todayDiaryData != null) {
-        await _analysisService.generateSummaryAnalysis(
-          todayExercise: _todayExerciseData!,
-          todayReading: _todayReadingData!,
-          todayDiary: _todayDiaryData!,
-          userName: _userName,
-        );
-      }
-    } catch (e) {
-      // 분석 생성 실패
-    }
-  }
+  // 개별 활동 분석 생성 메서드 제거됨
+  // 종합 운동 분석만 ExerciseAnalysisPage에서 직접 호출
   
   // 헬퍼 메서드들
   bool _isSameDay(DateTime date1, DateTime date2) {
@@ -535,7 +481,6 @@ class _EnhancedTodayAnalysisDialogState
         ExerciseAnalysisPage(
           todayData: _todayExerciseData,
           previousData: _previousExerciseData,
-          analysisText: _analysisData?.exerciseAnalysis,
           userName: _userName,
         ),
         
