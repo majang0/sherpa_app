@@ -90,7 +90,10 @@ class _EnhancedTodayAnalysisDialogState
       final hasReading = todayRecord?.readingLog != null;
       final hasDiary = todayRecord?.diaryLog != null;
       
-      if (hasExercise && hasReading && hasDiary) {
+      // TEMP: 개발 테스트를 위해 하나만 작성해도 열리도록 임시 수정
+      // 원래 조건: if (hasExercise && hasReading && hasDiary) {
+      // 임시 조건: 하나라도 작성되면 열림
+      if (hasExercise || hasReading || hasDiary) {  // TEMP: 개발 모드
         _hasAllActivities = true;
         
         // 오늘의 데이터 준비
