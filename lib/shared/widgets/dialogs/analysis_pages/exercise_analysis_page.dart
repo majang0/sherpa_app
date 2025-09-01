@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/ai/activity_analysis_service.dart';
 
-/// 운동 분석 페이지 - 시각적 배지와 AI 기반 인사이트
+/// 운동 분석 페이지 - 시각적 배지와 AI 기반 인사이트 (주황색 테마)
 class ExerciseAnalysisPage extends StatefulWidget {
   final Map<String, dynamic>? todayData;
   final Map<String, dynamic>? previousData;
@@ -36,6 +36,16 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
   // 애니메이션 컨트롤러
   late AnimationController _badgeAnimationController;
   late AnimationController _pulseController;
+  late AnimationController _cardAnimationController;
+  
+  // 섹션별 확장 상태
+  final Map<String, bool> _expandedSections = {};
+  
+  // 주황색 테마 색상
+  static const Color exerciseOrange = Color(0xFFFF6B35);  // 생동감 넘치는 오렌지
+  static const Color exerciseOrangeLight = Color(0xFFFFF3E0);  // 연한 오렌지 배경
+  static const Color exerciseOrangeMedium = Color(0xFFFFB74D);  // 중간 오렌지
+  static const Color exerciseOrangeDark = Color(0xFFFF5722);  // 진한 오렌지
   
   @override
   void initState() {
@@ -50,6 +60,11 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat(reverse: true);
+    
+    _cardAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
     
     // AI 분석 데이터 로드
     _loadAnalysisData();
@@ -104,6 +119,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
   void dispose() {
     _badgeAnimationController.dispose();
     _pulseController.dispose();
+    _cardAnimationController.dispose();
     super.dispose();
   }
   
@@ -148,19 +164,19 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     return '🏃'; // 기본값
   }
   
-  // 강도에 따른 색상 반환
+  // 강도에 따른 색상 반환 (주황색 테마)
   Color _getIntensityColor(String? intensity) {
     switch (intensity) {
       case '낮음':
-        return ModernColors.success;
+        return const Color(0xFFFFD54F);  // 연한 노란 오렌지
       case '중간':
-        return ModernColors.primary;
+        return exerciseOrangeMedium;
       case '높음':
-        return ModernColors.warning;
+        return exerciseOrange;
       case '매우 높음':
-        return ModernColors.error;
+        return exerciseOrangeDark;
       default:
-        return ModernColors.primary;
+        return exerciseOrangeMedium;
     }
   }
   
@@ -196,23 +212,23 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           
           const SizedBox(height: 24),
           
-          // 3. 비교 분석 섹션
-          _buildComparisonSection(),
+          // 3. 비교 분석 섹션 (리디자인)
+          _buildModernComparisonSection(),
           
           const SizedBox(height: 20),
           
-          // 4. 오늘 운동의 장점
-          _buildBenefitsSection(),
+          // 4. 오늘 운동의 장점 (리디자인)
+          _buildModernBenefitsSection(),
           
           const SizedBox(height: 20),
           
-          // 5. 셰르피의 추천
-          _buildRecommendationSection(),
+          // 5. 셰르피의 추천 (리디자인)
+          _buildModernRecommendationSection(),
           
           const SizedBox(height: 20),
           
-          // 6. 응원의 말
-          _buildEncouragementSection(),
+          // 6. 응원의 말 (리디자인)
+          _buildModernEncouragementSection(),
           
           const SizedBox(height: 20),
         ],
@@ -246,7 +262,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     );
   }
   
-  /// 개별 운동 배지
+  /// 개별 운동 배지 (주황색 테마 적용)
   Widget _buildExerciseBadge({
     required String title,
     required Map<String, dynamic> data,
@@ -282,7 +298,14 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: isToday 
-                    ? ModernColors.primaryGradient
+                    ? LinearGradient(
+                        colors: [
+                          exerciseOrange,
+                          exerciseOrangeMedium,
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
                     : LinearGradient(
                         colors: [
                           ModernColors.textTertiary.withOpacity(0.2),
@@ -295,7 +318,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 boxShadow: [
                   BoxShadow(
                     color: isToday 
-                        ? ModernColors.primary.withOpacity(0.3)
+                        ? exerciseOrange.withOpacity(0.3)
                         : Colors.black.withOpacity(0.1),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
@@ -593,313 +616,135 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     );
   }
   
-  /// 비교 분석 섹션
-  Widget _buildComparisonSection() {
-    // AI 분석이 로딩 중이거나 없을 때 기본 메시지 사용
+  /// 현대적인 비교 분석 섹션 (개선된 디자인)
+  Widget _buildModernComparisonSection() {
     final content = _isLoading 
         ? '분석 중...'
         : (_analysisData?.comparison ?? _getDefaultComparisonMessage());
     
-    return _buildSectionCard(
-      title: '지난번과 비교',
-      icon: Icons.compare_arrows_rounded,
-      color: ModernColors.warning,
-      content: content,
-    );
-  }
-  
-  /// 기본 비교 메시지
-  String _getDefaultComparisonMessage() {
-    if (widget.previousData == null) {
-      return '오늘이 첫 운동 기록이에요! 🎉\n훌륭한 시작입니다. 꾸준히 운동하면 건강한 몸과 마음을 만들 수 있어요.';
-    }
-    return '운동 데이터를 분석하고 있어요...';
-  }
-  
-  /// 오늘 운동의 장점 섹션
-  Widget _buildBenefitsSection() {
-    final content = _isLoading 
-        ? '분석 중...'
-        : (_analysisData?.benefits ?? '운동의 효과를 분석하고 있어요...');
-    
-    return _buildSectionCard(
-      title: '오늘 운동의 효과',
-      icon: Icons.favorite_rounded,
-      color: ModernColors.error,
-      content: content,
-    );
-  }
-  
-  /// [Deprecated] 운동 효과 생성 - AI 분석으로 대체됨
-  @deprecated
-  String _generateBenefits(String type, int duration, String intensity) {
-    String benefits = '';
-    
-    // 운동 타입별 효과
-    if (type.contains('달리기') || type.contains('런닝') || type.contains('조깅')) {
-      benefits = '🏃 달리기는 심폐 지구력을 향상시키고 전신 근육을 강화합니다.\n';
-      if (duration >= 30) {
-        benefits += '30분 이상 달리기로 엔돌핀이 분비되어 기분이 좋아집니다.\n';
-      }
-    } else if (type.contains('걷기') || type.contains('산책')) {
-      benefits = '🚶 걷기는 관절에 무리 없이 건강을 유지하는 최고의 운동입니다.\n';
-      benefits += '스트레스 해소와 창의력 향상에도 도움이 됩니다.\n';
-    } else if (type.contains('자전거') || type.contains('사이클')) {
-      benefits = '🚴 자전거는 하체 근력을 강화하고 균형 감각을 향상시킵니다.\n';
-      benefits += '무릎 관절에 부담이 적어 지속 가능한 운동입니다.\n';
-    } else if (type.contains('수영')) {
-      benefits = '🏊 수영은 전신 운동으로 모든 근육을 균형있게 발달시킵니다.\n';
-      benefits += '물의 저항으로 근력과 지구력이 동시에 향상됩니다.\n';
-    } else if (type.contains('요가') || type.contains('필라테스')) {
-      benefits = '🧘 요가는 유연성과 균형감을 향상시키고 마음을 안정시킵니다.\n';
-      benefits += '코어 근육이 강화되어 자세 교정에도 효과적입니다.\n';
-    } else if (type.contains('헬스') || type.contains('웨이트') || type.contains('근력')) {
-      benefits = '💪 근력 운동은 기초 대사량을 높이고 뼈를 튼튼하게 합니다.\n';
-      benefits += '근육량 증가로 일상 생활이 더 활기차집니다.\n';
-    } else {
-      benefits = '🎯 ${type}은(는) 신체 활동량을 늘리고 건강을 증진시킵니다.\n';
-    }
-    
-    // 강도별 추가 효과
-    switch (intensity) {
-      case '낮음':
-        benefits += '\n💚 낮은 강도로 부담 없이 운동하여 회복과 지속성에 좋습니다.';
-        break;
-      case '중간':
-        benefits += '\n💙 적절한 강도로 체력 향상과 체중 관리에 효과적입니다.';
-        break;
-      case '높음':
-        benefits += '\n🧡 높은 강도로 심폐 기능과 운동 능력이 크게 향상됩니다.';
-        break;
-      case '매우 높음':
-        benefits += '\n❤️ 최고 강도로 운동하여 한계를 극복하고 있습니다. 대단해요!';
-        break;
-    }
-    
-    // 시간별 추가 효과
-    if (duration >= 60) {
-      benefits += '\n⏰ 1시간 이상 운동으로 지구력이 크게 향상되고 있어요!';
-    } else if (duration >= 30) {
-      benefits += '\n⏰ 30분 이상 운동으로 건강한 습관을 만들고 있어요!';
-    }
-    
-    return benefits;
-  }
-  
-  /// 셰르피의 추천 섹션
-  Widget _buildRecommendationSection() {
-    final content = _isLoading 
-        ? '분석 중...'
-        : (_analysisData?.recommendation ?? '맞춤형 추천을 준비하고 있어요...');
-    
-    return _buildSectionCard(
-      title: '셰르피의 추천',
-      icon: Icons.lightbulb_rounded,
-      color: ModernColors.warning,
-      content: content,
-      hasGradient: true,
-    );
-  }
-  
-  /// [Deprecated] 추천 메시지 생성 - AI 분석으로 대체됨
-  @deprecated
-  String _generateRecommendation() {
-    final exerciseType = widget.todayData!['type'] as String? ?? '운동';
-    final duration = widget.todayData!['duration'] as int? ?? 0;
-    final intensity = widget.todayData!['intensity'] as String? ?? '중간';
-    
-    String recommendation = '';
-    
-    // 지난번 데이터와 비교
-    if (widget.previousData != null) {
-      final previousDuration = widget.previousData!['duration'] as int? ?? 0;
-      final previousIntensity = widget.previousData!['intensity'] as String? ?? '중간';
-      
-      if (duration > previousDuration && intensity == '높음' || intensity == '매우 높음') {
-        recommendation = '💡 운동량이 늘어났네요! 충분한 휴식도 중요해요.\n'
-            '• 운동 후 스트레칭을 10분 정도 해주세요\n'
-            '• 단백질과 수분 섭취를 충분히 하세요\n'
-            '• 다음 운동 전 충분한 수면을 취하세요';
-      } else if (duration < 20) {
-        recommendation = '💡 짧은 운동도 좋지만, 점진적으로 늘려보세요!\n'
-            '• 매주 5분씩 운동 시간을 늘려보세요\n'
-            '• 좋아하는 음악을 들으며 운동해보세요\n'
-            '• 운동 친구를 만들어 함께 해보세요';
-      } else {
-        recommendation = '💡 꾸준한 운동 습관이 만들어지고 있어요!\n'
-            '• 다양한 운동을 시도해보세요\n'
-            '• 운동 전후 영양 섭취에 신경쓰세요\n'
-            '• 목표를 세우고 도전해보세요';
-      }
-    } else {
-      recommendation = '💡 첫 운동을 시작하셨군요! 이렇게 해보세요:\n'
-          '• 무리하지 말고 천천히 시작하세요\n'
-          '• 매일 같은 시간에 운동하는 습관을 만드세요\n'
-          '• 운동 일지를 작성하며 발전을 확인하세요\n'
-          '• 작은 목표부터 달성해나가세요';
-    }
-    
-    // 운동 타입별 추가 팁
-    if (exerciseType.contains('달리기') || exerciseType.contains('런닝')) {
-      recommendation += '\n\n🏃 러닝 팁: 올바른 자세와 호흡법을 익히면 더 오래 달릴 수 있어요!';
-    } else if (exerciseType.contains('헬스') || exerciseType.contains('웨이트')) {
-      recommendation += '\n\n💪 근력 운동 팁: 근육 부위별로 휴식일을 가지며 운동하세요!';
-    }
-    
-    return recommendation;
-  }
-  
-  /// 응원의 말 섹션
-  Widget _buildEncouragementSection() {
-    final encouragement = _isLoading 
-        ? '응원 메시지를 준비하고 있어요...'
-        : (_analysisData?.encouragement ?? '오늘도 정말 수고하셨어요! 💪');
+    // 텍스트를 bullet points로 분리
+    final points = _splitIntoPoints(content);
     
     return Container(
-      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            ModernColors.primary.withOpacity(0.1),
-            ModernColors.secondary.withOpacity(0.05),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: ModernColors.primary.withOpacity(0.2),
-          width: 1,
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: exerciseOrange.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 셰르피 아이콘
-          AnimatedBuilder(
-            animation: _pulseController,
-            builder: (context, child) {
-              return Transform.scale(
-                scale: 1.0 + (_pulseController.value * 0.1),
-                child: Container(
-                  width: 60,
-                  height: 60,
+          // 헤더 섹션
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  exerciseOrangeLight.withOpacity(0.8),
+                  exerciseOrangeLight.withOpacity(0.4),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Row(
+              children: [
+                // 아이콘 컨테이너
+                Container(
+                  width: 44,
+                  height: 44,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: ModernColors.primaryGradient,
-                    boxShadow: [
-                      BoxShadow(
-                        color: ModernColors.primary.withOpacity(0.3),
-                        blurRadius: 20,
-                        spreadRadius: 2,
+                    color: exerciseOrange,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.compare_arrows_rounded,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                // 타이틀
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '지난번과 비교',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: ModernColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '운동 성과 분석',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: exerciseOrange,
+                        ),
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.favorite_rounded,
-                    color: Colors.white,
-                    size: 30,
-                  ),
                 ),
-              );
-            },
-          ),
-          
-          const SizedBox(height: 16),
-          
-          Text(
-            '오늘도 수고하셨어요! 🌟',
-            style: GoogleFonts.notoSans(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: ModernColors.textPrimary,
+                // 비교 데이터가 있으면 차트 표시
+                if (widget.previousData != null && !_isLoading)
+                  _buildMiniChart(),
+              ],
             ),
           ),
           
-          const SizedBox(height: 12),
-          
-          Text(
-            encouragement,
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: ModernColors.textSecondary,
-              height: 1.6,
+          // 컨텐츠 섹션
+          Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: points.map((point) => _buildBulletPoint(point)).toList(),
             ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),
     ).animate()
-      .slideY(
-        begin: 0.1,
-        end: 0,
-        duration: 800.ms,
-        delay: 800.ms,
-        curve: Curves.easeOutBack,
-      )
-      .fadeIn(
-        duration: 800.ms,
-        delay: 800.ms,
-      );
+      .slideY(begin: 0.1, end: 0, duration: 600.ms, delay: 400.ms)
+      .fadeIn(duration: 600.ms, delay: 400.ms);
   }
   
-  /// [Deprecated] 응원 메시지 생성 - AI 분석으로 대체됨
-  @deprecated
-  String _generateEncouragement(int duration, int calories) {
-    List<String> messages = [
-      '오늘 ${duration}분 동안 ${calories}kcal를 소모했어요! 당신의 노력이 빛나고 있어요. 내일도 함께 운동해요!',
-      '운동을 완료한 당신, 정말 멋져요! 건강한 몸과 마음을 위한 투자는 절대 헛되지 않아요.',
-      '한 걸음 한 걸음이 모여 큰 변화를 만들어요. 오늘의 운동이 더 나은 내일을 만들고 있어요!',
-      '포기하지 않고 꾸준히 운동하는 당신이 자랑스러워요. 이 기세를 계속 유지해봐요!',
-      '오늘도 자신과의 약속을 지켰네요! 스스로에게 박수를 보내주세요. 👏',
-    ];
+  /// 현대적인 효과 섹션 (개선된 디자인)
+  Widget _buildModernBenefitsSection() {
+    final content = _isLoading 
+        ? '분석 중...'
+        : (_analysisData?.benefits ?? '운동의 효과를 분석하고 있어요...');
     
-    // 운동 시간에 따른 특별 메시지
-    if (duration >= 60) {
-      return '와! 1시간 이상 운동하셨네요! 정말 대단해요. '
-          '이런 열정과 끈기라면 무엇이든 이룰 수 있어요. '
-          '충분한 휴식도 잊지 마세요!';
-    } else if (duration >= 30) {
-      return messages[DateTime.now().millisecond % messages.length];
-    } else {
-      return '짧은 시간이라도 운동한 것이 중요해요! '
-          '꾸준함이 가장 큰 힘이에요. '
-          '내일은 조금 더 도전해보는 건 어떨까요?';
-    }
-  }
-  
-  /// 섹션 카드 위젯
-  Widget _buildSectionCard({
-    required String title,
-    required IconData icon,
-    required Color color,
-    required String content,
-    bool hasGradient = false,
-  }) {
+    final points = _splitIntoPoints(content);
+    
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        gradient: LinearGradient(
+          colors: [
+            Colors.white,
+            exerciseOrangeLight.withOpacity(0.3),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: hasGradient 
-              ? color.withOpacity(0.3)
-              : ModernColors.borderLight,
+          color: exerciseOrange.withOpacity(0.2),
           width: 1,
         ),
-        gradient: hasGradient 
-            ? LinearGradient(
-                colors: [
-                  color.withOpacity(0.05),
-                  Colors.white,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : null,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
-            blurRadius: 10,
+            color: exerciseOrange.withOpacity(0.06),
+            blurRadius: 15,
             offset: const Offset(0, 4),
           ),
         ],
@@ -908,36 +753,30 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 헤더
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
-            ),
+          Padding(
+            padding: const EdgeInsets.all(18),
             child: Row(
               children: [
+                // 아이콘
                 Container(
-                  width: 32,
-                  height: 32,
+                  width: 40,
+                  height: 40,
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8),
+                    color: exerciseOrangeMedium.withOpacity(0.2),
+                    shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    icon,
-                    color: color,
-                    size: 18,
+                    Icons.auto_awesome_rounded,
+                    color: exerciseOrange,
+                    size: 22,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  title,
+                  '오늘 운동의 효과',
                   style: GoogleFonts.notoSans(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
                     color: ModernColors.textPrimary,
                   ),
                 ),
@@ -945,11 +784,290 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             ),
           ),
           
-          // 컨텐츠
+          // 효과 리스트 (카드 스타일)
           Padding(
+            padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+            child: Column(
+              children: points.asMap().entries.map((entry) {
+                final index = entry.key;
+                final point = entry.value;
+                return _buildEffectCard(point, index);
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    ).animate()
+      .slideY(begin: 0.1, end: 0, duration: 600.ms, delay: 600.ms)
+      .fadeIn(duration: 600.ms, delay: 600.ms);
+  }
+  
+  /// 현대적인 추천 섹션 (개선된 디자인)
+  Widget _buildModernRecommendationSection() {
+    final content = _isLoading 
+        ? '분석 중...'
+        : (_analysisData?.recommendation ?? '맞춤형 추천을 준비하고 있어요...');
+    
+    final points = _splitIntoPoints(content);
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: exerciseOrange.withOpacity(0.1),
+            blurRadius: 25,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // 헤더
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  exerciseOrange.withOpacity(0.9),
+                  exerciseOrangeMedium.withOpacity(0.9),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Row(
+              children: [
+                // 셰르피 아이콘
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.lightbulb_rounded,
+                    color: exerciseOrange,
+                    size: 26,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '셰르피의 추천',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        '맞춤형 운동 가이드',
+                        style: GoogleFonts.notoSans(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white.withOpacity(0.9),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // 추천 카드들
+          Padding(
+            padding: const EdgeInsets.all(18),
+            child: Column(
+              children: points.asMap().entries.map((entry) {
+                final index = entry.key;
+                final point = entry.value;
+                return _buildRecommendationCard(point, index);
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    ).animate()
+      .slideY(begin: 0.1, end: 0, duration: 600.ms, delay: 800.ms)
+      .fadeIn(duration: 600.ms, delay: 800.ms);
+  }
+  
+  /// 현대적인 응원 섹션 (개선된 디자인)
+  Widget _buildModernEncouragementSection() {
+    final encouragement = _isLoading 
+        ? '응원 메시지를 준비하고 있어요...'
+        : (_analysisData?.encouragement ?? '오늘도 정말 수고하셨어요! 💪');
+    
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            exerciseOrangeLight.withOpacity(0.5),
+            Colors.white,
+            exerciseOrangeLight.withOpacity(0.3),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: exerciseOrange.withOpacity(0.15),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        children: [
+          // 셰르피 아이콘 (애니메이션)
+          AnimatedBuilder(
+            animation: _pulseController,
+            builder: (context, child) {
+              return Transform.scale(
+                scale: 1.0 + (_pulseController.value * 0.1),
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [exerciseOrange, exerciseOrangeMedium],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: exerciseOrange.withOpacity(0.4),
+                        blurRadius: 25,
+                        spreadRadius: 3,
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.favorite_rounded,
+                    color: Colors.white,
+                    size: 35,
+                  ),
+                ),
+              );
+            },
+          ),
+          
+          const SizedBox(height: 18),
+          
+          // 제목
+          Text(
+            '오늘도 수고하셨어요! 🌟',
+            style: GoogleFonts.notoSans(
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: exerciseOrange,
+            ),
+          ),
+          
+          const SizedBox(height: 14),
+          
+          // 응원 메시지
+          Container(
             padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.8),
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: Text(
-              content,
+              encouragement,
+              style: GoogleFonts.notoSans(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: ModernColors.textSecondary,
+                height: 1.7,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // 동기부여 배지
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildMotivationBadge('💪', '꾸준함'),
+              const SizedBox(width: 12),
+              _buildMotivationBadge('🔥', '열정'),
+              const SizedBox(width: 12),
+              _buildMotivationBadge('⭐', '성장'),
+            ],
+          ),
+        ],
+      ),
+    ).animate()
+      .slideY(begin: 0.1, end: 0, duration: 800.ms, delay: 1000.ms)
+      .fadeIn(duration: 800.ms, delay: 1000.ms);
+  }
+  
+  // ============ 헬퍼 위젯들 ============
+  
+  /// 미니 차트 위젯
+  Widget _buildMiniChart() {
+    final todayCalories = widget.todayData!['calories'] as int? ?? 0;
+    final prevCalories = widget.previousData!['calories'] as int? ?? 0;
+    final diff = todayCalories - prevCalories;
+    final isIncrease = diff >= 0;
+    
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            isIncrease ? Icons.trending_up : Icons.trending_down,
+            color: isIncrease ? exerciseOrange : ModernColors.textSecondary,
+            size: 18,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '${isIncrease ? '+' : ''}$diff kcal',
+            style: GoogleFonts.notoSans(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: isIncrease ? exerciseOrange : ModernColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  /// Bullet point 위젯
+  Widget _buildBulletPoint(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            margin: const EdgeInsets.only(top: 7, right: 10),
+            decoration: BoxDecoration(
+              color: exerciseOrange,
+              shape: BoxShape.circle,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              text,
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
@@ -963,6 +1081,186 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     );
   }
   
+  /// 효과 카드 위젯
+  Widget _buildEffectCard(String text, int index) {
+    final icons = [
+      Icons.favorite_rounded,
+      Icons.flash_on_rounded,
+      Icons.trending_up_rounded,
+      Icons.psychology_rounded,
+    ];
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: exerciseOrange.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: exerciseOrangeLight,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icons[index % icons.length],
+              color: exerciseOrange,
+              size: 18,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: ModernColors.textSecondary,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).animate()
+      .slideX(begin: -0.1, end: 0, duration: 400.ms, delay: (100 * index).ms)
+      .fadeIn(duration: 400.ms, delay: (100 * index).ms);
+  }
+  
+  /// 추천 카드 위젯
+  Widget _buildRecommendationCard(String text, int index) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            exerciseOrangeLight.withOpacity(0.3),
+            exerciseOrangeLight.withOpacity(0.1),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: exerciseOrange.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          // 번호 뱃지
+          Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              color: exerciseOrange,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                '${index + 1}',
+                style: GoogleFonts.notoSans(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.notoSans(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: ModernColors.textSecondary,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).animate()
+      .slideX(begin: 0.1, end: 0, duration: 400.ms, delay: (100 * index).ms)
+      .fadeIn(duration: 400.ms, delay: (100 * index).ms);
+  }
+  
+  /// 동기부여 배지 위젯
+  Widget _buildMotivationBadge(String emoji, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: exerciseOrange.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 16)),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: GoogleFonts.notoSans(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: exerciseOrange,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  /// 텍스트를 포인트로 분리하는 헬퍼 메서드
+  List<String> _splitIntoPoints(String text) {
+    // 문장 단위로 분리 (. ! ? 기준)
+    final sentences = text.split(RegExp(r'[.!?]\s*'));
+    
+    // 빈 문자열 제거하고 3-4개씩 그룹화
+    final filtered = sentences.where((s) => s.trim().isNotEmpty).toList();
+    
+    if (filtered.length <= 2) {
+      // 짧은 텍스트는 그대로 반환
+      return [text];
+    }
+    
+    // 긴 텍스트는 2-3개 포인트로 분리
+    final points = <String>[];
+    for (int i = 0; i < filtered.length; i += 2) {
+      final end = (i + 2 > filtered.length) ? filtered.length : i + 2;
+      points.add(filtered.sublist(i, end).join('. '));
+    }
+    
+    return points.take(3).toList(); // 최대 3개 포인트
+  }
+  
+  /// 기본 비교 메시지
+  String _getDefaultComparisonMessage() {
+    if (widget.previousData == null) {
+      return '오늘이 첫 운동 기록이에요! 🎉\n훌륭한 시작입니다. 꾸준히 운동하면 건강한 몸과 마음을 만들 수 있어요.';
+    }
+    return '운동 데이터를 분석하고 있어요...';
+  }
+  
   /// 데이터 없음 상태
   Widget _buildNoDataState() {
     return Center(
@@ -973,12 +1271,12 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             width: 80,
             height: 80,
             decoration: BoxDecoration(
-              color: ModernColors.textTertiary.withOpacity(0.1),
+              color: exerciseOrangeLight,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.fitness_center_rounded,
-              color: ModernColors.textTertiary,
+              color: exerciseOrange,
               size: 40,
             ),
           ),
