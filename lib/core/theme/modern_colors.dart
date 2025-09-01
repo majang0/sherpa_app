@@ -150,9 +150,9 @@ class ModernColors {
   static const Color exercise = Color(0xFFFF6B35);
   static const Color exerciseLight = Color(0xFFFFF3E0);
   
-  /// 📚 독서 - 지적인 인디고
-  static const Color reading = Color(0xFF6366F1);
-  static const Color readingLight = Color(0xFFEEF2FF);
+  /// 📚 독서 - 신선한 민트 그린
+  static const Color reading = Color(0xFF10B981);
+  static const Color readingLight = Color(0xFFD1FAE5);
   
   /// 🎯 집중 - 진중한 슬레이트
   static const Color focus = Color(0xFF475569);

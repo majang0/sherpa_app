@@ -257,7 +257,22 @@ class SampleDataGenerator {
       {'title': '리팩토링', 'author': '마틴 파울러'},
       {'title': '이펙티브 자바', 'author': '조슈아 블로크'},
       {'title': '대화의 기술', 'author': '라이언 김'},
-      {'title': '습관의 재발견', 'author': '찰스 두히그'}
+      {'title': '습관의 재발견', 'author': '찰스 두히그'},
+      // 인문학
+      {'title': '총, 균, 쇠', 'author': '재레드 다이아몬드'},
+      {'title': '문명의 충돌', 'author': '새뮤얼 헌팅턴'},
+      // 철학
+      {'title': '정의란 무엇인가', 'author': '마이클 샌델'},
+      {'title': '죽음에 대하여', 'author': '셸리 케이건'},
+      {'title': '니코마코스 윤리학', 'author': '아리스토텔레스'},
+      // 심리학
+      {'title': '생각에 관한 생각', 'author': '대니얼 카너먼'},
+      {'title': '설득의 심리학', 'author': '로버트 치알디니'},
+      {'title': '몰입', 'author': '미하이 칙센트미하이'},
+      // SF
+      {'title': '듄', 'author': '프랭크 허버트'},
+      {'title': '파운데이션', 'author': '아이작 아시모프'},
+      {'title': '삼체', 'author': '류츠신'}
     ];
 
     final book = books[_random.nextInt(books.length)];
@@ -529,12 +544,31 @@ class SampleDataGenerator {
       return '역사';
     } else if (title.contains('네트워크') ||
         title.contains('코드') ||
-        title.contains('자바')) {
-      return 'IT';
+        title.contains('자바') ||
+        title.contains('리팩토링')) {
+      return '과학';  // IT를 과학으로 변경
     } else if (title.contains('대화') || title.contains('기술')) {
-      return '커뮤니케이션';
+      return '경영';  // 커뮤니케이션을 경영으로 변경
+    } else if (title.contains('부의')) {
+      return '경영';
+    } else if (title.contains('총, 균, 쇠') ||
+               title.contains('문명')) {
+      return '인문학';
+    } else if (title.contains('정의란') ||
+               title.contains('죽음에') ||
+               title.contains('윤리학')) {
+      return '철학';
+    } else if (title.contains('생각') ||
+               title.contains('설득') ||
+               title.contains('몰입') ||
+               title.contains('심리')) {
+      return '심리학';
+    } else if (title.contains('듄') ||
+               title.contains('파운데이션') ||
+               title.contains('삼체')) {
+      return 'SF';
     } else {
-      return '일반';
+      return '기타';
     }
   }
 

@@ -39,8 +39,6 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
   late AnimationController _pulseController;
   late AnimationController _cardAnimationController;
   
-  // 섹션별 확장 상태
-  final Map<String, bool> _expandedSections = {};
   
   // ModernColors.exercise를 사용 (이제 주황색으로 변경됨)
   
@@ -611,6 +609,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     final points = _splitIntoPoints(content);
     
     return Container(
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -625,76 +624,61 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 헤더 섹션
-          Container(
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  ModernColors.exerciseLight.withOpacity(0.8),
-                  ModernColors.exerciseLight.withOpacity(0.4),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+          // 타이틀 - 효과 섹션과 동일한 스타일
+          Row(
+            children: [
+              // 아이콘 컨테이너
+              Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: ModernColors.exercise,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.compare_arrows_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            ),
-            child: Row(
-              children: [
-                // 아이콘 컨테이너
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: ModernColors.exercise,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.compare_arrows_rounded,
-                    color: Colors.white,
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 14),
-                // 타이틀
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '지난번이랑 비교해볼까요?',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: ModernColors.textPrimary,
-                        ),
+              const SizedBox(width: 12),
+              // 타이틀
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '📊 지난번과의 비교',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        color: ModernColors.textPrimary,
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '셰르피가 분석해드려요',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: ModernColors.exercise,
-                        ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '셰르피가 분석해드려요',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: ModernColors.exercise,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                // 비교 데이터가 있으면 차트 표시
-                if (widget.previousData != null && !_isLoading)
-                  _buildMiniChart(),
-              ],
-            ),
+              ),
+              // 비교 데이터가 있으면 차트 표시
+              if (widget.previousData != null && !_isLoading)
+                _buildMiniChart(),
+            ],
           ),
           
+          const SizedBox(height: 20),
+          
           // 컨텐츠 섹션
-          Padding(
-            padding: const EdgeInsets.all(18),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: points.map((point) => _buildBulletPoint(point)).toList(),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: points.map((point) => _buildBulletPoint(point)).toList(),
           ),
         ],
       ),
@@ -1213,51 +1197,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
   }
   
   // ============ 헬퍼 메서드들 ============
-  
-  /// 혈압 감소 효과 계산
-  String _getBloodPressureEffect(String intensity) {
-    switch (intensity) {
-      case '높음':
-      case '매우 높음':
-        return '7-10mmHg';
-      case '중간':
-        return '5-7mmHg';
-      case '낮음':
-      default:
-        return '3-5mmHg';
-    }
-  }
-  
-  /// 인지 능력 향상 효과 계산
-  int _getCognitiveEffect(int duration) {
-    return math.min(15 + (duration ~/ 10) * 5, 40);
-  }
-  
-  /// 대사율 증가 효과 계산
-  int _getMetabolicEffect(int calories) {
-    return (calories * 0.15).round();
-  }
-  
-  /// 근육 성장 효과 계산 (운동 타입별)
-  String _getMuscleGrowth(String exerciseType) {
-    final typeMap = {
-      '근력운동': '0.3-0.5%',
-      '웨이트': '0.3-0.5%',
-      '헬스': '0.3-0.5%',
-      '달리기': '0.1-0.2%',
-      '런닝': '0.1-0.2%',
-      '자전거': '0.2-0.3%',
-      '수영': '0.2-0.4%',
-      '요가': '0.1-0.2%',
-    };
-    
-    for (final entry in typeMap.entries) {
-      if (exerciseType.contains(entry.key)) {
-        return entry.value;
-      }
-    }
-    return '0.1-0.3%';
-  }
+  // 사용하지 않는 의학적 계산 메서드들 제거됨
 
   // ============ 헬퍼 위젯들 ============
 

@@ -50,7 +50,11 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
     {'id': '과학', 'emoji': '🔬', 'label': '과학'},
     {'id': '역사', 'emoji': '📜', 'label': '역사'},
     {'id': '예술', 'emoji': '🎨', 'label': '예술'},
-    {'id': '기타', 'emoji': '📖', 'label': '기타'},
+    {'id': '인문학', 'emoji': '📖', 'label': '인문학'},
+    {'id': '철학', 'emoji': '🤔', 'label': '철학'},
+    {'id': '심리학', 'emoji': '🧠', 'label': '심리학'},
+    {'id': 'SF', 'emoji': '🚀', 'label': 'SF'},
+    {'id': '기타', 'emoji': '📗', 'label': '기타'},
   ];
 
   final List<Map<String, dynamic>> _emotions = [
@@ -183,7 +187,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: _isSubmitting ? ModernColors.textTertiary : const Color(0xFF10B981),
+                    color: _isSubmitting ? ModernColors.textTertiary : ModernColors.reading,
                   ),
                 ),
               ),
@@ -202,8 +206,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFF10B981),
-                    const Color(0xFF10B981).withOpacity(0.7),
+                    ModernColors.reading,
+                    ModernColors.reading.withOpacity(0.7),
                   ],
                 ),
               ),
@@ -318,7 +322,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF10B981).withOpacity(0.2),
+            color: ModernColors.reading.withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -339,14 +343,14 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      const Color(0xFF10B981),
-                      const Color(0xFF10B981).withOpacity(0.8),
+                      ModernColors.reading,
+                      ModernColors.reading.withOpacity(0.8),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF10B981).withOpacity(0.3),
+                      color: ModernColors.reading.withOpacity(0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -368,7 +372,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFF10B981),
+                        color: ModernColors.reading,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -392,10 +396,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFF10B981).withOpacity(0.1),
+              color: ModernColors.reading.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFF10B981).withOpacity(0.2),
+                color: ModernColors.reading.withOpacity(0.2),
                 width: 1,
               ),
             ),
@@ -404,7 +408,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               children: [
                 Icon(
                   Icons.calendar_today,
-                  color: const Color(0xFF10B981),
+                  color: ModernColors.reading,
                   size: 18,
                 ),
                 const SizedBox(width: 8),
@@ -413,7 +417,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF10B981),
+                    color: ModernColors.reading,
                   ),
                 ),
               ],
@@ -452,12 +456,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withOpacity(0.1),
+                        color: ModernColors.reading.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
                         Icons.category,
-                        color: const Color(0xFF10B981),
+                        color: ModernColors.reading,
                         size: 20,
                       ),
                     ),
@@ -503,10 +507,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withOpacity(0.1),
+                      color: ModernColors.reading.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: const Color(0xFF10B981).withOpacity(0.2),
+                        color: ModernColors.reading.withOpacity(0.2),
                         width: 1,
                       ),
                     ),
@@ -522,7 +526,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: const Color(0xFF10B981),
+                            color: ModernColors.reading,
                           ),
                         ),
                       ],
@@ -553,17 +557,17 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           gradient: isSelected ? LinearGradient(
-            colors: [const Color(0xFF10B981), const Color(0xFF059669)],
+            colors: [ModernColors.reading, ModernColors.reading.withOpacity(0.85)],
           ) : null,
           color: isSelected ? null : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? const Color(0xFF10B981) : ModernColors.textTertiary.withOpacity(0.2),
-            width: isSelected ? 2 : 1,
+            color: isSelected ? ModernColors.reading : ModernColors.textTertiary.withOpacity(0.2),
+            width: 1.5,
           ),
           boxShadow: isSelected ? [
             BoxShadow(
-              color: const Color(0xFF10B981).withOpacity(0.4),
+              color: ModernColors.reading.withOpacity(0.4),
               blurRadius: 15,
               offset: const Offset(0, 6),
             ),
@@ -578,12 +582,9 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 300),
-              style: TextStyle(
-                fontSize: isSelected ? 22 : 18,
-              ),
-              child: Text(category['emoji']),
+            Text(
+              category['emoji'],
+              style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(width: 8),
             Text(
@@ -624,12 +625,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withOpacity(0.1),
+                    color: ModernColors.reading.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.menu_book,
-                    color: const Color(0xFF10B981),
+                    color: ModernColors.reading,
                     size: 18,
                   ),
                 ),
@@ -651,7 +652,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: _bookTitleController.text.isNotEmpty 
-                      ? const Color(0xFF10B981).withOpacity(0.3)
+                      ? ModernColors.reading.withOpacity(0.3)
                       : ModernColors.textTertiary.withOpacity(0.2),
                   width: 1.5,
                 ),
@@ -680,7 +681,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     padding: const EdgeInsets.all(12),
                     child: Icon(
                       Icons.book_outlined,
-                      color: const Color(0xFF10B981),
+                      color: ModernColors.reading,
                       size: 24,
                     ),
                   ),
@@ -718,12 +719,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withOpacity(0.1),
+                    color: ModernColors.reading.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.auto_stories,
-                    color: const Color(0xFF10B981),
+                    color: ModernColors.reading,
                     size: 18,
                   ),
                 ),
@@ -764,7 +765,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: _startPageController.text.isNotEmpty 
-                            ? const Color(0xFF10B981).withOpacity(0.3)
+                            ? ModernColors.reading.withOpacity(0.3)
                             : ModernColors.textTertiary.withOpacity(0.2),
                         width: 1.5,
                       ),
@@ -800,12 +801,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withOpacity(0.1),
+                      color: ModernColors.reading.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
                       Icons.arrow_forward,
-                      color: const Color(0xFF10B981),
+                      color: ModernColors.reading,
                       size: 20,
                     ),
                   ),
@@ -817,7 +818,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: _endPageController.text.isNotEmpty 
-                            ? const Color(0xFF10B981).withOpacity(0.3)
+                            ? ModernColors.reading.withOpacity(0.3)
                             : ModernColors.textTertiary.withOpacity(0.2),
                         width: 1.5,
                       ),
@@ -858,7 +859,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withOpacity(0.1),
+                    color: ModernColors.reading.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -866,7 +867,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     children: [
                       Icon(
                         Icons.check_circle,
-                        color: const Color(0xFF10B981),
+                        color: ModernColors.reading,
                         size: 16,
                       ),
                       const SizedBox(width: 8),
@@ -875,7 +876,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF10B981),
+                          color: ModernColors.reading,
                         ),
                       ),
                     ],
@@ -1081,12 +1082,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withOpacity(0.1),
+                    color: ModernColors.reading.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     Icons.mood,
-                    color: const Color(0xFF10B981),
+                    color: ModernColors.reading,
                     size: 20,
                   ),
                 ),
@@ -1132,10 +1133,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF10B981).withOpacity(0.1),
+                  color: ModernColors.reading.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF10B981).withOpacity(0.2),
+                    color: ModernColors.reading.withOpacity(0.2),
                     width: 1,
                   ),
                 ),
@@ -1151,7 +1152,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF10B981),
+                        color: ModernColors.reading,
                       ),
                     ),
                   ],
@@ -1180,17 +1181,17 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           gradient: isSelected ? LinearGradient(
-            colors: [const Color(0xFF10B981), const Color(0xFF059669)],
+            colors: [ModernColors.reading, ModernColors.reading.withOpacity(0.85)],
           ) : null,
           color: isSelected ? null : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? const Color(0xFF10B981) : ModernColors.textTertiary.withOpacity(0.2),
-            width: isSelected ? 2 : 1,
+            color: isSelected ? ModernColors.reading : ModernColors.textTertiary.withOpacity(0.2),
+            width: 1.5,
           ),
           boxShadow: isSelected ? [
             BoxShadow(
-              color: const Color(0xFF10B981).withOpacity(0.4),
+              color: ModernColors.reading.withOpacity(0.4),
               blurRadius: 15,
               offset: const Offset(0, 6),
             ),
@@ -1205,12 +1206,9 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 300),
-              style: TextStyle(
-                fontSize: isSelected ? 22 : 18,
-              ),
-              child: Text(emotion['emoji']),
+            Text(
+              emotion['emoji'],
+              style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(width: 8),
             Text(
@@ -1251,12 +1249,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withOpacity(0.1),
+                    color: ModernColors.reading.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.format_quote,
-                    color: const Color(0xFF10B981),
+                    color: ModernColors.reading,
                     size: 18,
                   ),
                 ),
@@ -1294,7 +1292,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: _noteController.text.isNotEmpty 
-                      ? const Color(0xFF10B981).withOpacity(0.3)
+                      ? ModernColors.reading.withOpacity(0.3)
                       : ModernColors.textTertiary.withOpacity(0.2),
                   width: 1.5,
                 ),
@@ -1336,7 +1334,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withOpacity(0.1),
+                        color: ModernColors.reading.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -1344,7 +1342,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: const Color(0xFF10B981),
+                          color: ModernColors.reading,
                         ),
                       ),
                     ),
@@ -1381,12 +1379,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withOpacity(0.1),
+                    color: ModernColors.reading.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
                     Icons.photo_camera,
-                    color: const Color(0xFF10B981),
+                    color: ModernColors.reading,
                     size: 18,
                   ),
                 ),
@@ -1414,7 +1412,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   color: const Color(0xFFF8FAFC),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFF10B981).withOpacity(0.3),
+                    color: ModernColors.reading.withOpacity(0.3),
                     width: 2,
                   ),
                 ),
@@ -1424,12 +1422,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withOpacity(0.1),
+                        color: ModernColors.reading.withOpacity(0.1),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.camera_alt_rounded,
-                        color: const Color(0xFF10B981),
+                        color: ModernColors.reading,
                         size: 32,
                       ),
                     ),
@@ -1482,12 +1480,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF10B981).withOpacity(0.1),
+                color: ModernColors.reading.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 Icons.people_rounded,
-                color: const Color(0xFF10B981),
+                color: ModernColors.reading,
                 size: 24,
               ),
             ),
@@ -1522,7 +1520,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: _shareWithCommunity ? [
                   BoxShadow(
-                    color: const Color(0xFF10B981).withOpacity(0.3),
+                    color: ModernColors.reading.withOpacity(0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -1536,7 +1534,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   });
                   HapticFeedbackManager.lightImpact();
                 },
-                activeColor: const Color(0xFF10B981),
+                activeColor: ModernColors.reading,
                 inactiveTrackColor: Colors.grey.shade300,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
@@ -1549,7 +1547,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
 
   Widget _buildSubmitButton() {
     final canSubmit = _canSubmit();
-    final buttonColor = canSubmit ? const Color(0xFF10B981) : ModernColors.textTertiary;
+    final buttonColor = canSubmit ? ModernColors.reading : ModernColors.textTertiary;
     
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
