@@ -63,6 +63,12 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
   /// 샘플 모임 데이터 로드
   void _loadSampleMeetings() {
     final now = DateTime.now();
+    
+    // 정상적인 시간대를 위한 헬퍼 함수
+    DateTime _getDateTime(int daysFromNow, int hour, int minute) {
+      final date = now.add(Duration(days: daysFromNow));
+      return DateTime(date.year, date.month, date.day, hour, minute);
+    }
 
     final meetings = [
       // 🏃‍♂️ 운동 모임들
@@ -73,7 +79,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.exercise,
         type: MeetingType.free,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(hours: 18)), // 오늘 저녁
+        dateTime: _getDateTime(1, 6, 0), // 내일 아침 6시
         location: '한강공원 여의도점',
         detailedLocation: '서울 영등포구 여의동로 330 한강공원 여의도점 주차장',
         maxParticipants: 15,
@@ -93,7 +99,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.exercise,
         type: MeetingType.free,
         scope: MeetingScope.university,
-        dateTime: now.add(const Duration(hours: 12)), // 오늘 오후
+        dateTime: _getDateTime(0, 20, 0), // 오늘 저녁 8시
         location: '온라인 (Zoom)',
         detailedLocation: '줌 링크는 참여 확정 후 공유됩니다',
         maxParticipants: 20,
@@ -115,7 +121,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.study,
         type: MeetingType.paid,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 5, hours: 19)),
+        dateTime: _getDateTime(5, 19, 0), // 5일 후 저녁 7시
         location: '선릉역 코워킹스페이스',
         detailedLocation: '서울 강남구 테헤란로 123 ABC빌딩 5층',
         maxParticipants: 12,
@@ -135,7 +141,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.study,
         type: MeetingType.free,
         scope: MeetingScope.university,
-        dateTime: now.add(const Duration(days: 3, hours: 18)),
+        dateTime: _getDateTime(3, 18, 0), // 3일 후 저녁 6시
         location: '영남이공대 학생회관',
         detailedLocation: '영남이공대학교 학생회관 2층 동아리방',
         maxParticipants: 15,
@@ -156,7 +162,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.reading,
         type: MeetingType.free,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 3, hours: 14)),
+        dateTime: _getDateTime(3, 14, 0), // 3일 후 오후 2시
         location: '강남역 스터디카페',
         detailedLocation: '서울 강남구 강남대로 지하 1층 북카페',
         maxParticipants: 10,
@@ -177,7 +183,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.outdoor,
         type: MeetingType.free,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 7, hours: 10)),
+        dateTime: _getDateTime(7, 10, 0), // 7일 후 오전 10시
         location: '서울숲 입구',
         detailedLocation: '서울 성동구 뚝섬로 273 서울숲공원 정문',
         maxParticipants: 20,
@@ -198,7 +204,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.exercise,
         type: MeetingType.free,
         scope: MeetingScope.university,
-        dateTime: now.add(const Duration(days: 2, hours: 18)),
+        dateTime: _getDateTime(2, 18, 30), // 2일 후 저녁 6시 30분
         location: '홍대 요가스튜디오',
         detailedLocation: '서울 마포구 와우산로 123 2층 요가스튜디오',
         maxParticipants: 8,
@@ -220,7 +226,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.networking,
         type: MeetingType.paid,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 4, hours: 19)),
+        dateTime: _getDateTime(4, 19, 0), // 4일 후 저녁 7시
         location: '강남 스타트업 허브',
         detailedLocation: '서울 강남구 테헤란로 142 아크플레이스 지하1층',
         maxParticipants: 25,
@@ -242,7 +248,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.reading,
         type: MeetingType.paid,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 6, hours: 15)),
+        dateTime: _getDateTime(6, 15, 0), // 6일 후 오후 3시
         location: '강남역 북카페',
         detailedLocation: '서울 강남구 강남대로 123 비즈센터 3층',
         maxParticipants: 12,
@@ -264,7 +270,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.outdoor,
         type: MeetingType.paid,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(hours: 6)), // 오늘 오전
+        dateTime: _getDateTime(1, 9, 0), // 내일 오전 9시
         location: '여의도 한강공원',
         detailedLocation: '서울 영등포구 여의동로 330 한강공원 여의도점',
         maxParticipants: 30,
@@ -286,7 +292,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.culture,
         type: MeetingType.paid,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 8, hours: 19)),
+        dateTime: _getDateTime(8, 19, 30), // 8일 후 저녁 7시 30분
         location: '충무아트센터',
         detailedLocation: '서울 중구 퇴계로 387 충무아트센터 대극장',
         maxParticipants: 8,
@@ -308,7 +314,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.exercise,
         type: MeetingType.free,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 9, hours: 9)),
+        dateTime: _getDateTime(6, 9, 0), // 토요일 오전 9시
         location: '올림픽공원 축구장',
         detailedLocation: '서울 송파구 올림픽로 424 올림픽공원 축구장 A코트',
         maxParticipants: 22,
@@ -329,7 +335,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.study,
         type: MeetingType.free,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 3, hours: 20)),
+        dateTime: _getDateTime(3, 20, 0), // 3일 후 저녁 8시
         location: '온라인',
         detailedLocation: 'Zoom 링크는 참여 확정 후 공유됩니다',
         maxParticipants: 15,
@@ -350,7 +356,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.study,
         type: MeetingType.free,
         scope: MeetingScope.university,
-        dateTime: now.add(const Duration(days: 2, hours: 20)),
+        dateTime: _getDateTime(2, 19, 0), // 2일 후 저녁 7시
         location: '부산대학교 도서관',
         detailedLocation: '부산 금정구 부산대학로 63번길 2 부산대학교 중앙도서관',
         maxParticipants: 6,
@@ -372,7 +378,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.networking,
         type: MeetingType.paid,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 5, hours: 18)),
+        dateTime: _getDateTime(5, 18, 30), // 5일 후 저녁 6시 30분
         location: '대전 유성구 카페',
         detailedLocation: '대전 유성구 대학로 123 네트워킹 카페',
         maxParticipants: 20,
@@ -394,7 +400,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         category: MeetingCategory.outdoor,
         type: MeetingType.paid,
         scope: MeetingScope.public,
-        dateTime: now.add(const Duration(days: 21, hours: 8)),
+        dateTime: _getDateTime(21, 8, 0), // 21일 후 오전 8시
         location: '제주국제공항',
         detailedLocation: '제주특별자치도 제주시 공항로 2 제주국제공항 국내선청사',
         maxParticipants: 8,

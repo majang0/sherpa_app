@@ -179,7 +179,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
         
         if (mounted) setState(() {});
       } catch (e) {
-        print('캐시 로드 실패: $e');
+        // 캐시 로드 실패 시 조용히 처리
       }
     }
     
@@ -259,7 +259,6 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       await _saveCachedAnalysis();
       
     } catch (e) {
-      print('분석 생성 실패: $e');
       // 실패 시 기본 메시지 사용
       _useDefaultMessages();
     } finally {
@@ -352,7 +351,8 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
     await prefs.setString('book_recommendations_cache', json.encode(recommendationsData));
     
     // 캐시 타임스탬프 저장
-    await prefs.setInt('reading_analysis_timestamp', DateTime.now().millisecondsSinceEpoch);
+    final timestamp = DateTime.now();
+    await prefs.setInt('reading_analysis_timestamp', timestamp.millisecondsSinceEpoch);
   }
   
   @override
@@ -463,7 +463,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
   /// 헤더
   Widget _buildHeader() {
     return Container(
-      height: 200,
+      height: 140,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -488,21 +488,10 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
           // 콘텐츠
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 뒤로가기 버튼
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      color: ModernColors.reading,
-                    ),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                  
                   const Spacer(),
                   
                   // 타이틀
@@ -580,23 +569,9 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
               ),
             ],
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.white.withValues(alpha: 0.9),
-                      ModernColors.reading.withValues(alpha: 0.05),
-                    ],
-                  ),
-                ),
-                child: Column(
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // 섹션 헤더
@@ -640,8 +615,6 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                       _buildSherpiInsight(_cachedResponses['previous_insight']!),
                   ],
                 ),
-              ),
-            ),
           ),
         ),
       ),
@@ -660,34 +633,16 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
           return Transform.scale(
             scale: _heartbeatAnimation.value,
             child: Container(
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    ModernColors.reading.withValues(alpha: 0.15),
-                    ModernColors.reading.withValues(alpha: 0.05),
-                  ],
-                ),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: ModernColors.reading.withValues(alpha: 0.3),
+                  color: ModernColors.reading.withValues(alpha: 0.15),
                   width: 2,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: ModernColors.reading.withValues(alpha: 0.2),
-                    blurRadius: 30,
-                    offset: const Offset(0, 15),
-                  ),
-                ],
+                boxShadow: ModernColors.getElevationShadow(3),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-                  child: Container(
-                    padding: const EdgeInsets.all(24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -698,12 +653,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                               width: 44,
                               height: 44,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    ModernColors.reading,
-                                    ModernColors.reading.withValues(alpha: 0.7),
-                                  ],
-                                ),
+                                color: ModernColors.reading,
                                 borderRadius: BorderRadius.circular(14),
                               ),
                               child: Center(
@@ -752,9 +702,6 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                           ),
                       ],
                     ),
-                  ),
-                ),
-              ),
             ),
           );
         },
@@ -770,19 +717,9 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       padding: const EdgeInsets.all(20),
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.white,
-              ModernColors.reading.withValues(alpha: 0.03),
-            ],
-          ),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: ModernColors.reading.withValues(alpha: 0.1),
-            width: 1,
-          ),
+          boxShadow: ModernColors.getElevationShadow(1),
         ),
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -796,8 +733,8 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                     offset: Offset(_floatingAnimation.value * 0.5, _floatingAnimation.value),
                     child: Image.asset(
                       SherpiEmotion.cheering.imagePath,
-                      width: 80,
-                      height: 80,
+                      width: 72,
+                      height: 72,
                     ),
                   );
                 },
@@ -811,9 +748,10 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                   _cachedResponses['journey_encouragement']!,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.notoSans(
-                    fontSize: 16,
+                    fontSize: 15,
                     color: ModernColors.textPrimary,
-                    height: 1.6,
+                    height: 1.5,
+                    fontWeight: FontWeight.w500,
                   ),
                 ).animate()
                   .fadeIn(delay: const Duration(milliseconds: 800))
@@ -865,12 +803,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      ModernColors.reading,
-                      ModernColors.accent,
-                    ],
-                  ),
+                  color: ModernColors.reading,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Center(
@@ -941,14 +874,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                 width: isToday ? 60 : 50,
                 height: isToday ? 80 : 70,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      ModernColors.reading.withValues(alpha: 0.3),
-                      ModernColors.reading.withValues(alpha: 0.1),
-                    ],
-                  ),
+                  color: ModernColors.reading.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
@@ -1052,19 +978,9 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: isSpecial
-              ? [
-                  ModernColors.reading.withValues(alpha: 0.05),
-                  Colors.white,
-                ]
-              : [
-                  Colors.white.withValues(alpha: 0.5),
-                  Colors.white.withValues(alpha: 0.3),
-                ],
-        ),
+        color: isSpecial
+            ? ModernColors.reading.withValues(alpha: 0.05)
+            : ModernColors.gray50,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isSpecial
@@ -1154,19 +1070,8 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.white,
-            ModernColors.reading.withValues(alpha: 0.02),
-          ],
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: ModernColors.reading.withValues(alpha: 0.1),
-          width: 1,
-        ),
         boxShadow: [
           BoxShadow(
             color: ModernColors.reading.withValues(alpha: 0.08),
@@ -1184,12 +1089,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    ModernColors.reading,
-                    ModernColors.accent,
-                  ],
-                ),
+                color: ModernColors.reading,
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -1296,20 +1196,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
               return Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      ModernColors.gray100,
-                      ModernColors.gray200,
-                      ModernColors.gray100,
-                    ],
-                    stops: [
-                      0.0,
-                      _shimmerController.value,
-                      1.0,
-                    ],
-                  ),
+                  color: ModernColors.gray100,
                 ),
               );
             },

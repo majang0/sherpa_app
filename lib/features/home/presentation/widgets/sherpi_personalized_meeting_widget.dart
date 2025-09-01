@@ -20,6 +20,9 @@ import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/widgets/components/molecules/participant_avatars_2025.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 
+// AI Recommendation Widgets
+import '../../../meetings/presentation/widgets/ai/ai_recommendation_button.dart';
+
 /// 🎯 셰르피가 추천하는 맞춤 모임 위젯
 /// 사용자의 활동 데이터를 분석해 개인화된 모임을 추천하는 위젯
 class SherpiPersonalizedMeetingWidget extends ConsumerStatefulWidget {
@@ -586,6 +589,14 @@ class _SherpiPersonalizedMeetingWidgetState
               _buildInsightSection(
                 user.name,
                 analysis['insight'] as String,
+              ),
+              
+              const SizedBox(height: 12),
+              
+              // 🤖 AI 추천 버튼
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: CompactAIRecommendationButton(),
               ),
               
               const SizedBox(height: 16),
