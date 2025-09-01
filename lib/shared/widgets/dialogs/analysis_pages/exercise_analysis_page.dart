@@ -120,45 +120,41 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     super.dispose();
   }
   
-  // 운동 타입에 따른 이모지 반환
+  // 운동 타입에 따른 이모지 반환 - ExerciseSelectionScreen과 동일한 시스템
   String _getExerciseEmoji(String? type) {
-    if (type == null) return '🏃';
+    if (type == null) return '💪';
     
-    final typeMap = {
-      '달리기': '🏃',
-      '런닝': '🏃',
-      '조깅': '🏃',
-      '걷기': '🚶',
-      '산책': '🚶',
-      '자전거': '🚴',
-      '사이클': '🚴',
-      '수영': '🏊',
-      '요가': '🧘',
-      '필라테스': '🧘',
-      '헬스': '💪',
-      '웨이트': '💪',
-      '근력운동': '💪',
-      '축구': '⚽',
-      '농구': '🏀',
-      '배구': '🏐',
-      '테니스': '🎾',
-      '배드민턴': '🏸',
-      '등산': '⛰️',
-      '댄스': '💃',
-      '춤': '💃',
-      '격투기': '🥊',
-      '복싱': '🥊',
-      '기타': '🎯',
-    };
-    
-    // 키워드 매칭
-    for (final entry in typeMap.entries) {
-      if (type.contains(entry.key)) {
-        return entry.value;
-      }
-    }
-    
-    return '🏃'; // 기본값
+    // 실제 운동 선택 화면과 동일한 이모지 매핑
+    switch (type) {
+      case '헬스':
+        return '💪';
+      case '러닝':
+        return '🏃‍♂️';
+      case '등산':
+        return '🥾';
+      case '수영':
+        return '🏊‍♂️';
+      case '자전거':
+        return '🚴‍♂️';
+      case '요가':
+        return '🧘‍♀️';
+      case '필라테스':
+        return '🤸‍♀️';
+      case '클라이밍':
+        return '🧗‍♂️';
+      case '테니스':
+        return '🎾';
+      case '배드민턴':
+        return '🏸';
+      case '골프':
+        return '⛳';
+      case '축구':
+        return '⚽';
+      case '농구':
+        return '🏀';
+      default:
+        return '💪';
+    } // 기본값
   }
   
   // 강도에 따른 색상 반환 (주황색 테마)
@@ -294,29 +290,21 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                gradient: isToday 
-                    ? LinearGradient(
-                        colors: [
-                          ModernColors.exercise,
-                          ModernColors.exercise,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      )
-                    : LinearGradient(
-                        colors: [
-                          ModernColors.textTertiary.withOpacity(0.2),
-                          ModernColors.textTertiary.withOpacity(0.1),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                color: isToday 
+                    ? ModernColors.exercise
+                    : ModernColors.surfaceElevated,
                 borderRadius: BorderRadius.circular(20),
+                border: isToday 
+                    ? null
+                    : Border.all(
+                        color: ModernColors.border,
+                        width: 1,
+                      ),
                 boxShadow: [
                   BoxShadow(
                     color: isToday 
                         ? ModernColors.exercise.withOpacity(0.3)
-                        : Colors.black.withOpacity(0.1),
+                        : ModernColors.border.withOpacity(0.3),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -551,18 +539,18 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             Text(
               '$calories',
               style: GoogleFonts.notoSans(
-                fontSize: 28,  // 40 -> 28로 줄임
+                fontSize: 24,  // 28 -> 24로 더 줄임
                 fontWeight: FontWeight.w700,
                 color: isToday ? Colors.white : ModernColors.textPrimary,
                 height: 1,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 4, left: 3),  // bottom: 6 -> 4로 조정
+              padding: const EdgeInsets.only(bottom: 3, left: 3),  // bottom: 4 -> 3으로 조정
               child: Text(
                 'kcal',
                 style: GoogleFonts.notoSans(
-                  fontSize: 14,  // 16 -> 14로 줄임
+                  fontSize: 12,  // 14 -> 12로 더 줄임
                   fontWeight: FontWeight.w500,
                   color: isToday 
                       ? Colors.white.withOpacity(0.8)
@@ -787,7 +775,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         children: [
           // 헤더 섹션 - Clean Design
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -799,19 +787,19 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 Row(
                   children: [
                     Container(
-                      width: 44,
-                      height: 44,
+                      width: 38,
+                      height: 38,
                       decoration: BoxDecoration(
                         color: ModernColors.exercise,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(
                         Icons.trending_up_rounded,
                         color: Colors.white,
-                        size: 24,
+                        size: 20,
                       ),
                     ),
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -819,7 +807,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                           Text(
                             '🎉 오! 이런 효과가?',
                             style: GoogleFonts.notoSans(
-                              fontSize: 18,
+                              fontSize: 16,
                               fontWeight: FontWeight.w800,
                               color: ModernColors.textPrimary,
                             ),
@@ -828,7 +816,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                           Text(
                             '생각보다 더 대단한 변화들',
                             style: GoogleFonts.notoSans(
-                              fontSize: 13,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: ModernColors.exercise,
                             ),
@@ -882,8 +870,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 // AI 개인화 메시지 - Clean Modern Design
                 if (_analysisData?.benefits != null && _analysisData!.benefits!.isNotEmpty)
                   Container(
-                    margin: const EdgeInsets.only(top: 12),
-                    padding: const EdgeInsets.all(14),
+                    margin: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
@@ -937,10 +925,10 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           
           // 구체적 효과 카드들 - Clean White Design
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: Column(
               children: [
-                const SizedBox(height: 8),
+                const SizedBox(height: 2),
                 
                 _buildSpecificEffectCard(
                   icon: '🫀',
@@ -955,7 +943,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   index: 0,
                 ),
                 
-                const SizedBox(height: 8),
+                const SizedBox(height: 10), // Optimal card spacing
                 
                 _buildSpecificEffectCard(
                   icon: '😴',
@@ -970,7 +958,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   index: 1,
                 ),
                 
-                const SizedBox(height: 8),
+                const SizedBox(height: 10), // Optimal card spacing
                 
                 _buildSpecificEffectCard(
                   icon: '💪',
@@ -985,9 +973,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   index: 2,
                 ),
                 
-                const SizedBox(height: 16),
+                const SizedBox(height: 12), // Compact section spacing
                 
-                // "Did you know?" 섹션 - Simple Text Only (No Box)
+                // "Did you know?" 섹션 - Optimized Compact Design
                 _buildSimpleDidYouKnowSection(duration, calories, intensity, endorphinData),
               ],
             ),
@@ -1355,7 +1343,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     );
   }
 
-  /// 구체적 효과 카드 (Clean Modern Design)
+  /// 구체적 효과 카드 (Optimized Compact Design)
   Widget _buildSpecificEffectCard({
     required String icon,
     required String title,
@@ -1365,7 +1353,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     required int index,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12), // Reduced from 16 to 12
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -1384,21 +1372,21 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 헤더 - Clean Design
+          // 헤더 - Compact Design
           Row(
             children: [
               Container(
-                width: 32,
-                height: 32,
+                width: 28, // Reduced from 32 to 28
+                height: 28, // Reduced from 32 to 28
                 decoration: BoxDecoration(
                   color: ModernColors.exercise.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
-                  child: Text(icon, style: const TextStyle(fontSize: 16)),
+                  child: Text(icon, style: const TextStyle(fontSize: 14)), // Reduced from 16 to 14
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8), // Reduced from 12 to 8
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1406,18 +1394,20 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     Text(
                       title,
                       style: GoogleFonts.notoSans(
-                        fontSize: 14,
+                        fontSize: 13, // Reduced from 14 to 13
                         fontWeight: FontWeight.w700,
                         color: ModernColors.textPrimary,
+                        height: 1.2, // Added for compact display
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 1), // Reduced from 2 to 1
                     Text(
                       mainEffect,
                       style: GoogleFonts.notoSans(
-                        fontSize: 12,
+                        fontSize: 11, // Reduced from 12 to 11
                         fontWeight: FontWeight.w600,
                         color: ModernColors.exercise,
+                        height: 1.2, // Added for compact display
                       ),
                     ),
                   ],
@@ -1426,14 +1416,14 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             ],
           ),
           
-          const SizedBox(height: 12),
+          const SizedBox(height: 10), // Reduced from 12 to 10
           
-          // 프로그레스 바 - Modern Orange
+          // 프로그레스 바 - Compact Orange
           Container(
-            height: 6,
+            height: 4, // Reduced from 6 to 4
             decoration: BoxDecoration(
               color: ModernColors.border,
-              borderRadius: BorderRadius.circular(3),
+              borderRadius: BorderRadius.circular(2), // Reduced from 3 to 2
             ),
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
@@ -1441,7 +1431,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               child: Container(
                 decoration: BoxDecoration(
                   color: ModernColors.exercise,
-                  borderRadius: BorderRadius.circular(3),
+                  borderRadius: BorderRadius.circular(2), // Reduced from 3 to 2
                 ),
               ),
             ),
@@ -1453,84 +1443,78 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       .fadeIn(duration: 400.ms, delay: (200 * index).ms);
   }
 
-  /// 간단한 "알고 계셨나요?" 섹션 - Simple Text Only (No Box)
+  /// 간단한 "알고 계셨나요?" 섹션 - Optimized Compact Design
   Widget _buildSimpleDidYouKnowSection(int duration, int calories, String intensity, Map<String, dynamic> endorphinData) {
     // MET 기반 실제 계산
     final stairs = (duration * 20).toInt(); // 분당 20층 (실제 MET 계산)
     final apples = (calories / 95).toStringAsFixed(1); // 중간 사과 1개 = 95kcal
     final heartBeats = (duration * 140 - duration * 70).toInt(); // 운동시 평균 140bpm - 안정시 70bpm
-    final coffeeEquivalent = (duration / 15).toStringAsFixed(1); // 15분 운동 = 커피 1잔 각성 효과
     
-    // 추가 팩트들은 더 이상 사용하지 않음
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // 자연스럽게 배치된 팩트들 - 제목 없이
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Row(
-            children: [
-              Text('🏃', style: TextStyle(fontSize: 18)),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  '${duration}분 = 계단 ${stairs}층',
+    return Container(
+      padding: const EdgeInsets.all(10), // Reduced padding for compact design
+      decoration: BoxDecoration(
+        color: ModernColors.exercise.withOpacity(0.02), // Very subtle background
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: ModernColors.exercise.withOpacity(0.08),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Compact title with smaller font
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Row(
+              children: [
+                Text('💡', style: const TextStyle(fontSize: 12)), // Smaller icon
+                const SizedBox(width: 6),
+                Text(
+                  '재미있는 사실',
                   style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: ModernColors.textPrimary,
-                    height: 1.3,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: ModernColors.exercise,
+                    height: 1.2,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Row(
-            children: [
-              Text('🍎', style: TextStyle(fontSize: 18)),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  '${calories}kcal = 사과 ${apples}개',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: ModernColors.textPrimary,
-                    height: 1.3,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Row(
-            children: [
-              Text('💓', style: TextStyle(fontSize: 18)),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  '심장박동 = ${heartBeats}회 증가',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: ModernColors.textPrimary,
-                    height: 1.3,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+          
+          // Compact facts with better spacing
+          _buildCompactFact('🏃', '${duration}분 = 계단 ${stairs}층'),
+          const SizedBox(height: 6), // Tighter spacing
+          _buildCompactFact('🍎', '${calories}kcal = 사과 ${apples}개'),
+          const SizedBox(height: 6), // Tighter spacing
+          _buildCompactFact('💓', '심장박동 = ${heartBeats}회 증가'),
+        ],
+      ),
     ).animate()
       .slideY(begin: 0.05, end: 0, duration: 400.ms, delay: 600.ms)
       .fadeIn(duration: 400.ms, delay: 600.ms);
+  }
+
+  /// Compact fact item helper
+  Widget _buildCompactFact(String emoji, String text) {
+    return Row(
+      children: [
+        Text(emoji, style: const TextStyle(fontSize: 14)), // Compact emoji
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: GoogleFonts.notoSans(
+              fontSize: 12, // Reduced from 14 to 12 for secondary info
+              fontWeight: FontWeight.w500, // Reduced from w600 to w500
+              color: ModernColors.textSecondary, // Changed to secondary text color
+              height: 1.3,
+            ),
+          ),
+        ),
+      ],
+    );
   }
   
   /// 미니 차트 위젯
