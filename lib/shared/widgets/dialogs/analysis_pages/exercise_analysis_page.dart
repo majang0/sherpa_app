@@ -42,11 +42,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
   // 섹션별 확장 상태
   final Map<String, bool> _expandedSections = {};
   
-  // 주황색 테마 색상
-  static const Color exerciseOrange = Color(0xFFFF6B35);  // 생동감 넘치는 오렌지
-  static const Color exerciseOrangeLight = Color(0xFFFFF3E0);  // 연한 오렌지 배경
-  static const Color exerciseOrangeMedium = Color(0xFFFFB74D);  // 중간 오렌지
-  static const Color exerciseOrangeDark = Color(0xFFFF5722);  // 진한 오렌지
+  // ModernColors.exercise를 사용 (이제 주황색으로 변경됨)
   
   @override
   void initState() {
@@ -169,15 +165,15 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
   Color _getIntensityColor(String? intensity) {
     switch (intensity) {
       case '낮음':
-        return const Color(0xFFFFD54F);  // 연한 노란 오렌지
+        return ModernColors.warning;  // 경고 색상
       case '중간':
-        return exerciseOrangeMedium;
+        return ModernColors.exercise;
       case '높음':
-        return exerciseOrange;
+        return ModernColors.exercise;
       case '매우 높음':
-        return exerciseOrangeDark;
+        return ModernColors.exercise;
       default:
-        return exerciseOrangeMedium;
+        return ModernColors.exercise;
     }
   }
   
@@ -301,8 +297,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 gradient: isToday 
                     ? LinearGradient(
                         colors: [
-                          exerciseOrange,
-                          exerciseOrangeMedium,
+                          ModernColors.exercise,
+                          ModernColors.exercise,
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -319,7 +315,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 boxShadow: [
                   BoxShadow(
                     color: isToday 
-                        ? exerciseOrange.withOpacity(0.3)
+                        ? ModernColors.exercise.withOpacity(0.3)
                         : Colors.black.withOpacity(0.1),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
@@ -632,7 +628,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: exerciseOrange.withOpacity(0.08),
+            color: ModernColors.exercise.withOpacity(0.08),
             blurRadius: 20,
             offset: const Offset(0, 5),
           ),
@@ -647,8 +643,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  exerciseOrangeLight.withOpacity(0.8),
-                  exerciseOrangeLight.withOpacity(0.4),
+                  ModernColors.exerciseLight.withOpacity(0.8),
+                  ModernColors.exerciseLight.withOpacity(0.4),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -662,7 +658,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: exerciseOrange,
+                    color: ModernColors.exercise,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
@@ -691,7 +687,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: exerciseOrange,
+                          color: ModernColors.exercise,
                         ),
                       ),
                     ],
@@ -719,7 +715,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       .fadeIn(duration: 600.ms, delay: 400.ms);
   }
   
-  /// 효과 섹션 (구체적 수치와 시각화)
+  /// 효과 섹션 (구체적 수치와 시각화) - Modern Clean Design
   Widget _buildModernBenefitsSection() {
     if (_isLoading) {
       return _buildLoadingBenefitsSection();
@@ -782,54 +778,31 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.white,
-            exerciseOrangeLight.withOpacity(0.3),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: ModernColors.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: exerciseOrange.withOpacity(0.2),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: exerciseOrange.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 6),
-          ),
-        ],
+        boxShadow: ModernColors.softShadow(primaryColor: ModernColors.exercise),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 헤더 섹션
+          // 헤더 섹션 - Clean Design
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  exerciseOrange.withOpacity(0.1),
-                  exerciseOrangeLight.withOpacity(0.05),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // 타이틀 - 단순하고 명확
                 Row(
                   children: [
                     Container(
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: exerciseOrange,
+                        color: ModernColors.exercise,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(
@@ -857,7 +830,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                             style: GoogleFonts.notoSans(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
-                              color: exerciseOrange,
+                              color: ModernColors.exercise,
                             ),
                           ),
                         ],
@@ -865,16 +838,17 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
                 
-                // 메인 임팩트 수치
+                const SizedBox(height: 20),
+                
+                // 메인 임팩트 수치 - White Background with Orange Accent
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: exerciseOrange.withOpacity(0.2),
+                      color: ModernColors.exercise.withOpacity(0.2),
                       width: 1,
                     ),
                   ),
@@ -905,42 +879,28 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   ),
                 ),
                 
-                // AI 개인화 메시지
+                // AI 개인화 메시지 - Clean Modern Design
                 if (_analysisData?.benefits != null && _analysisData!.benefits!.isNotEmpty)
                   Container(
                     margin: const EdgeInsets.only(top: 12),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          exerciseOrange.withOpacity(0.08),
-                          Colors.white.withOpacity(0.9),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(14),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: exerciseOrange.withOpacity(0.15),
+                        color: ModernColors.border,
                         width: 1,
                       ),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: exerciseOrange.withOpacity(0.15),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.auto_awesome_rounded,
-                            color: exerciseOrange,
-                            size: 18,
-                          ),
+                        Icon(
+                          Icons.auto_awesome_rounded,
+                          color: ModernColors.exercise,
+                          size: 20,
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -948,9 +908,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                               Text(
                                 'AI 분석 인사이트',
                                 style: GoogleFonts.notoSans(
-                                  fontSize: 11,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w700,
-                                  color: exerciseOrange,
+                                  color: ModernColors.exercise,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -975,11 +935,13 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             ),
           ),
           
-          // 구체적 효과 카드들
+          // 구체적 효과 카드들 - Clean White Design
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             child: Column(
               children: [
+                const SizedBox(height: 8),
+                
                 _buildSpecificEffectCard(
                   icon: '🫀',
                   title: '심혈관 건강',
@@ -993,7 +955,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   index: 0,
                 ),
                 
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 
                 _buildSpecificEffectCard(
                   icon: '😴',
@@ -1008,14 +970,14 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   index: 1,
                 ),
                 
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 
                 _buildSpecificEffectCard(
                   icon: '💪',
                   title: '근육 & 대사',
                   mainEffect: '운동후 Afterburn ${metabolicData['epocCalories']}kcal 추가 소모',
                   details: [
-                    '근육 성장률 ${muscleData['growthRate']}',
+                    '${muscleData['growthRate']}',
                     '단백질 합성 +${muscleData['proteinSynthesis']}',
                     '${muscleData['muscleGroup']} 강화'
                   ],
@@ -1023,10 +985,10 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   index: 2,
                 ),
                 
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 
-                // 놀라운 사실 섹션
-                _buildMedicalFactCard(duration, calories, intensity, endorphinData),
+                // "Did you know?" 섹션 - Simple Text Only (No Box)
+                _buildSimpleDidYouKnowSection(duration, calories, intensity, endorphinData),
               ],
             ),
           ),
@@ -1051,7 +1013,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: exerciseOrange.withOpacity(0.1),
+            color: ModernColors.exercise.withOpacity(0.1),
             blurRadius: 25,
             offset: const Offset(0, 8),
           ),
@@ -1059,18 +1021,11 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       ),
       child: Column(
         children: [
-          // 헤더
+          // 헤더 - Clean Design
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  exerciseOrange.withOpacity(0.9),
-                  exerciseOrangeMedium.withOpacity(0.9),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: ModernColors.exercise,
               borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Row(
@@ -1085,7 +1040,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   ),
                   child: Icon(
                     Icons.lightbulb_rounded,
-                    color: exerciseOrange,
+                    color: ModernColors.exercise,
                     size: 26,
                   ),
                 ),
@@ -1146,16 +1101,16 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            exerciseOrangeLight.withOpacity(0.5),
+            ModernColors.exerciseLight.withOpacity(0.5),
             Colors.white,
-            exerciseOrangeLight.withOpacity(0.3),
+            ModernColors.exerciseLight.withOpacity(0.3),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: exerciseOrange.withOpacity(0.15),
+          color: ModernColors.exercise.withOpacity(0.15),
           width: 1,
         ),
       ),
@@ -1175,7 +1130,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: exerciseOrange.withOpacity(0.3),
+                        color: ModernColors.exercise.withOpacity(0.3),
                         blurRadius: 20,
                         spreadRadius: 2,
                       ),
@@ -1200,7 +1155,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             style: GoogleFonts.notoSans(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: exerciseOrange,
+              color: ModernColors.exercise,
             ),
           ),
           
@@ -1216,7 +1171,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   color: Colors.white.withOpacity(0.9),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: exerciseOrange.withOpacity(0.2),
+                    color: ModernColors.exercise.withOpacity(0.2),
                     width: 1.5,
                   ),
                 ),
@@ -1241,7 +1196,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     size: const Size(20, 10),
                     painter: _BubbleTailPainter(
                       color: Colors.white.withOpacity(0.9),
-                      borderColor: exerciseOrange.withOpacity(0.2),
+                      borderColor: ModernColors.exercise.withOpacity(0.2),
                     ),
                   ),
                 ),
@@ -1323,20 +1278,14 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: ModernColors.surface,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: exerciseOrange.withOpacity(0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: ModernColors.softShadow(primaryColor: ModernColors.exercise),
       ),
       child: Column(
         children: [
           CircularProgressIndicator(
-            color: exerciseOrange,
+            color: ModernColors.exercise,
             strokeWidth: 3,
           ),
           const SizedBox(height: 16),
@@ -1370,7 +1319,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             style: GoogleFonts.notoSans(
               fontSize: 14,
               fontWeight: FontWeight.w800,
-              color: exerciseOrange,
+              color: ModernColors.exercise,
             ),
           ),
           Text(
@@ -1406,7 +1355,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     );
   }
 
-  /// 구체적 효과 카드 (간소화 버전)
+  /// 구체적 효과 카드 (Clean Modern Design)
   Widget _buildSpecificEffectCard({
     required String icon,
     required String title,
@@ -1416,18 +1365,18 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     required int index,
   }) {
     return Container(
-      padding: const EdgeInsets.all(11),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: exerciseOrange.withOpacity(0.15),
+          color: ModernColors.border,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: exerciseOrange.withOpacity(0.04),
-            blurRadius: 10,
+            color: ModernColors.exercise.withOpacity(0.04),
+            blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
@@ -1435,21 +1384,21 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 헤더
+          // 헤더 - Clean Design
           Row(
             children: [
               Container(
-                width: 28,
-                height: 28,
+                width: 32,
+                height: 32,
                 decoration: BoxDecoration(
-                  color: exerciseOrangeLight.withOpacity(0.8),
+                  color: ModernColors.exercise.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
-                  child: Text(icon, style: const TextStyle(fontSize: 14)),
+                  child: Text(icon, style: const TextStyle(fontSize: 16)),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1457,17 +1406,18 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     Text(
                       title,
                       style: GoogleFonts.notoSans(
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                         color: ModernColors.textPrimary,
                       ),
                     ),
+                    const SizedBox(height: 2),
                     Text(
                       mainEffect,
                       style: GoogleFonts.notoSans(
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: exerciseOrange,
+                        color: ModernColors.exercise,
                       ),
                     ),
                   ],
@@ -1476,11 +1426,11 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             ],
           ),
           
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           
-          // 프로그레스 바
+          // 프로그레스 바 - Modern Orange
           Container(
-            height: 5,
+            height: 6,
             decoration: BoxDecoration(
               color: ModernColors.border,
               borderRadius: BorderRadius.circular(3),
@@ -1490,15 +1440,12 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               widthFactor: progress,
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [exerciseOrange, exerciseOrangeMedium],
-                  ),
+                  color: ModernColors.exercise,
                   borderRadius: BorderRadius.circular(3),
                 ),
               ),
             ),
           ),
-          // 상세 설명 제거로 카드 크기 축소
         ],
       ),
     ).animate()
@@ -1506,93 +1453,84 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       .fadeIn(duration: 400.ms, delay: (200 * index).ms);
   }
 
-  /// 놀라운 사실 카드 (재미있고 신빙성 있는 버전)
-  Widget _buildMedicalFactCard(int duration, int calories, String intensity, Map<String, dynamic> endorphinData) {
+  /// 간단한 "알고 계셨나요?" 섹션 - Simple Text Only (No Box)
+  Widget _buildSimpleDidYouKnowSection(int duration, int calories, String intensity, Map<String, dynamic> endorphinData) {
     // MET 기반 실제 계산
     final stairs = (duration * 20).toInt(); // 분당 20층 (실제 MET 계산)
     final apples = (calories / 95).toStringAsFixed(1); // 중간 사과 1개 = 95kcal
     final heartBeats = (duration * 140 - duration * 70).toInt(); // 운동시 평균 140bpm - 안정시 70bpm
     final coffeeEquivalent = (duration / 15).toStringAsFixed(1); // 15분 운동 = 커피 1잔 각성 효과
     
-    // 재미있으면서도 과학적인 팩트들
-    final facts = [
-      '🏃 ${duration}분 운동 = 계단 ${stairs}층 오르기',
-      '🍎 ${calories}kcal 소모 = 사과 ${apples}개분의 칼로리',
-      '💓 심장이 평소보다 ${heartBeats}번 더 뛰었어요',
-      '☕ 각성 효과가 커피 ${coffeeEquivalent}잔과 맞먹어요',
-      if (endorphinData['level'] >= 60)
-        '🎉 러너스 하이! 엔돌핀이 ${endorphinData['level']}% 분비됐어요',
-      if (duration >= 30)
-        '🧠 30분 운동 = 뇌 신경세포가 ${(duration * 0.5).toInt()}% 더 활발해졌어요',
-      if (calories >= 300)
-        '🍔 햄버거 반 개(${(calories / 550).toStringAsFixed(1)}개)를 태웠어요!',
-    ];
+    // 추가 팩트들은 더 이상 사용하지 않음
     
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            exerciseOrange.withOpacity(0.1),
-            exerciseOrangeLight.withOpacity(0.2),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: exerciseOrange.withOpacity(0.3),
-          width: 1.5,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 자연스럽게 배치된 팩트들 - 제목 없이
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: exerciseOrange,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.lightbulb_rounded,
-                  color: Colors.white,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                '💡 알고 계셨나요?',
-                style: GoogleFonts.notoSans(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w800,
-                  color: ModernColors.textPrimary,
+              Text('🏃', style: TextStyle(fontSize: 18)),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '${duration}분 = 계단 ${stairs}층',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: ModernColors.textPrimary,
+                    height: 1.3,
+                  ),
                 ),
               ),
             ],
           ),
-          
-          const SizedBox(height: 14),
-          
-          ...facts.take(3).map((fact) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              fact,
-              style: GoogleFonts.notoSans(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: exerciseOrange.withOpacity(0.9),
-                height: 1.4,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Row(
+            children: [
+              Text('🍎', style: TextStyle(fontSize: 18)),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '${calories}kcal = 사과 ${apples}개',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: ModernColors.textPrimary,
+                    height: 1.3,
+                  ),
+                ),
               ),
-            ),
-          )).toList(),
-        ],
-      ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Row(
+            children: [
+              Text('💓', style: TextStyle(fontSize: 18)),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '심장박동 = ${heartBeats}회 증가',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: ModernColors.textPrimary,
+                    height: 1.3,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     ).animate()
-      .slideY(begin: 0.1, end: 0, duration: 500.ms, delay: 800.ms)
-      .fadeIn(duration: 500.ms, delay: 800.ms);
+      .slideY(begin: 0.05, end: 0, duration: 400.ms, delay: 600.ms)
+      .fadeIn(duration: 400.ms, delay: 600.ms);
   }
   
   /// 미니 차트 위젯
@@ -1612,7 +1550,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         children: [
           Icon(
             isIncrease ? Icons.trending_up : Icons.trending_down,
-            color: isIncrease ? exerciseOrange : ModernColors.textSecondary,
+            color: isIncrease ? ModernColors.exercise : ModernColors.textSecondary,
             size: 18,
           ),
           const SizedBox(width: 4),
@@ -1621,7 +1559,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: isIncrease ? exerciseOrange : ModernColors.textSecondary,
+              color: isIncrease ? ModernColors.exercise : ModernColors.textSecondary,
             ),
           ),
         ],
@@ -1641,7 +1579,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             height: 6,
             margin: const EdgeInsets.only(top: 7, right: 10),
             decoration: BoxDecoration(
-              color: exerciseOrange,
+              color: ModernColors.exercise,
               shape: BoxShape.circle,
             ),
           ),
@@ -1678,7 +1616,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: exerciseOrange.withOpacity(0.05),
+            color: ModernColors.exercise.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -1690,12 +1628,12 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: exerciseOrangeLight,
+              color: ModernColors.exerciseLight,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               icons[index % icons.length],
-              color: exerciseOrange,
+              color: ModernColors.exercise,
               size: 18,
             ),
           ),
@@ -1726,15 +1664,15 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            exerciseOrangeLight.withOpacity(0.3),
-            exerciseOrangeLight.withOpacity(0.1),
+            ModernColors.exerciseLight.withOpacity(0.3),
+            ModernColors.exerciseLight.withOpacity(0.1),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: exerciseOrange.withOpacity(0.2),
+          color: ModernColors.exercise.withOpacity(0.2),
           width: 1,
         ),
       ),
@@ -1745,7 +1683,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              color: exerciseOrange,
+              color: ModernColors.exercise,
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -1787,7 +1725,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: exerciseOrange.withOpacity(0.1),
+            color: ModernColors.exercise.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -1802,7 +1740,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: exerciseOrange,
+              color: ModernColors.exercise,
             ),
           ),
         ],
@@ -1859,7 +1797,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: exerciseOrange.withOpacity(0.2),
+                  color: ModernColors.exercise.withOpacity(0.2),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),

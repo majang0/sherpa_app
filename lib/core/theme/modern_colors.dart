@@ -146,9 +146,9 @@ class ModernColors {
   static const Color hoverOverlay = Color(0x0860A5FA);       // hover 효과용 (3% opacity)
   static const Color pressOverlay = Color(0x1560A5FA);       // press 효과용 (8% opacity)
   
-  /// 💪 운동 - 활기찬 스카이 블루
-  static const Color exercise = Color(0xFF0284C7);
-  static const Color exerciseLight = Color(0xFFE0F2FE);
+  /// 💪 운동 - 활기찬 오렌지
+  static const Color exercise = Color(0xFFFF6B35);
+  static const Color exerciseLight = Color(0xFFFFF3E0);
   
   /// 📚 독서 - 지적인 인디고
   static const Color reading = Color(0xFF6366F1);
