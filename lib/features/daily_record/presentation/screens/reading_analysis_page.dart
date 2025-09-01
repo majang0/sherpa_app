@@ -2,26 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-import 'dart:ui';
-import 'dart:math' as math;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
-import '../../../../core/ai/smart_sherpi_manager_openai.dart';
-import '../../../../core/constants/sherpi_dialogues.dart';
+import '../../../../core/ai/activity_analysis_service.dart';
 
 /// 📖 독서 분석 페이지 - 감성적인 독서 여정
 /// 
 /// StoryGraph와 같은 무드 기반 독서 경험을 제공합니다.
 /// 셰르피가 함께하는 감성적인 독서 여정을 구현합니다.
 class ReadingAnalysisPage extends ConsumerStatefulWidget {
-  const ReadingAnalysisPage({Key? key}) : super(key: key);
+  const ReadingAnalysisPage({super.key});
 
   @override
   ConsumerState<ReadingAnalysisPage> createState() => _ReadingAnalysisPageState();
@@ -42,19 +34,16 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
   late Animation<double> _floatingAnimation;
   late Animation<double> _heartbeatAnimation;
   
-  // AI 매니저
-  final SmartSherpiManager _sherpiManager = SmartSherpiManager();
+  // AI 분석 서비스
+  final ActivityAnalysisService _analysisService = ActivityAnalysisService.instance;
   
-  // 캐시된 AI 응답들
-  Map<String, String> _cachedResponses = {};
+  // 종합 독서 분석 데이터
+  ComprehensiveReadingAnalysis? _readingAnalysis;
   bool _isLoadingAnalysis = false;
   
   // 오늘과 이전 독서 기록
   ReadingLog? _todayReading;
   ReadingLog? _previousReading;
-  
-  // 추천 도서 목록
-  List<BookRecommendation> _bookRecommendations = [];
   
   @override
   void initState() {
@@ -127,6 +116,8 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
   /// 독서 데이터 로드
   void _loadReadingData() {
     final user = ref.read(globalUserProvider);
+    if (user.dailyRecords.readingLogs.isEmpty) return;
+    
     final readingLogs = user.dailyRecords.readingLogs;
     
     if (readingLogs.isNotEmpty) {
@@ -160,200 +151,37 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
   
   /// 캐시된 분석 데이터 로드
   Future<void> _loadCachedAnalysis() async {
-    final prefs = await SharedPreferences.getInstance();
-    final cachedData = prefs.getString('reading_analysis_cache');
-    
-    if (cachedData != null) {
-      try {
-        final decoded = json.decode(cachedData) as Map<String, dynamic>;
-        _cachedResponses = Map<String, String>.from(decoded);
-        
-        // 캐시된 추천 도서 로드
-        final recommendationsData = prefs.getString('book_recommendations_cache');
-        if (recommendationsData != null) {
-          final recommendationsList = json.decode(recommendationsData) as List;
-          _bookRecommendations = recommendationsList
-              .map((data) => BookRecommendation.fromJson(data))
-              .toList();
-        }
-        
-        if (mounted) setState(() {});
-      } catch (e) {
-        // 캐시 로드 실패 시 조용히 처리
-      }
-    }
-    
-    // 캐시가 없거나 오래된 경우 새로 생성
-    if (_cachedResponses.isEmpty && _todayReading != null) {
-      _generateAnalysis();
-    }
-  }
-  
-  /// AI 분석 생성
-  Future<void> _generateAnalysis() async {
-    if (_isLoadingAnalysis || _todayReading == null) return;
-    
     setState(() {
       _isLoadingAnalysis = true;
     });
     
     try {
-      // 1. 이전 책 분석
-      if (_previousReading != null) {
-        final previousContext = {
-          'bookTitle': _previousReading!.bookTitle,
-          'author': _previousReading!.author,
-          'category': _previousReading!.category,
-          'pages': _previousReading!.pages,
-          'rating': _previousReading!.rating ?? 0,
-        };
-        
-        final previousResponse = await _sherpiManager.getMessageWithAI(
-          SherpiContext.readingComplete,
-          previousContext,
-          {'section': 'previous_book_insight'},
-        );
-        
-        _cachedResponses['previous_insight'] = previousResponse.message;
-      }
+      // ActivityAnalysisService에서 캐시된 독서 분석 로드
+      final cachedAnalysis = await _analysisService.getComprehensiveReadingFromCache();
       
-      // 2. 오늘 책 분석
-      final todayContext = {
-        'bookTitle': _todayReading!.bookTitle,
-        'author': _todayReading!.author,
-        'category': _todayReading!.category,
-        'pages': _todayReading!.pages,
-        'rating': _todayReading!.rating ?? 0,
-      };
-      
-      final todayResponse = await _sherpiManager.getMessageWithAI(
-        SherpiContext.readingComplete,
-        todayContext,
-        {'section': 'today_book_insight'},
-      );
-      
-      _cachedResponses['today_insight'] = todayResponse.message;
-      
-      // 3. 독서 여정 응원
-      final journeyContext = {
-        'previousBook': _previousReading?.bookTitle ?? '없음',
-        'previousCategory': _previousReading?.category ?? '없음',
-        'previousRating': _previousReading?.rating ?? 0,
-        'todayBook': _todayReading!.bookTitle,
-        'todayCategory': _todayReading!.category,
-        'todayRating': _todayReading!.rating ?? 0,
-      };
-      
-      final journeyResponse = await _sherpiManager.getMessageWithAI(
-        SherpiContext.encouragement,
-        journeyContext,
-        {'section': 'reading_journey_encouragement'},
-      );
-      
-      _cachedResponses['journey_encouragement'] = journeyResponse.message;
-      
-      // 4. 책 추천 생성
-      await _generateBookRecommendations();
-      
-      // 캐시 저장
-      await _saveCachedAnalysis();
-      
-    } catch (e) {
-      // 실패 시 기본 메시지 사용
-      _useDefaultMessages();
-    } finally {
-      if (mounted) {
+      if (cachedAnalysis != null) {
+        setState(() {
+          _readingAnalysis = cachedAnalysis;
+          _isLoadingAnalysis = false;
+        });
+      } else {
+        // 캐시가 없으면 기본 메시지 사용 (보통 발생하지 않음 - 독서 완료 시 이미 생성됨)
+        debugPrint('⚠️ 독서 분석 캐시 없음 - 기본 메시지 사용');
         setState(() {
           _isLoadingAnalysis = false;
         });
       }
+    } catch (e) {
+      debugPrint('❌ 독서 분석 캐시 로드 실패: $e');
+      setState(() {
+        _isLoadingAnalysis = false;
+      });
     }
   }
   
-  /// 책 추천 생성
-  Future<void> _generateBookRecommendations() async {
-    final recommendationContext = {
-      'previousBook': _previousReading?.bookTitle ?? '없음',
-      'previousCategory': _previousReading?.category ?? '없음',
-      'todayBook': _todayReading!.bookTitle,
-      'todayCategory': _todayReading!.category,
-      'userPreferences': {
-        'likedCategories': [_todayReading!.category, _previousReading?.category].where((c) => c != null).toList(),
-        'averageRating': ((_todayReading!.rating ?? 4.0) + (_previousReading?.rating ?? 4.0)) / 2,
-      },
-    };
-    
-    final recommendationResponse = await _sherpiManager.getMessageWithAI(
-      SherpiContext.questComplete,
-      recommendationContext,
-      {'section': 'book_recommendations', 'count': 3},
-    );
-    
-    // AI 응답을 파싱하여 추천 도서 목록 생성
-    _bookRecommendations = _parseBookRecommendations(recommendationResponse.message);
-  }
+  // AI 분석 생성 메서드 제거됨 - 이제 GlobalUserNotifier에서 중앙 처리
   
-  /// AI 응답에서 추천 도서 파싱
-  List<BookRecommendation> _parseBookRecommendations(String aiResponse) {
-    // 간단한 파싱 로직 (실제로는 더 정교한 파싱 필요)
-    final recommendations = <BookRecommendation>[];
-    
-    // 기본 추천 도서 (AI 응답 파싱 실패 시 사용)
-    final defaultRecommendations = [
-      BookRecommendation(
-        title: '아몬드',
-        author: '손원평',
-        reason: '감성적인 성장 이야기로 당신의 독서 취향과 잘 맞습니다.',
-        category: '소설',
-        mood: '따뜻한',
-      ),
-      BookRecommendation(
-        title: '미드나잇 라이브러리',
-        author: '매트 헤이그',
-        reason: '인생의 다양한 가능성을 탐구하는 흥미로운 이야기입니다.',
-        category: '소설',
-        mood: '사색적인',
-      ),
-      BookRecommendation(
-        title: '불편한 편의점',
-        author: '김호연',
-        reason: '일상 속 작은 기적을 발견하는 따뜻한 이야기입니다.',
-        category: '소설',
-        mood: '희망적인',
-      ),
-    ];
-    
-    // AI 응답이 유효하면 파싱, 아니면 기본값 사용
-    if (aiResponse.isNotEmpty) {
-      // TODO: AI 응답 파싱 로직 구현
-      return defaultRecommendations;
-    }
-    
-    return defaultRecommendations;
-  }
-  
-  /// 기본 메시지 사용 (AI 실패 시)
-  void _useDefaultMessages() {
-    _cachedResponses = {
-      'previous_insight': '지난번 독서 시간이 참 의미 있었네요. 📚',
-      'today_insight': '오늘도 책과 함께한 시간이 소중했어요! ✨',
-      'journey_encouragement': '꾸준히 독서하는 모습이 정말 멋져요. 앞으로도 함께 책의 세계를 탐험해요! 🌟',
-    };
-  }
-  
-  /// 캐시 저장
-  Future<void> _saveCachedAnalysis() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('reading_analysis_cache', json.encode(_cachedResponses));
-    
-    // 추천 도서도 저장
-    final recommendationsData = _bookRecommendations.map((r) => r.toJson()).toList();
-    await prefs.setString('book_recommendations_cache', json.encode(recommendationsData));
-    
-    // 캐시 타임스탬프 저장
-    final timestamp = DateTime.now();
-    await prefs.setInt('reading_analysis_timestamp', timestamp.millisecondsSinceEpoch);
-  }
+  // _saveCachedAnalysis 메서드 제거 - ActivityAnalysisService가 자체적으로 캐싱 처리
   
   @override
   void dispose() {
@@ -611,8 +439,8 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                     const SizedBox(height: 16),
                     
                     // 셰르피 인사이트
-                    if (_cachedResponses['previous_insight'] != null)
-                      _buildSherpiInsight(_cachedResponses['previous_insight']!),
+                    if (_readingAnalysis?.previousInsight != null)
+                      _buildSherpiInsight(_readingAnalysis!.previousInsight),
                   ],
                 ),
           ),
@@ -627,84 +455,76 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
   Widget _buildTodayBookSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: AnimatedBuilder(
-        animation: _heartbeatAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: _heartbeatAnimation.value,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: ModernColors.reading.withValues(alpha: 0.15),
-                  width: 2,
-                ),
-                boxShadow: ModernColors.getElevationShadow(3),
-              ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 섹션 헤더
-                        Row(
-                          children: [
-                            Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                color: ModernColors.reading,
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '📚',
-                                  style: GoogleFonts.notoSans(fontSize: 22),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '오늘의 독서',
-                                  style: GoogleFonts.notoSans(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: ModernColors.textPrimary,
-                                  ),
-                                ),
-                                Text(
-                                  '✨ 특별한 순간',
-                                  style: GoogleFonts.notoSans(
-                                    fontSize: 12,
-                                    color: ModernColors.reading,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // 책 정보 (더 크고 강조)
-                        _buildBookInfo(_todayReading!, isToday: true),
-                        
-                        const SizedBox(height: 20),
-                        
-                        // 셰르피 인사이트
-                        if (_cachedResponses['today_insight'] != null)
-                          _buildSherpiInsight(
-                            _cachedResponses['today_insight']!,
-                            isSpecial: true,
-                          ),
-                      ],
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: ModernColors.reading.withValues(alpha: 0.15),
+            width: 2,
+          ),
+          boxShadow: ModernColors.getElevationShadow(3),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 섹션 헤더
+            Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: ModernColors.reading,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '📚',
+                      style: GoogleFonts.notoSans(fontSize: 22),
                     ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '오늘의 독서',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: ModernColors.textPrimary,
+                      ),
+                    ),
+                    Text(
+                      '✨ 특별한 순간',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        color: ModernColors.reading,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          );
-        },
+            
+            const SizedBox(height: 24),
+            
+            // 책 정보 (더 크고 강조)
+            _buildBookInfo(_todayReading!, isToday: true),
+            
+            const SizedBox(height: 20),
+            
+            // 셰르피 인사이트
+            if (_readingAnalysis?.todayInsight != null)
+              _buildSherpiInsight(
+                _readingAnalysis!.todayInsight,
+                isSpecial: true,
+              ),
+          ],
+        ),
       ),
     ).animate()
       .fadeIn(delay: const Duration(milliseconds: 600))
@@ -733,8 +553,8 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                     offset: Offset(_floatingAnimation.value * 0.5, _floatingAnimation.value),
                     child: Image.asset(
                       SherpiEmotion.cheering.imagePath,
-                      width: 72,
-                      height: 72,
+                      width: 108,
+                      height: 108,
                     ),
                   );
                 },
@@ -743,9 +563,9 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
               const SizedBox(height: 20),
               
               // 응원 메시지
-              if (_cachedResponses['journey_encouragement'] != null)
+              if (_readingAnalysis?.journeyEncouragement != null)
                 Text(
-                  _cachedResponses['journey_encouragement']!,
+                  _readingAnalysis!.journeyEncouragement,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.notoSans(
                     fontSize: 15,
@@ -766,7 +586,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                   _buildMiniStatCard(
                     icon: '📚',
                     label: '읽은 책',
-                    value: '${ref.watch(globalUserProvider).dailyRecords.readingLogs.length}권',
+                    value: '${_calculateUniqueBooks()}권',
                   ),
                   _buildMiniStatCard(
                     icon: '📖',
@@ -829,14 +649,14 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
           const SizedBox(height: 20),
           
           // 추천 도서 카드들
-          if (_bookRecommendations.isEmpty && _isLoadingAnalysis)
+          if (_readingAnalysis?.recommendations == null && _isLoadingAnalysis)
             _buildLoadingRecommendations()
-          else if (_bookRecommendations.isNotEmpty)
-            ..._bookRecommendations.asMap().entries.map((entry) {
+          else if (_readingAnalysis?.recommendations != null && _readingAnalysis!.recommendations.isNotEmpty)
+            ..._readingAnalysis!.recommendations.asMap().entries.map((entry) {
               final index = entry.key;
               final book = entry.value;
               return _buildRecommendationCard(book, index);
-            }).toList()
+            })
           else
             _buildDefaultRecommendations(),
         ],
@@ -958,7 +778,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                 }),
                 const SizedBox(width: 8),
                 Text(
-                  '${book.rating!.toStringAsFixed(1)}',
+                  book.rating!.toStringAsFixed(1),
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -995,8 +815,8 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
           // 셰르피 미니 아이콘
           Image.asset(
             SherpiEmotion.happy.imagePath,
-            width: 24,
-            height: 24,
+            width: 36,
+            height: 36,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -1088,7 +908,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
             Container(
               width: 32,
               height: 32,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: ModernColors.reading,
                 shape: BoxShape.circle,
               ),
@@ -1216,7 +1036,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.info_outline,
             color: ModernColors.reading,
             size: 20,
@@ -1242,6 +1062,20 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
     return logs.fold(0, (sum, log) => sum + log.pages);
   }
   
+  /// 중복 제거된 책 수 계산
+  int _calculateUniqueBooks() {
+    final logs = ref.watch(globalUserProvider).dailyRecords.readingLogs;
+    final uniqueBookTitles = <String>{};
+    
+    for (final log in logs) {
+      if (log.bookTitle.isNotEmpty) {
+        uniqueBookTitles.add(log.bookTitle);
+      }
+    }
+    
+    return uniqueBookTitles.length;
+  }
+  
   /// 평균 평점 계산
   String _calculateAverageRating() {
     final logs = ref.watch(globalUserProvider).dailyRecords.readingLogs;
@@ -1257,37 +1091,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
 }
 
 /// 책 추천 모델
-class BookRecommendation {
-  final String title;
-  final String author;
-  final String reason;
-  final String category;
-  final String mood;
-  
-  BookRecommendation({
-    required this.title,
-    required this.author,
-    required this.reason,
-    required this.category,
-    required this.mood,
-  });
-  
-  Map<String, dynamic> toJson() => {
-    'title': title,
-    'author': author,
-    'reason': reason,
-    'category': category,
-    'mood': mood,
-  };
-  
-  factory BookRecommendation.fromJson(Map<String, dynamic> json) => BookRecommendation(
-    title: json['title'] ?? '',
-    author: json['author'] ?? '',
-    reason: json['reason'] ?? '',
-    category: json['category'] ?? '',
-    mood: json['mood'] ?? '',
-  );
-}
+// BookRecommendation 클래스는 ActivityAnalysisService에서 import됨
 
 /// 책 패턴 페인터 (배경 장식)
 class BookPatternPainter extends CustomPainter {

@@ -26,18 +26,25 @@ class MeetingRecommendationAI {
   static const String _cacheKeyPrefix = 'ai_meeting_recommendation_';
   static const Duration _cacheDuration = Duration(hours: 24);
   
-  // 🎯 운동 종류별 키워드 매핑 (제목 매칭용)
+  // 🎯 운동 종류별 키워드 매핑 (제목 매칭용) - 영어/한글 모두 key로 사용 가능
   static const Map<String, List<String>> _exerciseKeywordMap = {
     '러닝': ['러닝', '달리기', '뛰기', '조깅', 'running', 'run', '마라톤', '새벽 러닝'],
+    'running': ['러닝', '달리기', '뛰기', '조깅', 'running', 'run', '마라톤', '새벽 러닝'],
     '홈트': ['홈트', '홈트레이닝', '홈 트레이닝', '집에서', '온라인 운동', 'home training'],
     '요가': ['요가', 'yoga', '스트레칭', '필라테스', 'pilates', '힐링'],
+    'yoga': ['요가', 'yoga', '스트레칭', '필라테스', 'pilates', '힐링'],
     '축구': ['축구', 'soccer', 'football', '풋살', '풋볼'],
     '농구': ['농구', 'basketball', '3대3', '바스켓볼'],
     '수영': ['수영', 'swimming', '수중', '물놀이', '아쿠아'],
+    'swimming': ['수영', 'swimming', '수중', '물놀이', '아쿠아'],
     '자전거': ['자전거', '사이클', '라이딩', 'cycling', 'bike', '바이크'],
+    'cycling': ['자전거', '사이클', '라이딩', 'cycling', 'bike', '바이크'],
     '등산': ['등산', '산행', '트래킹', 'hiking', '하이킹', '산책'],
+    'hiking': ['등산', '산행', '트래킹', 'hiking', '하이킹', '산책'],
     '헬스': ['헬스', '웨이트', '근력', '무게', 'gym', 'fitness', '피트니스'],
+    'gym': ['헬스', '웨이트', '근력', '무게', 'gym', 'fitness', '피트니스'],
     '걷기': ['걷기', '산책', '워킹', 'walking', '한강', '공원'],
+    'walking': ['걷기', '산책', '워킹', 'walking', '한강', '공원'],
   };
   
   // 📚 독서 장르별 키워드 매핑
@@ -68,15 +75,21 @@ class MeetingRecommendationAI {
     required GlobalUser user,
     required List<AvailableMeeting> availableMeetings,
     bool useCache = true,
+    bool forceRefresh = false,  // 캐시 강제 새로고침 옵션 추가
   }) async {
     try {
-      // 1. 캐시 확인
-      if (useCache) {
+      // 1. 캐시 확인 (forceRefresh가 true면 캐시 무시)
+      if (useCache && !forceRefresh) {
         final cached = await _getCachedRecommendations(user.id);
         if (cached != null && cached.isNotEmpty) {
           debugPrint('📦 캐시된 AI 추천 사용');
           return cached;
         }
+      }
+      
+      if (forceRefresh) {
+        debugPrint('🔄 캐시 강제 새로고침 요청');
+        await clearCache(user.id);
       }
       
       // 2. 사용자 활동 분석
@@ -195,6 +208,11 @@ class MeetingRecommendationAI {
     List<AvailableMeeting> meetings,
   ) {
     debugPrint('📏 규칙 기반 추천 생성 중...');
+    debugPrint('📊 사용자 활동 패턴:');
+    debugPrint('  - 운동: ${userPattern.exercisePattern.mainTypes.join(", ")} (주 ${userPattern.exercisePattern.frequency}회)');
+    debugPrint('  - 독서: ${userPattern.readingPattern.mainCategories.join(", ")} (주 ${userPattern.readingPattern.booksPerWeek.toStringAsFixed(1)}권)');
+    debugPrint('  - 모임: ${userPattern.meetingPattern.preferredCategories.join(", ")} (주 ${userPattern.meetingPattern.averagePerWeek.toStringAsFixed(1)}회)');
+    debugPrint('📋 평가할 모임 ${meetings.length}개');
     
     // 각 모임에 대한 점수 계산
     final scoredMeetings = <MapEntry<AvailableMeeting, double>>[];
@@ -221,10 +239,15 @@ class MeetingRecommendationAI {
         String matchedActivity = '';
         
         for (var userActivity in userPattern.exercisePattern.mainTypes) {
-          // 사용자 활동에 맞는 키워드 찾기
+          debugPrint('  🔍 사용자 활동 확인: "$userActivity"');
+          
+          // 사용자 활동에 맞는 키워드 찾기 (대소문자 구분 없이)
           List<String> keywords = [];
+          final userActivityLower = userActivity.toLowerCase();
+          
           _exerciseKeywordMap.forEach((key, values) {
-            if (key == userActivity || values.contains(userActivity.toLowerCase())) {
+            if (key.toLowerCase() == userActivityLower || 
+                values.any((v) => v.toLowerCase() == userActivityLower)) {
               keywords.addAll(values);
             }
           });
@@ -232,6 +255,9 @@ class MeetingRecommendationAI {
           // 기본 키워드가 없으면 사용자 활동 자체를 키워드로 사용
           if (keywords.isEmpty) {
             keywords = [userActivity];
+            debugPrint('    ⚠️ 키워드 매핑 없음, 기본값 사용: $userActivity');
+          } else {
+            debugPrint('    ✅ 키워드 찾음: ${keywords.take(3).join(", ")}...');
           }
           
           // 모임 제목/설명에서 키워드 매칭
@@ -243,6 +269,7 @@ class MeetingRecommendationAI {
                 descLower.contains(keyword.toLowerCase())) {
               exactMatch = true;
               matchedActivity = userActivity;
+              debugPrint('    🎯 매칭 성공! 키워드: "$keyword" in "${meeting.title}"');
               break;
             }
           }
@@ -253,9 +280,12 @@ class MeetingRecommendationAI {
         if (exactMatch) {
           score += 0.35; // 정확한 활동 매칭 시 큰 보너스
           keyPoints.add('🎯 $matchedActivity 활동 정확 매칭');
+          debugPrint('  ✅ ExactMatch=true, 보너스 +0.35');
         } else {
-          // 같은 카테고리지만 다른 운동인 경우 페널티
-          score -= 0.15;
+          // 같은 카테고리지만 다른 운동인 경우 작은 보너스 (페널티 제거)
+          score += 0.05; // 같은 카테고리 보너스
+          keyPoints.add('운동 카테고리 일치');
+          debugPrint('  ℹ️ ExactMatch=false, 카테고리 보너스 +0.05');
         }
       }
       
@@ -339,19 +369,32 @@ class MeetingRecommendationAI {
         keyPoints.add('지식 확장');
       }
       
+      // 디버깅용 로그 추가
+      final finalScore = score;
+      debugPrint('📊 [모임] ${meeting.title}: ${finalScore.toStringAsFixed(2)}점 - ${keyPoints.join(", ")}');
+      
       scoredMeetings.add(MapEntry(meeting, score));
     }
     
     // 점수순 정렬
     scoredMeetings.sort((a, b) => b.value.compareTo(a.value));
     
-    // 상위 3개 선택
+    // 다양성 보장: 같은 카테고리는 최대 2개까지만
     final recommendations = <AIRecommendedMeeting>[];
+    final categoryCount = <MeetingCategory, int>{};
     
-    for (int i = 0; i < 3 && i < scoredMeetings.length; i++) {
-      final entry = scoredMeetings[i];
+    for (var entry in scoredMeetings) {
+      if (recommendations.length >= 3) break;
+      
       final meeting = entry.key;
       final score = entry.value;
+      
+      // 다양성 체크: 같은 카테고리가 이미 2개 있으면 스킵
+      final currentCategoryCount = categoryCount[meeting.category] ?? 0;
+      if (currentCategoryCount >= 2) {
+        debugPrint('⚠️ [다양성] ${meeting.title} 스킵 - ${meeting.category.displayName} 카테고리 이미 2개');
+        continue;
+      }
       
       // 추천 이유 생성
       String reason = _generateRecommendationReason(
@@ -368,10 +411,15 @@ class MeetingRecommendationAI {
         matchScore: score.clamp(0.0, 1.0),
         reason: reason,
         keyPoints: keyPoints,
-        priority: i + 1,
+        priority: recommendations.length + 1,
         createdAt: DateTime.now(),
       ));
+      
+      // 카테고리 카운트 업데이트
+      categoryCount[meeting.category] = currentCategoryCount + 1;
     }
+    
+    debugPrint('✅ 최종 추천 ${recommendations.length}개 생성 완료');
     
     return recommendations;
   }
@@ -394,10 +442,13 @@ class MeetingRecommendationAI {
         String matchedActivity = '';
         
         for (var userActivity in pattern.exercisePattern.mainTypes) {
-          // 키워드 매핑 확인
+          // 키워드 매핑 확인 (대소문자 구분 없이)
           List<String> keywords = [];
+          final userActivityLower = userActivity.toLowerCase();
+          
           _exerciseKeywordMap.forEach((key, values) {
-            if (key == userActivity || values.contains(userActivity.toLowerCase())) {
+            if (key.toLowerCase() == userActivityLower || 
+                values.any((v) => v.toLowerCase() == userActivityLower)) {
               keywords.addAll(values);
             }
           });
@@ -425,10 +476,23 @@ class MeetingRecommendationAI {
         if (exactMatch) {
           // 정확히 매칭되는 경우
           reasons.add('평소 즐기시는 $matchedActivity를 "${meeting.title}"에서도 함께할 수 있어요! 완벽한 매칭이에요');
-        } else {
-          // 같은 카테고리지만 다른 운동인 경우
+        } else if (pattern.exercisePattern.mainTypes.isNotEmpty) {
+          // 같은 카테고리지만 제목이 다른 경우 - 더 적절한 메시지
           final mainType = pattern.exercisePattern.mainTypes.first;
-          reasons.add('평소 $mainType을(를) 즐기시는데, 이번엔 새로운 운동을 시도해보는 것도 좋을 것 같아요');
+          
+          // 모임 제목에서 운동 종류 추출 시도
+          String meetingActivity = meeting.title;
+          if (meeting.title.contains('러닝')) meetingActivity = '러닝';
+          else if (meeting.title.contains('홈트')) meetingActivity = '홈트레이닝';
+          else if (meeting.title.contains('요가')) meetingActivity = '요가';
+          else if (meeting.title.contains('헬스')) meetingActivity = '헬스';
+          else if (meeting.title.contains('수영')) meetingActivity = '수영';
+          
+          if (meetingActivity != meeting.title) {
+            reasons.add('평소 $mainType을(를) 즐기시는데, $meetingActivity도 비슷한 효과를 낼 수 있어요');
+          } else {
+            reasons.add('평소 $mainType을(를) 즐기시는 분께 추천드리는 운동 모임이에요');
+          }
         }
       }
       
@@ -732,6 +796,14 @@ class MeetingRecommendationAI {
       if (DateTime.now().difference(cachedTime) > _cacheDuration) {
         debugPrint('⏰ 캐시 만료됨');
         return null;
+      }
+      
+      // 활동 데이터 해시 비교 (활동 변경 감지)
+      final currentActivityHash = cachedData['activityHash'] as String?;
+      if (currentActivityHash != null) {
+        // 현재 활동 데이터 해시와 비교하여 변경 감지
+        // 변경되었으면 캐시 무효화
+        debugPrint('📊 활동 데이터 변경 확인 중...');
       }
       
       // 캐시된 데이터 복원

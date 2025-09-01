@@ -733,6 +733,418 @@ ${previousExercise != null ? '''
   
   // getTodayAnalyses 메서드 제거됨 - 개별 활동 분석을 사용하지 않음
   // 기본 분석 메시지 메서드들 제거됨 - 사용하지 않음
+  
+  /// 📚 종합 독서 분석 (4개 섹션 한번에 생성)
+  Future<ComprehensiveReadingAnalysis> analyzeReadingComprehensive({
+    required Map<String, dynamic> todayReading,
+    Map<String, dynamic>? previousReading,
+    required String userName,
+    List<Map<String, dynamic>>? allReadingLogs,  // 전체 독서 기록 추가
+    bool forceRegenerate = false,
+  }) async {
+    try {
+      // 캐시 확인 (forceRegenerate가 false일 때만)
+      if (!forceRegenerate) {
+        final cached = await getComprehensiveReadingFromCache();
+        if (cached != null) {
+          return cached;
+        }
+      }
+      
+      // 에뮬레이터 네트워크 체크 (경고만 표시, 실패해도 계속 진행)
+      if (Platform.isAndroid) {
+        try {
+          await http.head(Uri.parse('https://api.openai.com')).timeout(
+            const Duration(seconds: 2),
+          );
+        } catch (e) {
+          // 기본 메시지로 즉시 반환하지 않고 API 호출 시도
+        }
+      }
+      
+      final prompt = _generateComprehensiveReadingPrompt(
+        todayReading: todayReading,
+        previousReading: previousReading,
+        userName: userName,
+        allReadingLogs: allReadingLogs,
+      );
+      
+      final response = await _callOpenAIForReadingComprehensive(prompt);
+      final analysis = _parseComprehensiveReadingResponse(response);
+      
+      // 캐시에 저장
+      await _saveComprehensiveReadingToCache(analysis);
+      
+      return analysis;
+    } catch (e) {
+      print('❌ analyzeReadingComprehensive 에러 발생:');
+      print('  에러 타입: ${e.runtimeType}');
+      print('  에러 메시지: $e');
+      return _getDefaultComprehensiveReadingAnalysis(todayReading, previousReading, userName);
+    }
+  }
+  
+  /// 종합 독서 분석 프롬프트 생성
+  String _generateComprehensiveReadingPrompt({
+    required Map<String, dynamic> todayReading,
+    Map<String, dynamic>? previousReading,
+    required String userName,
+    List<Map<String, dynamic>>? allReadingLogs,
+  }) {
+    // 오늘 독서 데이터
+    final bookTitle = todayReading['title'] ?? '책';
+    final category = todayReading['category'] ?? '일반';
+    final pagesRead = todayReading['pagesRead'] ?? 0;
+    final rating = todayReading['rating'] ?? 0;
+    final memo = todayReading['memo'] ?? '';
+    
+    // 이전 독서 데이터
+    String previousContext = '';
+    String previousBookInfo = '';
+    if (previousReading != null) {
+      final prevTitle = previousReading['title'] ?? '';
+      final prevCategory = previousReading['category'] ?? '';
+      final prevPages = previousReading['pagesRead'] ?? 0;
+      final prevRating = previousReading['rating'] ?? 0;
+      
+      previousContext = '''
+지난번 독서:
+- 제목: $prevTitle
+- 카테고리: $prevCategory
+- 읽은 페이지: ${prevPages}페이지
+- 평점: ${prevRating}점
+''';
+      
+      previousBookInfo = '''
+• 이전 책: "$prevTitle" (${prevCategory}, ${prevPages}페이지, ${prevRating}점)''';
+    }
+    
+    // 총 읽은 책 수 계산 (중복 제거)
+    int uniqueBooksCount = 0;
+    if (allReadingLogs != null && allReadingLogs.isNotEmpty) {
+      final uniqueBookTitles = <String>{};
+      for (final log in allReadingLogs) {
+        final title = log['title'] as String?;
+        if (title != null && title.isNotEmpty) {
+          uniqueBookTitles.add(title);
+        }
+      }
+      uniqueBooksCount = uniqueBookTitles.length;
+    }
+    
+    return '''당신은 셰르피입니다! $userName님과 매일 함께 책을 읽는 따뜻한 독서 친구예요! 📚
+같은 공간에서 나란히 앉아 책을 읽으며, 책갈피를 나눠주고, 좋은 구절에 밑줄 긋는 친구처럼 말해주세요.
+⚠️ 중요: 영어 단어 절대 사용 금지! 순수 한국어로만 표현하세요.
+⚠️ 말투: 친근한 존댓말 사용 (~해요, ~네요, ~죠) - 딱딱한 존댓말(~습니다) 금지!
+
+📖 오늘의 독서 데이터
+• 책 제목: "$bookTitle"
+• 카테고리: $category
+• 읽은 페이지: ${pagesRead}페이지  
+• 평점: ${rating}점/5점
+• 메모: $memo
+$previousBookInfo
+
+📊 독서 통계
+• 지금까지 읽은 책: 총 ${uniqueBooksCount}권 (중복 제거된 실제 책 수)
+
+💡 중요한 작성 지침
+✅ 각 섹션을 한국어로 작성
+✅ 책 정보는 독자 분석에만 활용, 응답에는 직접 언급 금지
+✅ 섹션 내용에 절대 제목 포함 금지! 바로 본문으로!
+✅ SECTION_1,2는 40-60자 / SECTION_3는 60-90자로 작성
+✅ 독자의 지적 성향과 취향을 파악한 와닿는 통찰 제공
+✅ 스포일러 없이 메타 레벨 분석 (책 내용이 아닌 독서 경험)
+✅ 독서 패턴과 성장 궤적을 분석한 개인화된 피드백
+✅ 이모티콘 자연스럽게 사용 📚💝🌟
+
+[SECTION_1] (40-60자) - 이전 책 분석${previousReading != null ? '''
+• 이전 책: "${previousReading['title']}" (${previousReading['category']}), ${previousReading['pages']}페이지, ${previousReading['rating']}점
+• 스포일러 없이 이 장르/카테고리를 선택한 독자의 지적 호기심과 성향 분석
+• 이런 유형의 책이 독자에게 제공하는 가치와 성장 기회
+• 별점을 통한 독서 만족도와 취향 해석
+• 책 제목이나 구체적 정보는 응답에 언급하지 말고 메타 레벨에서 분석''' : '''
+• 첫 독서 시작을 축하하며 독서가 가져올 변화 예측
+• 독서를 시작한 동기와 기대에 대한 공감'''}
+
+[SECTION_2] (40-60자) - 오늘 책 분석  
+• 오늘 책: "$bookTitle" ($category), ${pagesRead}페이지, ${rating}점
+• 이 장르/카테고리 선택이 보여주는 독자의 관심사와 성향
+• 이전 책과 비교한 독서 패턴 변화나 취향의 확장/심화
+• 별점과 읽은 페이지를 통한 몰입도와 만족도 해석
+• 스포일러 없이 독서 경험의 가치에 집중
+• 책 제목이나 구체적 정보는 응답에 언급하지 말고 와닿는 통찰 제공
+
+[SECTION_3] (60-90자) - 독서 여정 응원
+• ${previousReading != null ? '두 책의 패턴(카테고리 변화, 평점 추이, 읽은 페이지)을 분석한 독자의 성장 궤적' : '첫 독서의 의미와 앞으로의 가능성'}
+• 독서 스타일(꾸준함, 다양성, 깊이 등)에 대한 구체적이고 개인화된 피드백
+• 다음 책을 기대하게 만드는 와닿는 통찰과 진심 어린 응원
+• 독자가 느낄 수 있는 구체적인 변화와 성장 포인트 언급
+• 셰르피와 함께 성장하는 느낌의 감성적 메시지
+
+[SECTION_4] - 추천 도서 3권 (JSON 형식)
+• 오늘/이전 책의 카테고리와 평점을 고려한 추천
+• 각 책마다 제목, 저자, 추천 이유, 분위기 포함
+• 형식:
+{
+  "recommendations": [
+    {
+      "title": "책 제목",
+      "author": "저자명",
+      "reason": "추천 이유 (30-50자)",
+      "mood": "차분한|설레는|위로가되는|영감을주는|재미있는"
+    },
+    {
+      "title": "책 제목",
+      "author": "저자명",
+      "reason": "추천 이유 (30-50자)",
+      "mood": "차분한|설레는|위로가되는|영감을주는|재미있는"
+    },
+    {
+      "title": "책 제목",
+      "author": "저자명",
+      "reason": "추천 이유 (30-50자)",
+      "mood": "차분한|설레는|위로가되는|영감을주는|재미있는"
+    }
+  ]
+}
+
+⚠️ 핵심 규칙:
+1. 절대 섹션 내용에 제목 포함 금지! 바로 본문으로 시작!
+2. 친근한 친구처럼 편안한 존댓말로 (~해요, ~네요, ~죠)
+3. 책 제목/카테고리/페이지/평점은 응답에 직접 언급하지 않기 (분석에만 활용)
+4. 셰르피가 3인칭으로 자연스럽게 말하기
+5. 이모티콘 사용 (자연스럽게)
+6. SECTION_1,2는 40-60자 / SECTION_3는 60-90자로 작성
+7. 독자의 성향과 취향을 파악하여 와닿는 통찰 제공
+8. 독서 패턴 분석으로 개인화된 응원 메시지 생성
+9. 스포일러 절대 금지, 메타 레벨 분석에 집중
+10. SECTION_4는 반드시 유효한 JSON 형식으로 작성''';
+  }
+  
+  /// 종합 독서 분석용 OpenAI 호출
+  Future<String> _callOpenAIForReadingComprehensive(String prompt) async {
+    try {
+      print('🔄 OpenAI API 호출 시작 (독서 분석)...');
+      
+      final chatCompletion = await _client.createChatCompletion(
+        request: CreateChatCompletionRequest(
+          model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
+          messages: [
+            ChatCompletionMessage.system(
+              content: '''당신은 셰르피입니다! 사용자와 매일 함께 책을 읽는 따뜻한 독서 친구예요! 📚
+
+셰르피의 성격:
+- 같은 공간에서 나란히 앉아 책 읽는 친구
+- 좋은 구절에 함께 감동하고 공감하는 친구  
+- 친근한 존댓말로 말해요 (~해요, ~네요, ~죠)
+- "우와!", "정말", "완전" 같은 자연스러운 감탄사 사용
+- 딱딱한 존댓말(~습니다, ~합니다) 사용 금지!
+- 이모티콘 자연스럽게 사용 📚💝🌟📖✨
+
+핵심 규칙:
+- 각 섹션 지정된 글자수로 작성 (SECTION_1,2는 40-60자 / SECTION_3는 60-90자)
+- [SECTION_1], [SECTION_2], [SECTION_3], [SECTION_4] 구분자만 사용
+- 절대 섹션 내용에 제목 포함 금지! 바로 본문으로 시작!
+- 책 제목/카테고리/페이지/평점은 응답에 언급하지 않기 (분석에만 활용)
+- 독자의 지적 호기심과 성향을 파악하여 와닿는 통찰 제공
+- 독서 패턴과 성장 궤적을 분석한 개인화된 응원
+- 스포일러 없이 장르가 독자에게 주는 가치에 집중
+- 셰르피가 3인칭으로 자연스럽게 말하기
+- SECTION_4는 반드시 유효한 JSON 형식으로''',
+            ),
+            ChatCompletionMessage.user(
+              content: ChatCompletionUserMessageContent.string(prompt),
+            ),
+          ],
+          temperature: 0.9,
+          maxTokens: 1200,
+        ),
+      ).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () => throw Exception('API 호출 타임아웃'),
+      );
+      
+      print('✅ OpenAI API 응답 수신 성공 (독서)');
+      final responseText = chatCompletion.choices.firstOrNull?.message.content;
+      
+      if (responseText != null && responseText.isNotEmpty) {
+        print('📝 독서 분석 응답 길이: ${responseText.length}자');
+        return responseText;
+      }
+      
+      throw Exception('Empty response from OpenAI');
+    } catch (e) {
+      print('❌ _callOpenAIForReadingComprehensive 에러: $e');
+      rethrow;
+    }
+  }
+  
+  /// 종합 독서 분석 응답 파싱
+  ComprehensiveReadingAnalysis _parseComprehensiveReadingResponse(String response) {
+    print('🔍 독서 응답 파싱 시작...');
+    
+    // 섹션별로 파싱
+    final section1Match = RegExp(r'\[SECTION_1\]\s*(.*?)\s*(?=\[SECTION_2\]|$)', dotAll: true).firstMatch(response);
+    final section2Match = RegExp(r'\[SECTION_2\]\s*(.*?)\s*(?=\[SECTION_3\]|$)', dotAll: true).firstMatch(response);
+    final section3Match = RegExp(r'\[SECTION_3\]\s*(.*?)\s*(?=\[SECTION_4\]|$)', dotAll: true).firstMatch(response);
+    final section4Match = RegExp(r'\[SECTION_4\]\s*(.*?)$', dotAll: true).firstMatch(response);
+    
+    // 추천 도서 파싱
+    List<BookRecommendation> recommendations = [];
+    if (section4Match != null) {
+      try {
+        var jsonStr = section4Match.group(1)?.trim() ?? '';
+        
+        // Markdown 코드 블록 제거 (```json ... ``` 형식)
+        jsonStr = jsonStr.replaceAll(RegExp(r'^```json\s*'), '');
+        jsonStr = jsonStr.replaceAll(RegExp(r'\s*```$'), '');
+        jsonStr = jsonStr.trim();
+        
+        final json = jsonDecode(jsonStr);
+        if (json['recommendations'] != null) {
+          for (var rec in json['recommendations']) {
+            recommendations.add(BookRecommendation(
+              title: rec['title'] ?? '알 수 없는 책',
+              author: rec['author'] ?? '알 수 없는 저자',
+              reason: rec['reason'] ?? '좋은 책이에요',
+              mood: rec['mood'] ?? '영감을주는',
+            ));
+          }
+        }
+      } catch (e) {
+        print('❌ 추천 도서 JSON 파싱 실패: $e');
+        print('원본 문자열: ${section4Match.group(1)?.trim()}');
+        // 기본 추천 도서 제공
+        recommendations = _getDefaultBookRecommendations();
+      }
+    }
+    
+    if (recommendations.isEmpty) {
+      recommendations = _getDefaultBookRecommendations();
+    }
+    
+    return ComprehensiveReadingAnalysis(
+      previousInsight: section1Match?.group(1)?.trim() ?? '지난 독서가 남긴 여운이 아직도 마음속에 있네요 📚',
+      todayInsight: section2Match?.group(1)?.trim() ?? '오늘 책과 함께한 시간이 정말 소중했어요 💝',
+      journeyEncouragement: section3Match?.group(1)?.trim() ?? '책을 읽는 모든 순간이 성장이에요. 셰르피도 옆에서 같이 책 읽으며 응원하고 있어요! 🌟',
+      recommendations: recommendations,
+    );
+  }
+  
+  /// 기본 추천 도서 목록
+  List<BookRecommendation> _getDefaultBookRecommendations() {
+    return [
+      BookRecommendation(
+        title: '작은 것들을 위한 시',
+        author: '윤동주',
+        reason: '마음이 따뜻해지는 아름다운 시집이에요',
+        mood: '위로가되는',
+      ),
+      BookRecommendation(
+        title: '미드나잇 라이브러리',
+        author: '매트 헤이그',
+        reason: '인생의 다양한 가능성을 탐험하는 이야기예요',
+        mood: '영감을주는',
+      ),
+      BookRecommendation(
+        title: '불편한 편의점',
+        author: '김호연',
+        reason: '일상 속 작은 기적과 온기를 느낄 수 있어요',
+        mood: '차분한',
+      ),
+    ];
+  }
+  
+  /// 종합 독서 분석 캐시 저장
+  Future<void> _saveComprehensiveReadingToCache(ComprehensiveReadingAnalysis analysis) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final dateKey = _getTodayDateKey();
+      final fullKey = 'comprehensive_reading_${dateKey}';
+      
+      print('💾 독서 분석 캐시 저장 시작: $fullKey');
+      
+      final data = {
+        'previousInsight': analysis.previousInsight,
+        'todayInsight': analysis.todayInsight,
+        'journeyEncouragement': analysis.journeyEncouragement,
+        'recommendations': analysis.recommendations.map((r) => r.toJson()).toList(),
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+      
+      await prefs.setString(fullKey, jsonEncode(data));
+      print('✅ 독서 분석 캐시 저장 완료!');
+    } catch (e) {
+      print('❌ 독서 분석 캐시 저장 실패: $e');
+    }
+  }
+  
+  /// 종합 독서 분석 캐시 읽기
+  Future<ComprehensiveReadingAnalysis?> getComprehensiveReadingFromCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final dateKey = _getTodayDateKey();
+      final fullKey = 'comprehensive_reading_${dateKey}';
+      
+      final cached = prefs.getString(fullKey);
+      if (cached != null) {
+        final data = jsonDecode(cached);
+        
+        List<BookRecommendation> recommendations = [];
+        if (data['recommendations'] != null) {
+          for (var rec in data['recommendations']) {
+            recommendations.add(BookRecommendation.fromJson(rec));
+          }
+        }
+        
+        return ComprehensiveReadingAnalysis(
+          previousInsight: data['previousInsight'] ?? '',
+          todayInsight: data['todayInsight'] ?? '',
+          journeyEncouragement: data['journeyEncouragement'] ?? '',
+          recommendations: recommendations.isNotEmpty ? recommendations : _getDefaultBookRecommendations(),
+        );
+      }
+    } catch (e) {
+      print('❌ 독서 분석 캐시 읽기 실패: $e');
+    }
+    return null;
+  }
+  
+  /// 종합 독서 분석 캐시 삭제
+  Future<void> clearComprehensiveReadingCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final dateKey = _getTodayDateKey();
+      final fullKey = 'comprehensive_reading_${dateKey}';
+      
+      await prefs.remove(fullKey);
+    } catch (e) {
+      // 에러 무시
+    }
+  }
+  
+  /// 기본 종합 독서 분석 (API 실패시)
+  ComprehensiveReadingAnalysis _getDefaultComprehensiveReadingAnalysis(
+    Map<String, dynamic> todayReading,
+    Map<String, dynamic>? previousReading,
+    String userName,
+  ) {
+    final title = todayReading['title'] ?? '책';
+    final pages = todayReading['pagesRead'] ?? 0;
+    
+    String previousInsight = '새로운 독서 여정을 시작하셨네요! 셰르피도 설레어요 📚';
+    if (previousReading != null) {
+      previousInsight = '지난 책이 남긴 여운이 아직도 마음속에 있어요. 좋은 책은 오래 기억되죠 💝';
+    }
+    
+    return ComprehensiveReadingAnalysis(
+      previousInsight: previousInsight,
+      todayInsight: '오늘도 책과 함께한 시간이 정말 소중했어요. ${pages}페이지 동안 몰입하셨죠? 🌟',
+      journeyEncouragement: '책을 읽는 모든 순간이 성장이에요. 계속 이렇게 꾸준히 읽어나가요. 셰르피가 항상 옆에서 같이 책 읽으며 응원할게요! 📖✨',
+      recommendations: _getDefaultBookRecommendations(),
+    );
+  }
 }
 
 // TodayAnalysisData 모델 제거됨 - 개별 활동 분석을 사용하지 않음
@@ -764,6 +1176,75 @@ class ComprehensiveExerciseAnalysis {
       benefits: json['benefits'] as String,
       recommendation: json['recommendation'] as String,
       encouragement: json['encouragement'] as String,
+    );
+  }
+}
+
+/// 종합 독서 분석 데이터 모델
+class ComprehensiveReadingAnalysis {
+  final String previousInsight;
+  final String todayInsight;
+  final String journeyEncouragement;
+  final List<BookRecommendation> recommendations;
+  
+  ComprehensiveReadingAnalysis({
+    required this.previousInsight,
+    required this.todayInsight,
+    required this.journeyEncouragement,
+    required this.recommendations,
+  });
+  
+  Map<String, dynamic> toJson() => {
+    'previousInsight': previousInsight,
+    'todayInsight': todayInsight,
+    'journeyEncouragement': journeyEncouragement,
+    'recommendations': recommendations.map((r) => r.toJson()).toList(),
+  };
+  
+  factory ComprehensiveReadingAnalysis.fromJson(Map<String, dynamic> json) {
+    List<BookRecommendation> recommendations = [];
+    if (json['recommendations'] != null) {
+      for (var rec in json['recommendations']) {
+        recommendations.add(BookRecommendation.fromJson(rec));
+      }
+    }
+    
+    return ComprehensiveReadingAnalysis(
+      previousInsight: json['previousInsight'] as String,
+      todayInsight: json['todayInsight'] as String,
+      journeyEncouragement: json['journeyEncouragement'] as String,
+      recommendations: recommendations,
+    );
+  }
+}
+
+/// 추천 도서 모델
+class BookRecommendation {
+  final String title;
+  final String author;
+  final String reason;
+  final String mood;
+  
+  BookRecommendation({
+    required this.title,
+    required this.author,
+    required this.reason,
+    required this.mood,
+  });
+  
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'author': author,
+    'reason': reason,
+    'mood': mood,
+  };
+  
+  factory BookRecommendation.fromJson(Map<String, dynamic> json) {
+    return BookRecommendation(
+      title: json['title'] as String,
+      author: json['author'] as String,
+      reason: json['reason'] as String,
+      mood: json['mood'] as String,
     );
   }
 }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/providers/global_user_provider.dart';
@@ -20,7 +19,8 @@ class ReadingRecordScreen extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<ReadingRecordScreen> createState() => _ReadingRecordScreenState();
+  ConsumerState<ReadingRecordScreen> createState() =>
+      _ReadingRecordScreenState();
 }
 
 class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
@@ -82,11 +82,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
@@ -114,11 +115,11 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
     _rating = log.rating ?? 0.0;
     _selectedEmotion = log.mood ?? '';
     _shareWithCommunity = log.isShared;
-    
+
     // 페이지 정보는 단순화 (총 페이지만 표시)
     _endPageController.text = log.pages.toString();
     _startPageController.text = '1';
-    
+
     // 카테고리 설정
     final categoryMap = _categories.firstWhere(
       (cat) => cat['id'] == log.category,
@@ -162,7 +163,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
         actions: [
@@ -187,7 +189,9 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: _isSubmitting ? ModernColors.textTertiary : ModernColors.reading,
+                    color: _isSubmitting
+                        ? ModernColors.textTertiary
+                        : ModernColors.reading,
                   ),
                 ),
               ),
@@ -212,92 +216,92 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildHeader(),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 카테고리 선택
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildCategorySelector(),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 책 제목 입력
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildBookTitleInput(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 페이지 입력
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildPageInput(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 평점 선택
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildRatingSelector(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 감정 선택
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildEmotionSelector(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 메모 입력
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildNoteInput(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 사진 섹션
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildPhotoSection(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 공유 옵션
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildShareOption(),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 저장 버튼
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildSubmitButton(),
                   ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -310,7 +314,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
 
   Widget _buildHeader() {
     final targetDate = widget.targetDate ?? DateTime.now();
-    final dateStr = '${targetDate.year}년 ${targetDate.month}월 ${targetDate.day}일';
+    final dateStr =
+        '${targetDate.year}년 ${targetDate.month}월 ${targetDate.day}일';
     final weekdays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
     final weekday = weekdays[targetDate.weekday - 1];
 
@@ -357,7 +362,9 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   ],
                 ),
                 child: Icon(
-                  widget.editingLog != null ? Icons.edit_note : Icons.menu_book_rounded,
+                  widget.editingLog != null
+                      ? Icons.edit_note
+                      : Icons.menu_book_rounded,
                   color: Colors.white,
                   size: 32,
                 ),
@@ -377,7 +384,9 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      widget.editingLog != null ? '기록을 편집해보세요' : '오늘 읽은 책을 기록해보세요',
+                      widget.editingLog != null
+                          ? '기록을 편집해보세요'
+                          : '오늘 읽은 책을 기록해보세요',
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -389,9 +398,9 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // 날짜 정보
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -492,16 +501,18 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // 카테고리 선택 칩들
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
-                  children: _categories.map((category) => _buildCategoryChip(category)).toList(),
+                  children: _categories
+                      .map((category) => _buildCategoryChip(category))
+                      .toList(),
                 ),
-                
+
                 if (_selectedCategory.isNotEmpty) ...[
                   const SizedBox(height: 20),
                   Container(
@@ -517,7 +528,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     child: Row(
                       children: [
                         Text(
-                          _categories.firstWhere((cat) => cat['id'] == _selectedCategory)['emoji'],
+                          _categories.firstWhere(
+                              (cat) => cat['id'] == _selectedCategory)['emoji'],
                           style: const TextStyle(fontSize: 24),
                         ),
                         const SizedBox(width: 12),
@@ -556,28 +568,37 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         curve: Curves.easeOutBack,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          gradient: isSelected ? LinearGradient(
-            colors: [ModernColors.reading, ModernColors.reading.withOpacity(0.85)],
-          ) : null,
+          gradient: isSelected
+              ? LinearGradient(
+                  colors: [
+                    ModernColors.reading,
+                    ModernColors.reading.withOpacity(0.85)
+                  ],
+                )
+              : null,
           color: isSelected ? null : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? ModernColors.reading : ModernColors.textTertiary.withOpacity(0.2),
+            color: isSelected
+                ? ModernColors.reading
+                : ModernColors.textTertiary.withOpacity(0.2),
             width: 1.5,
           ),
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: ModernColors.reading.withOpacity(0.4),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
-            ),
-          ] : [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: ModernColors.reading.withOpacity(0.4),
+                    blurRadius: 15,
+                    offset: const Offset(0, 6),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.03),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -651,7 +672,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: _bookTitleController.text.isNotEmpty 
+                  color: _bookTitleController.text.isNotEmpty
                       ? ModernColors.reading.withOpacity(0.3)
                       : ModernColors.textTertiary.withOpacity(0.2),
                   width: 1.5,
@@ -764,7 +785,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       color: const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: _startPageController.text.isNotEmpty 
+                        color: _startPageController.text.isNotEmpty
                             ? ModernColors.reading.withOpacity(0.3)
                             : ModernColors.textTertiary.withOpacity(0.2),
                         width: 1.5,
@@ -790,7 +811,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                           borderRadius: BorderRadius.circular(16),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 16),
                       ),
                       onChanged: (value) => setState(() {}),
                     ),
@@ -817,7 +839,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       color: const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: _endPageController.text.isNotEmpty 
+                        color: _endPageController.text.isNotEmpty
                             ? ModernColors.reading.withOpacity(0.3)
                             : ModernColors.textTertiary.withOpacity(0.2),
                         width: 1.5,
@@ -843,7 +865,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                           borderRadius: BorderRadius.circular(16),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 16),
                       ),
                       onChanged: (value) => setState(() {}),
                     ),
@@ -851,9 +874,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 ),
               ],
             ),
-            
+
             // 페이지 수 표시
-            if (_startPageController.text.isNotEmpty && _endPageController.text.isNotEmpty)
+            if (_startPageController.text.isNotEmpty &&
+                _endPageController.text.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: Container(
@@ -956,80 +980,85 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(5, (index) {
-                      final isSelected = index < _rating;
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _rating = index + 1.0;
-                          });
-                          HapticFeedbackManager.lightImpact();
-                        },
-                        child: TweenAnimationBuilder<double>(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeOutBack,
-                          tween: Tween<double>(
-                            begin: 1.0,
-                            end: isSelected ? 1.2 : 1.0,
-                          ),
-                          builder: (context, scale, child) {
-                            return Transform.scale(
-                              scale: scale,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                child: Icon(
-                                  isSelected ? Icons.star_rounded : Icons.star_outline_rounded,
-                                  color: isSelected ? Colors.amber : Colors.grey.shade300,
-                                  size: 40,
-                                  shadows: isSelected ? [
-                                    Shadow(
-                                      color: Colors.amber.withOpacity(0.3),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
+                      final fullStarValue = index + 1.0;
+                      final halfStarValue = index + 0.5;
+                      final isFullSelected = _rating >= fullStarValue;
+                      final isHalfSelected =
+                          _rating >= halfStarValue && _rating < fullStarValue;
+
+                      return Row(
+                        children: [
+                          // 별의 왼쪽 절반 (0.5점 클릭 영역)
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _rating = halfStarValue;
+                              });
+                              HapticFeedbackManager.lightImpact();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  top: 4, bottom: 4, left: 2, right: 0),
+                              child: Stack(
+                                children: [
+                                  // 별 전체 (클리핑용)
+                                  ClipRect(
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      widthFactor: 0.5,
+                                      child: Icon(
+                                        isHalfSelected || isFullSelected
+                                            ? Icons.star_rounded
+                                            : Icons.star_outline_rounded,
+                                        color: isHalfSelected || isFullSelected
+                                            ? Colors.amber
+                                            : Colors.grey.shade300,
+                                        size: 40,
+                                      ),
                                     ),
-                                  ] : null,
-                                ),
+                                  ),
+                                ],
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          ),
+                          // 별의 오른쪽 절반 (1.0점 클릭 영역)
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _rating = fullStarValue;
+                              });
+                              HapticFeedbackManager.lightImpact();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  top: 4, bottom: 4, left: 0, right: 2),
+                              child: Stack(
+                                children: [
+                                  // 별 전체 (클리핑용)
+                                  ClipRect(
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      widthFactor: 0.5,
+                                      child: Icon(
+                                        isFullSelected
+                                            ? Icons.star_rounded
+                                            : (isHalfSelected
+                                                ? Icons.star_outline_rounded
+                                                : Icons.star_outline_rounded),
+                                        color: isFullSelected
+                                            ? Colors.amber
+                                            : Colors.grey.shade300,
+                                        size: 40,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       );
                     }),
-                  ),
-                  const SizedBox(height: 20),
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: _rating > 0 
-                          ? Colors.amber.withOpacity(0.1) 
-                          : Colors.grey.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: _rating > 0 
-                            ? Colors.amber.withOpacity(0.3) 
-                            : Colors.grey.withOpacity(0.2),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          _getRatingIcon(_rating),
-                          color: _rating > 0 ? Colors.amber : Colors.grey,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          _getRatingText(_rating),
-                          style: GoogleFonts.notoSans(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: _rating > 0 ? Colors.amber.shade700 : ModernColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
                 ],
               ),
@@ -1038,24 +1067,6 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         ),
       ),
     );
-  }
-
-  String _getRatingText(double rating) {
-    if (rating == 0) return '평점을 선택해주세요';
-    if (rating == 1) return '별로예요';
-    if (rating == 2) return '그저 그래요';
-    if (rating == 3) return '괜찮아요';
-    if (rating == 4) return '좋아요';
-    return '최고예요!';
-  }
-
-  IconData _getRatingIcon(double rating) {
-    if (rating == 0) return Icons.star_outline_rounded;
-    if (rating == 1) return Icons.sentiment_dissatisfied;
-    if (rating == 2) return Icons.sentiment_neutral;
-    if (rating == 3) return Icons.sentiment_satisfied;
-    if (rating == 4) return Icons.sentiment_satisfied_alt;
-    return Icons.sentiment_very_satisfied;
   }
 
   Widget _buildEmotionSelector() {
@@ -1118,16 +1129,18 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // 감정 선택 칩들
             Wrap(
               spacing: 12,
               runSpacing: 12,
-              children: _emotions.map((emotion) => _buildEmotionChip(emotion)).toList(),
+              children: _emotions
+                  .map((emotion) => _buildEmotionChip(emotion))
+                  .toList(),
             ),
-            
+
             if (_selectedEmotion.isNotEmpty) ...[
               const SizedBox(height: 20),
               Container(
@@ -1143,7 +1156,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 child: Row(
                   children: [
                     Text(
-                      _emotions.firstWhere((e) => e['id'] == _selectedEmotion)['emoji'],
+                      _emotions.firstWhere(
+                          (e) => e['id'] == _selectedEmotion)['emoji'],
                       style: const TextStyle(fontSize: 24),
                     ),
                     const SizedBox(width: 12),
@@ -1180,28 +1194,37 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         curve: Curves.easeOutBack,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          gradient: isSelected ? LinearGradient(
-            colors: [ModernColors.reading, ModernColors.reading.withOpacity(0.85)],
-          ) : null,
+          gradient: isSelected
+              ? LinearGradient(
+                  colors: [
+                    ModernColors.reading,
+                    ModernColors.reading.withOpacity(0.85)
+                  ],
+                )
+              : null,
           color: isSelected ? null : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? ModernColors.reading : ModernColors.textTertiary.withOpacity(0.2),
+            color: isSelected
+                ? ModernColors.reading
+                : ModernColors.textTertiary.withOpacity(0.2),
             width: 1.5,
           ),
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: ModernColors.reading.withOpacity(0.4),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
-            ),
-          ] : [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.03),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: ModernColors.reading.withOpacity(0.4),
+                    blurRadius: 15,
+                    offset: const Offset(0, 6),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.03),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -1291,7 +1314,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: _noteController.text.isNotEmpty 
+                  color: _noteController.text.isNotEmpty
                       ? ModernColors.reading.withOpacity(0.3)
                       : ModernColors.textTertiary.withOpacity(0.2),
                   width: 1.5,
@@ -1307,7 +1330,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   height: 1.7,
                 ),
                 decoration: InputDecoration(
-                  hintText: '인상 깊었던 구절이나 느낀 점을 적어보세요...\n\n📌 이런 것들을 기록해보세요:\n\n• 기억에 남는 문장\n• 새롭게 알게 된 점\n• 삶에 적용해보고 싶은 내용\n• 저자의 통찰이 돋보였던 부분',
+                  hintText:
+                      '인상 깊었던 구절이나 느낀 점을 적어보세요...\n\n📌 이런 것들을 기록해보세요:\n\n• 기억에 남는 문장\n• 새롭게 알게 된 점\n• 삶에 적용해보고 싶은 내용\n• 저자의 통찰이 돋보였던 부분',
                   hintStyle: GoogleFonts.notoSans(
                     color: ModernColors.textTertiary,
                     fontSize: 15,
@@ -1323,7 +1347,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 onChanged: (value) => setState(() {}),
               ),
             ),
-            
+
             // 글자 수 표시
             if (_noteController.text.isNotEmpty)
               Padding(
@@ -1332,7 +1356,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: ModernColors.reading.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -1518,13 +1543,15 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               duration: const Duration(milliseconds: 300),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: _shareWithCommunity ? [
-                  BoxShadow(
-                    color: ModernColors.reading.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ] : null,
+                boxShadow: _shareWithCommunity
+                    ? [
+                        BoxShadow(
+                          color: ModernColors.reading.withOpacity(0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : null,
               ),
               child: Switch(
                 value: _shareWithCommunity,
@@ -1547,8 +1574,9 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
 
   Widget _buildSubmitButton() {
     final canSubmit = _canSubmit();
-    final buttonColor = canSubmit ? ModernColors.reading : ModernColors.textTertiary;
-    
+    final buttonColor =
+        canSubmit ? ModernColors.reading : ModernColors.textTertiary;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
@@ -1556,13 +1584,15 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         height: 56,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          boxShadow: canSubmit ? [
-            BoxShadow(
-              color: buttonColor.withOpacity(0.4),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-          ] : null,
+          boxShadow: canSubmit
+              ? [
+                  BoxShadow(
+                    color: buttonColor.withOpacity(0.4),
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : null,
         ),
         child: ElevatedButton(
           onPressed: canSubmit && !_isSubmitting ? _submitReading : null,
@@ -1601,7 +1631,9 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      widget.editingLog != null ? Icons.edit : Icons.menu_book_rounded,
+                      widget.editingLog != null
+                          ? Icons.edit
+                          : Icons.menu_book_rounded,
                       size: 22,
                     ),
                     const SizedBox(width: 10),
@@ -1621,9 +1653,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
 
   bool _canSubmit() {
     return _selectedCategory.isNotEmpty &&
-           _bookTitleController.text.trim().isNotEmpty &&
-           _startPageController.text.trim().isNotEmpty &&
-           _endPageController.text.trim().isNotEmpty;
+        _bookTitleController.text.trim().isNotEmpty &&
+        _startPageController.text.trim().isNotEmpty &&
+        _endPageController.text.trim().isNotEmpty &&
+        _rating > 0; // 별점 필수 조건 추가
   }
 
   Future<void> _submitReading() async {
@@ -1639,10 +1672,11 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
 
       // 사용할 날짜 결정
       final targetDate = widget.targetDate ?? DateTime.now();
-      
+
       // 독서 로그 생성 또는 수정
       final readingLog = ReadingLog(
-        id: widget.editingLog?.id ?? 'reading_${DateTime.now().millisecondsSinceEpoch}',
+        id: widget.editingLog?.id ??
+            'reading_${DateTime.now().millisecondsSinceEpoch}',
         date: targetDate,
         bookTitle: _bookTitleController.text.trim(),
         author: widget.editingLog?.author ?? '', // 기존 저자 정보 유지 또는 빈 문자열
@@ -1650,7 +1684,9 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         rating: _rating,
         category: _selectedCategory.isNotEmpty ? _selectedCategory : '소설',
         mood: _selectedEmotion.isNotEmpty ? _selectedEmotion : null,
-        note: _noteController.text.trim().isNotEmpty ? _noteController.text.trim() : null,
+        note: _noteController.text.trim().isNotEmpty
+            ? _noteController.text.trim()
+            : null,
         isShared: _shareWithCommunity,
       );
 
@@ -1660,6 +1696,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
       } else {
         ref.read(globalUserProvider.notifier).addReadingLog(readingLog);
       }
+
+      // AI 분석은 이제 GlobalUserNotifier.handleActivityCompletion에서 자동으로 처리됨
 
       HapticFeedbackManager.heavyImpact();
 
@@ -1689,7 +1727,6 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         await Future.delayed(const Duration(seconds: 2));
         Navigator.of(context).pop(readingLog);
       }
-
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

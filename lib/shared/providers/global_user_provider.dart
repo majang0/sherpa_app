@@ -2001,7 +2001,51 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           break;
           
         case 'reading':
-          // 독서 AI 분석 제거됨 - 리소스 최적화
+          if (todayReading != null) {
+            // 이전 독서 기록 찾기 (최근 7일 이내)
+            final previousReading = _findPreviousActivity('reading');
+            
+            final readingData = {
+              'title': todayReading.bookTitle,
+              'category': todayReading.category,
+              'pagesRead': todayReading.pages,
+              'rating': todayReading.rating ?? 0,
+              'memo': todayReading.note ?? '',
+            };
+            
+            // 백그라운드에서 분석 생성
+            // 종합 독서 분석 생성 (독서 완료 시점에 미리 생성)
+            // forceRegenerate: true가 캐시를 무시하고 새로 생성하므로 별도 캐시 삭제 불필요
+            
+            // 전체 독서 기록을 Map 형태로 변환
+            final allReadingLogs = state.dailyRecords.readingLogs.map((log) => {
+              'title': log.bookTitle,
+              'category': log.category,
+              'pagesRead': log.pages,
+              'rating': log.rating,
+              'date': log.date.toIso8601String(),
+            }).toList();
+            
+            try {
+              final analysis = await analysisService.analyzeReadingComprehensive(
+                todayReading: readingData,
+                previousReading: previousReading,
+                userName: userName,
+                allReadingLogs: allReadingLogs,  // 전체 독서 기록 전달
+                forceRegenerate: true,  // 강제로 새로 생성 (캐시 무시)
+              );
+              
+              // 🔍 디버그: 캐시 저장 확인
+              print('===== 독서 분석 캐시 저장 완료 =====');
+              print('📊 섹션 1 - 이전 책 인사이트: ${analysis.previousInsight}');
+              print('📊 섹션 2 - 오늘 책 인사이트: ${analysis.todayInsight}');
+              print('📊 섹션 3 - 여정 응원: ${analysis.journeyEncouragement}');
+              print('📊 섹션 4 - 추천 도서: ${analysis.recommendations.length}권');
+              print('=====================================');
+            } catch (e) {
+              print('❌ 독서 분석 생성 실패: $e');
+            }
+          }
           break;
           
         case 'diary':
