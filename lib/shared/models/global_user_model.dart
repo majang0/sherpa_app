@@ -594,6 +594,7 @@ class ExerciseLog {
   final String exerciseType;
   final int durationMinutes;
   final String intensity;
+  final int? calories;  // 칼로리 필드 추가
   final String? note;
   final String? imageUrl;
   final bool isShared;
@@ -604,6 +605,7 @@ class ExerciseLog {
     required this.exerciseType,
     required this.durationMinutes,
     required this.intensity,
+    this.calories,
     this.note,
     this.imageUrl,
     this.isShared = false,
@@ -619,6 +621,7 @@ class ExerciseLog {
       'exerciseType': exerciseType,
       'durationMinutes': durationMinutes,
       'intensity': intensity,
+      'calories': calories,
       'note': note,
       'imageUrl': imageUrl,
       'isShared': isShared,
@@ -632,6 +635,7 @@ class ExerciseLog {
       exerciseType: json['exerciseType'] ?? '',
       durationMinutes: json['durationMinutes'] ?? 0,
       intensity: json['intensity'] ?? 'medium',
+      calories: json['calories'] != null ? json['calories'] as int : null,
       note: json['note'],
       imageUrl: json['imageUrl'],
       isShared: json['isShared'] ?? false,

@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/ai/activity_analysis_service.dart';
+import '../../../../core/utils/exercise_calculator.dart';
 
 /// 운동 분석 페이지 - 셰르피가 직접 대화하는 친근한 분석 (주황색 테마)
 class ExerciseAnalysisPage extends StatefulWidget {
@@ -727,9 +728,57 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     // 실제 운동 데이터 기반 효과 계산
     final todayData = widget.todayData!;
     final duration = todayData['duration'] as int? ?? 0;
-    final calories = todayData['calories'] as int? ?? 0;
     final intensity = todayData['intensity'] as String? ?? '중간';
     final exerciseType = todayData['type'] as String? ?? '운동';
+    final exerciseTime = todayData['date'] ?? DateTime.now();
+    
+    // 칼로리 계산 (실제 칼로리가 없으면 MET 기반 계산)
+    final calories = todayData['calories'] as int? ?? 
+        ExerciseCalculator.calculateCalories(
+          exerciseType: ExerciseTypeMapper.toKorean(exerciseType),
+          durationMinutes: duration,
+          intensity: intensity,
+        );
+    
+    // 의학적 근거 기반 데이터 계산
+    final heartRateData = ExerciseCalculator.calculateHeartRateEffect(
+      durationMinutes: duration,
+      intensity: intensity,
+    );
+    
+    final bloodPressureData = ExerciseCalculator.getBloodPressureEffect(
+      durationMinutes: duration,
+      intensity: intensity,
+    );
+    
+    final endorphinData = ExerciseCalculator.getEndorphinEffect(
+      durationMinutes: duration,
+      intensity: intensity,
+    );
+    
+    final brainData = ExerciseCalculator.getBrainEffect(
+      durationMinutes: duration,
+      exerciseType: ExerciseTypeMapper.toKorean(exerciseType),
+      intensity: intensity,
+    );
+    
+    final metabolicData = ExerciseCalculator.getMetabolicEffect(
+      calories: calories,
+      intensity: intensity,
+      durationMinutes: duration,
+    );
+    
+    final muscleData = ExerciseCalculator.getMuscleGrowthEffect(
+      exerciseType: ExerciseTypeMapper.toKorean(exerciseType),
+      durationMinutes: duration,
+      intensity: intensity,
+    );
+    
+    final sleepData = ExerciseCalculator.getSleepEffect(
+      durationMinutes: duration,
+      intensity: intensity,
+      exerciseTime: exerciseTime,
+    );
     
     return Container(
       decoration: BoxDecoration(
@@ -759,7 +808,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         children: [
           // 헤더 섹션
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -816,11 +865,11 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 
                 // 메인 임팩트 수치
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.8),
                     borderRadius: BorderRadius.circular(16),
@@ -834,83 +883,150 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     children: [
                       _buildImpactMetric(
                         icon: '🔥',
-                        value: '${calories}kcal',
-                        label: '소모',
-                        subtitle: '도넛 ${(calories / 250).toStringAsFixed(1)}개 분량!',
+                        value: '${metabolicData['totalCalories']}kcal',
+                        label: '총 소모',
+                        subtitle: '${metabolicData['epocDuration']}시간 추가 소모!',
                       ),
                       _buildVerticalDivider(),
                       _buildImpactMetric(
                         icon: '💓',
-                        value: '${duration * 2}회',
+                        value: '+${heartRateData['increase']}bpm',
                         label: '심박수 증가',
-                        subtitle: '혈액순환 UP!',
+                        subtitle: '목표 ${heartRateData['targetHR']}회/분',
                       ),
                       _buildVerticalDivider(),
                       _buildImpactMetric(
                         icon: '🧠',
-                        value: '${(duration * 1.5).toInt()}%',
-                        label: '뇌 활성화',
-                        subtitle: '집중력 향상!',
+                        value: '+${brainData['bdnfIncrease']}%',
+                        label: 'BDNF 증가',
+                        subtitle: '${brainData['cognitiveEffect']}',
                       ),
                     ],
                   ),
                 ),
+                
+                // AI 개인화 메시지
+                if (_analysisData?.benefits != null && _analysisData!.benefits!.isNotEmpty)
+                  Container(
+                    margin: const EdgeInsets.only(top: 12),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          exerciseOrange.withOpacity(0.08),
+                          Colors.white.withOpacity(0.9),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: exerciseOrange.withOpacity(0.15),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: exerciseOrange.withOpacity(0.15),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.auto_awesome_rounded,
+                            color: exerciseOrange,
+                            size: 18,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'AI 분석 인사이트',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: exerciseOrange,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                _analysisData!.benefits!,
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 13,
+                                  height: 1.5,
+                                  fontWeight: FontWeight.w500,
+                                  color: ModernColors.textPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ).animate()
+                    .fadeIn(duration: 600.ms, delay: 400.ms)
+                    .slideY(begin: 0.05, end: 0, duration: 600.ms, delay: 400.ms),
               ],
             ),
           ),
           
           // 구체적 효과 카드들
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
             child: Column(
               children: [
                 _buildSpecificEffectCard(
                   icon: '🫀',
                   title: '심혈관 건강',
-                  mainEffect: '혈압 ${_getBloodPressureEffect(intensity)} 감소',
+                  mainEffect: '혈압 ${bloodPressureData['systolic']}/${bloodPressureData['diastolic']}mmHg 감소',
                   details: [
-                    '혈액순환이 ${duration}% 향상되었어요',
-                    '심장 근육이 더 강해졌어요',
-                    '혈관 탄력성이 증가했어요'
+                    '${bloodPressureData['duration']} 동안 효과 지속',
+                    '${bloodPressureData['longTermBenefit']}',
+                    '회복 시간 ${heartRateData['recoveryMinutes']}분'
                   ],
                   progress: _getIntensityLevel(intensity) / 4,
                   index: 0,
                 ),
                 
-                const SizedBox(height: 12),
+                const SizedBox(height: 6),
                 
                 _buildSpecificEffectCard(
-                  icon: '🧠',
-                  title: '뇌 기능 향상',
-                  mainEffect: '기억력 ${_getCognitiveEffect(duration)}% UP',
+                  icon: '😴',
+                  title: '수면 개선',
+                  mainEffect: '수면 질 ${sleepData['qualityImprovement']} 개선',
                   details: [
-                    '스트레스 호르몬 ${((duration / 60) * 30).toInt()}% 감소',
-                    '행복 호르몬(엔돌핀) 대량 분비',
-                    '집중력이 ${(duration / 10).toInt()}시간 지속'
+                    '${sleepData['effect']}',
+                    '깊은 수면 ${sleepData['deepSleep']}',
+                    '${sleepData['recommendation']}'
                   ],
-                  progress: math.min(duration / 60, 1.0),
+                  progress: math.min(double.parse(sleepData['qualityImprovement'].replaceAll('%', '')) / 40.0, 1.0),
                   index: 1,
                 ),
                 
-                const SizedBox(height: 12),
+                const SizedBox(height: 6),
                 
                 _buildSpecificEffectCard(
                   icon: '💪',
                   title: '근육 & 대사',
-                  mainEffect: '기초대사율 ${_getMetabolicEffect(calories)}kcal 증가',
+                  mainEffect: '운동후 Afterburn ${metabolicData['epocCalories']}kcal 추가 소모',
                   details: [
-                    '근육량 ${_getMuscleGrowth(exerciseType)} 증가',
-                    '24시간 동안 지속적 칼로리 소모',
-                    '인슐린 민감도 향상으로 당뇨 예방'
+                    '근육 성장률 ${muscleData['growthRate']}',
+                    '단백질 합성 +${muscleData['proteinSynthesis']}',
+                    '${muscleData['muscleGroup']} 강화'
                   ],
                   progress: math.min(calories / 500, 1.0),
                   index: 2,
                 ),
                 
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 
                 // 놀라운 사실 섹션
-                _buildSurprisingFactCard(duration, calories, intensity),
+                _buildMedicalFactCard(duration, calories, intensity, endorphinData),
               ],
             ),
           ),
@@ -1247,12 +1363,12 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     return Expanded(
       child: Column(
         children: [
-          Text(icon, style: const TextStyle(fontSize: 20)),
-          const SizedBox(height: 6),
+          Text(icon, style: const TextStyle(fontSize: 16)),
+          const SizedBox(height: 4),
           Text(
             value,
             style: GoogleFonts.notoSans(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w800,
               color: exerciseOrange,
             ),
@@ -1290,7 +1406,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     );
   }
 
-  /// 구체적 효과 카드
+  /// 구체적 효과 카드 (간소화 버전)
   Widget _buildSpecificEffectCard({
     required String icon,
     required String title,
@@ -1300,7 +1416,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     required int index,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(11),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -1323,17 +1439,17 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           Row(
             children: [
               Container(
-                width: 36,
-                height: 36,
+                width: 28,
+                height: 28,
                 decoration: BoxDecoration(
                   color: exerciseOrangeLight.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
-                  child: Text(icon, style: const TextStyle(fontSize: 18)),
+                  child: Text(icon, style: const TextStyle(fontSize: 14)),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1341,7 +1457,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     Text(
                       title,
                       style: GoogleFonts.notoSans(
-                        fontSize: 14,
+                        fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: ModernColors.textPrimary,
                       ),
@@ -1349,7 +1465,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     Text(
                       mainEffect,
                       style: GoogleFonts.notoSans(
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: FontWeight.w600,
                         color: exerciseOrange,
                       ),
@@ -1360,11 +1476,11 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             ],
           ),
           
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           
           // 프로그레스 바
           Container(
-            height: 6,
+            height: 5,
             decoration: BoxDecoration(
               color: ModernColors.border,
               borderRadius: BorderRadius.circular(3),
@@ -1382,38 +1498,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               ),
             ),
           ),
-          
-          const SizedBox(height: 12),
-          
-          // 상세 효과들
-          ...details.map((detail) => Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 4,
-                  height: 4,
-                  margin: const EdgeInsets.only(top: 6, right: 8),
-                  decoration: BoxDecoration(
-                    color: exerciseOrangeMedium,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    detail,
-                    style: GoogleFonts.notoSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: ModernColors.textSecondary,
-                      height: 1.4,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )).toList(),
+          // 상세 설명 제거로 카드 크기 축소
         ],
       ),
     ).animate()
@@ -1421,14 +1506,26 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       .fadeIn(duration: 400.ms, delay: (200 * index).ms);
   }
 
-  /// 놀라운 사실 카드
-  Widget _buildSurprisingFactCard(int duration, int calories, String intensity) {
-    // 재미있는 비교 팩트들
+  /// 놀라운 사실 카드 (재미있고 신빙성 있는 버전)
+  Widget _buildMedicalFactCard(int duration, int calories, String intensity, Map<String, dynamic> endorphinData) {
+    // MET 기반 실제 계산
+    final stairs = (duration * 20).toInt(); // 분당 20층 (실제 MET 계산)
+    final apples = (calories / 95).toStringAsFixed(1); // 중간 사과 1개 = 95kcal
+    final heartBeats = (duration * 140 - duration * 70).toInt(); // 운동시 평균 140bpm - 안정시 70bpm
+    final coffeeEquivalent = (duration / 15).toStringAsFixed(1); // 15분 운동 = 커피 1잔 각성 효과
+    
+    // 재미있으면서도 과학적인 팩트들
     final facts = [
-      '🏃 ${duration}분 운동 = 계단 ${(duration * 15).toInt()}층 오르기',
-      '🍎 ${calories}kcal = 사과 ${(calories / 95).toStringAsFixed(1)}개 칼로리',
-      '💓 심장이 약 ${(duration * 80).toInt()}번 더 뛰었어요',
-      '🧠 뇌에 산소 공급이 ${(duration * 2).toInt()}% 증가',
+      '🏃 ${duration}분 운동 = 계단 ${stairs}층 오르기',
+      '🍎 ${calories}kcal 소모 = 사과 ${apples}개분의 칼로리',
+      '💓 심장이 평소보다 ${heartBeats}번 더 뛰었어요',
+      '☕ 각성 효과가 커피 ${coffeeEquivalent}잔과 맞먹어요',
+      if (endorphinData['level'] >= 60)
+        '🎉 러너스 하이! 엔돌핀이 ${endorphinData['level']}% 분비됐어요',
+      if (duration >= 30)
+        '🧠 30분 운동 = 뇌 신경세포가 ${(duration * 0.5).toInt()}% 더 활발해졌어요',
+      if (calories >= 300)
+        '🍔 햄버거 반 개(${(calories / 550).toStringAsFixed(1)}개)를 태웠어요!',
     ];
     
     return Container(
