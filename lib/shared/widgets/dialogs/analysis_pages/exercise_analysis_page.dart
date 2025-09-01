@@ -983,6 +983,10 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: ModernColors.exercise,
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: ModernColors.exercise.withOpacity(0.1),
@@ -1025,7 +1029,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                         '셰르피의 꿀팁이에요!',
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w800,
                           color: Colors.white,
                         ),
                       ),
@@ -1044,9 +1048,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             ),
           ),
           
-          // 추천 카드들
+          // 추천 카드들 - 깔끔한 디자인
           Padding(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(16),
             child: Column(
               children: points.asMap().entries.map((entry) {
                 final index = entry.key;
@@ -1583,40 +1587,30 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
   /// 추천 카드 위젯
   Widget _buildRecommendationCard(String text, int index) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      margin: EdgeInsets.only(bottom: index < 2 ? 12 : 0), // 마지막 카드는 margin 없음
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            ModernColors.exerciseLight.withOpacity(0.3),
-            ModernColors.exerciseLight.withOpacity(0.1),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.2),
-          width: 1,
-        ),
+        color: ModernColors.surfaceElevated,  // 연한 회색 배경
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 번호 뱃지
+          // 번호 뱃지 - 더 심플하고 작게
           Container(
-            width: 28,
-            height: 28,
+            width: 24,
+            height: 24,
             decoration: BoxDecoration(
-              color: ModernColors.exercise,
+              color: ModernColors.exercise.withOpacity(0.15),
               shape: BoxShape.circle,
             ),
             child: Center(
               child: Text(
                 '${index + 1}',
                 style: GoogleFonts.notoSans(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: ModernColors.exercise,
                 ),
               ),
             ),
@@ -1626,18 +1620,19 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             child: Text(
               text,
               style: GoogleFonts.notoSans(
-                fontSize: 13,
+                fontSize: 14,  // 가독성 향상
                 fontWeight: FontWeight.w500,
-                color: ModernColors.textSecondary,
-                height: 1.5,
+                color: ModernColors.textPrimary,  // 더 진한 색상으로 가독성 향상
+                height: 1.4,
+                letterSpacing: -0.2,  // 약간 타이트한 자간
               ),
             ),
           ),
         ],
       ),
     ).animate()
-      .slideX(begin: 0.1, end: 0, duration: 400.ms, delay: (100 * index).ms)
-      .fadeIn(duration: 400.ms, delay: (100 * index).ms);
+      .slideX(begin: 0.05, end: 0, duration: 300.ms, delay: (80 * index).ms)
+      .fadeIn(duration: 300.ms, delay: (80 * index).ms);
   }
   
   /// 동기부여 배지 위젯
