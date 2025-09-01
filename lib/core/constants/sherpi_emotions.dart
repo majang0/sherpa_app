@@ -83,7 +83,7 @@ class SherpiEmotionMapper {
       case SherpiContext.welcome:
       case SherpiContext.dailyGreeting:
       case SherpiContext.exerciseComplete:
-      case SherpiContext.studyComplete:
+      case SherpiContext.readingComplete:
       case SherpiContext.achievement:
         return SherpiEmotion.happy;
         

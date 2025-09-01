@@ -121,7 +121,7 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
             personality: personality,
           );
           
-        case SherpiContext.studyComplete:
+        case SherpiContext.readingComplete:
           return ActivityPromptTemplates.generateStudyPrompt(
             activityData: activityData,
             userContext: userContext ?? {},

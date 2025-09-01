@@ -28,7 +28,7 @@ enum SherpiContext {
 
   // 일상 기록 관련
   exerciseComplete,     // 운동 완료
-  studyComplete,        // 공부 완료
+  readingComplete,      // 독서 완료
   diaryWritten,         // 일기 작성
   focusComplete,        // 집중 타이머 완료
 
@@ -169,7 +169,7 @@ const Map<SherpiContext, List<String>> sherpiDialogues = {
     '꾸준함이라는 최고의 근육을 키우고 있는 중이에요. 정말 멋져요!',
   ],
 
-  SherpiContext.studyComplete: [
+  SherpiContext.readingComplete: [
     // 독서 완료 메시지는 카테고리별로 처리됨 (readingCategoryMessages 참조)
     // StaticDialogueSource에서 자동으로 적절한 메시지 선택
   ],
@@ -736,7 +736,7 @@ final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
 
   // 일상 기록 관련
   SherpiContext.exerciseComplete: SherpiEmotion.surprised,
-  SherpiContext.studyComplete: SherpiEmotion.thinking,
+  SherpiContext.readingComplete: SherpiEmotion.thinking,
   SherpiContext.diaryWritten: SherpiEmotion.guiding,
   SherpiContext.focusComplete: SherpiEmotion.thinking,
 
@@ -875,7 +875,7 @@ class StaticDialogueSource implements SherpiDialogueSource {
     }
     
     // 독서 완료 시 카테고리별 메시지 처리
-    if (context == SherpiContext.studyComplete && userContext != null) {
+    if (context == SherpiContext.readingComplete && userContext != null) {
       // 독서 활동인지 확인 (additionalData에서 bookTitle이 있으면 독서)
       final bookTitle = userContext['bookTitle'] as String?;
       if (bookTitle != null) {

@@ -255,7 +255,7 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
         case SherpiContext.exerciseComplete:
           interactionType = 'exercise_complete';
           break;
-        case SherpiContext.studyComplete:
+        case SherpiContext.readingComplete:
           interactionType = 'study_complete';
           break;
         case SherpiContext.questComplete:
@@ -647,7 +647,7 @@ void initializeSherpi() {
   bool _isActivityCompletionContext(SherpiContext context) {
     const activityContexts = [
       SherpiContext.exerciseComplete,
-      SherpiContext.studyComplete,
+      SherpiContext.readingComplete,
       SherpiContext.questComplete,
       SherpiContext.climbingSuccess,
       SherpiContext.levelUp,
@@ -674,7 +674,7 @@ void initializeSherpi() {
         case SherpiContext.exerciseComplete:
           activityType = 'exercise';
           break;
-        case SherpiContext.studyComplete:
+        case SherpiContext.readingComplete:
           activityType = 'study';
           break;
         case SherpiContext.questComplete:

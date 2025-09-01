@@ -1707,7 +1707,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     switch (activityType) {
       // 📚 독서 완료
       case 'reading':
-        context = SherpiContext.studyComplete;
+        context = SherpiContext.readingComplete;
         emotion = SherpiEmotion.thinking;  // 독서는 thinking 감정이 적절
         break;
         

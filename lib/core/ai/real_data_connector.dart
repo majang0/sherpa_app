@@ -73,7 +73,7 @@ class RealDataConnector {
       case SherpiContext.exerciseComplete:
         userContext.addAll(_getExerciseContextData(user, additionalData));
         break;
-      case SherpiContext.studyComplete:
+      case SherpiContext.readingComplete:
         userContext.addAll(_getStudyContextData(user, additionalData));
         break;
       case SherpiContext.questComplete:

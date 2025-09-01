@@ -8,7 +8,7 @@ import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../core/constants/sherpi_emotions.dart';
 import 'analysis_pages/exercise_analysis_page.dart';
-import 'analysis_pages/reading_analysis_page.dart';
+import '../../../features/daily_record/presentation/screens/reading_analysis_page.dart';
 import 'analysis_pages/diary_analysis_page.dart';
 import 'analysis_pages/comprehensive_analysis_page.dart';
 
@@ -487,8 +487,8 @@ class _EnhancedTodayAnalysisDialogState
           userName: _userName,
         ),
         
-        // Page 2: 독서 분석 (임시 플레이스홀더)
-        _buildComingSoonPage('독서 분석', Icons.menu_book_rounded),
+        // Page 2: 독서 분석
+        const ReadingAnalysisPage(),
         
         // Page 3: 일기 분석 (임시 플레이스홀더)
         _buildComingSoonPage('일기 분석', Icons.edit_note_rounded),
