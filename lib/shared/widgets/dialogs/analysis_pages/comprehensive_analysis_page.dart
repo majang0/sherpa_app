@@ -41,7 +41,8 @@ class _ComprehensiveAnalysisPageState
   
   // 종합 분석 데이터
   ComprehensiveDayAnalysis? _analysisData;
-  bool _isLoading = true;
+  bool _isLoading = false;
+  bool _hasGenerated = false;  // 분석 생성 여부
   String _loadingMessage = '오늘의 데이터를 모으고 있어요...';
   double _loadingProgress = 0.0;
   
@@ -64,7 +65,7 @@ class _ComprehensiveAnalysisPageState
   void initState() {
     super.initState();
     _initializeAnimations();
-    _loadAnalysisData();
+    // 자동 로딩 제거 - 버튼 클릭 시에만 로딩
   }
   
   @override
@@ -160,8 +161,8 @@ class _ComprehensiveAnalysisPageState
         _loadingProgress = 0.9;
       });
       
-      // 실제 AI 분석 호출 (현재는 임시 데이터)
-      await _performAnalysis();
+      // 실제 AI 분석 호출 - forceRegenerate: true로 항상 새로 생성
+      await _performAnalysis(forceRefresh: true);
       
       // 로딩 완료
       setState(() {
@@ -218,7 +219,106 @@ class _ComprehensiveAnalysisPageState
       return _buildLoadingScreen();
     }
     
+    if (!_hasGenerated) {
+      return _buildGenerateButton();
+    }
+    
     return _buildAnalysisContent();
+  }
+  
+  /// 분석 생성 버튼 화면
+  Widget _buildGenerateButton() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // 셰르피 아이콘
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [
+                  ModernColors.primary.withOpacity(0.1),
+                  ModernColors.primary.withOpacity(0.05),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Center(
+              child: Image.asset(
+                SherpiEmotion.defaults.imagePath,
+                width: 70,
+                height: 70,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          // 안내 텍스트
+          Text(
+            'AI가 오늘 하루를\n종합적으로 분석해드릴게요',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.notoSans(
+              fontSize: 16,
+              height: 1.5,
+              color: ModernColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 32),
+          // 생성 버튼
+          GestureDetector(
+            onTap: _generateAnalysis,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              decoration: BoxDecoration(
+                gradient: ModernColors.primaryGradient,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: ModernColors.primary.withOpacity(0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.auto_awesome_rounded,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '종합 분석 생성',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ).animate()
+            .fadeIn(duration: 500.ms)
+            .scale(begin: const Offset(0.8, 0.8), end: const Offset(1, 1)),
+        ],
+      ),
+    );
+  }
+  
+  /// 분석 생성 실행
+  Future<void> _generateAnalysis() async {
+    setState(() {
+      _isLoading = true;
+      _hasGenerated = true;
+    });
+    
+    await _loadAnalysisData();
   }
   
   /// 로딩 화면 구성

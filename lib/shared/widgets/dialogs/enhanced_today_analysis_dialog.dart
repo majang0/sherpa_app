@@ -51,11 +51,17 @@ class _EnhancedTodayAnalysisDialogState
   // 사용자 이름
   String _userName = '';
   
+  // 종합 분석 페이지 키 - 다이얼로그 생명주기 동안 유지
+  late final ValueKey<int> _comprehensivePageKey;
+  
   @override
   void initState() {
     super.initState();
     
     _pageController = PageController();
+    
+    // 종합 분석 페이지 키 생성 - 다이얼로그가 열릴 때마다 새로 생성
+    _comprehensivePageKey = ValueKey(DateTime.now().millisecondsSinceEpoch);
     
     // 애니메이션 초기화
     _pageIndicatorController = AnimationController(
@@ -495,6 +501,7 @@ class _EnhancedTodayAnalysisDialogState
         
         // Page 4: 종합 분석
         ComprehensiveAnalysisPage(
+          key: _comprehensivePageKey,  // 페이지 키 전달로 인스턴스 관리
           exerciseData: _todayExerciseData,
           readingData: _todayReadingData,
           diaryData: _todayDiaryData,
