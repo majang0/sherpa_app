@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/ai/activity_analysis_service.dart';
 import '../../../../core/utils/exercise_calculator.dart';
+import '../../../../core/constants/sherpi_emotions.dart';
 
 /// 운동 분석 페이지 - 셰르피가 직접 대화하는 친근한 분석 (주황색 테마)
 class ExerciseAnalysisPage extends StatefulWidget {
@@ -38,6 +39,12 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
   late AnimationController _badgeAnimationController;
   late AnimationController _pulseController;
   late AnimationController _cardAnimationController;
+  late AnimationController _pageAnimationController;
+  late AnimationController _floatingAnimationController;
+  
+  // 애니메이션들
+  late Animation<double> _fadeInAnimation;
+  late Animation<double> _floatingAnimation;
   
   
   // ModernColors.exercise를 사용 (이제 주황색으로 변경됨)
@@ -60,6 +67,33 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
+    
+    _pageAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    
+    _floatingAnimationController = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    )..repeat(reverse: true);
+    
+    // 애니메이션 곡선 설정
+    _fadeInAnimation = CurvedAnimation(
+      parent: _pageAnimationController,
+      curve: Curves.easeInOut,
+    );
+    
+    _floatingAnimation = Tween<double>(
+      begin: -10,
+      end: 10,
+    ).animate(CurvedAnimation(
+      parent: _floatingAnimationController,
+      curve: Curves.easeInOut,
+    ));
+    
+    // 페이지 애니메이션 시작
+    _pageAnimationController.forward();
     
     // AI 분석 데이터 로드
     _loadAnalysisData();
@@ -115,6 +149,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     _badgeAnimationController.dispose();
     _pulseController.dispose();
     _cardAnimationController.dispose();
+    _pageAnimationController.dispose();
+    _floatingAnimationController.dispose();
     super.dispose();
   }
   
@@ -190,41 +226,151 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
   @override
   Widget build(BuildContext context) {
     if (widget.todayData == null) {
-      return _buildNoDataState();
+      return Scaffold(
+        backgroundColor: ModernColors.background,
+        body: _buildNoDataState(),
+      );
     }
     
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // 1-2. 시각적 배지 섹션
-          _buildBadgeSection(),
+    return Scaffold(
+      backgroundColor: ModernColors.background,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          // 헤더
+          SliverToBoxAdapter(
+            child: _buildHeader(),
+          ),
           
-          const SizedBox(height: 24),
-          
-          // 3. 비교 분석 섹션 (리디자인)
-          _buildModernComparisonSection(),
-          
-          const SizedBox(height: 20),
-          
-          // 4. 오늘 운동의 장점 (리디자인)
-          _buildModernBenefitsSection(),
-          
-          const SizedBox(height: 20),
-          
-          // 5. 셰르피의 추천 (리디자인)
-          _buildModernRecommendationSection(),
-          
-          const SizedBox(height: 20),
-          
-          // 6. 응원의 말 (리디자인)
-          _buildModernEncouragementSection(),
-          
-          const SizedBox(height: 20),
+          // 컨텐츠
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // 1-2. 시각적 배지 섹션
+                  _buildBadgeSection(),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // 3. 비교 분석 섹션 (리디자인)
+                  _buildModernComparisonSection(),
+                  
+                  const SizedBox(height: 20),
+                  
+                  // 4. 오늘 운동의 장점 (리디자인)
+                  _buildModernBenefitsSection(),
+                  
+                  const SizedBox(height: 20),
+                  
+                  // 5. 셰르피의 추천 (리디자인)
+                  _buildModernRecommendationSection(),
+                  
+                  const SizedBox(height: 20),
+                  
+                  // 6. 응원의 말 (리디자인)
+                  _buildModernEncouragementSection(),
+                  
+                  const SizedBox(height: 100),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
+  }
+  
+  /// 헤더
+  Widget _buildHeader() {
+    return Container(
+      height: 140,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            ModernColors.exercise.withValues(alpha: 0.2),
+            ModernColors.exercise.withValues(alpha: 0.05),
+          ],
+        ),
+      ),
+      child: Stack(
+        children: [
+          // 배경 패턴
+          Positioned.fill(
+            child: CustomPaint(
+              painter: ExercisePatternPainter(
+                color: ModernColors.exercise.withValues(alpha: 0.1),
+              ),
+            ),
+          ),
+          
+          // 콘텐츠
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Spacer(),
+                  
+                  // 타이틀
+                  FadeTransition(
+                    opacity: _fadeInAnimation,
+                    child: Row(
+                      children: [
+                        // 셰르피 아이콘
+                        AnimatedBuilder(
+                          animation: _floatingAnimation,
+                          builder: (context, child) {
+                            return Transform.translate(
+                              offset: Offset(0, _floatingAnimation.value),
+                              child: Image.asset(
+                                SherpiEmotion.cheering.imagePath,
+                                width: 90,
+                                height: 90,
+                              ),
+                            );
+                          },
+                        ),
+                        
+                        const SizedBox(width: 16),
+                        
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '운동 여정 분석',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w700,
+                                  color: ModernColors.exercise,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                '셰르피와 함께하는 운동 이야기',
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 14,
+                                  color: ModernColors.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ).animate().fadeIn(duration: const Duration(milliseconds: 800));
   }
   
   /// 시각적 배지 섹션
@@ -1707,44 +1853,40 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // 셰르피 이미지
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: ModernColors.exercise.withOpacity(0.2),
-                  blurRadius: 15,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                'assets/images/sherpi/sherpi_thinking.png',
-                fit: BoxFit.cover,
-              ),
-            ),
+          // 셰르피 이미지 (애니메이션 추가)
+          Image.asset(
+            SherpiEmotion.thinking.imagePath,
+            width: 120,
+            height: 120,
+          ).animate(
+            onPlay: (controller) => controller.repeat(),
+          ).scale(
+            duration: const Duration(seconds: 2),
+            curve: Curves.easeInOut,
+            begin: const Offset(0.95, 0.95),
+            end: const Offset(1.05, 1.05),
           ),
-          const SizedBox(height: 16),
+          
+          const SizedBox(height: 24),
+          
           Text(
-            '"아직 운동 기록이 없네요"',
+            '아직 운동 기록이 없어요',
             style: GoogleFonts.notoSans(
-              fontSize: 16,
+              fontSize: 20,
               fontWeight: FontWeight.w600,
               color: ModernColors.textPrimary,
             ),
           ),
-          const SizedBox(height: 8),
+          
+          const SizedBox(height: 12),
+          
           Text(
-            '"오늘의 운동을 기록해볼까요?"',
+            '운동을 하고 기록을 남겨보세요.\n셰르피가 함께 운동 여정을 분석해드릴게요!',
+            textAlign: TextAlign.center,
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              fontWeight: FontWeight.w500,
               color: ModernColors.textSecondary,
+              height: 1.5,
             ),
           ),
         ],
@@ -1782,6 +1924,74 @@ class _BubbleTailPainter extends CustomPainter {
     
     canvas.drawPath(path, paint);
     canvas.drawPath(path, borderPaint);
+  }
+  
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+/// 운동 패턴 페인터 (배경 장식)
+class ExercisePatternPainter extends CustomPainter {
+  final Color color;
+  
+  ExercisePatternPainter({required this.color});
+  
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+    
+    // 운동 관련 패턴 그리기 (덤벨 모양)
+    const dumbbellWidth = 35.0;
+    const dumbbellHeight = 15.0;
+    const spacing = 20.0;
+    
+    for (double x = 0; x < size.width; x += dumbbellWidth + spacing) {
+      for (double y = 0; y < size.height; y += dumbbellHeight + spacing) {
+        final centerX = x + (y.toInt() % 2 == 0 ? 0 : dumbbellWidth / 2);
+        final centerY = y + dumbbellHeight / 2;
+        
+        // 덤벨 그리기
+        _drawDumbbell(canvas, paint, centerX, centerY, dumbbellWidth, dumbbellHeight);
+      }
+    }
+  }
+  
+  void _drawDumbbell(Canvas canvas, Paint paint, double centerX, double centerY, double width, double height) {
+    // 덤벨 바 (중앙 막대)
+    final barRect = Rect.fromCenter(
+      center: Offset(centerX, centerY),
+      width: width * 0.6,
+      height: height * 0.3,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(barRect, const Radius.circular(2)),
+      paint,
+    );
+    
+    // 왼쪽 웨이트
+    final leftWeight = Rect.fromCenter(
+      center: Offset(centerX - width * 0.25, centerY),
+      width: width * 0.2,
+      height: height * 0.8,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(leftWeight, const Radius.circular(3)),
+      paint,
+    );
+    
+    // 오른쪽 웨이트
+    final rightWeight = Rect.fromCenter(
+      center: Offset(centerX + width * 0.25, centerY),
+      width: width * 0.2,
+      height: height * 0.8,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rightWeight, const Radius.circular(3)),
+      paint,
+    );
   }
   
   @override
