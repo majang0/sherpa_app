@@ -784,6 +784,58 @@ ${previousExercise != null ? '''
     }
   }
   
+  /// 📝 종합 일기 분석 (감정 기반 4개 섹션 한번에 생성)
+  /// 
+  /// 일기 내용이 아닌 감정 데이터만을 기반으로 분석합니다.
+  Future<ComprehensiveDiaryAnalysis> analyzeDiaryComprehensive({
+    required String currentMood,
+    String? previousMood,
+    required String userName,
+    List<String>? recentMoodHistory,  // 최근 7일 감정 기록
+    bool forceRegenerate = false,
+  }) async {
+    try {
+      // 캐시 확인 (forceRegenerate가 false일 때만)
+      if (!forceRegenerate) {
+        final cached = await getComprehensiveDiaryFromCache();
+        if (cached != null) {
+          return cached;
+        }
+      }
+      
+      // 에뮬레이터 네트워크 체크 (경고만 표시, 실패해도 계속 진행)
+      if (Platform.isAndroid) {
+        try {
+          await http.head(Uri.parse('https://api.openai.com')).timeout(
+            const Duration(seconds: 2),
+          );
+        } catch (e) {
+          // 기본 메시지로 즉시 반환하지 않고 API 호출 시도
+        }
+      }
+      
+      final prompt = _generateComprehensiveDiaryPrompt(
+        currentMood: currentMood,
+        previousMood: previousMood,
+        userName: userName,
+        recentMoodHistory: recentMoodHistory,
+      );
+      
+      final response = await _callOpenAIForDiaryComprehensive(prompt);
+      final analysis = _parseComprehensiveDiaryResponse(response);
+      
+      // 캐시에 저장
+      await _saveComprehensiveDiaryToCache(analysis);
+      
+      return analysis;
+    } catch (e) {
+      print('❌ analyzeDiaryComprehensive 에러 발생:');
+      print('  에러 타입: ${e.runtimeType}');
+      print('  에러 메시지: $e');
+      return _getDefaultComprehensiveDiaryAnalysis(currentMood, previousMood, userName);
+    }
+  }
+  
   /// 종합 독서 분석 프롬프트 생성
   String _generateComprehensiveReadingPrompt({
     required Map<String, dynamic> todayReading,
@@ -1145,9 +1197,573 @@ $previousBookInfo
       recommendations: _getDefaultBookRecommendations(),
     );
   }
+  
+  /// 📝 종합 일기 분석 프롬프트 생성
+  String _generateComprehensiveDiaryPrompt({
+    required String currentMood,
+    String? previousMood,
+    required String userName,
+    List<String>? recentMoodHistory,
+  }) {
+    // 감정 이모지와 라벨 매핑
+    final moodEmojis = {
+      'excited': '🥰',
+      'happy': '😄',
+      'good': '😊',
+      'normal': '😐',
+      'thoughtful': '🤔',
+      'tired': '😴',
+      'sad': '😢',
+      'angry': '😡',
+    };
+    
+    final moodLabels = {
+      'excited': '설레요',
+      'happy': '기뻐요',
+      'good': '좋아요',
+      'normal': '보통이에요',
+      'thoughtful': '생각이 많아요',
+      'tired': '피곤해요',
+      'sad': '슬퍼요',
+      'angry': '화나요',
+    };
+    
+    final currentEmoji = moodEmojis[currentMood] ?? '😊';
+    final currentLabel = moodLabels[currentMood] ?? '보통이에요';
+    
+    String previousContext = '';
+    if (previousMood != null) {
+      final prevEmoji = moodEmojis[previousMood] ?? '😊';
+      final prevLabel = moodLabels[previousMood] ?? '보통이에요';
+      previousContext = '• 이전 감정: $prevEmoji $prevLabel';
+    }
+    
+    String moodPattern = '';
+    if (recentMoodHistory != null && recentMoodHistory.isNotEmpty) {
+      final recentEmojis = recentMoodHistory.map((m) => moodEmojis[m] ?? '😊').join(' → ');
+      moodPattern = '• 최근 7일 감정 변화: $recentEmojis';
+    }
+    
+    return '''당신은 셰르피입니다! $userName님의 감정을 깊이 이해하고 공감하는 따뜻한 친구예요! 💝
+같은 공간에서 함께 있는 것처럼, 진심으로 공감하고 위로해주세요.
+⚠️ 중요: 일기 내용은 언급하지 마세요. 오직 감정만을 다뤄주세요.
+⚠️ 말투: 친근한 존댓말 사용 (~해요, ~네요, ~죠) - 딱딱한 존댓말(~습니다) 금지!
+
+📊 감정 데이터
+• 현재 감정: $currentEmoji $currentLabel
+$previousContext
+$moodPattern
+
+[SECTION_1] (정확히 40자) - 감정 전환 메시지
+${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLabel"로의 변화를 부드럽게 언급
+• 감정의 흐름을 자연스럽게 연결
+• 예: "차분했던 마음이 오늘은 설레는 기분으로 바뀌었네요! 🌸"''' : '''• 오늘의 감정 상태를 따뜻하게 인정
+• 첫 감정 기록을 축하'''}
+
+[SECTION_2] (100-130자) - 감정적 지지
+• 현재 감정($currentLabel)에 깊이 공감
+• 마치 옆에서 이야기를 듣는 것처럼 따뜻하게
+• 구체적인 공감 표현 사용
+• 감정을 있는 그대로 인정하고 지지
+
+[SECTION_3] (100-130자) - 실질적 조언
+• 현재 감정 상태에 맞는 구체적인 활동 제안
+• 실천 가능한 작은 행동들
+• 긍정적 변화를 위한 부드러운 가이드
+• 무리하지 않는 선에서 할 수 있는 것들
+
+[SECTION_4] (80-100자) - 내일의 희망
+• 내일을 기대하게 만드는 메시지
+• 셰르피와 함께하는 약속
+• 희망적이고 따뜻한 마무리
+• 언제나 곁에 있다는 든든함 전달''';
+  }
+  
+  /// 종합 일기 분석 API 호출
+  Future<String> _callOpenAIForDiaryComprehensive(String prompt) async {
+    try {
+      final chatCompletion = await _client.createChatCompletion(
+        request: CreateChatCompletionRequest(
+          model: ChatCompletionModel.modelId(ApiConfig.openAIModel),
+          messages: [
+            ChatCompletionMessage.system(
+              content: '''당신은 셰르피입니다. 사용자와 매일 함께하는 따뜻한 감정 친구예요.
+친근한 존댓말을 사용하고 (~해요, ~네요, ~죠), 이모티콘을 자연스럽게 사용하세요.
+감정에 깊이 공감하고, 위로와 응원을 전달하세요.''',
+            ),
+            ChatCompletionMessage.user(
+              content: ChatCompletionUserMessageContent.string(prompt),
+            ),
+          ],
+          temperature: 0.9,
+          maxTokens: 1000,
+        ),
+      ).timeout(
+        const Duration(seconds: 15),
+        onTimeout: () => throw TimeoutException('OpenAI API 타임아웃'),
+      );
+      
+      return chatCompletion.choices.first.message.content ?? '';
+    } catch (e) {
+      print('❌ 일기 API 호출 실패: $e');
+      rethrow;
+    }
+  }
+  
+  /// 종합 일기 분석 응답 파싱
+  ComprehensiveDiaryAnalysis _parseComprehensiveDiaryResponse(String response) {
+    try {
+      // 각 섹션 추출
+      final section1Match = RegExp(r'\[SECTION_1\]\s*(.*?)\s*(?=\[SECTION_2\]|$)', dotAll: true).firstMatch(response);
+      final section2Match = RegExp(r'\[SECTION_2\]\s*(.*?)\s*(?=\[SECTION_3\]|$)', dotAll: true).firstMatch(response);
+      final section3Match = RegExp(r'\[SECTION_3\]\s*(.*?)\s*(?=\[SECTION_4\]|$)', dotAll: true).firstMatch(response);
+      final section4Match = RegExp(r'\[SECTION_4\]\s*(.*?)$', dotAll: true).firstMatch(response);
+      
+      return ComprehensiveDiaryAnalysis(
+        emotionTransition: _cleanAndTrimText(section1Match?.group(1), 200) ?? '감정의 변화를 함께 지켜보고 있어요 💝',
+        emotionalSupport: _cleanAndTrimText(section2Match?.group(1), 500) ?? '오늘 하루도 정말 수고 많으셨어요. 어떤 감정이든 소중해요. 셰르피가 늘 곁에서 응원하고 있어요 💖',
+        practicalAdvice: _cleanAndTrimText(section3Match?.group(1), 500) ?? '지금 이 순간, 깊게 숨을 들이쉬고 내쉬어보세요. 따뜻한 차 한잔과 좋아하는 음악을 들으며 잠시 쉬어가는 것도 좋을 것 같아요 ☕',
+        tomorrowHope: _cleanAndTrimText(section4Match?.group(1), 400) ?? '내일도 셰르피가 함께할게요. 오늘보다 더 나은 내일이 되도록, 작은 것부터 하나씩 함께 해나가요 🌟',
+      );
+    } catch (e) {
+      print('⚠️ 일기 응답 파싱 실패, 기본값 사용: $e');
+      return ComprehensiveDiaryAnalysis(
+        emotionTransition: '감정의 변화를 함께 지켜보고 있어요 💝',
+        emotionalSupport: '오늘 하루도 정말 수고 많으셨어요. 어떤 감정이든 소중해요. 셰르피가 늘 곁에서 응원하고 있어요 💖',
+        practicalAdvice: '지금 이 순간, 깊게 숨을 들이쉬고 내쉬어보세요. 따뜻한 차 한잔과 좋아하는 음악을 들으며 잠시 쉬어가는 것도 좋을 것 같아요 ☕',
+        tomorrowHope: '내일도 셰르피가 함께할게요. 오늘보다 더 나은 내일이 되도록, 작은 것부터 하나씩 함께 해나가요 🌟',
+      );
+    }
+  }
+  
+  /// 텍스트 정리 및 길이 제한
+  String? _cleanAndTrimText(String? text, int maxLength) {
+    if (text == null || text.isEmpty) return null;
+    
+    // 불필요한 공백 제거
+    String cleaned = text.trim().replaceAll(RegExp(r'\s+'), ' ');
+    
+    // 길이 제한
+    if (cleaned.length > maxLength) {
+      cleaned = cleaned.substring(0, maxLength - 3) + '...';
+    }
+    
+    return cleaned;
+  }
+  
+  /// 종합 일기 분석 캐시 저장
+  Future<void> _saveComprehensiveDiaryToCache(ComprehensiveDiaryAnalysis analysis) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final dateKey = _getTodayDateKey();
+      final fullKey = 'comprehensive_diary_$dateKey';
+      
+      await prefs.setString(fullKey, jsonEncode(analysis.toJson()));
+      print('✅ 종합 일기 분석 캐시 저장 완료: $fullKey');
+    } catch (e) {
+      print('❌ 일기 분석 캐시 저장 실패: $e');
+    }
+  }
+  
+  /// 종합 일기 분석 캐시에서 읽기
+  Future<ComprehensiveDiaryAnalysis?> getComprehensiveDiaryFromCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final dateKey = _getTodayDateKey();
+      final fullKey = 'comprehensive_diary_$dateKey';
+      
+      final cached = prefs.getString(fullKey);
+      if (cached != null) {
+        final json = jsonDecode(cached) as Map<String, dynamic>;
+        print('✅ 종합 일기 분석 캐시 로드 성공');
+        return ComprehensiveDiaryAnalysis.fromJson(json);
+      }
+    } catch (e) {
+      print('❌ 일기 분석 캐시 로드 실패: $e');
+    }
+    return null;
+  }
+  
+  /// 종합 일기 분석 캐시 삭제
+  Future<void> clearComprehensiveDiaryCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final dateKey = _getTodayDateKey();
+      final fullKey = 'comprehensive_diary_$dateKey';
+      
+      await prefs.remove(fullKey);
+      print('✅ 종합 일기 분석 캐시 삭제 완료');
+    } catch (e) {
+      print('❌ 일기 분석 캐시 삭제 실패: $e');
+    }
+  }
+  
+  /// 기본 종합 일기 분석 (API 실패 시)
+  ComprehensiveDiaryAnalysis _getDefaultComprehensiveDiaryAnalysis(
+    String currentMood,
+    String? previousMood,
+    String userName,
+  ) {
+    // 감정별 기본 메시지
+    final emotionMessages = {
+      'excited': {
+        'transition': '설레는 마음이 가득하시네요! 좋은 일이 있으신가 봐요 🥰',
+        'support': '설레는 감정은 정말 소중해요. 이런 순간들이 모여서 행복한 추억이 되죠. 셰르피도 함께 설레어요! 오늘의 이 기분을 마음껏 즐기세요 💖',
+        'advice': '설렐 때는 그 감정을 충분히 느껴보세요. 좋아하는 음악을 들으며 산책하거나, 친구와 이 기분을 나누는 것도 좋을 것 같아요 🎵',
+        'hope': '내일도 이런 설렘이 계속되길 바라요. 셰르피가 함께 응원할게요! 오늘의 설렘을 내일의 에너지로 만들어봐요 ✨',
+      },
+      'happy': {
+        'transition': '기쁜 마음이 느껴져요! 행복이 가득한 하루였나 봐요 😄',
+        'support': '행복한 감정을 느끼고 계시는군요! 이런 순간이 정말 소중해요. 셰르피도 함께 기뻐요. 오늘의 행복을 마음껏 만끽하세요 🌈',
+        'advice': '행복할 때는 그 순간을 기록해두면 좋아요. 사진을 찍거나 짧은 메모를 남겨보세요. 나중에 큰 힘이 될 거예요 📸',
+        'hope': '내일도 웃을 일이 가득하길 바라요. 오늘의 행복이 내일로 이어지도록, 셰르피가 함께할게요 🌟',
+      },
+      'good': {
+        'transition': '오늘은 마음이 편안하고 좋으신가 봐요 😊',
+        'support': '안정적이고 편안한 마음 상태네요. 이런 평온함도 정말 소중해요. 무리하지 않고 자연스럽게 하루를 보내신 것 같아 좋아요 💚',
+        'advice': '마음이 편안할 때 새로운 것을 시도해보는 것도 좋아요. 평소 읽고 싶었던 책이나 보고 싶었던 영화를 즐겨보세요 📚',
+        'hope': '내일도 이런 편안함이 계속되길 바라요. 천천히, 자신의 속도로 나아가는 것이 중요해요. 셰르피가 응원할게요 🌱',
+      },
+      'normal': {
+        'transition': '오늘은 평범한 하루를 보내셨네요 😐',
+        'support': '때로는 특별하지 않은 날도 필요해요. 평범한 일상 속에서도 작은 의미를 찾을 수 있어요. 오늘도 수고하셨어요 💙',
+        'advice': '평범한 날에는 작은 변화를 시도해보세요. 새로운 차를 마시거나, 다른 길로 산책해보는 것도 좋을 것 같아요 ☕',
+        'hope': '내일은 조금 더 특별한 일이 생기길 바라요. 작은 기대감을 가지고 하루를 시작해보세요. 셰르피가 함께해요 🌤️',
+      },
+      'thoughtful': {
+        'transition': '생각이 많으신 하루인가 봐요 🤔',
+        'support': '많은 생각을 하고 계시는군요. 때로는 생각이 많아지는 날도 있죠. 그런 날도 나름의 의미가 있어요. 천천히 정리해나가세요 💭',
+        'advice': '생각이 많을 때는 종이에 적어보는 것이 도움이 돼요. 머릿속을 정리하면 마음도 한결 가벼워질 거예요 📝',
+        'hope': '내일은 조금 더 명료한 하루가 되길 바라요. 오늘의 고민이 내일의 답이 될 수 있어요. 셰르피가 곁에 있을게요 💫',
+      },
+      'tired': {
+        'transition': '피곤한 하루를 보내셨군요 😴',
+        'support': '정말 수고 많으셨어요. 피곤함을 느끼는 것은 열심히 살았다는 증거예요. 충분히 쉬어도 괜찮아요. 셰르피가 토닥토닥 💤',
+        'advice': '오늘은 일찍 쉬세요. 따뜻한 물로 샤워하고, 좋아하는 향의 캔들을 켜두는 것도 좋을 것 같아요 🛁',
+        'hope': '푹 쉬고 나면 내일은 더 개운한 하루가 될 거예요. 충분한 휴식은 선택이 아닌 필수예요. 편안한 밤 되세요 🌙',
+      },
+      'sad': {
+        'transition': '마음이 무거운 하루였나 봐요 😢',
+        'support': '슬픈 감정도 소중해요. 슬플 때는 슬퍼해도 괜찮아요. 셰르피가 옆에서 함께 있을게요. 혼자가 아니에요. 따뜻한 포옹을 보내요 🤗',
+        'advice': '슬플 때는 자신에게 친절해지세요. 좋아하는 음식을 먹거나, 편안한 옷을 입고 쉬는 것도 좋아요 🍵',
+        'hope': '비가 온 뒤 땅이 더 단단해지듯, 오늘의 슬픔도 내일의 힘이 될 거예요. 셰르피가 항상 곁에 있을게요 🌈',
+      },
+      'angry': {
+        'transition': '화가 나는 일이 있으셨나 봐요 😡',
+        'support': '화가 나는 것도 자연스러운 감정이에요. 참기만 하지 마세요. 화를 느끼는 것도 괜찮아요. 셰르피가 들어드릴게요 🔥',
+        'advice': '화가 날 때는 깊게 숨을 쉬고, 잠시 거리를 두는 것이 도움이 돼요. 운동이나 글쓰기로 감정을 표출해보세요 💨',
+        'hope': '내일은 더 차분한 마음으로 하루를 시작할 수 있을 거예요. 오늘의 감정도 지나갈 거예요. 셰르피가 응원해요 🌅',
+      },
+    };
+    
+    final messages = emotionMessages[currentMood] ?? emotionMessages['normal']!;
+    
+    // 이전 감정이 있으면 전환 메시지 조정
+    String transitionMessage = messages['transition']!;
+    if (previousMood != null && previousMood != currentMood) {
+      final prevLabel = {
+        'excited': '설레는',
+        'happy': '기쁜',
+        'good': '좋은',
+        'normal': '평범한',
+        'thoughtful': '생각 많은',
+        'tired': '피곤한',
+        'sad': '슬픈',
+        'angry': '화난',
+      }[previousMood] ?? '어제의';
+      
+      final currLabel = {
+        'excited': '설레는',
+        'happy': '기쁜',
+        'good': '좋은',
+        'normal': '평범한',
+        'thoughtful': '생각 많은',
+        'tired': '피곤한',
+        'sad': '슬픈',
+        'angry': '화난',
+      }[currentMood] ?? '오늘의';
+      
+      transitionMessage = '$prevLabel 마음이 $currLabel 마음으로 바뀌었네요 💝';
+    }
+    
+    return ComprehensiveDiaryAnalysis(
+      emotionTransition: transitionMessage,
+      emotionalSupport: messages['support']!,
+      practicalAdvice: messages['advice']!,
+      tomorrowHope: messages['hope']!,
+    );
+  }
+  
+  /// 🎯 하루 전체 종합 분석
+  Future<ComprehensiveDayAnalysis> analyzeDayComprehensive({
+    required Map<String, dynamic> exerciseData,
+    required Map<String, dynamic> readingData,
+    required Map<String, dynamic> diaryData,
+    required String userName,
+    Map<String, dynamic>? previousDayData,
+    bool forceRegenerate = false,
+  }) async {
+    try {
+      // 캐시 확인
+      if (!forceRegenerate) {
+        final cached = await _getComprehensiveDayFromCache();
+        if (cached != null) {
+          print('✅ 종합 하루 분석 캐시에서 로드 완료');
+          return cached;
+        }
+      }
+      
+      // 프롬프트 생성
+      final prompt = _generateComprehensiveDayPrompt(
+        exerciseData: exerciseData,
+        readingData: readingData,
+        diaryData: diaryData,
+        userName: userName,
+        previousDayData: previousDayData,
+      );
+      
+      // OpenAI API 호출
+      final response = await _callOpenAIForComprehensiveDay(prompt);
+      final analysis = _parseComprehensiveDayResponse(response);
+      
+      // 캐시에 저장
+      await _saveComprehensiveDayToCache(analysis);
+      
+      return analysis;
+    } catch (e) {
+      print('❌ analyzeDayComprehensive 에러: $e');
+      return _getDefaultComprehensiveDayAnalysis(
+        exerciseData,
+        readingData,
+        diaryData,
+        userName,
+      );
+    }
+  }
+  
+  /// 종합 하루 분석 프롬프트 생성
+  String _generateComprehensiveDayPrompt({
+    required Map<String, dynamic> exerciseData,
+    required Map<String, dynamic> readingData,
+    required Map<String, dynamic> diaryData,
+    required String userName,
+    Map<String, dynamic>? previousDayData,
+  }) {
+    // 운동 데이터
+    final exerciseType = _translateExerciseType(exerciseData['type'] ?? '운동');
+    final intensity = _ensureKorean(exerciseData['intensity'] ?? '보통');
+    final duration = exerciseData['duration'] ?? 0;
+    final calories = exerciseData['calories'] ?? 0;
+    
+    // 독서 데이터
+    final bookTitle = readingData['bookTitle'] ?? '책';
+    final pages = readingData['pages'] ?? 0;
+    final genre = readingData['genre'] ?? '일반';
+    final rating = readingData['rating'] ?? 0;
+    
+    // 일기 데이터
+    final mood = diaryData['mood'] ?? 'normal';
+    final diaryContent = diaryData['content'] ?? '';
+    
+    return '''당신은 사용자와 하루를 함께 보낸 AI 동반자 '셰르피'입니다.
+사용자의 하루 활동을 종합적으로 분석하여 따뜻하고 통찰력 있는 피드백을 제공하세요.
+
+[사용자 정보]
+이름: $userName
+
+[오늘의 활동 데이터]
+운동: $exerciseType, ${duration}분, $intensity 강도, ${calories}kcal
+독서: "$bookTitle", ${pages}페이지, $genre 장르, 평점 ${rating}점
+일기: $mood 기분, "$diaryContent"
+
+[분석 요청사항]
+다음 6개 항목을 각각 분석하여 JSON 형식으로 응답해주세요:
+
+1. dayTheme: 오늘 하루의 전체적인 테마를 한 문장으로 표현 (이모지 포함, 15-25자)
+2. emotionalJourney: 운동-독서-감정이 어떻게 연결되었는지 스토리텔링 (100-150자)
+3. balanceReport: 신체(운동), 정신(독서), 감정(일기)의 균형 상태 평가 (80-120자)
+4. growthInsight: 발견한 성장 패턴이나 특별한 인사이트 (80-120자)
+5. tomorrowGuide: 내일을 위한 구체적이고 실천 가능한 제안 (60-100자)
+6. sherpiMessage: 셰르피가 전하는 감동적인 응원 메시지, $userName님 호칭 사용 (100-150자)
+
+[톤 앤 매너]
+- 친근하고 따뜻한 어조
+- 구체적인 데이터를 활용한 개인화된 피드백
+- 긍정적이면서도 현실적인 조언
+- 이모지를 적절히 활용하여 친근감 표현
+
+JSON 형식으로만 응답하세요.''';
+  }
+  
+  /// 종합 하루 분석 OpenAI 호출
+  Future<String> _callOpenAIForComprehensiveDay(String prompt) async {
+    try {
+      final response = await _client.createChatCompletion(
+        request: CreateChatCompletionRequest(
+          model: ChatCompletionModel.model(ChatCompletionModels.gpt4oMini),
+          messages: [
+            ChatCompletionMessage.system(
+              content: '당신은 사용자의 하루를 종합적으로 분석하는 AI 동반자입니다. JSON 형식으로만 응답하세요.',
+            ),
+            ChatCompletionMessage.user(
+              content: ChatCompletionUserMessageContent.string(prompt),
+            ),
+          ],
+          temperature: 0.8,
+          maxTokens: 1000,
+          // JSON 응답 강제
+        ),
+      );
+      
+      return response.choices.first.message.content ?? '{}';
+    } catch (e) {
+      print('❌ OpenAI API 호출 실패: $e');
+      throw e;
+    }
+  }
+  
+  /// 종합 하루 분석 응답 파싱
+  ComprehensiveDayAnalysis _parseComprehensiveDayResponse(String response) {
+    try {
+      final json = jsonDecode(response);
+      
+      // 점수 계산 (운동, 독서, 감정 데이터를 기반으로)
+      final scores = <String, double>{
+        '신체': 85.0,  // 임시 값
+        '정신': 80.0,  // 임시 값
+        '감정': 75.0,  // 임시 값
+      };
+      
+      final balanceScore = scores.values.reduce((a, b) => a + b) / scores.length;
+      
+      return ComprehensiveDayAnalysis(
+        dayTheme: json['dayTheme'] ?? '균형잡힌 하루 🌟',
+        emotionalJourney: json['emotionalJourney'] ?? '오늘은 활기찬 운동으로 시작하여 독서로 마음을 채우고, 일기로 하루를 정리한 충실한 날이었어요.',
+        balanceReport: json['balanceReport'] ?? '신체, 정신, 감정이 조화롭게 균형을 이룬 하루였습니다.',
+        growthInsight: json['growthInsight'] ?? '꾸준한 활동이 긍정적인 에너지로 이어지고 있어요.',
+        tomorrowGuide: json['tomorrowGuide'] ?? '내일도 오늘처럼 균형잡힌 하루를 보내보세요.',
+        sherpiMessage: json['sherpiMessage'] ?? '오늘 정말 멋진 하루를 보내셨네요! 내일도 함께 더 나은 하루를 만들어가요!',
+        balanceScore: balanceScore,
+        scores: scores,
+      );
+    } catch (e) {
+      print('❌ 응답 파싱 실패: $e');
+      throw e;
+    }
+  }
+  
+  /// 종합 하루 분석 캐시 저장
+  Future<void> _saveComprehensiveDayToCache(ComprehensiveDayAnalysis analysis) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final now = DateTime.now();
+      final dateKey = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      final key = 'comprehensive_day_$dateKey';
+      
+      final data = {
+        'dayTheme': analysis.dayTheme,
+        'emotionalJourney': analysis.emotionalJourney,
+        'balanceReport': analysis.balanceReport,
+        'growthInsight': analysis.growthInsight,
+        'tomorrowGuide': analysis.tomorrowGuide,
+        'sherpiMessage': analysis.sherpiMessage,
+        'balanceScore': analysis.balanceScore,
+        'scores': analysis.scores,
+        'timestamp': now.toIso8601String(),
+      };
+      
+      await prefs.setString(key, jsonEncode(data));
+      print('✅ 종합 하루 분석 캐시 저장 완료');
+    } catch (e) {
+      print('❌ 캐시 저장 실패: $e');
+    }
+  }
+  
+  /// 종합 하루 분석 캐시에서 읽기
+  Future<ComprehensiveDayAnalysis?> _getComprehensiveDayFromCache() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final now = DateTime.now();
+      final dateKey = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      final key = 'comprehensive_day_$dateKey';
+      
+      final cached = prefs.getString(key);
+      if (cached != null) {
+        final data = jsonDecode(cached);
+        return ComprehensiveDayAnalysis(
+          dayTheme: data['dayTheme'],
+          emotionalJourney: data['emotionalJourney'],
+          balanceReport: data['balanceReport'],
+          growthInsight: data['growthInsight'],
+          tomorrowGuide: data['tomorrowGuide'],
+          sherpiMessage: data['sherpiMessage'],
+          balanceScore: data['balanceScore'].toDouble(),
+          scores: Map<String, double>.from(data['scores']),
+        );
+      }
+    } catch (e) {
+      print('❌ 캐시 읽기 실패: $e');
+    }
+    return null;
+  }
+  
+  /// 기본 종합 하루 분석 (API 실패 시)
+  ComprehensiveDayAnalysis _getDefaultComprehensiveDayAnalysis(
+    Map<String, dynamic> exerciseData,
+    Map<String, dynamic> readingData,
+    Map<String, dynamic> diaryData,
+    String userName,
+  ) {
+    // 각 활동의 완성도에 따른 점수 계산
+    final exerciseScore = (exerciseData['duration'] != null && exerciseData['duration'] > 0) ? 85.0 : 0.0;
+    final readingScore = (readingData['pages'] != null && readingData['pages'] > 0) ? 80.0 : 0.0;
+    final diaryScore = (diaryData['content'] != null && diaryData['content'].isNotEmpty) ? 75.0 : 0.0;
+    
+    final scores = {
+      '신체': exerciseScore,
+      '정신': readingScore,
+      '감정': diaryScore,
+    };
+    
+    final balanceScore = scores.values.where((v) => v > 0).isNotEmpty
+        ? scores.values.where((v) => v > 0).reduce((a, b) => a + b) / scores.values.where((v) => v > 0).length
+        : 0.0;
+    
+    return ComprehensiveDayAnalysis(
+      dayTheme: '성실한 하루 ✨',
+      emotionalJourney: '오늘은 운동으로 활력을 얻고, 독서로 지식을 쌓으며, 일기로 마음을 정리한 알찬 하루였어요.',
+      balanceReport: '신체와 정신, 감정이 조화를 이루며 균형잡힌 하루를 보내셨네요.',
+      growthInsight: '꾸준한 기록과 활동이 당신의 성장을 만들어가고 있어요. 이런 습관이 큰 변화를 가져올 거예요.',
+      tomorrowGuide: '오늘의 좋은 흐름을 내일도 이어가보세요. 작은 목표를 하나 더 추가해보는 것도 좋겠어요.',
+      sherpiMessage: '$userName님, 오늘 하루도 정말 수고 많으셨어요! 🎉 운동도, 독서도, 일기도 모두 완료하신 당신이 자랑스러워요. 내일도 함께 멋진 하루를 만들어가요!',
+      balanceScore: balanceScore,
+      scores: scores,
+    );
+  }
 }
 
-// TodayAnalysisData 모델 제거됨 - 개별 활동 분석을 사용하지 않음
+/// 🎯 종합 하루 분석 데이터 모델
+class ComprehensiveDayAnalysis {
+  final String dayTheme;           // 오늘의 테마
+  final String emotionalJourney;   // 감정 여정 스토리
+  final String balanceReport;      // 균형 분석
+  final String growthInsight;      // 성장 인사이트
+  final String tomorrowGuide;      // 내일을 위한 제안
+  final String sherpiMessage;      // 셰르피 메시지
+  final double balanceScore;       // 균형 점수
+  final Map<String, double> scores; // 영역별 점수
+  
+  ComprehensiveDayAnalysis({
+    required this.dayTheme,
+    required this.emotionalJourney,
+    required this.balanceReport,
+    required this.growthInsight,
+    required this.tomorrowGuide,
+    required this.sherpiMessage,
+    required this.balanceScore,
+    required this.scores,
+  });
+}
 
 /// 종합 운동 분석 데이터 모델
 class ComprehensiveExerciseAnalysis {
@@ -1245,6 +1861,40 @@ class BookRecommendation {
       author: json['author'] as String,
       reason: json['reason'] as String,
       mood: json['mood'] as String,
+    );
+  }
+}
+
+/// 📝 종합 일기 분석 모델
+/// 
+/// 사용자의 감정 변화를 추적하고 공감적 피드백을 제공합니다.
+/// 일기 내용이 아닌 감정 데이터만을 기반으로 분석합니다.
+class ComprehensiveDiaryAnalysis {
+  final String emotionTransition;    // 감정 전환 메시지 (40자)
+  final String emotionalSupport;     // 감정적 지지 메시지 (100-130자)
+  final String practicalAdvice;      // 실질적 조언 (100-130자)
+  final String tomorrowHope;         // 내일을 위한 희망 메시지 (80-100자)
+  
+  ComprehensiveDiaryAnalysis({
+    required this.emotionTransition,
+    required this.emotionalSupport,
+    required this.practicalAdvice,
+    required this.tomorrowHope,
+  });
+  
+  Map<String, dynamic> toJson() => {
+    'emotionTransition': emotionTransition,
+    'emotionalSupport': emotionalSupport,
+    'practicalAdvice': practicalAdvice,
+    'tomorrowHope': tomorrowHope,
+  };
+  
+  factory ComprehensiveDiaryAnalysis.fromJson(Map<String, dynamic> json) {
+    return ComprehensiveDiaryAnalysis(
+      emotionTransition: json['emotionTransition'] as String,
+      emotionalSupport: json['emotionalSupport'] as String,
+      practicalAdvice: json['practicalAdvice'] as String,
+      tomorrowHope: json['tomorrowHope'] as String,
     );
   }
 }

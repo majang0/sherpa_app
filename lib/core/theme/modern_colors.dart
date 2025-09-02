@@ -150,9 +150,24 @@ class ModernColors {
   static const Color exercise = Color(0xFFFF6B35);
   static const Color exerciseLight = Color(0xFFFFF3E0);
   
+  /// 🌸 운동 페이지용 부드러운 배경색 (Soft Flow Design)
+  static const Color exerciseBackground = Color(0xFFFFF8F5);  // 극연한 피치
+  static const Color exerciseMist = Color(0xFFFFEFE6);        // 은은한 미스트  
+  static const Color exerciseCloud = Color(0xFFFFF5F0);       // 구름빛
+  static const Color exerciseWarm = Color(0xFFFF8A65);        // 부드러운 코랄
+  static const Color exerciseSoft = Color(0xFFFFAB91);        // 연한 피치
+  static const Color exerciseGlow = Color(0xFFFFE0D2);        // 글로우 효과
+  
   /// 📚 독서 - 신선한 민트 그린
   static const Color reading = Color(0xFF10B981);
   static const Color readingLight = Color(0xFFD1FAE5);
+  
+  /// 🌊 진한 민트색 계열 - 오늘의 독서 섹션용
+  static const Color deepMint = Color(0xFF4DB6AC);      // 연한 민트 (메인)
+  static const Color deepMintDark = Color(0xFF26A69A);  // 약간 진한 민트
+  static const Color deepMintLight = Color(0xFF80CBC4); // 밝은 민트
+  static const Color deepMintSoft = Color(0xFFB2DFDB);  // 매우 연한 민트
+  static const Color mintPale = Color(0xFFE0F2F1);      // 극연한 민트 (지난 독서용)
   
   /// 🎯 집중 - 진중한 슬레이트
   static const Color focus = Color(0xFF475569);

@@ -220,17 +220,17 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
     }
   }
   
-  /// 감정 색상 가져오기
+  /// 감정 색상 가져오기 - 부드러운 일기 테마 색상
   Color _getMoodColor(String mood) {
     switch (mood) {
-      case 'excited': return const Color(0xFFFF6B6B);  // 붉은 계열
-      case 'happy': return const Color(0xFFFFD93D);    // 노란 계열
-      case 'good': return const Color(0xFF6BCF7F);     // 초록 계열
-      case 'normal': return const Color(0xFF6B5B95);   // 보라 계열
-      case 'thoughtful': return const Color(0xFF4ECDC4); // 청록 계열
-      case 'tired': return const Color(0xFF95A99C);    // 회색 계열
-      case 'sad': return const Color(0xFF5C9EAD);      // 파란 계열
-      case 'angry': return const Color(0xFFE74C3C);    // 빨간 계열
+      case 'excited': return ModernColors.diary;                           // 풀 컬러
+      case 'happy': return ModernColors.diary;                             // 풀 컬러
+      case 'good': return ModernColors.diaryAccent;                        // 스카이 블루
+      case 'normal': return ModernColors.diary.withValues(alpha: 0.9);     // 살짝만 연하게
+      case 'thoughtful': return ModernColors.diary.withValues(alpha: 0.85); // 약간 연하게
+      case 'tired': return ModernColors.diary.withValues(alpha: 0.8);      // 조금 연하게
+      case 'sad': return ModernColors.diary.withValues(alpha: 0.85);       // 약간 연하게
+      case 'angry': return ModernColors.diary.withValues(alpha: 0.9);      // 살짝만 연하게
       default: return ModernColors.diary;
     }
   }
@@ -315,9 +315,11 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            ModernColors.diary.withValues(alpha: 0.2),
-            ModernColors.diary.withValues(alpha: 0.05),
+            ModernColors.diaryLight,
+            ModernColors.diaryLight.withValues(alpha: 0.5),
+            Colors.white.withValues(alpha: 0.95),
           ],
+          stops: const [0.0, 0.5, 1.0],
         ),
       ),
       child: Stack(
@@ -326,7 +328,7 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
           Positioned.fill(
             child: CustomPaint(
               painter: DiaryPatternPainter(
-                color: ModernColors.diary.withValues(alpha: 0.1),
+                color: ModernColors.diary.withValues(alpha: 0.05),
               ),
             ),
           ),
@@ -370,7 +372,7 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
                                 style: GoogleFonts.notoSans(
                                   fontSize: 26,
                                   fontWeight: FontWeight.w800,
-                                  color: ModernColors.textPrimary,
+                                  color: ModernColors.diary,
                                   letterSpacing: -0.5,
                                 ),
                               ),
@@ -434,8 +436,19 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
                     width: 100,
                     height: 100,
                     decoration: BoxDecoration(
-                      color: moodColor.withValues(alpha: 0.1),
+                      gradient: RadialGradient(
+                        colors: [
+                          ModernColors.diaryLight,
+                          ModernColors.diaryLight.withValues(alpha: 0.3),
+                        ],
+                        center: Alignment.center,
+                        radius: 0.8,
+                      ),
                       shape: BoxShape.circle,
+                      border: Border.all(
+                        color: ModernColors.diary.withValues(alpha: 0.1),
+                        width: 1,
+                      ),
                     ),
                     child: Center(
                       child: Text(
@@ -498,10 +511,17 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
         children: [
           Row(
             children: [
-              Icon(
-                Icons.timeline,
-                color: ModernColors.diary,
-                size: 20,
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: ModernColors.diaryLight,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.timeline,
+                  color: ModernColors.diary,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: 8),
               Text(
@@ -542,10 +562,17 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
                 builder: (context, child) {
                   return Opacity(
                     opacity: 0.5 + _emotionTransitionAnimation.value * 0.5,
-                    child: Icon(
-                      Icons.arrow_forward,
-                      color: ModernColors.diary,
-                      size: 24,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: ModernColors.diaryLight.withValues(alpha: 0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.arrow_forward_rounded,
+                        color: ModernColors.diary,
+                        size: 20,
+                      ),
                     ),
                   );
                 },
@@ -680,8 +707,19 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
         children: [
           Row(
             children: [
-              Icon(icon, color: iconColor, size: 24),
-              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: ModernColors.diary.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
+                ),
+                child: Icon(icon, color: iconColor, size: 20),
+              ),
+              const SizedBox(width: 12),
               Text(
                 title,
                 style: GoogleFonts.notoSans(
@@ -693,12 +731,19 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
             ],
           ),
           const SizedBox(height: 12),
-          Text(
-            content,
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              color: ModernColors.textPrimary,
-              height: 1.6,
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: ModernColors.diaryLight.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              content,
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                color: ModernColors.textPrimary,
+                height: 1.6,
+              ),
             ),
           ),
         ],
@@ -814,9 +859,9 @@ class DiaryPatternPainter extends CustomPainter {
       );
     }
     
-    // 왼쪽 여백 선 (빨간 선)
+    // 왼쪽 여백 선 (일기 테마 색상)
     paint
-      ..color = ModernColors.error.withValues(alpha: 0.2)
+      ..color = ModernColors.diaryAccent.withValues(alpha: 0.3)
       ..strokeWidth = 2;
     canvas.drawLine(
       Offset(marginLeft, 0),

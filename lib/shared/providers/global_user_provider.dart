@@ -2049,7 +2049,48 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           break;
           
         case 'diary':
-          // 일기 AI 분석 제거됨 - 리소스 최적화
+          if (todayDiary != null) {
+            // 이전 일기 감정 찾기 (최근 7일 이내)
+            final previousDiary = _findPreviousDiary();
+            
+            // 최근 7일간 감정 기록 수집 (List<String> 형태로)
+            final recentMoodHistory = <String>[];
+            final today = DateTime.now();
+            for (int i = 0; i < 7; i++) {
+              final targetDate = today.subtract(Duration(days: i));
+              final diary = state.dailyRecords.diaryLogs.where((log) {
+                return _isSameDay(log.date, targetDate);
+              }).firstOrNull;
+              
+              if (diary != null) {
+                recentMoodHistory.add(diary.mood);
+              }
+            }
+            
+            // 백그라운드에서 분석 생성
+            // 캐시 삭제 후 새로 생성
+            await analysisService.clearComprehensiveDiaryCache();
+            
+            try {
+              final analysis = await analysisService.analyzeDiaryComprehensive(
+                currentMood: todayDiary.mood,
+                previousMood: previousDiary?.mood,
+                userName: userName,
+                recentMoodHistory: recentMoodHistory,
+                forceRegenerate: true,  // 강제로 새로 생성 (캐시 무시)
+              );
+              
+              // 🔍 디버그: 캐시 저장 확인
+              print('===== 일기 분석 캐시 저장 완료 =====');
+              print('📊 섹션 1 - 감정 전환: ${analysis.emotionTransition}');
+              print('📊 섹션 2 - 감정적 지지: ${analysis.emotionalSupport}');
+              print('📊 섹션 3 - 실질적 조언: ${analysis.practicalAdvice}');
+              print('📊 섹션 4 - 내일의 희망: ${analysis.tomorrowHope}');
+              print('=====================================');
+            } catch (e) {
+              print('❌ 일기 분석 생성 실패: $e');
+            }
+          }
           break;
       }
       
@@ -2143,6 +2184,47 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     }
     
     return null;
+  }
+
+  /// 이전 일기 찾기 (최근 7일 이내)
+  DiaryLog? _findPreviousDiary() {
+    final records = state.dailyRecords;
+    final today = DateTime.now();
+    
+    // 오늘을 제외하고 최근 7일 이내의 일기 찾기
+    for (int i = 1; i <= 7; i++) {
+      final targetDate = today.subtract(Duration(days: i));
+      final diary = records.diaryLogs.where((log) {
+        return _isSameDay(log.date, targetDate);
+      }).firstOrNull;
+      
+      if (diary != null) {
+        return diary;
+      }
+    }
+    
+    return null;
+  }
+  
+  /// 최근 감정 히스토리 가져오기
+  Map<String, int> _getRecentMoodHistory(int days) {
+    final records = state.dailyRecords;
+    final today = DateTime.now();
+    final moodCount = <String, int>{};
+    
+    // 오늘을 포함하여 최근 N일간의 감정 수집
+    for (int i = 0; i < days; i++) {
+      final targetDate = today.subtract(Duration(days: i));
+      final diary = records.diaryLogs.where((log) {
+        return _isSameDay(log.date, targetDate);
+      }).firstOrNull;
+      
+      if (diary != null) {
+        moodCount[diary.mood] = (moodCount[diary.mood] ?? 0) + 1;
+      }
+    }
+    
+    return moodCount;
   }
 
   // ==================== 계획 관리 시스템 ====================

@@ -37,6 +37,7 @@ import 'features/daily_record/presentation/screens/exercise_detail_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_edit_screen.dart';
 import 'features/daily_record/presentation/screens/reading_record_screen.dart';
 import 'features/daily_record/presentation/screens/focus_timer_record_screen.dart';
+import 'shared/widgets/dialogs/analysis_pages/diary_analysis_page.dart';
 
 // Screens - Shared
 import 'shared/presentation/screens/component_viewer_screen.dart';
@@ -176,6 +177,7 @@ class MyApp extends ConsumerWidget {
         '/reading_record': (context) => ReadingRecordScreen(),
         '/focus_timer': (context) => EnhancedDailyRecordScreen(), // 집중 타이머는 기록 화면에서 접근
         '/focus_timer_record': (context) => FocusTimerRecordScreen(),
+        '/diary_analysis': (context) => DiaryAnalysisPage(),
         '/component_viewer': (context) => ComponentViewerScreen(),
         '/sherpi_message_history': (context) => SherpiMessageHistoryScreen(),
 
