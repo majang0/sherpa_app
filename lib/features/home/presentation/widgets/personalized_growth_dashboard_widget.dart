@@ -1129,8 +1129,8 @@ class _PersonalizedGrowthDashboardWidgetState
         break;
         
       case 'exercise':
-        // 운동 -> 운동 기록 선택창 띄우기
-        Navigator.of(context).pushNamed('/exercise_record');
+        // 운동 -> 운동 선택 화면으로 이동
+        Navigator.of(context).pushNamed('/exercise_selection');
         break;
         
       case 'diary':

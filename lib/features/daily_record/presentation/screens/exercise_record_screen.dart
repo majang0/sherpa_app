@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../widgets/unified_exercise_record_form.dart';
 
 class ExerciseRecordScreen extends ConsumerStatefulWidget {
@@ -25,6 +24,11 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
+  
+  bool _canSubmit = false;
+  bool _isSubmitting = false;
+  final GlobalKey<UnifiedExerciseRecordFormState> _formKey = 
+      GlobalKey<UnifiedExerciseRecordFormState>();
 
   @override
   void initState() {
@@ -52,77 +56,156 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
-      appBar: SherpaCleanAppBar(
-        title: '${widget.exerciseType} 기록하기',
-        backgroundColor: const Color(0xFFF8FAFC),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
+          ),
+        ),
+        actions: [
+          if (_canSubmit)
+            Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: _isSubmitting ? null : _submitExercise,
+                child: Text(
+                  '완료',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: _isSubmitting
+                        ? ModernColors.textTertiary
+                        : ModernColors.exercise,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              
-              // 헤더 섹션
-              _buildHeader(),
-              
-              const SizedBox(height: 32),
-              
-              // 선택된 운동에 맞는 폼 표시
-              _buildExerciseForm(),
-              
-              const SizedBox(height: 40),
-            ],
-          ),
+        child: Stack(
+          children: [
+            // 배경 그라데이션 (오렌지 계열)
+            Container(
+              height: 280,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    ModernColors.exercise,
+                    ModernColors.exercise.withOpacity(0.7),
+                  ],
+                ),
+              ),
+            ),
+            
+            // 메인 콘텐츠
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  const SizedBox(height: 120), // AppBar 공간
+                  
+                  // 헤더 섹션
+                  _buildHeader(),
+                  
+                  const SizedBox(height: 32),
+                  
+                  // 선택된 운동에 맞는 폼 표시
+                  _buildExerciseForm(),
+                  
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildHeader() {
-    final dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][widget.selectedDate.weekday % 7];
-    final exerciseColor = _getExerciseColor(widget.exerciseType);
-    final exerciseEmoji = _getExerciseEmoji(widget.exerciseType);
+    final weekdays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+    final weekday = weekdays[(widget.selectedDate.weekday - 1) % 7];
+    final dateStr = '${widget.selectedDate.year}년 ${widget.selectedDate.month}월 ${widget.selectedDate.day}일';
     
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            exerciseColor,
-            exerciseColor.withOpacity(0.8),
-          ],
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: exerciseColor.withOpacity(0.3),
+            color: ModernColors.exercise.withOpacity(0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         children: [
+          // 제목과 아이콘
           Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.3),
-                    width: 2,
+                  gradient: LinearGradient(
+                    colors: [
+                      ModernColors.exercise,
+                      ModernColors.exercise.withOpacity(0.8),
+                    ],
                   ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: ModernColors.exercise.withOpacity(0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  exerciseEmoji,
-                  style: const TextStyle(fontSize: 32),
+                child: Center(
+                  child: Text(
+                    _getExerciseEmoji(widget.exerciseType),
+                    style: const TextStyle(fontSize: 28),
+                  ),
                 ),
               ),
               const SizedBox(width: 20),
@@ -135,16 +218,16 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: Colors.white,
+                        color: ModernColors.exercise,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${widget.selectedDate.month}월 ${widget.selectedDate.day}일 ($dayOfWeek)',
+                      '오늘의 운동을 기록하세요',
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white.withOpacity(0.9),
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -155,31 +238,51 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
           
           const SizedBox(height: 24),
           
+          // 날짜 정보 - Borderless Design
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.2),
-                width: 1,
+              gradient: LinearGradient(
+                colors: [
+                  ModernColors.exercise.withOpacity(0.05),
+                  ModernColors.exercise.withOpacity(0.08),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: ModernColors.exercise.withOpacity(0.08),
+                  blurRadius: 12,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.edit,
-                  color: Colors.white.withOpacity(0.9),
+                  Icons.calendar_today,
+                  color: ModernColors.exercise,
                   size: 18,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 Text(
-                  '상세 정보를 입력해주세요',
+                  dateStr,
+                  style: GoogleFonts.notoSans(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: ModernColors.exercise,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  weekday,
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white.withOpacity(0.9),
+                    fontWeight: FontWeight.w500,
+                    color: ModernColors.exercise.withOpacity(0.8),
                   ),
                 ),
               ],
@@ -190,11 +293,33 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
     );
   }
 
+  // 완료 버튼 클릭 시 호출되는 메서드
+  Future<void> _submitExercise() async {
+    setState(() {
+      _isSubmitting = true;
+    });
+    
+    // GlobalKey를 통해 폼의 submit 메서드 호출
+    await _formKey.currentState?.submitExerciseRecord();
+    
+    if (mounted) {
+      setState(() {
+        _isSubmitting = false;
+      });
+    }
+  }
+  
   Widget _buildExerciseForm() {
     // 모든 운동 타입에 대해 통합된 폼을 사용
     return UnifiedExerciseRecordForm(
+      key: _formKey,
       selectedDate: widget.selectedDate,
       exerciseType: widget.exerciseType,
+      onFormValidityChanged: (isValid) {
+        setState(() {
+          _canSubmit = isValid;
+        });
+      },
     );
   }
 
@@ -243,54 +368,75 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
   }
 
   Color _getExerciseColor(String exerciseType) {
-    switch (exerciseType) {
-      // 딥 블루 - 유산소 운동
-      case '걷기':
-      case '러닝':
-      case '수영':
-      case '자전거':
-        return const Color(0xFF2563EB);
-      
-      // 미디엄 블루 - 근력/체조 운동
-      case '요가':
-      case '클라이밍':
-      case '필라테스':
-      case '헬스':
-        return const Color(0xFF3B82F6);
-      
-      // 스카이 블루 - 라켓 스포츠
-      case '골프':
-      case '배드민턴':
-      case '테니스':
-        return const Color(0xFF0EA5E9);
-      
-      // 라이트 블루 - 볼 스포츠
-      case '농구':
-      case '축구':
-        return const Color(0xFF60A5FA);
-      
-      // 등산 - 인디고 블루
-      case '등산':
-        return const Color(0xFF4F46E5);
-      
-      // 기타 - 기본 블루
-      default:
-        return const Color(0xFF2563EB);
-    }
+    // 모든 운동 타입에 대해 통일된 오렌지 색상 사용
+    return ModernColors.exercise;
   }
 
-  String _getExerciseEmoji(String exerciseType) {
+  IconData _getExerciseIcon(String exerciseType) {
     switch (exerciseType) {
       case '러닝':
-        return '🏃';
+        return Icons.directions_run;
+      case '걷기':
+        return Icons.directions_walk;
+      case '수영':
+        return Icons.pool;
+      case '자전거':
+        return Icons.directions_bike;
+      case '요가':
+        return Icons.self_improvement;
       case '클라이밍':
-        return '🧗';
+        return Icons.terrain;
+      case '필라테스':
+        return Icons.accessibility_new;
+      case '헬스':
+        return Icons.fitness_center;
+      case '골프':
+        return Icons.golf_course;
+      case '배드민턴':
+        return Icons.sports_tennis;
+      case '테니스':
+        return Icons.sports_tennis;
+      case '농구':
+        return Icons.sports_basketball;
+      case '축구':
+        return Icons.sports_soccer;
+      case '등산':
+        return Icons.landscape;
+      default:
+        return Icons.fitness_center;
+    }
+  }
+  
+  String _getExerciseEmoji(String exerciseType) {
+    switch (exerciseType) {
+      case '헬스':
+        return '💪';
+      case '러닝':
+        return '🏃‍♂️';
       case '등산':
         return '🥾';
-      case '헬스':
-        return '🏋️';
+      case '수영':
+        return '🏊‍♂️';
+      case '자전거':
+        return '🚴‍♂️';
+      case '요가':
+        return '🧘‍♀️';
+      case '필라테스':
+        return '🤸‍♀️';
+      case '클라이밍':
+        return '🧗‍♂️';
+      case '테니스':
+        return '🎾';
       case '배드민턴':
         return '🏸';
+      case '골프':
+        return '⛳';
+      case '축구':
+        return '⚽';
+      case '농구':
+        return '🏀';
+      case '걷기':
+        return '🚶‍♂️';
       default:
         return '💪';
     }

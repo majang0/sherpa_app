@@ -255,7 +255,7 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
       child: InkWell(
         onTap: () {
           HapticFeedbackManager.lightImpact();
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => ExerciseRecordScreen(

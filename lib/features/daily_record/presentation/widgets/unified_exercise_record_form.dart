@@ -18,19 +18,22 @@ import '../../../../shared/widgets/sherpa_button.dart';
 class UnifiedExerciseRecordForm extends ConsumerStatefulWidget {
   final DateTime selectedDate;
   final String exerciseType;
+  final Function(bool)? onFormValidityChanged;
 
   const UnifiedExerciseRecordForm({
     super.key,
     required this.selectedDate,
     required this.exerciseType,
+    this.onFormValidityChanged,
   });
 
   @override
   ConsumerState<UnifiedExerciseRecordForm> createState() =>
-      _UnifiedExerciseRecordFormState();
+      UnifiedExerciseRecordFormState();
 }
 
-class _UnifiedExerciseRecordFormState
+// public으로 변경하여 GlobalKey에서 접근 가능하도록 함
+class UnifiedExerciseRecordFormState
     extends ConsumerState<UnifiedExerciseRecordForm>
     with TickerProviderStateMixin {
   late AnimationController _scaleController;
@@ -39,14 +42,14 @@ class _UnifiedExerciseRecordFormState
   final TextEditingController _detailsController = TextEditingController();
 
   // Form state
-  int _durationMinutes = 30;
-  DifficultyLevel _selectedDifficulty = DifficultyLevel.moderate;
+  int? _durationMinutes; // 초기값 없음
+  DifficultyLevel? _selectedDifficulty; // 초기값 없음
   bool _isShared = false;
   bool _isSubmitting = false;
   File? _selectedImage;
 
   // Workout diary state
-  double _achievementScore = 7.0; // 운동 성취도 (1-10)
+  double? _achievementScore; // 운동 성취도 (1-10) - 초기값 없음
 
   final ImagePicker _imagePicker = ImagePicker();
 
@@ -66,6 +69,16 @@ class _UnifiedExerciseRecordFormState
     Future.delayed(const Duration(milliseconds: 200), () {
       _scaleController.forward();
     });
+    
+    // 초기 폼 유효성 상태 전달
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkFormValidity();
+    });
+  }
+  
+  void _checkFormValidity() {
+    final bool isValid = _durationMinutes != null && _selectedDifficulty != null;
+    widget.onFormValidityChanged?.call(isValid);
   }
 
   @override
@@ -81,129 +94,27 @@ class _UnifiedExerciseRecordFormState
       scale: _scaleAnimation,
       child: Column(
         children: [
-          _buildQuickSummaryCard()
+          _buildDurationSection()
               .animate()
               .fadeIn(duration: 600.ms, delay: 50.ms),
           const SizedBox(height: 24),
-          _buildDurationSection()
+          _buildDifficultySection()
               .animate()
               .fadeIn(duration: 600.ms, delay: 100.ms),
           const SizedBox(height: 24),
-          _buildDifficultySection()
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 200.ms),
-          const SizedBox(height: 24),
           _buildWorkoutDiarySection()
               .animate()
-              .fadeIn(duration: 600.ms, delay: 300.ms),
+              .fadeIn(duration: 600.ms, delay: 150.ms),
           const SizedBox(height: 24),
           _buildPhotoSection()
               .animate()
-              .fadeIn(duration: 600.ms, delay: 400.ms),
+              .fadeIn(duration: 600.ms, delay: 200.ms),
           const SizedBox(height: 24),
-          _buildShareToggle().animate().fadeIn(duration: 600.ms, delay: 500.ms),
+          _buildShareToggle().animate().fadeIn(duration: 600.ms, delay: 250.ms),
           const SizedBox(height: 32),
           _buildSubmitButton()
               .animate()
-              .fadeIn(duration: 600.ms, delay: 600.ms),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuickSummaryCard() {
-    final exerciseColor = _getExerciseColor(widget.exerciseType);
-    final calories = (_calculateCalories()).round();
-    
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: exerciseColor.withOpacity(0.2)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: exerciseColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              Icons.fitness_center,
-              color: exerciseColor,
-              size: 24,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '현재 설정',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: ModernColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    Text(
-                      _formatDuration(_durationMinutes),
-                      style: GoogleFonts.notoSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: ModernColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: exerciseColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        '${calories}kcal',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: exerciseColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: _selectedDifficulty.color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              _selectedDifficulty.label,
-              style: GoogleFonts.notoSans(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: _selectedDifficulty.color,
-              ),
-            ),
-          ),
+              .fadeIn(duration: 600.ms, delay: 300.ms),
         ],
       ),
     );
@@ -217,12 +128,12 @@ class _UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.primary.withOpacity(0.08),
+          color: ModernColors.exercise.withOpacity(0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withOpacity(0.1),
+            color: ModernColors.exercise.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -241,12 +152,12 @@ class _UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.exercise.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.timer_outlined,
-                  color: ModernColors.primary,
+                  color: ModernColors.exercise,
                   size: 20,
                 ),
               ),
@@ -268,11 +179,15 @@ class _UnifiedExerciseRecordFormState
             child: Column(
               children: [
                 Text(
-                  _formatDuration(_durationMinutes),
+                  _durationMinutes != null 
+                    ? _formatDuration(_durationMinutes!)
+                    : '시간을 선택하세요',
                   style: GoogleFonts.notoSans(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    color: ModernColors.primary,
+                    fontSize: _durationMinutes != null ? 32 : 24,
+                    fontWeight: _durationMinutes != null ? FontWeight.w800 : FontWeight.w600,
+                    color: _durationMinutes != null 
+                      ? ModernColors.exercise 
+                      : Colors.grey.shade500,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -292,16 +207,16 @@ class _UnifiedExerciseRecordFormState
           // Custom slider
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
-              activeTrackColor: ModernColors.primary,
-              inactiveTrackColor: ModernColors.primary.withOpacity(0.1),
-              thumbColor: ModernColors.primary,
-              overlayColor: ModernColors.primary.withOpacity(0.2),
+              activeTrackColor: ModernColors.exercise,
+              inactiveTrackColor: ModernColors.exercise.withOpacity(0.1),
+              thumbColor: ModernColors.exercise,
+              overlayColor: ModernColors.exercise.withOpacity(0.2),
               trackHeight: 8.0,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 14.0),
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 24.0),
             ),
             child: Slider(
-              value: _durationMinutes.toDouble(),
+              value: _durationMinutes?.toDouble() ?? 5.0,
               min: 5,
               max: 300,
               divisions: 59,
@@ -338,12 +253,12 @@ class _UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.primary.withOpacity(0.08),
+          color: ModernColors.exercise.withOpacity(0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withOpacity(0.1),
+            color: ModernColors.exercise.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -362,12 +277,12 @@ class _UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.exercise.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.fitness_center,
-                  color: ModernColors.primary,
+                  color: ModernColors.exercise,
                   size: 20,
                 ),
               ),
@@ -399,24 +314,25 @@ class _UnifiedExerciseRecordFormState
                       setState(() {
                         _selectedDifficulty = difficulty;
                       });
+                      _checkFormValidity();
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
                         color:
-                            isSelected ? difficulty.color : Colors.grey.shade50,
+                            isSelected ? ModernColors.exercise : Colors.grey.shade50,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: isSelected
-                              ? difficulty.color
-                              : ModernColors.primary.withOpacity(0.1),
+                              ? ModernColors.exercise
+                              : ModernColors.exercise.withOpacity(0.1),
                           width: isSelected ? 2 : 1,
                         ),
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: difficulty.color.withOpacity(0.3),
+                                  color: ModernColors.exercise.withOpacity(0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
@@ -464,12 +380,12 @@ class _UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.primary.withOpacity(0.08),
+          color: ModernColors.exercise.withOpacity(0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withOpacity(0.1),
+            color: ModernColors.exercise.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -489,12 +405,12 @@ class _UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.exercise.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.book,
-                  color: ModernColors.primary,
+                  color: ModernColors.exercise,
                   size: 20,
                 ),
               ),
@@ -511,7 +427,7 @@ class _UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.exercise.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -519,7 +435,7 @@ class _UnifiedExerciseRecordFormState
                   style: GoogleFonts.notoSans(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: ModernColors.primary,
+                    color: ModernColors.exercise,
                   ),
                 ),
               ),
@@ -536,13 +452,13 @@ class _UnifiedExerciseRecordFormState
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  ModernColors.primary.withOpacity(0.05),
-                  ModernColors.primary.withOpacity(0.02),
+                  ModernColors.exercise.withOpacity(0.05),
+                  ModernColors.exercise.withOpacity(0.02),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: ModernColors.primary.withOpacity(0.1),
+                color: ModernColors.exercise.withOpacity(0.1),
                 width: 1,
               ),
             ),
@@ -553,7 +469,7 @@ class _UnifiedExerciseRecordFormState
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: ModernColors.primary.withOpacity(0.1),
+                        color: ModernColors.exercise.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -575,11 +491,15 @@ class _UnifiedExerciseRecordFormState
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: ModernColors.primary,
+                        color: _achievementScore != null 
+                          ? ModernColors.exercise 
+                          : Colors.grey.shade400,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        '${_achievementScore.toInt()}/10',
+                        _achievementScore != null 
+                          ? '${_achievementScore!.toInt()}/10'
+                          : '?/10',
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
@@ -592,10 +512,10 @@ class _UnifiedExerciseRecordFormState
                 const SizedBox(height: 16),
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
-                    activeTrackColor: ModernColors.primary,
-                    inactiveTrackColor: ModernColors.primary.withOpacity(0.2),
-                    thumbColor: ModernColors.primary,
-                    overlayColor: ModernColors.primary.withOpacity(0.2),
+                    activeTrackColor: ModernColors.exercise,
+                    inactiveTrackColor: ModernColors.exercise.withOpacity(0.2),
+                    thumbColor: ModernColors.exercise,
+                    overlayColor: ModernColors.exercise.withOpacity(0.2),
                     trackHeight: 6.0,
                     thumbShape:
                         const RoundSliderThumbShape(enabledThumbRadius: 12.0),
@@ -603,7 +523,7 @@ class _UnifiedExerciseRecordFormState
                         const RoundSliderOverlayShape(overlayRadius: 20.0),
                   ),
                   child: Slider(
-                    value: _achievementScore,
+                    value: _achievementScore ?? 1.0,
                     min: 1,
                     max: 10,
                     divisions: 9,
@@ -617,11 +537,15 @@ class _UnifiedExerciseRecordFormState
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  _getAchievementLabel(_achievementScore),
+                  _achievementScore != null 
+                    ? _getAchievementLabel(_achievementScore!)
+                    : '만족도를 선택해주세요',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: ModernColors.textSecondary,
+                    color: _achievementScore != null 
+                      ? ModernColors.textSecondary
+                      : Colors.grey.shade500,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -660,7 +584,7 @@ class _UnifiedExerciseRecordFormState
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: ModernColors.primary,
+                  color: ModernColors.exercise,
                   width: 2,
                 ),
               ),
@@ -684,12 +608,12 @@ class _UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.primary.withOpacity(0.08),
+          color: ModernColors.exercise.withOpacity(0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withOpacity(0.1),
+            color: ModernColors.exercise.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -708,12 +632,12 @@ class _UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.exercise.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   Icons.camera_alt_outlined,
-                  color: ModernColors.primary,
+                  color: ModernColors.exercise,
                   size: 20,
                 ),
               ),
@@ -730,7 +654,7 @@ class _UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.exercise.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -738,7 +662,7 @@ class _UnifiedExerciseRecordFormState
                   style: GoogleFonts.notoSans(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    color: ModernColors.primary,
+                    color: ModernColors.exercise,
                   ),
                 ),
               ),
@@ -751,10 +675,10 @@ class _UnifiedExerciseRecordFormState
               child: Container(
                 height: 120,
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.05),
+                  color: ModernColors.exercise.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: ModernColors.primary.withOpacity(0.2),
+                    color: ModernColors.exercise.withOpacity(0.2),
                     width: 2,
                     style: BorderStyle.solid,
                   ),
@@ -765,7 +689,7 @@ class _UnifiedExerciseRecordFormState
                     children: [
                       Icon(
                         Icons.add_photo_alternate_outlined,
-                        color: ModernColors.primary.withOpacity(0.6),
+                        color: ModernColors.exercise.withOpacity(0.6),
                         size: 40,
                       ),
                       const SizedBox(height: 8),
@@ -774,7 +698,7 @@ class _UnifiedExerciseRecordFormState
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: ModernColors.primary.withOpacity(0.8),
+                          color: ModernColors.exercise.withOpacity(0.8),
                         ),
                       ),
                     ],
@@ -833,12 +757,12 @@ class _UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.primary.withOpacity(0.08),
+          color: ModernColors.exercise.withOpacity(0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withOpacity(0.1),
+            color: ModernColors.exercise.withOpacity(0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -854,12 +778,12 @@ class _UnifiedExerciseRecordFormState
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: ModernColors.primary.withOpacity(0.1),
+              color: ModernColors.exercise.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               Icons.group_outlined,
-              color: ModernColors.primary,
+              color: ModernColors.exercise,
               size: 20,
             ),
           ),
@@ -896,7 +820,7 @@ class _UnifiedExerciseRecordFormState
                 _isShared = value;
               });
             },
-            activeColor: ModernColors.primary,
+            activeColor: ModernColors.exercise,
           ),
         ],
       ),
@@ -904,12 +828,16 @@ class _UnifiedExerciseRecordFormState
   }
 
   Widget _buildSubmitButton() {
+    // 필수 항목이 모두 선택되었는지 확인 (성취도는 선택사항)
+    final bool isFormValid = _durationMinutes != null && 
+                            _selectedDifficulty != null;
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SherpaButton(
-        text: '운동 기록 완료',
-        onPressed: _isSubmitting ? null : _submitExerciseRecord,
-        backgroundColor: ModernColors.primary,
+        text: isFormValid ? '운동 기록 완료' : '필수 항목을 모두 선택해주세요',
+        onPressed: (_isSubmitting || !isFormValid) ? null : _submitExerciseRecord,
+        backgroundColor: isFormValid ? ModernColors.exercise : Colors.grey.shade400,
         height: 56,
         isLoading: _isSubmitting,
       ),
@@ -925,7 +853,7 @@ class _UnifiedExerciseRecordFormState
       shape: RoundedRectangleBorder(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         side: BorderSide(
-          color: ModernColors.primary.withOpacity(0.1),
+          color: ModernColors.exercise.withOpacity(0.1),
           width: 1,
         ),
       ),
@@ -938,7 +866,7 @@ class _UnifiedExerciseRecordFormState
               ListTile(
                 leading: Icon(
                   Icons.camera_alt,
-                  color: ModernColors.primary,
+                  color: ModernColors.exercise,
                 ),
                 title: Text(
                   '카메라로 촬영',
@@ -966,7 +894,7 @@ class _UnifiedExerciseRecordFormState
               ListTile(
                 leading: Icon(
                   Icons.photo_library,
-                  color: ModernColors.primary,
+                  color: ModernColors.exercise,
                 ),
                 title: Text(
                   '갤러리에서 선택',
@@ -998,7 +926,17 @@ class _UnifiedExerciseRecordFormState
     );
   }
 
+  // 외부에서 호출 가능한 submit 메서드
+  Future<void> submitExerciseRecord() async {
+    return _submitExerciseRecord();
+  }
+  
   Future<void> _submitExerciseRecord() async {
+    // null 체크 - 성취도는 선택사항
+    if (_durationMinutes == null || _selectedDifficulty == null) {
+      return;
+    }
+    
     setState(() {
       _isSubmitting = true;
     });
@@ -1011,8 +949,8 @@ class _UnifiedExerciseRecordFormState
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         date: widget.selectedDate,
         exerciseType: widget.exerciseType,
-        durationMinutes: _durationMinutes,
-        intensity: ExerciseUtils.difficultyToIntensity(_selectedDifficulty),
+        durationMinutes: _durationMinutes!,
+        intensity: ExerciseUtils.difficultyToIntensity(_selectedDifficulty!),
         note: _detailsController.text.isEmpty ? null : _detailsController.text,
         imageUrl: _selectedImage != null ? 'local_image_${DateTime.now().millisecondsSinceEpoch}' : null,
         isShared: _isShared,
@@ -1061,7 +999,7 @@ class _UnifiedExerciseRecordFormState
                 ),
               ],
             ),
-            backgroundColor: ModernColors.primary,
+            backgroundColor: ModernColors.exercise,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -1110,11 +1048,12 @@ class _UnifiedExerciseRecordFormState
         setState(() {
           _durationMinutes = minutes;
         });
+        _checkFormValidity();
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? ModernColors.primary : Colors.grey.shade100,
+          color: isSelected ? ModernColors.exercise : Colors.grey.shade100,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -1186,47 +1125,18 @@ class _UnifiedExerciseRecordFormState
   }
 
   Color _getExerciseColor(String exerciseType) {
-    switch (exerciseType) {
-      // 딥 블루 - 유산소 운동
-      case '걷기':
-      case '러닝':
-      case '수영':
-      case '자전거':
-        return const Color(0xFF2563EB);
-      
-      // 미디엄 블루 - 근력/체조 운동
-      case '요가':
-      case '클라이밍':
-      case '필라테스':
-      case '헬스':
-        return const Color(0xFF3B82F6);
-      
-      // 스카이 블루 - 라켓 스포츠
-      case '골프':
-      case '배드민턴':
-      case '테니스':
-        return const Color(0xFF0EA5E9);
-      
-      // 라이트 블루 - 볼 스포츠
-      case '농구':
-      case '축구':
-        return const Color(0xFF60A5FA);
-      
-      // 등산 - 인디고 블루
-      case '등산':
-        return const Color(0xFF4F46E5);
-      
-      // 기타 - 기본 블루
-      default:
-        return const Color(0xFF2563EB);
-    }
+    // 모든 운동 타입에 대해 주황색 계열 사용
+    return ModernColors.exercise; // 통일된 주황색 테마 (exercise는 이미 주황색)
   }
 
   int _calculateCalories() {
-    final intensity = CalorieCalculator.difficultyToIntensity(_selectedDifficulty);
+    if (_selectedDifficulty == null || _durationMinutes == null) {
+      return 0;
+    }
+    final intensity = CalorieCalculator.difficultyToIntensity(_selectedDifficulty!);
     return CalorieCalculator.calculateCalories(
       exerciseType: widget.exerciseType,
-      durationMinutes: _durationMinutes,
+      durationMinutes: _durationMinutes!,
       intensity: intensity,
     );
   }
