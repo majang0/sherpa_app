@@ -48,18 +48,18 @@ lib/
 
 ### State Management (Riverpod)
 
-**Provider Initialization Order** (lib/main.dart):
+**Provider Initialization Order**:
 ```dart
 // Initialize in this exact order to prevent dependencies issues
-ref.read(globalGameProvider);         // Line 196
-ref.read(globalUserProvider);         // Line 199  
-ref.read(globalPointProvider);        // Line 202
-ref.read(globalUserTitleProvider);    // Line 205
-ref.read(questProviderV2);           // Line 208 - Note: V2, not questProvider
-ref.read(globalMeetingProvider);      // Line 211
-ref.read(sherpiProvider);            // Line 214
-ref.read(relationshipProvider);      // Line 217
-ref.read(emotionAnalysisProvider);   // Line 220
+ref.read(globalGameProvider);
+ref.read(globalUserProvider);
+ref.read(globalPointProvider);
+ref.read(globalUserTitleProvider);
+ref.read(questProviderV2);           // Note: V2, not questProvider
+ref.read(globalMeetingProvider);
+ref.read(sherpiProvider);
+ref.read(relationshipProvider);
+ref.read(emotionAnalysisProvider);
 ```
 
 ### Navigation
@@ -95,6 +95,14 @@ Navigator.pushNamed(context, '/', arguments: {
 });
 ```
 
+**Main Route Arguments**:
+| Route | Arguments Schema | Example |
+|-------|-----------------|---------|
+| `/` | `int` or `Map` | `2` or `{'tabIndex': 3, 'subTabIndex': 1}` |
+| `/meeting_detail` | `{'meetingId': String}` | `{'meetingId': 'abc123'}` |
+| `/daily_record` | `{'date': String?}` | `{'date': '2025-09-08'}` |
+| `/levelup` | None | - |
+
 ## 💡 Core Features
 
 ### Meeting System
@@ -114,17 +122,16 @@ Browse → Detail → Apply → Process → Success → Participate → Review �
 - Weekly challenges: Long-term objectives
 - Premium quests: Enhanced content
 
-**Important**: Quest data resets in debug mode only:
+**⚠️ Important**: Quest data currently resets on every app start (development convenience):
 ```dart
 // lib/features/quests/providers/quest_provider_v2.dart
-import 'package:flutter/foundation.dart';
-
-if (kDebugMode) {
-  // Development-only reset - NOT in production
-  await prefs.remove('saved_quests_v2');
-  await prefs.remove('premium_quest_active_v2');
-}
+// TODO: Add kDebugMode guard before production deployment
+await prefs.remove('saved_quests_v2');
+await prefs.remove('premium_quest_active_v2');
+await prefs.remove('last_daily_generated_v2');
+await prefs.remove('last_weekly_generated_v2');
 ```
+**Production Note**: Wrap with `if (kDebugMode) { ... }` before release
 
 ### Gamification
 
@@ -179,23 +186,37 @@ SherpaButton(
 
 ### Sherpi AI Companion
 
-**Overview**: Static message-based AI companion (manual AI mode)
+**Overview**: Static message-based AI companion (manual AI mode by default)
 
 **Key Files**:
 - `core/ai/smart_sherpi_manager_openai.dart` - Message management
 - `shared/providers/global_sherpi_provider.dart` - State management
 
-**Usage**:
+**Available APIs**:
 ```dart
-// Static message (default)
+// Static message display (instant, no AI)
+showInstantMessage(context, customDialogue, emotion, duration)
+
+// Context-aware message (uses static or AI based on internal logic)
+showMessage(context, userContext, gameContext)
+
+// Game-specific messages
+showGameMessage(context, gameData)
+
+// Hide current message
+hideMessage()
+
+// Change emotion state
+changeEmotion(SherpiEmotion emotion)
+```
+
+**Common Usage**:
+```dart
 ref.read(sherpiProvider.notifier).showInstantMessage(
   context: SherpiContext.levelUp,
   customDialogue: 'Congratulations!',
   emotion: SherpiEmotion.cheering,
 );
-
-// AI message (requires manual activation)
-ref.read(sherpiProvider.notifier).enableAIForNextMessage();
 ```
 
 **Note**: Background caching disabled due to Gemini SDK compatibility issues
@@ -219,8 +240,12 @@ ref.read(sherpiProvider.notifier).enableAIForNextMessage();
 
 - Use correct model for context (AvailableMeeting vs RecommendedMeeting vs MeetingLog)
 - Category enums differ between models
-- Always call `handleActivityCompletion()` with `activityType: 'meeting'`
 - Meeting tab (index 3) has sub-tabs - use `subTabIndex`
+
+**Activity Completion Timing**:
+- `'meeting_review'`: After review submission
+- `'meeting_host'`: When host completes meeting
+- `'meeting_participant'`: When participant completes meeting
 
 ### Implementation Discrepancies
 
@@ -294,7 +319,7 @@ For detailed information on specific topics:
 
 ### Quick References
 
-- **Provider init**: `lib/main.dart` (lines 196-220)
+- **Provider init**: `lib/main.dart` (initialization section)
 - **Routes**: `lib/main.dart` (routes Map)
 - **Quest reset**: `lib/features/quests/providers/quest_provider_v2.dart`
 - **Colors**: `lib/core/theme/modern_colors.dart`
