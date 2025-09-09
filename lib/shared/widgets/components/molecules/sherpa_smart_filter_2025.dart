@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../core/constants/app_colors_2025.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/theme/glass_neu_style_system.dart';
 import '../../../../core/animation/micro_interactions.dart';
@@ -303,8 +303,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
   Widget _buildSearchBar(SmartFilterConfiguration config) {
     final baseColor = widget.customColor ?? 
         (widget.category != null 
-            ? AppColors2025.getCategoryColor2025(widget.category!)
-            : AppColors2025.primary);
+            ? ModernColors.getFunctionColor(widget.category!)
+            : ModernColors.primary);
 
     return Container(
       height: config.searchBarHeight,
@@ -318,7 +318,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
               Icons.search_rounded,
               color: _isSearchFocused 
                   ? baseColor 
-                  : AppColors2025.textTertiary,
+                  : ModernColors.textTertiary,
               size: config.iconSize,
             ),
           ),
@@ -332,13 +332,13 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
               onEditingComplete: () => _handleSearchFocus(false),
               style: GoogleFonts.notoSans(
                 fontSize: config.textSize,
-                color: AppColors2025.textPrimary,
+                color: ModernColors.textPrimary,
               ),
               decoration: InputDecoration(
                 hintText: widget.searchHint ?? '모임 이름, 지역, 키워드로 검색',
                 hintStyle: GoogleFonts.notoSans(
                   fontSize: config.textSize,
-                  color: AppColors2025.textTertiary,
+                  color: ModernColors.textTertiary,
                 ),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(
@@ -365,7 +365,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
           _buildActionButton(
             icon: Icons.auto_awesome_outlined,
             onTap: () {}, // AI 기능 구현 시 추가
-            color: AppColors2025.secondary,
+            color: ModernColors.secondary,
             config: config,
           ),
         
@@ -382,8 +382,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
                       : Icons.mic_outlined,
                   onTap: _handleVoiceSearch,
                   color: _isVoiceRecording 
-                      ? AppColors2025.error 
-                      : AppColors2025.textTertiary,
+                      ? ModernColors.error 
+                      : ModernColors.textTertiary,
                   config: config,
                 ),
               );
@@ -395,7 +395,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
           _buildActionButton(
             icon: Icons.clear_rounded,
             onTap: _handleClearSearch,
-            color: AppColors2025.textTertiary,
+            color: ModernColors.textTertiary,
             config: config,
           ),
       ],
@@ -430,8 +430,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
     final isActive = widget.showOnlineOnly;
     final activeColor = widget.customColor ?? 
         (widget.category != null 
-            ? AppColors2025.getCategoryColor2025(widget.category!)
-            : AppColors2025.primary);
+            ? ModernColors.getFunctionColor(widget.category!)
+            : ModernColors.primary);
 
     return GestureDetector(
       onTap: _handleOnlineToggle,
@@ -441,7 +441,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
         decoration: _getFilterButtonDecoration(
           config, 
           isActive, 
-          isActive ? activeColor : AppColors2025.surface,
+          isActive ? activeColor : ModernColors.surface,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -449,8 +449,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
             Icon(
               Icons.videocam_rounded,
               color: isActive 
-                  ? AppColors2025.textOnPrimary 
-                  : AppColors2025.textSecondary,
+                  ? ModernColors.textOnPrimary 
+                  : ModernColors.textSecondary,
               size: config.filterIconSize,
             ),
             SizedBox(width: config.spacing * 0.5),
@@ -460,8 +460,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
                 fontSize: config.filterTextSize,
                 fontWeight: FontWeight.w600,
                 color: isActive 
-                    ? AppColors2025.textOnPrimary 
-                    : AppColors2025.textSecondary,
+                    ? ModernColors.textOnPrimary 
+                    : ModernColors.textSecondary,
               ),
             ),
           ],
@@ -474,8 +474,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
     final isActive = widget.showDetailedFilters || widget.activeFilterCount > 0;
     final activeColor = widget.customColor ?? 
         (widget.category != null 
-            ? AppColors2025.getCategoryColor2025(widget.category!)
-            : AppColors2025.primary);
+            ? ModernColors.getFunctionColor(widget.category!)
+            : ModernColors.primary);
 
     return Stack(
       children: [
@@ -487,15 +487,15 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
             decoration: _getFilterButtonDecoration(
               config, 
               isActive, 
-              isActive ? activeColor : AppColors2025.surface,
+              isActive ? activeColor : ModernColors.surface,
             ),
             child: Icon(
               widget.showDetailedFilters 
                   ? Icons.filter_list_off_rounded 
                   : Icons.filter_list_rounded,
               color: isActive 
-                  ? AppColors2025.textOnPrimary 
-                  : AppColors2025.textSecondary,
+                  ? ModernColors.textOnPrimary 
+                  : ModernColors.textSecondary,
               size: config.filterIconSize,
             ),
           ),
@@ -509,7 +509,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
             child: Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: AppColors2025.error,
+                color: ModernColors.error,
                 shape: BoxShape.circle,
               ),
               constraints: const BoxConstraints(
@@ -522,7 +522,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
                   style: GoogleFonts.notoSans(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
-                    color: AppColors2025.textOnPrimary,
+                    color: ModernColors.textOnPrimary,
                   ),
                 ),
               ),
@@ -542,10 +542,10 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
             margin: EdgeInsets.only(top: config.spacing),
             padding: EdgeInsets.all(config.spacing),
             decoration: BoxDecoration(
-              color: AppColors2025.surface,
+              color: ModernColors.surface,
               borderRadius: BorderRadius.circular(AppSizes.radiusM),
               border: Border.all(
-                color: AppColors2025.border,
+                color: ModernColors.border,
                 width: 1,
               ),
             ),
@@ -554,14 +554,14 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
                 Icon(
                   Icons.tune_rounded,
                   size: config.indicatorIconSize,
-                  color: AppColors2025.primary,
+                  color: ModernColors.primary,
                 ),
                 SizedBox(width: config.spacing * 0.5),
                 Text(
                   '상세 필터가 활성화되었습니다',
                   style: GoogleFonts.notoSans(
                     fontSize: config.indicatorTextSize,
-                    color: AppColors2025.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
                 const Spacer(),
@@ -572,7 +572,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
                       vertical: config.spacing * 0.5,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors2025.primary.withOpacity(0.15),
+                      color: ModernColors.primary.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(AppSizes.radiusS),
                     ),
                     child: Text(
@@ -580,7 +580,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
                       style: GoogleFonts.notoSans(
                         fontSize: config.indicatorTextSize,
                         fontWeight: FontWeight.w600,
-                        color: AppColors2025.primary,
+                        color: ModernColors.primary,
                       ),
                     ),
                   ),
@@ -592,13 +592,13 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
                     child: Container(
                       padding: EdgeInsets.all(config.spacing * 0.5),
                       decoration: BoxDecoration(
-                        color: AppColors2025.error.withOpacity(0.15),
+                        color: ModernColors.error.withOpacity(0.15),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
                         Icons.clear_rounded,
                         size: config.indicatorIconSize,
-                        color: AppColors2025.error,
+                        color: ModernColors.error,
                       ),
                     ),
                   ),
@@ -667,7 +667,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
   }
 
   BoxDecoration _getSearchBarDecoration(SmartFilterConfiguration config, Color baseColor) {
-    final focusedColor = _isSearchFocused ? baseColor : AppColors2025.surface;
+    final focusedColor = _isSearchFocused ? baseColor : ModernColors.surface;
     
     switch (widget.variant) {
       case SherpaSmartFilterVariant2025.glass:
@@ -681,7 +681,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
       case SherpaSmartFilterVariant2025.neu:
         return GlassNeuStyle.neumorphism(
           elevation: GlassNeuElevation.low,
-          baseColor: AppColors2025.surface,
+          baseColor: ModernColors.surface,
           borderRadius: config.borderRadius,
         );
 
@@ -695,10 +695,10 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
 
       case SherpaSmartFilterVariant2025.minimal:
         return BoxDecoration(
-          color: AppColors2025.surface,
+          color: ModernColors.surface,
           borderRadius: BorderRadius.circular(config.borderRadius),
           border: Border.all(
-            color: _isSearchFocused ? baseColor : AppColors2025.border,
+            color: _isSearchFocused ? baseColor : ModernColors.border,
             width: _isSearchFocused ? 2 : 1,
           ),
         );
@@ -739,7 +739,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
           color: color,
           borderRadius: BorderRadius.circular(config.borderRadius),
           border: Border.all(
-            color: isActive ? color : AppColors2025.border,
+            color: isActive ? color : ModernColors.border,
             width: 1,
           ),
         );

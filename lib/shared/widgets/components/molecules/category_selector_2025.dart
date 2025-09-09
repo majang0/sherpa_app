@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../../../../features/meetings/models/available_meeting_model.dart';
-import '../../../../core/constants/app_colors_2025.dart';
+import '../../../../core/theme/modern_colors.dart';
 
 /// 2025 트렌드 카테고리 선택기 - 현대적 디자인과 매끄러운 애니메이션
 class CategorySelector2025 extends StatefulWidget {
@@ -139,15 +139,15 @@ class _CategorySelector2025State extends State<CategorySelector2025>
               color: isSelected
                 ? null
                 : isDark
-                  ? AppColors2025.glassWhite10
-                  : AppColors2025.neuBase.withOpacity(0.5),
+                  ? ModernColors.surface.withOpacity(0.1)
+                  : ModernColors.background.withOpacity(0.5),
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
                 color: isSelected
                   ? category.color.withOpacity(0.3)
                   : isDark
-                    ? AppColors2025.glassBorderSoft
-                    : AppColors2025.borderLight,
+                    ? ModernColors.border.withOpacity(0.1)
+                    : ModernColors.borderLight,
                 width: isSelected ? 1.5 : 1,
               ),
               boxShadow: isSelected
@@ -165,7 +165,7 @@ class _CategorySelector2025State extends State<CategorySelector2025>
                   ]
                 : [
                     BoxShadow(
-                      color: AppColors2025.shadowLight,
+                      color: Colors.black.withOpacity(0.04),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -196,8 +196,8 @@ class _CategorySelector2025State extends State<CategorySelector2025>
                     color: isSelected
                       ? Colors.white
                       : isDark
-                        ? AppColors2025.textOnDark
-                        : AppColors2025.textPrimary,
+                        ? ModernColors.textOnPrimary
+                        : ModernColors.textPrimary,
                     letterSpacing: isSelected ? 0.3 : 0,
                   ),
                   child: Text(category.displayName),
@@ -215,7 +215,7 @@ class _CategorySelector2025State extends State<CategorySelector2025>
                       borderRadius: BorderRadius.circular(2),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors2025.neuHighlight.withOpacity(0.5),
+                          color: Colors.white.withOpacity(0.5),
                           blurRadius: 4,
                           offset: const Offset(0, 0),
                         ),

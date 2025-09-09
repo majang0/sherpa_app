@@ -1,7 +1,7 @@
 // lib/shared/widgets/components/molecules/participant_avatars_2025.dart
 
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors_2025.dart';
+import '../../../../core/theme/modern_colors.dart';
 
 /// 모임 참가자 프로필을 겹친 원형으로 표시하는 2025 트렌드 위젯
 class ParticipantAvatars2025 extends StatelessWidget {
@@ -131,7 +131,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: AppColors2025.textSecondary,
+        color: ModernColors.textSecondary,
         borderRadius: BorderRadius.circular(size / 2),
         border: Border.all(
           color: Colors.white,
@@ -168,8 +168,8 @@ class ParticipantAvatars2025 extends StatelessWidget {
         fontSize: size * 0.375, // 12px when size is 32
         fontWeight: FontWeight.w600,
         color: isNearFull 
-          ? AppColors2025.warning 
-          : (isDark ? Colors.white70 : AppColors2025.textSecondary),
+          ? ModernColors.warning 
+          : (isDark ? Colors.white70 : ModernColors.textSecondary),
       ),
     );
   }
@@ -182,7 +182,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color: AppColors2025.border,
+            color: ModernColors.border,
             borderRadius: BorderRadius.circular(size / 2),
             border: Border.all(
               color: Colors.white,
@@ -192,7 +192,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
           child: const Icon(
             Icons.person_outline,
             size: 16,
-            color: AppColors2025.textTertiary,
+            color: ModernColors.textTertiary,
           ),
         ),
         const SizedBox(width: 8),
@@ -201,7 +201,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
           style: TextStyle(
             fontSize: size * 0.375,
             fontWeight: FontWeight.w600,
-            color: AppColors2025.textTertiary,
+            color: ModernColors.textTertiary,
           ),
         ),
       ],
@@ -244,12 +244,12 @@ class ParticipantAvatars2025 extends StatelessWidget {
 
   Color _getAvatarColor(int index) {
     final colors = [
-      AppColors2025.primary,
-      AppColors2025.meeting2025,
-      AppColors2025.exercise2025,
-      AppColors2025.reading2025,
-      AppColors2025.focus2025,
-      AppColors2025.diary2025,
+      ModernColors.primary,
+      ModernColors.meeting,
+      ModernColors.exercise,
+      ModernColors.reading,
+      ModernColors.focus,
+      ModernColors.diary,
     ];
     
     return colors[index % colors.length];
@@ -279,8 +279,8 @@ class ParticipantCount2025 extends StatelessWidget {
     final isNearFull = currentParticipants / maxParticipants > 0.8;
     final color = textColor ?? 
         (isNearFull 
-          ? AppColors2025.warning 
-          : (isDark ? Colors.white70 : AppColors2025.textSecondary));
+          ? ModernColors.warning 
+          : (isDark ? Colors.white70 : ModernColors.textSecondary));
     
     return Row(
       mainAxisSize: MainAxisSize.min,

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors_2025.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/theme/glass_neu_style_system.dart';
 import '../../../../core/animation/micro_interactions.dart';
@@ -75,7 +75,7 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
       position: position,
       variant: SherpaNotificationBadgeVariant2025.dot,
       type: SherpaNotificationBadgeType.notification,
-      backgroundColor: AppColors2025.error,
+      backgroundColor: ModernColors.error,
     );
   }
 
@@ -175,7 +175,7 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
       variant: SherpaNotificationBadgeVariant2025.pill,
       type: SherpaNotificationBadgeType.special,
       size: SherpaNotificationBadgeSize2025.small,
-      backgroundColor: AppColors2025.success,
+      backgroundColor: ModernColors.success,
     );
   }
 
@@ -193,7 +193,7 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
       position: position,
       variant: SherpaNotificationBadgeVariant2025.dot,
       type: SherpaNotificationBadgeType.status,
-      backgroundColor: isOnline ? AppColors2025.success : AppColors2025.textQuaternary,
+      backgroundColor: isOnline ? ModernColors.success : ModernColors.textPlaceholder,
       size: SherpaNotificationBadgeSize2025.small,
     );
   }
@@ -459,7 +459,7 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
     final color = widget.customColor ??
         widget.backgroundColor ??
         (widget.category != null
-            ? AppColors2025.getCategoryColor2025(widget.category!)
+            ? ModernColors.getFunctionColor(widget.category!)
             : _getTypeColor());
 
     final textColor = widget.textColor ?? _getTextColor(color);
@@ -507,26 +507,26 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
   Color _getTypeColor() {
     switch (widget.type) {
       case SherpaNotificationBadgeType.notification:
-        return AppColors2025.error;
+        return ModernColors.error;
       case SherpaNotificationBadgeType.success:
-        return AppColors2025.success;
+        return ModernColors.success;
       case SherpaNotificationBadgeType.warning:
-        return AppColors2025.warning;
+        return ModernColors.warning;
       case SherpaNotificationBadgeType.error:
-        return AppColors2025.error;
+        return ModernColors.error;
       case SherpaNotificationBadgeType.info:
-        return AppColors2025.info;
+        return ModernColors.info;
       case SherpaNotificationBadgeType.status:
-        return AppColors2025.primary;
+        return ModernColors.primary;
       case SherpaNotificationBadgeType.special:
-        return AppColors2025.primaryDark;
+        return ModernColors.primaryHover;
     }
   }
 
   Color _getTextColor(Color backgroundColor) {
     // 배경색의 밝기에 따라 텍스트 색상 결정
     final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? AppColors2025.textPrimary : AppColors2025.textOnPrimary;
+    return luminance > 0.5 ? ModernColors.textPrimary : ModernColors.textOnPrimary;
   }
 
   double _getBorderRadius() {
@@ -575,7 +575,7 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
             color: config.backgroundColor,
             borderRadius: BorderRadius.circular(config.borderRadius),
             border: Border.all(
-              color: AppColors2025.surface,
+              color: ModernColors.surface,
               width: 1.5,
             ),
           );

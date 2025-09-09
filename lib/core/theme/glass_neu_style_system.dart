@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:ui';
-import '../constants/app_colors_2025.dart';
+import 'modern_colors.dart';
 
 /// 글래스모피즘과 뉴모피즘을 결합한 2025 스타일 시스템
 /// 
@@ -12,7 +12,7 @@ import '../constants/app_colors_2025.dart';
 /// Container(
 ///   decoration: GlassNeuStyle.glassMorphism(
 ///     elevation: GlassNeuElevation.medium,
-///     color: AppColors2025.primary,
+///     color: ModernColors.primary,
 ///   ),
 ///   child: YourWidget(),
 /// )
@@ -46,7 +46,7 @@ class GlassNeuStyle {
     final elevationValue = _elevationValues[elevation] ?? 8;
     
     return BoxDecoration(
-      color: (color ?? AppColors2025.glassWhite20).withOpacity(opacity),
+      color: (color ?? ModernColors.surface.withOpacity(0.2)).withOpacity(opacity),
       borderRadius: BorderRadius.circular(borderRadius),
       border: borderColor != null 
           ? Border.all(
@@ -54,20 +54,20 @@ class GlassNeuStyle {
               width: borderWidth,
             )
           : Border.all(
-              color: AppColors2025.glassBorder,
+              color: ModernColors.border.withOpacity(0.1),
               width: borderWidth,
             ),
       boxShadow: [
         // 메인 그림자
         BoxShadow(
-          color: AppColors2025.shadowLight,
+          color: Colors.black.withOpacity(0.04),
           blurRadius: elevationValue * 1.5,
           offset: Offset(0, elevationValue * 0.5),
           spreadRadius: 0,
         ),
         // 상단 하이라이트
         BoxShadow(
-          color: AppColors2025.glassWhite10,
+          color: ModernColors.surface.withOpacity(0.1),
           blurRadius: elevationValue * 0.5,
           offset: Offset(0, -elevationValue * 0.2),
           spreadRadius: 0,
@@ -84,10 +84,10 @@ class GlassNeuStyle {
   }) {
     return glassMorphism(
       elevation: elevation,
-      color: AppColors2025.glassBlue20,
+      color: ModernColors.primary.withOpacity(0.2),
       borderRadius: borderRadius,
       opacity: opacity,
-      borderColor: AppColors2025.glassBorderBlue,
+      borderColor: ModernColors.primary.withOpacity(0.2),
     );
   }
 
@@ -98,8 +98,8 @@ class GlassNeuStyle {
     double borderRadius = 16,
     double opacity = 0.15,
   }) {
-    final categoryColor = AppColors2025.getCategoryGlassColor(category);
-    final baseColor = AppColors2025.getCategoryColor2025(category);
+    final categoryColor = ModernColors.getFunctionColor(category).withOpacity(0.2);
+    final baseColor = ModernColors.getFunctionColor(category);
     
     return glassMorphism(
       elevation: elevation,
@@ -121,7 +121,7 @@ class GlassNeuStyle {
     bool isInverted = false,
   }) {
     final elevationValue = _elevationValues[elevation] ?? 8;
-    final base = baseColor ?? AppColors2025.neuBase;
+    final base = baseColor ?? ModernColors.background;
     
     // 눌렸을 때는 오목한 효과
     if (isPressed) {
@@ -149,14 +149,14 @@ class GlassNeuStyle {
       boxShadow: [
         // 어두운 그림자 (오른쪽 아래)
         BoxShadow(
-          color: AppColors2025.createNeuShadow(baseColor, 0.1),
+          color: Color.lerp(baseColor, Colors.black, 0.1)!,
           blurRadius: elevation,
           offset: Offset(elevation * 0.5, elevation * 0.5),
           spreadRadius: 0,
         ),
         // 밝은 하이라이트 (왼쪽 위)
         BoxShadow(
-          color: AppColors2025.createNeuHighlight(baseColor, 0.1),
+          color: Color.lerp(baseColor, Colors.white, 0.1)!,
           blurRadius: elevation * 0.5,
           offset: Offset(-elevation * 0.2, -elevation * 0.2),
           spreadRadius: 0,
@@ -172,19 +172,19 @@ class GlassNeuStyle {
     double borderRadius,
   ) {
     return BoxDecoration(
-      color: AppColors2025.createNeuShadow(baseColor, 0.02),
+      color: Color.lerp(baseColor, Colors.black, 0.02)!,
       borderRadius: BorderRadius.circular(borderRadius),
       boxShadow: [
         // 내부 어두운 그림자
         BoxShadow(
-          color: AppColors2025.createNeuShadow(baseColor, 0.15),
+          color: Color.lerp(baseColor, Colors.black, 0.15)!,
           blurRadius: elevation * 0.8,
           offset: Offset(elevation * 0.3, elevation * 0.3),
           spreadRadius: -elevation * 0.3,
         ),
         // 내부 밝은 하이라이트
         BoxShadow(
-          color: AppColors2025.createNeuHighlight(baseColor, 0.05),
+          color: Color.lerp(baseColor, Colors.white, 0.05)!,
           blurRadius: elevation * 0.5,
           offset: Offset(-elevation * 0.2, -elevation * 0.2),
           spreadRadius: -elevation * 0.2,
@@ -201,7 +201,7 @@ class GlassNeuStyle {
   }) {
     return neumorphism(
       elevation: elevation,
-      baseColor: AppColors2025.neuBaseBlue,
+      baseColor: ModernColors.primary.withOpacity(0.1),
       borderRadius: borderRadius,
       isPressed: isPressed,
     );
@@ -218,7 +218,7 @@ class GlassNeuStyle {
     bool isPressed = false,
   }) {
     final elevationValue = _elevationValues[elevation] ?? 8;
-    final baseColor = color ?? AppColors2025.primary;
+    final baseColor = color ?? ModernColors.primary;
     
     if (isPressed) {
       return _createPressedHybrid(baseColor, elevationValue, borderRadius, glassOpacity);
@@ -246,21 +246,21 @@ class GlassNeuStyle {
       boxShadow: [
         // 뉴모피즘 어두운 그림자
         BoxShadow(
-          color: AppColors2025.createNeuShadow(AppColors2025.neuBase, 0.1),
+          color: Color.lerp(ModernColors.background, Colors.black, 0.1)!,
           blurRadius: elevation,
           offset: Offset(elevation * 0.5, elevation * 0.5),
           spreadRadius: 0,
         ),
         // 뉴모피즘 밝은 하이라이트
         BoxShadow(
-          color: AppColors2025.neuHighlight,
+          color: Colors.white,
           blurRadius: elevation * 0.5,
           offset: Offset(-elevation * 0.2, -elevation * 0.2),
           spreadRadius: 0,
         ),
         // 글래스 하이라이트
         BoxShadow(
-          color: AppColors2025.glassWhite10,
+          color: ModernColors.surface.withOpacity(0.1),
           blurRadius: elevation * 0.3,
           offset: Offset(0, -elevation * 0.1),
           spreadRadius: 0,
@@ -277,7 +277,7 @@ class GlassNeuStyle {
     double glassOpacity,
   ) {
     return BoxDecoration(
-      color: AppColors2025.createNeuShadow(AppColors2025.neuBase, 0.02),
+      color: Color.lerp(ModernColors.background, Colors.black, 0.02)!,
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: baseColor.withOpacity(0.3),
@@ -286,7 +286,7 @@ class GlassNeuStyle {
       boxShadow: [
         // 내부 그림자 (눌린 효과)
         BoxShadow(
-          color: AppColors2025.createNeuShadow(AppColors2025.neuBase, 0.15),
+          color: Color.lerp(ModernColors.background, Colors.black, 0.15)!,
           blurRadius: elevation * 0.6,
           offset: Offset(elevation * 0.2, elevation * 0.2),
           spreadRadius: -elevation * 0.2,
@@ -311,23 +311,23 @@ class GlassNeuStyle {
     double elevation = 12,
   }) {
     return BoxDecoration(
-      color: (color ?? AppColors2025.glassWhite20).withOpacity(0.25),
+      color: (color ?? ModernColors.surface.withOpacity(0.2)).withOpacity(0.25),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: AppColors2025.glassBorder,
+        color: ModernColors.border.withOpacity(0.1),
         width: 1,
       ),
       boxShadow: [
         // 메인 플로팅 그림자
         BoxShadow(
-          color: AppColors2025.shadowMedium,
+          color: Colors.black.withOpacity(0.08),
           blurRadius: elevation * 2,
           offset: Offset(0, elevation),
           spreadRadius: 0,
         ),
         // 글래스 하이라이트
         BoxShadow(
-          color: AppColors2025.glassWhite30,
+          color: ModernColors.surface.withOpacity(0.3),
           blurRadius: elevation * 0.5,
           offset: Offset(0, -elevation * 0.3),
           spreadRadius: 0,
@@ -350,7 +350,7 @@ class GlassNeuStyle {
     double borderRadius = 16,
     double intensity = 0.05,
   }) {
-    final base = baseColor ?? AppColors2025.neuBase;
+    final base = baseColor ?? ModernColors.background;
     
     return BoxDecoration(
       color: base,
@@ -358,14 +358,14 @@ class GlassNeuStyle {
       boxShadow: [
         // 매우 부드러운 어두운 그림자
         BoxShadow(
-          color: AppColors2025.createNeuShadow(base, intensity),
+          color: Color.lerp(base, Colors.black, intensity)!,
           blurRadius: 6,
           offset: const Offset(3, 3),
           spreadRadius: 0,
         ),
         // 매우 부드러운 밝은 하이라이트
         BoxShadow(
-          color: AppColors2025.createNeuHighlight(base, intensity),
+          color: Color.lerp(base, Colors.white, intensity)!,
           blurRadius: 4,
           offset: const Offset(-2, -2),
           spreadRadius: 0,
@@ -455,12 +455,12 @@ class GlassNeuStyle {
       ),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: AppColors2025.glassBorder,
+        color: ModernColors.border.withOpacity(0.1),
         width: 1,
       ),
       boxShadow: [
         BoxShadow(
-          color: AppColors2025.shadowLight,
+          color: Colors.black.withOpacity(0.04),
           blurRadius: elevationValue * 1.5,
           offset: Offset(0, elevationValue * 0.5),
           spreadRadius: 0,

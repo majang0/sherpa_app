@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../../../core/constants/app_colors_2025.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/theme/glass_neu_style_system.dart';
 import '../../../../core/animation/micro_interactions.dart';
@@ -138,7 +138,7 @@ class SherpaQuickFilter2025 extends StatefulWidget {
         key: 'free',
         label: '무료',
         icon: Icons.money_off_rounded,
-        color: AppColors2025.success,
+        color: ModernColors.success,
         description: '참가비가 없는 모임',
       ),
       SherpaQuickFilterItem2025(
@@ -311,8 +311,8 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
             size: config.titleIconSize,
             color: widget.customColor ?? 
                 (widget.category != null 
-                    ? AppColors2025.getCategoryColor2025(widget.category!)
-                    : AppColors2025.primary),
+                    ? ModernColors.getFunctionColor(widget.category!)
+                    : ModernColors.primary),
           ),
           SizedBox(width: config.spacing * 0.5),
         ],
@@ -322,7 +322,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
           style: GoogleFonts.notoSans(
             fontSize: config.titleTextSize,
             fontWeight: FontWeight.w600,
-            color: AppColors2025.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         
@@ -336,7 +336,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
               vertical: config.spacing * 0.5,
             ),
             decoration: BoxDecoration(
-              color: AppColors2025.primary.withOpacity(0.15),
+              color: ModernColors.primary.withOpacity(0.15),
               borderRadius: BorderRadius.circular(AppSizes.radiusS),
             ),
             child: Text(
@@ -344,7 +344,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
               style: GoogleFonts.notoSans(
                 fontSize: config.badgeTextSize,
                 fontWeight: FontWeight.w600,
-                color: AppColors2025.primary,
+                color: ModernColors.primary,
               ),
             ),
           ),
@@ -359,13 +359,13 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
             child: Container(
               padding: EdgeInsets.all(config.spacing * 0.5),
               decoration: BoxDecoration(
-                color: AppColors2025.error.withOpacity(0.15),
+                color: ModernColors.error.withOpacity(0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.clear_all_rounded,
                 size: config.titleIconSize,
-                color: AppColors2025.error,
+                color: ModernColors.error,
               ),
             ),
           ),
@@ -481,7 +481,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
 
   Widget _buildFilterItem(SherpaQuickFilterItem2025 item, QuickFilterConfiguration config) {
     final isActive = widget.activeFilters.contains(item.key);
-    final itemColor = item.color ?? AppColors2025.primary;
+    final itemColor = item.color ?? ModernColors.primary;
     
     return GestureDetector(
       onTap: () => _handleFilterToggle(item.key),
@@ -501,7 +501,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
             Icon(
               item.icon,
               size: config.iconSize,
-              color: isActive ? AppColors2025.textOnPrimary : itemColor,
+              color: isActive ? ModernColors.textOnPrimary : itemColor,
             ),
             
             SizedBox(width: config.spacing * 0.5),
@@ -514,8 +514,8 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
                   fontSize: config.textSize,
                   fontWeight: FontWeight.w600,
                   color: isActive 
-                      ? AppColors2025.textOnPrimary 
-                      : AppColors2025.textPrimary,
+                      ? ModernColors.textOnPrimary 
+                      : ModernColors.textPrimary,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
@@ -531,7 +531,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
                 ),
                 decoration: BoxDecoration(
                   color: isActive 
-                      ? AppColors2025.textOnPrimary.withOpacity(0.2)
+                      ? ModernColors.textOnPrimary.withOpacity(0.2)
                       : itemColor.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(AppSizes.radiusS),
                 ),
@@ -541,7 +541,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
                     fontSize: config.countTextSize,
                     fontWeight: FontWeight.w700,
                     color: isActive 
-                        ? AppColors2025.textOnPrimary 
+                        ? ModernColors.textOnPrimary 
                         : itemColor,
                   ),
                 ),
@@ -616,7 +616,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
     bool isActive, 
     Color itemColor,
   ) {
-    final backgroundColor = isActive ? itemColor : AppColors2025.surface;
+    final backgroundColor = isActive ? itemColor : ModernColors.surface;
     
     switch (widget.variant) {
       case SherpaQuickFilterVariant2025.glass:
@@ -647,7 +647,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
           color: backgroundColor,
           borderRadius: BorderRadius.circular(AppSizes.radiusL),
           border: Border.all(
-            color: isActive ? itemColor : AppColors2025.border,
+            color: isActive ? itemColor : ModernColors.border,
             width: isActive ? 2 : 1,
           ),
         );

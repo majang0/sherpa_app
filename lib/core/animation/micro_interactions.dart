@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../constants/app_colors_2025.dart';
+import '../theme/modern_colors.dart';
 
 /// 2025 마이크로 인터랙션 애니메이션 시스템
 /// 사용자와의 감정적 연결을 위한 정교한 애니메이션 패턴
@@ -250,7 +250,7 @@ class MicroInteractions {
   }) {
     return ButtonPressWidget(
       onPressed: onPressed,
-      glowColor: glowColor ?? AppColors2025.primary,
+      glowColor: glowColor ?? ModernColors.primary,
       isPressed: isPressed,
       child: child,
     );
@@ -305,8 +305,8 @@ class MicroInteractions {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        splashColor: rippleColor ?? AppColors2025.primary.withOpacity(0.1),
-        highlightColor: rippleColor ?? AppColors2025.primary.withOpacity(0.05),
+        splashColor: rippleColor ?? ModernColors.primary.withOpacity(0.1),
+        highlightColor: rippleColor ?? ModernColors.primary.withOpacity(0.05),
         borderRadius: borderRadius ?? BorderRadius.circular(12),
         child: child,
       ),
@@ -507,7 +507,7 @@ class _HoverEffectWidgetState extends State<HoverEffectWidget>
                 boxShadow: _isHovered
                     ? [
                         BoxShadow(
-                          color: AppColors2025.shadowMedium,
+                          color: Colors.black.withOpacity(0.08),
                           blurRadius: 8 + widget.elevationIncrease,
                           offset: Offset(0, 4 + widget.elevationIncrease / 2),
                         ),

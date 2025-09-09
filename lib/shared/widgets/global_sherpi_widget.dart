@@ -9,7 +9,6 @@ import '../../core/constants/app_colors.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/animation/micro_interactions.dart';
 import '../../core/theme/modern_colors.dart';
-import '../widgets/components/molecules/sherpa_tab_bar_2025.dart';
 
 // Features
 import '../../features/sherpi/chat/presentation/screens/sherpi_chat_screen.dart';

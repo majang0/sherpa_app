@@ -2,7 +2,7 @@
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors_2025.dart';
+import '../../../../core/theme/modern_colors.dart';
 
 /// 2025 트렌드 검색바 - Glassmorphism과 고급 애니메이션 효과
 class SearchBar2025 extends StatefulWidget {
@@ -184,8 +184,8 @@ class _SearchBar2025State extends State<SearchBar2025>
                   boxShadow: [
                     BoxShadow(
                       color: _isFocused
-                        ? AppColors2025.glassBlue20
-                        : AppColors2025.shadowLight,
+                        ? ModernColors.primary.withOpacity(0.2)
+                        : Colors.black.withOpacity(0.04),
                       blurRadius: _isFocused ? 20 : 10,
                       offset: const Offset(0, 4),
                     ),
@@ -202,18 +202,18 @@ class _SearchBar2025State extends State<SearchBar2025>
                           end: Alignment.bottomRight,
                           colors: isDark
                             ? [
-                                AppColors2025.glassWhite10,
-                                AppColors2025.glassWhite10.withOpacity(0.5),
+                                ModernColors.surface.withOpacity(0.1),
+                                ModernColors.surface.withOpacity(0.05),
                               ]
                             : [
-                                AppColors2025.surface,
-                                AppColors2025.surfaceElevated,
+                                ModernColors.surface,
+                                ModernColors.surfaceElevated,
                               ],
                         ),
                         border: Border.all(
                           color: _isFocused
-                            ? AppColors2025.borderFocus
-                            : AppColors2025.glassBorder,
+                            ? ModernColors.borderFocus
+                            : ModernColors.border.withOpacity(0.1),
                           width: _isFocused ? 1.5 : 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -229,8 +229,8 @@ class _SearchBar2025State extends State<SearchBar2025>
                                 Icons.search,
                                 size: 22,
                                 color: _isFocused
-                                  ? AppColors2025.primary
-                                  : (isDark ? AppColors2025.textOnDark.withOpacity(0.7) : AppColors2025.textSecondary),
+                                  ? ModernColors.primary
+                                  : (isDark ? ModernColors.textOnPrimary.withOpacity(0.7) : ModernColors.textSecondary),
                               ),
                             ),
                           ),
@@ -242,15 +242,15 @@ class _SearchBar2025State extends State<SearchBar2025>
                               focusNode: _focusNode,
                               style: TextStyle(
                                 fontSize: 16,
-                                color: isDark ? AppColors2025.textOnDark : AppColors2025.textPrimary,
+                                color: isDark ? ModernColors.textOnPrimary : ModernColors.textPrimary,
                                 fontWeight: FontWeight.w500,
                               ),
                               decoration: InputDecoration(
                                 hintText: widget.hintText,
                                 hintStyle: TextStyle(
                                   color: isDark 
-                                    ? AppColors2025.textOnDark.withOpacity(0.5)
-                                    : AppColors2025.textTertiary,
+                                    ? ModernColors.textOnPrimary.withOpacity(0.5)
+                                    : ModernColors.textTertiary,
                                   fontWeight: FontWeight.w400,
                                 ),
                                 border: InputBorder.none,
@@ -315,7 +315,7 @@ class _SearchBar2025State extends State<SearchBar2025>
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors2025.shadowLight,
+                            color: Colors.black.withOpacity(0.04),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
@@ -332,16 +332,16 @@ class _SearchBar2025State extends State<SearchBar2025>
                                 end: Alignment.bottomRight,
                                 colors: isDark
                                   ? [
-                                      AppColors2025.glassWhite10,
-                                      AppColors2025.glassWhite10.withOpacity(0.5),
+                                      ModernColors.surface.withOpacity(0.1),
+                                      ModernColors.surface.withOpacity(0.05),
                                     ]
                                   : [
-                                      AppColors2025.surface,
-                                      AppColors2025.surfaceElevated,
+                                      ModernColors.surface,
+                                      ModernColors.surfaceElevated,
                                     ],
                               ),
                               border: Border.all(
-                                color: AppColors2025.glassBorder,
+                                color: ModernColors.border.withOpacity(0.1),
                                 width: 1,
                               ),
                               borderRadius: BorderRadius.circular(16),
@@ -388,14 +388,14 @@ class _SearchBar2025State extends State<SearchBar2025>
         ),
         decoration: BoxDecoration(
           color: isDark 
-            ? AppColors2025.glassWhite10
-            : AppColors2025.neuBase.withOpacity(0.5),
+            ? ModernColors.surface.withOpacity(0.1)
+            : ModernColors.background.withOpacity(0.5),
           borderRadius: BorderRadius.circular(18),
         ),
         child: Icon(
           icon,
           size: 18,
-          color: isDark ? AppColors2025.textOnDark.withOpacity(0.7) : AppColors2025.textSecondary,
+          color: isDark ? ModernColors.textOnPrimary.withOpacity(0.7) : ModernColors.textSecondary,
         ),
       ),
     );
@@ -416,8 +416,8 @@ class _SearchBar2025State extends State<SearchBar2025>
             ? Border(
                 bottom: BorderSide(
                   color: isDark 
-                    ? AppColors2025.glassBorderSoft
-                    : AppColors2025.borderLight,
+                    ? ModernColors.border.withOpacity(0.1)
+                    : ModernColors.borderLight,
                   width: 0.5,
                 ),
               )
@@ -428,7 +428,7 @@ class _SearchBar2025State extends State<SearchBar2025>
             Icon(
               Icons.search,
               size: 18,
-              color: isDark ? AppColors2025.textOnDark.withOpacity(0.6) : AppColors2025.textTertiary,
+              color: isDark ? ModernColors.textOnPrimary.withOpacity(0.6) : ModernColors.textTertiary,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -436,7 +436,7 @@ class _SearchBar2025State extends State<SearchBar2025>
                 suggestion,
                 style: TextStyle(
                   fontSize: 14,
-                  color: isDark ? AppColors2025.textOnDark.withOpacity(0.7) : AppColors2025.textPrimary,
+                  color: isDark ? ModernColors.textOnPrimary.withOpacity(0.7) : ModernColors.textPrimary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -444,7 +444,7 @@ class _SearchBar2025State extends State<SearchBar2025>
             Icon(
               Icons.north_west,
               size: 16,
-              color: isDark ? AppColors2025.textOnDark.withOpacity(0.38) : AppColors2025.textQuaternary,
+              color: isDark ? ModernColors.textOnPrimary.withOpacity(0.38) : ModernColors.textPlaceholder,
             ),
           ],
         ),
