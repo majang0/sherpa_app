@@ -11,11 +11,10 @@ import '../providers/global_user_provider.dart';
 import '../providers/global_point_provider.dart';
 import '../providers/global_user_title_provider.dart';
 import '../providers/notification_provider.dart';
-import '../models/notification_model.dart';
 import '../widgets/notification_item_widget.dart';
 import '../../features/profile/presentation/screens/my_info_screen.dart';
-import '../../features/shop/presentation/screens/enhanced_point_shop_screen.dart';
-import '../../features/notification/screens/notification_screen.dart';
+import '../../features/profile/shop/presentation/screens/enhanced_point_shop_screen.dart';
+import '../notification/screens/notification_screen.dart';
 
 class SherpaCleanAppBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
   final String? title;
