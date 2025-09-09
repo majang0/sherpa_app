@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/sherpi_emotions.dart';
 import '../models/sherpi_relationship_model.dart';
-import '../../features/sherpi_relationship/providers/relationship_provider.dart';
+import '../../features/sherpi/relationship/providers/relationship_provider.dart';
 
 /// 🎨 셰르피 개인화 설정 다이얼로그
 /// 

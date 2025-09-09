@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../features/sherpi_relationship/providers/relationship_provider.dart';
+import '../../features/sherpi/relationship/providers/relationship_provider.dart';
 import '../models/sherpi_relationship_model.dart';
 
 /// Week 3: 관계 성장 시각화 위젯

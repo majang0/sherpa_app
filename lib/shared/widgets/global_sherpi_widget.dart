@@ -12,17 +12,17 @@ import '../../core/theme/modern_colors.dart';
 import '../widgets/components/molecules/sherpa_tab_bar_2025.dart';
 
 // Features
-import '../../features/sherpi_chat/presentation/screens/sherpi_chat_screen.dart';
-import '../../features/sherpi_analysis/services/user_data_analyzer.dart';
-// import '../../features/sherpi_analysis/services/ai_insight_generator.dart'; // AI 시스템 비활성화 - 사용하지 않는 import 제거
-import '../../features/sherpi_analysis/presentation/screens/analysis_result_screen.dart';
-import '../../features/sherpi_planning/presentation/screens/simple_planner_screen.dart';
+import '../../features/sherpi/chat/presentation/screens/sherpi_chat_screen.dart';
+import '../../features/sherpi/analysis/services/user_data_analyzer.dart';
+// import '../../features/sherpi/analysis/services/ai_insight_generator.dart'; // AI 시스템 비활성화 - 사용하지 않는 import 제거
+import '../../features/sherpi/analysis/presentation/screens/analysis_result_screen.dart';
+import '../../features/sherpi/planning/presentation/screens/simple_planner_screen.dart';
 
 // Shared
 import '../providers/global_sherpi_provider.dart';
 import '../providers/global_user_provider.dart';
-import '../../features/sherpi_relationship/providers/relationship_provider.dart';
-import '../../features/sherpi_relationship/presentation/widgets/intimacy_level_widget.dart';
+import '../../features/sherpi/relationship/providers/relationship_provider.dart';
+import '../../features/sherpi/relationship/presentation/widgets/intimacy_level_widget.dart';
 import 'sherpi_relationship_growth_widget.dart';
 import 'sherpi_personalization_dialog.dart';
 import 'dialogs/enhanced_today_analysis_dialog.dart';

@@ -17,8 +17,8 @@ import 'shared/providers/global_user_title_provider.dart';
 import 'shared/providers/global_game_provider.dart';
 import 'shared/providers/global_meeting_provider.dart';
 import 'features/quests/providers/quest_provider_v2.dart';
-import 'features/sherpi_relationship/providers/relationship_provider.dart';
-import 'features/sherpi_emotion/providers/emotion_analysis_provider.dart';
+import 'features/sherpi/relationship/providers/relationship_provider.dart';
+import 'features/sherpi/emotion/providers/emotion_analysis_provider.dart';
 
 // Screens - Meetings
 import 'features/meetings/presentation/screens/available_meeting_detail_screen.dart';
@@ -43,7 +43,7 @@ import 'shared/widgets/dialogs/analysis_pages/diary_analysis_page.dart';
 import 'shared/presentation/screens/component_viewer_screen.dart';
 
 // Screens - Sherpi Chat
-import 'features/sherpi_chat/presentation/screens/sherpi_message_history_screen.dart';
+import 'features/sherpi/chat/presentation/screens/sherpi_message_history_screen.dart';
 
 
 // Models
