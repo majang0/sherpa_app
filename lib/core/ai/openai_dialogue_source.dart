@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:openai_dart/openai_dart.dart';
@@ -24,9 +25,9 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
         baseUrl: 'https://api.openai.com/v1',
       );
       
-      print('🤖 OpenAI GPT-5 클라이언트 초기화 성공');
+      debugPrint('🤖 OpenAI GPT-5 클라이언트 초기화 성공');
     } catch (e) {
-      print('❌ OpenAI 클라이언트 초기화 실패: $e');
+      debugPrint('❌ OpenAI 클라이언트 초기화 실패: $e');
       rethrow;
     }
   }
@@ -40,7 +41,7 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
     try {
       // API 키 유효성 검사
       if (!ApiConfig.isOpenAIApiKeyValid) {
-        print('⚠️ OpenAI API 키가 유효하지 않음, 정적 메시지 사용');
+        debugPrint('⚠️ OpenAI API 키가 유효하지 않음, 정적 메시지 사용');
         return await _fallbackSource.getDialogue(context, userContext, gameContext);
       }
       
@@ -73,26 +74,26 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
         
         if (responseText != null && responseText.isNotEmpty) {
           final processedResponse = _processResponse(responseText);
-          print('✅ OpenAI GPT-5 응답 생성 성공');
+          debugPrint('✅ OpenAI GPT-5 응답 생성 성공');
           return processedResponse;
         } else {
-          print('⚠️ OpenAI 응답이 비어있음, 정적 메시지 사용');
+          debugPrint('⚠️ OpenAI 응답이 비어있음, 정적 메시지 사용');
           return await _fallbackSource.getDialogue(context, userContext, gameContext);
         }
       } catch (apiError) {
-        print('❌ OpenAI API 호출 실패: $apiError');
+        debugPrint('❌ OpenAI API 호출 실패: $apiError');
         
         // API 오류 상세 정보 출력
         if (apiError is HttpException) {
-          print('  - HTTP 오류: ${apiError.message}');
+          debugPrint('  - HTTP 오류: ${apiError.message}');
         } else if (apiError.toString().contains('statusCode')) {
-          print('  - API 오류: $apiError');
+          debugPrint('  - API 오류: $apiError');
         }
         
         return await _fallbackSource.getDialogue(context, userContext, gameContext);
       }
     } catch (e) {
-      print('❌ OpenAI 대화 생성 중 오류: $e');
+      debugPrint('❌ OpenAI 대화 생성 중 오류: $e');
       return await _fallbackSource.getDialogue(context, userContext, gameContext);
     }
   }
@@ -235,6 +236,6 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
   /// 리소스 정리
   void dispose() {
     // OpenAI 클라이언트는 특별한 정리가 필요 없음
-    print('🔄 OpenAI 클라이언트 정리 완료');
+    debugPrint('🔄 OpenAI 클라이언트 정리 완료');
   }
 }

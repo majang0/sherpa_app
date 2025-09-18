@@ -7,8 +7,6 @@ import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../models/available_meeting_model.dart';
 import '../../../../shared/providers/global_meeting_provider.dart';
-import '../widgets/satisfaction_rating_widget.dart';
-import '../widgets/mood_selector_widget.dart';
 
 /// 🌟 모임 만족도 평가 화면
 /// 모임 참여 후 후기 작성 및 최종 보상 획득
@@ -21,7 +19,8 @@ class MeetingReviewScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<MeetingReviewScreen> createState() => _MeetingReviewScreenState();
+  ConsumerState<MeetingReviewScreen> createState() =>
+      _MeetingReviewScreenState();
 }
 
 class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
@@ -29,11 +28,46 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  late AnimationController _ratingAnimationController;
+  late Animation<double> _ratingScaleAnimation;
 
   double _satisfaction = 4.0;
   String _selectedMood = 'happy';
   final TextEditingController _noteController = TextEditingController();
   bool _isSubmitting = false;
+
+  static const Map<String, Map<String, dynamic>> _moods = {
+    'very_happy': {
+      'emoji': '😄',
+      'label': '매우 좋음',
+      'color': Color(0xFF10B981),
+    },
+    'happy': {
+      'emoji': '😊',
+      'label': '좋음',
+      'color': Color(0xFF3B82F6),
+    },
+    'good': {
+      'emoji': '🙂',
+      'label': '괜찮음',
+      'color': Color(0xFF8B5CF6),
+    },
+    'normal': {
+      'emoji': '😐',
+      'label': '보통',
+      'color': Color(0xFF6B7280),
+    },
+    'tired': {
+      'emoji': '😴',
+      'label': '피곤함',
+      'color': Color(0xFFEF4444),
+    },
+    'stressed': {
+      'emoji': '😰',
+      'label': '스트레스',
+      'color': Color(0xFFF59E0B),
+    },
+  };
 
   @override
   void initState() {
@@ -57,6 +91,20 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
       curve: Curves.easeOut,
     ));
 
+    _ratingAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _ratingScaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.2,
+    ).animate(
+      CurvedAnimation(
+        parent: _ratingAnimationController,
+        curve: Curves.elasticOut,
+      ),
+    );
+
     _animationController.forward();
 
     // 🚫 화면 진입 시 셰르피 안내 제거 - 단순 화면 진입은 조용히 처리
@@ -75,6 +123,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _ratingAnimationController.dispose();
     _noteController.dispose();
     super.dispose();
   }
@@ -100,27 +149,27 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
                   children: [
                     // 🎨 헤더
                     _buildHeader(),
-                    
+
                     const SizedBox(height: 30),
-                    
+
                     // ⭐ 만족도 평가
                     _buildSatisfactionSection(),
-                    
+
                     const SizedBox(height: 30),
-                    
+
                     // 😊 기분 선택
                     _buildMoodSection(),
-                    
+
                     const SizedBox(height: 30),
-                    
+
                     // 📝 한마디 작성
                     _buildNoteSection(),
-                    
+
                     const SizedBox(height: 30),
-                    
+
                     // 🎁 추가 보상 안내
                     _buildBonusRewardSection(),
-                    
+
                     const SizedBox(height: 100), // 하단 버튼 공간
                   ],
                 ),
@@ -129,7 +178,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
           );
         },
       ),
-      
+
       // 🎯 하단 제출 버튼
       bottomNavigationBar: _buildSubmitBar(),
     );
@@ -176,9 +225,9 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           Text(
             '🌟 모험은 어떠셨나요?',
             style: GoogleFonts.notoSans(
@@ -187,9 +236,9 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
               color: ModernColors.textPrimary,
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           Text(
             widget.meeting.title,
             style: GoogleFonts.notoSans(
@@ -199,9 +248,9 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           Text(
             '여러분의 소중한 후기가 다른 모험가들에게 큰 도움이 돼요!',
             style: GoogleFonts.notoSans(
@@ -242,20 +291,9 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
               color: ModernColors.textPrimary,
             ),
           ),
-          
           const SizedBox(height: 16),
-          
-          SatisfactionRatingWidget(
-            rating: _satisfaction,
-            onRatingChanged: (rating) {
-              setState(() {
-                _satisfaction = rating;
-              });
-            },
-          ),
-          
+          _buildSatisfactionSlider(),
           const SizedBox(height: 12),
-          
           Text(
             _getSatisfactionText(_satisfaction),
             style: GoogleFonts.notoSans(
@@ -296,19 +334,135 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
               color: ModernColors.textPrimary,
             ),
           ),
-          
           const SizedBox(height: 16),
-          
-          MoodSelectorWidget(
-            selectedMood: _selectedMood,
-            onMoodChanged: (mood) {
+          _buildMoodSelector(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSatisfactionSlider() {
+    return Column(
+      children: [
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: ModernColors.warning,
+            inactiveTrackColor: Colors.grey.shade200,
+            thumbColor: ModernColors.warning,
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
+            trackHeight: 6,
+          ),
+          child: Slider(
+            value: _satisfaction,
+            min: 1.0,
+            max: 5.0,
+            divisions: 8,
+            onChanged: (value) {
+              _ratingAnimationController.forward(from: 0).then(
+                  (_) => mounted ? _ratingAnimationController.reverse() : null);
               setState(() {
-                _selectedMood = mood;
+                _satisfaction = value;
               });
             },
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 16),
+        AnimatedBuilder(
+          animation: _ratingAnimationController,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _ratingScaleAnimation.value,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  final starValue = index + 1.0;
+                  final isFull = starValue <= _satisfaction;
+                  final isHalf = !isFull && starValue - 0.5 <= _satisfaction;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Icon(
+                      isFull
+                          ? Icons.star_rounded
+                          : isHalf
+                              ? Icons.star_half_rounded
+                              : Icons.star_outline_rounded,
+                      size: 32,
+                      color: starValue <= _satisfaction + 0.5
+                          ? ModernColors.warning
+                          : Colors.grey.shade300,
+                    ),
+                  );
+                }),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 8),
+        Text(
+          '${_satisfaction.toStringAsFixed(1)}/5.0',
+          style: GoogleFonts.notoSans(
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: ModernColors.warning,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMoodSelector() {
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: _moods.entries.map((entry) {
+        final moodKey = entry.key;
+        final moodData = entry.value;
+        final color = moodData['color'] as Color;
+        final emoji = moodData['emoji'] as String;
+        final label = moodData['label'] as String;
+        final isSelected = _selectedMood == moodKey;
+
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              _selectedMood = moodKey;
+            });
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? color.withValues(alpha: 0.1)
+                  : Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isSelected ? color : Colors.grey.shade200,
+                width: isSelected ? 2 : 1,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  emoji,
+                  style: const TextStyle(fontSize: 20),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  label,
+                  style: GoogleFonts.notoSans(
+                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    color: isSelected ? color : ModernColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 
@@ -338,9 +492,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
               color: ModernColors.textPrimary,
             ),
           ),
-          
           const SizedBox(height: 8),
-          
           Text(
             '모임에 대한 소감을 자유롭게 적어주세요 (선택사항)',
             style: GoogleFonts.notoSans(
@@ -348,9 +500,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
               color: ModernColors.textSecondary,
             ),
           ),
-          
           const SizedBox(height: 16),
-          
           TextField(
             controller: _noteController,
             maxLines: 4,
@@ -419,9 +569,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
                   size: 20,
                 ),
               ),
-              
               const SizedBox(width: 12),
-              
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -446,9 +594,9 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // 보상 미리보기
           Row(
             children: [
@@ -566,11 +714,13 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
     try {
       // 글로벌 시스템을 통한 후기 완료 처리
       ref.read(globalMeetingProvider.notifier).completeMeetingReview(
-        meetingId: widget.meeting.id,
-        satisfaction: _satisfaction,
-        mood: _selectedMood,
-        note: _noteController.text.trim().isEmpty ? null : _noteController.text.trim(),
-      );
+            meetingId: widget.meeting.id,
+            satisfaction: _satisfaction,
+            mood: _selectedMood,
+            note: _noteController.text.trim().isEmpty
+                ? null
+                : _noteController.text.trim(),
+          );
 
       // 성공 시 홈으로 이동
       if (mounted) {

@@ -1,7 +1,8 @@
+// ignore_for_file: unnecessary_brace_in_string_interps
+
 import 'dart:async';
 import 'dart:io';
-import 'package:sherpa_app/core/ai/openai_dialogue_source.dart';
-import 'package:sherpa_app/core/ai/analysis_prompt_templates.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sherpa_app/core/config/api_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -85,10 +86,10 @@ class ActivityAnalysisService {
       
       return analysis;
     } catch (e) {
-      print('❌ analyzeExerciseComprehensive 에러 발생:');
-      print('  에러 타입: ${e.runtimeType}');
-      print('  에러 메시지: $e');
-      print('  스택 트레이스 확인 필요');
+      debugPrint('❌ analyzeExerciseComprehensive 에러 발생:');
+      debugPrint('  에러 타입: ${e.runtimeType}');
+      debugPrint('  에러 메시지: $e');
+      debugPrint('  스택 트레이스 확인 필요');
       return _getDefaultComprehensiveExerciseAnalysis(todayExercise, previousExercise, userName);
     }
   }
@@ -263,16 +264,16 @@ ${previousExercise != null ? '''
   /// 종합 운동 분석용 OpenAI 호출
   Future<String> _callOpenAIForComprehensive(String prompt) async {
     try {
-      print('🔄 OpenAI API 호출 시작...');
-      print('📋 프롬프트 길이: ${prompt.length}자');
+      debugPrint('🔄 OpenAI API 호출 시작...');
+      debugPrint('📋 프롬프트 길이: ${prompt.length}자');
       
       // 프롬프트를 500자씩 나눠서 출력
-      print('=====프롬프트 시작=====');
+      debugPrint('=====프롬프트 시작=====');
       for (int i = 0; i < prompt.length; i += 500) {
         final end = (i + 500 < prompt.length) ? i + 500 : prompt.length;
-        print('[${i}-${end}] ${prompt.substring(i, end)}');
+        debugPrint('[${i}-${end}] ${prompt.substring(i, end)}');
       }
-      print('=====프롬프트 끝=====');
+      debugPrint('=====프롬프트 끝=====');
       final chatCompletion = await _client.createChatCompletion(
         request: CreateChatCompletionRequest(
           model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
@@ -313,33 +314,33 @@ ${previousExercise != null ? '''
         onTimeout: () => throw Exception('API 호출 타임아웃'),
       );
       
-      print('✅ OpenAI API 응답 수신 성공');
+      debugPrint('✅ OpenAI API 응답 수신 성공');
       final responseText = chatCompletion.choices.firstOrNull?.message.content;
       
       if (responseText != null && responseText.isNotEmpty) {
-        print('📝 응답 길이: ${responseText.length}자');
-        print('🤖 실제 받은 AI 응답:');
-        print('=====응답 시작=====');
+        debugPrint('📝 응답 길이: ${responseText.length}자');
+        debugPrint('🤖 실제 받은 AI 응답:');
+        debugPrint('=====응답 시작=====');
         // 응답을 300자씩 나눠서 출력
         for (int i = 0; i < responseText.length; i += 300) {
           final end = (i + 300 < responseText.length) ? i + 300 : responseText.length;
-          print('[${i}-${end}] ${responseText.substring(i, end)}');
+          debugPrint('[${i}-${end}] ${responseText.substring(i, end)}');
         }
-        print('=====응답 끝====');
+        debugPrint('=====응답 끝====');
         return responseText;
       }
       
       throw Exception('Empty response from OpenAI');
     } catch (e) {
-      print('❌ _callOpenAIForComprehensive 에러: $e');
+      debugPrint('❌ _callOpenAIForComprehensive 에러: $e');
       rethrow;
     }
   }
   
   /// 종합 운동 분석 응답 파싱
   ComprehensiveExerciseAnalysis _parseComprehensiveExerciseResponse(String response) {
-    print('🔍 응답 파싱 시작...');
-    print('📄 원본 응답:\n$response');
+    debugPrint('🔍 응답 파싱 시작...');
+    debugPrint('📄 원본 응답:\n$response');
     
     final sections = <String, String>{};
     
@@ -349,44 +350,44 @@ ${previousExercise != null ? '''
     final section3Match = RegExp(r'\[SECTION_3\]\s*(.*?)\s*(?=\[SECTION_4\]|$)', dotAll: true).firstMatch(response);
     final section4Match = RegExp(r'\[SECTION_4\]\s*(.*?)$', dotAll: true).firstMatch(response);
     
-    print('🔍 파싱 결과:');
-    print('  SECTION_1 찾음: ${section1Match != null}');
-    print('  SECTION_2 찾음: ${section2Match != null}');
-    print('  SECTION_3 찾음: ${section3Match != null}');
-    print('  SECTION_4 찾음: ${section4Match != null}');
+    debugPrint('🔍 파싱 결과:');
+    debugPrint('  SECTION_1 찾음: ${section1Match != null}');
+    debugPrint('  SECTION_2 찾음: ${section2Match != null}');
+    debugPrint('  SECTION_3 찾음: ${section3Match != null}');
+    debugPrint('  SECTION_4 찾음: ${section4Match != null}');
     
     sections['comparison'] = section1Match?.group(1)?.trim() ?? '지난번 운동과 비교하여 꾸준히 발전하고 계세요! 💪';
     sections['benefits'] = section2Match?.group(1)?.trim() ?? '오늘의 운동이 건강한 몸과 마음을 만들어가고 있어요! 🌟';
     sections['recommendation'] = section3Match?.group(1)?.trim() ?? '내일도 함께 운동해요! 조금씩 강도를 높여보는 것도 좋아요. 🎯';
     sections['encouragement'] = section4Match?.group(1)?.trim() ?? '오늘도 정말 수고하셨어요! 셰르피가 항상 응원하고 있어요! 💝';
     
-    print('📝 파싱된 섹션:');
-    print('  comparison (${sections['comparison']!.length}자): ${sections['comparison']}');
-    print('  benefits (${sections['benefits']!.length}자): ${sections['benefits']}');
-    print('  recommendation (${sections['recommendation']!.length}자): ${sections['recommendation']}');
-    print('  encouragement (${sections['encouragement']!.length}자): ${sections['encouragement']}');
+    debugPrint('📝 파싱된 섹션:');
+    debugPrint('  comparison (${sections['comparison']!.length}자): ${sections['comparison']}');
+    debugPrint('  benefits (${sections['benefits']!.length}자): ${sections['benefits']}');
+    debugPrint('  recommendation (${sections['recommendation']!.length}자): ${sections['recommendation']}');
+    debugPrint('  encouragement (${sections['encouragement']!.length}자): ${sections['encouragement']}');
     
     // 글자수 체크 (100-130자)
     for (var entry in sections.entries) {
       if (entry.value.length < 100) {
-        print('⚠️ 경고: ${entry.key}가 너무 짧습니다 (${entry.value.length}자 < 100자)');
+        debugPrint('⚠️ 경고: ${entry.key}가 너무 짧습니다 (${entry.value.length}자 < 100자)');
       } else if (entry.value.length > 130) {
-        print('⚠️ 경고: ${entry.key}가 너무 깁니다 (${entry.value.length}자 > 130자)');
+        debugPrint('⚠️ 경고: ${entry.key}가 너무 깁니다 (${entry.value.length}자 > 130자)');
       }
     }
     
     // 기본 메시지 체크 (디버깅용)
     if (sections['comparison']!.contains('오늘도 함께 운동해서 기뻐요')) {
-      print('⚠️ 경고: comparison이 기본 메시지입니다!');
+      debugPrint('⚠️ 경고: comparison이 기본 메시지입니다!');
     }
     if (sections['benefits']!.contains('몸도 마음도 상쾌해졌죠')) {
-      print('⚠️ 경고: benefits가 기본 메시지입니다!');
+      debugPrint('⚠️ 경고: benefits가 기본 메시지입니다!');
     }
     if (sections['recommendation']!.contains('셰르피가 꼭 같이 할게요')) {
-      print('⚠️ 경고: recommendation이 기본 메시지입니다!');
+      debugPrint('⚠️ 경고: recommendation이 기본 메시지입니다!');
     }
     if (sections['encouragement']!.contains('내일도 셰르피가 옆에서 응원할게요')) {
-      print('⚠️ 경고: encouragement가 기본 메시지입니다!');
+      debugPrint('⚠️ 경고: encouragement가 기본 메시지입니다!');
     }
     
     return ComprehensiveExerciseAnalysis(
@@ -404,7 +405,7 @@ ${previousExercise != null ? '''
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_exercise_${dateKey}';
       
-      print('💾 캐시 저장 시작: $fullKey');
+      debugPrint('💾 캐시 저장 시작: $fullKey');
       
       final data = {
         'comparison': analysis.comparison,
@@ -415,9 +416,9 @@ ${previousExercise != null ? '''
       };
       
       await prefs.setString(fullKey, jsonEncode(data));
-      print('✅ 캐시 저장 완료!');
+      debugPrint('✅ 캐시 저장 완료!');
     } catch (e) {
-      print('❌ 캐시 저장 실패: $e');
+      debugPrint('❌ 캐시 저장 실패: $e');
     }
   }
   
@@ -777,9 +778,9 @@ ${previousExercise != null ? '''
       
       return analysis;
     } catch (e) {
-      print('❌ analyzeReadingComprehensive 에러 발생:');
-      print('  에러 타입: ${e.runtimeType}');
-      print('  에러 메시지: $e');
+      debugPrint('❌ analyzeReadingComprehensive 에러 발생:');
+      debugPrint('  에러 타입: ${e.runtimeType}');
+      debugPrint('  에러 메시지: $e');
       return _getDefaultComprehensiveReadingAnalysis(todayReading, previousReading, userName);
     }
   }
@@ -829,9 +830,9 @@ ${previousExercise != null ? '''
       
       return analysis;
     } catch (e) {
-      print('❌ analyzeDiaryComprehensive 에러 발생:');
-      print('  에러 타입: ${e.runtimeType}');
-      print('  에러 메시지: $e');
+      debugPrint('❌ analyzeDiaryComprehensive 에러 발생:');
+      debugPrint('  에러 타입: ${e.runtimeType}');
+      debugPrint('  에러 메시지: $e');
       return _getDefaultComprehensiveDiaryAnalysis(currentMood, previousMood, userName);
     }
   }
@@ -977,7 +978,7 @@ $previousBookInfo
   /// 종합 독서 분석용 OpenAI 호출
   Future<String> _callOpenAIForReadingComprehensive(String prompt) async {
     try {
-      print('🔄 OpenAI API 호출 시작 (독서 분석)...');
+      debugPrint('🔄 OpenAI API 호출 시작 (독서 분석)...');
       
       final chatCompletion = await _client.createChatCompletion(
         request: CreateChatCompletionRequest(
@@ -1017,24 +1018,24 @@ $previousBookInfo
         onTimeout: () => throw Exception('API 호출 타임아웃'),
       );
       
-      print('✅ OpenAI API 응답 수신 성공 (독서)');
+      debugPrint('✅ OpenAI API 응답 수신 성공 (독서)');
       final responseText = chatCompletion.choices.firstOrNull?.message.content;
       
       if (responseText != null && responseText.isNotEmpty) {
-        print('📝 독서 분석 응답 길이: ${responseText.length}자');
+        debugPrint('📝 독서 분석 응답 길이: ${responseText.length}자');
         return responseText;
       }
       
       throw Exception('Empty response from OpenAI');
     } catch (e) {
-      print('❌ _callOpenAIForReadingComprehensive 에러: $e');
+      debugPrint('❌ _callOpenAIForReadingComprehensive 에러: $e');
       rethrow;
     }
   }
   
   /// 종합 독서 분석 응답 파싱
   ComprehensiveReadingAnalysis _parseComprehensiveReadingResponse(String response) {
-    print('🔍 독서 응답 파싱 시작...');
+    debugPrint('🔍 독서 응답 파싱 시작...');
     
     // 섹션별로 파싱
     final section1Match = RegExp(r'\[SECTION_1\]\s*(.*?)\s*(?=\[SECTION_2\]|$)', dotAll: true).firstMatch(response);
@@ -1065,8 +1066,8 @@ $previousBookInfo
           }
         }
       } catch (e) {
-        print('❌ 추천 도서 JSON 파싱 실패: $e');
-        print('원본 문자열: ${section4Match.group(1)?.trim()}');
+        debugPrint('❌ 추천 도서 JSON 파싱 실패: $e');
+        debugPrint('원본 문자열: ${section4Match.group(1)?.trim()}');
         // 기본 추천 도서 제공
         recommendations = _getDefaultBookRecommendations();
       }
@@ -1115,7 +1116,7 @@ $previousBookInfo
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_reading_${dateKey}';
       
-      print('💾 독서 분석 캐시 저장 시작: $fullKey');
+      debugPrint('💾 독서 분석 캐시 저장 시작: $fullKey');
       
       final data = {
         'previousInsight': analysis.previousInsight,
@@ -1126,9 +1127,9 @@ $previousBookInfo
       };
       
       await prefs.setString(fullKey, jsonEncode(data));
-      print('✅ 독서 분석 캐시 저장 완료!');
+      debugPrint('✅ 독서 분석 캐시 저장 완료!');
     } catch (e) {
-      print('❌ 독서 분석 캐시 저장 실패: $e');
+      debugPrint('❌ 독서 분석 캐시 저장 실패: $e');
     }
   }
   
@@ -1158,7 +1159,7 @@ $previousBookInfo
         );
       }
     } catch (e) {
-      print('❌ 독서 분석 캐시 읽기 실패: $e');
+      debugPrint('❌ 독서 분석 캐시 읽기 실패: $e');
     }
     return null;
   }
@@ -1305,7 +1306,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       
       return chatCompletion.choices.first.message.content ?? '';
     } catch (e) {
-      print('❌ 일기 API 호출 실패: $e');
+      debugPrint('❌ 일기 API 호출 실패: $e');
       rethrow;
     }
   }
@@ -1326,7 +1327,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
         tomorrowHope: _cleanAndTrimText(section4Match?.group(1), 400) ?? '내일도 셰르피가 함께할게요. 오늘보다 더 나은 내일이 되도록, 작은 것부터 하나씩 함께 해나가요 🌟',
       );
     } catch (e) {
-      print('⚠️ 일기 응답 파싱 실패, 기본값 사용: $e');
+      debugPrint('⚠️ 일기 응답 파싱 실패, 기본값 사용: $e');
       return ComprehensiveDiaryAnalysis(
         emotionTransition: '감정의 변화를 함께 지켜보고 있어요 💝',
         emotionalSupport: '오늘 하루도 정말 수고 많으셨어요. 어떤 감정이든 소중해요. 셰르피가 늘 곁에서 응원하고 있어요 💖',
@@ -1359,9 +1360,9 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       final fullKey = 'comprehensive_diary_$dateKey';
       
       await prefs.setString(fullKey, jsonEncode(analysis.toJson()));
-      print('✅ 종합 일기 분석 캐시 저장 완료: $fullKey');
+      debugPrint('✅ 종합 일기 분석 캐시 저장 완료: $fullKey');
     } catch (e) {
-      print('❌ 일기 분석 캐시 저장 실패: $e');
+      debugPrint('❌ 일기 분석 캐시 저장 실패: $e');
     }
   }
   
@@ -1375,11 +1376,11 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       final cached = prefs.getString(fullKey);
       if (cached != null) {
         final json = jsonDecode(cached) as Map<String, dynamic>;
-        print('✅ 종합 일기 분석 캐시 로드 성공');
+        debugPrint('✅ 종합 일기 분석 캐시 로드 성공');
         return ComprehensiveDiaryAnalysis.fromJson(json);
       }
     } catch (e) {
-      print('❌ 일기 분석 캐시 로드 실패: $e');
+      debugPrint('❌ 일기 분석 캐시 로드 실패: $e');
     }
     return null;
   }
@@ -1392,9 +1393,9 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       final fullKey = 'comprehensive_diary_$dateKey';
       
       await prefs.remove(fullKey);
-      print('✅ 종합 일기 분석 캐시 삭제 완료');
+      debugPrint('✅ 종합 일기 분석 캐시 삭제 완료');
     } catch (e) {
-      print('❌ 일기 분석 캐시 삭제 실패: $e');
+      debugPrint('❌ 일기 분석 캐시 삭제 실패: $e');
     }
   }
   
@@ -1508,7 +1509,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       if (!forceRegenerate) {
         final cached = await _getComprehensiveDayFromCache();
         if (cached != null) {
-          print('✅ 종합 하루 분석 캐시에서 로드 완료');
+          debugPrint('✅ 종합 하루 분석 캐시에서 로드 완료');
           return cached;
         }
       }
@@ -1531,7 +1532,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       
       return analysis;
     } catch (e) {
-      print('❌ analyzeDayComprehensive 에러: $e');
+      debugPrint('❌ analyzeDayComprehensive 에러: $e');
       return _getDefaultComprehensiveDayAnalysis(
         exerciseData,
         readingData,
@@ -1617,7 +1618,7 @@ JSON 형식으로만 응답하세요.''';
       
       return response.choices.first.message.content ?? '{}';
     } catch (e) {
-      print('❌ OpenAI API 호출 실패: $e');
+      debugPrint('❌ OpenAI API 호출 실패: $e');
       throw e;
     }
   }
@@ -1647,7 +1648,7 @@ JSON 형식으로만 응답하세요.''';
         scores: scores,
       );
     } catch (e) {
-      print('❌ 응답 파싱 실패: $e');
+      debugPrint('❌ 응답 파싱 실패: $e');
       throw e;
     }
   }
@@ -1673,9 +1674,9 @@ JSON 형식으로만 응답하세요.''';
       };
       
       await prefs.setString(key, jsonEncode(data));
-      print('✅ 종합 하루 분석 캐시 저장 완료');
+      debugPrint('✅ 종합 하루 분석 캐시 저장 완료');
     } catch (e) {
-      print('❌ 캐시 저장 실패: $e');
+      debugPrint('❌ 캐시 저장 실패: $e');
     }
   }
   
@@ -1702,7 +1703,7 @@ JSON 형식으로만 응답하세요.''';
         );
       }
     } catch (e) {
-      print('❌ 캐시 읽기 실패: $e');
+      debugPrint('❌ 캐시 읽기 실패: $e');
     }
     return null;
   }

@@ -5,7 +5,7 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 import '../providers/global_sherpi_provider.dart';
 import '../../core/constants/sherpi_dialogues.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/theme/modern_colors.dart';
 
 // 메인 셰르피 위젯 - 전역에서 사용 가능한 애니메이션 캐릭터
 class SherpiWidget extends ConsumerStatefulWidget {
@@ -194,23 +194,23 @@ class _SherpiWidgetState extends ConsumerState<SherpiWidget>
       constraints: const BoxConstraints(maxWidth: 220),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: bubbleColor.withOpacity(0.95),
+        color: bubbleColor.withValues(alpha: 0.95),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: bubbleColor.withOpacity(0.3),
+            color: bubbleColor.withValues(alpha: 0.95),
             blurRadius: 12,
             offset: const Offset(0, 4),
             spreadRadius: 2,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.12),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
         border: Border.all(
-          color: Colors.white.withOpacity(0.8),
+          color: Colors.white.withValues(alpha: 0.85),
           width: 1.5,
         ),
       ),
@@ -263,8 +263,8 @@ class _SherpiWidgetState extends ConsumerState<SherpiWidget>
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        emotionColor.withOpacity(0.3 * _glowAnimation.value),
-                        emotionColor.withOpacity(0.1 * _glowAnimation.value),
+                        emotionColor.withValues(alpha: 0.18),
+                        emotionColor.withValues(alpha: 0.18),
                         Colors.transparent,
                       ],
                     ),
@@ -280,7 +280,7 @@ class _SherpiWidgetState extends ConsumerState<SherpiWidget>
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: emotionColor.withOpacity(0.4),
+                  color: emotionColor.withValues(alpha: 0.18),
                   width: 2,
                 ),
               ),
@@ -307,7 +307,7 @@ class _SherpiWidgetState extends ConsumerState<SherpiWidget>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: emotionColor.withOpacity(0.4),
+                        color: emotionColor.withValues(alpha: 0.18),
                         blurRadius: 15,
                         spreadRadius: 3,
                       ),
@@ -340,12 +340,12 @@ class _SherpiWidgetState extends ConsumerState<SherpiWidget>
         shape: BoxShape.circle,
         gradient: RadialGradient(
           colors: [
-            emotionColor.withOpacity(0.3),
-            emotionColor.withOpacity(0.1),
+            emotionColor.withValues(alpha: 0.18),
+            emotionColor.withValues(alpha: 0.18),
           ],
         ),
         border: Border.all(
-          color: emotionColor.withOpacity(0.6),
+          color: emotionColor.withValues(alpha: 0.18),
           width: 2,
         ),
       ),
@@ -409,7 +409,7 @@ class _SherpiWidgetState extends ConsumerState<SherpiWidget>
       case SherpiEmotion.thinking:
         return Colors.purple;
       case SherpiEmotion.guiding:
-        return AppColors.primary;
+        return ModernColors.primary;
       case SherpiEmotion.warning:
         return Colors.red;
       case SherpiEmotion.sleeping:
@@ -417,7 +417,7 @@ class _SherpiWidgetState extends ConsumerState<SherpiWidget>
       case SherpiEmotion.special:
         return Colors.pink;
       default:
-        return AppColors.primary;
+        return ModernColors.primary;
     }
   }
 
@@ -434,7 +434,7 @@ class _SherpiWidgetState extends ConsumerState<SherpiWidget>
       case SherpiEmotion.thinking:
         return Colors.purple.shade100;
       case SherpiEmotion.guiding:
-        return AppColors.primary.withOpacity(0.1);
+        return ModernColors.primary.withValues(alpha: 0.2);
       case SherpiEmotion.warning:
         return Colors.red.shade100;
       case SherpiEmotion.sleeping:
@@ -454,7 +454,7 @@ class _SherpiWidgetState extends ConsumerState<SherpiWidget>
       case SherpiEmotion.sad:
         return Colors.blue.shade800;
       default:
-        return AppColors.textPrimary;
+        return ModernColors.textPrimary;
     }
   }
 
@@ -507,7 +507,7 @@ class BubbleTailPainter extends CustomPainter {
 
     // 테두리
     final borderPaint = Paint()
-      ..color = Colors.white.withOpacity(0.8)
+      ..color = Colors.white.withValues(alpha: 0.85)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
@@ -560,20 +560,20 @@ class GlobalSherpiOverlay extends ConsumerWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: _getEmotionColor(sherpiState.emotion).withOpacity(0.15),
+                        color: _getEmotionColor(sherpiState.emotion).withValues(alpha: 0.15),
                         blurRadius: 20,
                         offset: const Offset(0, 8),
                         spreadRadius: 2,
                       ),
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withValues(alpha: 0.12),
                         blurRadius: 6,
                         offset: const Offset(0, 2),
                         spreadRadius: 0,
                       ),
                     ],
                     border: Border.all(
-                      color: _getEmotionColor(sherpiState.emotion).withOpacity(0.2),
+                      color: _getEmotionColor(sherpiState.emotion).withValues(alpha: 0.15),
                       width: 1.5,
                     ),
                   ),
@@ -584,7 +584,7 @@ class GlobalSherpiOverlay extends ConsumerWidget {
                         Container(
                           width: 100,
                           height: 100,
-                          color: _getEmotionColor(sherpiState.emotion).withOpacity(0.05),
+                          color: _getEmotionColor(sherpiState.emotion).withValues(alpha: 0.15),
                         ),
                         // ✅ 셰르피 이미지 (중앙 정렬)
                         Center(
@@ -605,8 +605,8 @@ class GlobalSherpiOverlay extends ConsumerWidget {
                                       shape: BoxShape.circle,
                                       gradient: LinearGradient(
                                         colors: [
-                                          _getEmotionColor(sherpiState.emotion).withOpacity(0.2),
-                                          _getEmotionColor(sherpiState.emotion).withOpacity(0.05),
+                                          _getEmotionColor(sherpiState.emotion).withValues(alpha: 0.15),
+                                          _getEmotionColor(sherpiState.emotion).withValues(alpha: 0.15),
                                         ],
                                       ),
                                     ),
@@ -631,7 +631,7 @@ class GlobalSherpiOverlay extends ConsumerWidget {
                             child: Text(
                               'Sherpi',
                               style: TextStyle(
-                                color: _getEmotionColor(sherpiState.emotion).withOpacity(0.8),
+                                color: _getEmotionColor(sherpiState.emotion).withValues(alpha: 0.15),
                                 fontSize: 9,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.5,
@@ -659,20 +659,20 @@ class GlobalSherpiOverlay extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: _getEmotionColor(sherpiState.emotion).withOpacity(0.08),
+                      color: _getEmotionColor(sherpiState.emotion).withValues(alpha: 0.15),
                       blurRadius: 25,
                       offset: const Offset(0, 10),
                       spreadRadius: 0,
                     ),
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.12),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                       spreadRadius: 0,
                     ),
                   ],
                   border: Border.all(
-                    color: _getEmotionColor(sherpiState.emotion).withOpacity(0.1),
+                    color: _getEmotionColor(sherpiState.emotion).withValues(alpha: 0.15),
                     width: 1,
                   ),
                 ),
@@ -684,7 +684,7 @@ class GlobalSherpiOverlay extends ConsumerWidget {
                       width: 32,
                       height: 3,
                       decoration: BoxDecoration(
-                        color: _getEmotionColor(sherpiState.emotion).withOpacity(0.3),
+                        color: _getEmotionColor(sherpiState.emotion).withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -707,7 +707,7 @@ class GlobalSherpiOverlay extends ConsumerWidget {
                       size: const Size(16, 8),
                       painter: ModernBubbleTailPainter(
                         color: Colors.white,
-                        borderColor: _getEmotionColor(sherpiState.emotion).withOpacity(0.1),
+                        borderColor: _getEmotionColor(sherpiState.emotion).withValues(alpha: 0.15),
                       ),
                     ),
                   ],
@@ -801,5 +801,4 @@ class ModernBubbleTailPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-
 
