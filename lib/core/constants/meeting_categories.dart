@@ -112,8 +112,8 @@ class MeetingCategories {
 
   /// 📝 모든 카테고리 목록 (통합)
   static List<String> get allCategories => [
-    ..._categoryMap.keys.toList(),
-    ..._additionalCategories.keys.toList(),
+    ..._categoryMap.keys,
+    ..._additionalCategories.keys,
   ];
 
   /// 🎨 카테고리별 이모지 가져오기 (확장 지원)

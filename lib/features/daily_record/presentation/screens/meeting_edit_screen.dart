@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
@@ -12,7 +12,7 @@ import '../../../../core/constants/meeting_categories.dart';
 class MeetingEditScreen extends ConsumerStatefulWidget {
   final MeetingLog meeting;
   
-  const MeetingEditScreen({required this.meeting});
+  const MeetingEditScreen({super.key, required this.meeting});
 
   @override
   ConsumerState<MeetingEditScreen> createState() => _MeetingEditScreenState();
@@ -110,11 +110,11 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha:0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha:0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -129,11 +129,11 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha:0.9),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha:0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -246,12 +246,12 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: categoryInfo['color'].withOpacity(0.2),
+            color: categoryInfo['color'].withValues(alpha:0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha:0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -271,13 +271,13 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: categoryInfo['color'].withOpacity(0.3),
+                      color: categoryInfo['color'].withValues(alpha:0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
                   ],
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.edit,
                   color: Colors.white,
                   size: 32,
@@ -302,7 +302,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -325,7 +325,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha:0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -339,12 +339,12 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: RecordColors.textLight.withOpacity(0.1),
+                    color: ModernColors.textTertiary.withValues(alpha:0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.lock_outlined,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     size: 18,
                   ),
                 ),
@@ -354,7 +354,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -368,7 +368,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: RecordColors.textLight.withOpacity(0.1),
+                  color: ModernColors.textTertiary.withValues(alpha:0.1),
                   width: 1,
                 ),
               ),
@@ -390,7 +390,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: RecordColors.textLight,
+                color: ModernColors.textTertiary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -413,7 +413,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           style: GoogleFonts.notoSans(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
         const Spacer(),
@@ -423,7 +423,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
             style: GoogleFonts.notoSans(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
             textAlign: TextAlign.end,
             overflow: TextOverflow.ellipsis,
@@ -443,7 +443,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha:0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -457,10 +457,10 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFBBF24).withOpacity(0.1),
+                    color: const Color(0xFFFBBF24).withValues(alpha:0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.star,
                     color: const Color(0xFFFBBF24),
                     size: 18,
@@ -472,7 +472,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const Spacer(),
@@ -495,7 +495,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFFFBBF24).withOpacity(0.1),
+                  color: const Color(0xFFFBBF24).withValues(alpha:0.1),
                   width: 1,
                 ),
               ),
@@ -543,7 +543,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       widthFactor: 0.5,
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.star,
                                         size: 32,
                                         color: const Color(0xFFFBBF24),
@@ -563,9 +563,9 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
                       activeTrackColor: const Color(0xFFFBBF24),
-                      inactiveTrackColor: const Color(0xFFFBBF24).withOpacity(0.2),
+                      inactiveTrackColor: const Color(0xFFFBBF24).withValues(alpha:0.2),
                       thumbColor: const Color(0xFFFBBF24),
-                      overlayColor: const Color(0xFFFBBF24).withOpacity(0.2),
+                      overlayColor: const Color(0xFFFBBF24).withValues(alpha:0.2),
                       trackHeight: 6,
                       thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12),
                     ),
@@ -601,7 +601,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha:0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -615,7 +615,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: categoryInfo['color'].withOpacity(0.1),
+                    color: categoryInfo['color'].withValues(alpha:0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -630,7 +630,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -644,7 +644,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: categoryInfo['color'].withOpacity(0.1),
+                  color: categoryInfo['color'].withValues(alpha:0.1),
                   width: 1,
                 ),
               ),
@@ -666,18 +666,18 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                         color: isSelected ? categoryInfo['color'] : Colors.white,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: isSelected ? categoryInfo['color'] : RecordColors.textLight.withOpacity(0.2),
+                          color: isSelected ? categoryInfo['color'] : ModernColors.textTertiary.withValues(alpha:0.2),
                           width: 1.5,
                         ),
                         boxShadow: isSelected ? [
                           BoxShadow(
-                            color: categoryInfo['color'].withOpacity(0.3),
+                            color: categoryInfo['color'].withValues(alpha:0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
                         ] : [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.03),
+                            color: Colors.black.withValues(alpha:0.03),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -696,7 +696,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: isSelected ? Colors.white : RecordColors.textPrimary,
+                              color: isSelected ? Colors.white : ModernColors.textPrimary,
                             ),
                           ),
                         ],
@@ -722,7 +722,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha:0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -736,7 +736,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: categoryInfo['color'].withOpacity(0.1),
+                    color: categoryInfo['color'].withValues(alpha:0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -751,7 +751,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -765,7 +765,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: categoryInfo['color'].withOpacity(0.1),
+                  color: categoryInfo['color'].withValues(alpha:0.1),
                   width: 1,
                 ),
               ),
@@ -779,14 +779,14 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                   hintStyle: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textLight,
+                    color: ModernColors.textTertiary,
                   ),
                   counterText: '',
                 ),
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.5,
                 ),
               ),
@@ -807,7 +807,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha:0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -821,7 +821,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: categoryInfo['color'].withOpacity(0.1),
+                    color: categoryInfo['color'].withValues(alpha:0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -836,7 +836,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -850,7 +850,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: categoryInfo['color'].withOpacity(0.1),
+                  color: categoryInfo['color'].withValues(alpha:0.1),
                   width: 1,
                 ),
               ),
@@ -871,7 +871,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -879,7 +879,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -914,7 +914,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: categoryInfo['color'].withOpacity(0.4),
+              color: categoryInfo['color'].withValues(alpha:0.4),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -943,7 +943,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.save, size: 20),
+                    const Icon(Icons.save, size: 20),
                     const SizedBox(width: 8),
                     Text(
                       '수정 완료',

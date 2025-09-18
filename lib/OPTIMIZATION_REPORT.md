@@ -104,9 +104,9 @@ features/climbing/providers/climbing_providers.dart
 shared/providers/global_climbing_provider.dart
 → 하나로 통합
 
-features/meetings/providers/meeting_creation_provider.dart
+features/meetings/providers/meeting_creation_provider.dart (2025-09-18: `new_meeting_discovery_screen.dart` 내부 `_meetingCreationProvider`로 인라인 완료)
 shared/providers/global_meeting_provider.dart
-→ 하나로 통합
+→ 전역 데이터 공급만 유지
 ```
 
 ## 📁 Meeting 관련 파일 정리

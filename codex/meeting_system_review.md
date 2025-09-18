@@ -14,6 +14,7 @@
 | 데이터/상태 | `AvailableMeeting` 계산 프로퍼티(`participationFee`, `experienceReward`, `statRewards`)가 비즈니스 규칙을 캡슐화. `MeetingLog` 헬퍼(`shortName`, `satisfactionColor`, `moodIcon`)가 UI 표현을 단순화. |
 | 상태 연동 | `globalMeetingProvider.joinMeeting`이 포인트, 경험치, 능력치, 알림, 셰르피 메시지까지 한 번에 처리하여 일관성 있는 후속 작업 보장. |
 | UI 구조 | 인라인 위젯 덕분에 동일 파일 내에서 컴포넌트를 추적할 수 있고, 불필요한 import 및 파일 난립 문제 해결. |
+| 화면 상태 | 모임 생성 단계는 `new_meeting_discovery_screen.dart` 내부 전용 `_meetingCreationProvider`로 관리되어 단일 용도 provider 파일을 제거하면서도 상태 추적 흐름을 단순화. |
 | 네비게이션 | ID 기반 인자가 없어도 `AvailableMeeting`을 직접 전달할 수 있으며, 누락 시 graceful fallback. |
 | 테스트 | 모델/프로바이더/통합 테스트로 핵심 시나리오(생성→참여→리뷰)를 자동 검증. `ProviderContainer` 활용으로 전역 상태 주입을 안정적으로 재현. |
 | 문서 | 흐름 다이어그램, API Reference, 코드 예제가 문서에 포함되어 실제 구현과 맞춰지도록 유지 관리됨. |

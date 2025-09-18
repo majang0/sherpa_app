@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/models/global_user_model.dart'; // ✅ GlobalUser import 추가
-import '../../../../shared/providers/global_meeting_provider.dart';
 
 /// 📱 소셜 탐험 헤더 위젯
 /// RPG 게임의 '모험가 상태 정보' 컨셉으로 설계

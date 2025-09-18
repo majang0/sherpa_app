@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 
 /// 🔍 모임/챌린지 범위 선택 탭 위젯
 /// [전체] vs [우리 학교] 필터링을 위한 하위 탭바
@@ -20,19 +20,19 @@ class MeetingScopeTabsWidget extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: AppColors.textLight.withValues(alpha: 0.1),
+        color: ModernColors.textTertiary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.textLight.withValues(alpha: 0.2),
+          color: ModernColors.textTertiary.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
       child: TabBar(
         controller: controller,
-        labelColor: isChallenge 
-            ? AppColors.accent 
-            : AppColors.primary,
-        unselectedLabelColor: AppColors.textSecondary,
+        labelColor: isChallenge
+            ? ModernColors.secondary
+            : ModernColors.primary,
+        unselectedLabelColor: ModernColors.textSecondary,
         labelStyle: GoogleFonts.notoSans(
           fontSize: 13,
           fontWeight: FontWeight.w600,
@@ -99,7 +99,7 @@ class MeetingScopeTabsWidget extends StatelessWidget {
                 description,
                 style: GoogleFonts.notoSans(
                   fontSize: 9,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
             ],
