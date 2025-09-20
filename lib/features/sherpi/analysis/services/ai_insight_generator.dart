@@ -505,5 +505,5 @@ class InsufficientPointsException implements Exception {
   InsufficientPointsException(this.message);
 
   @override
-  String toString() => message;
+  String toString() => 'InsufficientPointsException: $message';
 }
