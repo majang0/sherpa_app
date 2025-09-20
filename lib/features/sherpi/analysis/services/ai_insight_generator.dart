@@ -1,25 +1,71 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:sherpa_app/core/ai/sources/enhanced_gemini_dialogue_source.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../shared/models/global_user_model.dart';
+import '../../../../shared/models/point_system_model.dart';
+import '../../../../shared/providers/global_point_provider.dart';
 import 'user_data_analyzer.dart';
 
 /// 🤖 AI 기반 인사이트 생성기
 ///
-/// Gemini AI를 활용하여 사용자의 데이터를 분석하고
+/// OpenAI GPT-5를 활용하여 사용자의 데이터를 분석하고
 /// 개인화된 인사이트와 추천사항을 생성합니다.
+/// 분석 시 30포인트가 필요합니다.
 class AiInsightGenerator {
-  late final EnhancedGeminiDialogueSource _geminiSource;
+  late final OpenAIDialogueSource _openAISource;
+  static const int ANALYSIS_COST = 30; // 분석 비용: 30포인트
 
-  AiInsightGenerator() {
+  final Ref? _ref; // Riverpod ref for accessing providers
+
+  AiInsightGenerator({Ref? ref}) : _ref = ref {
     try {
-      _geminiSource = EnhancedGeminiDialogueSource();
-      // AI 인사이트 생성기 초기화 완료
+      _openAISource = OpenAIDialogueSource();
+      print('✅ OpenAI GPT-5 인사이트 생성기 초기화 완료');
     } catch (e) {
-      // AI 인사이트 생성기 초기화 실패
+      print('❌ OpenAI 인사이트 생성기 초기화 실패: $e');
       rethrow;
+    }
+  }
+
+  /// 포인트 확인 메서드
+  bool _hasEnoughPoints() {
+    if (_ref == null) return false;
+    final pointState = _ref!.read(globalPointProvider);
+    return pointState.totalPoints >= ANALYSIS_COST;
+  }
+
+  /// 포인트 차감 메서드
+  Future<bool> _deductPoints() async {
+    if (_ref == null) return false;
+    try {
+      final result = _ref!.read(globalPointProvider.notifier).spendPointsDetailed(
+        ANALYSIS_COST,
+        PointSpendType.analysisReport,
+        'AI 분석 사용료',
+      );
+      if (result) {
+        print('✅ 분석 포인트 차감 성공: ${ANALYSIS_COST}P');
+      } else {
+        print('❌ 분석 포인트 차감 실패: 포인트 부족');
+      }
+      return result;
+    } catch (e) {
+      print('❌ 포인트 차감 중 오류: $e');
+      return false;
+    }
+  }
+
+  Future<void> _refundPoints(String reason) async {
+    if (_ref == null) return;
+    try {
+      _ref!
+          .read(globalPointProvider.notifier)
+          .refundPoints(ANALYSIS_COST, reason);
+    } catch (e) {
+      print('⚠️ 포인트 환불 중 오류: $e');
     }
   }
 
@@ -28,14 +74,26 @@ class AiInsightGenerator {
     GlobalUser user,
     AnalysisResult analysisResult,
   ) async {
+    bool deducted = false;
+    if (_ref != null) {
+      if (!_hasEnoughPoints()) {
+        throw InsufficientPointsException(
+            '포인트 부족: 분석을 위해서는 ${ANALYSIS_COST}포인트가 필요합니다.');
+      }
+      deducted = await _deductPoints();
+      if (!deducted) {
+        throw InsufficientPointsException('포인트 차감에 실패했습니다.');
+      }
+    }
+
     try {
       // AI 인사이트 생성 시작
 
       // 사용자 데이터 요약 생성
       final userSummary = _buildUserDataSummary(user, analysisResult);
 
-      // Gemini AI로 인사이트 요청
-      final aiResponse = await _geminiSource.getDialogue(
+      // OpenAI GPT-5로 인사이트 요청
+      final aiResponse = await _openAISource.getDialogue(
         SherpiContext.general, // 일반적인 컨텍스트 사용
         {
           'task': 'analyze_insights',
@@ -59,6 +117,9 @@ class AiInsightGenerator {
       // AI 인사이트 생성 완료
       return combinedInsights.take(8).toList();
     } catch (e) {
+      if (deducted) {
+        await _refundPoints('AI 인사이트 생성 실패');
+      }
       // AI 인사이트 생성 실패
       // 실패 시 기본 인사이트 반환
       return analysisResult.insights;
@@ -70,14 +131,26 @@ class AiInsightGenerator {
     GlobalUser user,
     AnalysisResult analysisResult,
   ) async {
+    bool deducted = false;
+    if (_ref != null) {
+      if (!_hasEnoughPoints()) {
+        throw InsufficientPointsException(
+            '포인트 부족: 분석을 위해서는 ${ANALYSIS_COST}포인트가 필요합니다.');
+      }
+      deducted = await _deductPoints();
+      if (!deducted) {
+        throw InsufficientPointsException('포인트 차감에 실패했습니다.');
+      }
+    }
+
     try {
       // AI 추천사항 생성 시작
 
       // 사용자 데이터와 현재 성과 요약
       final performanceSummary = _buildPerformanceSummary(user, analysisResult);
 
-      // Gemini AI로 개인화된 추천사항 요청
-      final aiResponse = await _geminiSource.getDialogue(
+      // OpenAI GPT-5로 개인화된 추천사항 요청
+      final aiResponse = await _openAISource.getDialogue(
         SherpiContext.guidance,
         {
           'task': 'generate_recommendations',
@@ -107,6 +180,9 @@ class AiInsightGenerator {
       // AI 추천사항 생성 완료
       return combinedRecommendations.take(6).toList();
     } catch (e) {
+      if (deducted) {
+        await _refundPoints('AI 추천 생성 실패');
+      }
       // AI 추천사항 생성 실패
       // 실패 시 기본 추천사항 반환
       return analysisResult.recommendations;
@@ -118,14 +194,26 @@ class AiInsightGenerator {
     GlobalUser user,
     AnalysisResult analysisResult,
   ) async {
+    bool deducted = false;
+    if (_ref != null) {
+      if (!_hasEnoughPoints()) {
+        throw InsufficientPointsException(
+            '포인트 부족: 분석을 위해서는 ${ANALYSIS_COST}포인트가 필요합니다.');
+      }
+      deducted = await _deductPoints();
+      if (!deducted) {
+        throw InsufficientPointsException('포인트 차감에 실패했습니다.');
+      }
+    }
+
     try {
       // 스마트 성장 계획 생성 시작
 
       // 성장 계획을 위한 종합적인 데이터 준비
       final growthContext = _buildGrowthContext(user, analysisResult);
 
-      // Gemini AI로 개인화된 성장 계획 요청
-      final aiResponse = await _geminiSource.getDialogue(
+      // OpenAI GPT-5로 개인화된 성장 계획 요청
+      final aiResponse = await _openAISource.getDialogue(
         SherpiContext.guidance,
         {
           'task': 'create_growth_plan',
@@ -142,6 +230,9 @@ class AiInsightGenerator {
       // 스마트 성장 계획 생성 완료
       return _processGrowthPlan(aiResponse);
     } catch (e) {
+      if (deducted) {
+        await _refundPoints('AI 성장 계획 생성 실패');
+      }
       // 스마트 성장 계획 생성 실패
       // 실패 시 기본 계획 반환
       return _getDefaultGrowthPlan(user, analysisResult);
@@ -388,4 +479,31 @@ ${_getWeakAreas(analysisResult).map((area) => '- $area').join('\n')}
 💡 성공 팁: 작은 목표부터 시작하여 점진적으로 확장하세요!
 ''';
   }
+}
+
+/// AI 분석 결과 클래스
+class AiAnalysisResult {
+  final List<Insight> insights;
+  final List<Recommendation> recommendations;
+  final String growthPlan;
+  final int pointsUsed;
+  final DateTime analysisTime;
+
+  AiAnalysisResult({
+    required this.insights,
+    required this.recommendations,
+    required this.growthPlan,
+    required this.pointsUsed,
+    required this.analysisTime,
+  });
+}
+
+/// 포인트 부족 예외
+class InsufficientPointsException implements Exception {
+  final String message;
+
+  InsufficientPointsException(this.message);
+
+  @override
+  String toString() => message;
 }

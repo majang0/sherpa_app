@@ -53,24 +53,41 @@ class _StubStaticManager extends StaticSherpiManager {
 class _InMemoryAiMessageCache extends AiMessageCache {
   final Map<String, CachedMessage> _store = {};
 
-  void preload(
-    SherpiContext context,
-    Map<String, dynamic> userContext,
-    String message,
-  ) {
-    _store[_key(context, userContext)] = CachedMessage(
+  void preload({
+    required String userId,
+    required SherpiContext context,
+    required Map<String, dynamic> userContext,
+    required String message,
+    String? meetingSetId,
+  }) {
+    final key = _key(
+      userId: userId,
+      context: context,
+      userContext: userContext,
+      meetingSetId: meetingSetId,
+    );
+
+    _store[key] = CachedMessage(
       message: message,
       generatedAt: DateTime.now(),
       userContext: Map.from(userContext),
+      ttl: const Duration(hours: 12),
     );
   }
 
   @override
-  Future<String?> getCachedMessage(
-    SherpiContext context,
-    Map<String, dynamic> userContext,
-  ) async {
-    final key = _key(context, userContext);
+  Future<String?> getCachedMessage({
+    required String userId,
+    required SherpiContext context,
+    required Map<String, dynamic> userContext,
+    String? meetingSetId,
+  }) async {
+    final key = _key(
+      userId: userId,
+      context: context,
+      userContext: userContext,
+      meetingSetId: meetingSetId,
+    );
     final cached = _store[key];
     if (cached == null) {
       return null;
@@ -84,26 +101,45 @@ class _InMemoryAiMessageCache extends AiMessageCache {
 
   @override
   Future<void> storeMessage({
+    required String userId,
     required SherpiContext context,
     required Map<String, dynamic> userContext,
     required String message,
+    String? meetingSetId,
   }) async {
-    final key = _key(context, userContext);
+    final key = _key(
+      userId: userId,
+      context: context,
+      userContext: userContext,
+      meetingSetId: meetingSetId,
+    );
     _store[key] = CachedMessage(
       message: message,
       generatedAt: DateTime.now(),
       userContext: Map.from(userContext),
+      ttl: const Duration(hours: 12),
     );
   }
 
-  String _key(
-    SherpiContext context,
-    Map<String, dynamic> userContext,
-  ) {
+  String _key({
+    required String userId,
+    required SherpiContext context,
+    required Map<String, dynamic> userContext,
+    String? meetingSetId,
+  }) {
     final sortedEntries = userContext.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
     final normalizedContext = Map.fromEntries(sortedEntries);
-    return '${context.name}_${jsonEncode(normalizedContext)}';
+    final buffer = StringBuffer()
+      ..write('user:$userId')
+      ..write(':ctx:${context.name}')
+      ..write(':hash:${jsonEncode(normalizedContext)}');
+
+    if (meetingSetId != null) {
+      buffer.write(':meet:$meetingSetId');
+    }
+
+    return buffer.toString();
   }
 }
 
@@ -115,13 +151,17 @@ void main() {
       final cache = _InMemoryAiMessageCache();
       final dialogueSource = _FakeDialogueSource('AI response ✨');
       final manager = OpenAISherpiManager(
-        staticManager: _StubStaticManager('static fallback'),
         dialogueSource: dialogueSource,
         cache: cache,
       );
 
-      final userContext = {'레벨': 7, '연속 접속일': 3};
-      cache.preload(SherpiContext.general, userContext, 'cache first');
+      final userContext = {'userId': 'user-test', '레벨': 7, '연속 접속일': 3};
+      cache.preload(
+        userId: 'user-test',
+        context: SherpiContext.general,
+        userContext: userContext,
+        message: 'cache first',
+      );
 
       final response = await manager.getMessage(
         SherpiContext.general,
@@ -137,7 +177,6 @@ void main() {
     test('falls back to static manager when AI throws', () async {
       final dialogueSource = _FakeDialogueSource('no-op', shouldThrow: true);
       final manager = OpenAISherpiManager(
-        staticManager: _StubStaticManager('정적 메시지'),
         dialogueSource: dialogueSource,
         cache: _InMemoryAiMessageCache(),
       );
@@ -145,7 +184,7 @@ void main() {
       manager.enableAIForNextMessage();
       final response = await manager.getMessage(
         SherpiContext.general,
-        {'사용자': '연우'},
+        {'userId': 'user-test', '사용자': '연우'},
         {'personalityType': '균형형'},
       );
 
@@ -157,7 +196,6 @@ void main() {
     test('removes emojis when personalization disables them', () async {
       final dialogueSource = _FakeDialogueSource('안녕! 😊🌟 함께해요.');
       final manager = OpenAISherpiManager(
-        staticManager: _StubStaticManager('fallback'),
         dialogueSource: dialogueSource,
         cache: _InMemoryAiMessageCache(),
       );

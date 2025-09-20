@@ -1,107 +1,97 @@
-# AI/Sherpi Consolidated Execution Plan (2025-09-20)
+# AI/Sherpi Consolidated Execution Plan (2025-09-20 Rev.2)
 
-본 문서는 Codex 코드 리뷰 결과와 Claude가 제공한 세 문서
-(`AI_SHERPI_COMPREHENSIVE_REVIEW_20250920.md`,
-`AI_SHERPI_STRATEGIC_DIRECTION_20250920.md`,
-`QUICK_ACTION_PLAN.md`)를 교차 검토한 뒤
-향후 실행 단계를 통합 정리한 계획서입니다.
+본 계획서는 Phase 0~3 완료 결과와 `PHASE4_REVISED_PLAN.md`에서 제안된 AI 범위 재정의를 반영하여
+향후 실행 단계를 재정립한 문서입니다. 플로팅 메시지는 전면 정적, 분석/계획 다이얼로그는 선택적 AI라는
+명확한 경계 아래, 유지·분석·관측 관점에서의 우선순위를 정리합니다.
 
 ---
 
-## 1. 공통 인식 요약
-- **구조 상태**: DI 기반 구조는 양호하나 `lib/core/ai/` 루트에 옛 파일이 남아 중복·혼선 발생.
-- **메시지 콘텐츠**: 풍부한 정적 대사 자산이 존재하며 즉시 활용 가치가 큼.
-- **AI 연동**: OpenAI 경로와 하이브리드 매니저는 존재하지만 현재 비활성 상태.
-- **기술 부채**: 중복 파일, 미완결 Provider, 캐시 설계 미비, 테스트 복구 필요 등.
-- **전략**: “정리 → 강화 → 통합 → 혁신(Clean → Enhance → Integrate → Innovate)” 단계적 접근이 공통 제안.
+## 1. 상황 요약
+- **플로팅 메시지**: 정적 메시지로 충분하며, 응답 속도와 일관성을 최우선으로 유지한다.
+- **AI 활용**: 오늘의 분석·감정/계획 다이얼로그 등 심층 인사이트 기능에서만 AI를 사용한다.
+- **백엔드 상태**: Phase 3까지 완료되어 추천/캐시 구조는 정비됨. 분석 파이프라인과 비용 관리가 다음 핵심 과제다.
+- **기술 부채**: Analyzer 경고 정리, 분석 캐시/사용량 추적, 문서 싱크 등 운영 기반 정비가 필요하다.
 
 ---
 
-## 2. 단계별 실행 계획
+## 2. 새로운 단계 체계 (Phase 2 폐지, Stage 기반 재구성)
 
-### Phase 0 — 안전판 정비 (D+0)
-1. **중복/잔여 파일 삭제 확정**
-   - 루트 `lib/core/ai/*.dart` 잔여본 및 `C:sherpa_app...` 오염 파일 제거.
-   - 삭제 후 모든 임포트 경로를 `package:sherpa_app/core/ai/...` 하위 디렉터리로 통일.
-2. **Git 상태 정리**
-   - 복구된 테스트 3종 등 미추적 파일 `git add`.
-   - `.bak` 등 임시 파일 처리 방침 수립 (필요 시 보관 디렉터리 분리).
+| Stage | 목표 | 주요 산출물 | 예상 기간 |
+|-------|------|-------------|-----------|
+| **Stage A** | 플로팅 메시지 정적화 확정 | SherpiNotifier 정적 매니저 고정, 불필요한 AI 훅 제거 | D+0 |
+| **Stage B** | 분석 AI Feature Flag 도입 | `AnalysisAIConfig`, Provider, UI 연동 | D+1~2 |
+| **Stage C** | 분석 캐시/사용량 제한 | 분석 결과 캐시, `AnalysisUsageTracker` | D+3~4 |
+| **Stage D** | 분석 UI 통합·폴백 강화 | 분석 화면 캐시/폴백, 모드 표시 UX | D+5~6 |
+| **Stage E** | 테스트·관측성·문서화 | 테스트 확대, 로그/모니터링, 문서 갱신 | D+7~8 |
 
-### Phase 1 — WSL 품질 루프 복원 (D+0~1)
-1. **Flutter/Dart 스크립트 LF 교정** (CRLF 문제 재발 방지).
-2. **`dart format`, `dart analyze`, `flutter test` WSL 재실행**
-   - Analyzer 경고/에러 최신화, 14/14 테스트 복구 확인.
-3. **Sherpi 결과물 스냅샷 기록**
-   - `codex/ai_sherpi_structure_journal.md` 업데이트.
-
-### Phase 2 — 정적 시스템 고도화 (D+1~4)
-1. **정적 메시지 개선**
-   - 시간대·연속일수·관계 레벨 기반 메시지 가변화 (Quick Action Plan 반영).
-   - 중복/누락 메시지 QA.
-2. **감정/관계 연동 활성화**
-   - `SherpiState` 색상 적용, Emotion Analyzer 기본 경로 연결.
-   - Relationship milestone 메시지/보상 로직 점검.
-3. **로깅 및 히스토리**
-   - 최소한의 Debug/Info 로그 체계 구축 (필요 시 Feature Flag).
-
-### Phase 3 — 전역 추천 & 캐시 정비 (D+4~7)
-1. **`global_ai_recommendation_provider`·`MeetingRecommendationAI` 정렬**
-   - SherpiInsights 파라미터 전달 설계 확정.
-   - 캐시 키에 미팅 세트/유저 ID 포함.
-2. **`AiMessageCache` 강화**
-   - 사용자 ID 포함 키, TTL 정책 재검토, 캐시 상태 Metric 노출.
-3. **DI 기반 Sherpi Manager Provider 복구**
-   - `.bak` 파일 정식화, `global_sherpi_provider`에서 주입.
-
-### Phase 4 — AI 재도입 준비 (D+7~14)
-1. **Feature Flag/Toggle 설계**
-   - Static/Hybrid/AI 엔진 전환을 위한 환경 변수 및 런타임 제어.
-2. **비용/성능 가드레일**
-   - 토큰 사용량 추적, 최소 캐싱 전략.
-3. **사전 테스트 플로우**
-   - Mock AI 응답, 네트워크 오류 Handling, 롤백 시나리오 작성.
-
-### Phase 5 — 문서·거버넌스 정비 (상시)
-1. **문서 싱크**
-   - `docs/sherpi_system.md`, `codex/ai_sherpi_progress_status.md` 지속 업데이트.
-2. **Metric/KPI 수립**
-   - 메시지 지연, 캐시 Hit, 사용자 반응 지표 수집 파이프 설계.
-3. **릴리즈 체크리스트 표준화**
-   - Analyzer/테스트/메시지 QA/Feature Flag 확인 항목 명문화.
+> *완료된 작업*: Stage A 일부(정적 매니저 DI), Stage C 캐시 개편(전역 추천). 향후 작업은 Stage A~E를 순차 실행한다.
 
 ---
 
-## 3. Codex vs. Claude 제안 차이 & 보완점
-| 항목 | Claude 제안 | Codex 리뷰 | 통합 결론 |
-| --- | --- | --- | --- |
-| 파일 구조 | 루트 중복 파일 즉시 삭제 | 중복이 실 배포에 리스크 | **즉시 제거 후 임포트 통일** |
-| 정적 메시지 | 시간·마일스톤 변주 추가 | 기존 자산 최대 활용 | **Phase 2에서 실행** |
-| Emotion/Relationship | 활성화 권장 | Provider/DI 부재 문제 지적 | **DI 복구 후 단계적 연결** |
-| 추천 AI | 캐시·Feature Flag 제안 | Insights 전달/캐시 키 부실 | **Phase 3에서 구조 정리 후 Flag 도입** |
-| AI 재활성화 | 장기 로드맵 (비용 감시) | 초기부터 안전장치 필요 | **Flag+비용 모니터 함께 준비** |
+## 3. Stage별 세부 계획
+
+### Stage A – 플로팅 메시지 정적화 확정
+1. `global_sherpi_provider.dart`에서 `SherpiMessageManager`를 반드시 `StaticSherpiManager`로 주입.
+2. `enableAIForNextMessage`, `debugForceAI` 등 AI 관련 레거시 훅 제거.
+3. Legacy OpenAI 매니저는 분석 다이얼로그 전용으로 `legacy/` 위치에 한정, 플로팅 경로에서 import 금지.
+4. 정적 메시지 품질 점검 로깅(선택): 중복/빈 문자열 감지용 디버그 로그.
+
+### Stage B – 분석 AI Feature Flag 도입
+1. `lib/core/config/analysis_ai_config.dart`와 `analysisConfigProvider` 추가.
+2. 모드: `disabled` / `mock` / `gemini` / `openai` + 호출 한도/캐시 지속시간 매개변수 정의.
+3. 분석 UI 및 서비스(ActivityAnalysisService, AiInsightGenerator)가 Provider를 통해 모드를 확인하도록 수정.
+4. QA: Mock 모드에서 deterministic 응답 제공, 테스트용 JSON 준비.
+
+### Stage C – 분석 캐시 및 사용량 제한
+1. 분석 결과 캐시(사용자+날짜+분석타입 Key). TTL은 Config 값 사용.
+2. `AnalysisUsageTracker`: 일일 호출 횟수, 토큰 사용량, 추정 비용, 한도 초과 시 예외 처리.
+3. 캐시 데이터는 SharedPreferences 또는 로컬 DB 사용. 메타 정보(저장 시각/모드) 기록.
+4. 비용 리포트: 일별 사용량을 `codex/reports/analysis_usage/`에 요약 저장(선택).
+
+### Stage D – 분석 UI 통합 및 폴백 강화
+1. `enhanced_today_analysis_dialog.dart`, `comprehensive_analysis_page.dart` 등에서 캐시 확인 후 AI 호출.
+2. 캐시 Hit, Mock, 실시간 결과 각각에 대한 UI 라벨 표시.
+3. AI 호출 실패 시 규칙 기반(정적) 분석 레포트로 폴백하고 사용자 안내 문구 제공.
+4. 긴 분석 시 로딩 체감 개선(프로그레스/힌트 메시지).
+
+### Stage E – 테스트·관측성·문서화
+1. 테스트: Feature Flag 상태별, 캐시 만료, 할당량 초과, 폴백 흐름 등.
+2. 관측성: 로그 레벨 정의, 이벤트 태그(캐시 히트, AI 호출, 폴백 등) 추가.
+3. 문서: `docs/sherpi_system.md`, `codex/PHASE4_REVISED_PLAN.md`, `codex/ai_sherpi_progress_status.md` 업데이트.
+4. 릴리즈 체크리스트 갱신: Stage별 완료 조건, 테스트 목록, 롤백 절차 반영.
 
 ---
 
-## 4. 의존 작업 & 선행 조건
-- PowerShell 측에서도 동일 파일 삭제/정리 적용 (충돌 방지).
-- 테스트 복구가 완료됐으므로 추가 케이스 작성 시 구조 유지.
-- Analyzer 경고가 실제 “경고/정보”인지 확인 후 우선순위 분류.
-- 문서 업데이트는 Phase 종료 시마다 실행.
+## 4. Stage 간 의존 및 주의사항
+- Stage A는 Stage B~E의 기반. 플로팅/분석 경로가 섞이지 않도록 방어 로직 점검.
+- Stage B에서 Feature Flag를 도입하면 Stage C~D 작업 시 모든 경로에서 모드를 참조해야 한다.
+- Stage C 캐시 도입 시 기존 추천 캐시와 충돌하지 않도록 별도 키 네임스페이스 사용.
+- Stage D에서 사용자 경험 단절을 방지하기 위해 폴백 메시지를 충분히 준비.
+- Stage E 테스트는 기존 테스트와 중복되지 않도록 새 파일/그룹으로 구성.
 
 ---
 
-## 5. 즉시 다음 조치 (D+0)
-1. 루트 `lib/core/ai/*.dart` 잔여 파일 및 `C:sherpa_app…` 파일 삭제.
-2. Sherpi 테스트 3종 `git add` 및 기본 실행 확인.
-3. Flutter 스크립트 CRLF→LF 변환 최종 점검 후 `dart format` 재시도.
+## 5. 즉시 다음 조치 (Stage A)
+1. `global_sherpi_provider` 코드에서 정적 매니저만 참조하도록 검증.
+2. 삭제된 AI 훅(Enable/Force) 관련 테스트/문서 업데이트.
+3. 플로팅 메시지 생성 경로에 대한 간단한 QA: 정적 메시지 정상 출력 확인.
 
 ---
 
 ## 6. 추적 및 보고
 - **진행 로그**: `codex/ai_sherpi_structure_journal.md`
 - **상태 표**: `codex/ai_sherpi_progress_status.md`
-- **핵심 의사결정 기록**: `docs/sherpi_system.md` 및 새 회의 노트.
+- **레이어 문서**: `docs/sherpi_system.md`
+- **AI 전략 문서**: `codex/PHASE4_REVISED_PLAN.md`
 
 ---
 
-_작성자: Codex (2025-09-20)_
+## 7. 성공 지표 업데이트
+- 플로팅 메시지 응답 시간 p95 < 100ms
+- 분석 AI 월간 비용 < $20, 일일 호출 < 50회
+- 분석 캐시 히트율 > 60%, 폴백 발생률 < 10%
+- 사용자 피드백: 플로팅 메시지 만족도 유지, 분석 다이어로그 만족도 상승
+
+---
+
+_작성자: Codex (2025-09-20, Rev.2)_

@@ -44,7 +44,9 @@ class AIRecommendedMeeting {
               .toList() ??
           [],
       priority: json['priority'] as int? ?? 0,
-      createdAt: DateTime.now(),
+      createdAt: json['createdAt'] is String
+          ? DateTime.tryParse(json['createdAt'] as String) ?? DateTime.now()
+          : DateTime.now(),
     );
   }
 

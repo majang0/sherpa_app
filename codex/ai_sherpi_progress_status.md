@@ -64,7 +64,7 @@
    - 모임 상세·챌린지 화면에서도 전역 추천 상태 활용.
    - Sherpi 인사이트 기반 추천 사유/UX 카피 튜닝.
 4. **캐시/자동 트리거 정책**
-   - `AiMessageCache` 운영 전략 결정 및 UI 토글(`debugForceAI`) 정식화.
+   - `AiMessageCache` 운영 전략 결정 및 AI 분석 포인트 시스템(30P) 정식화.
 5. **리스크 대응**
    - Provider 초기화 자동화 스크립트 검토(`Structure guide Phase 3`).
    - Analyzer 레거시 경고와 문서 싱크 주기적 관리.

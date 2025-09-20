@@ -52,9 +52,9 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
         // GPT-5 모델을 사용하여 대화 생성
         final chatCompletion = await _client.createChatCompletion(
           request: CreateChatCompletionRequest(
-            model: ChatCompletionModel.modelId('gpt-5-chat-latest'), // GPT-5 사용
+            model: const ChatCompletionModel.modelId('gpt-5-chat-latest'), // GPT-5 사용
             messages: [
-              ChatCompletionMessage.system(
+              const ChatCompletionMessage.system(
                 content: '당신은 셰르피입니다. 사용자의 성장을 함께하는 친근하고 따뜻한 AI 동반자입니다.',
               ),
               ChatCompletionMessage.user(

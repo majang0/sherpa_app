@@ -16,6 +16,7 @@ class _FakeMeetingRecommendationAI extends MeetingRecommendationAI {
     required List<AvailableMeeting> availableMeetings,
     bool useCache,
     bool forceRefresh,
+    SherpiInsights? sherpiInsights,
   })? onCall;
 
   @override
@@ -27,6 +28,7 @@ class _FakeMeetingRecommendationAI extends MeetingRecommendationAI {
     required List<AvailableMeeting> availableMeetings,
     bool useCache = true,
     bool forceRefresh = false,
+    SherpiInsights? sherpiInsights,
   }) async {
     callCount++;
     if (onCall != null) {
@@ -35,6 +37,7 @@ class _FakeMeetingRecommendationAI extends MeetingRecommendationAI {
         availableMeetings: availableMeetings,
         useCache: useCache,
         forceRefresh: forceRefresh,
+        sherpiInsights: sherpiInsights,
       );
     }
     return const [];
@@ -146,9 +149,11 @@ void main() {
       required List<AvailableMeeting> availableMeetings,
       bool useCache = true,
       bool forceRefresh = false,
+      SherpiInsights? sherpiInsights,
     }) async {
       expect(user.id, testUser.id);
       expect(availableMeetings, isNotEmpty);
+      expect(sherpiInsights, isNotNull);
       return [recommendation];
     };
 
@@ -188,6 +193,7 @@ void main() {
       required List<AvailableMeeting> availableMeetings,
       bool useCache = true,
       bool forceRefresh = false,
+      SherpiInsights? sherpiInsights,
     }) async {
       return [
         AIRecommendedMeeting(

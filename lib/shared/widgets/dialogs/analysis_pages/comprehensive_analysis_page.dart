@@ -6,6 +6,8 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../../../core/theme/modern_colors.dart';
 import 'package:sherpa_app/core/ai/services/activity_analysis_service.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
+import '../../../models/point_system_model.dart';
+import '../../../providers/global_point_provider.dart';
 // import '../../../providers/global_user_provider.dart';
 // import '../../../models/global_user_model.dart';
 
@@ -132,6 +134,171 @@ class _ComprehensiveAnalysisPageState
 
   /// 종합 분석 데이터 로드
   Future<void> _loadAnalysisData() async {
+    // 포인트 확인 (30포인트 필요)
+    const int analysisPointCost = 30;
+    final pointState = ref.read(globalPointProvider);
+
+    if (pointState.totalPoints < analysisPointCost) {
+      // 포인트 부족 다이얼로그 표시
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: ModernColors.surface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: Row(
+              children: [
+                Icon(Icons.warning_amber_rounded, color: ModernColors.warning),
+                const SizedBox(width: 8),
+                Text(
+                  '포인트 부족',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: ModernColors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'AI 분석을 위해서는 ${analysisPointCost}포인트가 필요합니다.',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    color: ModernColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: ModernColors.background.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '현재 포인트:',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 13,
+                              color: ModernColors.textSecondary,
+                            ),
+                          ),
+                          Text(
+                            '${pointState.totalPoints}P',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: ModernColors.textPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '필요 포인트:',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 13,
+                              color: ModernColors.textSecondary,
+                            ),
+                          ),
+                          Text(
+                            '${analysisPointCost}P',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: ModernColors.warning,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '부족한 포인트:',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 13,
+                              color: ModernColors.textSecondary,
+                            ),
+                          ),
+                          Text(
+                            '${analysisPointCost - pointState.totalPoints}P',
+                            style: GoogleFonts.notoSans(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: ModernColors.error,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  '💡 활동을 완료하여 포인트를 획득해보세요!',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 12,
+                    color: ModernColors.textSecondary,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  '확인',
+                  style: GoogleFonts.notoSans(
+                    color: ModernColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+      return; // 포인트 부족시 분석 진행하지 않음
+    }
+
+    // 포인트 차감
+    final deductSuccess = ref.read(globalPointProvider.notifier).spendPointsDetailed(
+      analysisPointCost,
+      PointSpendType.analysisReport,
+      'AI 종합 분석',
+    );
+
+    if (!deductSuccess) {
+      // 포인트 차감 실패
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '포인트 차감에 실패했습니다. 잠시 후 다시 시도해주세요.',
+              style: GoogleFonts.notoSans(),
+            ),
+            backgroundColor: ModernColors.error,
+          ),
+        );
+      }
+      return;
+    }
+
     // 로딩 프로그레스 애니메이션 시작
     _progressController.forward();
 
@@ -168,16 +335,50 @@ class _ComprehensiveAnalysisPageState
       setState(() {
         _loadingProgress = 1.0;
         _isLoading = false;
+        _hasGenerated = true; // 분석 생성 완료 표시
       });
 
       // 페이지 애니메이션 시작
       _pageAnimationController.forward();
       _chartAnimationController.forward();
+
+      // 성공 메시지
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  'AI 분석 완료! (${analysisPointCost}P 사용)',
+                  style: GoogleFonts.notoSans(),
+                ),
+              ],
+            ),
+            backgroundColor: ModernColors.success,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
     } catch (e) {
       print('종합 분석 로드 에러: $e');
       setState(() {
         _isLoading = false;
       });
+
+      // 에러 발생시 포인트는 차감되지만 환불 없음
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '분석 중 오류가 발생했습니다. 포인트는 차감되었습니다.',
+              style: GoogleFonts.notoSans(),
+            ),
+            backgroundColor: ModernColors.error,
+          ),
+        );
+      }
     }
   }
 
@@ -229,6 +430,10 @@ class _ComprehensiveAnalysisPageState
 
   /// 분석 생성 버튼 화면
   Widget _buildGenerateButton() {
+    const int analysisPointCost = 30;
+    final pointState = ref.watch(globalPointProvider);
+    final hasEnoughPoints = pointState.totalPoints >= analysisPointCost;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -267,38 +472,143 @@ class _ComprehensiveAnalysisPageState
               color: ModernColors.textSecondary,
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 16),
+          // 포인트 정보 표시
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: hasEnoughPoints
+                  ? ModernColors.success.withOpacity(0.1)
+                  : ModernColors.warning.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: hasEnoughPoints
+                    ? ModernColors.success.withOpacity(0.3)
+                    : ModernColors.warning.withOpacity(0.3),
+                width: 1,
+              ),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      hasEnoughPoints ? Icons.check_circle : Icons.info,
+                      color: hasEnoughPoints
+                          ? ModernColors.success
+                          : ModernColors.warning,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      hasEnoughPoints
+                          ? '분석 가능'
+                          : '포인트 부족',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: hasEnoughPoints
+                            ? ModernColors.success
+                            : ModernColors.warning,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '필요 포인트: ',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        color: ModernColors.textSecondary,
+                      ),
+                    ),
+                    Text(
+                      '${analysisPointCost}P',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: ModernColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      '보유: ',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        color: ModernColors.textSecondary,
+                      ),
+                    ),
+                    Text(
+                      '${pointState.totalPoints}P',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: hasEnoughPoints
+                            ? ModernColors.success
+                            : ModernColors.error,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
           // 생성 버튼
           GestureDetector(
-            onTap: _generateAnalysis,
-            child: Container(
+            onTap: hasEnoughPoints ? _generateAnalysis : null,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               decoration: BoxDecoration(
-                gradient: ModernColors.primaryGradient,
+                gradient: hasEnoughPoints
+                    ? ModernColors.primaryGradient
+                    : LinearGradient(
+                        colors: [
+                          ModernColors.textSecondary.withOpacity(0.3),
+                          ModernColors.textSecondary.withOpacity(0.2),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                 borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: ModernColors.primary.withOpacity(0.3),
-                    blurRadius: 12,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
+                boxShadow: hasEnoughPoints
+                    ? [
+                        BoxShadow(
+                          color: ModernColors.primary.withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 6),
+                        ),
+                      ]
+                    : [],
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
-                    Icons.auto_awesome_rounded,
-                    color: Colors.white,
+                  Icon(
+                    hasEnoughPoints
+                        ? Icons.auto_awesome_rounded
+                        : Icons.lock_outline,
+                    color: hasEnoughPoints
+                        ? Colors.white
+                        : ModernColors.textSecondary,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '종합 분석 생성',
+                    hasEnoughPoints
+                        ? '종합 분석 생성'
+                        : '포인트 부족',
                     style: GoogleFonts.notoSans(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: hasEnoughPoints
+                          ? Colors.white
+                          : ModernColors.textSecondary,
                     ),
                   ),
                 ],

@@ -81,6 +81,7 @@ class GlobalAIRecommendationNotifier
         availableMeetings: availableMeetings,
         useCache: !forceRefresh,
         forceRefresh: forceRefresh,
+        sherpiInsights: insights,
       );
 
       if (recommendations.isEmpty) {

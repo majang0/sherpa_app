@@ -1,4 +1,6 @@
+import 'dart:collection';
 import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 
@@ -7,25 +9,16 @@ class CachedMessage {
   final String message;
   final DateTime generatedAt;
   final Map<String, dynamic> userContext;
+  final Duration ttl;
   DateTime lastAccessTime; // LRU를 위한 마지막 접근 시간
 
   CachedMessage({
     required this.message,
     required this.generatedAt,
     required this.userContext,
+    required this.ttl,
     DateTime? lastAccessTime,
   }) : lastAccessTime = lastAccessTime ?? DateTime.now();
-
-  factory CachedMessage.fromJson(Map<String, dynamic> json) {
-    return CachedMessage(
-      message: json['message'],
-      generatedAt: DateTime.parse(json['generatedAt']),
-      userContext: json['userContext'] ?? {},
-      lastAccessTime: json['lastAccessTime'] != null
-          ? DateTime.parse(json['lastAccessTime'])
-          : DateTime.now(),
-    );
-  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -33,13 +26,12 @@ class CachedMessage {
       'generatedAt': generatedAt.toIso8601String(),
       'userContext': userContext,
       'lastAccessTime': lastAccessTime.toIso8601String(),
+      'ttlMs': ttl.inMilliseconds,
     };
   }
 
   /// 캐시 만료 여부 확인
-  bool get isExpired {
-    return DateTime.now().difference(generatedAt) > AiMessageCache._cacheExpiry;
-  }
+  bool get isExpired => DateTime.now().isAfter(generatedAt.add(ttl));
 
   /// 접근 시간 업데이트 (LRU용)
   void updateAccessTime() {
@@ -51,9 +43,25 @@ class CachedMessage {
 ///
 /// AI 시스템이 비활성화되어 캐시 기능도 사용하지 않습니다.
 class AiMessageCache {
-  static const String _cacheKey = 'ai_message_cache';
-  static const Duration _cacheExpiry = Duration(hours: 24); // 24시간 후 만료 (더 짧게)
+  static const String _cacheKey = 'ai_message_cache_v2';
+  static const int _cacheVersion = 2;
+  static const Duration _fallbackTTL = Duration(hours: 12);
   static const int _maxCacheSize = 50;
+
+  static const Map<SherpiContext, Duration> _contextTTL = {
+    SherpiContext.dailyGreeting: Duration(hours: 12),
+    SherpiContext.longTimeNoSee: Duration(hours: 24),
+    SherpiContext.questComplete: Duration(hours: 24),
+    SherpiContext.exerciseComplete: Duration(hours: 6),
+    SherpiContext.readingComplete: Duration(hours: 6),
+    SherpiContext.diaryWritten: Duration(hours: 6),
+    SherpiContext.climbingSuccess: Duration(hours: 12),
+    SherpiContext.climbingFailure: Duration(hours: 2),
+    SherpiContext.encouragement: Duration(hours: 6),
+    SherpiContext.guidance: Duration(hours: 6),
+  };
+
+  static Map<String, dynamic>? _lastMeta;
 
   /// 🚀 핵심 메시지만 백그라운드 생성 (비활성화됨)
   Future<void> pregenerateImportantMessages({
@@ -74,17 +82,28 @@ class AiMessageCache {
     for (final key in expiredKeys) {
       cache.remove(key);
     }
+
+    if (expiredKeys.isNotEmpty) {
+      await _saveCache(cache);
+    }
   }
 
   /// ⚡ 캐시된 AI 메시지 즉시 반환
-  Future<String?> getCachedMessage(
-    SherpiContext context,
-    Map<String, dynamic> userContext,
-  ) async {
+  Future<String?> getCachedMessage({
+    required String userId,
+    required SherpiContext context,
+    required Map<String, dynamic> userContext,
+    String? meetingSetId,
+  }) async {
     final cache = await _loadCache();
     await _cleanupExpired(cache);
 
-    final key = _buildCacheKey(context, userContext);
+    final key = _buildCacheKey(
+      userId: userId,
+      context: context,
+      userContext: userContext,
+      meetingSetId: meetingSetId,
+    );
     final cached = cache[key];
     if (cached == null) {
       return null;
@@ -102,18 +121,27 @@ class AiMessageCache {
   }
 
   Future<void> storeMessage({
+    required String userId,
     required SherpiContext context,
     required Map<String, dynamic> userContext,
     required String message,
+    String? meetingSetId,
   }) async {
     final cache = await _loadCache();
     await _cleanupExpired(cache);
 
-    final key = _buildCacheKey(context, userContext);
+    final key = _buildCacheKey(
+      userId: userId,
+      context: context,
+      userContext: userContext,
+      meetingSetId: meetingSetId,
+    );
+    final ttl = _contextTTL[context] ?? _fallbackTTL;
     cache[key] = CachedMessage(
       message: message,
       generatedAt: DateTime.now(),
       userContext: userContext,
+      ttl: ttl,
     );
 
     if (cache.length > _maxCacheSize) {
@@ -126,15 +154,57 @@ class AiMessageCache {
   /// 💾 캐시 로드
   Future<Map<String, CachedMessage>> _loadCache() async {
     final prefs = await SharedPreferences.getInstance();
-    final cacheData = prefs.getString(_cacheKey);
+    // Legacy 키 제거 (v1)
+    await prefs.remove('ai_message_cache');
 
-    if (cacheData == null) return {};
+    final cacheData = prefs.getString(_cacheKey);
+    if (cacheData == null) {
+      _lastMeta = null;
+      return {};
+    }
 
     try {
-      final Map<String, dynamic> cacheJson = jsonDecode(cacheData);
-      return cacheJson
-          .map((key, value) => MapEntry(key, CachedMessage.fromJson(value)));
+      final raw = jsonDecode(cacheData) as Map<String, dynamic>;
+      final meta = raw['_meta'] as Map<String, dynamic>? ?? {'version': 1};
+      final version = meta['version'] as int? ?? 1;
+
+      if (version != _cacheVersion) {
+        await prefs.remove(_cacheKey);
+        _lastMeta = null;
+        return {};
+      }
+
+      _lastMeta = meta;
+
+      final entries = raw.entries
+          .where((entry) => entry.key != '_meta')
+          .where((entry) => entry.value is Map<String, dynamic>);
+
+      final result = <String, CachedMessage>{};
+      for (final entry in entries) {
+        final mapValue = entry.value as Map<String, dynamic>;
+        final ttlMs = mapValue['ttlMs'] as int?;
+        final ttl =
+            ttlMs != null ? Duration(milliseconds: ttlMs) : _fallbackTTL;
+        result[entry.key] = CachedMessage(
+          message: mapValue['message'] as String? ?? '',
+          generatedAt: DateTime.parse(
+            mapValue['generatedAt'] as String? ??
+                DateTime.now().toIso8601String(),
+          ),
+          userContext:
+              (mapValue['userContext'] as Map<String, dynamic>?) ?? const {},
+          ttl: ttl,
+          lastAccessTime: mapValue['lastAccessTime'] != null
+              ? DateTime.parse(mapValue['lastAccessTime'] as String)
+              : DateTime.now(),
+        );
+      }
+
+      return result;
     } catch (e) {
+      await prefs.remove(_cacheKey);
+      _lastMeta = null;
       return {};
     }
   }
@@ -142,24 +212,41 @@ class AiMessageCache {
   /// 💾 캐시 저장
   Future<void> _saveCache(Map<String, CachedMessage> cache) async {
     final prefs = await SharedPreferences.getInstance();
-    final cacheJson = cache.map((key, value) => MapEntry(key, value.toJson()));
+    final cacheJson = <String, dynamic>{
+      '_meta': {
+        'version': _cacheVersion,
+        'savedAt': DateTime.now().toIso8601String(),
+        'entryCount': cache.length,
+      },
+    };
 
+    cacheJson.addAll(
+      cache.map((key, value) => MapEntry(key, value.toJson())),
+    );
+
+    _lastMeta = cacheJson['_meta'] as Map<String, dynamic>;
     await prefs.setString(_cacheKey, jsonEncode(cacheJson));
   }
 
-  /// 👤 사용자 고유 해시 생성 (개인화를 위한 키)
-  String _getUserHash(Map<String, dynamic> userContext) {
-    final level = userContext['레벨']?.toString() ?? '1';
-    final days = userContext['연속 접속일']?.toString() ?? '1';
-    return '${level}_$days'.hashCode.toString();
-  }
+  String _buildCacheKey({
+    required String userId,
+    required SherpiContext context,
+    required Map<String, dynamic> userContext,
+    String? meetingSetId,
+  }) {
+    final buffer = StringBuffer()
+      ..write('user:$userId')
+      ..write(':ctx:${context.name}');
 
-  String _buildCacheKey(
-    SherpiContext context,
-    Map<String, dynamic> userContext,
-  ) {
-    final userHash = _getUserHash(userContext);
-    return '${context.name}_$userHash';
+    if (meetingSetId != null && meetingSetId.isNotEmpty) {
+      buffer.write(':meet:$meetingSetId');
+    }
+
+    if (userContext.isNotEmpty) {
+      buffer.write(':hash:${_generateStableHash(userContext)}');
+    }
+
+    return buffer.toString();
   }
 
   String _findLeastRecentlyUsedKey(
@@ -190,6 +277,30 @@ class AiMessageCache {
       'valid': valid,
       'expired': expired,
       'cache_enabled': total > 0,
+      'version': _lastMeta?['version'] ?? _cacheVersion,
+      'last_saved_at': _lastMeta?['savedAt'],
     };
+  }
+
+  String _generateStableHash(Map<String, dynamic> value) {
+    final normalized = _normalizeJson(value);
+    final encoded = jsonEncode(normalized);
+    return base64Url.encode(utf8.encode(encoded));
+  }
+
+  dynamic _normalizeJson(dynamic value) {
+    if (value is Map) {
+      final sorted = SplayTreeMap<String, dynamic>();
+      value.forEach((key, innerValue) {
+        sorted[key] = _normalizeJson(innerValue);
+      });
+      return sorted;
+    }
+
+    if (value is List) {
+      return value.map(_normalizeJson).toList();
+    }
+
+    return value;
   }
 }

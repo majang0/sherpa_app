@@ -11,14 +11,14 @@ import '../models/conversation_state.dart';
 // Core
 import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
-import 'package:sherpa_app/core/ai/managers/legacy/smart_sherpi_manager.dart';
+import 'package:sherpa_app/core/ai/managers/openai_sherpi_manager.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 
 /// 💬 채팅 대화 관리 프로바이더
 ///
 /// 셰르피와의 실시간 대화를 관리하고 메시지 히스토리를 보관합니다.
 class ChatConversationNotifier extends StateNotifier<ConversationState> {
-  final SmartSherpiManager _smartManager = SmartSherpiManager();
+  final OpenAISherpiManager _smartManager = OpenAISherpiManager();
   final Ref _ref;
   Timer? _typingTimer;
 

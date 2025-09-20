@@ -1,13 +1,10 @@
 import 'package:sherpa_app/core/ai/cache/ai_message_cache.dart';
 import 'package:sherpa_app/core/ai/managers/sherpi_message_manager.dart';
-import 'package:sherpa_app/core/ai/managers/static_sherpi_manager.dart';
 import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
 import 'package:sherpa_app/core/config/api_config.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/features/sherpi/domain/models/sherpi_response.dart';
 import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
-import 'package:sherpa_app/shared/providers/global_sherpi_provider.dart'
-    show PersonalizationSettings;
 
 /// 🧠 OpenAI 셰르피 매니저 (OpenAI GPT-5 버전)
 ///
@@ -26,15 +23,11 @@ class OpenAISherpiManager implements SherpiMessageManager {
   // 수동 AI 사용 플래그 (사용자가 명시적으로 요청할 때만 true)
   bool _useAIManually = false;
 
-  // 정적 매니저 (폴백용)
-  final StaticSherpiManager _staticManager;
-
   /// 생성자
   OpenAISherpiManager({
-    StaticSherpiManager? staticManager,
     SherpiDialogueSource? dialogueSource,
     AiMessageCache? cache,
-  }) : _staticManager = staticManager ?? StaticSherpiManager() {
+  }) {
     _openaiSource = dialogueSource;
     if (dialogueSource == null) {
       _initializeAI();
@@ -79,6 +72,9 @@ class OpenAISherpiManager implements SherpiMessageManager {
     Map<String, dynamic>? userContext,
     Map<String, dynamic>? gameContext,
   ) async {
+    final resolvedUserContext = userContext ?? const {};
+    final userId = _resolveUserId(resolvedUserContext);
+
     // 게임 컨텍스트에 개인화 설정 추가
     if (gameContext != null) {
       gameContext['personalityType'] =
@@ -88,8 +84,11 @@ class OpenAISherpiManager implements SherpiMessageManager {
     }
 
     // 1. 캐시 확인
-    final cachedMessage =
-        await _cache.getCachedMessage(context, userContext ?? {});
+    final cachedMessage = await _cache.getCachedMessage(
+      userId: userId,
+      context: context,
+      userContext: resolvedUserContext,
+    );
     if (cachedMessage != null) {
       print('💾 캐시에서 메시지 반환');
       return SherpiResponse(
@@ -124,6 +123,13 @@ class OpenAISherpiManager implements SherpiMessageManager {
         }
 
         print('✅ OpenAI 메시지 생성 완료 (${stopwatch.elapsedMilliseconds}ms)');
+
+        await _cache.storeMessage(
+          userId: userId,
+          context: context,
+          userContext: resolvedUserContext,
+          message: finalMessage,
+        );
 
         return SherpiResponse(
           message: finalMessage,
@@ -369,6 +375,19 @@ class OpenAISherpiManager implements SherpiMessageManager {
           SherpiContext.guidance: '제가 도와드릴게요! 함께 해봐요! 🤝',
         };
     }
+  }
+
+  String _resolveUserId(Map<String, dynamic> context) {
+    for (final key in const ['userId', 'id', 'user_id', 'uid']) {
+      final value = context[key];
+      if (value == null) continue;
+      final id = value.toString();
+      if (id.isNotEmpty) {
+        return id;
+      }
+    }
+
+    return 'anonymous';
   }
 
   /// 이모지 제거 유틸리티 함수

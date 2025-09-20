@@ -5,7 +5,6 @@ import 'package:sherpa_app/shared/providers/global_user_provider.dart';
 import 'package:sherpa_app/shared/models/point_system_model.dart';
 import 'package:sherpa_app/features/quests/models/quest_instance_model.dart';
 import 'package:sherpa_app/features/quests/providers/quest_provider_v2.dart';
-import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 
 /// 🎯 Phase 2: 활동별 상세 데이터 수집 시스템
 ///
@@ -63,7 +62,7 @@ class ActivityDataCollector {
                 0, (sum, log) => sum + log.durationMinutes) +
             durationMinutes,
         'exerciseTypes':
-            [...exerciseTypeStats.keys, exerciseType].toSet().toList(),
+            {...exerciseTypeStats.keys, exerciseType}.toList(),
         'averageIntensity':
             _calculateAverageIntensityScore(todayExercises, intensity),
         'timePattern': timePattern,
@@ -181,7 +180,6 @@ class ActivityDataCollector {
     Map<String, dynamic>? additionalData,
   }) {
     final user = _ref.read(globalUserProvider);
-    final todayDiary = user.dailyRecords.diaryLogs;
     final allTimeDiary = _getAllTimeDiaryData(user);
 
     // 감정 패턴 분석
@@ -242,7 +240,6 @@ class ActivityDataCollector {
     Map<String, dynamic>? additionalData,
   }) {
     final quests = _ref.read(questProviderV2);
-    final user = _ref.read(globalUserProvider);
     final points = _ref.read(globalPointProvider);
 
     return quests.when(

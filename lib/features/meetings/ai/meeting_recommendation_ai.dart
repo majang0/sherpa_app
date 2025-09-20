@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
+import 'package:sherpa_app/features/sherpi/domain/services/sherpi_insight_repository.dart';
+
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../models/available_meeting_model.dart';
@@ -77,17 +79,10 @@ class MeetingRecommendationAI {
     required List<AvailableMeeting> availableMeetings,
     bool useCache = true,
     bool forceRefresh = false, // 캐시 강제 새로고침 옵션 추가
+    SherpiInsights? sherpiInsights,
   }) async {
     try {
       // 1. 캐시 확인 (forceRefresh가 true면 캐시 무시)
-      if (useCache && !forceRefresh) {
-        final cached = await _getCachedRecommendations(user.id);
-        if (cached != null && cached.isNotEmpty) {
-          debugPrint('📦 캐시된 AI 추천 사용');
-          return cached;
-        }
-      }
-
       if (forceRefresh) {
         debugPrint('🔄 캐시 강제 새로고침 요청');
         await clearCache(user.id);
@@ -107,6 +102,20 @@ class MeetingRecommendationAI {
         return [];
       }
 
+      final meetingSetHash = _computeMeetingSetHash(availableMeetingsList);
+
+      if (useCache && !forceRefresh) {
+        final cached = await _getCachedRecommendations(
+          user.id,
+          availableMeetingsList,
+          meetingSetHash,
+        );
+        if (cached != null && cached.isNotEmpty) {
+          debugPrint('📦 캐시된 AI 추천 사용');
+          return cached;
+        }
+      }
+
       // 4. AI 추천 생성
       List<AIRecommendedMeeting> recommendations;
 
@@ -115,6 +124,7 @@ class MeetingRecommendationAI {
         recommendations = await _getAIGeneratedRecommendations(
           userPattern,
           availableMeetingsList,
+          sherpiInsights,
         );
       } else {
         // AI 사용 불가 - 규칙 기반 폴백
@@ -126,7 +136,11 @@ class MeetingRecommendationAI {
 
       // 5. 결과 캐싱
       if (useCache && recommendations.isNotEmpty) {
-        await _cacheRecommendations(user.id, recommendations);
+        await _cacheRecommendations(
+          user.id,
+          meetingSetHash,
+          recommendations,
+        );
       }
 
       return recommendations;
@@ -143,12 +157,14 @@ class MeetingRecommendationAI {
   Future<List<AIRecommendedMeeting>> _getAIGeneratedRecommendations(
     UserActivityPattern userPattern,
     List<AvailableMeeting> meetings,
+    SherpiInsights? sherpiInsights,
   ) async {
     try {
       // 프롬프트 생성
       final prompt = _promptBuilder.buildPrompt(
         userPattern: userPattern,
         availableMeetings: meetings,
+        sherpiInsights: sherpiInsights,
       );
 
       debugPrint('🤖 AI에게 추천 요청 중... (${meetings.length}개 모임 중)');
@@ -834,6 +850,8 @@ class MeetingRecommendationAI {
   /// 캐시에서 추천 가져오기
   Future<List<AIRecommendedMeeting>?> _getCachedRecommendations(
     String userId,
+    List<AvailableMeeting> availableMeetings,
+    String meetingSetHash,
   ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -845,24 +863,44 @@ class MeetingRecommendationAI {
       final cachedData = jsonDecode(cachedJson) as Map<String, dynamic>;
       final cachedTime = DateTime.parse(cachedData['timestamp'] as String);
 
-      // 캐시 유효성 검사
       if (DateTime.now().difference(cachedTime) > _cacheDuration) {
         debugPrint('⏰ 캐시 만료됨');
         return null;
       }
 
-      // 활동 데이터 해시 비교 (활동 변경 감지)
-      final currentActivityHash = cachedData['activityHash'] as String?;
-      if (currentActivityHash != null) {
-        // 현재 활동 데이터 해시와 비교하여 변경 감지
-        // 변경되었으면 캐시 무효화
-        debugPrint('📊 활동 데이터 변경 확인 중...');
+      if (cachedData['meetingSetHash'] != meetingSetHash) {
+        debugPrint('📦 모임 목록이 변경되어 캐시 무효화');
+        return null;
       }
 
-      // 캐시된 데이터 복원
-      // 주의: 실제 구현에서는 meeting 객체도 함께 저장/복원해야 함
-      // 여기서는 간단히 null 반환
-      return null;
+      final recommendationJson =
+          cachedData['recommendations'] as List<dynamic>?;
+      if (recommendationJson == null || recommendationJson.isEmpty) {
+        return null;
+      }
+
+      final meetingsById = {
+        for (final meeting in availableMeetings) meeting.id: meeting,
+      };
+
+      final restored = <AIRecommendedMeeting>[];
+      for (final entry in recommendationJson) {
+        if (entry is! Map<String, dynamic>) continue;
+        final meetingId = entry['meetingId'] as String?;
+        if (meetingId == null) continue;
+        final meeting = meetingsById[meetingId];
+        if (meeting == null) {
+          debugPrint('⚠️ 캐시된 추천 모임($meetingId)을 현재 목록에서 찾을 수 없음');
+          continue;
+        }
+        restored.add(AIRecommendedMeeting.fromJson(entry, meeting));
+      }
+
+      if (restored.isEmpty) {
+        return null;
+      }
+
+      return restored;
     } catch (e) {
       debugPrint('캐시 읽기 실패: $e');
       return null;
@@ -872,6 +910,7 @@ class MeetingRecommendationAI {
   /// 추천 캐싱
   Future<void> _cacheRecommendations(
     String userId,
+    String meetingSetHash,
     List<AIRecommendedMeeting> recommendations,
   ) async {
     try {
@@ -880,7 +919,9 @@ class MeetingRecommendationAI {
 
       final cacheData = {
         'timestamp': DateTime.now().toIso8601String(),
-        'recommendations': recommendations.map((r) => r.toJson()).toList(),
+        'meetingSetHash': meetingSetHash,
+        'recommendations':
+            recommendations.map((r) => r.toJson()).toList(growable: false),
       };
 
       await prefs.setString(key, jsonEncode(cacheData));
@@ -900,5 +941,15 @@ class MeetingRecommendationAI {
     } catch (e) {
       debugPrint('캐시 삭제 실패: $e');
     }
+  }
+
+  String _computeMeetingSetHash(List<AvailableMeeting> meetings) {
+    if (meetings.isEmpty) {
+      return 'empty';
+    }
+
+    final sortedIds = meetings.map((m) => m.id).toList()..sort();
+    final payload = jsonEncode(sortedIds);
+    return base64Url.encode(utf8.encode(payload));
   }
 }

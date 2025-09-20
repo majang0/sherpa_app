@@ -2,6 +2,8 @@
 /// 사용자 활동 패턴과 모임 목록을 구조화된 프롬프트로 변환
 
 import 'dart:convert';
+import 'package:sherpa_app/features/sherpi/domain/services/sherpi_insight_repository.dart';
+
 import '../models/available_meeting_model.dart';
 import 'models/user_activity_pattern.dart';
 
@@ -36,6 +38,7 @@ class RecommendationPromptBuilder {
   String buildPrompt({
     required UserActivityPattern userPattern,
     required List<AvailableMeeting> availableMeetings,
+    SherpiInsights? sherpiInsights,
   }) {
     final buffer = StringBuffer();
 
@@ -50,6 +53,28 @@ class RecommendationPromptBuilder {
         '사교성 ${userPattern.growthStats.sociality}, '
         '의지력 ${userPattern.growthStats.willpower}');
     buffer.writeln();
+
+    if (sherpiInsights != null) {
+      buffer.writeln('## Sherpi Insights');
+      buffer.writeln('- 셰르피 성격: ${sherpiInsights.personalityType.displayName}');
+      buffer.writeln('- 셰르피 닉네임: ${sherpiInsights.sherpiNickname}');
+      buffer.writeln('- 사용자 선호 호칭: ${sherpiInsights.userPreferredName}');
+      buffer.writeln('- 친밀도 레벨: ${sherpiInsights.intimacyLevel}');
+      buffer.writeln(
+          '- 감정 동기화 점수: ${(sherpiInsights.emotionalSyncScore * 100).toStringAsFixed(0)}%');
+      if (sherpiInsights.recentSherpiEmotion != null) {
+        buffer.writeln(
+            '- 최근 셰르피 감정: ${sherpiInsights.recentSherpiEmotion!.name}');
+      }
+      if (sherpiInsights.recentSherpiContext != null) {
+        buffer.writeln('- 최근 대화 컨텍스트: '
+            '${sherpiInsights.recentSherpiContext!.name}');
+      }
+      if (sherpiInsights.lastSherpiMessage.isNotEmpty) {
+        buffer.writeln('- 마지막 셰르피 메시지: "${sherpiInsights.lastSherpiMessage}"');
+      }
+      buffer.writeln();
+    }
 
     // 활동 패턴 섹션
     buffer.writeln('## 최근 ${userPattern.analysisPeriod.days}일 활동 패턴');

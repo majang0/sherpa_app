@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
-import 'package:sherpa_app/core/ai/services/activity_prompt_templates.dart';
 import 'package:sherpa_app/core/config/api_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -116,42 +114,13 @@ class ActivityAnalysisService {
       previousContext = '''
 지난번 운동:
 - 종류: $prevType, 강도: $prevIntensity
-- 시간: ${prevDuration}분, 칼로리: ${prevCalories}kcal
+- 시간: $prevDuration분, 칼로리: ${prevCalories}kcal
 ''';
     }
 
     // 운동 타입별 특성 정의 (친근한 표현)
-    String exerciseContext = '';
-    String exerciseFeeling = '';
-    switch (exerciseType) {
-      case '러닝':
-        exerciseContext = '옆에서 같이 뛰면서 숨소리 맞춰갔어요! 심장이 튼튼해지고 있어요';
-        exerciseFeeling = '시원한 바람 맞으며 나란히 달렸잖아요! 정말 시원했죠?';
-        break;
-      case '헬스':
-        exerciseContext = '셰르피도 옆에서 "하나, 둘!" 카운트하며 같이 힘냈어요!';
-        exerciseFeeling = '마지막 한 개 들어올릴 때 같이 "으아악!" 했잖아요 ㅋㅋ';
-        break;
-      case '요가':
-        exerciseContext = '셰르피도 옆에서 같은 자세로 깊게 숨 쉬었어요. 정말 평화로웠죠?';
-        exerciseFeeling = '나무 자세할 때 같이 흔들흔들했지만 끝까지 버텼어요!';
-        break;
-      case '자전거':
-        exerciseContext = '옆에서 같이 페달 밟으면서 "힘내!" 외쳤어요!';
-        exerciseFeeling = '오르막길에서 같이 "영차영차" 하며 올라갔잖아요!';
-        break;
-      case '수영':
-        exerciseContext = '옆 레인에서 같이 헤엄치면서 속도 맞춰갔어요!';
-        exerciseFeeling = '숨 참고 잠수할 때 셰르피도 같이 "풍덩!" 했어요';
-        break;
-      case '걷기':
-        exerciseContext = '발걸음 맞춰 나란히 걸으면서 이런저런 얘기 나눴잖아요!';
-        exerciseFeeling = '산책로에서 "저 나무 예쁘다!" 하면서 같이 구경했죠?';
-        break;
-      default:
-        exerciseContext = '오늘도 셰르피랑 함께 운동해서 정말 즐거웠어요!';
-        exerciseFeeling = '같이 땀 흘리니까 더 힘이 났죠?';
-    }
+    // Note: 운동 타입별 메시지는 추후 활용 예정
+    // 현재는 사용되지 않음
 
     // 강도별 메시지 (감성적 표현)
     String intensityMessage = '';
@@ -201,9 +170,9 @@ class ActivityAnalysisService {
 
 
 📊 오늘의 운동 데이터
-• 종류: $exerciseType ($exerciseFeeling)
-• 강도: $intensity ($intensityMessage)  
-• 시간: ${duration}분 동안 정말 열심히!
+• 종류: $exerciseType
+• 강도: $intensity ($intensityMessage)
+• 시간: $duration분 동안 정말 열심히!
 • 칼로리: $calorieComparison
 • 특별 기록: $personalBest
 
@@ -228,14 +197,14 @@ ${previousExercise != null ? '''
 • 앞으로의 여정에 대한 기대감'''}
 
 [SECTION_2] (100-130자) - 오늘 운동의 효과와 미래 전망 (제목 없이 바로 시작!)
-• ${duration}분 $exerciseType이 몸과 마음에 미친 긍정적 변화
+• $duration분 $exerciseType이 몸과 마음에 미친 긍정적 변화
 • 오늘 운동이 내일, 다음 주, 미래에 어떤 변화를 가져올지
 • 과학적 효과를 친근하게 설명 (엔돌핀, 근육 성장 등)
 • 매번 다른 각도로 창의적이고 따뜻하게 표현
 • 희망적이고 동기부여되는 미래 그리기
 
 [SECTION_3] (100-130자) - 의학적/과학적 회복 전략 (제목 없이 바로 시작!)
-• ${exerciseType} ${duration}분을 ${intensity} 강도로 수행한 것을 정확히 분석
+• $exerciseType $duration분을 $intensity 강도로 수행한 것을 정확히 분석
 • 운동 생리학적 관점에서 신뢰할 수 있는 회복 전략 제시
 • 이 운동과 강도 조합에 따른 정확한 회복 시간과 영양 요구량
 • 근거 기반 전문 조언 (근섬유 회복, 글리코겐 보충, 호르몬 변화 등)
@@ -270,15 +239,15 @@ ${previousExercise != null ? '''
       print('=====프롬프트 시작=====');
       for (int i = 0; i < prompt.length; i += 500) {
         final end = (i + 500 < prompt.length) ? i + 500 : prompt.length;
-        print('[${i}-${end}] ${prompt.substring(i, end)}');
+        print('[$i-$end] ${prompt.substring(i, end)}');
       }
       print('=====프롬프트 끝=====');
       final chatCompletion = await _client
           .createChatCompletion(
             request: CreateChatCompletionRequest(
-              model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
+              model: const ChatCompletionModel.modelId('gpt-5-chat-latest'),
               messages: [
-                ChatCompletionMessage.system(
+                const ChatCompletionMessage.system(
                   content: '''당신은 셰르피입니다! 사용자와 매일 함께 운동하는 최고의 운동 친구예요! 💪
 
 셰르피의 성격:
@@ -326,7 +295,7 @@ ${previousExercise != null ? '''
         for (int i = 0; i < responseText.length; i += 300) {
           final end =
               (i + 300 < responseText.length) ? i + 300 : responseText.length;
-          print('[${i}-${end}] ${responseText.substring(i, end)}');
+          print('[$i-$end] ${responseText.substring(i, end)}');
         }
         print('=====응답 끝====');
         return responseText;
@@ -422,7 +391,7 @@ ${previousExercise != null ? '''
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
-      final fullKey = 'comprehensive_exercise_${dateKey}';
+      final fullKey = 'comprehensive_exercise_$dateKey';
 
       print('💾 캐시 저장 시작: $fullKey');
 
@@ -447,7 +416,7 @@ ${previousExercise != null ? '''
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
-      final fullKey = 'comprehensive_exercise_${dateKey}';
+      final fullKey = 'comprehensive_exercise_$dateKey';
 
       final cached = prefs.getString(fullKey);
       if (cached != null) {
@@ -468,9 +437,9 @@ ${previousExercise != null ? '''
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
-      final fullKey = 'comprehensive_exercise_${dateKey}';
+      final fullKey = 'comprehensive_exercise_$dateKey';
 
-      final removed = await prefs.remove(fullKey);
+      await prefs.remove(fullKey);
     } catch (e) {
       // 에러 무시
     }
@@ -487,7 +456,7 @@ ${previousExercise != null ? '''
       await prefs.remove(exerciseKey);
 
       // 종합 운동 분석 캐시 삭제
-      final comprehensiveKey = 'comprehensive_exercise_${dateKey}';
+      final comprehensiveKey = 'comprehensive_exercise_$dateKey';
       await prefs.remove(comprehensiveKey);
     } catch (e) {}
   }
@@ -515,7 +484,7 @@ ${previousExercise != null ? '''
 
     return ComprehensiveExerciseAnalysis(
       comparison: comparison,
-      benefits: '${duration}분 동안 같이 $type했어요! 셰르피도 땀 흘렸어요, 상쾌하죠? 😊',
+      benefits: '$duration분 동안 같이 $type했어요! 셰르피도 땀 흘렸어요, 상쾌하죠? 😊',
       recommendation: '내일도 같이 운동해요! 셰르피가 옆에서 함께할게요. 물 충분히 드세요 💧',
       encouragement:
           '오늘 함께 운동해서 정말 행복했어요. 당신이 있어서 셰르피도 힘이 났어요. 내일도 꼭 만나요, 우리 계속 함께해요 ❤️',
@@ -567,90 +536,9 @@ ${previousExercise != null ? '''
   //
   // 종합 운동 분석 (analyzeExerciseComprehensive) 메서드만 유지
 
-  /// OpenAI API 호출
-  Future<String> _callOpenAI(String prompt) async {
-    try {
-      // 타임아웃 설정으로 네트워크 문제 빠르게 감지
-      final chatCompletion = await _client
-          .createChatCompletion(
-            request: CreateChatCompletionRequest(
-              model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
-              messages: [
-                ChatCompletionMessage.system(
-                  content: '''당신은 셰르피입니다. 사용자의 일상 활동을 분석하고 
-              따뜻한 격려와 응원을 제공하는 친근한 AI 동반자입니다.
-              
-              지침:
-              - 친근한 존댓말 사용 (~해요, ~네요, ~죠) - 딱딱한 ~습니다체 금지
-              - 구체적인 데이터를 언급하며 개인화된 피드백 제공
-              - 긍정적이고 희망적인 메시지 전달
-              - 이모지를 적절히 사용하여 감정 표현
-              - 4-5문장 이내로 간결하게 작성''',
-                ),
-                ChatCompletionMessage.user(
-                  content: ChatCompletionUserMessageContent.string(prompt),
-                ),
-              ],
-              temperature: 0.85,
-              maxTokens: 250,
-              topP: 0.95,
-            ),
-          )
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: () => throw Exception('API 호출 타임아웃'),
-          );
+  // OpenAI API 호출 메서드 제거됨 - 개별 분석 메서드들이 직접 API 호출함
 
-      final responseText = chatCompletion.choices.firstOrNull?.message.content;
-
-      if (responseText != null && responseText.isNotEmpty) {
-        return _processResponse(responseText);
-      }
-
-      throw Exception('Empty response from OpenAI');
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  // 종합 분석용 OpenAI 호출 메서드 제거됨 - 사용하지 않음
-
-  /// 응답 후처리
-  String _processResponse(String rawResponse) {
-    String processed = rawResponse.trim();
-
-    // 마크다운 제거
-    // **굵은 텍스트** -> 굵은 텍스트
-    processed = processed.replaceAllMapped(
-        RegExp(r'\*\*([^\*]+)\*\*'), (match) => match.group(1) ?? '');
-
-    // *기울임 텍스트* -> 기울임 텍스트
-    processed = processed.replaceAllMapped(
-        RegExp(r'\*([^\*]+)\*'), (match) => match.group(1) ?? '');
-
-    // __밑줄__ -> 밑줄
-    processed = processed.replaceAllMapped(
-        RegExp(r'__([^_]+)__'), (match) => match.group(1) ?? '');
-
-    // _기울임_ -> 기울임
-    processed = processed.replaceAllMapped(
-        RegExp(r'_([^_]+)_'), (match) => match.group(1) ?? '');
-
-    // ### 제목 -> 제목
-    processed = processed.replaceAll(RegExp(r'#{1,6}\s+'), '');
-
-    // - 또는 * 리스트 마커 제거 (줄 시작 부분만)
-    processed =
-        processed.replaceAll(RegExp(r'^[\-\*]\s+', multiLine: true), '');
-
-    // 길이 제한 대폭 증가 (800자)
-    if (processed.length > 800) {
-      processed = '${processed.substring(0, 797)}...';
-    }
-
-    return processed;
-  }
-
+  // _processResponse 메서드 제거됨 - 사용하지 않음
   // _saveToCache와 getFromCache 메서드 제거됨 - 사용하지 않음
 
   /// 오늘 날짜 키 생성
@@ -666,7 +554,7 @@ ${previousExercise != null ? '''
       final dateKey = _getTodayDateKey();
 
       // 종합 운동 분석 캐시만 삭제
-      final comprehensiveKey = 'comprehensive_exercise_${dateKey}';
+      final comprehensiveKey = 'comprehensive_exercise_$dateKey';
       await prefs.remove(comprehensiveKey);
     } catch (e) {}
   }
@@ -869,7 +757,6 @@ ${previousExercise != null ? '''
     final memo = todayReading['memo'] ?? '';
 
     // 이전 독서 데이터
-    String previousContext = '';
     String previousBookInfo = '';
     if (previousReading != null) {
       final prevTitle = previousReading['title'] ?? '';
@@ -877,16 +764,13 @@ ${previousExercise != null ? '''
       final prevPages = previousReading['pagesRead'] ?? 0;
       final prevRating = previousReading['rating'] ?? 0;
 
-      previousContext = '''
+      previousBookInfo = '''
 지난번 독서:
 - 제목: $prevTitle
 - 카테고리: $prevCategory
-- 읽은 페이지: ${prevPages}페이지
-- 평점: ${prevRating}점
+- 읽은 페이지: $prevPages페이지
+- 평점: $prevRating점
 ''';
-
-      previousBookInfo = '''
-• 이전 책: "$prevTitle" (${prevCategory}, ${prevPages}페이지, ${prevRating}점)''';
     }
 
     // 총 읽은 책 수 계산 (중복 제거)
@@ -910,13 +794,13 @@ ${previousExercise != null ? '''
 📖 오늘의 독서 데이터
 • 책 제목: "$bookTitle"
 • 카테고리: $category
-• 읽은 페이지: ${pagesRead}페이지  
-• 평점: ${rating}점/5점
+• 읽은 페이지: $pagesRead페이지  
+• 평점: $rating점/5점
 • 메모: $memo
 $previousBookInfo
 
 📊 독서 통계
-• 지금까지 읽은 책: 총 ${uniqueBooksCount}권 (중복 제거된 실제 책 수)
+• 지금까지 읽은 책: 총 $uniqueBooksCount권 (중복 제거된 실제 책 수)
 
 💡 중요한 작성 지침
 ✅ 각 섹션을 한국어로 작성
@@ -938,7 +822,7 @@ $previousBookInfo
 • 독서를 시작한 동기와 기대에 대한 공감'''}
 
 [SECTION_2] (40-60자) - 오늘 책 분석  
-• 오늘 책: "$bookTitle" ($category), ${pagesRead}페이지, ${rating}점
+• 오늘 책: "$bookTitle" ($category), $pagesRead페이지, $rating점
 • 이 장르/카테고리 선택이 보여주는 독자의 관심사와 성향
 • 이전 책과 비교한 독서 패턴 변화나 취향의 확장/심화
 • 별점과 읽은 페이지를 통한 몰입도와 만족도 해석
@@ -1000,9 +884,9 @@ $previousBookInfo
       final chatCompletion = await _client
           .createChatCompletion(
             request: CreateChatCompletionRequest(
-              model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
+              model: const ChatCompletionModel.modelId('gpt-5-chat-latest'),
               messages: [
-                ChatCompletionMessage.system(
+                const ChatCompletionMessage.system(
                   content: '''당신은 셰르피입니다! 사용자와 매일 함께 책을 읽는 따뜻한 독서 친구예요! 📚
 
 셰르피의 성격:
@@ -1145,7 +1029,7 @@ $previousBookInfo
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
-      final fullKey = 'comprehensive_reading_${dateKey}';
+      final fullKey = 'comprehensive_reading_$dateKey';
 
       print('💾 독서 분석 캐시 저장 시작: $fullKey');
 
@@ -1171,7 +1055,7 @@ $previousBookInfo
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
-      final fullKey = 'comprehensive_reading_${dateKey}';
+      final fullKey = 'comprehensive_reading_$dateKey';
 
       final cached = prefs.getString(fullKey);
       if (cached != null) {
@@ -1204,7 +1088,7 @@ $previousBookInfo
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
-      final fullKey = 'comprehensive_reading_${dateKey}';
+      final fullKey = 'comprehensive_reading_$dateKey';
 
       await prefs.remove(fullKey);
     } catch (e) {
@@ -1218,7 +1102,6 @@ $previousBookInfo
     Map<String, dynamic>? previousReading,
     String userName,
   ) {
-    final title = todayReading['title'] ?? '책';
     final pages = todayReading['pagesRead'] ?? 0;
 
     String previousInsight = '새로운 독서 여정을 시작하셨네요! 셰르피도 설레어요 📚';
@@ -1228,7 +1111,7 @@ $previousBookInfo
 
     return ComprehensiveReadingAnalysis(
       previousInsight: previousInsight,
-      todayInsight: '오늘도 책과 함께한 시간이 정말 소중했어요. ${pages}페이지 동안 몰입하셨죠? 🌟',
+      todayInsight: '오늘도 책과 함께한 시간이 정말 소중했어요. $pages페이지 동안 몰입하셨죠? 🌟',
       journeyEncouragement:
           '책을 읽는 모든 순간이 성장이에요. 계속 이렇게 꾸준히 읽어나가요. 셰르피가 항상 옆에서 같이 책 읽으며 응원할게요! 📖✨',
       recommendations: _getDefaultBookRecommendations(),
@@ -1323,9 +1206,9 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       final chatCompletion = await _client
           .createChatCompletion(
             request: CreateChatCompletionRequest(
-              model: ChatCompletionModel.modelId(ApiConfig.openAIModel),
+              model: const ChatCompletionModel.modelId(ApiConfig.openAIModel),
               messages: [
-                ChatCompletionMessage.system(
+                const ChatCompletionMessage.system(
                   content: '''당신은 셰르피입니다. 사용자와 매일 함께하는 따뜻한 감정 친구예요.
 친근한 존댓말을 사용하고 (~해요, ~네요, ~죠), 이모티콘을 자연스럽게 사용하세요.
 감정에 깊이 공감하고, 위로와 응원을 전달하세요.''',
@@ -1399,7 +1282,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
 
     // 길이 제한
     if (cleaned.length > maxLength) {
-      cleaned = cleaned.substring(0, maxLength - 3) + '...';
+      cleaned = '${cleaned.substring(0, maxLength - 3)}...';
     }
 
     return cleaned;
@@ -1647,8 +1530,8 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
 이름: $userName
 
 [오늘의 활동 데이터]
-운동: $exerciseType, ${duration}분, $intensity 강도, ${calories}kcal
-독서: "$bookTitle", ${pages}페이지, $genre 장르, 평점 ${rating}점
+운동: $exerciseType, $duration분, $intensity 강도, ${calories}kcal
+독서: "$bookTitle", $pages페이지, $genre 장르, 평점 $rating점
 일기: $mood 기분, "$diaryContent"
 
 [분석 요청사항]
@@ -1675,9 +1558,9 @@ JSON 형식으로만 응답하세요.''';
     try {
       final response = await _client.createChatCompletion(
         request: CreateChatCompletionRequest(
-          model: ChatCompletionModel.model(ChatCompletionModels.gpt4oMini),
+          model: const ChatCompletionModel.model(ChatCompletionModels.gpt4oMini),
           messages: [
-            ChatCompletionMessage.system(
+            const ChatCompletionMessage.system(
               content: '당신은 사용자의 하루를 종합적으로 분석하는 AI 동반자입니다. JSON 형식으로만 응답하세요.',
             ),
             ChatCompletionMessage.user(
@@ -1693,7 +1576,7 @@ JSON 형식으로만 응답하세요.''';
       return response.choices.first.message.content ?? '{}';
     } catch (e) {
       print('❌ OpenAI API 호출 실패: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -1727,7 +1610,7 @@ JSON 형식으로만 응답하세요.''';
       );
     } catch (e) {
       print('❌ 응답 파싱 실패: $e');
-      throw e;
+      rethrow;
     }
   }
 

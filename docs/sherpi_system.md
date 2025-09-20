@@ -58,7 +58,7 @@ lib/
 
 ## 3. 데이터 & 흐름
 1. **메시지 요청**: 위젯/Provider → `global_sherpi_provider` → `SherpiMessageManager`.
-2. **정적 우선 전략**: 항상 `StaticSherpiManager` 우선, 필요 시 `OpenAISherpiManager.enableAIForNextMessage()`로 AI 사용.
+2. **정적 우선 전략**: 항상 `StaticSherpiManager` 우선, 분석 다이얼로그에서만 AI 사용 (30포인트 차감).
 3. **AI 호출**: `OpenAISherpiManager` → `OpenAIDialogueSource` → OpenAI GPT-5.
 4. **캐시**: `AiMessageCache`(SharedPreferences 기반, 현재 비활성화) — 재활성화 시 TTL 24시간.
 5. **감정/관계 업데이트**: 메시지 표시 후 `relationshipProvider`, `emotionAnalysisProvider` 통해 동기화.

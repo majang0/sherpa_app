@@ -33,6 +33,12 @@
 - 주요 경고: withOpacity deprecation 2538개 (이미 코드는 수정됨, analyzer 캐시 이슈)
 - Phase 1 시작: WSL에서 `/mnt/c/flutter/bin/cache/dart-sdk/bin/dart.exe format lib test` 실행으로 전체 포맷 정리, 8개 파일이 실변경됨.
 - `cmd.exe /C "cd /d C:\\sherpa_app && flutter test"` 수행으로 20개 테스트(모임/AI/셰르피) 모두 통과, `openai_sherpi_manager_test`는 정적 폴백 로직에 맞춰 기대값을 조정함.
+- Phase 3 진행: `AiMessageCache` 사용자별 키/TTL 체계 적용, SherpiInsights 전달 및 MeetingRecommendationAI 캐시 회복 로직 개선, SherpiNotifier가 `SherpiMessageManager` DI 경유로 메시지를 생성하도록 리팩터링.
+- 신규 단위 테스트 추가: `test/core/ai/cache/ai_message_cache_test.dart`로 캐시 분리와 TTL 만료 시나리오 검증, 기존 Sherpi/AI 관련 테스트 모두 통과.
+- `PHASE4_REVISED_PLAN.md`를 반영하여 `AI_SHERPI_CONSOLIDATED_PLAN_20250920.md`를 Rev.2로 갱신, Stage A~E 기반의 신규 로드맵(플로팅=정적, 분석=선택적 AI) 확정.
+- Stage A(플로팅 정적화): `debugForceAI` 및 잔여 AI 훅 제거, `sherpi_manager_provider.dart.bak` 정리, SherpiNotifier가 항상 `StaticSherpiManager`만 사용하도록 확인.
+- Stage A(플로팅 정적화): `debugForceAI` 및 잔여 AI 훅 제거, `sherpi_manager_provider.dart.bak` 정리, SherpiNotifier가 항상 `StaticSherpiManager`만 사용하도록 확인.
+- Sprint 0(P0-1): `AiInsightGenerator`에 포인트 확인·차감·환불 흐름을 적용해 분석 실행 시 30P가 실제로 차감되도록 수정.
 - Phase 0 착수: `lib/core/ai/` 루트에 남아 있던 중복 파일을 `services/`, `sources/`, `cache/` 하위 버전으로 통일하고, 모든 사용처 임포트를 `package:sherpa_app/core/ai/...` 경로로 정리함.
 - `smart_sherpi_manager(_openai)`는 임시로 `lib/core/ai/managers/legacy/`로 이동시켜 기존 의존성을 유지하면서도 루트 디렉터리를 비움.
 - Windows 경로가 섞인 잘못된 파일(`C:sherpa_app...`)을 제거해 git 상태를 정돈.

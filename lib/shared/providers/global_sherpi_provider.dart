@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/constants/sherpi_emotions.dart';
-// import 'package:sherpa_app/core/ai/managers/legacy/smart_sherpi_manager_openai.dart'; // OpenAI GPT-5 시스템 (DISABLED)
+import 'package:sherpa_app/core/ai/managers/sherpi_message_manager.dart';
+import 'package:sherpa_app/core/ai/managers/static_sherpi_manager.dart';
 import 'package:sherpa_app/core/ai/services/real_data_connector.dart';
 import '../../features/sherpi/relationship/providers/relationship_provider.dart';
 import '../../features/sherpi/emotion/providers/emotion_analysis_provider.dart';
@@ -159,10 +160,8 @@ class SherpiState {
 }
 
 class SherpiNotifier extends StateNotifier<SherpiState> {
-  final SherpiDialogueSource _dialogueSource;
+  final SherpiMessageManager _messageManager;
   late final RealDataConnector _dataConnector;
-  // SmartSherpiManager 비활성화 - 정적 메시지만 사용
-  // final SmartSherpiManager _smartManager = SmartSherpiManager(); // OpenAI GPT-5 시스템 (DISABLED)
   final Ref _ref;
   Timer? _hideTimer;
 
@@ -178,26 +177,24 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
   // 🚨 전역 메시지 표시 락 - 동시 메시지 호출 방지
   bool _isShowingMessage = false;
 
-  // 🐛 디버그 모드 - AI 응답 강제 사용
-  static bool debugForceAI = false;
+  SherpiMessageManager get messageManager => _messageManager;
 
-  SherpiNotifier(this._ref, {SherpiDialogueSource? dialogueSource})
-      : _dialogueSource = dialogueSource ?? StaticDialogueSource(),
+  SherpiNotifier(
+    this._ref, {
+    SherpiMessageManager? messageManager,
+  })  : _messageManager = messageManager ?? StaticSherpiManager(),
         _dataConnector = RealDataConnector(_ref),
         super(const SherpiState()) {
     // 친밀도 레벨 초기화
     _updateIntimacyLevel();
 
-    // 🎯 Phase 2: SmartSherpiManager에 데이터 수집기 초기화 - OpenAI GPT-5 시스템
-    // _smartManager.initDataCollector(_ref); // 데이터 수집기는 현재 비활성화
+    // 🎯 메시지 매니저에 데이터 초기화가 필요한 경우 여기에서 수행 가능
   }
 
-  /// Phase 2: 친밀도 레벨과 개인화 설정을 SmartSherpiManager에 업데이트
+  /// 개인화 설정을 메시지 매니저에 업데이트
   void _updateIntimacyLevel() {
     try {
       final relationship = _ref.read(relationshipProvider);
-      // _smartManager.setIntimacyLevel(relationship.intimacyLevel); // 친밀도 레벨 설정 (현재 미사용)
-
       // 🎯 Phase 1 개선: 실제 사용자 이름을 PersonalizationSettings에 반영
       final user = _ref.read(globalUserProvider);
       final userName = user.name.isNotEmpty ? user.name : '친구';
@@ -206,7 +203,7 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
       final updatedSettings = relationship.personalizationSettings.copyWith(
         userPreferredName: userName, // 실제 사용자 이름으로 업데이트
       );
-      // _smartManager.setPersonalizationSettings(updatedSettings); // AI 시스템 비활성화
+      _messageManager.setPersonalizationSettings(updatedSettings);
     } catch (e) {
       // 관계 프로바이더가 아직 초기화되지 않은 경우
     }
@@ -327,17 +324,10 @@ void initializeSherpi() {
       );
       final realGameContext = _dataConnector.buildRealGameContext();
 
-      // 💬 정적 메시지만 사용 (AI 비활성화)
-      // SmartSherpiManager를 사용하지 않고 직접 정적 메시지 가져오기
-      final staticDialogue = await _dialogueSource.getDialogue(
-          context, realUserContext, realGameContext);
-
-      // 정적 메시지를 SherpiResponse로 래핑
-      final sherpiResponse = SherpiResponse(
-        message: staticDialogue,
-        source: MessageSource.static,
-        responseTime: DateTime.now(),
-        generationDuration: Duration.zero,
+      final sherpiResponse = await _messageManager.getMessage(
+        context,
+        realUserContext,
+        realGameContext,
       );
 
       final metadata = {
@@ -350,6 +340,7 @@ void initializeSherpi() {
 
       // 응답 소스 정보를 메타데이터에 추가
       final enhancedMetadata = {
+        ...sherpiResponse.metadata,
         ...metadata,
         'response_source': sherpiResponse.source.name,
         'response_time': sherpiResponse.responseTime.toIso8601String(),
@@ -389,7 +380,7 @@ void initializeSherpi() {
       );
 
       // 🤝 상호작용 기록 및 친밀도 업데이트
-      _recordInteraction(context, userContext, gameContext);
+      _recordInteraction(context, realUserContext, realGameContext);
 
       // 💖 Sherpi 응답 기록 (감정 동기화를 위해)
       _recordSherpiResponse(selectedEmotion);
@@ -543,8 +534,6 @@ void initializeSherpi() {
       gameContext: gameContext,
     );
   }
-
-  void switchDialogueSource(SherpiDialogueSource newSource) {}
 
   Map<String, dynamic> exportState() {
     return state.toJson();
@@ -763,7 +752,6 @@ void initializeSherpi() {
       // 직접 상태 업데이트 (관계 프로바이더에 업데이트 메서드가 있다면 그것을 사용)
       relationshipNotifier.updateRelationship(updatedRelationship);
 
-      // SmartSherpiManager 비활성화 - 정적 메시지만 사용
       // _smartManager.setPersonalizationSettings(newSettings); // DISABLED
 
       // 설정 변경을 알리는 메시지 표시 (선택사항)
@@ -815,13 +803,17 @@ void initializeSherpi() {
 }
 
 // ✅ 초기화 기능이 추가된 Provider
+final sherpiMessageManagerProvider = Provider<SherpiMessageManager>((ref) {
+  return StaticSherpiManager();
+});
+
 final sherpiProvider =
     StateNotifierProvider<SherpiNotifier, SherpiState>((ref) {
-  final notifier = SherpiNotifier(ref);
-  // 앱 시작 시 자동으로 cheering 상태로 초기화
-  /*
-  Future.microtask(() => notifier.initializeSherpi());
-  */
+  final messageManager = ref.watch(sherpiMessageManagerProvider);
+  final notifier = SherpiNotifier(
+    ref,
+    messageManager: messageManager,
+  );
 
   return notifier;
 });
