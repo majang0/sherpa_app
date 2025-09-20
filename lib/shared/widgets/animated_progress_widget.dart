@@ -99,7 +99,6 @@ class _AnimatedProgressWidgetState extends State<AnimatedProgressWidget>
           ],
         ),
         const SizedBox(height: 8),
-
         Stack(
           children: [
             // 기본 진행률 바
@@ -128,7 +127,8 @@ class _AnimatedProgressWidgetState extends State<AnimatedProgressWidget>
                 builder: (context, child) {
                   return Positioned(
                     left: (widget.progress / widget.total) *
-                        (MediaQuery.of(context).size.width - 40) * _sparkleAnimation.value,
+                        (MediaQuery.of(context).size.width - 40) *
+                        _sparkleAnimation.value,
                     top: -2,
                     child: Container(
                       width: 12,
@@ -138,7 +138,8 @@ class _AnimatedProgressWidgetState extends State<AnimatedProgressWidget>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: widget.progressColor.withOpacity(_sparkleAnimation.value),
+                            color: widget.progressColor
+                                .withOpacity(_sparkleAnimation.value),
                             blurRadius: 8,
                             spreadRadius: 2,
                           ),

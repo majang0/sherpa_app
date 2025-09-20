@@ -1,7 +1,7 @@
 import 'package:sherpa_app/core/constants/sherpi_emotions.dart';
 
 /// 💬 채팅 메시지 모델
-/// 
+///
 /// 셰르피와 사용자 간의 대화를 표현하는 기본 데이터 구조
 class ChatMessage {
   final String id;
@@ -92,20 +92,20 @@ class ChatMessage {
 
 /// 📨 메시지 발신자
 enum MessageSender {
-  user,    // 사용자
-  sherpi,  // 셰르피
+  user, // 사용자
+  sherpi, // 셰르피
 }
 
 /// 🎭 메시지 타입
 enum MessageType {
-  text,           // 일반 텍스트
-  celebration,    // 축하 메시지
-  encouragement,  // 격려 메시지
-  suggestion,     // 제안/조언
-  question,       // 질문
-  milestone,      // 마일스톤 달성
-  memory,         // 기억/회상
-  system,         // 시스템 메시지
+  text, // 일반 텍스트
+  celebration, // 축하 메시지
+  encouragement, // 격려 메시지
+  suggestion, // 제안/조언
+  question, // 질문
+  milestone, // 마일스톤 달성
+  memory, // 기억/회상
+  system, // 시스템 메시지
 }
 
 /// 💡 메시지 타입별 유틸리티

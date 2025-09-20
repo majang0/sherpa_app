@@ -16,7 +16,8 @@ import '../../features/profile/presentation/screens/my_info_screen.dart';
 import '../../features/profile/shop/presentation/screens/enhanced_point_shop_screen.dart';
 import '../notification/screens/notification_screen.dart';
 
-class SherpaCleanAppBar extends ConsumerStatefulWidget implements PreferredSizeWidget {
+class SherpaCleanAppBar extends ConsumerStatefulWidget
+    implements PreferredSizeWidget {
   final String? title;
   final bool showBackButton;
   final VoidCallback? onProfileTap;
@@ -121,9 +122,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                 backgroundImage: _getProfileImage(user.profileImageUrl),
                 child: _getProfileImage(user.profileImageUrl) == null
                     ? Text(
-                        user.name.isNotEmpty
-                            ? user.name[0].toUpperCase()
-                            : '셰',
+                        user.name.isNotEmpty ? user.name[0].toUpperCase() : '셰',
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -149,7 +148,8 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                         border: Border.all(color: Colors.white, width: 2),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.success.withValues(alpha: _pulseAnimation.value),
+                            color: AppColors.success
+                                .withValues(alpha: _pulseAnimation.value),
                             blurRadius: 8,
                             spreadRadius: 2,
                           ),
@@ -199,7 +199,8 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
 
                 // ✅ 레벨 배지 (실제 레벨 데이터)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
                     gradient: AppColors.primaryGradient,
                     borderRadius: BorderRadius.circular(10),
@@ -286,7 +287,8 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.error.withValues(alpha: _notificationAnimation.value),
+                              color: AppColors.error.withValues(
+                                  alpha: _notificationAnimation.value),
                               blurRadius: 6,
                               spreadRadius: 1,
                             ),
@@ -360,15 +362,14 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
     );
   }
 
-
   // 프로필 이미지 처리 헬퍼 메서드
   ImageProvider? _getProfileImage(String? profileImageUrl) {
     if (profileImageUrl == null || profileImageUrl.isEmpty) {
       return null;
     }
-    
+
     // 로컬 파일 경로인지 확인
-    if (profileImageUrl.startsWith('/') || 
+    if (profileImageUrl.startsWith('/') ||
         profileImageUrl.contains(':\\') ||
         !profileImageUrl.startsWith('http')) {
       // 로컬 파일
@@ -386,8 +387,9 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
   // 알림 미리보기 다이얼로그 표시
   void _showNotificationPreview(BuildContext context) {
     final notifications = ref.read(notificationProvider);
-    final unreadNotifications = notifications.where((n) => !n.isRead).take(3).toList();
-    
+    final unreadNotifications =
+        notifications.where((n) => !n.isRead).take(3).toList();
+
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -398,7 +400,8 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
         elevation: 2,
         child: Container(
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(context).size.height * 0.5,  // 0.6 → 0.5로 축소
+            maxHeight:
+                MediaQuery.of(context).size.height * 0.5, // 0.6 → 0.5로 축소
             maxWidth: MediaQuery.of(context).size.width * 0.9,
           ),
           decoration: BoxDecoration(
@@ -477,7 +480,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                   ],
                 ),
               ),
-              
+
               // 알림 목록
               if (unreadNotifications.isEmpty)
                 Container(
@@ -526,10 +529,12 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                       final notification = unreadNotifications[index];
                       return NotificationItemWidget(
                         notification: notification,
-                        showDetail: false,  // 프리뷰에서는 상세 내용 숨김
+                        showDetail: false, // 프리뷰에서는 상세 내용 숨김
                         onTap: () {
                           // 읽음 처리
-                          ref.read(notificationProvider.notifier).markAsRead(notification.id);
+                          ref
+                              .read(notificationProvider.notifier)
+                              .markAsRead(notification.id);
                           // 다이얼로그 닫고 전체보기로 이동
                           Navigator.pop(context);
                           Navigator.push(
@@ -545,7 +550,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                     },
                   ),
                 ),
-              
+
               // 전체보기 버튼
               Container(
                 padding: const EdgeInsets.all(16),
@@ -601,5 +606,4 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
       ),
     );
   }
-
 }

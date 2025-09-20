@@ -1,5 +1,5 @@
 /// 🎭 셰르피 감정 상태 시스템
-/// 
+///
 /// 10개의 감정 이미지를 활용한 상황별 감정 표현 시스템
 
 import 'dart:math' as math;
@@ -10,48 +10,48 @@ import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 enum SherpiEmotion {
   /// 😊 기본 상태 - 일반적인 안내, 평상시
   defaults('sherpi_default.png'),
-  
+
   /// 😄 행복한 상태 - 성취 축하, 긍정적 피드백
   happy('sherpi_happy.png'),
-  
+
   /// 😔 슬픈 상태 - 위로가 필요한 상황, 격려가 필요할 때
   sad('sherpi_sad.png'),
-  
+
   /// 😲 놀란 상태 - 예상치 못한 성취, 놀라운 발견
   surprised('sherpi_surprised.png'),
-  
+
   /// 🤔 생각하는 상태 - 분석 중, 조언 준비
   thinking('sherpi_thinking.png'),
-  
+
   /// 👨‍🏫 안내하는 상태 - 가이드, 도움말 제공
   guiding('sherpi_guiding.png'),
-  
+
   /// 🎉 환호하는 상태 - 레벨업, 큰 성취 축하
   cheering('sherpi_cheering.png'),
-  
+
   /// ⚠️ 경고 상태 - 주의사항, 중요한 알림
   warning('sherpi_warning.png'),
-  
+
   /// 😴 잠자는 상태 - 장기 미접속, 휴식 상태
   sleeping('sherpi_sleeping.png'),
-  
+
   /// ✨ 특별한 상태 - 기념일, 마일스톤, 특별한 순간
   special('sherpi_special.png'),
-  
+
   /// 😁 미소 상태 - 차분한 만족감, 진지한 성격 표현
   smile('sherpi_smile.png'),
-  
+
   /// 💬 대화 상태 - 유머러스한 상황, 재치있는 대화
   talking('sherpi_talking.png'),
-  
+
   /// 😎 자신감 상태 - 확신에 찬 모습, 당당함
   confidence('sherpi_confidence.png');
 
   const SherpiEmotion(this.fileName);
-  
+
   /// 이미지 파일명
   final String fileName;
-  
+
   /// 전체 이미지 경로 반환
   /// sad 감정의 경우 sherpi_sad.png와 sherpi_sad2.png 중 랜덤 선택
   String get imagePath {
@@ -78,7 +78,7 @@ class SherpiEmotionMapper {
       case SherpiContext.climbingSuccess:
       case SherpiContext.questComplete:
         return SherpiEmotion.cheering;
-        
+
       // 😊 행복/긍정적 상황
       case SherpiContext.welcome:
       case SherpiContext.dailyGreeting:
@@ -86,53 +86,53 @@ class SherpiEmotionMapper {
       case SherpiContext.readingComplete:
       case SherpiContext.achievement:
         return SherpiEmotion.happy;
-        
+
       // 🤔 분석/생각하는 상황
       case SherpiContext.guidance:
         return SherpiEmotion.thinking;
-        
+
       // 👨‍🏫 안내/가이드 상황
       case SherpiContext.tutorial:
         return SherpiEmotion.guiding;
-        
+
       // 😲 놀라운/예상치 못한 상황
       case SherpiContext.longTimeNoSee:
         return SherpiEmotion.surprised;
-        
+
       // ✨ 특별한/기념할만한 상황
       case SherpiContext.milestone:
       case SherpiContext.specialEvent:
         return SherpiEmotion.special;
-        
+
       // 😊 격려/응원 상황 (웃으며 격려)
       case SherpiContext.encouragement:
-        return SherpiEmotion.smile;  // sad -> smile 변경: 격려는 웃으며 해야 함
-        
+        return SherpiEmotion.smile; // sad -> smile 변경: 격려는 웃으며 해야 함
+
       // 😔 실패/위로가 필요한 상황
       case SherpiContext.climbingFailure:
         return SherpiEmotion.sad;
-        
+
       // ⚠️ 주의/경고 상황
       case SherpiContext.tiredWarning:
         return SherpiEmotion.warning;
-        
+
       // 🎉 기본 상황 - 일반적인 상호작용
       case SherpiContext.general:
         return SherpiEmotion.happy;
-        
+
       // 🌟 모임 관련 상황
       case SherpiContext.meetingCreated:
-        return SherpiEmotion.special;  // 모임 개설은 특별한 순간
-        
+        return SherpiEmotion.special; // 모임 개설은 특별한 순간
+
       case SherpiContext.meetingJoined:
-        return SherpiEmotion.talking;  // 모임 참가 시 대화 상태
-        
+        return SherpiEmotion.talking; // 모임 참가 시 대화 상태
+
       // 😊 기본 상황
       default:
         return SherpiEmotion.defaults;
     }
   }
-  
+
   /// 감정 상태에 따른 UI 색상 테마 반환
   static EmotionTheme getThemeForEmotion(SherpiEmotion emotion) {
     switch (emotion) {
@@ -163,32 +163,30 @@ class SherpiEmotionMapper {
         return EmotionTheme.celebration;
     }
   }
-  
+
   /// 감정 상태 변화에 적절한 애니메이션 타입 반환
   static SherpiAnimationType getAnimationForTransition(
-    SherpiEmotion from, 
-    SherpiEmotion to
-  ) {
+      SherpiEmotion from, SherpiEmotion to) {
     // 축하 상황으로 전환
     if (to == SherpiEmotion.cheering) {
       return SherpiAnimationType.celebration;
     }
-    
+
     // 놀라운 상황으로 전환
     if (to == SherpiEmotion.surprised) {
       return SherpiAnimationType.bounce;
     }
-    
+
     // 특별한 상황으로 전환
     if (to == SherpiEmotion.special) {
       return SherpiAnimationType.sparkle;
     }
-    
+
     // 위로가 필요한 상황으로 전환
     if (to == SherpiEmotion.sad) {
       return SherpiAnimationType.gentle;
     }
-    
+
     // 일반적인 전환
     return SherpiAnimationType.fade;
   }
@@ -196,26 +194,26 @@ class SherpiEmotionMapper {
 
 /// 🎨 감정별 UI 테마
 enum EmotionTheme {
-  celebration,    // 축하 - 오렌지/골드
-  positive,       // 긍정 - 초록/파랑
-  analytical,     // 분석 - 보라/인디고
-  helpful,        // 도움 - 파랑/청록
-  surprise,       // 놀람 - 핑크/마젠타
-  special,        // 특별 - 무지개/그라데이션
-  supportive,     // 지지 - 따뜻한 베이지/브라운
-  warning,        // 경고 - 주황/빨강
-  calm,          // 평온 - 회색/라벤더
+  celebration, // 축하 - 오렌지/골드
+  positive, // 긍정 - 초록/파랑
+  analytical, // 분석 - 보라/인디고
+  helpful, // 도움 - 파랑/청록
+  surprise, // 놀람 - 핑크/마젠타
+  special, // 특별 - 무지개/그라데이션
+  supportive, // 지지 - 따뜻한 베이지/브라운
+  warning, // 경고 - 주황/빨강
+  calm, // 평온 - 회색/라벤더
 }
 
 /// 🎬 셰르피 애니메이션 타입
 enum SherpiAnimationType {
-  fade,           // 페이드 전환
-  bounce,         // 바운스 효과
-  celebration,    // 축하 애니메이션
-  sparkle,        // 스파클 효과
-  gentle,         // 부드러운 전환
-  pulse,          // 맥동 효과
-  shake,          // 흔들기 (주의 끌기)
+  fade, // 페이드 전환
+  bounce, // 바운스 효과
+  celebration, // 축하 애니메이션
+  sparkle, // 스파클 효과
+  gentle, // 부드러운 전환
+  pulse, // 맥동 효과
+  shake, // 흔들기 (주의 끌기)
 }
 
 /// 🎯 감정 상태별 메시지 톤 가이드
@@ -250,7 +248,7 @@ class SherpiEmotionTone {
         return "자신감 있고 확신에 찬 톤. 당당하고 긍정적인 에너지";
     }
   }
-  
+
   /// 감정에 맞는 이모지 제안
   static List<String> getSuggestedEmojis(SherpiEmotion emotion) {
     switch (emotion) {

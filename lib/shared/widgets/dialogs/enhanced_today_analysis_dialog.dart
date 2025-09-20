@@ -13,33 +13,34 @@ import 'analysis_pages/diary_analysis_page.dart';
 import 'analysis_pages/comprehensive_analysis_page.dart';
 
 /// 🌟 향상된 오늘의 분석 다이얼로그 - 페이지 네비게이션과 시각적 데이터
-/// 
+///
 /// 운동, 독서, 일기, 종합 분석을 별도 페이지로 제공하며
 /// 시각적 배지와 AI 기반 인사이트를 제공합니다.
 class EnhancedTodayAnalysisDialog extends ConsumerStatefulWidget {
   const EnhancedTodayAnalysisDialog({super.key});
 
   @override
-  ConsumerState<EnhancedTodayAnalysisDialog> createState() => 
+  ConsumerState<EnhancedTodayAnalysisDialog> createState() =>
       _EnhancedTodayAnalysisDialogState();
 }
 
-class _EnhancedTodayAnalysisDialogState 
-    extends ConsumerState<EnhancedTodayAnalysisDialog> 
+class _EnhancedTodayAnalysisDialogState
+    extends ConsumerState<EnhancedTodayAnalysisDialog>
     with TickerProviderStateMixin {
-  final ActivityAnalysisService _analysisService = ActivityAnalysisService.instance;
-  bool _isLoading = false;  // 종합 분석 대기 없이 바로 열림
+  final ActivityAnalysisService _analysisService =
+      ActivityAnalysisService.instance;
+  bool _isLoading = false; // 종합 분석 대기 없이 바로 열림
   bool _hasAllActivities = false;
   String _missingActivities = '';
-  
+
   // 페이지 컨트롤러
   late PageController _pageController;
   int _currentPage = 0;
-  
+
   // 애니메이션 컨트롤러
   late AnimationController _pageIndicatorController;
   late AnimationController _backgroundAnimationController;
-  
+
   // 활동 데이터
   Map<String, dynamic>? _todayExerciseData;
   Map<String, dynamic>? _previousExerciseData;
@@ -47,36 +48,36 @@ class _EnhancedTodayAnalysisDialogState
   Map<String, dynamic>? _previousReadingData;
   Map<String, dynamic>? _todayDiaryData;
   Map<String, dynamic>? _previousDiaryData;
-  
+
   // 사용자 이름
   String _userName = '';
-  
+
   // 종합 분석 페이지 키 - 다이얼로그 생명주기 동안 유지
   late final ValueKey<int> _comprehensivePageKey;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _pageController = PageController();
-    
+
     // 종합 분석 페이지 키 생성 - 다이얼로그가 열릴 때마다 새로 생성
     _comprehensivePageKey = ValueKey(DateTime.now().millisecondsSinceEpoch);
-    
+
     // 애니메이션 초기화
     _pageIndicatorController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _backgroundAnimationController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     _loadAnalysisData();
   }
-  
+
   @override
   void dispose() {
     _pageController.dispose();
@@ -90,26 +91,27 @@ class _EnhancedTodayAnalysisDialogState
     try {
       final globalUser = ref.read(globalUserProvider);
       final todayRecord = globalUser.todayRecord;
-      
+
       // 모든 활동이 완료되었는지 확인
       final hasExercise = todayRecord?.exerciseLog != null;
       final hasReading = todayRecord?.readingLog != null;
       final hasDiary = todayRecord?.diaryLog != null;
-      
+
       // TEMP: 개발 테스트를 위해 하나만 작성해도 열리도록 임시 수정
       // 원래 조건: if (hasExercise && hasReading && hasDiary) {
       // 임시 조건: 하나라도 작성되면 열림
-      if (hasExercise || hasReading || hasDiary) {  // TEMP: 개발 모드
+      if (hasExercise || hasReading || hasDiary) {
+        // TEMP: 개발 모드
         _hasAllActivities = true;
-        
+
         // 오늘의 데이터 준비
         _prepareActivityData(globalUser, todayRecord!);
-        
+
         // 애니메이션 시작
         _pageIndicatorController.forward();
       } else {
         _hasAllActivities = false;
-        
+
         // 누락된 활동 목록 생성
         List<String> missing = [];
         if (!hasExercise) missing.add('운동');
@@ -121,13 +123,14 @@ class _EnhancedTodayAnalysisDialogState
       // 에러 처리
     }
   }
-  
+
   /// 활동 데이터 준비
-  void _prepareActivityData(GlobalUser globalUser, TodayActivityRecord todayRecord) {
-    _userName = globalUser.name;  // 사용자 이름 저장
+  void _prepareActivityData(
+      GlobalUser globalUser, TodayActivityRecord todayRecord) {
+    _userName = globalUser.name; // 사용자 이름 저장
     final today = DateTime.now();
     final sevenDaysAgo = today.subtract(const Duration(days: 7));
-    
+
     // 운동 데이터
     if (todayRecord.exerciseLog != null) {
       _todayExerciseData = {
@@ -138,11 +141,10 @@ class _EnhancedTodayAnalysisDialogState
         'steps': todayRecord.stepCount,
         'date': today,
       };
-      
+
       // 이전 운동 기록 찾기
       for (final log in globalUser.dailyRecords.exerciseLogs) {
-        if (log.date.isAfter(sevenDaysAgo) && 
-            !_isSameDay(log.date, today)) {
+        if (log.date.isAfter(sevenDaysAgo) && !_isSameDay(log.date, today)) {
           _previousExerciseData = {
             'type': log.exerciseType,
             'intensity': _translateIntensity(log.intensity),
@@ -154,7 +156,7 @@ class _EnhancedTodayAnalysisDialogState
         }
       }
     }
-    
+
     // 독서 데이터
     if (todayRecord.readingLog != null) {
       _todayReadingData = {
@@ -165,11 +167,10 @@ class _EnhancedTodayAnalysisDialogState
         'rating': todayRecord.readingLog!.rating?.round() ?? 0,
         'date': today,
       };
-      
+
       // 이전 독서 기록 찾기
       for (final log in globalUser.dailyRecords.readingLogs) {
-        if (log.date.isAfter(sevenDaysAgo) && 
-            !_isSameDay(log.date, today)) {
+        if (log.date.isAfter(sevenDaysAgo) && !_isSameDay(log.date, today)) {
           _previousReadingData = {
             'title': log.bookTitle,
             'category': log.category,
@@ -181,7 +182,7 @@ class _EnhancedTodayAnalysisDialogState
         }
       }
     }
-    
+
     // 일기 데이터
     if (todayRecord.diaryLog != null) {
       final translatedMood = _translateMood(todayRecord.diaryLog!.mood);
@@ -192,11 +193,10 @@ class _EnhancedTodayAnalysisDialogState
         'keywords': _extractKeywords(todayRecord.diaryLog!.content),
         'date': today,
       };
-      
+
       // 이전 일기 기록 찾기
       for (final log in globalUser.dailyRecords.diaryLogs) {
-        if (log.date.isAfter(sevenDaysAgo) && 
-            !_isSameDay(log.date, today)) {
+        if (log.date.isAfter(sevenDaysAgo) && !_isSameDay(log.date, today)) {
           final previousTranslatedMood = _translateMood(log.mood);
           _previousDiaryData = {
             'mood': previousTranslatedMood,
@@ -209,17 +209,17 @@ class _EnhancedTodayAnalysisDialogState
       }
     }
   }
-  
+
   // 개별 활동 분석 생성 메서드 제거됨
   // 종합 운동 분석만 ExerciseAnalysisPage에서 직접 호출
-  
+
   // 헬퍼 메서드들
   bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
-           date1.month == date2.month &&
-           date1.day == date2.day;
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
-  
+
   int _calculateCalories(int durationMinutes, String intensity) {
     final koreanIntensity = _translateIntensity(intensity);
     final caloriesPerMinute = switch (koreanIntensity) {
@@ -231,7 +231,7 @@ class _EnhancedTodayAnalysisDialogState
     };
     return durationMinutes * caloriesPerMinute;
   }
-  
+
   String _translateIntensity(String intensity) {
     switch (intensity.toLowerCase()) {
       case 'low':
@@ -251,7 +251,7 @@ class _EnhancedTodayAnalysisDialogState
         return '중간';
     }
   }
-  
+
   String _translateMood(String mood) {
     switch (mood.toLowerCase()) {
       case 'excited':
@@ -273,14 +273,23 @@ class _EnhancedTodayAnalysisDialogState
       case 'stressed':
         return '스트레스받아요';
       default:
-        if (['설레요', '행복해요', '평온해요', '보통이에요', '피곤해요', 
-             '우울해요', '불안해요', '화나요', '스트레스받아요'].contains(mood)) {
+        if ([
+          '설레요',
+          '행복해요',
+          '평온해요',
+          '보통이에요',
+          '피곤해요',
+          '우울해요',
+          '불안해요',
+          '화나요',
+          '스트레스받아요'
+        ].contains(mood)) {
           return mood;
         }
         return '보통이에요';
     }
   }
-  
+
   String _getMoodEmoji(String mood) {
     final moodEmojis = {
       '행복해요': '😊',
@@ -296,27 +305,27 @@ class _EnhancedTodayAnalysisDialogState
     };
     return moodEmojis[mood] ?? '😊';
   }
-  
+
   List<String> _extractKeywords(String content) {
     if (content.isEmpty) return [];
-    
+
     final words = content.split(' ');
     final keywords = <String>[];
-    
+
     for (final word in words) {
       if (word.length > 2 && !keywords.contains(word)) {
         keywords.add(word);
         if (keywords.length >= 3) break;
       }
     }
-    
+
     return keywords;
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.all(16),
@@ -341,7 +350,7 @@ class _EnhancedTodayAnalysisDialogState
           children: [
             // 헤더
             _buildEnhancedHeader(context),
-            
+
             // 컨텐츠
             Expanded(
               child: _isLoading
@@ -350,16 +359,15 @@ class _EnhancedTodayAnalysisDialogState
                       ? _buildPageViewContent()
                       : _buildRequirementsMessage(),
             ),
-            
+
             // 페이지 인디케이터 (활동이 모두 완료된 경우에만)
-            if (!_isLoading && _hasAllActivities)
-              _buildPageIndicator(),
+            if (!_isLoading && _hasAllActivities) _buildPageIndicator(),
           ],
         ),
       ),
     );
   }
-  
+
   /// 향상된 헤더
   Widget _buildEnhancedHeader(BuildContext context) {
     return Container(
@@ -395,7 +403,7 @@ class _EnhancedTodayAnalysisDialogState
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // 제목
           Expanded(
             child: Column(
@@ -421,15 +429,15 @@ class _EnhancedTodayAnalysisDialogState
               ],
             ),
           ),
-          
+
           // 네비게이션 버튼 (활동이 모두 완료된 경우에만)
           if (!_isLoading && _hasAllActivities) ...[
             IconButton(
               onPressed: _currentPage > 0 ? _previousPage : null,
               icon: Icon(
                 Icons.arrow_back_ios_rounded,
-                color: _currentPage > 0 
-                    ? ModernColors.textPrimary 
+                color: _currentPage > 0
+                    ? ModernColors.textPrimary
                     : ModernColors.textTertiary,
                 size: 20,
               ),
@@ -438,14 +446,14 @@ class _EnhancedTodayAnalysisDialogState
               onPressed: _currentPage < 3 ? _nextPage : null,
               icon: Icon(
                 Icons.arrow_forward_ios_rounded,
-                color: _currentPage < 3 
-                    ? ModernColors.textPrimary 
+                color: _currentPage < 3
+                    ? ModernColors.textPrimary
                     : ModernColors.textTertiary,
                 size: 20,
               ),
             ),
           ],
-          
+
           // 닫기 버튼
           IconButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -459,7 +467,7 @@ class _EnhancedTodayAnalysisDialogState
       ),
     );
   }
-  
+
   /// 현재 페이지 제목 가져오기
   String _getPageTitle() {
     switch (_currentPage) {
@@ -475,7 +483,7 @@ class _EnhancedTodayAnalysisDialogState
         return '';
     }
   }
-  
+
   /// 페이지 뷰 컨텐츠
   Widget _buildPageViewContent() {
     return PageView(
@@ -492,16 +500,16 @@ class _EnhancedTodayAnalysisDialogState
           previousData: _previousExerciseData,
           userName: _userName,
         ),
-        
+
         // Page 2: 독서 분석
         const ReadingAnalysisPage(),
-        
+
         // Page 3: 일기 분석
         const DiaryAnalysisPage(),
-        
+
         // Page 4: 종합 분석
         ComprehensiveAnalysisPage(
-          key: _comprehensivePageKey,  // 페이지 키 전달로 인스턴스 관리
+          key: _comprehensivePageKey, // 페이지 키 전달로 인스턴스 관리
           exerciseData: _todayExerciseData,
           readingData: _todayReadingData,
           diaryData: _todayDiaryData,
@@ -510,7 +518,7 @@ class _EnhancedTodayAnalysisDialogState
       ],
     );
   }
-  
+
   /// Coming Soon 페이지 (임시)
   Widget _buildComingSoonPage(String title, IconData icon) {
     return Center(
@@ -550,16 +558,14 @@ class _EnhancedTodayAnalysisDialogState
           ),
         ],
       ),
-    ).animate()
-      .fadeIn(duration: 500.ms)
-      .scale(
-        begin: const Offset(0.9, 0.9),
-        end: const Offset(1, 1),
-        duration: 500.ms,
-        curve: Curves.easeOutBack,
-      );
+    ).animate().fadeIn(duration: 500.ms).scale(
+          begin: const Offset(0.9, 0.9),
+          end: const Offset(1, 1),
+          duration: 500.ms,
+          curve: Curves.easeOutBack,
+        );
   }
-  
+
   /// 페이지 인디케이터
   Widget _buildPageIndicator() {
     return Container(
@@ -574,8 +580,8 @@ class _EnhancedTodayAnalysisDialogState
             width: isActive ? 24 : 8,
             height: 8,
             decoration: BoxDecoration(
-              color: isActive 
-                  ? ModernColors.primary 
+              color: isActive
+                  ? ModernColors.primary
                   : ModernColors.textTertiary.withOpacity(0.3),
               borderRadius: BorderRadius.circular(4),
             ),
@@ -584,7 +590,7 @@ class _EnhancedTodayAnalysisDialogState
       ),
     );
   }
-  
+
   /// 로딩 상태
   Widget _buildLoadingState() {
     return Center(
@@ -602,11 +608,13 @@ class _EnhancedTodayAnalysisDialogState
                   shape: BoxShape.circle,
                   gradient: ModernColors.primaryGradient,
                 ),
-              ).animate(
-                onPlay: (controller) => controller.repeat(),
-              ).rotate(
-                duration: 2.seconds,
-              ),
+              )
+                  .animate(
+                    onPlay: (controller) => controller.repeat(),
+                  )
+                  .rotate(
+                    duration: 2.seconds,
+                  ),
               Container(
                 width: 60,
                 height: 60,
@@ -646,7 +654,7 @@ class _EnhancedTodayAnalysisDialogState
       ),
     );
   }
-  
+
   /// 요구사항 메시지
   Widget _buildRequirementsMessage() {
     return Center(
@@ -675,16 +683,15 @@ class _EnhancedTodayAnalysisDialogState
                   height: 70,
                 ),
               ),
-            ).animate()
-              .scale(
-                begin: const Offset(0, 0),
-                end: const Offset(1, 1),
-                duration: 600.ms,
-                curve: Curves.elasticOut,
-              ),
-            
+            ).animate().scale(
+                  begin: const Offset(0, 0),
+                  end: const Offset(1, 1),
+                  duration: 600.ms,
+                  curve: Curves.elasticOut,
+                ),
+
             const SizedBox(height: 32),
-            
+
             Text(
               '모든 활동을 완료해주세요',
               style: GoogleFonts.notoSans(
@@ -693,9 +700,9 @@ class _EnhancedTodayAnalysisDialogState
                 color: ModernColors.textPrimary,
               ),
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             Text(
               '오늘의 분석을 보려면\n아래 활동들을 완료해주세요',
               style: GoogleFonts.notoSans(
@@ -706,9 +713,9 @@ class _EnhancedTodayAnalysisDialogState
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // 누락된 활동 표시
             Container(
               padding: const EdgeInsets.symmetric(
@@ -748,7 +755,7 @@ class _EnhancedTodayAnalysisDialogState
       ),
     );
   }
-  
+
   // 페이지 네비게이션
   void _previousPage() {
     _pageController.previousPage(
@@ -756,7 +763,7 @@ class _EnhancedTodayAnalysisDialogState
       curve: Curves.easeInOut,
     );
   }
-  
+
   void _nextPage() {
     _pageController.nextPage(
       duration: const Duration(milliseconds: 300),

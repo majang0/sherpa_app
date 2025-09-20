@@ -6,13 +6,13 @@ import '../../features/sherpi/relationship/providers/relationship_provider.dart'
 import '../models/sherpi_relationship_model.dart';
 
 /// Week 3: 관계 성장 시각화 위젯
-/// 
+///
 /// 사용자와 셰르피의 관계 레벨, 성장 진행도,
 /// 감정 동기화 수준을 시각적으로 표현합니다.
 class SherpiRelationshipGrowthWidget extends ConsumerStatefulWidget {
   final bool showFullStats;
   final VoidCallback? onTap;
-  
+
   const SherpiRelationshipGrowthWidget({
     super.key,
     this.showFullStats = false,
@@ -20,16 +20,15 @@ class SherpiRelationshipGrowthWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SherpiRelationshipGrowthWidget> createState() => 
+  ConsumerState<SherpiRelationshipGrowthWidget> createState() =>
       _SherpiRelationshipGrowthWidgetState();
 }
 
-class _SherpiRelationshipGrowthWidgetState 
-    extends ConsumerState<SherpiRelationshipGrowthWidget> 
+class _SherpiRelationshipGrowthWidgetState
+    extends ConsumerState<SherpiRelationshipGrowthWidget>
     with SingleTickerProviderStateMixin {
-  
   late AnimationController _pulseController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -38,17 +37,17 @@ class _SherpiRelationshipGrowthWidgetState
       vsync: this,
     )..repeat();
   }
-  
+
   @override
   void dispose() {
     _pulseController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final relationship = ref.watch(relationshipProvider);
-    
+
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
@@ -58,13 +57,16 @@ class _SherpiRelationshipGrowthWidgetState
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              _getRelationshipColor(relationship.intimacyLevel).withOpacity(0.1),
-              _getRelationshipColor(relationship.intimacyLevel).withOpacity(0.05),
+              _getRelationshipColor(relationship.intimacyLevel)
+                  .withOpacity(0.1),
+              _getRelationshipColor(relationship.intimacyLevel)
+                  .withOpacity(0.05),
             ],
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: _getRelationshipColor(relationship.intimacyLevel).withOpacity(0.3),
+            color: _getRelationshipColor(relationship.intimacyLevel)
+                .withOpacity(0.3),
             width: 2,
           ),
         ),
@@ -74,14 +76,14 @@ class _SherpiRelationshipGrowthWidgetState
             // 관계 레벨 헤더
             _buildRelationshipHeader(relationship),
             const SizedBox(height: 20),
-            
+
             // 친밀도 진행도 바
             _buildIntimacyProgressBar(relationship),
             const SizedBox(height: 16),
-            
+
             // 감정 동기화 게이지
             _buildEmotionalSyncGauge(relationship),
-            
+
             if (widget.showFullStats) ...[
               const SizedBox(height: 20),
               // 상세 통계
@@ -92,15 +94,16 @@ class _SherpiRelationshipGrowthWidgetState
             ],
           ],
         ),
-      ).animate()
-        .fadeIn(duration: 600.ms)
-        .slideY(begin: 0.1, end: 0, duration: 600.ms),
+      )
+          .animate()
+          .fadeIn(duration: 600.ms)
+          .slideY(begin: 0.1, end: 0, duration: 600.ms),
     );
   }
-  
+
   Widget _buildRelationshipHeader(SherpiRelationship relationship) {
     final personalization = relationship.personalizationSettings;
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -111,7 +114,8 @@ class _SherpiRelationshipGrowthWidgetState
               children: [
                 // 레벨 배지
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: _getRelationshipColor(relationship.intimacyLevel),
                     borderRadius: BorderRadius.circular(20),
@@ -143,10 +147,11 @@ class _SherpiRelationshipGrowthWidgetState
                       ),
                     ],
                   ),
-                ).animate()
-                  .scale(duration: 600.ms)
-                  .then()
-                  .shimmer(duration: 1500.ms, delay: 1000.ms),
+                )
+                    .animate()
+                    .scale(duration: 600.ms)
+                    .then()
+                    .shimmer(duration: 1500.ms, delay: 1000.ms),
                 const SizedBox(width: 8),
                 Text(
                   relationship.relationshipTitle,
@@ -173,14 +178,13 @@ class _SherpiRelationshipGrowthWidgetState
       ],
     );
   }
-  
+
   Widget _buildIntimacyProgressBar(SherpiRelationship relationship) {
     final progress = _calculateLevelProgress(relationship);
-    final nextLevel = relationship.intimacyLevel < 10 
-        ? relationship.intimacyLevel + 1 
-        : 10;
+    final nextLevel =
+        relationship.intimacyLevel < 10 ? relationship.intimacyLevel + 1 : 10;
     final levelColor = _getRelationshipColor(relationship.intimacyLevel);
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -203,7 +207,8 @@ class _SherpiRelationshipGrowthWidgetState
             children: [
               // 현재 레벨 배지
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: levelColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -221,11 +226,12 @@ class _SherpiRelationshipGrowthWidgetState
                   ),
                 ),
               ),
-              
+
               // 중앙 - 다음 레벨까지 남은 횟수 (가장 강조)
               if (relationship.intimacyLevel < 10) ...[
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -261,7 +267,8 @@ class _SherpiRelationshipGrowthWidgetState
                 ),
               ] else ...[
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -296,7 +303,7 @@ class _SherpiRelationshipGrowthWidgetState
                   ),
                 ),
               ],
-              
+
               // 진행률 퍼센트
               Text(
                 '${(progress * 100).toInt()}%',
@@ -308,9 +315,9 @@ class _SherpiRelationshipGrowthWidgetState
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // 진행도 바 (깔끔한 디자인)
           Container(
             height: 8,
@@ -345,9 +352,9 @@ class _SherpiRelationshipGrowthWidgetState
               ],
             ),
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // 하단 상세 정보
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -373,11 +380,12 @@ class _SherpiRelationshipGrowthWidgetState
           ),
         ],
       ),
-    ).animate()
-      .fadeIn(duration: 600.ms)
-      .slideY(begin: 0.1, end: 0, duration: 600.ms);
+    )
+        .animate()
+        .fadeIn(duration: 600.ms)
+        .slideY(begin: 0.1, end: 0, duration: 600.ms);
   }
-  
+
   Widget _buildEmotionalSyncGauge(SherpiRelationship relationship) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -429,8 +437,11 @@ class _SherpiRelationshipGrowthWidgetState
                       fontWeight: FontWeight.bold,
                       color: _getEmotionalSyncColor(relationship.emotionalSync),
                     ),
-                  ).animate(onPlay: (controller) => controller.repeat())
-                    .shimmer(duration: 2000.ms, color: Colors.white.withOpacity(0.3)),
+                  )
+                      .animate(onPlay: (controller) => controller.repeat())
+                      .shimmer(
+                          duration: 2000.ms,
+                          color: Colors.white.withOpacity(0.3)),
                 ],
               ),
             ],
@@ -439,11 +450,11 @@ class _SherpiRelationshipGrowthWidgetState
       ],
     );
   }
-  
+
   Widget _buildEmotionalSyncIcon(double sync) {
     IconData icon;
     Color color;
-    
+
     if (sync >= 0.8) {
       icon = Icons.favorite;
       color = Colors.red;
@@ -457,7 +468,7 @@ class _SherpiRelationshipGrowthWidgetState
       icon = Icons.favorite_border;
       color = Colors.grey;
     }
-    
+
     return AnimatedBuilder(
       animation: _pulseController,
       builder: (context, child) {
@@ -472,12 +483,11 @@ class _SherpiRelationshipGrowthWidgetState
       },
     );
   }
-  
+
   Widget _buildDetailedStats(SherpiRelationship relationship) {
-    final daysSinceMeeting = DateTime.now()
-        .difference(relationship.firstMeetingDate)
-        .inDays;
-    
+    final daysSinceMeeting =
+        DateTime.now().difference(relationship.firstMeetingDate).inDays;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -524,7 +534,7 @@ class _SherpiRelationshipGrowthWidgetState
       ),
     );
   }
-  
+
   Widget _buildStatRow(String label, String value, IconData icon, Color color) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -553,7 +563,7 @@ class _SherpiRelationshipGrowthWidgetState
       ],
     );
   }
-  
+
   Widget _buildInteractionChart(SherpiRelationship relationship) {
     // 최근 7일간의 상호작용 데이터를 가상으로 생성
     final List<FlSpot> spots = List.generate(7, (index) {
@@ -561,7 +571,7 @@ class _SherpiRelationshipGrowthWidgetState
       final value = 5.0 + (index * 2) + (index % 2 * 3);
       return FlSpot(index.toDouble(), value);
     });
-    
+
     return Container(
       height: 150,
       padding: const EdgeInsets.all(12),
@@ -608,7 +618,8 @@ class _SherpiRelationshipGrowthWidgetState
                           radius: 3,
                           color: Colors.white,
                           strokeWidth: 2,
-                          strokeColor: _getRelationshipColor(relationship.intimacyLevel),
+                          strokeColor:
+                              _getRelationshipColor(relationship.intimacyLevel),
                         );
                       },
                     ),
@@ -628,18 +639,19 @@ class _SherpiRelationshipGrowthWidgetState
       ),
     );
   }
-  
+
   double _calculateLevelProgress(SherpiRelationship relationship) {
     if (relationship.intimacyLevel >= 10) return 1.0;
-    
+
     final currentLevelRequirement = relationship.intimacyLevel * 100;
     final nextLevelRequirement = (relationship.intimacyLevel + 1) * 100;
-    final currentProgress = relationship.totalInteractions - currentLevelRequirement;
+    final currentProgress =
+        relationship.totalInteractions - currentLevelRequirement;
     final totalRequired = nextLevelRequirement - currentLevelRequirement;
-    
+
     return (currentProgress / totalRequired).clamp(0.0, 1.0);
   }
-  
+
   Color _getRelationshipColor(int level) {
     if (level >= 9) return Colors.purple;
     if (level >= 7) return Colors.indigo;
@@ -647,7 +659,7 @@ class _SherpiRelationshipGrowthWidgetState
     if (level >= 3) return Colors.green;
     return Colors.teal;
   }
-  
+
   Color _getEmotionalSyncColor(double sync) {
     if (sync >= 0.8) return Colors.red;
     if (sync >= 0.6) return Colors.pink;
@@ -661,24 +673,24 @@ class _SherpiRelationshipGrowthWidgetState
 class _EmotionalSyncGaugePainter extends CustomPainter {
   final double value;
   final Color color;
-  
+
   _EmotionalSyncGaugePainter({
     required this.value,
     required this.color,
   });
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height);
     final radius = size.width / 2;
-    
+
     // 배경 아크
     final backgroundPaint = Paint()
       ..color = Colors.grey[200]!
       ..style = PaintingStyle.stroke
       ..strokeWidth = 12
       ..strokeCap = StrokeCap.round;
-    
+
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius - 6),
       3.14159,
@@ -686,14 +698,14 @@ class _EmotionalSyncGaugePainter extends CustomPainter {
       false,
       backgroundPaint,
     );
-    
+
     // 진행도 아크
     final progressPaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 12
       ..strokeCap = StrokeCap.round;
-    
+
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius - 6),
       3.14159,
@@ -702,7 +714,7 @@ class _EmotionalSyncGaugePainter extends CustomPainter {
       progressPaint,
     );
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

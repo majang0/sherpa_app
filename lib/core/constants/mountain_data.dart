@@ -13,7 +13,6 @@ class MountainData {
       difficultyLevel: 1,
       durationHours: 0.5,
       requiredPower: GameConstants.calculateRequiredPower(1),
-
     ),
     Mountain(
       id: 2,
@@ -154,7 +153,8 @@ class MountainData {
   ];
 
   /// 레벨에 따른 추천 산 목록
-  static List<Mountain> getRecommendedMountains(int userLevel, double userPower) {
+  static List<Mountain> getRecommendedMountains(
+      int userLevel, double userPower) {
     // 사용자 레벨 ±3 범위의 산들을 추천
     final levelRange = allMountains.where((mountain) {
       final levelDiff = (mountain.difficultyLevel - userLevel).abs();
@@ -187,7 +187,9 @@ class MountainData {
 
   /// 관문 산 목록
   static List<Mountain> getGatewayMountains() {
-    return allMountains.where((mountain) => mountain.isGateway == true).toList();
+    return allMountains
+        .where((mountain) => mountain.isGateway == true)
+        .toList();
   }
 
   static List<Mountain> getRecommendedMountainsByPower(double userPower) {
@@ -203,5 +205,3 @@ class MountainData {
     return sortedMountains.take(3).toList();
   }
 }
-
-

@@ -10,22 +10,22 @@ import '../../core/constants/sherpi_dialogues.dart';
 import '../providers/global_sherpi_provider.dart';
 
 /// 🎭 셰르피 메시지 카드 위젯
-/// 
+///
 /// 셰르피의 메시지를 슬라이드업 애니메이션과 함께 표시하는 향상된 카드 위젯.
 /// 감정 상태에 따른 시각적 피드백과 사용자 상호작용을 제공합니다.
 class SherpiMessageCard extends ConsumerStatefulWidget {
   /// 메시지 표시 위치 (화면 하단에서의 오프셋)
   final double bottomOffset;
-  
+
   /// 카드가 표시되는 지속 시간
   final Duration duration;
-  
+
   /// 자동 숨김 여부
   final bool autoHide;
-  
+
   /// 탭 시 호출할 콜백 함수
   final VoidCallback? onTap;
-  
+
   /// 닫기 버튼 표시 여부
   final bool showCloseButton;
 
@@ -42,46 +42,45 @@ class SherpiMessageCard extends ConsumerStatefulWidget {
   ConsumerState<SherpiMessageCard> createState() => _SherpiMessageCardState();
 }
 
-class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard> 
+class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
     with TickerProviderStateMixin {
-      
   late AnimationController _slideController;
   late AnimationController _fadeController;
   late AnimationController _scaleController;
-  
+
   // 🚨 중복 방지: 마지막으로 표시된 메시지 추적
   String? _lastShownMessage;
   DateTime? _lastShownTime;
-  bool _hasShownAnimation = false;  // 애니메이션 중복 방지
-  
+  bool _hasShownAnimation = false; // 애니메이션 중복 방지
+
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // 슬라이드 애니메이션 컨트롤러
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 600),
       reverseDuration: const Duration(milliseconds: 400),
       vsync: this,
     );
-    
-    // 페이드 애니메이션 컨트롤러  
+
+    // 페이드 애니메이션 컨트롤러
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 300),
       reverseDuration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    
+
     // 스케일 애니메이션 컨트롤러 (터치 피드백용)
     _scaleController = AnimationController(
       duration: const Duration(milliseconds: 100),
       vsync: this,
     );
-    
+
     // 애니메이션 설정
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 1), // 아래에서 시작
@@ -91,7 +90,7 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       curve: Curves.easeOutBack,
       reverseCurve: Curves.easeInBack,
     ));
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -100,7 +99,7 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       curve: Curves.easeOut,
       reverseCurve: Curves.easeIn,
     ));
-    
+
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.95,
@@ -108,10 +107,10 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       parent: _scaleController,
       curve: Curves.easeOut,
     ));
-    
+
     // 초기 애니메이션은 build에서 처리 (새 메시지일 때만)
   }
-  
+
   @override
   void dispose() {
     _slideController.dispose();
@@ -119,14 +118,14 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
     _scaleController.dispose();
     super.dispose();
   }
-  
+
   /// 카드 표시 애니메이션
   Future<void> _showCard() async {
     await Future.wait([
       _slideController.forward(),
       _fadeController.forward(),
     ]);
-    
+
     // 자동 숨김이 활성화된 경우 일정 시간 후 숨김
     if (widget.autoHide) {
       await Future.delayed(widget.duration);
@@ -135,29 +134,29 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       }
     }
   }
-  
+
   /// 카드 숨김 애니메이션
   Future<void> _hideCard() async {
     await Future.wait([
       _slideController.reverse(),
       _fadeController.reverse(),
     ]);
-    
+
     // 셰르피 상태를 숨김으로 변경
     if (mounted) {
       ref.read(sherpiProvider.notifier).hideMessage();
     }
   }
-  
+
   /// 터치 피드백 애니메이션
   Future<void> _onTapDown() async {
     await _scaleController.forward();
   }
-  
+
   /// 터치 해제 애니메이션
   Future<void> _onTapUp() async {
     await _scaleController.reverse();
-    
+
     // 사용자 정의 콜백 실행
     if (widget.onTap != null) {
       widget.onTap!();
@@ -167,12 +166,12 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
   @override
   Widget build(BuildContext context) {
     final sherpiState = ref.watch(sherpiProvider);
-    
+
     // 🚨 중복 방지: 셰르피가 보이지 않거나 메시지가 없으면 표시 안함
     if (!sherpiState.isVisible || sherpiState.dialogue.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     // 🚨 중복 방지: 같은 메시지를 5초 이내에 다시 표시하지 않음 (탭 전환 시 중복 방지 강화)
     final now = DateTime.now();
     if (_lastShownMessage == sherpiState.dialogue &&
@@ -180,14 +179,14 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
         now.difference(_lastShownTime!).inSeconds < 5) {
       return const SizedBox.shrink();
     }
-    
+
     // 새로운 메시지인 경우 추적 정보 업데이트하고 애니메이션 재시작
     if (_lastShownMessage != sherpiState.dialogue) {
       _lastShownMessage = sherpiState.dialogue;
       _lastShownTime = now;
-      _hasShownAnimation = false;  // 애니메이션 리셋
+      _hasShownAnimation = false; // 애니메이션 리셋
     }
-    
+
     // 애니메이션을 아직 표시하지 않았다면 시작
     if (!_hasShownAnimation) {
       _hasShownAnimation = true;
@@ -197,13 +196,13 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
         }
       });
     }
-    
+
     final currentEmotion = sherpiState.emotion;
     final emotionTheme = SherpiEmotionMapper.getThemeForEmotion(currentEmotion);
-    
+
     return Positioned(
       bottom: widget.bottomOffset,
-      left: 20,   // 더 넓은 여백으로 조정
+      left: 20, // 더 넓은 여백으로 조정
       right: 20,
       child: SlideTransition(
         position: _slideAnimation,
@@ -215,43 +214,41 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
               onTapDown: (_) => _onTapDown(),
               onTapUp: (_) => _onTapUp(),
               onTapCancel: () => _scaleController.reverse(),
-              child: _buildMessageCard(sherpiState, currentEmotion, emotionTheme),
+              child:
+                  _buildMessageCard(sherpiState, currentEmotion, emotionTheme),
             ),
           ),
         ),
       ),
     );
   }
-  
+
   /// 메시지 카드 UI 구성
   Widget _buildMessageCard(
-    SherpiState state, 
-    SherpiEmotion emotion, 
-    EmotionTheme theme
-  ) {
+      SherpiState state, SherpiEmotion emotion, EmotionTheme theme) {
     return Container(
       constraints: const BoxConstraints(
-        maxWidth: 400,  // 더 넓은 카드 (350→400)
-        minHeight: 90,  // 더 높은 최소 높이 (80→90)
+        maxWidth: 400, // 더 넓은 카드 (350→400)
+        minHeight: 90, // 더 높은 최소 높이 (80→90)
       ),
-      padding: const EdgeInsets.all(20),  // 더 넓은 패딩 (16→20)
+      padding: const EdgeInsets.all(20), // 더 넓은 패딩 (16→20)
       decoration: BoxDecoration(
         gradient: _getThemeGradient(theme),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: _getThemeColor(theme).withOpacity(0.4),  // 더 진한 그림자
-            blurRadius: 16,  // 더 큰 블러 (12→16)
-            offset: const Offset(0, 6),  // 더 깊은 그림자 (4→6)
+            color: _getThemeColor(theme).withOpacity(0.4), // 더 진한 그림자
+            blurRadius: 16, // 더 큰 블러 (12→16)
+            offset: const Offset(0, 6), // 더 깊은 그림자 (4→6)
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.15),  // 더 진한 검은색 그림자
-            blurRadius: 12,  // 더 큰 블러 (8→12)
-            offset: const Offset(0, 4),  // 더 깊은 그림자 (2→4)
+            color: Colors.black.withOpacity(0.15), // 더 진한 검은색 그림자
+            blurRadius: 12, // 더 큰 블러 (8→12)
+            offset: const Offset(0, 4), // 더 깊은 그림자 (2→4)
           ),
           BoxShadow(
             color: _getThemeColor(theme).withOpacity(0.2),
-            blurRadius: 24,  // 추가 외곽 그림자로 입체감 증가
+            blurRadius: 24, // 추가 외곽 그림자로 입체감 증가
             offset: const Offset(0, 8),
           ),
         ],
@@ -260,9 +257,9 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
         children: [
           // 셰르피 아바타
           _buildSherpiAvatar(emotion),
-          
-          const SizedBox(width: 16),  // 더 넓은 간격 (12→16)
-          
+
+          const SizedBox(width: 16), // 더 넓은 간격 (12→16)
+
           // 메시지 내용
           Expanded(
             child: Column(
@@ -273,34 +270,33 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
                 Text(
                   state.dialogue,
                   style: GoogleFonts.notoSans(
-                    fontSize: 15,    // 더 큰 폰트 (14→15)
-                    fontWeight: FontWeight.w600,  // 더 굵은 폰트 (w500→w600)
+                    fontSize: 15, // 더 큰 폰트 (14→15)
+                    fontWeight: FontWeight.w600, // 더 굵은 폰트 (w500→w600)
                     color: Colors.white,
-                    height: 1.5,     // 더 넓은 줄 간격 (1.4→1.5)
+                    height: 1.5, // 더 넓은 줄 간격 (1.4→1.5)
                   ),
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // 메시지 소스 및 시간 정보
                 if (state.metadata != null)
                   _buildMessageMetadata(state.metadata!),
               ],
             ),
           ),
-          
+
           // 닫기 버튼
-          if (widget.showCloseButton)
-            _buildCloseButton(),
+          if (widget.showCloseButton) _buildCloseButton(),
         ],
       ),
     );
   }
-  
+
   /// 셰르피 아바타 위젯
   Widget _buildSherpiAvatar(SherpiEmotion emotion) {
     return Container(
-      width: 56,   // 더 큰 아바타 (48→56)
+      width: 56, // 더 큰 아바타 (48→56)
       height: 56,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -313,13 +309,13 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       child: ClipOval(
         child: Image.asset(
           emotion.imagePath,
-          width: 44,   // 더 큰 이미지 (36→44)
+          width: 44, // 더 큰 이미지 (36→44)
           height: 44,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
             return Icon(
               Icons.face,
-              size: 30,   // 더 큰 폴백 아이콘 (24→30)
+              size: 30, // 더 큰 폴백 아이콘 (24→30)
               color: Colors.white.withValues(alpha: 0.8),
             );
           },
@@ -327,15 +323,15 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       ),
     );
   }
-  
+
   /// 메시지 메타데이터 표시
   Widget _buildMessageMetadata(Map<String, dynamic> metadata) {
     final source = metadata['response_source'] as String?;
     final isFast = metadata['is_fast_response'] as bool? ?? false;
-    
+
     String sourceIcon = '⚡';
     String sourceText = '정적';
-    
+
     if (source != null) {
       switch (source) {
         case 'static':
@@ -352,7 +348,7 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
           break;
       }
     }
-    
+
     return Row(
       children: [
         Container(
@@ -380,7 +376,6 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
             ],
           ),
         ),
-        
         if (isFast) ...[
           const SizedBox(width: 6),
           Icon(
@@ -392,14 +387,13 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       ],
     );
   }
-  
 
   /// 닫기 버튼
   Widget _buildCloseButton() {
     final screenWidth = MediaQuery.of(context).size.width;
     final buttonSize = screenWidth > 400 ? 32.0 : 28.0;
     final iconSize = screenWidth > 400 ? 18.0 : 16.0;
-    
+
     return Semantics(
       label: '메시지 닫기',
       hint: '셰르피 메시지 카드를 닫습니다',
@@ -425,7 +419,7 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
       ),
     );
   }
-  
+
   /// 테마별 그라데이션 반환
   Gradient _getThemeGradient(EmotionTheme theme) {
     switch (theme) {
@@ -469,7 +463,7 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         );
-      case EmotionTheme.supportive: 
+      case EmotionTheme.supportive:
         return LinearGradient(
           colors: [Colors.brown.shade400, Colors.orange.shade300],
           begin: Alignment.topLeft,
@@ -489,7 +483,7 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
         );
     }
   }
-  
+
   /// 테마별 메인 색상 반환
   Color _getThemeColor(EmotionTheme theme) {
     switch (theme) {
@@ -535,7 +529,7 @@ extension SherpiMessageCardExtension on WidgetRef {
       forceShow: true,
     );
   }
-  
+
   /// 커스텀 메시지로 셰르피 카드 표시
   void showCustomSherpiCard(
     SherpiContext context,

@@ -13,16 +13,18 @@ import '../../../../../shared/models/sherpi_message_history.dart';
 import '../../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
 /// 💬 셰르피 메시지 히스토리 화면
-/// 
+///
 /// 셰르피의 메시지를 깔끔하고 단순하게 보여주는 화면
 class SherpiMessageHistoryScreen extends ConsumerStatefulWidget {
   const SherpiMessageHistoryScreen({super.key});
 
   @override
-  ConsumerState<SherpiMessageHistoryScreen> createState() => _SherpiMessageHistoryScreenState();
+  ConsumerState<SherpiMessageHistoryScreen> createState() =>
+      _SherpiMessageHistoryScreenState();
 }
 
-class _SherpiMessageHistoryScreenState extends ConsumerState<SherpiMessageHistoryScreen> {
+class _SherpiMessageHistoryScreenState
+    extends ConsumerState<SherpiMessageHistoryScreen> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -55,8 +57,9 @@ class _SherpiMessageHistoryScreenState extends ConsumerState<SherpiMessageHistor
 
   @override
   Widget build(BuildContext context) {
-    final messageHistory = ref.read(sherpiProvider.notifier).getMessageHistory();
-    
+    final messageHistory =
+        ref.read(sherpiProvider.notifier).getMessageHistory();
+
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: SherpaCleanAppBar(
@@ -144,7 +147,7 @@ class _SherpiMessageHistoryScreenState extends ConsumerState<SherpiMessageHistor
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // 메시지 내용
           Expanded(
             child: Column(
@@ -159,7 +162,7 @@ class _SherpiMessageHistoryScreenState extends ConsumerState<SherpiMessageHistor
                   ),
                 ),
                 const SizedBox(height: 4),
-                
+
                 // 메시지 버블
                 Container(
                   padding: const EdgeInsets.symmetric(

@@ -16,10 +16,12 @@ class EnhancedReadingCalendarWidget extends ConsumerStatefulWidget {
   const EnhancedReadingCalendarWidget({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<EnhancedReadingCalendarWidget> createState() => _EnhancedReadingCalendarWidgetState();
+  ConsumerState<EnhancedReadingCalendarWidget> createState() =>
+      _EnhancedReadingCalendarWidgetState();
 }
 
-class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingCalendarWidget>
+class _EnhancedReadingCalendarWidgetState
+    extends ConsumerState<EnhancedReadingCalendarWidget>
     with TickerProviderStateMixin {
   late AnimationController _slideController;
   late Animation<Offset> _slideAnimation;
@@ -73,7 +75,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
   Widget build(BuildContext context) {
     final user = ref.watch(globalUserProvider);
     final readingLogs = user.dailyRecords.readingLogs;
-    
+
     // 날짜순으로 정렬 (최신순 - 현재 날짜와 가장 가까운 순서)
     final sortedReadingLogs = List<ReadingLog>.from(readingLogs)
       ..sort((a, b) => b.date.compareTo(a.date));
@@ -85,7 +87,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: ModernColors.surface,  // 깔끔한 흰색 배경
+            color: ModernColors.surface, // 깔끔한 흰색 배경
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -150,7 +152,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: ModernColors.reading,  // 단순한 독서 색상
+                        color: ModernColors.reading, // 단순한 독서 색상
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
@@ -184,9 +186,9 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
 
               // 전체보기 버튼
               _buildFullViewButton(),
-              
+
               const SizedBox(height: 20),
-              
+
               // 최근 독서 기록들
               if (sortedReadingLogs.isNotEmpty) ...[
                 Text(
@@ -198,12 +200,14 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
                   ),
                 ),
                 const SizedBox(height: 12),
-                ...sortedReadingLogs.take(3).map((reading) => _buildReadingItem(reading)),
+                ...sortedReadingLogs
+                    .take(3)
+                    .map((reading) => _buildReadingItem(reading)),
               ] else
                 _buildEmptyState(),
-              
+
               const SizedBox(height: 24),
-              
+
               // 독서 기록 작성하기 버튼
               _buildWriteButton(),
             ],
@@ -216,18 +220,22 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
   Widget _buildTodayStats(List<ReadingLog> readingLogs) {
     final today = DateTime.now();
     final thisWeekStart = today.subtract(Duration(days: today.weekday - 1));
-    final thisWeekReadings = readingLogs.where((log) => 
-        log.date.isAfter(thisWeekStart.subtract(const Duration(days: 1))) &&
-        log.date.isBefore(today.add(const Duration(days: 1)))
-    ).toList();
-    final todayReadings = readingLogs.where((log) => ReadingUtils.isSameDay(log.date, today)).toList();
-    final totalPages = todayReadings.fold<int>(0, (sum, log) => sum + log.pages);
+    final thisWeekReadings = readingLogs
+        .where((log) =>
+            log.date.isAfter(thisWeekStart.subtract(const Duration(days: 1))) &&
+            log.date.isBefore(today.add(const Duration(days: 1))))
+        .toList();
+    final todayReadings = readingLogs
+        .where((log) => ReadingUtils.isSameDay(log.date, today))
+        .toList();
+    final totalPages =
+        todayReadings.fold<int>(0, (sum, log) => sum + log.pages);
     final weeklyReadingCount = thisWeekReadings.length;
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: ModernColors.background,  // 연한 회색 배경으로 구분
+        color: ModernColors.background, // 연한 회색 배경으로 구분
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -293,12 +301,13 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
 
   Widget _buildWeeklyChart(List<ReadingLog> readingLogs) {
     final now = DateTime.now();
-    final weekDays = List.generate(7, (index) => now.subtract(Duration(days: 6 - index)));
+    final weekDays =
+        List.generate(7, (index) => now.subtract(Duration(days: 6 - index)));
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: ModernColors.background,  // 연한 회색 배경
+        color: ModernColors.background, // 연한 회색 배경
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -323,7 +332,9 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: weekDays.map((day) => _buildChartBar(day, readingLogs)).toList(),
+            children: weekDays
+                .map((day) => _buildChartBar(day, readingLogs))
+                .toList(),
           ),
         ],
       ),
@@ -331,7 +342,9 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
   }
 
   Widget _buildChartBar(DateTime day, List<ReadingLog> readingLogs) {
-    final dayReadings = readingLogs.where((log) => ReadingUtils.isSameDay(log.date, day)).toList();
+    final dayReadings = readingLogs
+        .where((log) => ReadingUtils.isSameDay(log.date, day))
+        .toList();
     final totalPages = dayReadings.fold<int>(0, (sum, log) => sum + log.pages);
     final isToday = ReadingUtils.isToday(day);
     final weekdayName = ['월', '화', '수', '목', '금', '토', '일'][day.weekday - 1];
@@ -350,9 +363,9 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
             width: 16,
             height: barHeight,
             decoration: BoxDecoration(
-              color: isToday 
-                ? ModernColors.reading
-                : ModernColors.reading.withOpacity(0.6),
+              color: isToday
+                  ? ModernColors.reading
+                  : ModernColors.reading.withOpacity(0.6),
               borderRadius: BorderRadius.circular(8),
             ),
           ),
@@ -397,7 +410,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: ModernColors.surface,  // 흰색 카드 배경
+          color: ModernColors.surface, // 흰색 카드 배경
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -500,7 +513,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: ModernColors.background,  // 연한 회색 배경
+        color: ModernColors.background, // 연한 회색 배경
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -543,8 +556,6 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
     ReadingDetailModal.show(context, readingLog);
   }
 
-
-
   void _editReading(ReadingLog readingLog) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -572,7 +583,7 @@ class _EnhancedReadingCalendarWidgetState extends ConsumerState<EnhancedReadingC
         },
         style: OutlinedButton.styleFrom(
           foregroundColor: ModernColors.reading,
-          backgroundColor: ModernColors.background,  // 연한 회색 배경
+          backgroundColor: ModernColors.background, // 연한 회색 배경
           padding: const EdgeInsets.symmetric(vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

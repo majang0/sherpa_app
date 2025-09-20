@@ -7,42 +7,16 @@ import '../../core/constants/sherpi_emotions.dart';
 import '../../core/ai/real_data_connector.dart';
 import '../../features/sherpi/relationship/providers/relationship_provider.dart';
 import '../../features/sherpi/emotion/providers/emotion_analysis_provider.dart';
+import '../../features/sherpi/domain/models/sherpi_response.dart';
 import '../models/sherpi_message_history.dart';
 import '../models/sherpi_relationship_model.dart';
 import 'global_user_provider.dart'; // Phase 1: 실제 사용자 이름을 가져오기 위해 추가
 
-/// 📝 메시지 소스 타입 (AI 시스템 비활성화로 static만 사용)
-enum MessageSource {
-  static,      // 정적 메시지 (유일한 소스)
-  aiCached,    // 사용하지 않음 (호환성 유지용)
-  aiRealtime,  // 사용하지 않음 (호환성 유지용)
-}
-
-/// 📨 셰르피 응답 데이터 (AI 시스템 비활성화 버전)
-class SherpiResponse {
-  final String message;
-  final MessageSource source;
-  final DateTime responseTime;
-  final Duration? generationDuration;
-  final Map<String, dynamic> metadata;
-  
-  SherpiResponse({
-    required this.message,
-    required this.source,
-    required this.responseTime,
-    this.generationDuration,
-    this.metadata = const {},
-  });
-  
-  /// ⚡ 빠른 응답인지 확인 (항상 true - 정적 메시지만 사용)
-  bool get isFastResponse => true;
-}
-
 enum SherpiDisplayMode {
-  floating,      // 우하단 플로팅 (기본)
-  notification,  // 상단 알림바
-  inline,        // 인라인 (특정 위젯 내부)
-  hidden,        // 숨김
+  floating, // 우하단 플로팅 (기본)
+  notification, // 상단 알림바
+  inline, // 인라인 (특정 위젯 내부)
+  hidden, // 숨김
 }
 
 @immutable
@@ -165,7 +139,7 @@ class SherpiState {
   factory SherpiState.fromJson(Map<String, dynamic> json) {
     return SherpiState(
       emotion: SherpiEmotion.values.firstWhere(
-            (e) => e.name == json['emotion'],
+        (e) => e.name == json['emotion'],
         orElse: () => SherpiEmotion.defaults,
       ),
       dialogue: json['dialogue'] ?? '',
@@ -175,9 +149,9 @@ class SherpiState {
           : null,
       currentContext: json['currentContext'] != null
           ? SherpiContext.values.firstWhere(
-            (c) => c.name == json['currentContext'],
-        orElse: () => SherpiContext.general,
-      )
+              (c) => c.name == json['currentContext'],
+              orElse: () => SherpiContext.general,
+            )
           : null,
       metadata: json['metadata'] as Map<String, dynamic>? ?? {},
     );
@@ -191,19 +165,19 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
   // final SmartSherpiManager _smartManager = SmartSherpiManager(); // OpenAI GPT-5 시스템 (DISABLED)
   final Ref _ref;
   Timer? _hideTimer;
-  
+
   // 메시지 히스토리 저장 (최대 50개)
   final List<SherpiMessageHistory> _messageHistory = [];
   static const int _maxHistorySize = 50;
-  
+
   // 중복 메시지 방지를 위한 최근 메시지 추적
   DateTime? _lastMessageTime;
   SherpiContext? _lastContext;
   String? _lastDialogue;
-  
+
   // 🚨 전역 메시지 표시 락 - 동시 메시지 호출 방지
   bool _isShowingMessage = false;
-  
+
   // 🐛 디버그 모드 - AI 응답 강제 사용
   static bool debugForceAI = false;
 
@@ -213,42 +187,37 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
         super(const SherpiState()) {
     // 친밀도 레벨 초기화
     _updateIntimacyLevel();
-    
+
     // 🎯 Phase 2: SmartSherpiManager에 데이터 수집기 초기화 - OpenAI GPT-5 시스템
     // _smartManager.initDataCollector(_ref); // 데이터 수집기는 현재 비활성화
   }
-  
 
   /// Phase 2: 친밀도 레벨과 개인화 설정을 SmartSherpiManager에 업데이트
   void _updateIntimacyLevel() {
     try {
       final relationship = _ref.read(relationshipProvider);
       // _smartManager.setIntimacyLevel(relationship.intimacyLevel); // 친밀도 레벨 설정 (현재 미사용)
-      
+
       // 🎯 Phase 1 개선: 실제 사용자 이름을 PersonalizationSettings에 반영
       final user = _ref.read(globalUserProvider);
       final userName = user.name.isNotEmpty ? user.name : '친구';
-      
+
       // Phase 2: 개인화 설정도 함께 업데이트 (사용자 이름 포함)
       final updatedSettings = relationship.personalizationSettings.copyWith(
         userPreferredName: userName, // 실제 사용자 이름으로 업데이트
       );
       // _smartManager.setPersonalizationSettings(updatedSettings); // AI 시스템 비활성화
-      
     } catch (e) {
       // 관계 프로바이더가 아직 초기화되지 않은 경우
     }
   }
-  
+
   /// 상호작용 기록 및 친밀도 업데이트
-  void _recordInteraction(
-    SherpiContext context, 
-    Map<String, dynamic>? userContext,
-    Map<String, dynamic>? gameContext
-  ) {
+  void _recordInteraction(SherpiContext context,
+      Map<String, dynamic>? userContext, Map<String, dynamic>? gameContext) {
     try {
       final notifier = _ref.read(relationshipProvider.notifier);
-      
+
       // 상호작용 타입 결정
       String interactionType;
       switch (context) {
@@ -273,7 +242,7 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
         default:
           interactionType = 'general';
       }
-      
+
       // 상호작용 기록
       notifier.recordInteraction(
         interactionType: interactionType,
@@ -283,12 +252,10 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
           'gameContext': gameContext,
         },
       );
-      
+
       // 친밀도 레벨 업데이트
       _updateIntimacyLevel();
-      
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   @override
@@ -325,9 +292,9 @@ void initializeSherpi() {
       if (_isShowingMessage && !forceShow) {
         return;
       }
-      
+
       _isShowingMessage = true; // 락 설정
-      
+
       // 🚨 중복 메시지 방지: 강제 표시가 아닌 경우에만 중복 검사
       if (!forceShow && _isDuplicateMessage(context, null)) {
         _isShowingMessage = false; // 락 해제
@@ -335,7 +302,7 @@ void initializeSherpi() {
       }
 
       _hideTimer?.cancel();
-      
+
       // 🎭 감정 분석 및 추천 감정 가져오기
       SherpiEmotion selectedEmotion;
       if (emotion != null) {
@@ -344,27 +311,27 @@ void initializeSherpi() {
         // 활동 완료 시 감정 분석 수행
         if (_isActivityCompletionContext(context) && userContext != null) {
           selectedEmotion = await _analyzeAndGetRecommendedEmotion(
-            context, userContext, gameContext
-          );
+              context, userContext, gameContext);
         } else {
           selectedEmotion = SherpiEmotionMapper.getEmotionForContext(context);
         }
       }
-      
+
       // 🎯 Phase 1: 메시지 표시 전 최신 사용자 정보로 설정 업데이트
       _updateIntimacyLevel();
-      
+
       // 🔌 실제 사용자 데이터 연결
       final realUserContext = _dataConnector.buildRealUserContext(
         context: context,
         additionalData: userContext,
       );
       final realGameContext = _dataConnector.buildRealGameContext();
-      
+
       // 💬 정적 메시지만 사용 (AI 비활성화)
       // SmartSherpiManager를 사용하지 않고 직접 정적 메시지 가져오기
-      final staticDialogue = await _dialogueSource.getDialogue(context, realUserContext, realGameContext);
-      
+      final staticDialogue = await _dialogueSource.getDialogue(
+          context, realUserContext, realGameContext);
+
       // 정적 메시지를 SherpiResponse로 래핑
       final sherpiResponse = SherpiResponse(
         message: staticDialogue,
@@ -372,8 +339,7 @@ void initializeSherpi() {
         responseTime: DateTime.now(),
         generationDuration: Duration.zero,
       );
-      
-      
+
       final metadata = {
         'context': context.name,
         'timestamp': DateTime.now().toIso8601String(),
@@ -381,7 +347,7 @@ void initializeSherpi() {
         'game': gameContext ?? {},
         'recommendedEmotion': selectedEmotion.name,
       };
-      
+
       // 응답 소스 정보를 메타데이터에 추가
       final enhancedMetadata = {
         ...metadata,
@@ -389,14 +355,15 @@ void initializeSherpi() {
         'response_time': sherpiResponse.responseTime.toIso8601String(),
         'is_fast_response': sherpiResponse.isFastResponse,
         if (sherpiResponse.generationDuration != null)
-          'generation_duration_ms': sherpiResponse.generationDuration!.inMilliseconds,
+          'generation_duration_ms':
+              sherpiResponse.generationDuration!.inMilliseconds,
         'emotion_analyzed': _isActivityCompletionContext(context),
       };
-      
+
       // 이전 메시지와 다르거나 강제 표시일 때만 알림 표시
       final isNewMessage = state.dialogue != sherpiResponse.message;
       final shouldShowNotification = forceShow || isNewMessage;
-      
+
       state = state.copyWith(
         emotion: selectedEmotion,
         dialogue: sherpiResponse.message,
@@ -405,14 +372,14 @@ void initializeSherpi() {
         currentContext: context,
         metadata: enhancedMetadata,
       );
-      
+
       // 디버그 로그
       if (shouldShowNotification) {
-      } else {
-      }
-      
-      _logInteraction(context, selectedEmotion, sherpiResponse.message, enhancedMetadata);
-      
+      } else {}
+
+      _logInteraction(
+          context, selectedEmotion, sherpiResponse.message, enhancedMetadata);
+
       // 메시지 히스토리에 추가
       _addToHistory(
         emotion: selectedEmotion,
@@ -420,19 +387,18 @@ void initializeSherpi() {
         context: context,
         metadata: enhancedMetadata,
       );
-      
+
       // 🤝 상호작용 기록 및 친밀도 업데이트
       _recordInteraction(context, userContext, gameContext);
-      
+
       // 💖 Sherpi 응답 기록 (감정 동기화를 위해)
       _recordSherpiResponse(selectedEmotion);
-      
+
       // 💕 감정 동기화 점수를 관계 시스템에 업데이트
       if (_isActivityCompletionContext(context)) {
         _updateRelationshipEmotionalSync();
       }
-      
-      
+
       if (!forceShow) {
         _hideTimer = Timer(duration, () {
           if (state.currentContext == context && state.isVisible) {
@@ -440,10 +406,9 @@ void initializeSherpi() {
           }
         });
       }
-      
+
       // 🚨 락 해제: 메시지 표시 완료 후
       _isShowingMessage = false;
-      
     } catch (e) {
       _isShowingMessage = false; // 🚨 예외 발생 시에도 락 해제
       _showFallbackMessage(context, emotion);
@@ -462,9 +427,9 @@ void initializeSherpi() {
     if (_isShowingMessage && !forceShow) {
       return;
     }
-    
+
     _isShowingMessage = true; // 락 설정
-    
+
     // 🚨 강화된 중복 메시지 방지: forceShow가 false면 중복 검사 적용
     if (!forceShow && _isDuplicateMessage(context, customDialogue)) {
       _isShowingMessage = false; // 락 해제
@@ -472,16 +437,17 @@ void initializeSherpi() {
     }
 
     _hideTimer?.cancel();
-    final selectedEmotion = emotion ?? SherpiEmotionMapper.getEmotionForContext(context);
-    
+    final selectedEmotion =
+        emotion ?? SherpiEmotionMapper.getEmotionForContext(context);
+
     // 💬 customDialogue를 그대로 사용 (정적 메시지 모드)
     // AI나 조건부 메시지 선택 없이 전달받은 customDialogue를 그대로 사용
     String finalMessage = customDialogue;
     String responseSource = 'instant';
-    
+
     // 메시지 표시 (중복 방지 통과한 경우만)
     final isNewMessage = state.dialogue != finalMessage;
-    
+
     // 메타데이터 생성
     final metadata = {
       'context': context.name,
@@ -490,7 +456,7 @@ void initializeSherpi() {
       'is_fast_response': true,
       'original_message': customDialogue, // 원본 메시지 보존
     };
-    
+
     state = state.copyWith(
       emotion: selectedEmotion,
       dialogue: finalMessage,
@@ -499,10 +465,9 @@ void initializeSherpi() {
       currentContext: context,
       metadata: metadata,
     );
-    
+
     // 디버그 로그
     if (isNewMessage) {
-      
       // 🔔 메시지 히스토리에 추가 (새 메시지일 때만)
       _addToHistory(
         emotion: selectedEmotion,
@@ -510,11 +475,10 @@ void initializeSherpi() {
         context: context,
         metadata: metadata,
       );
-    } else {
-    }
-    
+    } else {}
+
     _hideTimer = Timer(duration, hideMessage);
-    
+
     // 🚨 락 해제: 즉시 메시지 표시 완료 후
     _isShowingMessage = false;
   }
@@ -528,7 +492,7 @@ void initializeSherpi() {
   void markMessageAsRead() {
     _hideTimer?.cancel();
     state = state.copyWith(isVisible: false);
-    
+
     // 현재 메시지를 히스토리에 읽음 상태로 기록
     if (state.dialogue.isNotEmpty) {
       _addToHistory(
@@ -580,9 +544,7 @@ void initializeSherpi() {
     );
   }
 
-  void switchDialogueSource(SherpiDialogueSource newSource) {
-
-  }
+  void switchDialogueSource(SherpiDialogueSource newSource) {}
 
   Map<String, dynamic> exportState() {
     return state.toJson();
@@ -600,7 +562,8 @@ void initializeSherpi() {
     };
 
     final dialogue = fallbackDialogues[context] ?? '안녕하세요!';
-    final selectedEmotion = emotion ?? SherpiEmotion.cheering; // ✅ 기본값을 cheering으로
+    final selectedEmotion =
+        emotion ?? SherpiEmotion.cheering; // ✅ 기본값을 cheering으로
 
     state = state.copyWith(
       emotion: selectedEmotion,
@@ -635,13 +598,11 @@ void initializeSherpi() {
   }
 
   void _logInteraction(
-      SherpiContext context,
-      SherpiEmotion emotion,
-      String dialogue,
-      Map<String, dynamic> metadata,
-      ) {
-
-  }
+    SherpiContext context,
+    SherpiEmotion emotion,
+    String dialogue,
+    Map<String, dynamic> metadata,
+  ) {}
 
   /// 🎭 활동 완료 컨텍스트인지 확인
   bool _isActivityCompletionContext(SherpiContext context) {
@@ -665,11 +626,11 @@ void initializeSherpi() {
   ) async {
     try {
       final emotionNotifier = _ref.read(emotionAnalysisProvider.notifier);
-      
+
       // 활동 타입 결정
       String activityType;
       bool isSuccess = true; // 기본값은 성공
-      
+
       switch (context) {
         case SherpiContext.exerciseComplete:
           activityType = 'exercise';
@@ -695,10 +656,10 @@ void initializeSherpi() {
         default:
           activityType = 'general';
       }
-      
+
       // 실패 여부 확인 (userContext에서)
       isSuccess = userContext['isSuccess'] as bool? ?? true;
-      
+
       // 연속 일수 추출
       int consecutiveDays = 0;
       switch (activityType) {
@@ -711,7 +672,7 @@ void initializeSherpi() {
         default:
           consecutiveDays = userContext['연속_접속일'] as int? ?? 0;
       }
-      
+
       // 감정 분석 실행
       final analysisResult = await emotionNotifier.analyzeUserEmotion(
         activityType: activityType,
@@ -719,13 +680,11 @@ void initializeSherpi() {
         consecutiveDays: consecutiveDays,
         performanceData: userContext,
       );
-      
+
       // 추천 감정 반환
       final recommendedEmotion = emotionNotifier.getRecommendedSherpiEmotion();
-      
-      
+
       return recommendedEmotion;
-      
     } catch (e) {
       // 실패 시 기본 감정 반환
       return SherpiEmotionMapper.getEmotionForContext(context);
@@ -737,8 +696,7 @@ void initializeSherpi() {
     try {
       final emotionNotifier = _ref.read(emotionAnalysisProvider.notifier);
       emotionNotifier.recordSherpiResponse(emotion);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /// 💕 관계 시스템에 감정 동기화 점수 업데이트
@@ -746,15 +704,14 @@ void initializeSherpi() {
     try {
       final emotionState = _ref.read(emotionAnalysisProvider);
       final relationshipNotifier = _ref.read(relationshipProvider.notifier);
-      
+
       // 감정 분석 시스템에서 계산된 동기화 점수를 관계 시스템에 적용
       final syncScore = emotionState.emotionalSyncScore;
-      
+
       if (syncScore > 0) {
         relationshipNotifier.updateEmotionalSync(syncScore);
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /// 📝 메시지 히스토리에 추가
@@ -772,25 +729,25 @@ void initializeSherpi() {
       timestamp: DateTime.now(),
       metadata: metadata,
     );
-    
+
     _messageHistory.insert(0, history); // 최신 메시지를 앞에 추가
-    
+
     // 최대 개수 유지
     if (_messageHistory.length > _maxHistorySize) {
       _messageHistory.removeLast();
     }
   }
-  
+
   /// 📚 메시지 히스토리 가져오기
   List<SherpiMessageHistory> getMessageHistory() {
     return List.unmodifiable(_messageHistory);
   }
-  
+
   /// 🧹 메시지 히스토리 초기화
   void clearMessageHistory() {
     _messageHistory.clear();
   }
-  
+
   /// 🎨 Phase 2: 개인화 설정 업데이트
   /// 사용자가 설정을 변경했을 때 호출되는 메서드
   void updatePersonalizationSettings(PersonalizationSettings newSettings) {
@@ -798,40 +755,38 @@ void initializeSherpi() {
       // 관계 프로바이더에 새로운 개인화 설정 적용
       final relationshipNotifier = _ref.read(relationshipProvider.notifier);
       final currentRelationship = _ref.read(relationshipProvider);
-      
+
       final updatedRelationship = currentRelationship.copyWith(
         personalizationSettings: newSettings,
       );
-      
+
       // 직접 상태 업데이트 (관계 프로바이더에 업데이트 메서드가 있다면 그것을 사용)
       relationshipNotifier.updateRelationship(updatedRelationship);
-      
+
       // SmartSherpiManager 비활성화 - 정적 메시지만 사용
       // _smartManager.setPersonalizationSettings(newSettings); // DISABLED
-      
-      
+
       // 설정 변경을 알리는 메시지 표시 (선택사항)
       showInstantMessage(
         context: SherpiContext.general,
-        customDialogue: '${newSettings.nickname}가 ${newSettings.personalityType.displayName} 성격으로 변경되었어요! ✨',
+        customDialogue:
+            '${newSettings.nickname}가 ${newSettings.personalityType.displayName} 성격으로 변경되었어요! ✨',
         emotion: SherpiEmotion.cheering,
         forceShow: true,
       );
-      
-    } catch (e) {
-    }
+    } catch (e) {}
   }
-  
+
   /// 🚨 중복 메시지 감지 (3초 이내 같은 컨텍스트/메시지는 중복으로 간주)
   bool _isDuplicateMessage(SherpiContext context, String? dialogue) {
     final now = DateTime.now();
-    
+
     // 첫 번째 메시지인 경우
     if (_lastMessageTime == null) {
       _updateLastMessage(now, context, dialogue);
       return false;
     }
-    
+
     // 3초 이내에 같은 컨텍스트의 메시지가 온 경우 (탭 전환 시 중복 방지를 위해 시간 증가)
     final timeDiff = now.difference(_lastMessageTime!);
     if (timeDiff.inSeconds < 3 && _lastContext == context) {
@@ -844,24 +799,24 @@ void initializeSherpi() {
         return true;
       }
     }
-    
+
     // 중복이 아닌 경우 최근 메시지 정보 업데이트
     _updateLastMessage(now, context, dialogue);
     return false;
   }
-  
+
   /// 최근 메시지 정보 업데이트
-  void _updateLastMessage(DateTime time, SherpiContext context, String? dialogue) {
+  void _updateLastMessage(
+      DateTime time, SherpiContext context, String? dialogue) {
     _lastMessageTime = time;
     _lastContext = context;
     _lastDialogue = dialogue;
   }
-  
-  
 }
 
 // ✅ 초기화 기능이 추가된 Provider
-final sherpiProvider = StateNotifierProvider<SherpiNotifier, SherpiState>((ref) {
+final sherpiProvider =
+    StateNotifierProvider<SherpiNotifier, SherpiState>((ref) {
   final notifier = SherpiNotifier(ref);
   // 앱 시작 시 자동으로 cheering 상태로 초기화
   /*
@@ -894,10 +849,10 @@ final sherpiContextProvider = Provider<SherpiContext?>((ref) {
 
 extension SherpiProviderExtension on WidgetRef {
   Future<void> showSherpi(
-      SherpiContext context, {
-        SherpiEmotion? emotion,
-        Duration? duration,
-      }) async {
+    SherpiContext context, {
+    SherpiEmotion? emotion,
+    Duration? duration,
+  }) async {
     await read(sherpiProvider.notifier).showMessage(
       context: context,
       emotion: emotion,
@@ -907,11 +862,11 @@ extension SherpiProviderExtension on WidgetRef {
   }
 
   Future<void> showSherpiWithContext(
-      SherpiContext context,
-      Map<String, dynamic> userContext, {
-        SherpiEmotion? emotion,
-        Duration? duration,
-      }) async {
+    SherpiContext context,
+    Map<String, dynamic> userContext, {
+    SherpiEmotion? emotion,
+    Duration? duration,
+  }) async {
     await read(sherpiProvider.notifier).showMessage(
       context: context,
       emotion: emotion,
@@ -922,11 +877,11 @@ extension SherpiProviderExtension on WidgetRef {
   }
 
   Future<void> showSherpiWithGame(
-      SherpiContext context,
-      Map<String, dynamic> gameContext, {
-        SherpiEmotion? emotion,
-        Duration? duration,
-      }) async {
+    SherpiContext context,
+    Map<String, dynamic> gameContext, {
+    SherpiEmotion? emotion,
+    Duration? duration,
+  }) async {
     await read(sherpiProvider.notifier).showMessage(
       context: context,
       emotion: emotion,
@@ -937,11 +892,11 @@ extension SherpiProviderExtension on WidgetRef {
   }
 
   void showCustomSherpi(
-      SherpiContext context,
-      String dialogue, {
-        SherpiEmotion? emotion,
-        Duration? duration,
-      }) {
+    SherpiContext context,
+    String dialogue, {
+    SherpiEmotion? emotion,
+    Duration? duration,
+  }) {
     read(sherpiProvider.notifier).showInstantMessage(
       context: context,
       customDialogue: dialogue,
@@ -958,12 +913,12 @@ extension SherpiProviderExtension on WidgetRef {
   void changeSherpiEmotion(SherpiEmotion emotion) {
     read(sherpiProvider.notifier).changeEmotion(emotion);
   }
-  
+
   /// 🎨 Phase 2: 개인화 설정 업데이트 확장 메서드
   void updateSherpiPersonalization(PersonalizationSettings settings) {
     read(sherpiProvider.notifier).updatePersonalizationSettings(settings);
   }
-  
+
   /// 🎨 현재 개인화 설정 가져오기
   PersonalizationSettings getSherpiPersonalizationSettings() {
     try {
@@ -973,5 +928,4 @@ extension SherpiProviderExtension on WidgetRef {
       return const PersonalizationSettings(); // 기본값 반환
     }
   }
-  
 }

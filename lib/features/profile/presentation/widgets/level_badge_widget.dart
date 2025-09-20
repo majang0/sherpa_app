@@ -22,7 +22,7 @@ class LevelBadgeWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userTitle = ref.watch(globalUserTitleProvider);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(

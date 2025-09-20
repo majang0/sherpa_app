@@ -21,10 +21,12 @@ class MeetingApplicationScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<MeetingApplicationScreen> createState() => _MeetingApplicationScreenState();
+  ConsumerState<MeetingApplicationScreen> createState() =>
+      _MeetingApplicationScreenState();
 }
 
-class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScreen>
+class _MeetingApplicationScreenState
+    extends ConsumerState<MeetingApplicationScreen>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -111,27 +113,27 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                     children: [
                       // 🎨 헤더 메시지
                       _buildHeaderMessage(),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // 📋 모임 요약 카드
                       _buildMeetingSummaryCard(),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // 💰 결제 정보 카드
                       _buildPaymentInfoCard(currentPoints),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // 📊 예상 보상 카드
                       _buildRewardPreviewCard(),
-                      
+
                       const SizedBox(height: 20),
-                      
+
                       // ✅ 동의 체크박스
                       _buildAgreementSection(),
-                      
+
                       const SizedBox(height: 100), // 하단 버튼 공간
                     ],
                   ),
@@ -141,7 +143,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
           );
         },
       ),
-      
+
       // 🎯 하단 확정 버튼
       bottomNavigationBar: _buildConfirmationBar(currentPoints),
     );
@@ -187,9 +189,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
               ),
             ),
           ),
-          
           const SizedBox(width: 16),
-          
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,9 +245,9 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
               color: ModernColors.textPrimary,
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // 제목
           Text(
             widget.meeting.title,
@@ -257,9 +257,9 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
               color: ModernColors.textPrimary,
             ),
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // 기본 정보들
           _buildSummaryRow(
             icon: Icons.event_rounded,
@@ -276,7 +276,8 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
           _buildSummaryRow(
             icon: Icons.people_rounded,
             label: '참가자',
-            value: '${widget.meeting.currentParticipants + 1}/${widget.meeting.maxParticipants}명 (나 포함)',
+            value:
+                '${widget.meeting.currentParticipants + 1}/${widget.meeting.maxParticipants}명 (나 포함)',
           ),
         ],
       ),
@@ -322,14 +323,20 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
   Widget _buildPaymentInfoCard(int currentPoints) {
     final fee = widget.meeting.participationFee;
     final hasEnough = currentPoints >= fee;
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: hasEnough
-              ? [ModernColors.success.withValues(alpha: 0.1), ModernColors.success.withValues(alpha: 0.05)]
-              : [ModernColors.warning.withValues(alpha: 0.1), ModernColors.warning.withValues(alpha: 0.05)],
+              ? [
+                  ModernColors.success.withValues(alpha: 0.1),
+                  ModernColors.success.withValues(alpha: 0.05)
+                ]
+              : [
+                  ModernColors.warning.withValues(alpha: 0.1),
+                  ModernColors.warning.withValues(alpha: 0.05)
+                ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -362,9 +369,9 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // 결제 상세
           Container(
             padding: const EdgeInsets.all(16),
@@ -394,9 +401,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                     ),
                   ],
                 ),
-                
                 const Divider(height: 20),
-                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -417,9 +422,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                     ),
                   ],
                 ),
-                
                 const Divider(height: 20),
-                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -436,7 +439,9 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
                       style: GoogleFonts.notoSans(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
-                        color: hasEnough ? ModernColors.success : ModernColors.warning,
+                        color: hasEnough
+                            ? ModernColors.success
+                            : ModernColors.warning,
                       ),
                     ),
                   ],
@@ -444,7 +449,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
               ],
             ),
           ),
-          
+
           if (!hasEnough) ...[
             const SizedBox(height: 12),
             Container(
@@ -485,7 +490,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
     final expReward = widget.meeting.experienceReward;
     final pointReward = widget.meeting.participationReward;
     final statRewards = widget.meeting.statRewards;
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -524,9 +529,9 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // 보상 그리드
           Row(
             children: [
@@ -549,7 +554,7 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
               ),
             ],
           ),
-          
+
           if (statRewards.isNotEmpty) ...[
             const SizedBox(height: 12),
             Text(
@@ -564,21 +569,24 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
             Wrap(
               spacing: 8,
               runSpacing: 4,
-              children: statRewards.entries.map((entry) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: ModernColors.success.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  '${_getStatDisplayName(entry.key)} +${entry.value.toStringAsFixed(1)}',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: ModernColors.success,
-                  ),
-                ),
-              )).toList(),
+              children: statRewards.entries
+                  .map((entry) => Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: ModernColors.success.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '${_getStatDisplayName(entry.key)} +${entry.value.toStringAsFixed(1)}',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: ModernColors.success,
+                          ),
+                        ),
+                      ))
+                  .toList(),
             ),
           ],
         ],
@@ -624,12 +632,18 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
 
   String _getStatDisplayName(String statKey) {
     switch (statKey) {
-      case 'stamina': return '체력';
-      case 'knowledge': return '지식';
-      case 'technique': return '기술';
-      case 'sociality': return '사교성';
-      case 'willpower': return '의지력';
-      default: return statKey;
+      case 'stamina':
+        return '체력';
+      case 'knowledge':
+        return '지식';
+      case 'technique':
+        return '기술';
+      case 'sociality':
+        return '사교성';
+      case 'willpower':
+        return '의지력';
+      default:
+        return statKey;
     }
   }
 
@@ -657,7 +671,6 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
             },
             activeColor: ModernColors.primary,
           ),
-          
           Expanded(
             child: GestureDetector(
               onTap: () {
@@ -685,10 +698,10 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
 
   /// 🎯 하단 확정 바
   Widget _buildConfirmationBar(int currentPoints) {
-    final canProceed = _agreementChecked && 
-                      currentPoints >= widget.meeting.participationFee && 
-                      !_isProcessing;
-    
+    final canProceed = _agreementChecked &&
+        currentPoints >= widget.meeting.participationFee &&
+        !_isProcessing;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -707,8 +720,8 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
           child: ElevatedButton(
             onPressed: canProceed ? _handleConfirmParticipation : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor: canProceed 
-                  ? widget.meeting.category.color 
+              backgroundColor: canProceed
+                  ? widget.meeting.category.color
                   : Colors.grey.shade300,
               foregroundColor: Colors.white,
               elevation: 0,
@@ -756,8 +769,10 @@ class _MeetingApplicationScreenState extends ConsumerState<MeetingApplicationScr
 
     try {
       // 글로벌 시스템을 통한 실제 모임 참여 처리
-      final success = await ref.read(globalMeetingProvider.notifier).joinMeeting(widget.meeting);
-      
+      final success = await ref
+          .read(globalMeetingProvider.notifier)
+          .joinMeeting(widget.meeting);
+
       if (success) {
         // 성공 시 완료 페이지로 이동
         if (mounted) {

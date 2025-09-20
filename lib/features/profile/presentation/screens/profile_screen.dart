@@ -41,18 +41,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   @override
   void initState() {
     super.initState();
-    
+
     // 애니메이션 초기화
     _fadeAnimationController = AnimationController(
       duration: Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _slideAnimationController = AnimationController(
       duration: Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -60,7 +60,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       parent: _fadeAnimationController,
       curve: Curves.easeInOut,
     ));
-    
+
     _slideAnimation = Tween<Offset>(
       begin: Offset(0, 0.1),
       end: Offset.zero,
@@ -68,11 +68,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       parent: _slideAnimationController,
       curve: Curves.easeOutCubic,
     ));
-    
+
     // 애니메이션 시작
     _fadeAnimationController.forward();
     _slideAnimationController.forward();
-    
+
     // 🚫 셰르피 환영 메시지 제거 - 단순 화면 진입은 조용히 처리
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   ref.read(sherpiProvider.notifier).showMessage(
@@ -96,7 +96,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
     final pointData = ref.watch(globalPointProvider);
     final userTitle = ref.watch(globalUserTitleProvider);
     final userProgress = ref.watch(userLevelProgressProvider);
-    
+
     // ✅ 실제 챌린지 데이터 가져오기
     final activeChallenges = ref.watch(globalMyJoinedChallengesProvider);
     final popularChallenges = ref.watch(globalPopularChallengesProvider);
@@ -115,7 +115,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               SliverToBoxAdapter(
                 child: LiquidGlassProfileHeader(),
               ),
-              
+
               // 2. 성장 요약 카드 (SliverToBoxAdapter)
               SliverToBoxAdapter(
                 child: AnimatedContainer(
@@ -123,7 +123,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                   child: GrowthSummaryCard(),
                 ),
               ),
-              
+
               // 3. 대표 기록 대시보드 (SliverToBoxAdapter)
               SliverToBoxAdapter(
                 child: AnimatedContainer(
@@ -131,22 +131,24 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                   child: RepresentativeDashboard(),
                 ),
               ),
-              
+
               // 4. 참여 중인 챌린지 헤더 (SliverPersistentHeader)
               SliverPersistentHeader(
                 pinned: false,
                 delegate: _ChallengeSectionHeaderDelegate(
-                  participatingCount: _getParticipatingChallengesCount(activeChallenges, popularChallenges),
+                  participatingCount: _getParticipatingChallengesCount(
+                      activeChallenges, popularChallenges),
                 ),
               ),
-              
+
               // 5. 참여 중인 챌린지 리스트 (SliverList)
               SliverPadding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     // ✅ 실제 챌린지 데이터 기반의 동적 챌린지
-                    ..._buildRealChallenges(user, activeChallenges, popularChallenges),
+                    ..._buildRealChallenges(
+                        user, activeChallenges, popularChallenges),
                   ]),
                 ),
               ),
@@ -158,9 +160,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   }
 
   // ✅ 참여 중인 챌린지 수 계산
-  int _getParticipatingChallengesCount(List<AvailableChallenge> activeChallenges, List<AvailableChallenge> popularChallenges) {
+  int _getParticipatingChallengesCount(
+      List<AvailableChallenge> activeChallenges,
+      List<AvailableChallenge> popularChallenges) {
     // 실제로는 사용자가 참여한 챌린지를 추적해야 하지만, 현재는 활성 챌린지 중 일부를 사용
-    return (activeChallenges.length + popularChallenges.take(2).length).clamp(0, 5);
+    return (activeChallenges.length + popularChallenges.take(2).length)
+        .clamp(0, 5);
   }
 }
 
@@ -177,7 +182,8 @@ class _ChallengeSectionHeaderDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => 60;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
@@ -221,25 +227,32 @@ class _ChallengeSectionHeaderDelegate extends SliverPersistentHeaderDelegate {
 }
 
 // ✅ 실제 챌린지 데이터에 기반한 동적 챌린지 리스트 생성
-List<Widget> _buildRealChallenges(GlobalUser user, List<AvailableChallenge> activeChallenges, List<AvailableChallenge> popularChallenges) {
+List<Widget> _buildRealChallenges(
+    GlobalUser user,
+    List<AvailableChallenge> activeChallenges,
+    List<AvailableChallenge> popularChallenges) {
   final challenges = <Widget>[];
-  
+
   // 1. 활성 챌린지 중에서 사용자가 "참여했을 법한" 챌린지들
   if (activeChallenges.isNotEmpty) {
     final userActiveChallenge = activeChallenges.first;
-    
+
     // 사용자 데이터 기반으로 진행률 계산
     double progress = 0.0;
     int daysLeft = userActiveChallenge.durationDays;
-    
+
     if (userActiveChallenge.categoryType == ChallengeCategory.fitness) {
       // 운동 챌린지는 오늘 걸음수 기반
       progress = (user.dailyRecords.todaySteps / 6000).clamp(0.0, 1.0);
-      daysLeft = (userActiveChallenge.durationDays * (1.0 - progress)).round().clamp(1, userActiveChallenge.durationDays);
+      daysLeft = (userActiveChallenge.durationDays * (1.0 - progress))
+          .round()
+          .clamp(1, userActiveChallenge.durationDays);
     } else if (userActiveChallenge.categoryType == ChallengeCategory.study) {
       // 공부 챌린지는 독서 기록 기반
       progress = (user.dailyRecords.readingLogs.length / 15).clamp(0.0, 1.0);
-      daysLeft = (userActiveChallenge.durationDays * (1.0 - progress)).round().clamp(1, userActiveChallenge.durationDays);
+      daysLeft = (userActiveChallenge.durationDays * (1.0 - progress))
+          .round()
+          .clamp(1, userActiveChallenge.durationDays);
     } else if (userActiveChallenge.categoryType == ChallengeCategory.habit) {
       // 습관 챌린지는 연속 접속일 기반
       progress = (user.dailyRecords.consecutiveDays / 21).clamp(0.0, 1.0);
@@ -254,18 +267,18 @@ List<Widget> _buildRealChallenges(GlobalUser user, List<AvailableChallenge> acti
       color: userActiveChallenge.categoryType.color,
     ));
   }
-  
+
   // 2. 인기 챌린지 중에서 2개 추가 (다른 카테고리로)
   final usedCategories = activeChallenges.map((c) => c.categoryType).toSet();
   final otherChallenges = popularChallenges
       .where((c) => !usedCategories.contains(c.categoryType))
       .take(2)
       .toList();
-  
+
   for (final challenge in otherChallenges) {
     double progress = 0.0;
     int daysLeft = challenge.durationDays;
-    
+
     // 각 챌린지별로 사용자 데이터에 맞는 진행률 시뮬레이션
     switch (challenge.categoryType) {
       case ChallengeCategory.fitness:
@@ -283,8 +296,10 @@ List<Widget> _buildRealChallenges(GlobalUser user, List<AvailableChallenge> acti
       default:
         progress = 0.3; // 기본 진행률
     }
-    
-    daysLeft = (challenge.durationDays * (1.0 - progress)).round().clamp(1, challenge.durationDays);
+
+    daysLeft = (challenge.durationDays * (1.0 - progress))
+        .round()
+        .clamp(1, challenge.durationDays);
 
     challenges.add(ChallengeListItem(
       title: challenge.title,
@@ -294,7 +309,7 @@ List<Widget> _buildRealChallenges(GlobalUser user, List<AvailableChallenge> acti
       color: challenge.categoryType.color,
     ));
   }
-  
+
   // 3. 만약 챌린지가 부족하면 사용자 데이터 기반 기본 챌린지 추가
   if (challenges.length < 3) {
     // 걸음수 기반 챌린지
@@ -306,9 +321,9 @@ List<Widget> _buildRealChallenges(GlobalUser user, List<AvailableChallenge> acti
       color: Color(0xFF10B981),
     ));
   }
-  
+
   if (challenges.length < 3 && user.dailyRecords.readingLogs.isNotEmpty) {
-    // 독서 기반 챌린지  
+    // 독서 기반 챌린지
     challenges.add(ChallengeListItem(
       title: '주 3회 독서 기록',
       category: '독서',
@@ -317,9 +332,9 @@ List<Widget> _buildRealChallenges(GlobalUser user, List<AvailableChallenge> acti
       color: Color(0xFF8B5CF6),
     ));
   }
-  
+
   // 4. 하단 여백 추가
   challenges.add(SizedBox(height: 40));
-  
+
   return challenges;
 }

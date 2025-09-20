@@ -10,7 +10,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/constants/sherpi_emotions.dart';
 
 /// 💬 채팅 메시지 말풍선 위젯
-/// 
+///
 /// 사용자와 셰르피의 메시지를 구분하여 표시하는 말풍선 위젯
 class ChatMessageBubble extends StatelessWidget {
   final ChatMessage message;
@@ -34,8 +34,8 @@ class ChatMessageBubble extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: message.isUserMessage 
-            ? MainAxisAlignment.end 
+        mainAxisAlignment: message.isUserMessage
+            ? MainAxisAlignment.end
             : MainAxisAlignment.start,
         children: [
           // 셰르피 아바타 (왼쪽)
@@ -43,7 +43,7 @@ class ChatMessageBubble extends StatelessWidget {
             _buildSherpiAvatar(),
             const SizedBox(width: 8),
           ],
-          
+
           // 메시지 말풍선
           Flexible(
             child: GestureDetector(
@@ -60,7 +60,7 @@ class ChatMessageBubble extends StatelessWidget {
                   children: [
                     // 메시지 말풍선
                     _buildMessageBubble(context),
-                    
+
                     // 타임스탬프
                     if (showTimestamp) ...[
                       const SizedBox(height: 4),
@@ -71,8 +71,8 @@ class ChatMessageBubble extends StatelessWidget {
               ),
             ),
           ),
-          
-          // 사용자 아바타 (오른쪽)  
+
+          // 사용자 아바타 (오른쪽)
           if (message.isUserMessage && showAvatar) ...[
             const SizedBox(width: 8),
             _buildUserAvatar(),
@@ -80,15 +80,15 @@ class ChatMessageBubble extends StatelessWidget {
         ],
       ),
     )
-    .animate()
-    .slideY(begin: 0.5, end: 0, duration: 300.ms)
-    .fade(duration: 300.ms);
+        .animate()
+        .slideY(begin: 0.5, end: 0, duration: 300.ms)
+        .fade(duration: 300.ms);
   }
 
   /// 🎭 셰르피 아바타
   Widget _buildSherpiAvatar() {
     final emotion = message.emotion ?? SherpiEmotion.happy;
-    
+
     return Container(
       width: 36,
       height: 36,
@@ -163,10 +163,12 @@ class ChatMessageBubble extends StatelessWidget {
       decoration: BoxDecoration(
         color: _getBubbleColor(isUser, isSpecial),
         borderRadius: _getBorderRadius(isUser),
-        border: isSpecial ? Border.all(
-          color: _getSpecialBorderColor(),
-          width: 1.5,
-        ) : null,
+        border: isSpecial
+            ? Border.all(
+                color: _getSpecialBorderColor(),
+                width: 1.5,
+              )
+            : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -200,7 +202,7 @@ class ChatMessageBubble extends StatelessWidget {
             ),
             const SizedBox(height: 8),
           ],
-          
+
           // 메시지 내용
           if (isTyping)
             _buildTypingIndicator()
@@ -255,14 +257,12 @@ class ChatMessageBubble extends StatelessWidget {
               color: Colors.grey.shade400,
               shape: BoxShape.circle,
             ),
-          )
-          .animate(onPlay: (controller) => controller.repeat())
-          .scale(
-            begin: const Offset(0.8, 0.8),
-            end: const Offset(1.2, 1.2),
-            duration: 600.ms,
-            delay: (i * 200).ms,
-          ),
+          ).animate(onPlay: (controller) => controller.repeat()).scale(
+                begin: const Offset(0.8, 0.8),
+                end: const Offset(1.2, 1.2),
+                duration: 600.ms,
+                delay: (i * 200).ms,
+              ),
           if (i < 2) const SizedBox(width: 4),
         ],
       ],
@@ -285,11 +285,11 @@ class ChatMessageBubble extends StatelessWidget {
     if (isUser) {
       return AppColors.primary;
     }
-    
+
     if (isSpecial) {
       return Colors.orange.shade50;
     }
-    
+
     return Colors.grey.shade100;
   }
 

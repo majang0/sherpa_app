@@ -16,7 +16,8 @@ import '../../models/available_challenge_model.dart';
 /// 모임 탭과 통일된 디자인 언어로 설계된 챌린지 화면
 class ChallengeIndexScreen extends ConsumerStatefulWidget {
   @override
-  ConsumerState<ChallengeIndexScreen> createState() => _ChallengeIndexScreenState();
+  ConsumerState<ChallengeIndexScreen> createState() =>
+      _ChallengeIndexScreenState();
 }
 
 class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
@@ -26,7 +27,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
   late AnimationController _slideController;
   late AnimationController _willpowerPulseController;
   late AnimationController _floatController;
-  
+
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _willpowerPulseAnimation;
@@ -36,34 +37,34 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
   void initState() {
     super.initState();
     _scopeController = TabController(length: 2, vsync: this);
-    
+
     // 애니메이션 컨트롤러 초기화
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _willpowerPulseController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    
+
     _floatController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     );
-    
+
     // 애니메이션 설정
     _fadeAnimation = CurvedAnimation(
       parent: _fadeController,
       curve: Curves.easeOut,
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.15),
       end: Offset.zero,
@@ -71,7 +72,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       parent: _slideController,
       curve: Curves.easeOutQuart,
     ));
-    
+
     _willpowerPulseAnimation = Tween<double>(
       begin: 1.0,
       end: 1.05,
@@ -79,7 +80,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       parent: _willpowerPulseController,
       curve: Curves.easeInOut,
     ));
-    
+
     _floatAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -87,7 +88,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       parent: _floatController,
       curve: Curves.easeInOut,
     ));
-    
+
     // 애니메이션 시작
     _fadeController.forward();
     _slideController.forward();
@@ -160,7 +161,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
   }
 
   /// 🏆 챌린지 특화 헤더 디자인
-  Widget _buildChallengeHeader(GlobalUser user, dynamic userTitle, UserLevelProgress levelProgress) {
+  Widget _buildChallengeHeader(
+      GlobalUser user, dynamic userTitle, UserLevelProgress levelProgress) {
     final challengeStats = ref.watch(challengeStatsProvider);
 
     return FadeTransition(
@@ -211,7 +213,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildMainContent(user, userTitle, levelProgress, challengeStats),
+                  _buildMainContent(
+                      user, userTitle, levelProgress, challengeStats),
                   _buildDivider(),
                   _buildChallengeStatsSection(user, challengeStats),
                 ],
@@ -223,7 +226,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
     );
   }
 
-  Widget _buildMainContent(GlobalUser user, dynamic userTitle, UserLevelProgress levelProgress, ChallengeStats challengeStats) {
+  Widget _buildMainContent(GlobalUser user, dynamic userTitle,
+      UserLevelProgress levelProgress, ChallengeStats challengeStats) {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Row(
@@ -309,7 +313,9 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: ModernColors.warning.withOpacity(0.8).withOpacity(0.1),
+                              color: ModernColors.warning
+                                  .withOpacity(0.8)
+                                  .withOpacity(0.1),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: ModernColors.warning.withOpacity(0.1),
@@ -353,7 +359,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       ),
     );
   }
-  
+
   Widget _buildExperienceProgress(UserLevelProgress levelProgress) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -457,7 +463,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       ],
     );
   }
-  
+
   Widget _buildChallengeGuideCard(double willpower) {
     return AnimatedBuilder(
       animation: _floatAnimation,
@@ -465,10 +471,10 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
         return GestureDetector(
           onTap: () {
             ref.read(sherpiProvider.notifier).showInstantMessage(
-              context: SherpiContext.welcome,
-              customDialogue: '챌린지에 도전하여 의지력을 높여보세요! 🔥',
-              emotion: SherpiEmotion.cheering,
-            );
+                  context: SherpiContext.welcome,
+                  customDialogue: '챌린지에 도전하여 의지력을 높여보세요! 🔥',
+                  emotion: SherpiEmotion.cheering,
+                );
           },
           child: Container(
             width: 100,
@@ -493,7 +499,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               children: [
                 // 챌린지 아이콘
                 Transform.translate(
-                  offset: Offset(0, math.sin(_floatAnimation.value * math.pi * 2) * 2),
+                  offset: Offset(
+                      0, math.sin(_floatAnimation.value * math.pi * 2) * 2),
                   child: Container(
                     width: 60,
                     height: 60,
@@ -543,7 +550,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       },
     );
   }
-  
+
   Widget _buildDivider() {
     return Container(
       height: 1,
@@ -559,8 +566,9 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       ),
     );
   }
-  
-  Widget _buildChallengeStatsSection(GlobalUser user, ChallengeStats challengeStats) {
+
+  Widget _buildChallengeStatsSection(
+      GlobalUser user, ChallengeStats challengeStats) {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -617,7 +625,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       ),
     );
   }
-  
+
   Widget _buildChallengeStatItem({
     required IconData icon,
     required String value,
@@ -681,7 +689,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       ],
     );
   }
-  
+
   String _getChallengeMessage(double willpower) {
     if (willpower < 5) {
       return "도전\n시작하기!";
@@ -701,7 +709,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
     return Consumer(
       builder: (context, ref, child) {
         final challenges = ref.watch(globalAvailableChallengesProvider);
-        final filteredChallenges = isUniversityOnly 
+        final filteredChallenges = isUniversityOnly
             ? challenges.where((c) => c.scope == 'university').toList()
             : challenges.where((c) => c.scope != 'university').toList();
 
@@ -772,7 +780,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                     children: [
                       // 카테고리 태그
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
                           color: challenge.category.color.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -784,7 +793,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(challenge.category.emoji, style: const TextStyle(fontSize: 14)),
+                            Text(challenge.category.emoji,
+                                style: const TextStyle(fontSize: 14)),
                             const SizedBox(width: 4),
                             Text(
                               challenge.category.displayName,
@@ -800,7 +810,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                       const SizedBox(width: 8),
                       // 난이도 표시
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: ModernColors.borderLight,
                           borderRadius: BorderRadius.circular(8),
@@ -808,7 +819,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(challenge.difficulty.emoji, style: const TextStyle(fontSize: 12)),
+                            Text(challenge.difficulty.emoji,
+                                style: const TextStyle(fontSize: 12)),
                             const SizedBox(width: 4),
                             Text(
                               challenge.difficulty.displayName,
@@ -824,7 +836,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                       const Spacer(),
                       // 상태 뱃지
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
                           color: challenge.statusColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -881,7 +894,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                       // 참가자
                       _buildInfoChip(
                         icon: Icons.people,
-                        text: '${challenge.currentParticipants}/${challenge.maxParticipants}명',
+                        text:
+                            '${challenge.currentParticipants}/${challenge.maxParticipants}명',
                         color: ModernColors.textSecondary,
                       ),
                       const SizedBox(width: 12),
@@ -895,7 +909,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                       // 참여 버튼
                       if (challenge.canJoin)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
@@ -923,7 +938,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                         )
                       else
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           decoration: BoxDecoration(
                             color: ModernColors.borderLight,
                             borderRadius: BorderRadius.circular(12),
@@ -1097,10 +1113,13 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
             ),
             const SizedBox(height: 16),
             _buildDetailItem('기간', challenge.formattedDateRange),
-            _buildDetailItem('난이도', '${challenge.difficulty.emoji} ${challenge.difficulty.displayName}'),
-            _buildDetailItem('참가 수수료', '${challenge.participationFee.toInt()}P'),
+            _buildDetailItem('난이도',
+                '${challenge.difficulty.emoji} ${challenge.difficulty.displayName}'),
+            _buildDetailItem(
+                '참가 수수료', '${challenge.participationFee.toInt()}P'),
             _buildDetailItem('완주 보상', '${challenge.completionReward.toInt()}P'),
-            _buildDetailItem('경험치 보상', '+${challenge.experienceReward.toInt()} XP'),
+            _buildDetailItem(
+                '경험치 보상', '+${challenge.experienceReward.toInt()} XP'),
           ],
         ),
         actions: [
@@ -1116,28 +1135,37 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [ModernColors.warning, ModernColors.warning.withOpacity(0.8)],
+                colors: [
+                  ModernColors.warning,
+                  ModernColors.warning.withOpacity(0.8)
+                ],
               ),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: challenge.canJoin ? () async {
-                  Navigator.pop(context);
-                  final success = await ref.read(globalChallengeProvider.notifier).joinChallenge(challenge);
-                  if (success) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('🎉 ${challenge.title} 챌린지에 참여했습니다!'),
-                        backgroundColor: ModernColors.success,
-                      ),
-                    );
-                  }
-                } : null,
+                onTap: challenge.canJoin
+                    ? () async {
+                        Navigator.pop(context);
+                        final success = await ref
+                            .read(globalChallengeProvider.notifier)
+                            .joinChallenge(challenge);
+                        if (success) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content:
+                                  Text('🎉 ${challenge.title} 챌린지에 참여했습니다!'),
+                              backgroundColor: ModernColors.success,
+                            ),
+                          );
+                        }
+                      }
+                    : null,
                 borderRadius: BorderRadius.circular(12),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Text(
                     '도전하기',
                     style: GoogleFonts.notoSans(
@@ -1152,12 +1180,12 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
         ],
       ),
     );
-    
+
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: '${challenge.title} 챌린지에 관심이 있으시군요! 💪',
-      emotion: SherpiEmotion.thinking,
-    );
+          context: SherpiContext.encouragement,
+          customDialogue: '${challenge.title} 챌린지에 관심이 있으시군요! 💪',
+          emotion: SherpiEmotion.thinking,
+        );
   }
 
   Widget _buildDetailItem(String label, String value) {
@@ -1194,7 +1222,8 @@ class _ScopeSelectorDelegate extends SliverPersistentHeaderDelegate {
   _ScopeSelectorDelegate({required this.controller});
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: ModernColors.background,
       child: Container(
@@ -1280,7 +1309,8 @@ class _ScopeSelectorDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => 72.0;
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => false;
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
 }
 
 // 챌린지 트로피 패인터
@@ -1296,21 +1326,23 @@ class ChallengeTrophyPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final path = Path();
-    
+
     // 트로피 그리기
     // 왼쪽 트로피
     _drawTrophy(path, size.width * 0.2, size.height * 0.5, 20);
-    
+
     // 가운데 큰 트로피
     _drawTrophy(path, size.width * 0.5, size.height * 0.4, 25);
-    
+
     // 오른쪽 트로피
     _drawTrophy(path, size.width * 0.8, size.height * 0.45, 22);
-    
+
     // 배경 물결
     path.moveTo(0, size.height);
-    path.quadraticBezierTo(size.width * 0.25, size.height * 0.85, size.width * 0.5, size.height * 0.9);
-    path.quadraticBezierTo(size.width * 0.75, size.height * 0.95, size.width, size.height * 0.85);
+    path.quadraticBezierTo(size.width * 0.25, size.height * 0.85,
+        size.width * 0.5, size.height * 0.9);
+    path.quadraticBezierTo(
+        size.width * 0.75, size.height * 0.95, size.width, size.height * 0.85);
     path.lineTo(size.width, size.height);
     path.close();
 
@@ -1320,10 +1352,11 @@ class ChallengeTrophyPainter extends CustomPainter {
   void _drawTrophy(Path path, double centerX, double centerY, double size) {
     // 트로피 컵 부분
     path.addRRect(RRect.fromRectAndRadius(
-      Rect.fromCenter(center: Offset(centerX, centerY), width: size, height: size * 0.8),
+      Rect.fromCenter(
+          center: Offset(centerX, centerY), width: size, height: size * 0.8),
       const Radius.circular(4),
     ));
-    
+
     // 트로피 베이스
     path.addRect(Rect.fromCenter(
       center: Offset(centerX, centerY + size * 0.6),

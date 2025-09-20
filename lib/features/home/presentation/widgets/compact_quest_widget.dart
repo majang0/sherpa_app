@@ -26,19 +26,18 @@ class CompactQuestWidget extends ConsumerStatefulWidget {
 
 class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
     with SingleTickerProviderStateMixin {
-      
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -46,7 +45,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
       parent: _fadeController,
       curve: Curves.easeOut,
     ));
-    
+
     _fadeController.forward();
   }
 
@@ -60,7 +59,8 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
   List<QuestInstance> _getUncompletedQuests(List<QuestInstance> allQuests) {
     return allQuests
         .where((quest) =>
-            (quest.type == QuestTypeV2.daily || quest.type == QuestTypeV2.weekly) &&
+            (quest.type == QuestTypeV2.daily ||
+                quest.type == QuestTypeV2.weekly) &&
             quest.status == QuestStatus.inProgress)
         .toList()
       ..sort((a, b) => b.progressRatio.compareTo(a.progressRatio)); // 진행률 높은 순
@@ -107,7 +107,8 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
         decoration: BoxDecoration(
           color: ModernColors.surface,
           borderRadius: BorderRadius.circular(24),
-          boxShadow: ModernColors.softShadow(primaryColor: ModernColors.modernPrimary),
+          boxShadow:
+              ModernColors.softShadow(primaryColor: ModernColors.modernPrimary),
         ),
         child: questsAsync.when(
           data: (quests) => _buildContent(quests),
@@ -130,7 +131,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
       children: [
         // 헤더 섹션
         _buildHeader(sherpiEmotion, statusMessage),
-        
+
         // 콘텐츠 섹션
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -152,9 +153,9 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
           GestureDetector(
             onTap: () {
               ref.read(sherpiProvider.notifier).showMessage(
-                context: SherpiContext.questComplete,
-                emotion: emotion,
-              );
+                    context: SherpiContext.questComplete,
+                    emotion: emotion,
+                  );
               HapticFeedbackManager.lightImpact();
             },
             child: SizedBox(
@@ -172,7 +173,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
             ),
           ),
           const SizedBox(width: 4), // 6 - 2 = 4픽셀로 더 줄임
-          
+
           // 텍스트 섹션
           Expanded(
             child: Column(
@@ -200,7 +201,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
               ],
             ),
           ),
-          
+
           // 더보기 버튼
           GestureDetector(
             onTap: () {
@@ -239,7 +240,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
   Widget _buildQuestCard(QuestInstance quest) {
     final progress = quest.progressRatio;
     final progressPercent = (progress * 100).round();
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -275,7 +276,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // 퀘스트 정보
           Expanded(
             child: Column(
@@ -320,7 +321,8 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
                   child: LinearProgressIndicator(
                     value: progress,
                     backgroundColor: ModernColors.borderLight,
-                    valueColor: AlwaysStoppedAnimation<Color>(quest.difficultyColor),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(quest.difficultyColor),
                     minHeight: 4,
                   ),
                 ),

@@ -12,14 +12,15 @@ import 'reading_record_screen.dart';
 
 class ReadingDetailScreen extends ConsumerStatefulWidget {
   final ReadingLog readingLog;
-  
+
   const ReadingDetailScreen({
     Key? key,
     required this.readingLog,
   }) : super(key: key);
 
   @override
-  ConsumerState<ReadingDetailScreen> createState() => _ReadingDetailScreenState();
+  ConsumerState<ReadingDetailScreen> createState() =>
+      _ReadingDetailScreenState();
 }
 
 class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
@@ -30,27 +31,57 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
-  
+
   // 현재 표시되는 독서 기록 (수정 후 업데이트됨)
   late ReadingLog currentReadingLog;
 
   // 감정 데이터 매핑
   final Map<String, Map<String, dynamic>> _emotionData = {
-    'happy': {'emoji': '😊', 'label': '기뻤어요', 'color': Color(0xFF4ECDC4), 'gradient': [Color(0xFF4ECDC4), Color(0xFF44A08D)]},
-    'excited': {'emoji': '🥰', 'label': '설렜어요', 'color': Color(0xFFFF6B9D), 'gradient': [Color(0xFFFF6B9D), Color(0xFFF093FB)]},
-    'thoughtful': {'emoji': '🤔', 'label': '생각이 많아졌어요', 'color': Color(0xFF9B59B6), 'gradient': [Color(0xFF9B59B6), Color(0xFF8E44AD)]},
-    'moved': {'emoji': '🥺', 'label': '감동적이었어요', 'color': Color(0xFF5DADE2), 'gradient': [Color(0xFF5DADE2), Color(0xFF3498DB)]},
-    'surprised': {'emoji': '😮', 'label': '놀라웠어요', 'color': Color(0xFFF39C12), 'gradient': [Color(0xFFF39C12), Color(0xFFE67E22)]},
-    'calm': {'emoji': '😌', 'label': '편안했어요', 'color': Color(0xFF96CEB4), 'gradient': [Color(0xFF96CEB4), Color(0xFF87CEEB)]},
+    'happy': {
+      'emoji': '😊',
+      'label': '기뻤어요',
+      'color': Color(0xFF4ECDC4),
+      'gradient': [Color(0xFF4ECDC4), Color(0xFF44A08D)]
+    },
+    'excited': {
+      'emoji': '🥰',
+      'label': '설렜어요',
+      'color': Color(0xFFFF6B9D),
+      'gradient': [Color(0xFFFF6B9D), Color(0xFFF093FB)]
+    },
+    'thoughtful': {
+      'emoji': '🤔',
+      'label': '생각이 많아졌어요',
+      'color': Color(0xFF9B59B6),
+      'gradient': [Color(0xFF9B59B6), Color(0xFF8E44AD)]
+    },
+    'moved': {
+      'emoji': '🥺',
+      'label': '감동적이었어요',
+      'color': Color(0xFF5DADE2),
+      'gradient': [Color(0xFF5DADE2), Color(0xFF3498DB)]
+    },
+    'surprised': {
+      'emoji': '😮',
+      'label': '놀라웠어요',
+      'color': Color(0xFFF39C12),
+      'gradient': [Color(0xFFF39C12), Color(0xFFE67E22)]
+    },
+    'calm': {
+      'emoji': '😌',
+      'label': '편안했어요',
+      'color': Color(0xFF96CEB4),
+      'gradient': [Color(0xFF96CEB4), Color(0xFF87CEEB)]
+    },
   };
 
   @override
   void initState() {
     super.initState();
-    
+
     // 초기 독서 기록 설정
     currentReadingLog = widget.readingLog;
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -63,17 +94,18 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
-    
+
     _fadeController.forward();
     Future.delayed(const Duration(milliseconds: 200), () {
       _slideController.forward();
@@ -82,7 +114,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
       _scaleController.forward();
     });
   }
-  
+
   // 수정된 독서 기록 데이터로 업데이트하는 메서드
   void _updateReadingData(ReadingLog updatedLog) {
     if (mounted) {
@@ -123,7 +155,8 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
         actions: [
@@ -169,54 +202,56 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션 (책 정보)
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildHeader(),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 독서 정보 카드들
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildInfoCards(),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 평점 및 감정 섹션
-                  if (currentReadingLog.rating != null && currentReadingLog.rating! > 0)
+                  if (currentReadingLog.rating != null &&
+                      currentReadingLog.rating! > 0)
                     FadeTransition(
                       opacity: _fadeAnimation,
                       child: _buildRatingSection(),
                     ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 메모/한마디 섹션
-                  if (currentReadingLog.note != null && currentReadingLog.note!.isNotEmpty)
+                  if (currentReadingLog.note != null &&
+                      currentReadingLog.note!.isNotEmpty)
                     FadeTransition(
                       opacity: _fadeAnimation,
                       child: _buildNoteSection(),
                     ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 액션 버튼들
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildActionButtons(),
                   ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -303,9 +338,9 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // 날짜 정보
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -398,9 +433,9 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
               ),
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // 페이지 카드
           Expanded(
             child: Container(
@@ -452,9 +487,9 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
               ),
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // 공유 상태 카드
           Expanded(
             child: Container(
@@ -475,14 +510,14 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: currentReadingLog.isShared 
+                      color: currentReadingLog.isShared
                           ? const Color(0xFF10B981).withOpacity(0.1)
                           : Colors.grey.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       currentReadingLog.isShared ? Icons.public : Icons.lock,
-                      color: currentReadingLog.isShared 
+                      color: currentReadingLog.isShared
                           ? const Color(0xFF10B981)
                           : Colors.grey,
                       size: 24,
@@ -494,7 +529,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: currentReadingLog.isShared 
+                      color: currentReadingLog.isShared
                           ? const Color(0xFF10B981)
                           : Colors.grey,
                     ),
@@ -518,10 +553,10 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
   }
 
   Widget _buildRatingSection() {
-    final emotionInfo = currentReadingLog.mood != null 
-        ? _emotionData[currentReadingLog.mood!] 
+    final emotionInfo = currentReadingLog.mood != null
+        ? _emotionData[currentReadingLog.mood!]
         : null;
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -576,7 +611,9 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 2),
                       child: Icon(
-                        isSelected ? Icons.star_rounded : Icons.star_outline_rounded,
+                        isSelected
+                            ? Icons.star_rounded
+                            : Icons.star_outline_rounded,
                         color: isSelected ? Colors.amber : Colors.grey.shade300,
                         size: 28,
                       ),
@@ -596,7 +633,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
               ],
             ),
           ),
-          
+
           // 감정 카드 (있는 경우)
           if (emotionInfo != null) ...[
             const SizedBox(height: 16),
@@ -797,9 +834,9 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
               ),
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // 공유 버튼
           Container(
             height: 56,
@@ -824,9 +861,9 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
               ),
             ),
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // 복사 버튼
           Container(
             height: 56,
@@ -920,9 +957,9 @@ ${currentReadingLog.author.isNotEmpty ? '저자: ${currentReadingLog.author}' : 
 페이지: ${currentReadingLog.pages}p
 평점: ${currentReadingLog.rating?.round() ?? 0}/5
 ${currentReadingLog.note?.isNotEmpty == true ? '\n한마디:\n${currentReadingLog.note}' : ''}''';
-    
+
     Clipboard.setData(ClipboardData(text: content));
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(

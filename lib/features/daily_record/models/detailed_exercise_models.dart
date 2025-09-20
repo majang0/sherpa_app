@@ -59,8 +59,9 @@ class RunningRecord extends DetailedExerciseRecord {
   }) : super(exerciseType: '러닝');
 
   double get averageSpeed => 60 / averagePace; // km/h
-  String get paceText => '${averagePace.toInt()}\'${((averagePace - averagePace.toInt()) * 60).toInt()}\"';
-  
+  String get paceText =>
+      '${averagePace.toInt()}\'${((averagePace - averagePace.toInt()) * 60).toInt()}\"';
+
   @override
   Map<String, dynamic> toJson() {
     return {
@@ -130,8 +131,9 @@ class ClimbingRecord extends DetailedExerciseRecord {
 
   int get totalRoutes => routes.length;
   int get completedRoutes => routes.where((r) => r.isCompleted).length;
-  double get completionRate => totalRoutes > 0 ? completedRoutes / totalRoutes : 0.0;
-  
+  double get completionRate =>
+      totalRoutes > 0 ? completedRoutes / totalRoutes : 0.0;
+
   @override
   Map<String, dynamic> toJson() {
     return {
@@ -208,7 +210,7 @@ class HikingRecord extends DetailedExerciseRecord {
 
   double get averageSpeed => distanceKm / (durationMinutes / 60); // km/h
   String get elevationText => '${elevationGain.toInt()}m';
-  
+
   @override
   Map<String, dynamic> toJson() {
     return {
@@ -277,9 +279,10 @@ class GymRecord extends DetailedExerciseRecord {
   }) : super(exerciseType: '헬스');
 
   int get totalExercises => exercises.length;
-  double get totalWeight => exercises.fold(0, (sum, ex) => sum + ex.totalWeight);
+  double get totalWeight =>
+      exercises.fold(0, (sum, ex) => sum + ex.totalWeight);
   int get totalSets => exercises.fold(0, (sum, ex) => sum + ex.sets.length);
-  
+
   @override
   Map<String, dynamic> toJson() {
     return {
@@ -350,7 +353,7 @@ class BadmintonRecord extends DetailedExerciseRecord {
   int get totalMatches => matches.length;
   int get wonMatches => matches.where((m) => m.isWon).length;
   double get winRate => totalMatches > 0 ? wonMatches / totalMatches : 0.0;
-  
+
   @override
   Map<String, dynamic> toJson() {
     return {
@@ -399,13 +402,13 @@ class BadmintonRecord extends DetailedExerciseRecord {
 
 /// 체감 난이도 열거형
 enum DifficultyLevel {
-  easy('편안함', Color(0xFF60A5FA)),     // 라이트 블루
+  easy('편안함', Color(0xFF60A5FA)), // 라이트 블루
   moderate('적당함', Color(0xFF3B82F6)), // 미디엄 블루
-  hard('힘듬', Color(0xFF2563EB)),       // 딥 블루
+  hard('힘듬', Color(0xFF2563EB)), // 딥 블루
   veryHard('매우 힘듬', Color(0xFF1D4ED8)); // 인텐스 블루
 
   const DifficultyLevel(this.label, this.color);
-  
+
   final String label;
   final Color color;
 }
@@ -419,7 +422,7 @@ enum ClimbingType {
   traditional('전통');
 
   const ClimbingType(this.label);
-  
+
   final String label;
 }
 
@@ -468,7 +471,8 @@ class GymExercise {
     this.equipmentType,
   });
 
-  double get totalWeight => sets.fold(0, (sum, set) => sum + (set.weight * set.reps));
+  double get totalWeight =>
+      sets.fold(0, (sum, set) => sum + (set.weight * set.reps));
   int get totalReps => sets.fold(0, (sum, set) => sum + set.reps);
 
   Map<String, dynamic> toJson() {
@@ -562,7 +566,7 @@ enum ExerciseMood {
   exhausted('지침', '😵');
 
   const ExerciseMood(this.label, this.emoji);
-  
+
   final String label;
   final String emoji;
 }
@@ -581,7 +585,7 @@ enum GymFocus {
   legs('다리');
 
   const GymFocus(this.label);
-  
+
   final String label;
 }
 
@@ -593,7 +597,7 @@ enum BadmintonCourtType {
   wooden('목재코트');
 
   const BadmintonCourtType(this.label);
-  
+
   final String label;
 }
 
@@ -604,7 +608,7 @@ enum GameResult {
   draw('무승부', '🤝', Color(0xFFEAB308));
 
   const GameResult(this.label, this.emoji, this.color);
-  
+
   final String label;
   final String emoji;
   final Color color;
@@ -614,34 +618,52 @@ enum GameResult {
 class ExerciseRecordUtils {
   static String getExerciseEmoji(String exerciseType) {
     switch (exerciseType) {
-      case '러닝': return '🏃';
-      case '클라이밍': return '🧗';
-      case '등산': return '🥾';
-      case '헬스': return '🏋️';
-      case '배드민턴': return '🏸';
-      default: return '💪';
+      case '러닝':
+        return '🏃';
+      case '클라이밍':
+        return '🧗';
+      case '등산':
+        return '🥾';
+      case '헬스':
+        return '🏋️';
+      case '배드민턴':
+        return '🏸';
+      default:
+        return '💪';
     }
   }
 
   static Color getExerciseColor(String exerciseType) {
     switch (exerciseType) {
-      case '러닝': return const Color(0xFF10B981);
-      case '클라이밍': return const Color(0xFF8B5CF6);
-      case '등산': return const Color(0xFF059669);
-      case '헬스': return const Color(0xFFEF4444);
-      case '배드민턴': return const Color(0xFF3B82F6);
-      default: return const Color(0xFFF97316);
+      case '러닝':
+        return const Color(0xFF10B981);
+      case '클라이밍':
+        return const Color(0xFF8B5CF6);
+      case '등산':
+        return const Color(0xFF059669);
+      case '헬스':
+        return const Color(0xFFEF4444);
+      case '배드민턴':
+        return const Color(0xFF3B82F6);
+      default:
+        return const Color(0xFFF97316);
     }
   }
 
   static List<Color> getExerciseGradient(String exerciseType) {
     switch (exerciseType) {
-      case '러닝': return [const Color(0xFF10B981), const Color(0xFF047857)];
-      case '클라이밍': return [const Color(0xFF8B5CF6), const Color(0xFF7C3AED)];
-      case '등산': return [const Color(0xFF059669), const Color(0xFF065F46)];
-      case '헬스': return [const Color(0xFFEF4444), const Color(0xFFDC2626)];
-      case '배드민턴': return [const Color(0xFF3B82F6), const Color(0xFF1E40AF)];
-      default: return [const Color(0xFFF97316), const Color(0xFFEA580C)];
+      case '러닝':
+        return [const Color(0xFF10B981), const Color(0xFF047857)];
+      case '클라이밍':
+        return [const Color(0xFF8B5CF6), const Color(0xFF7C3AED)];
+      case '등산':
+        return [const Color(0xFF059669), const Color(0xFF065F46)];
+      case '헬스':
+        return [const Color(0xFFEF4444), const Color(0xFFDC2626)];
+      case '배드민턴':
+        return [const Color(0xFF3B82F6), const Color(0xFF1E40AF)];
+      default:
+        return [const Color(0xFFF97316), const Color(0xFFEA580C)];
     }
   }
 }

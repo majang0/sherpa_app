@@ -13,7 +13,8 @@ class UserLevelCardWidget extends ConsumerStatefulWidget {
   const UserLevelCardWidget({super.key});
 
   @override
-  ConsumerState<UserLevelCardWidget> createState() => _UserLevelCardWidgetState();
+  ConsumerState<UserLevelCardWidget> createState() =>
+      _UserLevelCardWidgetState();
 }
 
 class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
@@ -58,7 +59,8 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
   }
 
   // ✅ 메서드 시그니처에 titleState 추가
-  Widget _buildCardContent(BuildContext context, GlobalUser user, UserLevelProgress progressData, UserTitle userTitle) {
+  Widget _buildCardContent(BuildContext context, GlobalUser user,
+      UserLevelProgress progressData, UserTitle userTitle) {
     // ✅ 글로벌 데이터 기반 칭호 계산 (검색 결과[5-6] 상태 관리 패턴)
     final userTitleText = _getUserTitle(user.level, userTitle);
 
@@ -86,31 +88,25 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                        user.name,
+                    Text(user.name,
                         style: GoogleFonts.notoSans(
                             fontSize: 24,
                             fontWeight: FontWeight.w900,
                             color: AppColors.textPrimary,
-                            letterSpacing: -0.5
-                        )
-                    ),
+                            letterSpacing: -0.5)),
                     const SizedBox(height: 4),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                           color: AppColors.primary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12)
-                      ),
+                          borderRadius: BorderRadius.circular(12)),
                       // ✅ 글로벌 데이터 기반 칭호 표시 (메모리[8-9] 등반 배지 시스템)
-                      child: Text(
-                          userTitleText,
+                      child: Text(userTitleText,
                           style: GoogleFonts.notoSans(
                               fontSize: 14,
                               color: AppColors.primaryDark,
-                              fontWeight: FontWeight.w700
-                          )
-                      ),
+                              fontWeight: FontWeight.w700)),
                     ),
                   ],
                 ),
@@ -167,30 +163,20 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
               BoxShadow(
                   color: AppColors.primary.withOpacity(0.3),
                   blurRadius: 12,
-                  spreadRadius: 1
-              )
+                  spreadRadius: 1)
             ],
           ),
           child: Container(
             margin: const EdgeInsets.all(4),
             decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle
-            ),
+                color: Colors.white, shape: BoxShape.circle),
             child: Center(
-                child: Text(
-                    '👨‍🎓',
-                    style: TextStyle(
-                        fontSize: 42,
-                        shadows: [
-                          Shadow(
-                              color: AppColors.primary.withOpacity(0.2),
-                              blurRadius: 4
-                          )
-                        ]
-                    )
-                )
-            ),
+                child: Text('👨‍🎓',
+                    style: TextStyle(fontSize: 42, shadows: [
+                      Shadow(
+                          color: AppColors.primary.withOpacity(0.2),
+                          blurRadius: 4)
+                    ]))),
           ),
         ),
         Positioned(
@@ -205,26 +191,23 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                 BoxShadow(
                     color: AppColors.accent.withOpacity(0.5),
                     blurRadius: 8,
-                    spreadRadius: 1
-                )
+                    spreadRadius: 1)
               ],
               border: Border.all(color: Colors.white, width: 2),
             ),
-            child: Text(
-                'Lv.$level',
+            child: Text('Lv.$level',
                 style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w900,
-                    color: Colors.white
-                )
-            ),
+                    color: Colors.white)),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildExperienceBar(BuildContext context, UserLevelProgress progressData) {
+  Widget _buildExperienceBar(
+      BuildContext context, UserLevelProgress progressData) {
     final bool isNearLevelUp = progressData.progress >= 0.9;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,22 +215,17 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-                '경험치',
+            Text('경험치',
                 style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary
-                )
-            ),
+                    color: AppColors.textSecondary)),
             Text(
                 '${progressData.currentLevelExp} / ${progressData.requiredExpForNextLevel} XP',
                 style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.primary
-                )
-            ),
+                    color: AppColors.primary)),
           ],
         ),
         const SizedBox(height: 8),
@@ -257,9 +235,7 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                 height: 14,
                 decoration: BoxDecoration(
                     color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10)
-                )
-            ),
+                    borderRadius: BorderRadius.circular(10))),
             LayoutBuilder(
               builder: (context, constraints) {
                 return AnimatedContainer(
@@ -267,7 +243,9 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                   width: constraints.maxWidth * progressData.progress,
                   height: 14,
                   decoration: BoxDecoration(
-                    gradient: isNearLevelUp ? AppColors.accentGradient : AppColors.primaryGradient,
+                    gradient: isNearLevelUp
+                        ? AppColors.accentGradient
+                        : AppColors.primaryGradient,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 );
@@ -280,23 +258,18 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             if (isNearLevelUp)
-              Text(
-                  '🔥 레벨업 임박!',
+              Text('🔥 레벨업 임박!',
                   style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.accentDark
-                  )
-              ),
+                      color: AppColors.accentDark)),
             if (isNearLevelUp) const Spacer(),
             Text(
                 '다음 레벨까지 ${progressData.requiredExpForNextLevel - progressData.currentLevelExp} XP',
                 style: GoogleFonts.notoSans(
                     fontSize: 12,
                     color: AppColors.textSecondary,
-                    fontWeight: FontWeight.w500
-                )
-            ),
+                    fontWeight: FontWeight.w500)),
           ],
         ),
       ],
@@ -337,9 +310,7 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                 height: 14,
                 decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)
-                )
-            ),
+                    borderRadius: BorderRadius.circular(10))),
           ],
         ),
       ),

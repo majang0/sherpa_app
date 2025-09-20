@@ -72,9 +72,9 @@ class GrowthSummaryCard extends ConsumerWidget {
                     color: Color(0xFF1E3A8A),
                   ),
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 Row(
                   children: [
                     // 왼쪽: 레이더 차트
@@ -82,13 +82,14 @@ class GrowthSummaryCard extends ConsumerWidget {
                       flex: 1,
                       child: _buildRadarChart(user.stats),
                     ),
-                    
+
                     const SizedBox(width: 24),
-                    
+
                     // 오른쪽: 핵심 스탯
                     Expanded(
                       flex: 1,
-                      child: _buildCoreStats(user, climbingPower, pointData.totalPoints),
+                      child: _buildCoreStats(
+                          user, climbingPower, pointData.totalPoints),
                     ),
                   ],
                 ),
@@ -119,7 +120,8 @@ class GrowthSummaryCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildCoreStats(GlobalUser user, double climbingPower, int totalPoints) {
+  Widget _buildCoreStats(
+      GlobalUser user, double climbingPower, int totalPoints) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -131,9 +133,9 @@ class GrowthSummaryCard extends ConsumerWidget {
           Color(0xFF10B981),
           isMain: true,
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // 현재 레벨
         _buildStatItem(
           '레벨',
@@ -141,9 +143,9 @@ class GrowthSummaryCard extends ConsumerWidget {
           Icons.star,
           Color(0xFFF59E0B),
         ),
-        
+
         const SizedBox(height: 12),
-        
+
         // 보유 뱃지
         _buildStatItem(
           '뱃지',
@@ -151,9 +153,9 @@ class GrowthSummaryCard extends ConsumerWidget {
           Icons.emoji_events,
           Color(0xFF8B5CF6),
         ),
-        
+
         const SizedBox(height: 12),
-        
+
         // 포인트
         _buildStatItem(
           '포인트',
@@ -165,7 +167,8 @@ class GrowthSummaryCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color, {bool isMain = false}) {
+  Widget _buildStatItem(String label, String value, IconData icon, Color color,
+      {bool isMain = false}) {
     return Row(
       children: [
         Container(
@@ -181,9 +184,7 @@ class GrowthSummaryCard extends ConsumerWidget {
             size: isMain ? 20 : 16,
           ),
         ),
-        
         const SizedBox(width: 12),
-        
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,29 +214,29 @@ class GrowthSummaryCard extends ConsumerWidget {
 
 class RadarChartPainter extends CustomPainter {
   final GlobalStats stats;
-  
+
   RadarChartPainter(this.stats);
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width, size.height) / 2 - 20;
-    
+
     // 배경 원들 그리기
     final backgroundPaint = Paint()
       ..color = Color(0xFFE2E8F0)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
-    
+
     for (int i = 1; i <= 5; i++) {
       canvas.drawCircle(center, (radius * i / 5), backgroundPaint);
     }
-    
+
     // 축 그리기
     final axisPaint = Paint()
       ..color = Color(0xFFCBD5E1)
       ..strokeWidth = 1;
-    
+
     final angles = [
       -math.pi / 2, // 체력 (위)
       -math.pi / 10, // 지식 (오른쪽 위)
@@ -243,7 +244,7 @@ class RadarChartPainter extends CustomPainter {
       math.pi - math.pi / 10, // 사교성 (왼쪽 아래)
       math.pi + math.pi / 10, // 의지 (왼쪽 위)
     ];
-    
+
     for (double angle in angles) {
       final end = Offset(
         center.dx + radius * math.cos(angle),
@@ -251,7 +252,7 @@ class RadarChartPainter extends CustomPainter {
       );
       canvas.drawLine(center, end, axisPaint);
     }
-    
+
     // 데이터 다각형 그리기
     final values = [
       stats.stamina / 10, // 0-1 범위로 정규화
@@ -260,17 +261,17 @@ class RadarChartPainter extends CustomPainter {
       stats.sociality / 10,
       stats.willpower / 10,
     ];
-    
+
     final path = Path();
     final fillPaint = Paint()
       ..color = Color(0xFF3B82F6).withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
-    
+
     final strokePaint = Paint()
       ..color = Color(0xFF3B82F6)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
-    
+
     for (int i = 0; i < values.length; i++) {
       final value = values[i].clamp(0.0, 1.0);
       final angle = angles[i];
@@ -278,7 +279,7 @@ class RadarChartPainter extends CustomPainter {
         center.dx + radius * value * math.cos(angle),
         center.dy + radius * value * math.sin(angle),
       );
-      
+
       if (i == 0) {
         path.moveTo(point.dx, point.dy);
       } else {
@@ -286,15 +287,15 @@ class RadarChartPainter extends CustomPainter {
       }
     }
     path.close();
-    
+
     canvas.drawPath(path, fillPaint);
     canvas.drawPath(path, strokePaint);
-    
+
     // 데이터 포인트 그리기
     final pointPaint = Paint()
       ..color = Color(0xFF3B82F6)
       ..style = PaintingStyle.fill;
-    
+
     for (int i = 0; i < values.length; i++) {
       final value = values[i].clamp(0.0, 1.0);
       final angle = angles[i];

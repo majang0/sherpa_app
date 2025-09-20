@@ -35,10 +35,14 @@ final todayClimbingGrowthProvider = Provider<TodayClimbingGrowthData>((ref) {
   final todayRecords = ref.watch(todayClimbingRecordsProvider);
 
   // 오늘의 등반 통계 계산
-  final successfulCount = todayRecords.where((r) => r.isSuccess ?? false).length;
-  final totalExp = todayRecords.fold<double>(0, (sum, r) => sum + (r.rewards?.experience ?? 0));
-  final totalPoints = todayRecords.fold<int>(0, (sum, r) => sum + (r.rewards?.points ?? 0).toInt());
-  final successRate = todayRecords.isEmpty ? 0.0 : successfulCount / todayRecords.length;
+  final successfulCount =
+      todayRecords.where((r) => r.isSuccess ?? false).length;
+  final totalExp = todayRecords.fold<double>(
+      0, (sum, r) => sum + (r.rewards?.experience ?? 0));
+  final totalPoints = todayRecords.fold<int>(
+      0, (sum, r) => sum + (r.rewards?.points ?? 0).toInt());
+  final successRate =
+      todayRecords.isEmpty ? 0.0 : successfulCount / todayRecords.length;
 
   return TodayClimbingGrowthData(
     todayClimbingCount: todayRecords.length,
@@ -339,7 +343,9 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
               AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
                 height: 8,
-                width: MediaQuery.of(context).size.width * (data.currentProgress ?? 0) * 0.8,
+                width: MediaQuery.of(context).size.width *
+                    (data.currentProgress ?? 0) *
+                    0.8,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [

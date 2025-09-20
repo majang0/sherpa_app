@@ -9,7 +9,7 @@ import '../../providers/quest_provider_v2.dart';
 import '../../models/quest_instance_model.dart';
 
 /// 🎮 컴팩트 셰르피 퀘스트 헤더 - 미니멀 게이미피케이션 디자인
-/// 
+///
 /// 기존 280px → 130px로 축소하여 퀘스트 카드들이 첫 화면에 보이도록 최적화
 /// 셰르피 중심의 수평 배치 디자인으로 공간 효율성 극대화
 class CompactQuestHeader extends ConsumerWidget {
@@ -20,17 +20,21 @@ class CompactQuestHeader extends ConsumerWidget {
     final globalUser = ref.watch(globalUserProvider);
     final totalPoints = ref.watch(globalTotalPointsProvider);
     final questsAsync = ref.watch(questProviderV2);
-    
+
     return questsAsync.when(
       data: (quests) {
         // 퀘스트 상태별 카운트 계산
-        final inProgressCount = quests.where((q) => q.status == QuestStatus.inProgress).length;
-        final claimableCount = quests.where((q) => q.status == QuestStatus.completed).length;
-        final claimedCount = quests.where((q) => q.status == QuestStatus.claimed).length;
-        
+        final inProgressCount =
+            quests.where((q) => q.status == QuestStatus.inProgress).length;
+        final claimableCount =
+            quests.where((q) => q.status == QuestStatus.completed).length;
+        final claimedCount =
+            quests.where((q) => q.status == QuestStatus.claimed).length;
+
         // 전체 진행률 계산
-        final overallProgress = quests.isNotEmpty ? claimedCount / quests.length : 0.0;
-        
+        final overallProgress =
+            quests.isNotEmpty ? claimedCount / quests.length : 0.0;
+
         return Container(
           height: 140, // 130px → 140px (오버플로우 해결)
           decoration: BoxDecoration(
@@ -46,19 +50,21 @@ class CompactQuestHeader extends ConsumerWidget {
           child: SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8), // 12 → 8로 축소
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 20, vertical: 8), // 12 → 8로 축소
               child: Column(
                 children: [
                   // 🎯 상단 바: 셰르피 + 인사말 + 완성도
-                  _buildTopBar(context, globalUser.name, totalPoints, overallProgress),
-                  
+                  _buildTopBar(
+                      context, globalUser.name, totalPoints, overallProgress),
+
                   const SizedBox(height: 12), // 16 → 12로 축소
-                  
+
                   // 📊 하단 바: 퀘스트 상태 + 진행률
                   _buildStatusBar(
                     context,
                     inProgressCount,
-                    claimableCount, 
+                    claimableCount,
                     claimedCount,
                     overallProgress,
                   ),
@@ -66,17 +72,16 @@ class CompactQuestHeader extends ConsumerWidget {
               ),
             ),
           ),
-        ).animate()
-          .fadeIn(duration: 400.ms)
-          .slideY(begin: -0.1, end: 0);
+        ).animate().fadeIn(duration: 400.ms).slideY(begin: -0.1, end: 0);
       },
       loading: () => _buildLoadingState(),
       error: (_, __) => _buildErrorState(),
     );
   }
-  
+
   /// 🎪 상단 바: 셰르피와 퀘스트 완성도가 있는 메인 영역
-  Widget _buildTopBar(BuildContext context, String userName, int totalPoints, double overallProgress) {
+  Widget _buildTopBar(BuildContext context, String userName, int totalPoints,
+      double overallProgress) {
     return Container(
       height: 64,
       child: Row(
@@ -120,13 +125,16 @@ class CompactQuestHeader extends ConsumerWidget {
                 },
               ),
             ),
-          ).animate()
-            .scale(duration: 600.ms, curve: Curves.elasticOut)
-            .then()
-            .shimmer(duration: 2000.ms, color: Colors.white.withValues(alpha: 0.3)),
-          
+          )
+              .animate()
+              .scale(duration: 600.ms, curve: Curves.elasticOut)
+              .then()
+              .shimmer(
+                  duration: 2000.ms,
+                  color: Colors.white.withValues(alpha: 0.3)),
+
           const SizedBox(width: 12),
-          
+
           // 💬 간단한 인사말
           Expanded(
             child: Column(
@@ -154,7 +162,7 @@ class CompactQuestHeader extends ConsumerWidget {
               ],
             ),
           ),
-          
+
           // 🎯 퀘스트 완성도 서클
           Container(
             width: 48,
@@ -169,7 +177,8 @@ class CompactQuestHeader extends ConsumerWidget {
                   child: CircularProgressIndicator(
                     value: overallProgress,
                     backgroundColor: Colors.white.withValues(alpha: 0.3),
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.white),
                     strokeWidth: 3,
                   ),
                 ),
@@ -189,12 +198,12 @@ class CompactQuestHeader extends ConsumerWidget {
       ),
     );
   }
-  
+
   /// 📈 하단 바: 퀘스트 상태와 진행률
   Widget _buildStatusBar(
     BuildContext context,
     int inProgressCount,
-    int claimableCount, 
+    int claimableCount,
     int claimedCount,
     double overallProgress,
   ) {
@@ -210,7 +219,7 @@ class CompactQuestHeader extends ConsumerWidget {
             label: '진행중',
           ),
           const SizedBox(width: 8),
-          
+
           _buildStatusChip(
             icon: Icons.card_giftcard_rounded,
             count: claimableCount,
@@ -219,16 +228,16 @@ class CompactQuestHeader extends ConsumerWidget {
             hasGlow: claimableCount > 0,
           ),
           const SizedBox(width: 8),
-          
+
           _buildStatusChip(
             icon: Icons.check_circle_rounded,
             count: claimedCount,
             color: ModernColors.modernSuccess,
             label: '완료',
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           // 📊 컴팩트 진행률 바
           Expanded(
             child: Column(
@@ -268,7 +277,7 @@ class CompactQuestHeader extends ConsumerWidget {
       ),
     );
   }
-  
+
   /// 🏷️ 상태 칩 (작은 크기)
   Widget _buildStatusChip({
     required IconData icon,
@@ -307,18 +316,17 @@ class CompactQuestHeader extends ConsumerWidget {
         ],
       ),
     );
-    
+
     if (hasGlow && count > 0) {
-      return chip.animate(onPlay: (controller) => controller.repeat())
-        .shimmer(
-          duration: const Duration(seconds: 2),
-          color: Colors.white.withValues(alpha: 0.5),
-        );
+      return chip.animate(onPlay: (controller) => controller.repeat()).shimmer(
+            duration: const Duration(seconds: 2),
+            color: Colors.white.withValues(alpha: 0.5),
+          );
     }
-    
+
     return chip;
   }
-  
+
   /// 🔄 로딩 상태 (컴팩트)
   Widget _buildLoadingState() {
     return Container(
@@ -342,8 +350,8 @@ class CompactQuestHeader extends ConsumerWidget {
       ),
     );
   }
-  
-  /// ❌ 에러 상태 (컴팩트)  
+
+  /// ❌ 에러 상태 (컴팩트)
   Widget _buildErrorState() {
     return Container(
       height: 130,

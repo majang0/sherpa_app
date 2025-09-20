@@ -13,7 +13,8 @@ import '../../../../shared/providers/global_badge_provider.dart';
 
 class BadgeManagementWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<BadgeManagementWidget> createState() => _BadgeManagementWidgetState();
+  ConsumerState<BadgeManagementWidget> createState() =>
+      _BadgeManagementWidgetState();
 }
 
 class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
@@ -85,7 +86,8 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
               ),
               SizedBox(height: 8),
               Expanded(
-                child: _buildBadgeList(filteredBadges, equippedBadges, maxBadgeSlots, screenWidth),
+                child: _buildBadgeList(
+                    filteredBadges, equippedBadges, maxBadgeSlots, screenWidth),
               ),
             ],
           ),
@@ -132,7 +134,9 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
         Container(
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: equippedCount == maxSlots ? AppColors.success : AppColors.primary.withOpacity(0.1),
+            color: equippedCount == maxSlots
+                ? AppColors.success
+                : AppColors.primary.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -140,7 +144,8 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: equippedCount == maxSlots ? Colors.white : AppColors.primary,
+              color:
+                  equippedCount == maxSlots ? Colors.white : AppColors.primary,
             ),
           ),
         ),
@@ -149,11 +154,13 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
   }
 
   // ✅ 총 효과 요약 카드 (타입별 분류 개선)
-  Widget _buildTotalEffectsSummary(List<GlobalBadge> equippedBadges, double screenWidth) {
+  Widget _buildTotalEffectsSummary(
+      List<GlobalBadge> equippedBadges, double screenWidth) {
     Map<String, double> effectsByType = {};
 
     for (final badge in equippedBadges) {
-      effectsByType[badge.effectType] = (effectsByType[badge.effectType] ?? 0) + badge.effectValue;
+      effectsByType[badge.effectType] =
+          (effectsByType[badge.effectType] ?? 0) + badge.effectValue;
     }
 
     return Container(
@@ -252,7 +259,8 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
   }
 
   // ✅ 게임 스타일 장착 슬롯 (개선)
-  Widget _buildEquippedSlots(List<GlobalBadge> equippedBadges, int maxSlots, double screenWidth) {
+  Widget _buildEquippedSlots(
+      List<GlobalBadge> equippedBadges, int maxSlots, double screenWidth) {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -392,26 +400,23 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
   }
 
   // ✅ 리스트 형태의 뱃지 목록 (그리드 대신)
-  Widget _buildBadgeList(
-      List<GlobalBadge> ownedBadges,
-      List<GlobalBadge> equippedBadges,
-      int maxSlots,
-      double screenWidth
-      ) {
+  Widget _buildBadgeList(List<GlobalBadge> ownedBadges,
+      List<GlobalBadge> equippedBadges, int maxSlots, double screenWidth) {
     return ListView.builder(
       itemCount: ownedBadges.length,
       itemBuilder: (context, index) {
         final badge = ownedBadges[index];
         final isEquipped = equippedBadges.any((b) => b.id == badge.id);
         final canEquip = equippedBadges.length < maxSlots;
-        
+
         return _buildBadgeListItem(badge, isEquipped, canEquip, screenWidth);
       },
     );
   }
 
   // ✅ 심플한 뱃지 리스트 아이템
-  Widget _buildBadgeListItem(GlobalBadge badge, bool isEquipped, bool canEquip, double screenWidth) {
+  Widget _buildBadgeListItem(
+      GlobalBadge badge, bool isEquipped, bool canEquip, double screenWidth) {
     return Container(
       margin: EdgeInsets.only(bottom: 6),
       child: GestureDetector(
@@ -425,7 +430,9 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isEquipped ? badge.tier.color : AppColors.primary.withOpacity(0.2),
+              color: isEquipped
+                  ? badge.tier.color
+                  : AppColors.primary.withOpacity(0.2),
               width: isEquipped ? 2 : 1,
             ),
           ),
@@ -448,7 +455,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                 ),
               ),
               SizedBox(width: 8),
-              
+
               // 뱃지 정보
               Expanded(
                 child: Column(
@@ -472,7 +479,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                   ],
                 ),
               ),
-              
+
               // 등급 표시
               Container(
                 width: 8,
@@ -483,7 +490,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                 ),
               ),
               SizedBox(width: 8),
-              
+
               // 장착/해제 버튼
               SizedBox(
                 width: 40,
@@ -492,9 +499,13 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                   onPressed: () {
                     HapticFeedbackManager.mediumImpact();
                     if (isEquipped) {
-                      ref.read(globalUserProvider.notifier).unequipBadge(badge.id);
+                      ref
+                          .read(globalUserProvider.notifier)
+                          .unequipBadge(badge.id);
                     } else if (canEquip) {
-                      ref.read(globalUserProvider.notifier).equipBadge(badge.id);
+                      ref
+                          .read(globalUserProvider.notifier)
+                          .equipBadge(badge.id);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -511,7 +522,8 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                         ? AppColors.error
                         : (canEquip ? AppColors.success : AppColors.textLight),
                     foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
                     padding: EdgeInsets.zero,
                     elevation: 0,
                   ),
@@ -648,7 +660,8 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
             style: TextButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

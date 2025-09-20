@@ -15,7 +15,7 @@ class MeetingCard2025 extends StatefulWidget {
   final bool isBookmarked;
   final String? imageAsset;
   final bool compact;
-  
+
   const MeetingCard2025({
     super.key,
     required this.meeting,
@@ -30,7 +30,7 @@ class MeetingCard2025 extends StatefulWidget {
   State<MeetingCard2025> createState() => _MeetingCard2025State();
 }
 
-class _MeetingCard2025State extends State<MeetingCard2025> 
+class _MeetingCard2025State extends State<MeetingCard2025>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -43,7 +43,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 1.0,
       end: 0.95,
@@ -51,7 +51,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
-    
+
     _opacityAnimation = Tween<double>(
       begin: 1.0,
       end: 0.8,
@@ -93,7 +93,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -109,9 +109,9 @@ class _MeetingCard2025State extends State<MeetingCard2025>
               child: Container(
                 width: double.infinity,
                 height: widget.compact ? 200 : 280,
-                margin: widget.compact 
-                  ? const EdgeInsets.all(4)
-                  : const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                margin: widget.compact
+                    ? const EdgeInsets.all(4)
+                    : const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(24),
                   child: BackdropFilter(
@@ -121,15 +121,15 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: isDark 
-                            ? [
-                                Colors.white.withOpacity(0.1),
-                                Colors.white.withOpacity(0.05),
-                              ]
-                            : [
-                                Colors.white.withOpacity(0.7),
-                                Colors.white.withOpacity(0.3),
-                              ],
+                          colors: isDark
+                              ? [
+                                  Colors.white.withOpacity(0.1),
+                                  Colors.white.withOpacity(0.05),
+                                ]
+                              : [
+                                  Colors.white.withOpacity(0.7),
+                                  Colors.white.withOpacity(0.3),
+                                ],
                         ),
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
@@ -146,7 +146,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                               child: _buildImageWidget(),
                             ),
                           ),
-                          
+
                           // Gradient Overlay
                           Positioned.fill(
                             child: Container(
@@ -164,7 +164,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                               ),
                             ),
                           ),
-                          
+
                           // Content
                           Positioned.fill(
                             child: Padding(
@@ -174,16 +174,17 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                 children: [
                                   // Top Row - Category & Bookmark
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       _buildCategoryChip(),
                                       if (widget.onBookmark != null)
                                         _buildBookmarkButton(),
                                     ],
                                   ),
-                                  
+
                                   const Spacer(),
-                                  
+
                                   // Title
                                   Text(
                                     widget.meeting.title,
@@ -196,9 +197,9 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                     maxLines: widget.compact ? 2 : 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  
+
                                   SizedBox(height: widget.compact ? 6 : 8),
-                                  
+
                                   // Location & Time
                                   Row(
                                     children: [
@@ -210,10 +211,12 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                       SizedBox(width: widget.compact ? 3 : 4),
                                       Expanded(
                                         child: Text(
-                                          _formatLocationText(widget.meeting.location),
+                                          _formatLocationText(
+                                              widget.meeting.location),
                                           style: TextStyle(
                                             fontSize: widget.compact ? 12 : 14,
-                                            color: Colors.white.withOpacity(0.8),
+                                            color:
+                                                Colors.white.withOpacity(0.8),
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -221,9 +224,9 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                       ),
                                     ],
                                   ),
-                                  
+
                                   SizedBox(height: widget.compact ? 3 : 4),
-                                  
+
                                   Row(
                                     children: [
                                       Icon(
@@ -237,7 +240,8 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                           widget.meeting.formattedDate,
                                           style: TextStyle(
                                             fontSize: widget.compact ? 12 : 14,
-                                            color: Colors.white.withOpacity(0.8),
+                                            color:
+                                                Colors.white.withOpacity(0.8),
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -245,16 +249,19 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                       ),
                                     ],
                                   ),
-                                  
+
                                   SizedBox(height: widget.compact ? 8 : 12),
-                                  
+
                                   // Bottom Row - Participants & Price
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       ParticipantAvatars2025(
-                                        currentParticipants: widget.meeting.currentParticipants,
-                                        maxParticipants: widget.meeting.maxParticipants,
+                                        currentParticipants:
+                                            widget.meeting.currentParticipants,
+                                        maxParticipants:
+                                            widget.meeting.maxParticipants,
                                         size: widget.compact ? 24 : 28,
                                         overlapFactor: 0.65,
                                       ),
@@ -282,10 +289,10 @@ class _MeetingCard2025State extends State<MeetingCard2025>
     final double padding = widget.compact ? 8 : 12;
     final double fontSize = widget.compact ? 10 : 12;
     final double emojiSize = widget.compact ? 10 : 12;
-    
+
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: padding, 
+        horizontal: padding,
         vertical: widget.compact ? 4 : 6,
       ),
       decoration: BoxDecoration(
@@ -323,7 +330,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
   Widget _buildBookmarkButton() {
     final double size = widget.compact ? 32 : 36;
     final double iconSize = widget.compact ? 16 : 18;
-    
+
     return GestureDetector(
       onTap: widget.onBookmark,
       child: Container(
@@ -384,28 +391,28 @@ class _MeetingCard2025State extends State<MeetingCard2025>
     final double horizontalPadding = widget.compact ? 8 : 10;
     final double verticalPadding = widget.compact ? 4 : 6;
     final double fontSize = widget.compact ? 10 : 12;
-    
+
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: horizontalPadding, 
+        horizontal: horizontalPadding,
         vertical: verticalPadding,
       ),
       decoration: BoxDecoration(
-        color: isLowFee 
-          ? Colors.green.withOpacity(0.2)
-          : Colors.orange.withOpacity(0.2),
+        color: isLowFee
+            ? Colors.green.withOpacity(0.2)
+            : Colors.orange.withOpacity(0.2),
         borderRadius: BorderRadius.circular(widget.compact ? 12 : 16),
         border: Border.all(
-          color: isLowFee 
-            ? Colors.green.withOpacity(0.3)
-            : Colors.orange.withOpacity(0.3),
+          color: isLowFee
+              ? Colors.green.withOpacity(0.3)
+              : Colors.orange.withOpacity(0.3),
           width: 1,
         ),
       ),
       child: Text(
-        widget.meeting.type == MeetingType.free 
-          ? '무료' 
-          : '${widget.meeting.participationFee.toInt()}P',
+        widget.meeting.type == MeetingType.free
+            ? '무료'
+            : '${widget.meeting.participationFee.toInt()}P',
         style: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.w600,
@@ -420,17 +427,18 @@ class _MeetingCard2025State extends State<MeetingCard2025>
     // 모임에 이미지가 있으면 확인
     if (widget.meeting.hasImages && widget.meeting.imageFileNames.isNotEmpty) {
       final firstImage = widget.meeting.imageFileNames.first;
-      
+
       // asset: 플래그로 시작하면 assets 폴더에서 로드
       if (firstImage.startsWith('asset:')) {
         final assetPath = 'assets/images/meeting/${firstImage.substring(6)}';
         return Image.asset(
           assetPath,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+          errorBuilder: (context, error, stackTrace) =>
+              _buildEmojiPlaceholder(),
         );
       }
-      
+
       // 일반 이미지 파일은 MeetingImageUtils를 사용하여 로드
       return FutureBuilder<File?>(
         future: MeetingImageUtils.getMeetingImageFile(firstImage),
@@ -439,14 +447,15 @@ class _MeetingCard2025State extends State<MeetingCard2025>
             return Image.file(
               snapshot.data!,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+              errorBuilder: (context, error, stackTrace) =>
+                  _buildEmojiPlaceholder(),
             );
           }
           return _buildEmojiPlaceholder();
         },
       );
     }
-    
+
     // imageAsset이 제공된 경우 (하위 호환성)
     if (widget.imageAsset != null) {
       final imagePath = widget.imageAsset!;
@@ -458,14 +467,15 @@ class _MeetingCard2025State extends State<MeetingCard2025>
         return _buildAssetImage(imagePath);
       }
     }
-    
+
     // 이미지가 없으면 카테고리 이모지 표시
     return _buildEmojiPlaceholder();
   }
 
   /// 동적 이미지 경로인지 확인
   bool _isDynamicImagePath(String path) {
-    return !path.startsWith('assets/') && (path.contains('/') || path.endsWith('.jpg') || path.endsWith('.png'));
+    return !path.startsWith('assets/') &&
+        (path.contains('/') || path.endsWith('.jpg') || path.endsWith('.png'));
   }
 
   /// 동적 이미지 위젯 생성 (파일 시스템)
@@ -490,7 +500,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
   Widget _buildErrorPlaceholder() {
     return _buildEmojiPlaceholder();
   }
-  
+
   /// 이모지 플레이스홀더 (이미지가 없거나 로드 실패시)
   Widget _buildEmojiPlaceholder() {
     return Container(

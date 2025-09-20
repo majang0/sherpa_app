@@ -17,13 +17,13 @@ import '../../../meetings/utils/meeting_image_utils.dart';
 // Shared Providers
 import '../../../../shared/providers/global_meeting_provider.dart';
 import '../../../../shared/providers/global_user_provider.dart';
+import '../../../../shared/providers/global_ai_recommendation_provider.dart';
 
 // Shared Widgets
 import '../../../../shared/widgets/components/molecules/participant_avatars_2025.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 
 // AI Recommendation Widgets
-import '../../../meetings/ai/meeting_recommendation_ai.dart';
 import '../../../meetings/ai/models/ai_recommended_meeting.dart';
 import '../../../meetings/presentation/widgets/ai/ai_analysis_loading_widget.dart';
 import '../../../meetings/presentation/widgets/ai/ai_recommendation_result_cards.dart';
@@ -1103,91 +1103,12 @@ class _SherpiPersonalizedMeetingWidgetState
   }
 }
 
-class _AIRecommendationState {
-  final bool isLoading;
-  final List<AIRecommendedMeeting> recommendations;
-  final String? error;
-
-  const _AIRecommendationState({
-    this.isLoading = false,
-    this.recommendations = const [],
-    this.error,
-  });
-
-  _AIRecommendationState copyWith({
-    bool? isLoading,
-    List<AIRecommendedMeeting>? recommendations,
-    String? error,
-  }) {
-    return _AIRecommendationState(
-      isLoading: isLoading ?? this.isLoading,
-      recommendations: recommendations ?? this.recommendations,
-      error: error,
-    );
-  }
-}
-
-class _AIRecommendationNotifier extends StateNotifier<_AIRecommendationState> {
-  final MeetingRecommendationAI _aiEngine = MeetingRecommendationAI();
-
-  _AIRecommendationNotifier() : super(const _AIRecommendationState()) {
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    await _aiEngine.initialize();
-  }
-
-  Future<void> generateRecommendations({
-    required GlobalUser user,
-    required List<dynamic> availableMeetings,
-  }) async {
-    state = state.copyWith(isLoading: true, error: null);
-
-    try {
-      final meetings = availableMeetings.whereType<dynamic>().toList();
-      if (meetings.isEmpty) {
-        throw Exception('참여 가능한 모임이 없습니다');
-      }
-
-      final recommendations = await _aiEngine.getAIRecommendations(
-        user: user,
-        availableMeetings: meetings.cast(),
-        useCache: true,
-      );
-
-      if (recommendations.isEmpty) {
-        throw Exception('추천할 모임을 찾을 수 없습니다');
-      }
-
-      state = state.copyWith(
-        isLoading: false,
-        recommendations: recommendations,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        error: e.toString(),
-      );
-    }
-  }
-
-  void reset() {
-    state = const _AIRecommendationState();
-  }
-}
-
-final _aiRecommendationProvider =
-    StateNotifierProvider<_AIRecommendationNotifier, _AIRecommendationState>(
-  (ref) => _AIRecommendationNotifier(),
-);
-
 class _CompactAIRecommendationButton extends ConsumerWidget {
   const _CompactAIRecommendationButton();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final aiState = ref.watch(_aiRecommendationProvider);
+    final aiState = ref.watch(globalAIRecommendationProvider);
 
     return GestureDetector(
       onTap: aiState.isLoading
@@ -1210,7 +1131,7 @@ class _CompactAIRecommendationButton extends ConsumerWidget {
               );
 
               await ref
-                  .read(_aiRecommendationProvider.notifier)
+                  .read(globalAIRecommendationProvider.notifier)
                   .generateRecommendations(
                     user: user,
                     availableMeetings: meetingState.availableMeetings,
@@ -1220,7 +1141,7 @@ class _CompactAIRecommendationButton extends ConsumerWidget {
                 Navigator.of(context).pop();
               }
 
-              final updatedState = ref.read(_aiRecommendationProvider);
+              final updatedState = ref.read(globalAIRecommendationProvider);
 
               if (updatedState.error != null && context.mounted) {
                 _showError(context, updatedState.error!);

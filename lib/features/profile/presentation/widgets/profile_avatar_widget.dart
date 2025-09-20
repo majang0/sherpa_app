@@ -25,7 +25,7 @@ class ProfileAvatarWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userTitle = ref.watch(globalUserTitleProvider);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -35,7 +35,9 @@ class ProfileAvatarWidget extends ConsumerWidget {
             radius: size / 2,
             backgroundColor: AppColors.primary,
             backgroundImage: _getProfileImageProvider(),
-            child: _getProfileImageProvider() == null ? _buildDefaultAvatar() : null,
+            child: _getProfileImageProvider() == null
+                ? _buildDefaultAvatar()
+                : null,
           ),
 
           // 레벨 배지
@@ -95,9 +97,9 @@ class ProfileAvatarWidget extends ConsumerWidget {
     if (user.profileImageUrl == null || user.profileImageUrl!.isEmpty) {
       return null;
     }
-    
+
     // 로컬 파일 경로인지 확인
-    if (user.profileImageUrl!.startsWith('/') || 
+    if (user.profileImageUrl!.startsWith('/') ||
         user.profileImageUrl!.contains(':\\') ||
         user.profileImageUrl!.startsWith('C:\\') ||
         !user.profileImageUrl!.startsWith('http')) {
@@ -112,13 +114,13 @@ class ProfileAvatarWidget extends ConsumerWidget {
       return NetworkImage(user.profileImageUrl!);
     }
   }
-  
+
   // 프로필 이미지 또는 기본 아바타 빌드 (구버전 - 참고용으로 유지)
   Widget _buildAvatarContent() {
     // profileImageUrl이 있는 경우 이미지 표시
     if (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty) {
       // 로컬 파일 경로인지 확인 (윈도우 경로 또는 Unix 경로)
-      if (user.profileImageUrl!.startsWith('/') || 
+      if (user.profileImageUrl!.startsWith('/') ||
           user.profileImageUrl!.contains(':\\') ||
           user.profileImageUrl!.startsWith('C:\\') ||
           !user.profileImageUrl!.startsWith('http')) {
@@ -157,14 +159,16 @@ class ProfileAvatarWidget extends ConsumerWidget {
         );
       }
     }
-    
+
     // 이미지가 없으면 기본 아바타 표시
     return _buildDefaultAvatar();
   }
-  
+
   Widget _buildDefaultAvatar() {
     return Text(
-      user.name.isNotEmpty ? user.name[0].toUpperCase() : '셰', // ✅ GlobalUser.name 사용
+      user.name.isNotEmpty
+          ? user.name[0].toUpperCase()
+          : '셰', // ✅ GlobalUser.name 사용
       style: GoogleFonts.notoSans(
         fontSize: size * 0.4,
         fontWeight: FontWeight.w700,

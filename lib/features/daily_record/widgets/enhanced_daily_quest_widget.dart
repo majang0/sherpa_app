@@ -12,25 +12,27 @@ import '../../home/presentation/widgets/all_goals_reward_modal.dart';
 
 class EnhancedDailyQuestWidget extends ConsumerStatefulWidget {
   const EnhancedDailyQuestWidget({Key? key}) : super(key: key);
-  
+
   @override
-  ConsumerState<EnhancedDailyQuestWidget> createState() => _EnhancedDailyQuestWidgetState();
+  ConsumerState<EnhancedDailyQuestWidget> createState() =>
+      _EnhancedDailyQuestWidgetState();
 }
 
-class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWidget>
+class _EnhancedDailyQuestWidgetState
+    extends ConsumerState<EnhancedDailyQuestWidget>
     with TickerProviderStateMixin {
   late AnimationController _slideController;
   late AnimationController _pulseController;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _pulseAnimation;
-  
+
   final Map<String, AnimationController> _itemControllers = {};
   final Map<String, Animation<double>> _itemAnimations = {};
 
   @override
   void initState() {
     super.initState();
-    
+
     // Main slide animation with smooth cubic easing
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 500),
@@ -58,7 +60,7 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
     ));
 
     _slideController.forward();
-    
+
     // Sync goals on init
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(globalUserProvider.notifier).syncDailyGoalsWithData();
@@ -143,7 +145,7 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
     final user = ref.watch(globalUserProvider);
     final goals = user.dailyRecords.dailyGoals;
     int completedCount = goals.where((g) => _isGoalAchieved(g.id, user)).length;
-    
+
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 8, 12, 14),
       decoration: BoxDecoration(
@@ -327,7 +329,7 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
     final isAchieved = _isGoalAchieved(goal.id, user);
     final progress = _getGoalProgress(goal.id, user);
     final statusText = _getAchievementStatus(goal.id, user);
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Material(
@@ -340,7 +342,7 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
             curve: Curves.easeOutCubic,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isAchieved 
+              color: isAchieved
                   ? const Color(0xFFF0FDF4) // 연한 성공 색상
                   : Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -397,13 +399,16 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                             ? ModernColors.success.withOpacity(0.1)
                             : Colors.white,
                         borderRadius: BorderRadius.circular(12),
-                        boxShadow: isAchieved ? null : [
-                          BoxShadow(
-                            color: ModernColors.shadowBase.withOpacity(0.04),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+                        boxShadow: isAchieved
+                            ? null
+                            : [
+                                BoxShadow(
+                                  color:
+                                      ModernColors.shadowBase.withOpacity(0.04),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
                       ),
                       child: Icon(
                         isAchieved
@@ -433,9 +438,8 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                               ? const Color(0xFF94A3B8)
                               : const Color(0xFF1E293B),
                           letterSpacing: -0.5,
-                          decoration: isAchieved
-                              ? TextDecoration.lineThrough
-                              : null,
+                          decoration:
+                              isAchieved ? TextDecoration.lineThrough : null,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -471,9 +475,14 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                   ),
               ],
             ),
-          ).animate(delay: Duration(milliseconds: 100 * index))
-            .fadeIn(duration: 400.ms)
-            .slideX(begin: 0.1, end: 0, duration: 400.ms, curve: Curves.easeOutCubic),
+          )
+              .animate(delay: Duration(milliseconds: 100 * index))
+              .fadeIn(duration: 400.ms)
+              .slideX(
+                  begin: 0.1,
+                  end: 0,
+                  duration: 400.ms,
+                  curve: Curves.easeOutCubic),
         ),
       ),
     );
@@ -482,7 +491,7 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
   Widget _buildProgressOverview() {
     final user = ref.watch(globalUserProvider);
     final goals = user.dailyRecords.dailyGoals;
-    
+
     int completedCount = goals.where((g) => _isGoalAchieved(g.id, user)).length;
     final totalCount = goals.length;
     final allCompleted = completedCount == totalCount;
@@ -569,7 +578,7 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  allCompleted 
+                  allCompleted
                       ? '훌륭해요! 오늘의 모든 목표를 완료했어요.'
                       : '조금만 더 힘내요! ${totalCount - completedCount}개의 목표가 남았어요.',
                   style: TextStyle(
@@ -589,11 +598,10 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
     );
   }
 
-
   Widget _buildRewardSection() {
     final user = ref.watch(globalUserProvider);
     final goals = user.dailyRecords.dailyGoals;
-    
+
     int completedCount = goals.where((g) => _isGoalAchieved(g.id, user)).length;
     final totalCount = goals.length;
     final allCompleted = completedCount == totalCount;
@@ -605,227 +613,228 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
       curve: Curves.easeOutCubic,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: allCompleted
-                    ? [
-                        ModernColors.success.withOpacity(0.08),
-                        ModernColors.success.withOpacity(0.04),
-                      ]
-                    : [
-                        ModernColors.gray100.withOpacity(0.5),
-                        ModernColors.gray50.withOpacity(0.3),
-                      ],
-              ),
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                // 메인 상태별 그림자
-                BoxShadow(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: allCompleted
+              ? [
+                  ModernColors.success.withOpacity(0.08),
+                  ModernColors.success.withOpacity(0.04),
+                ]
+              : [
+                  ModernColors.gray100.withOpacity(0.5),
+                  ModernColors.gray50.withOpacity(0.3),
+                ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          // 메인 상태별 그림자
+          BoxShadow(
+            color: allCompleted
+                ? const Color(0xFF10B981).withOpacity(0.15)
+                : const Color(0xFF64748B).withOpacity(0.08),
+            blurRadius: allCompleted ? 20 : 12,
+            offset: const Offset(0, 6),
+            spreadRadius: allCompleted ? 1 : 0,
+          ),
+          // 서브틀한 깊이감
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+          // 내부 하이라이트
+          BoxShadow(
+            color: Colors.white.withOpacity(0.7),
+            blurRadius: 1,
+            offset: const Offset(0, 1),
+            spreadRadius: -1,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Reward header
+          Row(
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
                   color: allCompleted
-                      ? const Color(0xFF10B981).withOpacity(0.15)
-                      : const Color(0xFF64748B).withOpacity(0.08),
-                  blurRadius: allCompleted ? 20 : 12,
-                  offset: const Offset(0, 6),
-                  spreadRadius: allCompleted ? 1 : 0,
+                      ? ModernColors.success.withOpacity(0.1)
+                      : ModernColors.gray200.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                // 서브틀한 깊이감
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
+                child: Icon(
+                  Icons.card_giftcard_outlined,
+                  color: allCompleted
+                      ? ModernColors.success
+                      : ModernColors.textTertiary,
+                  size: 15,
                 ),
-                // 내부 하이라이트
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.7),
-                  blurRadius: 1,
-                  offset: const Offset(0, 1),
-                  spreadRadius: -1,
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                // Reward header
-                Row(
-                  children: [
-                    Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: allCompleted
-                            ? ModernColors.success.withOpacity(0.1)
-                            : ModernColors.gray200.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(
-                        Icons.card_giftcard_outlined,
-                        color: allCompleted
-                            ? ModernColors.success
-                            : ModernColors.textTertiary,
-                        size: 15,
-                      ),
-                    ),
-                    const SizedBox(width: 9),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '완주 보상',
-                          style: TextStyle(
-                          fontFamily: 'Pretendard',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                            color: allCompleted
-                                ? const Color(0xFF10B981)
-                                : const Color(0xFF1E293B),
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                        if (!allCompleted)
-                          Text(
-                            '모든 목표 완료 시 획득',
-                            style: TextStyle(
-                              fontFamily: 'Pretendard',
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: const Color(0xFF3B82F6),
-                              letterSpacing: -0.3,
-                            ),
-                          ),
-                      ],
-                    ),
-                    const Spacer(),
-                    if (allCompleted)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: isRewardClaimed
-                              ? ModernColors.success.withOpacity(0.2)
-                              : ModernColors.success,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          isRewardClaimed ? '수령 완료' : '수령 가능',
-                          style: TextStyle(
-                            fontFamily: 'Pretendard',
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color: isRewardClaimed
-                                ? ModernColors.success
-                                : Colors.white,
-                          ),
-                        ),
-                      )
-                    else
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: ModernColors.gray200.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.lock_outline_rounded,
-                          size: 16,
-                          color: ModernColors.textTertiary,
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                // Reward items
-                AnimatedOpacity(
-                  duration: const Duration(milliseconds: 300),
-                  opacity: allCompleted ? 1.0 : 0.6,
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
+              ),
+              const SizedBox(width: 9),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '완주 보상',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
                       color: allCompleted
-                          ? Colors.white.withOpacity(0.5)
-                          : ModernColors.gray100.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildRewardItem(
-                          Icons.star_rounded,
-                          '200',
-                          'XP',
-                          isActive: allCompleted,
-                        ),
-                        Container(
-                          width: 1,
-                          height: 24,
-                          color: allCompleted
-                              ? ModernColors.gray200
-                              : ModernColors.gray200.withOpacity(0.3),
-                        ),
-                        _buildRewardItem(
-                          Icons.toll_rounded,
-                          '50',
-                          '포인트',
-                          isActive: allCompleted,
-                        ),
-                        Container(
-                          width: 1,
-                          height: 24,
-                          color: allCompleted
-                              ? ModernColors.gray200
-                              : ModernColors.gray200.withOpacity(0.3),
-                        ),
-                        _buildRewardItem(
-                          Icons.local_fire_department_rounded,
-                          '+0.1',
-                          '의지력',
-                          isActive: allCompleted,
-                        ),
-                      ],
+                          ? const Color(0xFF10B981)
+                          : const Color(0xFF1E293B),
+                      letterSpacing: -0.5,
                     ),
                   ),
-                ),
-                if (allCompleted && !isRewardClaimed) ...[
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => _claimReward(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ModernColors.success,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.redeem_rounded, size: 14),
-                          const SizedBox(width: 6),
-                          Text(
-                            '보상 받기',
-                            style: TextStyle(
-                              fontFamily: 'Pretendard',
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: -0.3,
-                            ),
-                          ),
-                        ],
+                  if (!allCompleted)
+                    Text(
+                      '모든 목표 완료 시 획득',
+                      style: TextStyle(
+                        fontFamily: 'Pretendard',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF3B82F6),
+                        letterSpacing: -0.3,
                       ),
                     ),
+                ],
+              ),
+              const Spacer(),
+              if (allCompleted)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: isRewardClaimed
+                        ? ModernColors.success.withOpacity(0.2)
+                        : ModernColors.success,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    isRewardClaimed ? '수령 완료' : '수령 가능',
+                    style: TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color:
+                          isRewardClaimed ? ModernColors.success : Colors.white,
+                    ),
+                  ),
+                )
+              else
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: ModernColors.gray200.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.lock_outline_rounded,
+                    size: 16,
+                    color: ModernColors.textTertiary,
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          // Reward items
+          AnimatedOpacity(
+            duration: const Duration(milliseconds: 300),
+            opacity: allCompleted ? 1.0 : 0.6,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: allCompleted
+                    ? Colors.white.withOpacity(0.5)
+                    : ModernColors.gray100.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildRewardItem(
+                    Icons.star_rounded,
+                    '200',
+                    'XP',
+                    isActive: allCompleted,
+                  ),
+                  Container(
+                    width: 1,
+                    height: 24,
+                    color: allCompleted
+                        ? ModernColors.gray200
+                        : ModernColors.gray200.withOpacity(0.3),
+                  ),
+                  _buildRewardItem(
+                    Icons.toll_rounded,
+                    '50',
+                    '포인트',
+                    isActive: allCompleted,
+                  ),
+                  Container(
+                    width: 1,
+                    height: 24,
+                    color: allCompleted
+                        ? ModernColors.gray200
+                        : ModernColors.gray200.withOpacity(0.3),
+                  ),
+                  _buildRewardItem(
+                    Icons.local_fire_department_rounded,
+                    '+0.1',
+                    '의지력',
+                    isActive: allCompleted,
                   ),
                 ],
-              ],
+              ),
             ),
-    ).animate()
-      .fadeIn(duration: 500.ms, delay: 300.ms)
-      .slideY(begin: 0.1, end: 0, duration: 500.ms, curve: Curves.easeOutCubic);
+          ),
+          if (allCompleted && !isRewardClaimed) ...[
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => _claimReward(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ModernColors.success,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.redeem_rounded, size: 14),
+                    const SizedBox(width: 6),
+                    Text(
+                      '보상 받기',
+                      style: TextStyle(
+                        fontFamily: 'Pretendard',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    ).animate().fadeIn(duration: 500.ms, delay: 300.ms).slideY(
+        begin: 0.1, end: 0, duration: 500.ms, curve: Curves.easeOutCubic);
   }
 
-  Widget _buildRewardItem(IconData icon, String value, String label, {bool isActive = true}) {
+  Widget _buildRewardItem(IconData icon, String value, String label,
+      {bool isActive = true}) {
     return Column(
       children: [
         Icon(
@@ -860,15 +869,15 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
 
   void _claimReward() {
     HapticFeedbackManager.heavyImpact();
-    
+
     final user = ref.read(globalUserProvider);
-    
+
     // 보상 받기 실행 (내부에서 셰르피 메시지 자동 호출됨)
     ref.read(globalUserProvider.notifier).claimAllGoalsReward();
-    
+
     // 현재 bottom sheet 닫기
     Navigator.pop(context);
-    
+
     // AllGoalsRewardModal 표시 (오버레이 방식)
     Navigator.push(
       context,
@@ -900,36 +909,34 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
   bool _isGoalAchieved(String goalId, dynamic user) {
     final records = user.dailyRecords;
     final today = DateTime.now();
-    
+
     switch (goalId) {
       case 'steps':
         return records.todaySteps >= 6000;
       case 'focus':
         return records.todayFocusMinutes >= 30;
       case 'reading':
-        return records.readingLogs.any((log) => 
-          _isToday(log.date, today) && log.pages >= 1);
+        return records.readingLogs
+            .any((log) => _isToday(log.date, today) && log.pages >= 1);
       case 'diary':
-        return records.diaryLogs.any((log) => 
-          _isToday(log.date, today));
+        return records.diaryLogs.any((log) => _isToday(log.date, today));
       case 'exercise':
-        return records.exerciseLogs.any((log) => 
-          _isToday(log.date, today));
+        return records.exerciseLogs.any((log) => _isToday(log.date, today));
       default:
         return false;
     }
   }
-  
+
   bool _isToday(DateTime date, DateTime today) {
     return date.year == today.year &&
-           date.month == today.month &&
-           date.day == today.day;
+        date.month == today.month &&
+        date.day == today.day;
   }
-  
+
   String _getAchievementStatus(String goalId, dynamic user) {
     final records = user.dailyRecords;
     final today = DateTime.now();
-    
+
     switch (goalId) {
       case 'steps':
         return '${records.todaySteps.toStringAsFixed(0)} / 6,000걸음';
@@ -937,14 +944,16 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
         return '${records.todayFocusMinutes}분 / 30분';
       case 'reading':
         final todayPages = records.readingLogs
-          .where((log) => _isToday(log.date, today))
-          .fold(0, (sum, log) => sum + log.pages);
+            .where((log) => _isToday(log.date, today))
+            .fold(0, (sum, log) => sum + log.pages);
         return '$todayPages페이지 / 1페이지';
       case 'diary':
-        final hasDiary = records.diaryLogs.any((log) => _isToday(log.date, today));
+        final hasDiary =
+            records.diaryLogs.any((log) => _isToday(log.date, today));
         return hasDiary ? '완료' : '미작성';
       case 'exercise':
-        final hasExercise = records.exerciseLogs.any((log) => _isToday(log.date, today));
+        final hasExercise =
+            records.exerciseLogs.any((log) => _isToday(log.date, today));
         return hasExercise ? '완료' : '미기록';
       default:
         return '미완료';
@@ -953,7 +962,7 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
 
   double _getGoalProgress(String goalId, dynamic user) {
     final records = user.dailyRecords;
-    
+
     switch (goalId) {
       case 'steps':
         return (records.todaySteps / 6000).clamp(0.0, 1.0);
@@ -962,15 +971,19 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
       case 'reading':
         final today = DateTime.now();
         final todayPages = records.readingLogs
-          .where((log) => _isToday(log.date, today))
-          .fold(0, (sum, log) => sum + log.pages);
+            .where((log) => _isToday(log.date, today))
+            .fold(0, (sum, log) => sum + log.pages);
         return (todayPages / 1).clamp(0.0, 1.0);
       case 'diary':
         final today = DateTime.now();
-        return records.diaryLogs.any((log) => _isToday(log.date, today)) ? 1.0 : 0.0;
+        return records.diaryLogs.any((log) => _isToday(log.date, today))
+            ? 1.0
+            : 0.0;
       case 'exercise':
         final today = DateTime.now();
-        return records.exerciseLogs.any((log) => _isToday(log.date, today)) ? 1.0 : 0.0;
+        return records.exerciseLogs.any((log) => _isToday(log.date, today))
+            ? 1.0
+            : 0.0;
       default:
         return 0.0;
     }
@@ -978,7 +991,7 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
 
   void _handleGoalTap(String goalId) {
     HapticFeedbackManager.mediumImpact();
-    
+
     switch (goalId) {
       case 'steps':
         _showModernInfoDialog(
@@ -1135,4 +1148,3 @@ class _EnhancedDailyQuestWidgetState extends ConsumerState<EnhancedDailyQuestWid
     }
   }
 }
-

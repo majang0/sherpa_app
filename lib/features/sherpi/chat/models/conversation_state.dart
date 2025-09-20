@@ -2,7 +2,7 @@ import 'package:sherpa_app/features/sherpi/chat/models/chat_message.dart';
 import 'package:sherpa_app/core/constants/sherpi_emotions.dart';
 
 /// 🗣️ 대화 상태 모델
-/// 
+///
 /// 현재 진행 중인 셰르피와의 대화 세션을 관리합니다.
 class ConversationState {
   final String sessionId;
@@ -99,8 +99,9 @@ class ConversationState {
     return ConversationState(
       sessionId: json['sessionId'] as String,
       messages: (json['messages'] as List<dynamic>?)
-          ?.map((m) => ChatMessage.fromJson(m as Map<String, dynamic>))
-          .toList() ?? [],
+              ?.map((m) => ChatMessage.fromJson(m as Map<String, dynamic>))
+              .toList() ??
+          [],
       status: ConversationStatus.values.firstWhere(
         (s) => s.name == json['status'],
         orElse: () => ConversationStatus.active,
@@ -110,8 +111,8 @@ class ConversationState {
         orElse: () => SherpiEmotion.happy,
       ),
       startTime: DateTime.parse(json['startTime'] as String),
-      endTime: json['endTime'] != null 
-          ? DateTime.parse(json['endTime'] as String) 
+      endTime: json['endTime'] != null
+          ? DateTime.parse(json['endTime'] as String)
           : null,
       context: ConversationContext.values.firstWhere(
         (c) => c.name == json['context'],
@@ -128,15 +129,15 @@ class ConversationState {
   bool get hasMessages => messages.isNotEmpty;
   int get messageCount => messages.length;
   ChatMessage? get lastMessage => messages.isNotEmpty ? messages.last : null;
-  ChatMessage? get lastSherpiMessage => 
-    messages.where((m) => m.isSherpiMessage).isNotEmpty 
-        ? messages.where((m) => m.isSherpiMessage).last 
-        : null;
-  ChatMessage? get lastUserMessage => 
-    messages.where((m) => m.isUserMessage).isNotEmpty 
-        ? messages.where((m) => m.isUserMessage).last 
-        : null;
-  
+  ChatMessage? get lastSherpiMessage =>
+      messages.where((m) => m.isSherpiMessage).isNotEmpty
+          ? messages.where((m) => m.isSherpiMessage).last
+          : null;
+  ChatMessage? get lastUserMessage =>
+      messages.where((m) => m.isUserMessage).isNotEmpty
+          ? messages.where((m) => m.isUserMessage).last
+          : null;
+
   /// 대화 지속 시간
   Duration get duration {
     final end = endTime ?? DateTime.now();
@@ -146,34 +147,34 @@ class ConversationState {
   /// 대화 요약 생성
   String get summary {
     if (messages.isEmpty) return '대화가 시작되지 않았습니다.';
-    
+
     final userMessageCount = messages.where((m) => m.isUserMessage).length;
     final sherpiMessageCount = messages.where((m) => m.isSherpiMessage).length;
-    
+
     return '총 ${messageCount}개 메시지 (사용자: $userMessageCount, 셰르피: $sherpiMessageCount)';
   }
 }
 
 /// 🔄 대화 진행 상태
 enum ConversationStatus {
-  active,   // 활성화 (진행 중)
-  paused,   // 일시정지
-  ended,    // 종료
+  active, // 활성화 (진행 중)
+  paused, // 일시정지
+  ended, // 종료
   archived, // 보관됨
 }
 
 /// 🎯 대화 맥락/상황
 enum ConversationContext {
-  general,        // 일반 대화
-  celebration,    // 축하 상황
-  encouragement,  // 격려 필요
-  guidance,       // 조언/가이드
-  reflection,     // 회고/돌아보기
-  planning,       // 계획 세우기
-  crisis,         // 위기/어려운 상황
-  milestone,      // 마일스톤 달성
-  casual,         // 일상 대화
-  deep,           // 깊은 대화
+  general, // 일반 대화
+  celebration, // 축하 상황
+  encouragement, // 격려 필요
+  guidance, // 조언/가이드
+  reflection, // 회고/돌아보기
+  planning, // 계획 세우기
+  crisis, // 위기/어려운 상황
+  milestone, // 마일스톤 달성
+  casual, // 일상 대화
+  deep, // 깊은 대화
 }
 
 /// 💡 대화 맥락별 유틸리티

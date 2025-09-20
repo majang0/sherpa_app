@@ -13,7 +13,8 @@ import '../../../shared/models/global_user_model.dart';
 
 class MovieFullViewWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<MovieFullViewWidget> createState() => _MovieFullViewWidgetState();
+  ConsumerState<MovieFullViewWidget> createState() =>
+      _MovieFullViewWidgetState();
 }
 
 class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
@@ -43,11 +44,12 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
@@ -103,7 +105,8 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
         title: Text(
@@ -134,37 +137,37 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 월 선택 컨트롤
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildMonthSelector(monthlyLogs),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 달력 그리드
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildCalendarGrid(monthlyLogs),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 장르 범례
                   if (monthlyLogs.isNotEmpty)
                     ScaleTransition(
                       scale: _scaleAnimation,
                       child: _buildGenreLegend(monthlyLogs),
                     ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -206,7 +209,8 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
             child: IconButton(
               onPressed: () {
                 setState(() {
-                  _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month - 1);
+                  _selectedMonth =
+                      DateTime(_selectedMonth.year, _selectedMonth.month - 1);
                 });
                 HapticFeedbackManager.lightImpact();
               },
@@ -256,7 +260,8 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
             child: IconButton(
               onPressed: () {
                 setState(() {
-                  _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1);
+                  _selectedMonth =
+                      DateTime(_selectedMonth.year, _selectedMonth.month + 1);
                 });
                 HapticFeedbackManager.lightImpact();
               },
@@ -319,9 +324,9 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
               );
             }).toList(),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // 달력 그리드
           ..._buildCalendarRows(monthlyLogs),
         ],
@@ -333,24 +338,25 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
     final firstDay = DateTime(_selectedMonth.year, _selectedMonth.month, 1);
     final lastDay = DateTime(_selectedMonth.year, _selectedMonth.month + 1, 0);
     final startDate = firstDay.subtract(Duration(days: firstDay.weekday % 7));
-    
+
     List<Widget> rows = [];
     DateTime currentDate = startDate;
-    
+
     while (currentDate.isBefore(lastDay.add(const Duration(days: 1)))) {
       List<Widget> weekDays = [];
-      
+
       for (int i = 0; i < 7; i++) {
-        final dayMovies = monthlyLogs.where((log) => 
-          log.date.year == currentDate.year &&
-          log.date.month == currentDate.month &&
-          log.date.day == currentDate.day
-        ).toList();
-        
+        final dayMovies = monthlyLogs
+            .where((log) =>
+                log.date.year == currentDate.year &&
+                log.date.month == currentDate.month &&
+                log.date.day == currentDate.day)
+            .toList();
+
         weekDays.add(_buildCalendarDay(currentDate, dayMovies));
         currentDate = currentDate.add(const Duration(days: 1));
       }
-      
+
       rows.add(
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
@@ -358,7 +364,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
         ),
       );
     }
-    
+
     return rows;
   }
 
@@ -366,7 +372,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
     final isCurrentMonth = date.month == _selectedMonth.month;
     final isToday = _isToday(date);
     final hasMovies = dayMovies.isNotEmpty;
-    
+
     return Expanded(
       child: GestureDetector(
         onTap: () => _onDateTap(date, dayMovies),
@@ -374,18 +380,18 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
           height: 45,
           margin: const EdgeInsets.all(2),
           decoration: BoxDecoration(
-            color: isToday 
-              ? const Color(0xFFEF4444).withOpacity(0.1)
-              : hasMovies 
-                ? Colors.white
-                : Colors.transparent,
+            color: isToday
+                ? const Color(0xFFEF4444).withOpacity(0.1)
+                : hasMovies
+                    ? Colors.white
+                    : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isToday 
-                ? const Color(0xFFEF4444)
-                : hasMovies 
-                  ? const Color(0xFFEF4444).withOpacity(0.2)
-                  : Colors.transparent,
+              color: isToday
+                  ? const Color(0xFFEF4444)
+                  : hasMovies
+                      ? const Color(0xFFEF4444).withOpacity(0.2)
+                      : Colors.transparent,
               width: isToday ? 2 : 1,
             ),
           ),
@@ -398,13 +404,15 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: isCurrentMonth 
-                      ? (isToday ? const Color(0xFFEF4444) : RecordColors.textPrimary)
-                      : RecordColors.textLight,
+                    color: isCurrentMonth
+                        ? (isToday
+                            ? const Color(0xFFEF4444)
+                            : RecordColors.textPrimary)
+                        : RecordColors.textLight,
                   ),
                 ),
               ),
-              
+
               // 영화 표시
               if (hasMovies)
                 Positioned(
@@ -414,25 +422,25 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     width: 16,
                     height: 16,
                     decoration: BoxDecoration(
-                      color: dayMovies.length > 1 
-                        ? const Color(0xFFEF4444)
-                        : _getGenreColor(dayMovies.first.genre),
+                      color: dayMovies.length > 1
+                          ? const Color(0xFFEF4444)
+                          : _getGenreColor(dayMovies.first.genre),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Center(
                       child: dayMovies.length > 1
-                        ? Text(
-                            '${dayMovies.length}',
-                            style: GoogleFonts.notoSans(
-                              fontSize: 8,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                          ? Text(
+                              '${dayMovies.length}',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 8,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              _getGenreEmoji(dayMovies.first.genre),
+                              style: const TextStyle(fontSize: 8),
                             ),
-                          )
-                        : Text(
-                            _getGenreEmoji(dayMovies.first.genre),
-                            style: const TextStyle(fontSize: 8),
-                          ),
                     ),
                   ),
                 ),
@@ -448,10 +456,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
     for (final movie in monthlyLogs) {
       genreMap[movie.genre] = _getGenreColor(movie.genre);
     }
-    
+
     final genres = genreMap.entries.toList()
       ..sort((a, b) => a.key.compareTo(b.key));
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
@@ -514,13 +522,13 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
   bool _isToday(DateTime date) {
     final today = DateTime.now();
     return date.year == today.year &&
-           date.month == today.month &&
-           date.day == today.day;
+        date.month == today.month &&
+        date.day == today.day;
   }
 
   void _onDateTap(DateTime date, List<MovieLog> dayMovies) {
     HapticFeedbackManager.lightImpact();
-    
+
     if (dayMovies.isEmpty) {
       // 영화가 없는 경우 - 빈 날짜 모달
       _showEmptyDateModal(date);
@@ -560,7 +568,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // 헤더
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
@@ -570,7 +578,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [const Color(0xFFEF4444), const Color(0xFFDC2626)],
+                          colors: [
+                            const Color(0xFFEF4444),
+                            const Color(0xFFDC2626)
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -607,10 +618,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   ],
                 ),
               ),
-              
+
               // 빈 날짜 콘텐츠
               _buildEmptyDateContent(date),
-              
+
               // 영화 기록 작성하기 버튼
               Container(
                 width: double.infinity,
@@ -684,7 +695,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // 헤더
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
@@ -694,7 +705,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [const Color(0xFFEF4444), const Color(0xFFDC2626)],
+                          colors: [
+                            const Color(0xFFEF4444),
+                            const Color(0xFFDC2626)
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -730,10 +744,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   ],
                 ),
               ),
-              
+
               // 단일 영화 미리보기
               _buildSingleMoviePreview(movie),
-              
+
               // 영화 기록 작성하기 버튼
               Container(
                 width: double.infinity,
@@ -807,7 +821,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // 헤더
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
@@ -817,7 +831,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [const Color(0xFFEF4444), const Color(0xFFDC2626)],
+                          colors: [
+                            const Color(0xFFEF4444),
+                            const Color(0xFFDC2626)
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -854,10 +871,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   ],
                 ),
               ),
-              
+
               // 영화 목록
               _buildMultipleMoviesList(movies),
-              
+
               // 영화 기록 작성하기 버튼
               Container(
                 width: double.infinity,
@@ -908,12 +925,12 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
     final now = DateTime.now();
     final isToday = _isToday(date);
     final isPast = date.isBefore(now.subtract(const Duration(days: 1)));
-    
+
     String emoji;
     String title;
     String subtitle;
     List<String> suggestions;
-    
+
     if (isToday) {
       emoji = '🎬';
       title = '오늘 영화를 감상해보는 건 어떨까요?';
@@ -945,7 +962,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
         '영화관에서 볼지 집에서 볼지 정해보세요'
       ];
     }
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -998,9 +1015,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
               ],
             ),
           ),
-          
           const SizedBox(height: 20),
-          
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
@@ -1049,37 +1064,36 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                 ),
                 const SizedBox(height: 16),
                 ...suggestions.map((suggestion) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 4,
-                        height: 4,
-                        margin: const EdgeInsets.only(top: 8, right: 12),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFEF4444),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          suggestion,
-                          style: GoogleFonts.notoSans(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
-                            height: 1.4,
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 4,
+                            height: 4,
+                            margin: const EdgeInsets.only(top: 8, right: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEF4444),
+                              shape: BoxShape.circle,
+                            ),
                           ),
-                        ),
+                          Expanded(
+                            child: Text(
+                              suggestion,
+                              style: GoogleFonts.notoSans(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: RecordColors.textSecondary,
+                                height: 1.4,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                )),
+                    )),
               ],
             ),
           ),
-          
           const SizedBox(height: 16),
         ],
       ),
@@ -1214,7 +1228,6 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
             ],
           ),
         ),
-        
         Padding(
           padding: const EdgeInsets.all(24),
           child: Row(
@@ -1232,7 +1245,8 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: const Color(0xFFEF4444),
-                    side: BorderSide(color: const Color(0xFFEF4444), width: 1.5),
+                    side:
+                        BorderSide(color: const Color(0xFFEF4444), width: 1.5),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -1254,9 +1268,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   ),
                 ),
               ),
-              
               const SizedBox(width: 12),
-              
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
@@ -1311,9 +1323,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
         itemCount: movies.length,
         itemBuilder: (context, index) {
           final movie = movies[index];
-          
+
           return Container(
-            margin: EdgeInsets.only(bottom: index == movies.length - 1 ? 0 : 12),
+            margin:
+                EdgeInsets.only(bottom: index == movies.length - 1 ? 0 : 12),
             child: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
@@ -1355,7 +1368,6 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       ),
                     ),
                     const SizedBox(width: 12),
-                    
                     Container(
                       width: 36,
                       height: 36,
@@ -1371,7 +1383,6 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       ),
                     ),
                     const SizedBox(width: 12),
-                    
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1423,7 +1434,6 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                         ],
                       ),
                     ),
-                    
                     Icon(
                       Icons.chevron_right,
                       color: RecordColors.textLight,
@@ -1441,39 +1451,67 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
 
   String _getGenreEmoji(String genre) {
     switch (genre) {
-      case '드라마': return '🎭';
-      case '액션': return '💥';
-      case 'SF': return '🚀';
-      case '로맨스': return '💕';
-      case '코미디': return '😂';
-      case '스릴러': return '😱';
-      case '공포': return '👻';
-      case '애니메이션': return '🎨';
-      case '다큐멘터리': return '📹';
-      case '뮤지컬': return '🎵';
-      case '범죄': return '🔍';
-      case '전쟁': return '⚔️';
-      case '판타지': return '🪄';
-      default: return '🎬';
+      case '드라마':
+        return '🎭';
+      case '액션':
+        return '💥';
+      case 'SF':
+        return '🚀';
+      case '로맨스':
+        return '💕';
+      case '코미디':
+        return '😂';
+      case '스릴러':
+        return '😱';
+      case '공포':
+        return '👻';
+      case '애니메이션':
+        return '🎨';
+      case '다큐멘터리':
+        return '📹';
+      case '뮤지컬':
+        return '🎵';
+      case '범죄':
+        return '🔍';
+      case '전쟁':
+        return '⚔️';
+      case '판타지':
+        return '🪄';
+      default:
+        return '🎬';
     }
   }
 
   Color _getGenreColor(String genre) {
     switch (genre) {
-      case '드라마': return const Color(0xFFEF4444);
-      case '액션': return const Color(0xFFDC2626);
-      case 'SF': return const Color(0xFF3B82F6);
-      case '로맨스': return const Color(0xFFEC4899);
-      case '코미디': return const Color(0xFFF59E0B);
-      case '스릴러': return const Color(0xFF6B7280);
-      case '공포': return const Color(0xFF1F2937);
-      case '애니메이션': return const Color(0xFF10B981);
-      case '다큐멘터리': return const Color(0xFF8B5CF6);
-      case '뮤지컬': return const Color(0xFFF97316);
-      case '범죄': return const Color(0xFF991B1B);
-      case '전쟁': return const Color(0xFF374151);
-      case '판타지': return const Color(0xFF7C3AED);
-      default: return const Color(0xFFEF4444);
+      case '드라마':
+        return const Color(0xFFEF4444);
+      case '액션':
+        return const Color(0xFFDC2626);
+      case 'SF':
+        return const Color(0xFF3B82F6);
+      case '로맨스':
+        return const Color(0xFFEC4899);
+      case '코미디':
+        return const Color(0xFFF59E0B);
+      case '스릴러':
+        return const Color(0xFF6B7280);
+      case '공포':
+        return const Color(0xFF1F2937);
+      case '애니메이션':
+        return const Color(0xFF10B981);
+      case '다큐멘터리':
+        return const Color(0xFF8B5CF6);
+      case '뮤지컬':
+        return const Color(0xFFF97316);
+      case '범죄':
+        return const Color(0xFF991B1B);
+      case '전쟁':
+        return const Color(0xFF374151);
+      case '판타지':
+        return const Color(0xFF7C3AED);
+      default:
+        return const Color(0xFFEF4444);
     }
   }
 }

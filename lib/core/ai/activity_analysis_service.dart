@@ -10,47 +10,46 @@ import 'package:openai_dart/openai_dart.dart';
 import 'package:http/http.dart' as http;
 
 /// 🎯 활동 분석 서비스
-/// 
+///
 /// 사용자의 운동, 독서, 일기 활동을 분석하고
 /// ChatGPT API를 통해 개인화된 피드백을 생성합니다.
 class ActivityAnalysisService {
   late final OpenAIClient _client;
   static ActivityAnalysisService? _instance;
-  
+
   // 싱글톤 패턴
   static ActivityAnalysisService get instance {
     _instance ??= ActivityAnalysisService._();
     return _instance!;
   }
-  
+
   ActivityAnalysisService._() {
     _initializeClient();
   }
-  
+
   /// OpenAI 클라이언트 초기화
   void _initializeClient() {
     try {
       final apiKey = ApiConfig.openAIApiKey;
-      
+
       // 모든 플랫폼에서 동일하게 처리 (Dio 제거)
       _client = OpenAIClient(
         apiKey: apiKey,
         baseUrl: 'https://api.openai.com/v1',
       );
-      
     } catch (e) {
       rethrow;
     }
   }
-  
+
   // 개별 운동 분석 메서드 제거됨 - 종합 운동 분석만 사용
-  
+
   /// 🏃 종합 운동 분석 (4개 섹션 한번에 생성)
   Future<ComprehensiveExerciseAnalysis> analyzeExerciseComprehensive({
     required Map<String, dynamic> todayExercise,
     Map<String, dynamic>? previousExercise,
     required String userName,
-    bool forceRegenerate = false,  // 강제 재생성 옵션 추가
+    bool forceRegenerate = false, // 강제 재생성 옵션 추가
   }) async {
     try {
       // 캐시 확인 (forceRegenerate가 false일 때만)
@@ -60,40 +59,41 @@ class ActivityAnalysisService {
           return cached;
         }
       }
-      
+
       // 에뮬레이터 네트워크 체크 (경고만 표시, 실패해도 계속 진행)
       if (Platform.isAndroid) {
         try {
           await http.head(Uri.parse('https://api.openai.com')).timeout(
-            const Duration(seconds: 2),
-          );
+                const Duration(seconds: 2),
+              );
         } catch (e) {
           // 기본 메시지로 즉시 반환하지 않고 API 호출 시도
         }
       }
-      
+
       final prompt = _generateComprehensiveExercisePrompt(
         todayExercise: todayExercise,
         previousExercise: previousExercise,
         userName: userName,
       );
-      
+
       final response = await _callOpenAIForComprehensive(prompt);
       final analysis = _parseComprehensiveExerciseResponse(response);
-      
+
       // 캐시에 저장
       await _saveComprehensiveExerciseToCache(analysis);
-      
+
       return analysis;
     } catch (e) {
       debugPrint('❌ analyzeExerciseComprehensive 에러 발생:');
       debugPrint('  에러 타입: ${e.runtimeType}');
       debugPrint('  에러 메시지: $e');
       debugPrint('  스택 트레이스 확인 필요');
-      return _getDefaultComprehensiveExerciseAnalysis(todayExercise, previousExercise, userName);
+      return _getDefaultComprehensiveExerciseAnalysis(
+          todayExercise, previousExercise, userName);
     }
   }
-  
+
   /// 종합 운동 분석 프롬프트 생성
   String _generateComprehensiveExercisePrompt({
     required Map<String, dynamic> todayExercise,
@@ -105,7 +105,7 @@ class ActivityAnalysisService {
     final intensity = _ensureKorean(todayExercise['intensity'] ?? '보통');
     final duration = todayExercise['duration'] ?? 0;
     final calories = todayExercise['calories'] ?? 0;
-    
+
     // 이전 운동 데이터
     String previousContext = '';
     if (previousExercise != null) {
@@ -113,14 +113,14 @@ class ActivityAnalysisService {
       final prevIntensity = _ensureKorean(previousExercise['intensity'] ?? '');
       final prevDuration = previousExercise['duration'] ?? 0;
       final prevCalories = previousExercise['calories'] ?? 0;
-      
+
       previousContext = '''
 지난번 운동:
 - 종류: $prevType, 강도: $prevIntensity
 - 시간: ${prevDuration}분, 칼로리: ${prevCalories}kcal
 ''';
     }
-    
+
     // 운동 타입별 특성 정의 (친근한 표현)
     String exerciseContext = '';
     String exerciseFeeling = '';
@@ -153,7 +153,7 @@ class ActivityAnalysisService {
         exerciseContext = '오늘도 셰르피랑 함께 운동해서 정말 즐거웠어요!';
         exerciseFeeling = '같이 땀 흘리니까 더 힘이 났죠?';
     }
-    
+
     // 강도별 메시지 (감성적 표현)
     String intensityMessage = '';
     switch (intensity) {
@@ -172,7 +172,7 @@ class ActivityAnalysisService {
       default:
         intensityMessage = '오늘도 함께 땀 흘려서 정말 좋았어요!';
     }
-    
+
     // 칼로리를 재미있게 비교
     String calorieComparison = '';
     if (calories < 200) {
@@ -260,13 +260,13 @@ ${previousExercise != null ? '''
 7. 창의적이고 개인화된 메시지
 8. SECTION_4는 특히 애정과 따뜻함을 듬뿍 담아서!''';
   }
-  
+
   /// 종합 운동 분석용 OpenAI 호출
   Future<String> _callOpenAIForComprehensive(String prompt) async {
     try {
       debugPrint('🔄 OpenAI API 호출 시작...');
       debugPrint('📋 프롬프트 길이: ${prompt.length}자');
-      
+
       // 프롬프트를 500자씩 나눠서 출력
       debugPrint('=====프롬프트 시작=====');
       for (int i = 0; i < prompt.length; i += 500) {
@@ -274,12 +274,13 @@ ${previousExercise != null ? '''
         debugPrint('[${i}-${end}] ${prompt.substring(i, end)}');
       }
       debugPrint('=====프롬프트 끝=====');
-      final chatCompletion = await _client.createChatCompletion(
-        request: CreateChatCompletionRequest(
-          model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
-          messages: [
-            ChatCompletionMessage.system(
-              content: '''당신은 셰르피입니다! 사용자와 매일 함께 운동하는 최고의 운동 친구예요! 💪
+      final chatCompletion = await _client
+          .createChatCompletion(
+            request: CreateChatCompletionRequest(
+              model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
+              messages: [
+                ChatCompletionMessage.system(
+                  content: '''당신은 셰르피입니다! 사용자와 매일 함께 운동하는 최고의 운동 친구예요! 💪
 
 셰르피의 성격:
 - 친근한 친구처럼 편안한 존댓말로 말해요 (~해요, ~네요, ~죠)
@@ -301,81 +302,101 @@ ${previousExercise != null ? '''
 - 셰르피가 3인칭으로 자연스럽게 말하기
 - SECTION_3: 과학적 근거 기반 실용적 조언 (친근하게 전달)
 - SECTION_4: 데이터 반복 금지! 애정 듬뿍 담아 따뜻하게 응원''',
+                ),
+                ChatCompletionMessage.user(
+                  content: ChatCompletionUserMessageContent.string(prompt),
+                ),
+              ],
+              temperature: 0.9, // 더 창의적인 응답을 위해 약간 상향
+              maxTokens: 1000, // 100-130자 x 4섹션 + 여유분
             ),
-            ChatCompletionMessage.user(
-              content: ChatCompletionUserMessageContent.string(prompt),
-            ),
-          ],
-          temperature: 0.9,  // 더 창의적인 응답을 위해 약간 상향
-          maxTokens: 1000,  // 100-130자 x 4섹션 + 여유분
-        ),
-      ).timeout(
-        const Duration(seconds: 15),
-        onTimeout: () => throw Exception('API 호출 타임아웃'),
-      );
-      
+          )
+          .timeout(
+            const Duration(seconds: 15),
+            onTimeout: () => throw Exception('API 호출 타임아웃'),
+          );
+
       debugPrint('✅ OpenAI API 응답 수신 성공');
       final responseText = chatCompletion.choices.firstOrNull?.message.content;
-      
+
       if (responseText != null && responseText.isNotEmpty) {
         debugPrint('📝 응답 길이: ${responseText.length}자');
         debugPrint('🤖 실제 받은 AI 응답:');
         debugPrint('=====응답 시작=====');
         // 응답을 300자씩 나눠서 출력
         for (int i = 0; i < responseText.length; i += 300) {
-          final end = (i + 300 < responseText.length) ? i + 300 : responseText.length;
+          final end =
+              (i + 300 < responseText.length) ? i + 300 : responseText.length;
           debugPrint('[${i}-${end}] ${responseText.substring(i, end)}');
         }
         debugPrint('=====응답 끝====');
         return responseText;
       }
-      
+
       throw Exception('Empty response from OpenAI');
     } catch (e) {
       debugPrint('❌ _callOpenAIForComprehensive 에러: $e');
       rethrow;
     }
   }
-  
+
   /// 종합 운동 분석 응답 파싱
-  ComprehensiveExerciseAnalysis _parseComprehensiveExerciseResponse(String response) {
+  ComprehensiveExerciseAnalysis _parseComprehensiveExerciseResponse(
+      String response) {
     debugPrint('🔍 응답 파싱 시작...');
     debugPrint('📄 원본 응답:\n$response');
-    
+
     final sections = <String, String>{};
-    
+
     // 섹션별로 파싱 (줄바꿈과 공백 처리 개선)
-    final section1Match = RegExp(r'\[SECTION_1\]\s*(.*?)\s*(?=\[SECTION_2\]|$)', dotAll: true).firstMatch(response);
-    final section2Match = RegExp(r'\[SECTION_2\]\s*(.*?)\s*(?=\[SECTION_3\]|$)', dotAll: true).firstMatch(response);
-    final section3Match = RegExp(r'\[SECTION_3\]\s*(.*?)\s*(?=\[SECTION_4\]|$)', dotAll: true).firstMatch(response);
-    final section4Match = RegExp(r'\[SECTION_4\]\s*(.*?)$', dotAll: true).firstMatch(response);
-    
+    final section1Match =
+        RegExp(r'\[SECTION_1\]\s*(.*?)\s*(?=\[SECTION_2\]|$)', dotAll: true)
+            .firstMatch(response);
+    final section2Match =
+        RegExp(r'\[SECTION_2\]\s*(.*?)\s*(?=\[SECTION_3\]|$)', dotAll: true)
+            .firstMatch(response);
+    final section3Match =
+        RegExp(r'\[SECTION_3\]\s*(.*?)\s*(?=\[SECTION_4\]|$)', dotAll: true)
+            .firstMatch(response);
+    final section4Match =
+        RegExp(r'\[SECTION_4\]\s*(.*?)$', dotAll: true).firstMatch(response);
+
     debugPrint('🔍 파싱 결과:');
     debugPrint('  SECTION_1 찾음: ${section1Match != null}');
     debugPrint('  SECTION_2 찾음: ${section2Match != null}');
     debugPrint('  SECTION_3 찾음: ${section3Match != null}');
     debugPrint('  SECTION_4 찾음: ${section4Match != null}');
-    
-    sections['comparison'] = section1Match?.group(1)?.trim() ?? '지난번 운동과 비교하여 꾸준히 발전하고 계세요! 💪';
-    sections['benefits'] = section2Match?.group(1)?.trim() ?? '오늘의 운동이 건강한 몸과 마음을 만들어가고 있어요! 🌟';
-    sections['recommendation'] = section3Match?.group(1)?.trim() ?? '내일도 함께 운동해요! 조금씩 강도를 높여보는 것도 좋아요. 🎯';
-    sections['encouragement'] = section4Match?.group(1)?.trim() ?? '오늘도 정말 수고하셨어요! 셰르피가 항상 응원하고 있어요! 💝';
-    
+
+    sections['comparison'] =
+        section1Match?.group(1)?.trim() ?? '지난번 운동과 비교하여 꾸준히 발전하고 계세요! 💪';
+    sections['benefits'] =
+        section2Match?.group(1)?.trim() ?? '오늘의 운동이 건강한 몸과 마음을 만들어가고 있어요! 🌟';
+    sections['recommendation'] = section3Match?.group(1)?.trim() ??
+        '내일도 함께 운동해요! 조금씩 강도를 높여보는 것도 좋아요. 🎯';
+    sections['encouragement'] = section4Match?.group(1)?.trim() ??
+        '오늘도 정말 수고하셨어요! 셰르피가 항상 응원하고 있어요! 💝';
+
     debugPrint('📝 파싱된 섹션:');
-    debugPrint('  comparison (${sections['comparison']!.length}자): ${sections['comparison']}');
-    debugPrint('  benefits (${sections['benefits']!.length}자): ${sections['benefits']}');
-    debugPrint('  recommendation (${sections['recommendation']!.length}자): ${sections['recommendation']}');
-    debugPrint('  encouragement (${sections['encouragement']!.length}자): ${sections['encouragement']}');
-    
+    debugPrint(
+        '  comparison (${sections['comparison']!.length}자): ${sections['comparison']}');
+    debugPrint(
+        '  benefits (${sections['benefits']!.length}자): ${sections['benefits']}');
+    debugPrint(
+        '  recommendation (${sections['recommendation']!.length}자): ${sections['recommendation']}');
+    debugPrint(
+        '  encouragement (${sections['encouragement']!.length}자): ${sections['encouragement']}');
+
     // 글자수 체크 (100-130자)
     for (var entry in sections.entries) {
       if (entry.value.length < 100) {
-        debugPrint('⚠️ 경고: ${entry.key}가 너무 짧습니다 (${entry.value.length}자 < 100자)');
+        debugPrint(
+            '⚠️ 경고: ${entry.key}가 너무 짧습니다 (${entry.value.length}자 < 100자)');
       } else if (entry.value.length > 130) {
-        debugPrint('⚠️ 경고: ${entry.key}가 너무 깁니다 (${entry.value.length}자 > 130자)');
+        debugPrint(
+            '⚠️ 경고: ${entry.key}가 너무 깁니다 (${entry.value.length}자 > 130자)');
       }
     }
-    
+
     // 기본 메시지 체크 (디버깅용)
     if (sections['comparison']!.contains('오늘도 함께 운동해서 기뻐요')) {
       debugPrint('⚠️ 경고: comparison이 기본 메시지입니다!');
@@ -389,7 +410,7 @@ ${previousExercise != null ? '''
     if (sections['encouragement']!.contains('내일도 셰르피가 옆에서 응원할게요')) {
       debugPrint('⚠️ 경고: encouragement가 기본 메시지입니다!');
     }
-    
+
     return ComprehensiveExerciseAnalysis(
       comparison: sections['comparison']!,
       benefits: sections['benefits']!,
@@ -397,16 +418,17 @@ ${previousExercise != null ? '''
       encouragement: sections['encouragement']!,
     );
   }
-  
+
   /// 종합 운동 분석 캐시 저장
-  Future<void> _saveComprehensiveExerciseToCache(ComprehensiveExerciseAnalysis analysis) async {
+  Future<void> _saveComprehensiveExerciseToCache(
+      ComprehensiveExerciseAnalysis analysis) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_exercise_${dateKey}';
-      
+
       debugPrint('💾 캐시 저장 시작: $fullKey');
-      
+
       final data = {
         'comparison': analysis.comparison,
         'benefits': analysis.benefits,
@@ -414,21 +436,22 @@ ${previousExercise != null ? '''
         'encouragement': analysis.encouragement,
         'timestamp': DateTime.now().toIso8601String(),
       };
-      
+
       await prefs.setString(fullKey, jsonEncode(data));
       debugPrint('✅ 캐시 저장 완료!');
     } catch (e) {
       debugPrint('❌ 캐시 저장 실패: $e');
     }
   }
-  
+
   /// 종합 운동 분석 캐시 읽기
-  Future<ComprehensiveExerciseAnalysis?> getComprehensiveExerciseFromCache() async {
+  Future<ComprehensiveExerciseAnalysis?>
+      getComprehensiveExerciseFromCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_exercise_${dateKey}';
-      
+
       final cached = prefs.getString(fullKey);
       if (cached != null) {
         final data = jsonDecode(cached);
@@ -439,41 +462,39 @@ ${previousExercise != null ? '''
           encouragement: data['encouragement'] ?? '',
         );
       }
-    } catch (e) {
-    }
+    } catch (e) {}
     return null;
   }
-  
+
   /// 종합 운동 분석 캐시 삭제
   Future<void> clearComprehensiveExerciseCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_exercise_${dateKey}';
-      
+
       final removed = await prefs.remove(fullKey);
     } catch (e) {
       // 에러 무시
     }
   }
-  
+
   /// 오늘의 운동 분석 캐시 삭제 (일반 + 종합)
   Future<void> clearTodayExerciseCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
-      
+
       // 일반 운동 분석 캐시 삭제
       final exerciseKey = 'analysis_${dateKey}_exercise_analysis';
       await prefs.remove(exerciseKey);
-      
+
       // 종합 운동 분석 캐시 삭제
       final comprehensiveKey = 'comprehensive_exercise_${dateKey}';
       await prefs.remove(comprehensiveKey);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
-  
+
   /// 기본 종합 운동 분석 (API 실패시)
   ComprehensiveExerciseAnalysis _getDefaultComprehensiveExerciseAnalysis(
     Map<String, dynamic> todayExercise,
@@ -483,25 +504,27 @@ ${previousExercise != null ? '''
     final type = todayExercise['type'] ?? '운동';
     final duration = todayExercise['duration'] ?? 0;
     final calories = todayExercise['calories'] ?? 0;
-    
+
     String comparison = '오늘도 함께 운동해서 정말 즐거웠어요! 같이 땀 흘렸잖아요 💪';
     if (previousExercise != null) {
       final prevCalories = previousExercise['calories'] ?? 0;
       if (calories > prevCalories) {
-        comparison = '우와! 어제보다 ${calories - prevCalories}kcal 더! 우리 정말 열심히 했네요 🔥';
+        comparison =
+            '우와! 어제보다 ${calories - prevCalories}kcal 더! 우리 정말 열심히 했네요 🔥';
       } else {
         comparison = '오늘은 여유롭게 운동했네요! 가끔은 이런 날도 필요해요 🤗';
       }
     }
-    
+
     return ComprehensiveExerciseAnalysis(
       comparison: comparison,
       benefits: '${duration}분 동안 같이 $type했어요! 셰르피도 땀 흘렸어요, 상쾌하죠? 😊',
       recommendation: '내일도 같이 운동해요! 셰르피가 옆에서 함께할게요. 물 충분히 드세요 💧',
-      encouragement: '오늘 함께 운동해서 정말 행복했어요. 당신이 있어서 셰르피도 힘이 났어요. 내일도 꼭 만나요, 우리 계속 함께해요 ❤️',
+      encouragement:
+          '오늘 함께 운동해서 정말 행복했어요. 당신이 있어서 셰르피도 힘이 났어요. 내일도 꼭 만나요, 우리 계속 함께해요 ❤️',
     );
   }
-  
+
   /// 운동 타입 번역 헬퍼
   String _translateExerciseType(String type) {
     switch (type.toLowerCase()) {
@@ -521,7 +544,7 @@ ${previousExercise != null ? '''
         return type;
     }
   }
-  
+
   /// 텍스트 한국어 변환 헬퍼
   String _ensureKorean(String text) {
     switch (text.toLowerCase()) {
@@ -539,24 +562,25 @@ ${previousExercise != null ? '''
         return text;
     }
   }
-  
+
   // 개별 활동 분석 메서드들 제거 완료
   // - analyzeReading: 독서 분석 (삭제됨)
   // - analyzeDiary: 일기 분석 (삭제됨)
   // - generateSummaryAnalysis: 종합 요약 분석 (삭제됨)
-  // 
+  //
   // 종합 운동 분석 (analyzeExerciseComprehensive) 메서드만 유지
-  
+
   /// OpenAI API 호출
   Future<String> _callOpenAI(String prompt) async {
     try {
       // 타임아웃 설정으로 네트워크 문제 빠르게 감지
-      final chatCompletion = await _client.createChatCompletion(
-        request: CreateChatCompletionRequest(
-          model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
-          messages: [
-            ChatCompletionMessage.system(
-              content: '''당신은 셰르피입니다. 사용자의 일상 활동을 분석하고 
+      final chatCompletion = await _client
+          .createChatCompletion(
+            request: CreateChatCompletionRequest(
+              model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
+              messages: [
+                ChatCompletionMessage.system(
+                  content: '''당신은 셰르피입니다. 사용자의 일상 활동을 분석하고 
               따뜻한 격려와 응원을 제공하는 친근한 AI 동반자입니다.
               
               지침:
@@ -565,123 +589,117 @@ ${previousExercise != null ? '''
               - 긍정적이고 희망적인 메시지 전달
               - 이모지를 적절히 사용하여 감정 표현
               - 4-5문장 이내로 간결하게 작성''',
+                ),
+                ChatCompletionMessage.user(
+                  content: ChatCompletionUserMessageContent.string(prompt),
+                ),
+              ],
+              temperature: 0.85,
+              maxTokens: 250,
+              topP: 0.95,
             ),
-            ChatCompletionMessage.user(
-              content: ChatCompletionUserMessageContent.string(prompt),
-            ),
-          ],
-          temperature: 0.85,
-          maxTokens: 250,
-          topP: 0.95,
-        ),
-      ).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () => throw Exception('API 호출 타임아웃'),
-      );
-      
+          )
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () => throw Exception('API 호출 타임아웃'),
+          );
+
       final responseText = chatCompletion.choices.firstOrNull?.message.content;
-      
+
       if (responseText != null && responseText.isNotEmpty) {
         return _processResponse(responseText);
       }
-      
+
       throw Exception('Empty response from OpenAI');
     } catch (e) {
-      
       rethrow;
     }
   }
-  
+
   // 종합 분석용 OpenAI 호출 메서드 제거됨 - 사용하지 않음
-  
+
   /// 응답 후처리
   String _processResponse(String rawResponse) {
     String processed = rawResponse.trim();
-    
+
     // 마크다운 제거
     // **굵은 텍스트** -> 굵은 텍스트
     processed = processed.replaceAllMapped(
-      RegExp(r'\*\*([^\*]+)\*\*'), 
-      (match) => match.group(1) ?? ''
-    );
-    
+        RegExp(r'\*\*([^\*]+)\*\*'), (match) => match.group(1) ?? '');
+
     // *기울임 텍스트* -> 기울임 텍스트
     processed = processed.replaceAllMapped(
-      RegExp(r'\*([^\*]+)\*'), 
-      (match) => match.group(1) ?? ''
-    );
-    
+        RegExp(r'\*([^\*]+)\*'), (match) => match.group(1) ?? '');
+
     // __밑줄__ -> 밑줄
     processed = processed.replaceAllMapped(
-      RegExp(r'__([^_]+)__'), 
-      (match) => match.group(1) ?? ''
-    );
-    
+        RegExp(r'__([^_]+)__'), (match) => match.group(1) ?? '');
+
     // _기울임_ -> 기울임
     processed = processed.replaceAllMapped(
-      RegExp(r'_([^_]+)_'), 
-      (match) => match.group(1) ?? ''
-    );
-    
+        RegExp(r'_([^_]+)_'), (match) => match.group(1) ?? '');
+
     // ### 제목 -> 제목
     processed = processed.replaceAll(RegExp(r'#{1,6}\s+'), '');
-    
+
     // - 또는 * 리스트 마커 제거 (줄 시작 부분만)
-    processed = processed.replaceAll(RegExp(r'^[\-\*]\s+', multiLine: true), '');
-    
+    processed =
+        processed.replaceAll(RegExp(r'^[\-\*]\s+', multiLine: true), '');
+
     // 길이 제한 대폭 증가 (800자)
     if (processed.length > 800) {
       processed = '${processed.substring(0, 797)}...';
     }
-    
+
     return processed;
   }
-  
+
   // _saveToCache와 getFromCache 메서드 제거됨 - 사용하지 않음
-  
+
   /// 오늘 날짜 키 생성
   String _getTodayDateKey() {
     final now = DateTime.now();
     return '${now.year}_${now.month.toString().padLeft(2, '0')}_${now.day.toString().padLeft(2, '0')}';
   }
-  
+
   /// 오늘의 캐시 클리어 (종합 운동 분석만)
   Future<void> clearTodayCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
-      
+
       // 종합 운동 분석 캐시만 삭제
       final comprehensiveKey = 'comprehensive_exercise_${dateKey}';
       await prefs.remove(comprehensiveKey);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
-  
+
   // areAllAnalysesComplete 메서드 제거됨 - 개별 활동 분석을 사용하지 않음
-  
+
   /// 네트워크 연결 테스트
   Future<bool> testNetworkConnection() async {
     try {
       final apiKey = ApiConfig.openAIApiKey;
-      
+
       // 에뮬레이터 감지
       bool isEmulator = false;
       if (Platform.isAndroid) {
         // 에뮬레이터 특징 확인
-        isEmulator = Platform.operatingSystem.contains('android') && 
-                     (Platform.environment['ANDROID_EMULATOR_HOME'] != null ||
-                      Platform.environment['ANDROID_SDK_ROOT'] != null);
+        isEmulator = Platform.operatingSystem.contains('android') &&
+            (Platform.environment['ANDROID_EMULATOR_HOME'] != null ||
+                Platform.environment['ANDROID_SDK_ROOT'] != null);
       }
-      
+
       if (!isEmulator) {
         try {
-          await http.get(
-            Uri.parse('https://www.google.com'),
-          ).timeout(
-            const Duration(seconds: 5),
-            onTimeout: () => throw TimeoutException('Google 연결 타임아웃'),
-          );
+          await http
+              .get(
+                Uri.parse('https://www.google.com'),
+              )
+              .timeout(
+                const Duration(seconds: 5),
+                onTimeout: () => throw TimeoutException('Google 연결 타임아웃'),
+              );
         } catch (e) {
           // 에뮬레이터가 아닌 경우에만 실패 처리
           if (!Platform.isAndroid) {
@@ -689,7 +707,7 @@ ${previousExercise != null ? '''
           }
         }
       }
-      
+
       // HTTP 패키지로 OpenAI API 직접 테스트
       try {
         final response = await http.get(
@@ -702,7 +720,7 @@ ${previousExercise != null ? '''
           const Duration(seconds: 10),
           onTimeout: () => throw TimeoutException('OpenAI API 타임아웃'),
         );
-        
+
         if (response.statusCode == 200) {
           // 연결 성공
         } else if (response.statusCode == 401) {
@@ -713,34 +731,34 @@ ${previousExercise != null ? '''
       } catch (e) {
         // HTTP 테스트 실패
       }
-      
+
       // OpenAI 클라이언트로 테스트
       try {
         await _client.listModels().timeout(
-          const Duration(seconds: 10),
-          onTimeout: () => throw TimeoutException('클라이언트 타임아웃'),
-        );
-        
+              const Duration(seconds: 10),
+              onTimeout: () => throw TimeoutException('클라이언트 타임아웃'),
+            );
+
         return true;
       } catch (e) {
         // 클라이언트 실패
       }
-      
+
       return false;
     } catch (e) {
       return false;
     }
   }
-  
+
   // getTodayAnalyses 메서드 제거됨 - 개별 활동 분석을 사용하지 않음
   // 기본 분석 메시지 메서드들 제거됨 - 사용하지 않음
-  
+
   /// 📚 종합 독서 분석 (4개 섹션 한번에 생성)
   Future<ComprehensiveReadingAnalysis> analyzeReadingComprehensive({
     required Map<String, dynamic> todayReading,
     Map<String, dynamic>? previousReading,
     required String userName,
-    List<Map<String, dynamic>>? allReadingLogs,  // 전체 독서 기록 추가
+    List<Map<String, dynamic>>? allReadingLogs, // 전체 독서 기록 추가
     bool forceRegenerate = false,
   }) async {
     try {
@@ -751,48 +769,49 @@ ${previousExercise != null ? '''
           return cached;
         }
       }
-      
+
       // 에뮬레이터 네트워크 체크 (경고만 표시, 실패해도 계속 진행)
       if (Platform.isAndroid) {
         try {
           await http.head(Uri.parse('https://api.openai.com')).timeout(
-            const Duration(seconds: 2),
-          );
+                const Duration(seconds: 2),
+              );
         } catch (e) {
           // 기본 메시지로 즉시 반환하지 않고 API 호출 시도
         }
       }
-      
+
       final prompt = _generateComprehensiveReadingPrompt(
         todayReading: todayReading,
         previousReading: previousReading,
         userName: userName,
         allReadingLogs: allReadingLogs,
       );
-      
+
       final response = await _callOpenAIForReadingComprehensive(prompt);
       final analysis = _parseComprehensiveReadingResponse(response);
-      
+
       // 캐시에 저장
       await _saveComprehensiveReadingToCache(analysis);
-      
+
       return analysis;
     } catch (e) {
       debugPrint('❌ analyzeReadingComprehensive 에러 발생:');
       debugPrint('  에러 타입: ${e.runtimeType}');
       debugPrint('  에러 메시지: $e');
-      return _getDefaultComprehensiveReadingAnalysis(todayReading, previousReading, userName);
+      return _getDefaultComprehensiveReadingAnalysis(
+          todayReading, previousReading, userName);
     }
   }
-  
+
   /// 📝 종합 일기 분석 (감정 기반 4개 섹션 한번에 생성)
-  /// 
+  ///
   /// 일기 내용이 아닌 감정 데이터만을 기반으로 분석합니다.
   Future<ComprehensiveDiaryAnalysis> analyzeDiaryComprehensive({
     required String currentMood,
     String? previousMood,
     required String userName,
-    List<String>? recentMoodHistory,  // 최근 7일 감정 기록
+    List<String>? recentMoodHistory, // 최근 7일 감정 기록
     bool forceRegenerate = false,
   }) async {
     try {
@@ -803,40 +822,41 @@ ${previousExercise != null ? '''
           return cached;
         }
       }
-      
+
       // 에뮬레이터 네트워크 체크 (경고만 표시, 실패해도 계속 진행)
       if (Platform.isAndroid) {
         try {
           await http.head(Uri.parse('https://api.openai.com')).timeout(
-            const Duration(seconds: 2),
-          );
+                const Duration(seconds: 2),
+              );
         } catch (e) {
           // 기본 메시지로 즉시 반환하지 않고 API 호출 시도
         }
       }
-      
+
       final prompt = _generateComprehensiveDiaryPrompt(
         currentMood: currentMood,
         previousMood: previousMood,
         userName: userName,
         recentMoodHistory: recentMoodHistory,
       );
-      
+
       final response = await _callOpenAIForDiaryComprehensive(prompt);
       final analysis = _parseComprehensiveDiaryResponse(response);
-      
+
       // 캐시에 저장
       await _saveComprehensiveDiaryToCache(analysis);
-      
+
       return analysis;
     } catch (e) {
       debugPrint('❌ analyzeDiaryComprehensive 에러 발생:');
       debugPrint('  에러 타입: ${e.runtimeType}');
       debugPrint('  에러 메시지: $e');
-      return _getDefaultComprehensiveDiaryAnalysis(currentMood, previousMood, userName);
+      return _getDefaultComprehensiveDiaryAnalysis(
+          currentMood, previousMood, userName);
     }
   }
-  
+
   /// 종합 독서 분석 프롬프트 생성
   String _generateComprehensiveReadingPrompt({
     required Map<String, dynamic> todayReading,
@@ -850,7 +870,7 @@ ${previousExercise != null ? '''
     final pagesRead = todayReading['pagesRead'] ?? 0;
     final rating = todayReading['rating'] ?? 0;
     final memo = todayReading['memo'] ?? '';
-    
+
     // 이전 독서 데이터
     String previousContext = '';
     String previousBookInfo = '';
@@ -859,7 +879,7 @@ ${previousExercise != null ? '''
       final prevCategory = previousReading['category'] ?? '';
       final prevPages = previousReading['pagesRead'] ?? 0;
       final prevRating = previousReading['rating'] ?? 0;
-      
+
       previousContext = '''
 지난번 독서:
 - 제목: $prevTitle
@@ -867,11 +887,11 @@ ${previousExercise != null ? '''
 - 읽은 페이지: ${prevPages}페이지
 - 평점: ${prevRating}점
 ''';
-      
+
       previousBookInfo = '''
 • 이전 책: "$prevTitle" (${prevCategory}, ${prevPages}페이지, ${prevRating}점)''';
     }
-    
+
     // 총 읽은 책 수 계산 (중복 제거)
     int uniqueBooksCount = 0;
     if (allReadingLogs != null && allReadingLogs.isNotEmpty) {
@@ -884,7 +904,7 @@ ${previousExercise != null ? '''
       }
       uniqueBooksCount = uniqueBookTitles.length;
     }
-    
+
     return '''당신은 셰르피입니다! $userName님과 매일 함께 책을 읽는 따뜻한 독서 친구예요! 📚
 같은 공간에서 나란히 앉아 책을 읽으며, 책갈피를 나눠주고, 좋은 구절에 밑줄 긋는 친구처럼 말해주세요.
 ⚠️ 중요: 영어 단어 절대 사용 금지! 순수 한국어로만 표현하세요.
@@ -974,18 +994,19 @@ $previousBookInfo
 9. 스포일러 절대 금지, 메타 레벨 분석에 집중
 10. SECTION_4는 반드시 유효한 JSON 형식으로 작성''';
   }
-  
+
   /// 종합 독서 분석용 OpenAI 호출
   Future<String> _callOpenAIForReadingComprehensive(String prompt) async {
     try {
       debugPrint('🔄 OpenAI API 호출 시작 (독서 분석)...');
-      
-      final chatCompletion = await _client.createChatCompletion(
-        request: CreateChatCompletionRequest(
-          model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
-          messages: [
-            ChatCompletionMessage.system(
-              content: '''당신은 셰르피입니다! 사용자와 매일 함께 책을 읽는 따뜻한 독서 친구예요! 📚
+
+      final chatCompletion = await _client
+          .createChatCompletion(
+            request: CreateChatCompletionRequest(
+              model: ChatCompletionModel.modelId('gpt-5-chat-latest'),
+              messages: [
+                ChatCompletionMessage.system(
+                  content: '''당신은 셰르피입니다! 사용자와 매일 함께 책을 읽는 따뜻한 독서 친구예요! 📚
 
 셰르피의 성격:
 - 같은 공간에서 나란히 앉아 책 읽는 친구
@@ -1005,55 +1026,64 @@ $previousBookInfo
 - 스포일러 없이 장르가 독자에게 주는 가치에 집중
 - 셰르피가 3인칭으로 자연스럽게 말하기
 - SECTION_4는 반드시 유효한 JSON 형식으로''',
+                ),
+                ChatCompletionMessage.user(
+                  content: ChatCompletionUserMessageContent.string(prompt),
+                ),
+              ],
+              temperature: 0.9,
+              maxTokens: 1200,
             ),
-            ChatCompletionMessage.user(
-              content: ChatCompletionUserMessageContent.string(prompt),
-            ),
-          ],
-          temperature: 0.9,
-          maxTokens: 1200,
-        ),
-      ).timeout(
-        const Duration(seconds: 15),
-        onTimeout: () => throw Exception('API 호출 타임아웃'),
-      );
-      
+          )
+          .timeout(
+            const Duration(seconds: 15),
+            onTimeout: () => throw Exception('API 호출 타임아웃'),
+          );
+
       debugPrint('✅ OpenAI API 응답 수신 성공 (독서)');
       final responseText = chatCompletion.choices.firstOrNull?.message.content;
-      
+
       if (responseText != null && responseText.isNotEmpty) {
         debugPrint('📝 독서 분석 응답 길이: ${responseText.length}자');
         return responseText;
       }
-      
+
       throw Exception('Empty response from OpenAI');
     } catch (e) {
       debugPrint('❌ _callOpenAIForReadingComprehensive 에러: $e');
       rethrow;
     }
   }
-  
+
   /// 종합 독서 분석 응답 파싱
-  ComprehensiveReadingAnalysis _parseComprehensiveReadingResponse(String response) {
+  ComprehensiveReadingAnalysis _parseComprehensiveReadingResponse(
+      String response) {
     debugPrint('🔍 독서 응답 파싱 시작...');
-    
+
     // 섹션별로 파싱
-    final section1Match = RegExp(r'\[SECTION_1\]\s*(.*?)\s*(?=\[SECTION_2\]|$)', dotAll: true).firstMatch(response);
-    final section2Match = RegExp(r'\[SECTION_2\]\s*(.*?)\s*(?=\[SECTION_3\]|$)', dotAll: true).firstMatch(response);
-    final section3Match = RegExp(r'\[SECTION_3\]\s*(.*?)\s*(?=\[SECTION_4\]|$)', dotAll: true).firstMatch(response);
-    final section4Match = RegExp(r'\[SECTION_4\]\s*(.*?)$', dotAll: true).firstMatch(response);
-    
+    final section1Match =
+        RegExp(r'\[SECTION_1\]\s*(.*?)\s*(?=\[SECTION_2\]|$)', dotAll: true)
+            .firstMatch(response);
+    final section2Match =
+        RegExp(r'\[SECTION_2\]\s*(.*?)\s*(?=\[SECTION_3\]|$)', dotAll: true)
+            .firstMatch(response);
+    final section3Match =
+        RegExp(r'\[SECTION_3\]\s*(.*?)\s*(?=\[SECTION_4\]|$)', dotAll: true)
+            .firstMatch(response);
+    final section4Match =
+        RegExp(r'\[SECTION_4\]\s*(.*?)$', dotAll: true).firstMatch(response);
+
     // 추천 도서 파싱
     List<BookRecommendation> recommendations = [];
     if (section4Match != null) {
       try {
         var jsonStr = section4Match.group(1)?.trim() ?? '';
-        
+
         // Markdown 코드 블록 제거 (```json ... ``` 형식)
         jsonStr = jsonStr.replaceAll(RegExp(r'^```json\s*'), '');
         jsonStr = jsonStr.replaceAll(RegExp(r'\s*```$'), '');
         jsonStr = jsonStr.trim();
-        
+
         final json = jsonDecode(jsonStr);
         if (json['recommendations'] != null) {
           for (var rec in json['recommendations']) {
@@ -1072,19 +1102,22 @@ $previousBookInfo
         recommendations = _getDefaultBookRecommendations();
       }
     }
-    
+
     if (recommendations.isEmpty) {
       recommendations = _getDefaultBookRecommendations();
     }
-    
+
     return ComprehensiveReadingAnalysis(
-      previousInsight: section1Match?.group(1)?.trim() ?? '지난 독서가 남긴 여운이 아직도 마음속에 있네요 📚',
-      todayInsight: section2Match?.group(1)?.trim() ?? '오늘 책과 함께한 시간이 정말 소중했어요 💝',
-      journeyEncouragement: section3Match?.group(1)?.trim() ?? '책을 읽는 모든 순간이 성장이에요. 셰르피도 옆에서 같이 책 읽으며 응원하고 있어요! 🌟',
+      previousInsight:
+          section1Match?.group(1)?.trim() ?? '지난 독서가 남긴 여운이 아직도 마음속에 있네요 📚',
+      todayInsight:
+          section2Match?.group(1)?.trim() ?? '오늘 책과 함께한 시간이 정말 소중했어요 💝',
+      journeyEncouragement: section3Match?.group(1)?.trim() ??
+          '책을 읽는 모든 순간이 성장이에요. 셰르피도 옆에서 같이 책 읽으며 응원하고 있어요! 🌟',
       recommendations: recommendations,
     );
   }
-  
+
   /// 기본 추천 도서 목록
   List<BookRecommendation> _getDefaultBookRecommendations() {
     return [
@@ -1108,54 +1141,59 @@ $previousBookInfo
       ),
     ];
   }
-  
+
   /// 종합 독서 분석 캐시 저장
-  Future<void> _saveComprehensiveReadingToCache(ComprehensiveReadingAnalysis analysis) async {
+  Future<void> _saveComprehensiveReadingToCache(
+      ComprehensiveReadingAnalysis analysis) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_reading_${dateKey}';
-      
+
       debugPrint('💾 독서 분석 캐시 저장 시작: $fullKey');
-      
+
       final data = {
         'previousInsight': analysis.previousInsight,
         'todayInsight': analysis.todayInsight,
         'journeyEncouragement': analysis.journeyEncouragement,
-        'recommendations': analysis.recommendations.map((r) => r.toJson()).toList(),
+        'recommendations':
+            analysis.recommendations.map((r) => r.toJson()).toList(),
         'timestamp': DateTime.now().toIso8601String(),
       };
-      
+
       await prefs.setString(fullKey, jsonEncode(data));
       debugPrint('✅ 독서 분석 캐시 저장 완료!');
     } catch (e) {
       debugPrint('❌ 독서 분석 캐시 저장 실패: $e');
     }
   }
-  
+
   /// 종합 독서 분석 캐시 읽기
-  Future<ComprehensiveReadingAnalysis?> getComprehensiveReadingFromCache() async {
+  Future<ComprehensiveReadingAnalysis?>
+      getComprehensiveReadingFromCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_reading_${dateKey}';
-      
+
       final cached = prefs.getString(fullKey);
       if (cached != null) {
         final data = jsonDecode(cached);
-        
+
         List<BookRecommendation> recommendations = [];
         if (data['recommendations'] != null) {
           for (var rec in data['recommendations']) {
             recommendations.add(BookRecommendation.fromJson(rec));
           }
         }
-        
+
         return ComprehensiveReadingAnalysis(
           previousInsight: data['previousInsight'] ?? '',
           todayInsight: data['todayInsight'] ?? '',
           journeyEncouragement: data['journeyEncouragement'] ?? '',
-          recommendations: recommendations.isNotEmpty ? recommendations : _getDefaultBookRecommendations(),
+          recommendations: recommendations.isNotEmpty
+              ? recommendations
+              : _getDefaultBookRecommendations(),
         );
       }
     } catch (e) {
@@ -1163,20 +1201,20 @@ $previousBookInfo
     }
     return null;
   }
-  
+
   /// 종합 독서 분석 캐시 삭제
   Future<void> clearComprehensiveReadingCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_reading_${dateKey}';
-      
+
       await prefs.remove(fullKey);
     } catch (e) {
       // 에러 무시
     }
   }
-  
+
   /// 기본 종합 독서 분석 (API 실패시)
   ComprehensiveReadingAnalysis _getDefaultComprehensiveReadingAnalysis(
     Map<String, dynamic> todayReading,
@@ -1185,20 +1223,21 @@ $previousBookInfo
   ) {
     final title = todayReading['title'] ?? '책';
     final pages = todayReading['pagesRead'] ?? 0;
-    
+
     String previousInsight = '새로운 독서 여정을 시작하셨네요! 셰르피도 설레어요 📚';
     if (previousReading != null) {
       previousInsight = '지난 책이 남긴 여운이 아직도 마음속에 있어요. 좋은 책은 오래 기억되죠 💝';
     }
-    
+
     return ComprehensiveReadingAnalysis(
       previousInsight: previousInsight,
       todayInsight: '오늘도 책과 함께한 시간이 정말 소중했어요. ${pages}페이지 동안 몰입하셨죠? 🌟',
-      journeyEncouragement: '책을 읽는 모든 순간이 성장이에요. 계속 이렇게 꾸준히 읽어나가요. 셰르피가 항상 옆에서 같이 책 읽으며 응원할게요! 📖✨',
+      journeyEncouragement:
+          '책을 읽는 모든 순간이 성장이에요. 계속 이렇게 꾸준히 읽어나가요. 셰르피가 항상 옆에서 같이 책 읽으며 응원할게요! 📖✨',
       recommendations: _getDefaultBookRecommendations(),
     );
   }
-  
+
   /// 📝 종합 일기 분석 프롬프트 생성
   String _generateComprehensiveDiaryPrompt({
     required String currentMood,
@@ -1217,7 +1256,7 @@ $previousBookInfo
       'sad': '😢',
       'angry': '😡',
     };
-    
+
     final moodLabels = {
       'excited': '설레요',
       'happy': '기뻐요',
@@ -1228,23 +1267,24 @@ $previousBookInfo
       'sad': '슬퍼요',
       'angry': '화나요',
     };
-    
+
     final currentEmoji = moodEmojis[currentMood] ?? '😊';
     final currentLabel = moodLabels[currentMood] ?? '보통이에요';
-    
+
     String previousContext = '';
     if (previousMood != null) {
       final prevEmoji = moodEmojis[previousMood] ?? '😊';
       final prevLabel = moodLabels[previousMood] ?? '보통이에요';
       previousContext = '• 이전 감정: $prevEmoji $prevLabel';
     }
-    
+
     String moodPattern = '';
     if (recentMoodHistory != null && recentMoodHistory.isNotEmpty) {
-      final recentEmojis = recentMoodHistory.map((m) => moodEmojis[m] ?? '😊').join(' → ');
+      final recentEmojis =
+          recentMoodHistory.map((m) => moodEmojis[m] ?? '😊').join(' → ');
       moodPattern = '• 최근 7일 감정 변화: $recentEmojis';
     }
-    
+
     return '''당신은 셰르피입니다! $userName님의 감정을 깊이 이해하고 공감하는 따뜻한 친구예요! 💝
 같은 공간에서 함께 있는 것처럼, 진심으로 공감하고 위로해주세요.
 ⚠️ 중요: 일기 내용은 언급하지 마세요. 오직 감정만을 다뤄주세요.
@@ -1279,100 +1319,117 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
 • 희망적이고 따뜻한 마무리
 • 언제나 곁에 있다는 든든함 전달''';
   }
-  
+
   /// 종합 일기 분석 API 호출
   Future<String> _callOpenAIForDiaryComprehensive(String prompt) async {
     try {
-      final chatCompletion = await _client.createChatCompletion(
-        request: CreateChatCompletionRequest(
-          model: ChatCompletionModel.modelId(ApiConfig.openAIModel),
-          messages: [
-            ChatCompletionMessage.system(
-              content: '''당신은 셰르피입니다. 사용자와 매일 함께하는 따뜻한 감정 친구예요.
+      final chatCompletion = await _client
+          .createChatCompletion(
+            request: CreateChatCompletionRequest(
+              model: ChatCompletionModel.modelId(ApiConfig.openAIModel),
+              messages: [
+                ChatCompletionMessage.system(
+                  content: '''당신은 셰르피입니다. 사용자와 매일 함께하는 따뜻한 감정 친구예요.
 친근한 존댓말을 사용하고 (~해요, ~네요, ~죠), 이모티콘을 자연스럽게 사용하세요.
 감정에 깊이 공감하고, 위로와 응원을 전달하세요.''',
+                ),
+                ChatCompletionMessage.user(
+                  content: ChatCompletionUserMessageContent.string(prompt),
+                ),
+              ],
+              temperature: 0.9,
+              maxTokens: 1000,
             ),
-            ChatCompletionMessage.user(
-              content: ChatCompletionUserMessageContent.string(prompt),
-            ),
-          ],
-          temperature: 0.9,
-          maxTokens: 1000,
-        ),
-      ).timeout(
-        const Duration(seconds: 15),
-        onTimeout: () => throw TimeoutException('OpenAI API 타임아웃'),
-      );
-      
+          )
+          .timeout(
+            const Duration(seconds: 15),
+            onTimeout: () => throw TimeoutException('OpenAI API 타임아웃'),
+          );
+
       return chatCompletion.choices.first.message.content ?? '';
     } catch (e) {
       debugPrint('❌ 일기 API 호출 실패: $e');
       rethrow;
     }
   }
-  
+
   /// 종합 일기 분석 응답 파싱
   ComprehensiveDiaryAnalysis _parseComprehensiveDiaryResponse(String response) {
     try {
       // 각 섹션 추출
-      final section1Match = RegExp(r'\[SECTION_1\]\s*(.*?)\s*(?=\[SECTION_2\]|$)', dotAll: true).firstMatch(response);
-      final section2Match = RegExp(r'\[SECTION_2\]\s*(.*?)\s*(?=\[SECTION_3\]|$)', dotAll: true).firstMatch(response);
-      final section3Match = RegExp(r'\[SECTION_3\]\s*(.*?)\s*(?=\[SECTION_4\]|$)', dotAll: true).firstMatch(response);
-      final section4Match = RegExp(r'\[SECTION_4\]\s*(.*?)$', dotAll: true).firstMatch(response);
-      
+      final section1Match =
+          RegExp(r'\[SECTION_1\]\s*(.*?)\s*(?=\[SECTION_2\]|$)', dotAll: true)
+              .firstMatch(response);
+      final section2Match =
+          RegExp(r'\[SECTION_2\]\s*(.*?)\s*(?=\[SECTION_3\]|$)', dotAll: true)
+              .firstMatch(response);
+      final section3Match =
+          RegExp(r'\[SECTION_3\]\s*(.*?)\s*(?=\[SECTION_4\]|$)', dotAll: true)
+              .firstMatch(response);
+      final section4Match =
+          RegExp(r'\[SECTION_4\]\s*(.*?)$', dotAll: true).firstMatch(response);
+
       return ComprehensiveDiaryAnalysis(
-        emotionTransition: _cleanAndTrimText(section1Match?.group(1), 200) ?? '감정의 변화를 함께 지켜보고 있어요 💝',
-        emotionalSupport: _cleanAndTrimText(section2Match?.group(1), 500) ?? '오늘 하루도 정말 수고 많으셨어요. 어떤 감정이든 소중해요. 셰르피가 늘 곁에서 응원하고 있어요 💖',
-        practicalAdvice: _cleanAndTrimText(section3Match?.group(1), 500) ?? '지금 이 순간, 깊게 숨을 들이쉬고 내쉬어보세요. 따뜻한 차 한잔과 좋아하는 음악을 들으며 잠시 쉬어가는 것도 좋을 것 같아요 ☕',
-        tomorrowHope: _cleanAndTrimText(section4Match?.group(1), 400) ?? '내일도 셰르피가 함께할게요. 오늘보다 더 나은 내일이 되도록, 작은 것부터 하나씩 함께 해나가요 🌟',
+        emotionTransition: _cleanAndTrimText(section1Match?.group(1), 200) ??
+            '감정의 변화를 함께 지켜보고 있어요 💝',
+        emotionalSupport: _cleanAndTrimText(section2Match?.group(1), 500) ??
+            '오늘 하루도 정말 수고 많으셨어요. 어떤 감정이든 소중해요. 셰르피가 늘 곁에서 응원하고 있어요 💖',
+        practicalAdvice: _cleanAndTrimText(section3Match?.group(1), 500) ??
+            '지금 이 순간, 깊게 숨을 들이쉬고 내쉬어보세요. 따뜻한 차 한잔과 좋아하는 음악을 들으며 잠시 쉬어가는 것도 좋을 것 같아요 ☕',
+        tomorrowHope: _cleanAndTrimText(section4Match?.group(1), 400) ??
+            '내일도 셰르피가 함께할게요. 오늘보다 더 나은 내일이 되도록, 작은 것부터 하나씩 함께 해나가요 🌟',
       );
     } catch (e) {
       debugPrint('⚠️ 일기 응답 파싱 실패, 기본값 사용: $e');
       return ComprehensiveDiaryAnalysis(
         emotionTransition: '감정의 변화를 함께 지켜보고 있어요 💝',
-        emotionalSupport: '오늘 하루도 정말 수고 많으셨어요. 어떤 감정이든 소중해요. 셰르피가 늘 곁에서 응원하고 있어요 💖',
-        practicalAdvice: '지금 이 순간, 깊게 숨을 들이쉬고 내쉬어보세요. 따뜻한 차 한잔과 좋아하는 음악을 들으며 잠시 쉬어가는 것도 좋을 것 같아요 ☕',
-        tomorrowHope: '내일도 셰르피가 함께할게요. 오늘보다 더 나은 내일이 되도록, 작은 것부터 하나씩 함께 해나가요 🌟',
+        emotionalSupport:
+            '오늘 하루도 정말 수고 많으셨어요. 어떤 감정이든 소중해요. 셰르피가 늘 곁에서 응원하고 있어요 💖',
+        practicalAdvice:
+            '지금 이 순간, 깊게 숨을 들이쉬고 내쉬어보세요. 따뜻한 차 한잔과 좋아하는 음악을 들으며 잠시 쉬어가는 것도 좋을 것 같아요 ☕',
+        tomorrowHope:
+            '내일도 셰르피가 함께할게요. 오늘보다 더 나은 내일이 되도록, 작은 것부터 하나씩 함께 해나가요 🌟',
       );
     }
   }
-  
+
   /// 텍스트 정리 및 길이 제한
   String? _cleanAndTrimText(String? text, int maxLength) {
     if (text == null || text.isEmpty) return null;
-    
+
     // 불필요한 공백 제거
     String cleaned = text.trim().replaceAll(RegExp(r'\s+'), ' ');
-    
+
     // 길이 제한
     if (cleaned.length > maxLength) {
       cleaned = cleaned.substring(0, maxLength - 3) + '...';
     }
-    
+
     return cleaned;
   }
-  
+
   /// 종합 일기 분석 캐시 저장
-  Future<void> _saveComprehensiveDiaryToCache(ComprehensiveDiaryAnalysis analysis) async {
+  Future<void> _saveComprehensiveDiaryToCache(
+      ComprehensiveDiaryAnalysis analysis) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_diary_$dateKey';
-      
+
       await prefs.setString(fullKey, jsonEncode(analysis.toJson()));
       debugPrint('✅ 종합 일기 분석 캐시 저장 완료: $fullKey');
     } catch (e) {
       debugPrint('❌ 일기 분석 캐시 저장 실패: $e');
     }
   }
-  
+
   /// 종합 일기 분석 캐시에서 읽기
   Future<ComprehensiveDiaryAnalysis?> getComprehensiveDiaryFromCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_diary_$dateKey';
-      
+
       final cached = prefs.getString(fullKey);
       if (cached != null) {
         final json = jsonDecode(cached) as Map<String, dynamic>;
@@ -1384,21 +1441,21 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
     }
     return null;
   }
-  
+
   /// 종합 일기 분석 캐시 삭제
   Future<void> clearComprehensiveDiaryCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_diary_$dateKey';
-      
+
       await prefs.remove(fullKey);
       debugPrint('✅ 종합 일기 분석 캐시 삭제 완료');
     } catch (e) {
       debugPrint('❌ 일기 분석 캐시 삭제 실패: $e');
     }
   }
-  
+
   /// 기본 종합 일기 분석 (API 실패 시)
   ComprehensiveDiaryAnalysis _getDefaultComprehensiveDiaryAnalysis(
     String currentMood,
@@ -1409,84 +1466,104 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
     final emotionMessages = {
       'excited': {
         'transition': '설레는 마음이 가득하시네요! 좋은 일이 있으신가 봐요 🥰',
-        'support': '설레는 감정은 정말 소중해요. 이런 순간들이 모여서 행복한 추억이 되죠. 셰르피도 함께 설레어요! 오늘의 이 기분을 마음껏 즐기세요 💖',
-        'advice': '설렐 때는 그 감정을 충분히 느껴보세요. 좋아하는 음악을 들으며 산책하거나, 친구와 이 기분을 나누는 것도 좋을 것 같아요 🎵',
+        'support':
+            '설레는 감정은 정말 소중해요. 이런 순간들이 모여서 행복한 추억이 되죠. 셰르피도 함께 설레어요! 오늘의 이 기분을 마음껏 즐기세요 💖',
+        'advice':
+            '설렐 때는 그 감정을 충분히 느껴보세요. 좋아하는 음악을 들으며 산책하거나, 친구와 이 기분을 나누는 것도 좋을 것 같아요 🎵',
         'hope': '내일도 이런 설렘이 계속되길 바라요. 셰르피가 함께 응원할게요! 오늘의 설렘을 내일의 에너지로 만들어봐요 ✨',
       },
       'happy': {
         'transition': '기쁜 마음이 느껴져요! 행복이 가득한 하루였나 봐요 😄',
-        'support': '행복한 감정을 느끼고 계시는군요! 이런 순간이 정말 소중해요. 셰르피도 함께 기뻐요. 오늘의 행복을 마음껏 만끽하세요 🌈',
-        'advice': '행복할 때는 그 순간을 기록해두면 좋아요. 사진을 찍거나 짧은 메모를 남겨보세요. 나중에 큰 힘이 될 거예요 📸',
+        'support':
+            '행복한 감정을 느끼고 계시는군요! 이런 순간이 정말 소중해요. 셰르피도 함께 기뻐요. 오늘의 행복을 마음껏 만끽하세요 🌈',
+        'advice':
+            '행복할 때는 그 순간을 기록해두면 좋아요. 사진을 찍거나 짧은 메모를 남겨보세요. 나중에 큰 힘이 될 거예요 📸',
         'hope': '내일도 웃을 일이 가득하길 바라요. 오늘의 행복이 내일로 이어지도록, 셰르피가 함께할게요 🌟',
       },
       'good': {
         'transition': '오늘은 마음이 편안하고 좋으신가 봐요 😊',
-        'support': '안정적이고 편안한 마음 상태네요. 이런 평온함도 정말 소중해요. 무리하지 않고 자연스럽게 하루를 보내신 것 같아 좋아요 💚',
-        'advice': '마음이 편안할 때 새로운 것을 시도해보는 것도 좋아요. 평소 읽고 싶었던 책이나 보고 싶었던 영화를 즐겨보세요 📚',
-        'hope': '내일도 이런 편안함이 계속되길 바라요. 천천히, 자신의 속도로 나아가는 것이 중요해요. 셰르피가 응원할게요 🌱',
+        'support':
+            '안정적이고 편안한 마음 상태네요. 이런 평온함도 정말 소중해요. 무리하지 않고 자연스럽게 하루를 보내신 것 같아 좋아요 💚',
+        'advice':
+            '마음이 편안할 때 새로운 것을 시도해보는 것도 좋아요. 평소 읽고 싶었던 책이나 보고 싶었던 영화를 즐겨보세요 📚',
+        'hope':
+            '내일도 이런 편안함이 계속되길 바라요. 천천히, 자신의 속도로 나아가는 것이 중요해요. 셰르피가 응원할게요 🌱',
       },
       'normal': {
         'transition': '오늘은 평범한 하루를 보내셨네요 😐',
-        'support': '때로는 특별하지 않은 날도 필요해요. 평범한 일상 속에서도 작은 의미를 찾을 수 있어요. 오늘도 수고하셨어요 💙',
-        'advice': '평범한 날에는 작은 변화를 시도해보세요. 새로운 차를 마시거나, 다른 길로 산책해보는 것도 좋을 것 같아요 ☕',
-        'hope': '내일은 조금 더 특별한 일이 생기길 바라요. 작은 기대감을 가지고 하루를 시작해보세요. 셰르피가 함께해요 🌤️',
+        'support':
+            '때로는 특별하지 않은 날도 필요해요. 평범한 일상 속에서도 작은 의미를 찾을 수 있어요. 오늘도 수고하셨어요 💙',
+        'advice':
+            '평범한 날에는 작은 변화를 시도해보세요. 새로운 차를 마시거나, 다른 길로 산책해보는 것도 좋을 것 같아요 ☕',
+        'hope':
+            '내일은 조금 더 특별한 일이 생기길 바라요. 작은 기대감을 가지고 하루를 시작해보세요. 셰르피가 함께해요 🌤️',
       },
       'thoughtful': {
         'transition': '생각이 많으신 하루인가 봐요 🤔',
-        'support': '많은 생각을 하고 계시는군요. 때로는 생각이 많아지는 날도 있죠. 그런 날도 나름의 의미가 있어요. 천천히 정리해나가세요 💭',
+        'support':
+            '많은 생각을 하고 계시는군요. 때로는 생각이 많아지는 날도 있죠. 그런 날도 나름의 의미가 있어요. 천천히 정리해나가세요 💭',
         'advice': '생각이 많을 때는 종이에 적어보는 것이 도움이 돼요. 머릿속을 정리하면 마음도 한결 가벼워질 거예요 📝',
-        'hope': '내일은 조금 더 명료한 하루가 되길 바라요. 오늘의 고민이 내일의 답이 될 수 있어요. 셰르피가 곁에 있을게요 💫',
+        'hope':
+            '내일은 조금 더 명료한 하루가 되길 바라요. 오늘의 고민이 내일의 답이 될 수 있어요. 셰르피가 곁에 있을게요 💫',
       },
       'tired': {
         'transition': '피곤한 하루를 보내셨군요 😴',
-        'support': '정말 수고 많으셨어요. 피곤함을 느끼는 것은 열심히 살았다는 증거예요. 충분히 쉬어도 괜찮아요. 셰르피가 토닥토닥 💤',
+        'support':
+            '정말 수고 많으셨어요. 피곤함을 느끼는 것은 열심히 살았다는 증거예요. 충분히 쉬어도 괜찮아요. 셰르피가 토닥토닥 💤',
         'advice': '오늘은 일찍 쉬세요. 따뜻한 물로 샤워하고, 좋아하는 향의 캔들을 켜두는 것도 좋을 것 같아요 🛁',
-        'hope': '푹 쉬고 나면 내일은 더 개운한 하루가 될 거예요. 충분한 휴식은 선택이 아닌 필수예요. 편안한 밤 되세요 🌙',
+        'hope':
+            '푹 쉬고 나면 내일은 더 개운한 하루가 될 거예요. 충분한 휴식은 선택이 아닌 필수예요. 편안한 밤 되세요 🌙',
       },
       'sad': {
         'transition': '마음이 무거운 하루였나 봐요 😢',
-        'support': '슬픈 감정도 소중해요. 슬플 때는 슬퍼해도 괜찮아요. 셰르피가 옆에서 함께 있을게요. 혼자가 아니에요. 따뜻한 포옹을 보내요 🤗',
+        'support':
+            '슬픈 감정도 소중해요. 슬플 때는 슬퍼해도 괜찮아요. 셰르피가 옆에서 함께 있을게요. 혼자가 아니에요. 따뜻한 포옹을 보내요 🤗',
         'advice': '슬플 때는 자신에게 친절해지세요. 좋아하는 음식을 먹거나, 편안한 옷을 입고 쉬는 것도 좋아요 🍵',
         'hope': '비가 온 뒤 땅이 더 단단해지듯, 오늘의 슬픔도 내일의 힘이 될 거예요. 셰르피가 항상 곁에 있을게요 🌈',
       },
       'angry': {
         'transition': '화가 나는 일이 있으셨나 봐요 😡',
-        'support': '화가 나는 것도 자연스러운 감정이에요. 참기만 하지 마세요. 화를 느끼는 것도 괜찮아요. 셰르피가 들어드릴게요 🔥',
-        'advice': '화가 날 때는 깊게 숨을 쉬고, 잠시 거리를 두는 것이 도움이 돼요. 운동이나 글쓰기로 감정을 표출해보세요 💨',
-        'hope': '내일은 더 차분한 마음으로 하루를 시작할 수 있을 거예요. 오늘의 감정도 지나갈 거예요. 셰르피가 응원해요 🌅',
+        'support':
+            '화가 나는 것도 자연스러운 감정이에요. 참기만 하지 마세요. 화를 느끼는 것도 괜찮아요. 셰르피가 들어드릴게요 🔥',
+        'advice':
+            '화가 날 때는 깊게 숨을 쉬고, 잠시 거리를 두는 것이 도움이 돼요. 운동이나 글쓰기로 감정을 표출해보세요 💨',
+        'hope':
+            '내일은 더 차분한 마음으로 하루를 시작할 수 있을 거예요. 오늘의 감정도 지나갈 거예요. 셰르피가 응원해요 🌅',
       },
     };
-    
+
     final messages = emotionMessages[currentMood] ?? emotionMessages['normal']!;
-    
+
     // 이전 감정이 있으면 전환 메시지 조정
     String transitionMessage = messages['transition']!;
     if (previousMood != null && previousMood != currentMood) {
       final prevLabel = {
-        'excited': '설레는',
-        'happy': '기쁜',
-        'good': '좋은',
-        'normal': '평범한',
-        'thoughtful': '생각 많은',
-        'tired': '피곤한',
-        'sad': '슬픈',
-        'angry': '화난',
-      }[previousMood] ?? '어제의';
-      
+            'excited': '설레는',
+            'happy': '기쁜',
+            'good': '좋은',
+            'normal': '평범한',
+            'thoughtful': '생각 많은',
+            'tired': '피곤한',
+            'sad': '슬픈',
+            'angry': '화난',
+          }[previousMood] ??
+          '어제의';
+
       final currLabel = {
-        'excited': '설레는',
-        'happy': '기쁜',
-        'good': '좋은',
-        'normal': '평범한',
-        'thoughtful': '생각 많은',
-        'tired': '피곤한',
-        'sad': '슬픈',
-        'angry': '화난',
-      }[currentMood] ?? '오늘의';
-      
+            'excited': '설레는',
+            'happy': '기쁜',
+            'good': '좋은',
+            'normal': '평범한',
+            'thoughtful': '생각 많은',
+            'tired': '피곤한',
+            'sad': '슬픈',
+            'angry': '화난',
+          }[currentMood] ??
+          '오늘의';
+
       transitionMessage = '$prevLabel 마음이 $currLabel 마음으로 바뀌었네요 💝';
     }
-    
+
     return ComprehensiveDiaryAnalysis(
       emotionTransition: transitionMessage,
       emotionalSupport: messages['support']!,
@@ -1494,7 +1571,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       tomorrowHope: messages['hope']!,
     );
   }
-  
+
   /// 🎯 하루 전체 종합 분석
   Future<ComprehensiveDayAnalysis> analyzeDayComprehensive({
     required Map<String, dynamic> exerciseData,
@@ -1513,7 +1590,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
           return cached;
         }
       }
-      
+
       // 프롬프트 생성
       final prompt = _generateComprehensiveDayPrompt(
         exerciseData: exerciseData,
@@ -1522,14 +1599,14 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
         userName: userName,
         previousDayData: previousDayData,
       );
-      
+
       // OpenAI API 호출
       final response = await _callOpenAIForComprehensiveDay(prompt);
       final analysis = _parseComprehensiveDayResponse(response);
-      
+
       // 캐시에 저장
       await _saveComprehensiveDayToCache(analysis);
-      
+
       return analysis;
     } catch (e) {
       debugPrint('❌ analyzeDayComprehensive 에러: $e');
@@ -1541,7 +1618,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       );
     }
   }
-  
+
   /// 종합 하루 분석 프롬프트 생성
   String _generateComprehensiveDayPrompt({
     required Map<String, dynamic> exerciseData,
@@ -1555,17 +1632,17 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
     final intensity = _ensureKorean(exerciseData['intensity'] ?? '보통');
     final duration = exerciseData['duration'] ?? 0;
     final calories = exerciseData['calories'] ?? 0;
-    
+
     // 독서 데이터
     final bookTitle = readingData['bookTitle'] ?? '책';
     final pages = readingData['pages'] ?? 0;
     final genre = readingData['genre'] ?? '일반';
     final rating = readingData['rating'] ?? 0;
-    
+
     // 일기 데이터
     final mood = diaryData['mood'] ?? 'normal';
     final diaryContent = diaryData['content'] ?? '';
-    
+
     return '''당신은 사용자와 하루를 함께 보낸 AI 동반자 '셰르피'입니다.
 사용자의 하루 활동을 종합적으로 분석하여 따뜻하고 통찰력 있는 피드백을 제공하세요.
 
@@ -1595,7 +1672,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
 
 JSON 형식으로만 응답하세요.''';
   }
-  
+
   /// 종합 하루 분석 OpenAI 호출
   Future<String> _callOpenAIForComprehensiveDay(String prompt) async {
     try {
@@ -1615,35 +1692,39 @@ JSON 형식으로만 응답하세요.''';
           // JSON 응답 강제
         ),
       );
-      
+
       return response.choices.first.message.content ?? '{}';
     } catch (e) {
       debugPrint('❌ OpenAI API 호출 실패: $e');
       throw e;
     }
   }
-  
+
   /// 종합 하루 분석 응답 파싱
   ComprehensiveDayAnalysis _parseComprehensiveDayResponse(String response) {
     try {
       final json = jsonDecode(response);
-      
+
       // 점수 계산 (운동, 독서, 감정 데이터를 기반으로)
       final scores = <String, double>{
-        '신체': 85.0,  // 임시 값
-        '정신': 80.0,  // 임시 값
-        '감정': 75.0,  // 임시 값
+        '신체': 85.0, // 임시 값
+        '정신': 80.0, // 임시 값
+        '감정': 75.0, // 임시 값
       };
-      
-      final balanceScore = scores.values.reduce((a, b) => a + b) / scores.length;
-      
+
+      final balanceScore =
+          scores.values.reduce((a, b) => a + b) / scores.length;
+
       return ComprehensiveDayAnalysis(
         dayTheme: json['dayTheme'] ?? '균형잡힌 하루 🌟',
-        emotionalJourney: json['emotionalJourney'] ?? '오늘은 활기찬 운동으로 시작하여 독서로 마음을 채우고, 일기로 하루를 정리한 충실한 날이었어요.',
-        balanceReport: json['balanceReport'] ?? '신체, 정신, 감정이 조화롭게 균형을 이룬 하루였습니다.',
+        emotionalJourney: json['emotionalJourney'] ??
+            '오늘은 활기찬 운동으로 시작하여 독서로 마음을 채우고, 일기로 하루를 정리한 충실한 날이었어요.',
+        balanceReport:
+            json['balanceReport'] ?? '신체, 정신, 감정이 조화롭게 균형을 이룬 하루였습니다.',
         growthInsight: json['growthInsight'] ?? '꾸준한 활동이 긍정적인 에너지로 이어지고 있어요.',
         tomorrowGuide: json['tomorrowGuide'] ?? '내일도 오늘처럼 균형잡힌 하루를 보내보세요.',
-        sherpiMessage: json['sherpiMessage'] ?? '오늘 정말 멋진 하루를 보내셨네요! 내일도 함께 더 나은 하루를 만들어가요!',
+        sherpiMessage: json['sherpiMessage'] ??
+            '오늘 정말 멋진 하루를 보내셨네요! 내일도 함께 더 나은 하루를 만들어가요!',
         balanceScore: balanceScore,
         scores: scores,
       );
@@ -1652,15 +1733,17 @@ JSON 형식으로만 응답하세요.''';
       throw e;
     }
   }
-  
+
   /// 종합 하루 분석 캐시 저장
-  Future<void> _saveComprehensiveDayToCache(ComprehensiveDayAnalysis analysis) async {
+  Future<void> _saveComprehensiveDayToCache(
+      ComprehensiveDayAnalysis analysis) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final now = DateTime.now();
-      final dateKey = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      final dateKey =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       final key = 'comprehensive_day_$dateKey';
-      
+
       final data = {
         'dayTheme': analysis.dayTheme,
         'emotionalJourney': analysis.emotionalJourney,
@@ -1672,22 +1755,23 @@ JSON 형식으로만 응답하세요.''';
         'scores': analysis.scores,
         'timestamp': now.toIso8601String(),
       };
-      
+
       await prefs.setString(key, jsonEncode(data));
       debugPrint('✅ 종합 하루 분석 캐시 저장 완료');
     } catch (e) {
       debugPrint('❌ 캐시 저장 실패: $e');
     }
   }
-  
+
   /// 종합 하루 분석 캐시에서 읽기
   Future<ComprehensiveDayAnalysis?> _getComprehensiveDayFromCache() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final now = DateTime.now();
-      final dateKey = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+      final dateKey =
+          '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
       final key = 'comprehensive_day_$dateKey';
-      
+
       final cached = prefs.getString(key);
       if (cached != null) {
         final data = jsonDecode(cached);
@@ -1707,7 +1791,7 @@ JSON 형식으로만 응답하세요.''';
     }
     return null;
   }
-  
+
   /// 기본 종합 하루 분석 (API 실패 시)
   ComprehensiveDayAnalysis _getDefaultComprehensiveDayAnalysis(
     Map<String, dynamic> exerciseData,
@@ -1716,27 +1800,36 @@ JSON 형식으로만 응답하세요.''';
     String userName,
   ) {
     // 각 활동의 완성도에 따른 점수 계산
-    final exerciseScore = (exerciseData['duration'] != null && exerciseData['duration'] > 0) ? 85.0 : 0.0;
-    final readingScore = (readingData['pages'] != null && readingData['pages'] > 0) ? 80.0 : 0.0;
-    final diaryScore = (diaryData['content'] != null && diaryData['content'].isNotEmpty) ? 75.0 : 0.0;
-    
+    final exerciseScore =
+        (exerciseData['duration'] != null && exerciseData['duration'] > 0)
+            ? 85.0
+            : 0.0;
+    final readingScore =
+        (readingData['pages'] != null && readingData['pages'] > 0) ? 80.0 : 0.0;
+    final diaryScore =
+        (diaryData['content'] != null && diaryData['content'].isNotEmpty)
+            ? 75.0
+            : 0.0;
+
     final scores = {
       '신체': exerciseScore,
       '정신': readingScore,
       '감정': diaryScore,
     };
-    
+
     final balanceScore = scores.values.where((v) => v > 0).isNotEmpty
-        ? scores.values.where((v) => v > 0).reduce((a, b) => a + b) / scores.values.where((v) => v > 0).length
+        ? scores.values.where((v) => v > 0).reduce((a, b) => a + b) /
+            scores.values.where((v) => v > 0).length
         : 0.0;
-    
+
     return ComprehensiveDayAnalysis(
       dayTheme: '성실한 하루 ✨',
       emotionalJourney: '오늘은 운동으로 활력을 얻고, 독서로 지식을 쌓으며, 일기로 마음을 정리한 알찬 하루였어요.',
       balanceReport: '신체와 정신, 감정이 조화를 이루며 균형잡힌 하루를 보내셨네요.',
       growthInsight: '꾸준한 기록과 활동이 당신의 성장을 만들어가고 있어요. 이런 습관이 큰 변화를 가져올 거예요.',
       tomorrowGuide: '오늘의 좋은 흐름을 내일도 이어가보세요. 작은 목표를 하나 더 추가해보는 것도 좋겠어요.',
-      sherpiMessage: '$userName님, 오늘 하루도 정말 수고 많으셨어요! 🎉 운동도, 독서도, 일기도 모두 완료하신 당신이 자랑스러워요. 내일도 함께 멋진 하루를 만들어가요!',
+      sherpiMessage:
+          '$userName님, 오늘 하루도 정말 수고 많으셨어요! 🎉 운동도, 독서도, 일기도 모두 완료하신 당신이 자랑스러워요. 내일도 함께 멋진 하루를 만들어가요!',
       balanceScore: balanceScore,
       scores: scores,
     );
@@ -1745,15 +1838,15 @@ JSON 형식으로만 응답하세요.''';
 
 /// 🎯 종합 하루 분석 데이터 모델
 class ComprehensiveDayAnalysis {
-  final String dayTheme;           // 오늘의 테마
-  final String emotionalJourney;   // 감정 여정 스토리
-  final String balanceReport;      // 균형 분석
-  final String growthInsight;      // 성장 인사이트
-  final String tomorrowGuide;      // 내일을 위한 제안
-  final String sherpiMessage;      // 셰르피 메시지
-  final double balanceScore;       // 균형 점수
+  final String dayTheme; // 오늘의 테마
+  final String emotionalJourney; // 감정 여정 스토리
+  final String balanceReport; // 균형 분석
+  final String growthInsight; // 성장 인사이트
+  final String tomorrowGuide; // 내일을 위한 제안
+  final String sherpiMessage; // 셰르피 메시지
+  final double balanceScore; // 균형 점수
   final Map<String, double> scores; // 영역별 점수
-  
+
   ComprehensiveDayAnalysis({
     required this.dayTheme,
     required this.emotionalJourney,
@@ -1772,21 +1865,21 @@ class ComprehensiveExerciseAnalysis {
   final String benefits;
   final String recommendation;
   final String encouragement;
-  
+
   ComprehensiveExerciseAnalysis({
     required this.comparison,
     required this.benefits,
     required this.recommendation,
     required this.encouragement,
   });
-  
+
   Map<String, dynamic> toJson() => {
-    'comparison': comparison,
-    'benefits': benefits,
-    'recommendation': recommendation,
-    'encouragement': encouragement,
-  };
-  
+        'comparison': comparison,
+        'benefits': benefits,
+        'recommendation': recommendation,
+        'encouragement': encouragement,
+      };
+
   factory ComprehensiveExerciseAnalysis.fromJson(Map<String, dynamic> json) {
     return ComprehensiveExerciseAnalysis(
       comparison: json['comparison'] as String,
@@ -1803,21 +1896,21 @@ class ComprehensiveReadingAnalysis {
   final String todayInsight;
   final String journeyEncouragement;
   final List<BookRecommendation> recommendations;
-  
+
   ComprehensiveReadingAnalysis({
     required this.previousInsight,
     required this.todayInsight,
     required this.journeyEncouragement,
     required this.recommendations,
   });
-  
+
   Map<String, dynamic> toJson() => {
-    'previousInsight': previousInsight,
-    'todayInsight': todayInsight,
-    'journeyEncouragement': journeyEncouragement,
-    'recommendations': recommendations.map((r) => r.toJson()).toList(),
-  };
-  
+        'previousInsight': previousInsight,
+        'todayInsight': todayInsight,
+        'journeyEncouragement': journeyEncouragement,
+        'recommendations': recommendations.map((r) => r.toJson()).toList(),
+      };
+
   factory ComprehensiveReadingAnalysis.fromJson(Map<String, dynamic> json) {
     List<BookRecommendation> recommendations = [];
     if (json['recommendations'] != null) {
@@ -1825,7 +1918,7 @@ class ComprehensiveReadingAnalysis {
         recommendations.add(BookRecommendation.fromJson(rec));
       }
     }
-    
+
     return ComprehensiveReadingAnalysis(
       previousInsight: json['previousInsight'] as String,
       todayInsight: json['todayInsight'] as String,
@@ -1841,21 +1934,21 @@ class BookRecommendation {
   final String author;
   final String reason;
   final String mood;
-  
+
   BookRecommendation({
     required this.title,
     required this.author,
     required this.reason,
     required this.mood,
   });
-  
+
   Map<String, dynamic> toJson() => {
-    'title': title,
-    'author': author,
-    'reason': reason,
-    'mood': mood,
-  };
-  
+        'title': title,
+        'author': author,
+        'reason': reason,
+        'mood': mood,
+      };
+
   factory BookRecommendation.fromJson(Map<String, dynamic> json) {
     return BookRecommendation(
       title: json['title'] as String,
@@ -1867,29 +1960,29 @@ class BookRecommendation {
 }
 
 /// 📝 종합 일기 분석 모델
-/// 
+///
 /// 사용자의 감정 변화를 추적하고 공감적 피드백을 제공합니다.
 /// 일기 내용이 아닌 감정 데이터만을 기반으로 분석합니다.
 class ComprehensiveDiaryAnalysis {
-  final String emotionTransition;    // 감정 전환 메시지 (40자)
-  final String emotionalSupport;     // 감정적 지지 메시지 (100-130자)
-  final String practicalAdvice;      // 실질적 조언 (100-130자)
-  final String tomorrowHope;         // 내일을 위한 희망 메시지 (80-100자)
-  
+  final String emotionTransition; // 감정 전환 메시지 (40자)
+  final String emotionalSupport; // 감정적 지지 메시지 (100-130자)
+  final String practicalAdvice; // 실질적 조언 (100-130자)
+  final String tomorrowHope; // 내일을 위한 희망 메시지 (80-100자)
+
   ComprehensiveDiaryAnalysis({
     required this.emotionTransition,
     required this.emotionalSupport,
     required this.practicalAdvice,
     required this.tomorrowHope,
   });
-  
+
   Map<String, dynamic> toJson() => {
-    'emotionTransition': emotionTransition,
-    'emotionalSupport': emotionalSupport,
-    'practicalAdvice': practicalAdvice,
-    'tomorrowHope': tomorrowHope,
-  };
-  
+        'emotionTransition': emotionTransition,
+        'emotionalSupport': emotionalSupport,
+        'practicalAdvice': practicalAdvice,
+        'tomorrowHope': tomorrowHope,
+      };
+
   factory ComprehensiveDiaryAnalysis.fromJson(Map<String, dynamic> json) {
     return ComprehensiveDiaryAnalysis(
       emotionTransition: json['emotionTransition'] as String,

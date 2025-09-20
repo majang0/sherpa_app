@@ -20,7 +20,7 @@ import '../../../../../shared/widgets/sherpa_button.dart';
 import '../../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../../shared/utils/haptic_feedback_manager.dart';
 
-// Widgets  
+// Widgets
 import '../widgets/mountain_path_widget.dart';
 import '../widgets/quick_goal_input_widget.dart';
 import '../widgets/checkpoint_tile_widget.dart';
@@ -31,18 +31,18 @@ class SimplePlannerScreen extends ConsumerStatefulWidget {
   const SimplePlannerScreen({super.key});
 
   @override
-  ConsumerState<SimplePlannerScreen> createState() => _SimplePlannerScreenState();
+  ConsumerState<SimplePlannerScreen> createState() =>
+      _SimplePlannerScreenState();
 }
 
-class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen> 
+class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     with SingleTickerProviderStateMixin {
-  
   late AnimationController _animationController;
   bool _showQuickInput = false;
-  
+
   // 체크포인트 완료 상태를 관리하는 Map
   final Map<String, bool> _checkpointCompletions = {};
-  
+
   @override
   void initState() {
     super.initState();
@@ -50,29 +50,29 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     // 처음 진입시 셰르피 인사
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showWelcomeMessage();
     });
   }
-  
+
   void _showWelcomeMessage() {
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.general,
-      customDialogue: '함께 목표를 달성해봐요! 어떤 산을 정복하고 싶으신가요? 🏔️',
-      emotion: SherpiEmotion.happy,
-      duration: const Duration(seconds: 3),
-    );
+          context: SherpiContext.general,
+          customDialogue: '함께 목표를 달성해봐요! 어떤 산을 정복하고 싶으신가요? 🏔️',
+          emotion: SherpiEmotion.happy,
+          duration: const Duration(seconds: 3),
+        );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(globalUserProvider);
     final goals = user.planningData?.goals ?? [];
     final todayCheckpoints = _getTodayCheckpoints(user);
     final overallProgress = _calculateOverallProgress(goals);
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: SherpaCleanAppBar(
@@ -123,7 +123,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                       onGoalTap: _onGoalTapped,
                     ),
                   ).animate().fadeIn(duration: 600.ms),
-                  
+
                   // 목표 리스트 버튼
                   Positioned(
                     top: 20,
@@ -161,13 +161,11 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                         ),
                       ),
                     ),
-                  ).animate()
-                    .fadeIn(delay: 300.ms)
-                    .slideX(begin: 0.2, end: 0),
+                  ).animate().fadeIn(delay: 300.ms).slideX(begin: 0.2, end: 0),
                 ],
               ),
             ),
-            
+
             // 오늘의 체크포인트
             Expanded(
               flex: 3,
@@ -213,22 +211,24 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                         ],
                       ),
                     ),
-                    
+
                     // 체크포인트 리스트
                     Expanded(
                       child: todayCheckpoints.isEmpty
                           ? _buildEmptyCheckpoints()
                           : ListView.builder(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
                               itemCount: todayCheckpoints.length,
                               itemBuilder: (context, index) {
                                 final checkpoint = todayCheckpoints[index];
                                 return CheckpointTileWidget(
                                   checkpoint: checkpoint,
                                   onToggle: () => _toggleCheckpoint(checkpoint),
-                                ).animate()
-                                  .fadeIn(delay: (100 * index).ms)
-                                  .slideX(begin: -0.1, end: 0);
+                                )
+                                    .animate()
+                                    .fadeIn(delay: (100 * index).ms)
+                                    .slideX(begin: -0.1, end: 0);
                               },
                             ),
                     ),
@@ -239,7 +239,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
           ],
         ),
       ),
-      
+
       // 플로팅 액션 버튼 - 목표 추가
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showQuickGoalInput,
@@ -252,12 +252,10 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
             fontWeight: FontWeight.bold,
           ),
         ),
-      ).animate()
-        .scale(delay: 300.ms, duration: 300.ms)
-        .fadeIn(),
+      ).animate().scale(delay: 300.ms, duration: 300.ms).fadeIn(),
     );
   }
-  
+
   // 목표 리스트 보기 모달
   void _showGoalsList() {
     showModalBottomSheet(
@@ -266,7 +264,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       backgroundColor: Colors.transparent,
       builder: (context) {
         final goals = ref.read(globalUserProvider).planningData?.goals ?? [];
-        
+
         return DraggableScrollableSheet(
           initialChildSize: 0.7,
           minChildSize: 0.3,
@@ -292,10 +290,11 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  
+
                   // 헤더
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: Row(
                       children: [
                         Text(
@@ -317,9 +316,9 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                       ],
                     ),
                   ),
-                  
+
                   const Divider(),
-                  
+
                   // 목표 리스트
                   Expanded(
                     child: goals.isEmpty
@@ -350,12 +349,12 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       },
     );
   }
-  
+
   // 목표 카드 위젯
   Widget _buildGoalCard(UserGoal goal) {
     final daysLeft = goal.daysRemaining;
     final progressPercent = goal.progress.toInt();
-    
+
     return Dismissible(
       key: Key(goal.id),
       background: Container(
@@ -397,7 +396,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       },
       onDismissed: (direction) {
         ref.read(globalUserProvider.notifier).deleteGoal(goal.id);
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${goal.title} 목표가 삭제되었어요'),
@@ -444,9 +443,9 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                 size: 24,
               ),
             ),
-            
+
             const SizedBox(width: 12),
-            
+
             // 목표 정보
             Expanded(
               child: Column(
@@ -495,7 +494,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                 ],
               ),
             ),
-            
+
             // 진행률 원형 차트
             SizedBox(
               width: 50,
@@ -527,7 +526,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       ),
     );
   }
-  
+
   // 카테고리별 색상
   Color _getCategoryColor(String category) {
     switch (category) {
@@ -543,7 +542,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
         return AppColors.primary;
     }
   }
-  
+
   // 카테고리별 아이콘
   IconData _getCategoryIcon(String category) {
     switch (category) {
@@ -559,7 +558,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
         return Icons.flag;
     }
   }
-  
+
   // 빈 체크포인트 화면
   Widget _buildEmptyCheckpoints() {
     return Center(
@@ -605,12 +604,12 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       ),
     );
   }
-  
+
   // 오늘의 체크포인트 가져오기
   List<Map<String, dynamic>> _getTodayCheckpoints(GlobalUser user) {
     final checkpoints = <Map<String, dynamic>>[];
     final now = DateTime.now();
-    
+
     // 목표에서 오늘 해야 할 체크포인트 추출
     if (user.planningData != null) {
       for (final goal in user.planningData!.goals) {
@@ -629,12 +628,12 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
         }
       }
     }
-    
+
     // 일일 활동 체크포인트는 제거 - 목표에서 설정한 것만 표시
-    
+
     return checkpoints;
   }
-  
+
   // 카테고리별 산 이름
   String _getCategoryMountain(String category) {
     switch (category) {
@@ -650,7 +649,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
         return '목표봉';
     }
   }
-  
+
   // 카테고리별 포인트
   int _getCategoryPoints(String category) {
     switch (category) {
@@ -666,29 +665,28 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
         return 25;
     }
   }
-  
-  
+
   // 전체 진행률 계산
   double _calculateOverallProgress(List<UserGoal> goals) {
     if (goals.isEmpty) return 0;
-    
+
     double totalProgress = 0;
     int activeGoals = 0;
-    
+
     for (final goal in goals) {
       if (goal.isActive) {
         totalProgress += goal.progress;
         activeGoals++;
       }
     }
-    
+
     return activeGoals > 0 ? totalProgress / activeGoals : 0;
   }
-  
+
   // 빠른 목표 입력 보여주기
   void _showQuickGoalInput() {
     HapticFeedbackManager.lightImpact();
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -701,7 +699,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       ),
     );
   }
-  
+
   // 목표 생성
   void _createGoal(Map<String, dynamic> goalData) {
     // 목표 데이터를 바로 Map 형태로 준비
@@ -715,103 +713,118 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       'progress': 0.0,
       'isActive': true,
     };
-    
+
     // 글로벌 프로바이더에 저장
     ref.read(globalUserProvider.notifier).saveGoals([goalMap]);
-    
+
     // 포인트 지급
     ref.read(globalPointProvider.notifier).earnPoints(
-      10,
-      PointSource.goalCompletion,
-      '새로운 목표 설정',
-    );
-    
+          10,
+          PointSource.goalCompletion,
+          '새로운 목표 설정',
+        );
+
     // 셰르피 반응
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.general,
-      customDialogue: '좋아요! "${goalData['title']}" 목표를 향해 함께 올라가봐요! 🚀',
-      emotion: SherpiEmotion.cheering,
-      duration: const Duration(seconds: 3),
-    );
-    
+          context: SherpiContext.general,
+          customDialogue: '좋아요! "${goalData['title']}" 목표를 향해 함께 올라가봐요! 🚀',
+          emotion: SherpiEmotion.cheering,
+          duration: const Duration(seconds: 3),
+        );
+
     // 애니메이션 재생
     _animationController.forward().then((_) {
       _animationController.reverse();
     });
   }
-  
+
   // 체크포인트 토글
   void _toggleCheckpoint(Map<String, dynamic> checkpoint) {
     HapticFeedbackManager.lightImpact();
-    
+
     final checkpointId = checkpoint['id'] as String;
     final newCompletedState = !checkpoint['completed'];
-    
+
     setState(() {
       checkpoint['completed'] = newCompletedState;
       _checkpointCompletions[checkpointId] = newCompletedState;
     });
-    
+
     if (newCompletedState) {
       // 포인트 지급
       ref.read(globalPointProvider.notifier).earnPoints(
-        checkpoint['points'],
-        PointSource.goalCompletion,
-        '체크포인트 완료: ${checkpoint['title']}',
-      );
-      
+            checkpoint['points'],
+            PointSource.goalCompletion,
+            '체크포인트 완료: ${checkpoint['title']}',
+          );
+
       // 경험치 추가
-      ref.read(globalUserProvider.notifier).addExperience(checkpoint['points'] ~/ 2);
-      
+      ref
+          .read(globalUserProvider.notifier)
+          .addExperience(checkpoint['points'] ~/ 2);
+
       // 목표 진행률 업데이트
       if (checkpoint['goalId'] != null) {
         // 현재 진행률을 가져와서 10% 증가시킴
-        final goal = ref.read(globalUserProvider).planningData?.goals
-            .firstWhere((g) => g.id == checkpoint['goalId'], 
-                        orElse: () => UserGoal(
-                          id: '', title: '', category: '', duration: 0, 
-                          createdAt: DateTime.now(), progress: 0, isActive: false));
-        
+        final goal = ref
+            .read(globalUserProvider)
+            .planningData
+            ?.goals
+            .firstWhere((g) => g.id == checkpoint['goalId'],
+                orElse: () => UserGoal(
+                    id: '',
+                    title: '',
+                    category: '',
+                    duration: 0,
+                    createdAt: DateTime.now(),
+                    progress: 0,
+                    isActive: false));
+
         if (goal != null && goal.id.isNotEmpty) {
           final newProgress = (goal.progress + 10).clamp(0.0, 100.0);
           ref.read(globalUserProvider.notifier).updateGoalProgress(
-            checkpoint['goalId'],
-            newProgress,
-          );
+                checkpoint['goalId'],
+                newProgress,
+              );
         }
       }
-      
+
       // 셰르피 축하 메시지
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.general,
-        customDialogue: '체크포인트 도달! 조금만 더 올라가면 정상이에요! ⛰️',
-        emotion: SherpiEmotion.happy,
-        duration: const Duration(seconds: 2),
-      );
+            context: SherpiContext.general,
+            customDialogue: '체크포인트 도달! 조금만 더 올라가면 정상이에요! ⛰️',
+            emotion: SherpiEmotion.happy,
+            duration: const Duration(seconds: 2),
+          );
     }
   }
-  
+
   // 목표 탭 이벤트
   void _onGoalTapped(String goalId) {
     // 목표 상세 보기 (향후 구현)
     HapticFeedbackManager.lightImpact();
-    
-    final goal = ref.read(globalUserProvider).planningData?.goals
-        .firstWhere((g) => g.id == goalId,
-                    orElse: () => UserGoal(
-                      id: '', title: '', category: '', duration: 0,
-                      createdAt: DateTime.now(), progress: 0, isActive: false));
-    
+
+    final goal = ref.read(globalUserProvider).planningData?.goals.firstWhere(
+        (g) => g.id == goalId,
+        orElse: () => UserGoal(
+            id: '',
+            title: '',
+            category: '',
+            duration: 0,
+            createdAt: DateTime.now(),
+            progress: 0,
+            isActive: false));
+
     if (goal != null && goal.id.isNotEmpty) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.general,
-        customDialogue: '${goal.title} - 진행률: ${goal.progress.toInt()}%',
-        emotion: SherpiEmotion.guiding,
-        duration: const Duration(seconds: 2),
-      );
+            context: SherpiContext.general,
+            customDialogue: '${goal.title} - 진행률: ${goal.progress.toInt()}%',
+            emotion: SherpiEmotion.guiding,
+            duration: const Duration(seconds: 2),
+          );
     }
   }
-  
+
   @override
   void dispose() {
     _animationController.dispose();

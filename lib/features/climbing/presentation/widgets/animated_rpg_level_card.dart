@@ -27,7 +27,8 @@ class AnimatedRPGLevelCard extends ConsumerStatefulWidget {
   const AnimatedRPGLevelCard({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<AnimatedRPGLevelCard> createState() => _AnimatedRPGLevelCardState();
+  ConsumerState<AnimatedRPGLevelCard> createState() =>
+      _AnimatedRPGLevelCardState();
 }
 
 class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
@@ -383,7 +384,8 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                           animation: _progressAnimation,
                           builder: (context, child) {
                             return FractionallySizedBox(
-                              widthFactor: displayProgress * _progressAnimation.value,
+                              widthFactor:
+                                  displayProgress * _progressAnimation.value,
                               child: Container(
                                 height: 8,
                                 decoration: BoxDecoration(
@@ -422,7 +424,8 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                         ),
                         if (progress.progress > 0.8)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: AppColors.warningLight.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12),
@@ -483,7 +486,8 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
               children: [
                 // 등반 가이드 셰르피
                 Transform.translate(
-                  offset: Offset(0, math.sin(_sherpiAnimation.value * math.pi * 2) * 2),
+                  offset: Offset(
+                      0, math.sin(_sherpiAnimation.value * math.pi * 2) * 2),
                   child: Container(
                     width: 60,
                     height: 60,
@@ -506,7 +510,8 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                           animation: _mountainFloatAnimation,
                           builder: (context, child) {
                             return Transform.translate(
-                              offset: Offset(0, -2 + _mountainFloatAnimation.value * 2),
+                              offset: Offset(
+                                  0, -2 + _mountainFloatAnimation.value * 2),
                               child: Icon(
                                 Icons.terrain,
                                 color: AppColors.primary.withOpacity(0.2),
@@ -664,24 +669,32 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
             children: [
               _buildClimbingStatItem(
                 icon: Icons.trending_up,
-                value: powerBonus > 0 ? '+${powerBonus.toStringAsFixed(0)}%' : '0%',
+                value: powerBonus > 0
+                    ? '+${powerBonus.toStringAsFixed(0)}%'
+                    : '0%',
                 label: '등반력 강화',
                 color: AppColors.primary,
                 description: powerBonus > 0 ? '뱃지 효과' : '효과 없음',
               ),
               _buildClimbingStatItem(
                 icon: Icons.speed,
-                value: totalTimeReduction > 0 ? '-${totalTimeReduction.toStringAsFixed(1)}%' : '0%',
+                value: totalTimeReduction > 0
+                    ? '-${totalTimeReduction.toStringAsFixed(1)}%'
+                    : '0%',
                 label: '소요시간 감소',
                 color: AppColors.success,
-                description: _getTimeReductionDescription(socialityTimeReduction, badgeTimeReduction),
+                description: _getTimeReductionDescription(
+                    socialityTimeReduction, badgeTimeReduction),
               ),
               _buildClimbingStatItem(
                 icon: Icons.check_circle,
-                value: totalSuccessBonus > 0 ? '+${totalSuccessBonus.toStringAsFixed(1)}%' : '0%',
+                value: totalSuccessBonus > 0
+                    ? '+${totalSuccessBonus.toStringAsFixed(1)}%'
+                    : '0%',
                 label: '성공률 증가',
                 color: AppColors.warning,
-                description: _getSuccessRateDescription(willpowerBonus, badgeSuccessBonus),
+                description: _getSuccessRateDescription(
+                    willpowerBonus, badgeSuccessBonus),
               ),
             ],
           ),
@@ -691,7 +704,8 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
   }
 
 // 시간 단축 설명 생성
-  String _getTimeReductionDescription(double socialityReduction, double badgeReduction) {
+  String _getTimeReductionDescription(
+      double socialityReduction, double badgeReduction) {
     if (socialityReduction > 0 && badgeReduction > 0) {
       return '사교성 ${socialityReduction.toStringAsFixed(1)}% + 뱃지 ${badgeReduction.toStringAsFixed(0)}%';
     } else if (socialityReduction > 0) {
@@ -779,7 +793,6 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
       ],
     );
   }
-
 
   String _getClimbingMessage(double progress) {
     if (progress < 0.25) {

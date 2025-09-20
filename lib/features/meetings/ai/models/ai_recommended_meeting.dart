@@ -7,19 +7,19 @@ import '../../models/available_meeting_model.dart';
 class AIRecommendedMeeting {
   /// 추천된 모임
   final AvailableMeeting meeting;
-  
+
   /// 매칭 점수 (0.0 ~ 1.0)
   final double matchScore;
-  
+
   /// AI가 생성한 추천 이유
   final String reason;
-  
+
   /// 핵심 매칭 포인트들
   final List<String> keyPoints;
-  
+
   /// 추천 우선순위 (1이 가장 높음)
   final int priority;
-  
+
   /// 추천 생성 시간
   final DateTime createdAt;
 
@@ -33,14 +33,16 @@ class AIRecommendedMeeting {
   });
 
   /// JSON 파싱을 위한 팩토리 메서드
-  factory AIRecommendedMeeting.fromJson(Map<String, dynamic> json, AvailableMeeting meeting) {
+  factory AIRecommendedMeeting.fromJson(
+      Map<String, dynamic> json, AvailableMeeting meeting) {
     return AIRecommendedMeeting(
       meeting: meeting,
       matchScore: (json['matchScore'] as num?)?.toDouble() ?? 0.0,
       reason: json['reason'] as String? ?? '',
       keyPoints: (json['keyPoints'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ?? [],
+              ?.map((e) => e.toString())
+              .toList() ??
+          [],
       priority: json['priority'] as int? ?? 0,
       createdAt: DateTime.now(),
     );
@@ -60,7 +62,7 @@ class AIRecommendedMeeting {
 
   /// 매칭 점수를 퍼센트로 변환
   int get matchPercentage => (matchScore * 100).round();
-  
+
   /// 매칭 레벨 계산
   String get matchLevel {
     if (matchScore >= 0.9) return '완벽한 매칭';

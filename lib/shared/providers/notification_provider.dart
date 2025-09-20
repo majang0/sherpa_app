@@ -4,7 +4,8 @@ import 'dart:convert';
 import '../models/notification_model.dart';
 
 // 알림 상태 관리 Provider
-final notificationProvider = StateNotifierProvider<NotificationNotifier, List<NotificationItem>>((ref) {
+final notificationProvider =
+    StateNotifierProvider<NotificationNotifier, List<NotificationItem>>((ref) {
   return NotificationNotifier();
 });
 
@@ -38,7 +39,7 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final notificationsJson = prefs.getString('notifications');
-      
+
       if (notificationsJson != null) {
         final List<dynamic> decoded = jsonDecode(notificationsJson);
         state = decoded.map((json) => NotificationItem.fromJson(json)).toList();
@@ -56,7 +57,8 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
   Future<void> _saveNotifications() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final notificationsJson = jsonEncode(state.map((n) => n.toJson()).toList());
+      final notificationsJson =
+          jsonEncode(state.map((n) => n.toJson()).toList());
       await prefs.setString('notifications', notificationsJson);
     } catch (e) {
       print('알림 저장 실패: $e');
@@ -144,7 +146,7 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
   void notifyGoalComplete(String goalName, {int? xp, int? points}) {
     final rewardText = _generateRewardText(xp: xp, points: points);
     final displayReward = rewardText.isNotEmpty ? rewardText : '보상';
-    
+
     addNotification(NotificationItem(
       id: _generateNotificationId(),
       type: NotificationType.goalComplete,
@@ -160,7 +162,7 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
   void notifyDailyQuestReward(String questName, {int? xp, int? points}) {
     final rewardText = _generateRewardText(xp: xp, points: points);
     final displayReward = rewardText.isNotEmpty ? rewardText : '보상 상자';
-    
+
     addNotification(NotificationItem(
       id: _generateNotificationId(),
       type: NotificationType.dailyQuestReward,
@@ -176,7 +178,7 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
   void notifyWeeklyQuestReward(String questName, {int? xp, int? points}) {
     final rewardText = _generateRewardText(xp: xp, points: points);
     final displayReward = rewardText.isNotEmpty ? rewardText : '특별 보상';
-    
+
     addNotification(NotificationItem(
       id: _generateNotificationId(),
       type: NotificationType.weeklyQuestReward,
@@ -192,13 +194,14 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
   void notifyFirstClimb(String mountainName, {int? xp, int? points}) {
     final rewardText = _generateRewardText(xp: xp, points: points);
     final rewardDisplay = rewardText.isNotEmpty ? ' ($rewardText)' : '';
-    
+
     addNotification(NotificationItem(
       id: _generateNotificationId(),
       type: NotificationType.firstClimb,
       title: '오늘의 첫 등반 성공! 🏔️',
       message: '$mountainName 정복$rewardDisplay',
-      detail: '오늘의 첫 등반을 성공적으로 완료했습니다! $mountainName 정상 도달${rewardText.isNotEmpty ? '로 $rewardText를 획득했습니다' : ''}!',
+      detail:
+          '오늘의 첫 등반을 성공적으로 완료했습니다! $mountainName 정상 도달${rewardText.isNotEmpty ? '로 $rewardText를 획득했습니다' : ''}!',
       createdAt: DateTime.now(),
       metadata: {'mountain': mountainName, 'xp': xp, 'points': points},
     ));
@@ -212,18 +215,24 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
       type: NotificationType.meetingComplete,
       title: '모임 참가 완료! 👥',
       message: '$meetingName 모임에 참가했습니다$feeText',
-      detail: '"$meetingName" 모임에 성공적으로 참가했습니다. 총 $participants명이 함께했습니다!${fee != null ? ' 참가비 ${fee}P가 결제되었습니다.' : ''}',
+      detail:
+          '"$meetingName" 모임에 성공적으로 참가했습니다. 총 $participants명이 함께했습니다!${fee != null ? ' 참가비 ${fee}P가 결제되었습니다.' : ''}',
       createdAt: DateTime.now(),
-      metadata: {'meetingName': meetingName, 'participants': participants, 'fee': fee},
+      metadata: {
+        'meetingName': meetingName,
+        'participants': participants,
+        'fee': fee
+      },
     ));
   }
 
   // 프로필 업데이트 알림
-  void notifyProfileUpdate(ProfileUpdateType updateType, {String? oldValue, String? newValue}) {
+  void notifyProfileUpdate(ProfileUpdateType updateType,
+      {String? oldValue, String? newValue}) {
     final String title;
     final String message;
     final String detail;
-    
+
     switch (updateType) {
       case ProfileUpdateType.photo:
         title = '프로필 사진 변경 완료! 📸';

@@ -13,7 +13,8 @@ import '../../../shared/models/global_user_model.dart';
 
 class MeetingFullViewWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<MeetingFullViewWidget> createState() => _MeetingFullViewWidgetState();
+  ConsumerState<MeetingFullViewWidget> createState() =>
+      _MeetingFullViewWidgetState();
 }
 
 class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
@@ -43,11 +44,12 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
@@ -78,7 +80,8 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
 
     print('📊 MeetingFullView: 모임 데이터 확인 - 총 ${meetingLogs.length}개');
     if (meetingLogs.isNotEmpty) {
-      final dates = meetingLogs.map((m) => '${m.date.month}/${m.date.day}').join(', ');
+      final dates =
+          meetingLogs.map((m) => '${m.date.month}/${m.date.day}').join(', ');
       print('  모임 날짜: $dates');
     }
 
@@ -87,8 +90,9 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
       return log.date.year == _selectedMonth.year &&
           log.date.month == _selectedMonth.month;
     }).toList();
-    
-    print('📅 ${_selectedMonth.year}년 ${_selectedMonth.month}월 모임: ${monthlyLogs.length}개');
+
+    print(
+        '📅 ${_selectedMonth.year}년 ${_selectedMonth.month}월 모임: ${monthlyLogs.length}개');
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -111,7 +115,8 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
       ),
@@ -133,44 +138,44 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildHeader(monthlyLogs),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 월 선택 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildMonthSelector(monthlyLogs),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 캘린더 그리드 섹션
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildCalendarGrid(monthlyLogs),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 액션 버튼
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildActionButton(),
                   ),
-                  
+
                   // 하단 여백 증가하여 오버플로우 방지
                   SizedBox(height: MediaQuery.of(context).padding.bottom + 60),
                 ],
@@ -186,7 +191,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
     final user = ref.watch(globalUserProvider);
     final totalMeetings = user.dailyRecords.meetingLogs.length;
     final monthlyCount = monthlyLogs.length;
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
@@ -262,9 +267,9 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // 통계 정보
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -333,7 +338,8 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month - 1);
+                    _selectedMonth =
+                        DateTime(_selectedMonth.year, _selectedMonth.month - 1);
                   });
                   HapticFeedbackManager.lightImpact();
                 },
@@ -383,7 +389,8 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1);
+                    _selectedMonth =
+                        DateTime(_selectedMonth.year, _selectedMonth.month + 1);
                   });
                   HapticFeedbackManager.lightImpact();
                 },
@@ -479,14 +486,14 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // 카테고리 색상 범례
             _buildCategoryLegend(),
-            
+
             const SizedBox(height: 16),
-            
+
             // 캘린더 내용
             Container(
               padding: const EdgeInsets.all(12),
@@ -517,15 +524,19 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                       padding: const EdgeInsets.only(bottom: 6),
                       child: Row(
                         children: List.generate(7, (dayIndex) {
-                          final date = startDate.add(Duration(days: weekIndex * 7 + dayIndex));
-                          final isCurrentMonth = date.month == _selectedMonth.month;
+                          final date = startDate
+                              .add(Duration(days: weekIndex * 7 + dayIndex));
+                          final isCurrentMonth =
+                              date.month == _selectedMonth.month;
                           final isToday = _isToday(date);
-                          final dayMeetings = _getMeetingsForDate(monthlyLogs, date);
+                          final dayMeetings =
+                              _getMeetingsForDate(monthlyLogs, date);
 
                           return Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(1),
-                              child: _buildCalendarDay(date, isCurrentMonth, isToday, dayMeetings),
+                              child: _buildCalendarDay(
+                                  date, isCurrentMonth, isToday, dayMeetings),
                             ),
                           );
                         }),
@@ -547,18 +558,20 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        children: weekdays.map((day) => Expanded(
-          child: Center(
-            child: Text(
-              day,
-              style: GoogleFonts.notoSans(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: RecordColors.textSecondary,
-              ),
-            ),
-          ),
-        )).toList(),
+        children: weekdays
+            .map((day) => Expanded(
+                  child: Center(
+                    child: Text(
+                      day,
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: RecordColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                ))
+            .toList(),
       ),
     );
   }
@@ -568,40 +581,40 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
     // 최대 4개까지만 표시
     final displayMeetings = meetings.take(4).toList();
     final hasMore = meetings.length > 4;
-    
+
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 2,
       runSpacing: 2,
       children: [
         ...displayMeetings.map((meeting) => Container(
-          width: 6,
-          height: 6,
-          decoration: BoxDecoration(
-            color: isToday 
-                ? Colors.white.withOpacity(0.9)
-                : _getCategoryColor(meeting.category),
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: _getCategoryColor(meeting.category).withOpacity(0.3),
-                blurRadius: 2,
-                offset: const Offset(0, 1),
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(
+                color: isToday
+                    ? Colors.white.withOpacity(0.9)
+                    : _getCategoryColor(meeting.category),
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: _getCategoryColor(meeting.category).withOpacity(0.3),
+                    blurRadius: 2,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
               ),
-            ],
-          ),
-        )),
+            )),
         if (hasMore) ...[
           const SizedBox(width: 2),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
             decoration: BoxDecoration(
-              color: isToday 
+              color: isToday
                   ? Colors.white.withOpacity(0.2)
                   : const Color(0xFF8B5CF6).withOpacity(0.1),
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
-                color: isToday 
+                color: isToday
                     ? Colors.white.withOpacity(0.4)
                     : const Color(0xFF8B5CF6).withOpacity(0.3),
                 width: 0.5,
@@ -612,7 +625,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
               style: GoogleFonts.notoSans(
                 fontSize: 6,
                 fontWeight: FontWeight.w700,
-                color: isToday 
+                color: isToday
                     ? Colors.white.withOpacity(0.9)
                     : const Color(0xFF8B5CF6),
               ),
@@ -623,9 +636,11 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
     );
   }
 
-  Widget _buildCalendarDay(DateTime date, bool isCurrentMonth, bool isToday, List<MeetingLog> dayMeetings) {
+  Widget _buildCalendarDay(DateTime date, bool isCurrentMonth, bool isToday,
+      List<MeetingLog> dayMeetings) {
     final hasMeeting = dayMeetings.isNotEmpty;
-    final isFuture = date.isAfter(DateTime.now().subtract(const Duration(hours: 1)));
+    final isFuture =
+        date.isAfter(DateTime.now().subtract(const Duration(hours: 1)));
     final isClickable = isCurrentMonth && hasMeeting; // 모임이 있는 날짜만 클릭 가능
 
     return GestureDetector(
@@ -633,34 +648,40 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
       child: Container(
         height: 64,
         decoration: BoxDecoration(
-          gradient: isToday 
+          gradient: isToday
               ? LinearGradient(
                   colors: [const Color(0xFF8B5CF6), const Color(0xFF7C3AED)],
                 )
               : null,
-          color: !isToday 
-              ? (hasMeeting 
+          color: !isToday
+              ? (hasMeeting
                   ? const Color(0xFF8B5CF6).withOpacity(0.1)
-                  : (isFuture 
+                  : (isFuture
                       ? Colors.grey.shade200.withOpacity(0.5)
-                      : (isCurrentMonth ? Colors.white : Colors.grey.shade100.withOpacity(0.3))))
+                      : (isCurrentMonth
+                          ? Colors.white
+                          : Colors.grey.shade100.withOpacity(0.3))))
               : null,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isToday 
+            color: isToday
                 ? Colors.transparent
-                : (hasMeeting 
+                : (hasMeeting
                     ? const Color(0xFF8B5CF6).withOpacity(0.3)
-                    : (isCurrentMonth ? RecordColors.textLight.withOpacity(0.1) : Colors.transparent)),
+                    : (isCurrentMonth
+                        ? RecordColors.textLight.withOpacity(0.1)
+                        : Colors.transparent)),
             width: 1.5,
           ),
-          boxShadow: hasMeeting || isToday ? [
-            BoxShadow(
-              color: const Color(0xFF8B5CF6).withOpacity(0.15),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ] : [],
+          boxShadow: hasMeeting || isToday
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF8B5CF6).withOpacity(0.15),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ]
+              : [],
         ),
         child: Padding(
           padding: const EdgeInsets.all(6),
@@ -676,9 +697,9 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: isCurrentMonth
-                          ? (isToday 
-                              ? Colors.white 
-                              : (isFuture 
+                          ? (isToday
+                              ? Colors.white
+                              : (isFuture
                                   ? RecordColors.textLight.withOpacity(0.4)
                                   : RecordColors.textPrimary))
                           : RecordColors.textLight.withOpacity(0.25),
@@ -686,11 +707,11 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                   ),
                 ),
               ),
-              
+
               // 모임 도트 표시 (하단)
               Expanded(
                 flex: 1,
-                child: hasMeeting 
+                child: hasMeeting
                     ? _buildMeetingDots(dayMeetings, isToday)
                     : const SizedBox.shrink(),
               ),
@@ -701,30 +722,33 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
     );
   }
 
-  List<MeetingLog> _getMeetingsForDate(List<MeetingLog> meetingLogs, DateTime date) {
-    return meetingLogs.where((log) => 
-      log.date.year == date.year &&
-      log.date.month == date.month &&
-      log.date.day == date.day
-    ).toList();
+  List<MeetingLog> _getMeetingsForDate(
+      List<MeetingLog> meetingLogs, DateTime date) {
+    return meetingLogs
+        .where((log) =>
+            log.date.year == date.year &&
+            log.date.month == date.month &&
+            log.date.day == date.day)
+        .toList();
   }
 
   bool _isToday(DateTime date) {
     final today = DateTime.now();
     return date.year == today.year &&
-           date.month == today.month &&
-           date.day == today.day;
+        date.month == today.month &&
+        date.day == today.day;
   }
 
   void _onDateTap(DateTime date, List<MeetingLog> dayMeetings) {
     HapticFeedbackManager.lightImpact();
-    
+
     if (dayMeetings.length == 1) {
       // 모임이 하나만 있는 경우 - 상세보기로 바로 이동
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MeetingLogDetailScreen(meeting: dayMeetings.first),
+          builder: (context) =>
+              MeetingLogDetailScreen(meeting: dayMeetings.first),
         ),
       );
     } else if (dayMeetings.length > 1) {
@@ -760,7 +784,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // 헤더
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
@@ -770,7 +794,10 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [const Color(0xFF8B5CF6), const Color(0xFF7C3AED)],
+                          colors: [
+                            const Color(0xFF8B5CF6),
+                            const Color(0xFF7C3AED)
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -807,7 +834,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                   ],
                 ),
               ),
-              
+
               // 모임 목록
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -819,16 +846,18 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                   itemCount: meetings.length,
                   itemBuilder: (context, index) {
                     final meeting = meetings[index];
-                    
+
                     return Container(
-                      margin: EdgeInsets.only(bottom: index == meetings.length - 1 ? 0 : 12),
+                      margin: EdgeInsets.only(
+                          bottom: index == meetings.length - 1 ? 0 : 12),
                       child: GestureDetector(
                         onTap: () {
                           Navigator.pop(context);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MeetingLogDetailScreen(meeting: meeting),
+                              builder: (context) =>
+                                  MeetingLogDetailScreen(meeting: meeting),
                             ),
                           );
                         },
@@ -849,7 +878,8 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                                 width: 36,
                                 height: 36,
                                 decoration: BoxDecoration(
-                                  color: _getCategoryColor(meeting.category).withOpacity(0.1),
+                                  color: _getCategoryColor(meeting.category)
+                                      .withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Center(
@@ -860,7 +890,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              
+
                               // 내용
                               Expanded(
                                 child: Column(
@@ -899,31 +929,41 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                                             5,
                                             (index) {
                                               final starValue = index + 1;
-                                              final isFullStar = meeting.satisfaction >= starValue;
-                                              final isHalfStar = meeting.satisfaction >= starValue - 0.5 && meeting.satisfaction < starValue;
-                                              
+                                              final isFullStar =
+                                                  meeting.satisfaction >=
+                                                      starValue;
+                                              final isHalfStar =
+                                                  meeting.satisfaction >=
+                                                          starValue - 0.5 &&
+                                                      meeting.satisfaction <
+                                                          starValue;
+
                                               return Stack(
                                                 children: [
                                                   Icon(
                                                     Icons.star_border,
                                                     size: 12,
-                                                    color: const Color(0xFFFBBF24),
+                                                    color:
+                                                        const Color(0xFFFBBF24),
                                                   ),
                                                   if (isFullStar)
                                                     Icon(
                                                       Icons.star,
                                                       size: 12,
-                                                      color: const Color(0xFFFBBF24),
+                                                      color: const Color(
+                                                          0xFFFBBF24),
                                                     )
                                                   else if (isHalfStar)
                                                     ClipRect(
                                                       child: Align(
-                                                        alignment: Alignment.centerLeft,
+                                                        alignment: Alignment
+                                                            .centerLeft,
                                                         widthFactor: 0.5,
                                                         child: Icon(
                                                           Icons.star,
                                                           size: 12,
-                                                          color: const Color(0xFFFBBF24),
+                                                          color: const Color(
+                                                              0xFFFBBF24),
                                                         ),
                                                       ),
                                                     ),
@@ -937,7 +977,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                                   ],
                                 ),
                               ),
-                              
+
                               // 화살표
                               Icon(
                                 Icons.chevron_right,
@@ -952,7 +992,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                   },
                 ),
               ),
-              
+
               const SizedBox(height: 24),
             ],
           ),
@@ -1012,16 +1052,26 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
 
   Color _getCategoryColor(String category) {
     switch (category) {
-      case '스터디': return const Color(0xFF3B82F6);      // 파랑
-      case '운동': return const Color(0xFF10B981);      // 초록
-      case '독서': return const Color(0xFF8B5CF6);      // 보라
-      case '취미': return const Color(0xFFF59E0B);      // 주황
-      case '네트워킹': return const Color(0xFFEC4899);  // 핀크
-      case '업무': return const Color(0xFF6B7280);      // 회색
-      case '친목': return const Color(0xFFEF4444);      // 빨강
-      case '종교': return const Color(0xFF06B6D4);      // 하늘색
-      case '봉사': return const Color(0xFF84CC16);      // 라임
-      default: return const Color(0xFF9CA3AF);       // 기본 회색
+      case '스터디':
+        return const Color(0xFF3B82F6); // 파랑
+      case '운동':
+        return const Color(0xFF10B981); // 초록
+      case '독서':
+        return const Color(0xFF8B5CF6); // 보라
+      case '취미':
+        return const Color(0xFFF59E0B); // 주황
+      case '네트워킹':
+        return const Color(0xFFEC4899); // 핀크
+      case '업무':
+        return const Color(0xFF6B7280); // 회색
+      case '친목':
+        return const Color(0xFFEF4444); // 빨강
+      case '종교':
+        return const Color(0xFF06B6D4); // 하늘색
+      case '봉사':
+        return const Color(0xFF84CC16); // 라임
+      default:
+        return const Color(0xFF9CA3AF); // 기본 회색
     }
   }
 
@@ -1091,43 +1141,44 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                 ),
               ],
             ),
-            
             const SizedBox(height: 12),
-            
             Wrap(
               spacing: 8,
               runSpacing: 6,
-              children: categories.map((category) => 
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: category['색상'] as Color,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: (category['색상'] as Color).withOpacity(0.3),
-                            blurRadius: 2,
-                            offset: const Offset(0, 1),
+              children: categories
+                  .map(
+                    (category) => Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: category['색상'] as Color,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    (category['색상'] as Color).withOpacity(0.3),
+                                blurRadius: 2,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          category['이름'] as String,
+                          style: GoogleFonts.notoSans(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: RecordColors.textSecondary,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      category['이름'] as String,
-                      style: GoogleFonts.notoSans(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ).toList(),
+                  )
+                  .toList(),
             ),
           ],
         ),

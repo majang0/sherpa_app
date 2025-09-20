@@ -13,7 +13,8 @@ import '../../../shared/models/global_user_model.dart';
 
 class ReadingFullViewWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<ReadingFullViewWidget> createState() => _ReadingFullViewWidgetState();
+  ConsumerState<ReadingFullViewWidget> createState() =>
+      _ReadingFullViewWidgetState();
 }
 
 class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
@@ -43,11 +44,12 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
@@ -103,7 +105,8 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
       ),
@@ -125,44 +128,44 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildHeader(monthlyLogs),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 월 선택 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildMonthSelector(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 캘린더 그리드 섹션
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildCalendarGrid(monthlyLogs),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 액션 버튼
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildActionButton(),
                   ),
-                  
+
                   // 하단 여백 증가하여 오버플로우 방지
                   SizedBox(height: MediaQuery.of(context).padding.bottom + 60),
                 ],
@@ -178,7 +181,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
     final user = ref.watch(globalUserProvider);
     final totalReadings = user.dailyRecords.readingLogs.length;
     final monthlyCount = monthlyLogs.length;
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
@@ -241,15 +244,14 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                       ),
                     ),
                     const SizedBox(height: 4),
-
                   ],
                 ),
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // 통계 정보
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -318,7 +320,8 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month - 1);
+                    _selectedMonth =
+                        DateTime(_selectedMonth.year, _selectedMonth.month - 1);
                   });
                   HapticFeedbackManager.lightImpact();
                 },
@@ -342,7 +345,6 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                       ),
                     ),
                     const SizedBox(height: 4),
-
                   ],
                 ),
               ),
@@ -361,7 +363,8 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1);
+                    _selectedMonth =
+                        DateTime(_selectedMonth.year, _selectedMonth.month + 1);
                   });
                   HapticFeedbackManager.lightImpact();
                 },
@@ -444,9 +447,9 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // 캘린더 내용
             Container(
               padding: const EdgeInsets.all(16),
@@ -470,13 +473,17 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Row(
                         children: List.generate(7, (dayIndex) {
-                          final date = startDate.add(Duration(days: weekIndex * 7 + dayIndex));
-                          final isCurrentMonth = date.month == _selectedMonth.month;
+                          final date = startDate
+                              .add(Duration(days: weekIndex * 7 + dayIndex));
+                          final isCurrentMonth =
+                              date.month == _selectedMonth.month;
                           final isToday = ReadingUtils.isToday(date);
-                          final readingLogs = _getReadingLogsForDate(monthlyLogs, date);
+                          final readingLogs =
+                              _getReadingLogsForDate(monthlyLogs, date);
 
                           return Expanded(
-                            child: _buildCalendarDay(date, isCurrentMonth, isToday, readingLogs),
+                            child: _buildCalendarDay(
+                                date, isCurrentMonth, isToday, readingLogs),
                           );
                         }),
                       ),
@@ -497,25 +504,29 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        children: weekdays.map((day) => Expanded(
-          child: Center(
-            child: Text(
-              day,
-              style: GoogleFonts.notoSans(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: ModernColors.textSecondary,
-              ),
-            ),
-          ),
-        )).toList(),
+        children: weekdays
+            .map((day) => Expanded(
+                  child: Center(
+                    child: Text(
+                      day,
+                      style: GoogleFonts.notoSans(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: ModernColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                ))
+            .toList(),
       ),
     );
   }
 
-  Widget _buildCalendarDay(DateTime date, bool isCurrentMonth, bool isToday, List<ReadingLog> readingLogs) {
+  Widget _buildCalendarDay(DateTime date, bool isCurrentMonth, bool isToday,
+      List<ReadingLog> readingLogs) {
     final hasReading = readingLogs.isNotEmpty;
-    final isFuture = date.isAfter(DateTime.now().subtract(const Duration(hours: 1)));
+    final isFuture =
+        date.isAfter(DateTime.now().subtract(const Duration(hours: 1)));
     final isClickable = isCurrentMonth && !isFuture;
 
     return GestureDetector(
@@ -524,36 +535,45 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
         height: 72,
         margin: const EdgeInsets.all(2),
         decoration: BoxDecoration(
-          gradient: isToday 
+          gradient: isToday
               ? LinearGradient(
                   colors: [const Color(0xFF10B981), const Color(0xFF059669)],
                 )
-              : hasReading 
+              : hasReading
                   ? LinearGradient(
-                      colors: [const Color(0xFF10B981).withOpacity(0.1), const Color(0xFF059669).withOpacity(0.05)],
+                      colors: [
+                        const Color(0xFF10B981).withOpacity(0.1),
+                        const Color(0xFF059669).withOpacity(0.05)
+                      ],
                     )
                   : null,
-          color: !isToday && !hasReading 
-              ? (isFuture 
+          color: !isToday && !hasReading
+              ? (isFuture
                   ? Colors.grey.shade200.withOpacity(0.5)
-                  : (isCurrentMonth ? Colors.white : Colors.grey.shade100.withOpacity(0.3)))
+                  : (isCurrentMonth
+                      ? Colors.white
+                      : Colors.grey.shade100.withOpacity(0.3)))
               : null,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isToday 
+            color: isToday
                 ? Colors.transparent
-                : (hasReading 
+                : (hasReading
                     ? const Color(0xFF10B981).withOpacity(0.3)
-                    : (isCurrentMonth ? ModernColors.textTertiary.withOpacity(0.1) : Colors.transparent)),
+                    : (isCurrentMonth
+                        ? ModernColors.textTertiary.withOpacity(0.1)
+                        : Colors.transparent)),
             width: 1.5,
           ),
-          boxShadow: hasReading || isToday ? [
-            BoxShadow(
-              color: const Color(0xFF10B981).withOpacity(0.15),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ] : [],
+          boxShadow: hasReading || isToday
+              ? [
+                  BoxShadow(
+                    color: const Color(0xFF10B981).withOpacity(0.15),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ]
+              : [],
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
@@ -580,7 +600,9 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 8,
                     fontWeight: FontWeight.w600,
-                    color: isToday ? Colors.white.withOpacity(0.9) : const Color(0xFF10B981),
+                    color: isToday
+                        ? Colors.white.withOpacity(0.9)
+                        : const Color(0xFF10B981),
                   ),
                 ),
                 Text(
@@ -588,7 +610,9 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 8,
                     fontWeight: FontWeight.w600,
-                    color: isToday ? Colors.white.withOpacity(0.9) : const Color(0xFF10B981),
+                    color: isToday
+                        ? Colors.white.withOpacity(0.9)
+                        : const Color(0xFF10B981),
                   ),
                 ),
                 const SizedBox(height: 1),
@@ -601,15 +625,17 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                 ] else ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: readingLogs.take(2).map((log) => 
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 1),
-                        child: Text(
-                          log.categoryEmoji,
-                          style: const TextStyle(fontSize: 8),
-                        ),
-                      )
-                    ).toList(),
+                    children: readingLogs
+                        .take(2)
+                        .map((log) => Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 1),
+                              child: Text(
+                                log.categoryEmoji,
+                                style: const TextStyle(fontSize: 8),
+                              ),
+                            ))
+                        .toList(),
                   ),
                 ],
               ] else ...[
@@ -620,9 +646,9 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                     fontSize: 15,
                     fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
                     color: isCurrentMonth
-                        ? (isToday 
-                            ? Colors.white 
-                            : (isFuture 
+                        ? (isToday
+                            ? Colors.white
+                            : (isFuture
                                 ? ModernColors.textTertiary.withOpacity(0.4)
                                 : ModernColors.textPrimary))
                         : ModernColors.textTertiary.withOpacity(0.25),
@@ -656,14 +682,14 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
     );
   }
 
-
-  List<ReadingLog> _getReadingLogsForDate(List<ReadingLog> readingLogs, DateTime date) {
+  List<ReadingLog> _getReadingLogsForDate(
+      List<ReadingLog> readingLogs, DateTime date) {
     return ReadingUtils.getLogsForDate(readingLogs, date, (log) => log.date);
   }
 
   void _onDateTap(DateTime date, List<ReadingLog> readingLogs) {
     HapticFeedbackManager.lightImpact();
-    
+
     if (readingLogs.isNotEmpty) {
       // 기존 독서 기록이 있는 경우 - 날짜 상세 보기
       _showDateDetail(date, readingLogs);
@@ -703,7 +729,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                 ),
               ),
             ),
-            
+
             // 헤더
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -729,7 +755,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                 ],
               ),
             ),
-            
+
             // 독서 기록 추가 버튼
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -766,9 +792,9 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // 독서 기록 리스트
             Expanded(
               child: ListView.builder(
@@ -839,7 +865,8 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                             ),
                             if (log.rating != null) ...[
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF10B981),
                                   borderRadius: BorderRadius.circular(8),
@@ -876,7 +903,6 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
   void _showReadingDetail(ReadingLog readingLog, DateTime? selectedDate) {
     ReadingDetailModal.show(context, readingLog, selectedDate: selectedDate);
   }
-
 
   Widget _buildActionButton() {
     return Container(
@@ -930,7 +956,6 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
       ),
     );
   }
-
 
   void _addReadingForDate(DateTime date) {
     Navigator.of(context).push(

@@ -5,9 +5,12 @@
 ### ✅ 활성 사용 중인 파일들 (보존 필요)
 
 **Core AI System**:
-- `lib/core/ai/smart_sherpi_manager.dart` - 하이브리드 AI 메시지 관리 (main system)
-- `lib/core/ai/gemini_dialogue_source.dart` - Gemini API 연동 (active)
-- `lib/core/ai/ai_message_cache.dart` - AI 메시지 캐싱 (active)
+- `lib/core/ai/managers/static_sherpi_manager.dart` - 정적 메시지 관리 (default)
+- `lib/core/ai/managers/openai_sherpi_manager.dart` - 하이브리드 AI 메시지 관리
+- `lib/core/ai/managers/sherpi_message_manager.dart` - 공통 인터페이스/DI 계약
+- `lib/core/ai/sources/openai_dialogue_source.dart` - OpenAI GPT-5 연동
+- `lib/core/ai/sources/enhanced_gemini_dialogue_source.dart` - Gemini API 연동 (fallback)
+- `lib/core/ai/cache/ai_message_cache.dart` - AI 메시지 캐싱
 - `lib/core/config/api_config.dart` - API 키 설정 (active)
 
 **Emotion & Dialogue System**:
@@ -42,16 +45,13 @@
 - `lib/shared/widgets/sherpa_character_widget.dart` - 사용되지 않음 (SherpaCharacterWidget)
 
 **Old Image Files (사용되지 않음)**:
-- `assets/images/sherpi_thumb.png`
-- `assets/images/sherpi_normal.png`
-- `assets/images/sherpi_think.png`
+- 루트 `assets/images/sherpi_*.png` 중복본 정리 완료 (2025-09-18)
 
 ### 🔧 코드 최적화 가능 영역
 
-**Unused Methods in smart_sherpi_manager.dart**:
-- `_getStaticMessage()` - 사용되지 않는 async 버전
-- `_shouldUseAI()` - 사용되지 않는 async 버전
-- Dead code elimination 필요
+**구조 업데이트 참고**:
+- SmartSherpiManager는 `managers/` 디렉터리의 `StaticSherpiManager`/`OpenAISherpiManager`로 분리되었습니다.
+- 모든 호출 지점은 `SherpiMessageManager` 인터페이스를 통해 접근하도록 마이그레이션되었습니다.
 
 ## 🎯 정리 실행 계획
 

@@ -43,7 +43,8 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
             // 프로필 아바타 (클릭 시 전체 화면 이미지 뷰어)
             GestureDetector(
               onTap: () {
-                if (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty) {
+                if (user.profileImageUrl != null &&
+                    user.profileImageUrl!.isNotEmpty) {
                   _showImageViewer(context, user.profileImageUrl!);
                 }
               },
@@ -56,9 +57,9 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // 사용자 이름
             Text(
               user.name,
@@ -69,9 +70,9 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                 letterSpacing: -0.5,
               ),
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // 칭호와 레벨 표시
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -102,9 +103,9 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // ✅ 경험치 바 (개선된 위치 - 사용자 정보 바로 아래)
             Container(
               width: 240, // 더 넓게 조정
@@ -185,9 +186,9 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // 소개말
             Text(
               '매일 1% 성장하며 인생의 주인공이 되어가는 중 🎬\n오늘보다 나은 내일을 위해!',
@@ -198,22 +199,28 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                 height: 1.4,
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // ✅ 팔로우/팔로워와 포인트 정보 (4개 통계)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildSocialStat('팔로잉', '${_calculateFollowing(user)}', Color(0xFF3B82F6)),
-                _buildSocialStat('팔로워', '${_calculateFollowers(user)}', Color(0xFF10B981)),
-                _buildSocialStat('포인트', '${_formatPoints(pointData.totalPoints)}', Color(0xFFF59E0B)),
-                _buildSocialStat('연속접속', '${user.dailyRecords.consecutiveDays}일', Color(0xFF8B5CF6)),
+                _buildSocialStat(
+                    '팔로잉', '${_calculateFollowing(user)}', Color(0xFF3B82F6)),
+                _buildSocialStat(
+                    '팔로워', '${_calculateFollowers(user)}', Color(0xFF10B981)),
+                _buildSocialStat(
+                    '포인트',
+                    '${_formatPoints(pointData.totalPoints)}',
+                    Color(0xFFF59E0B)),
+                _buildSocialStat('연속접속',
+                    '${user.dailyRecords.consecutiveDays}일', Color(0xFF8B5CF6)),
               ],
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // ✅ 현재 상태 태그들 (더 다양하게)
             Wrap(
               spacing: 8,
@@ -225,7 +232,7 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                 _buildInterestChip('클라이밍', Color(0xFF3B82F6)),
               ],
             ),
-            
+
             const SizedBox(height: 24),
           ],
         ),
@@ -314,7 +321,7 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
     if (level >= 10) return '중급자';
     return '초보자';
   }
-  
+
   // ✅ 이미지 뷰어 다이얼로그 표시
   void _showImageViewer(BuildContext context, String imageUrl) {
     showDialog(
@@ -329,9 +336,9 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
 // ✅ 이미지 뷰어 다이얼로그 위젯
 class _ImageViewerDialog extends StatelessWidget {
   final String imageUrl;
-  
+
   const _ImageViewerDialog({required this.imageUrl});
-  
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -349,7 +356,7 @@ class _ImageViewerDialog extends StatelessWidget {
               height: double.infinity,
             ),
           ),
-          
+
           // 이미지 뷰어
           InteractiveViewer(
             panEnabled: true, // 패닝 활성화
@@ -357,7 +364,7 @@ class _ImageViewerDialog extends StatelessWidget {
             maxScale: 4.0, // 최대 스케일
             child: _buildImage(),
           ),
-          
+
           // 닫기 버튼
           Positioned(
             top: MediaQuery.of(context).padding.top + 20,
@@ -382,10 +389,10 @@ class _ImageViewerDialog extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildImage() {
     // 로컬 파일 경로인지 확인
-    if (imageUrl.startsWith('/') || 
+    if (imageUrl.startsWith('/') ||
         imageUrl.contains(':\\') ||
         imageUrl.startsWith('C:\\') ||
         !imageUrl.startsWith('http')) {
@@ -420,7 +427,7 @@ class _ImageViewerDialog extends StatelessWidget {
       );
     }
   }
-  
+
   Widget _buildErrorWidget() {
     return Container(
       padding: const EdgeInsets.all(40),

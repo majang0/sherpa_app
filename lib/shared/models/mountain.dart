@@ -10,7 +10,6 @@ class Mountain {
   final String? imageUrl;
   final bool isGateway;
 
-
   const Mountain({
     required this.id,
     required this.name,

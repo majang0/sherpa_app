@@ -60,13 +60,18 @@ class EnhancedPointShopScreen extends ConsumerWidget {
               '모임 & 챌린지',
               Icons.people,
               [
-                ShopItem('무료 모임 참여', '새로운 사람들과 만나보세요', 1000, Icons.people_outline, () {
+                ShopItem(
+                    '무료 모임 참여', '새로운 사람들과 만나보세요', 1000, Icons.people_outline,
+                    () {
                   _purchaseFreeMeeting(context, ref);
                 }),
-                ShopItem('무료 챌린지 참여', '자신에게 도전해보세요', 500, Icons.flag_outlined, () {
+                ShopItem('무료 챌린지 참여', '자신에게 도전해보세요', 500, Icons.flag_outlined,
+                    () {
                   _purchaseFreeChallenge(context, ref);
                 }),
-                ShopItem('모임 홍보 부스트', '더 많은 사람에게 모임 노출', 3000, Icons.rocket_launch, () {
+                ShopItem(
+                    '모임 홍보 부스트', '더 많은 사람에게 모임 노출', 3000, Icons.rocket_launch,
+                    () {
                   _purchaseMeetingBoost(context, ref);
                 }),
               ],
@@ -78,10 +83,13 @@ class EnhancedPointShopScreen extends ConsumerWidget {
               '프리미엄 기능',
               Icons.star,
               [
-                ShopItem('프리미엄 퀘스트 팩', '한 달간 고급 퀘스트 언락', 2000, Icons.auto_awesome, () {
+                ShopItem(
+                    '프리미엄 퀘스트 팩', '한 달간 고급 퀘스트 언락', 2000, Icons.auto_awesome,
+                    () {
                   _purchasePremiumQuestPack(context, ref);
                 }),
-                ShopItem('고급 분석 리포트', '나만의 성장 일기 (전자책)', 3000, Icons.analytics, () {
+                ShopItem('고급 분석 리포트', '나만의 성장 일기 (전자책)', 3000, Icons.analytics,
+                    () {
                   _purchaseAnalysisReport(context, ref);
                 }),
               ],
@@ -93,10 +101,12 @@ class EnhancedPointShopScreen extends ConsumerWidget {
               '부스터 & 도구',
               Icons.build,
               [
-                ShopItem('퀘스트 완료 티켓', '어려운 퀘스트 즉시 완료', 1000, Icons.confirmation_number, () {
+                ShopItem('퀘스트 완료 티켓', '어려운 퀘스트 즉시 완료', 1000,
+                    Icons.confirmation_number, () {
                   _purchaseQuestTicket(context, ref);
                 }),
-                ShopItem('연속 기록 보호권', '연속 기록이 깨지지 않도록 보호', 500, Icons.shield, () {
+                ShopItem('연속 기록 보호권', '연속 기록이 깨지지 않도록 보호', 500, Icons.shield,
+                    () {
                   _purchaseStreakProtection(context, ref);
                 }),
               ],
@@ -111,7 +121,8 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                 ShopItem('친구에게 포인트 선물', '친구에게 포인트를 선물하세요', 0, Icons.send, () {
                   _showGiftDialog(context, ref);
                 }),
-                ShopItem('신규 유저 지원 팩', '친구에게 스타터 패키지 선물', 1000, Icons.volunteer_activism, () {
+                ShopItem('신규 유저 지원 팩', '친구에게 스타터 패키지 선물', 1000,
+                    Icons.volunteer_activism, () {
                   _showNewUserSupportDialog(context, ref);
                 }),
               ],
@@ -193,12 +204,12 @@ class EnhancedPointShopScreen extends ConsumerWidget {
   }
 
   Widget _buildShopCategory(
-      BuildContext context,
-      WidgetRef ref,
-      String title,
-      IconData icon,
-      List<ShopItem> items,
-      ) {
+    BuildContext context,
+    WidgetRef ref,
+    String title,
+    IconData icon,
+    List<ShopItem> items,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -222,7 +233,8 @@ class EnhancedPointShopScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildShopItemCard(BuildContext context, WidgetRef ref, ShopItem item) {
+  Widget _buildShopItemCard(
+      BuildContext context, WidgetRef ref, ShopItem item) {
     final pointData = ref.watch(globalPointProvider);
     final canAfford = item.price == 0 || pointData.totalPoints >= item.price;
 
@@ -274,7 +286,8 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                 children: [
                   if (item.price > 0) ...[
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: AppColors.accent.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -293,8 +306,10 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                   ElevatedButton(
                     onPressed: canAfford ? item.onPurchase : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: canAfford ? AppColors.primary : Colors.grey,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      backgroundColor:
+                          canAfford ? AppColors.primary : Colors.grey,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -358,14 +373,16 @@ class EnhancedPointShopScreen extends ConsumerWidget {
               final friendName = friendController.text.trim();
 
               if (amount > 0 && friendName.isNotEmpty) {
-                final success = ref.read(globalPointProvider.notifier).spendPoints(
-                  amount,
-                  '친구 선물: $friendName',
-                );
+                final success =
+                    ref.read(globalPointProvider.notifier).spendPoints(
+                          amount,
+                          '친구 선물: $friendName',
+                        );
                 if (success) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${friendName}님에게 ${amount}P를 선물했습니다!')),
+                    SnackBar(
+                        content: Text('${friendName}님에게 ${amount}P를 선물했습니다!')),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -418,14 +435,16 @@ class EnhancedPointShopScreen extends ConsumerWidget {
               final friendName = friendController.text.trim();
 
               if (friendName.isNotEmpty) {
-                final success = ref.read(globalPointProvider.notifier).spendPoints(
-                  1000,
-                  '신규 유저 지원 팩: $friendName',
-                );
+                final success =
+                    ref.read(globalPointProvider.notifier).spendPoints(
+                          1000,
+                          '신규 유저 지원 팩: $friendName',
+                        );
                 if (success) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${friendName}님에게 신규 유저 지원 팩을 선물했습니다!')),
+                    SnackBar(
+                        content: Text('${friendName}님에게 신규 유저 지원 팩을 선물했습니다!')),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -452,149 +471,155 @@ class ShopItem {
   ShopItem(this.name, this.description, this.price, this.icon, this.onPurchase);
 }
 
-  // === 포인트 통계 계산 메서드 ===
-  int _getTodayPoints(PointData pointData) {
-    final today = DateTime.now();
-    return pointData.transactions
-        .where((transaction) => 
-            transaction.timestamp.year == today.year &&
-            transaction.timestamp.month == today.month &&
-            transaction.timestamp.day == today.day &&
-            transaction.amount > 0)
-        .fold(0, (sum, transaction) => sum + transaction.amount.toInt());
-  }
+// === 포인트 통계 계산 메서드 ===
+int _getTodayPoints(PointData pointData) {
+  final today = DateTime.now();
+  return pointData.transactions
+      .where((transaction) =>
+          transaction.timestamp.year == today.year &&
+          transaction.timestamp.month == today.month &&
+          transaction.timestamp.day == today.day &&
+          transaction.amount > 0)
+      .fold(0, (sum, transaction) => sum + transaction.amount.toInt());
+}
 
-  int _getWeeklyPoints(PointData pointData) {
-    final now = DateTime.now();
-    final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    return pointData.transactions
-        .where((transaction) => 
-            transaction.timestamp.isAfter(weekStart) &&
-            transaction.amount > 0)
-        .fold(0, (sum, transaction) => sum + transaction.amount.toInt());
-  }
+int _getWeeklyPoints(PointData pointData) {
+  final now = DateTime.now();
+  final weekStart = now.subtract(Duration(days: now.weekday - 1));
+  return pointData.transactions
+      .where((transaction) =>
+          transaction.timestamp.isAfter(weekStart) && transaction.amount > 0)
+      .fold(0, (sum, transaction) => sum + transaction.amount.toInt());
+}
 
-  int _getMonthlyPoints(PointData pointData) {
-    final now = DateTime.now();
-    final monthStart = DateTime(now.year, now.month, 1);
-    return pointData.transactions
-        .where((transaction) => 
-            transaction.timestamp.isAfter(monthStart) &&
-            transaction.amount > 0)
-        .fold(0, (sum, transaction) => sum + transaction.amount.toInt());
-  }
+int _getMonthlyPoints(PointData pointData) {
+  final now = DateTime.now();
+  final monthStart = DateTime(now.year, now.month, 1);
+  return pointData.transactions
+      .where((transaction) =>
+          transaction.timestamp.isAfter(monthStart) && transaction.amount > 0)
+      .fold(0, (sum, transaction) => sum + transaction.amount.toInt());
+}
 
-  // === 구매 기능 메서드 ===
-  void _purchaseFreeMeeting(BuildContext context, WidgetRef ref) {
-    final success = ref.read(globalPointProvider.notifier).payFreeMeetingFee('무료 모임 참여');
-    if (success) {
-      _showSuccessMessage(context, ref, '무료 모임 참여가 완료되었습니다! 🤝');
-      // 글로벌 시스템에 모임 참여 기록
-      ref.read(globalUserProvider.notifier).completeMeeting(
-        meetingId: 'shop_meeting_${DateTime.now().millisecondsSinceEpoch}',
-        meetingType: '무료 모임',
-        isHost: false,
-      );
-    } else {
-      _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
-    }
+// === 구매 기능 메서드 ===
+void _purchaseFreeMeeting(BuildContext context, WidgetRef ref) {
+  final success =
+      ref.read(globalPointProvider.notifier).payFreeMeetingFee('무료 모임 참여');
+  if (success) {
+    _showSuccessMessage(context, ref, '무료 모임 참여가 완료되었습니다! 🤝');
+    // 글로벌 시스템에 모임 참여 기록
+    ref.read(globalUserProvider.notifier).completeMeeting(
+          meetingId: 'shop_meeting_${DateTime.now().millisecondsSinceEpoch}',
+          meetingType: '무료 모임',
+          isHost: false,
+        );
+  } else {
+    _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
   }
+}
 
-  void _purchaseFreeChallenge(BuildContext context, WidgetRef ref) {
-    final success = ref.read(globalPointProvider.notifier).spendPoints(500, '무료 챌린지 참여');
-    if (success) {
-      _showSuccessMessage(context, ref, '챌린지 참여가 완료되었습니다! 🏆');
-      // 글로벌 시스템에 챌린지 참여 기록
-      ref.read(globalUserProvider.notifier).completeChallenge(
-        challengeId: 'shop_challenge_${DateTime.now().millisecondsSinceEpoch}',
-        challengeType: '무료 챌린지',
-        duration: 7,
-      );
-    } else {
-      _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
-    }
+void _purchaseFreeChallenge(BuildContext context, WidgetRef ref) {
+  final success =
+      ref.read(globalPointProvider.notifier).spendPoints(500, '무료 챌린지 참여');
+  if (success) {
+    _showSuccessMessage(context, ref, '챌린지 참여가 완료되었습니다! 🏆');
+    // 글로벌 시스템에 챌린지 참여 기록
+    ref.read(globalUserProvider.notifier).completeChallenge(
+          challengeId:
+              'shop_challenge_${DateTime.now().millisecondsSinceEpoch}',
+          challengeType: '무료 챌린지',
+          duration: 7,
+        );
+  } else {
+    _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
   }
+}
 
-  void _purchaseMeetingBoost(BuildContext context, WidgetRef ref) {
-    final success = ref.read(globalPointProvider.notifier).spendPoints(3000, '모임 홍보 부스트');
-    if (success) {
-      _showSuccessMessage(context, ref, '모임 홍보 부스트가 적용되었습니다! 🚀');
-    } else {
-      _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
-    }
+void _purchaseMeetingBoost(BuildContext context, WidgetRef ref) {
+  final success =
+      ref.read(globalPointProvider.notifier).spendPoints(3000, '모임 홍보 부스트');
+  if (success) {
+    _showSuccessMessage(context, ref, '모임 홍보 부스트가 적용되었습니다! 🚀');
+  } else {
+    _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
   }
+}
 
-  void _purchasePremiumQuestPack(BuildContext context, WidgetRef ref) {
-    final success = ref.read(globalPointProvider.notifier).spendPoints(2000, '프리미엄 퀘스트 팩');
-    if (success) {
-      _showSuccessMessage(context, ref, '프리미엄 퀘스트 팩이 활성화되었습니다! ✨');
-      // 퀘스트 시스템에 프리미엄 활성화 알림
-      // TODO: 퀘스트 시스템과 연동
-    } else {
-      _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
-    }
+void _purchasePremiumQuestPack(BuildContext context, WidgetRef ref) {
+  final success =
+      ref.read(globalPointProvider.notifier).spendPoints(2000, '프리미엄 퀘스트 팩');
+  if (success) {
+    _showSuccessMessage(context, ref, '프리미엄 퀘스트 팩이 활성화되었습니다! ✨');
+    // 퀘스트 시스템에 프리미엄 활성화 알림
+    // TODO: 퀘스트 시스템과 연동
+  } else {
+    _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
   }
+}
 
-  void _purchaseAnalysisReport(BuildContext context, WidgetRef ref) {
-    final success = ref.read(globalPointProvider.notifier).spendPoints(3000, '고급 분석 리포트');
-    if (success) {
-      _showSuccessMessage(context, ref, '고급 분석 리포트가 생성되었습니다! 📈');
-    } else {
-      _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
-    }
+void _purchaseAnalysisReport(BuildContext context, WidgetRef ref) {
+  final success =
+      ref.read(globalPointProvider.notifier).spendPoints(3000, '고급 분석 리포트');
+  if (success) {
+    _showSuccessMessage(context, ref, '고급 분석 리포트가 생성되었습니다! 📈');
+  } else {
+    _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
   }
+}
 
-  void _purchaseQuestTicket(BuildContext context, WidgetRef ref) {
-    final success = ref.read(globalPointProvider.notifier).spendPoints(1000, '퀘스트 완료 티켓');
-    if (success) {
-      _showSuccessMessage(context, ref, '퀘스트 완료 티켓을 구매했습니다! 🎫');
-    } else {
-      _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
-    }
+void _purchaseQuestTicket(BuildContext context, WidgetRef ref) {
+  final success =
+      ref.read(globalPointProvider.notifier).spendPoints(1000, '퀘스트 완료 티켓');
+  if (success) {
+    _showSuccessMessage(context, ref, '퀘스트 완료 티켓을 구매했습니다! 🎫');
+  } else {
+    _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
   }
+}
 
-  void _purchaseStreakProtection(BuildContext context, WidgetRef ref) {
-    final success = ref.read(globalPointProvider.notifier).spendPoints(500, '연속 기록 보호권');
-    if (success) {
-      _showSuccessMessage(context, ref, '연속 기록 보호권을 구매했습니다! 🛡️');
-    } else {
-      _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
-    }
+void _purchaseStreakProtection(BuildContext context, WidgetRef ref) {
+  final success =
+      ref.read(globalPointProvider.notifier).spendPoints(500, '연속 기록 보호권');
+  if (success) {
+    _showSuccessMessage(context, ref, '연속 기록 보호권을 구매했습니다! 🛡️');
+  } else {
+    _showErrorMessage(context, ref, '포인트가 부족합니다! 😢');
   }
+}
 
-  // === 성공/오류 메시지 표시 ===
-  void _showSuccessMessage(BuildContext context, WidgetRef ref, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.primary,
-        duration: const Duration(seconds: 3),
-      ),
-    );
-    
-    // 셰르피 성공 피드백
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: message,
-      emotion: SherpiEmotion.cheering,
+// === 성공/오류 메시지 표시 ===
+void _showSuccessMessage(BuildContext context, WidgetRef ref, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      backgroundColor: AppColors.primary,
       duration: const Duration(seconds: 3),
-    );
-  }
+    ),
+  );
 
-  void _showErrorMessage(BuildContext context, WidgetRef ref, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
+  // 셰르피 성공 피드백
+  ref.read(sherpiProvider.notifier).showInstantMessage(
+        context: SherpiContext.encouragement,
+        customDialogue: message,
+        emotion: SherpiEmotion.cheering,
         duration: const Duration(seconds: 3),
-      ),
-    );
-    
-    // 셰르피 오류 피드백
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: message,
-      emotion: SherpiEmotion.warning,
+      );
+}
+
+void _showErrorMessage(BuildContext context, WidgetRef ref, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+      backgroundColor: Colors.red,
       duration: const Duration(seconds: 3),
-    );
-  }
+    ),
+  );
+
+  // 셰르피 오류 피드백
+  ref.read(sherpiProvider.notifier).showInstantMessage(
+        context: SherpiContext.encouragement,
+        customDialogue: message,
+        emotion: SherpiEmotion.warning,
+        duration: const Duration(seconds: 3),
+      );
+}

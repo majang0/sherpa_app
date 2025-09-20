@@ -1,5 +1,5 @@
 // 📈 성장 스토리 및 마일스톤 Provider
-// 
+//
 // 사용자의 성장 여정과 마일스톤을 추적하는 상태 관리 Provider
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,8 +14,9 @@ class GrowthStoryState {
   final MilestoneTracker? selectedMilestone;
   final bool isLoading;
   final String? error;
-  final String activeFilter; // 'all', 'achievements', 'milestones', 'challenges', 'learning'
-  
+  final String
+      activeFilter; // 'all', 'achievements', 'milestones', 'challenges', 'learning'
+
   const GrowthStoryState({
     this.storyItems = const [],
     this.milestoneTrackers = const [],
@@ -26,7 +27,7 @@ class GrowthStoryState {
     this.error,
     this.activeFilter = 'all',
   });
-  
+
   GrowthStoryState copyWith({
     List<GrowthStoryItem>? storyItems,
     List<MilestoneTracker>? milestoneTrackers,
@@ -48,40 +49,52 @@ class GrowthStoryState {
       activeFilter: activeFilter ?? this.activeFilter,
     );
   }
-  
+
   /// 필터링된 스토리 항목들
   List<GrowthStoryItem> get filteredStoryItems {
     switch (activeFilter) {
       case 'achievements':
-        return storyItems.where((item) => item.category == 'achievement').toList();
+        return storyItems
+            .where((item) => item.category == 'achievement')
+            .toList();
       case 'milestones':
-        return storyItems.where((item) => item.category == 'milestone').toList();
+        return storyItems
+            .where((item) => item.category == 'milestone')
+            .toList();
       case 'challenges':
-        return storyItems.where((item) => item.category == 'challenge').toList();
+        return storyItems
+            .where((item) => item.category == 'challenge')
+            .toList();
       case 'learning':
         return storyItems.where((item) => item.category == 'learning').toList();
       default:
         return storyItems;
     }
   }
-  
+
   /// 완료된 마일스톤들
   List<MilestoneTracker> get completedMilestones {
-    return milestoneTrackers.where((m) => m.isAchieved && m.achievedAt != null).toList()
+    return milestoneTrackers
+        .where((m) => m.isAchieved && m.achievedAt != null)
+        .toList()
       ..sort((a, b) => b.achievedAt!.compareTo(a.achievedAt!));
   }
-  
+
   /// 진행 중인 마일스톤들
   List<MilestoneTracker> get activeMilestones {
-    return milestoneTrackers.where((m) => !m.isAchieved && m.progress > 0.0).toList()
+    return milestoneTrackers
+        .where((m) => !m.isAchieved && m.progress > 0.0)
+        .toList()
       ..sort((a, b) => b.progress.compareTo(a.progress));
   }
-  
+
   /// 대기 중인 마일스톤들
   List<MilestoneTracker> get pendingMilestones {
-    return milestoneTrackers.where((m) => !m.isAchieved && m.progress == 0.0).toList();
+    return milestoneTrackers
+        .where((m) => !m.isAchieved && m.progress == 0.0)
+        .toList();
   }
-  
+
   /// 최근 하이라이트 (높은 중요도)
   List<GrowthStoryItem> get recentHighlights {
     return storyItems
@@ -89,7 +102,7 @@ class GrowthStoryState {
         .take(5)
         .toList();
   }
-  
+
   /// 카테고리별 스토리 개수
   Map<String, int> get storyCountByCategory {
     final counts = <String, int>{};
@@ -98,23 +111,24 @@ class GrowthStoryState {
     }
     return counts;
   }
-  
+
   /// 이번 달 성장 항목 수
   int get thisMonthGrowthCount {
     final now = DateTime.now();
     final thisMonthStart = DateTime(now.year, now.month, 1);
-    
-    return storyItems.where((item) => 
-        item.timestamp.isAfter(thisMonthStart)).length;
+
+    return storyItems
+        .where((item) => item.timestamp.isAfter(thisMonthStart))
+        .length;
   }
-  
+
   /// 전체 마일스톤 달성률
   double get overallMilestoneProgress {
     if (milestoneTrackers.isEmpty) return 0.0;
-    
+
     final totalProgress = milestoneTrackers.fold<double>(
-      0.0, (sum, tracker) => sum + tracker.progress);
-    
+        0.0, (sum, tracker) => sum + tracker.progress);
+
     return totalProgress / milestoneTrackers.length;
   }
 }
@@ -124,16 +138,17 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
   GrowthStoryNotifier() : super(const GrowthStoryState()) {
     loadGrowthData();
   }
-  
+
   /// 📱 성장 데이터 로드
   Future<void> loadGrowthData() async {
     state = state.copyWith(isLoading: true, error: null);
-    
+
     try {
       final storyItems = await GrowthStoryService.loadGrowthStory();
-      final milestoneTrackers = await GrowthStoryService.loadMilestoneTrackers();
+      final milestoneTrackers =
+          await GrowthStoryService.loadMilestoneTrackers();
       final stats = await GrowthStoryService.calculateGrowthStats();
-      
+
       state = state.copyWith(
         storyItems: storyItems,
         milestoneTrackers: milestoneTrackers,
@@ -147,16 +162,16 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
       );
     }
   }
-  
+
   /// ✍️ 새 스토리 항목 추가
   Future<void> addStoryItem(GrowthStoryItem item) async {
     try {
       await GrowthStoryService.addGrowthStoryItem(item);
-      
+
       // 상태 업데이트
       final updatedStoryItems = [item, ...state.storyItems];
       state = state.copyWith(storyItems: updatedStoryItems);
-      
+
       // 통계 업데이트
       await _updateStats();
     } catch (e) {
@@ -165,7 +180,7 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
       );
     }
   }
-  
+
   /// 🎯 마일스톤 진행률 업데이트
   Future<void> updateMilestoneProgress({
     required String milestoneId,
@@ -176,11 +191,11 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
         milestoneId: milestoneId,
         progressData: progressData,
       );
-      
+
       // 마일스톤 상태 다시 로드
       final updatedTrackers = await GrowthStoryService.loadMilestoneTrackers();
       state = state.copyWith(milestoneTrackers: updatedTrackers);
-      
+
       // 통계 업데이트
       await _updateStats();
     } catch (e) {
@@ -189,7 +204,7 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
       );
     }
   }
-  
+
   /// 🏆 활동에서 스토리 생성
   Future<void> createStoryFromActivity({
     required String activityType,
@@ -202,7 +217,7 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
         activityData: activityData,
         userName: userName,
       );
-      
+
       // 데이터 다시 로드
       await loadGrowthData();
     } catch (e) {
@@ -211,7 +226,7 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
       );
     }
   }
-  
+
   /// 🎯 성취에서 스토리 생성
   Future<void> createStoryFromAchievement({
     required String achievementType,
@@ -224,7 +239,7 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
         achievementData: achievementData,
         userName: userName,
       );
-      
+
       // 데이터 다시 로드
       await loadGrowthData();
     } catch (e) {
@@ -233,27 +248,27 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
       );
     }
   }
-  
+
   /// 🔍 필터 변경
   void setActiveFilter(String filter) {
     state = state.copyWith(activeFilter: filter);
   }
-  
+
   /// 🎯 스토리 항목 선택
   void selectStoryItem(GrowthStoryItem? item) {
     state = state.copyWith(selectedStoryItem: item);
   }
-  
+
   /// 🏆 마일스톤 선택
   void selectMilestone(MilestoneTracker? milestone) {
     state = state.copyWith(selectedMilestone: milestone);
   }
-  
+
   /// ⚠️ 에러 지우기
   void clearError() {
     state = state.copyWith(error: null);
   }
-  
+
   /// 📊 통계 업데이트
   Future<void> _updateStats() async {
     try {
@@ -264,7 +279,7 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
       print('통계 업데이트 오류: $e');
     }
   }
-  
+
   /// 🔄 모든 데이터 초기화
   Future<void> clearAllData() async {
     try {
@@ -276,48 +291,52 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
       );
     }
   }
-  
+
   /// 📈 특정 기간의 성장 데이터 가져오기
   List<GrowthStoryItem> getStoryItemsForPeriod({
     required DateTime startDate,
     required DateTime endDate,
   }) {
-    return state.storyItems.where((item) =>
-        item.timestamp.isAfter(startDate) &&
-        item.timestamp.isBefore(endDate)).toList();
+    return state.storyItems
+        .where((item) =>
+            item.timestamp.isAfter(startDate) &&
+            item.timestamp.isBefore(endDate))
+        .toList();
   }
-  
+
   /// 🎯 카테고리별 스토리 항목 가져오기
   List<GrowthStoryItem> getStoryItemsByCategory(String category) {
     return state.storyItems.where((item) => item.category == category).toList();
   }
-  
+
   /// 🌟 높은 중요도 스토리 항목 가져오기
   List<GrowthStoryItem> getHighSignificanceStoryItems({double minScore = 0.7}) {
     return state.storyItems
         .where((item) => item.significanceScore >= minScore)
         .toList();
   }
-  
+
   /// 📊 월별 성장 데이터 가져오기
   Map<String, int> getMonthlyGrowthData({int months = 12}) {
     final now = DateTime.now();
     final result = <String, int>{};
-    
+
     for (int i = 0; i < months; i++) {
       final date = DateTime(now.year, now.month - i, 1);
       final monthKey = '${date.year}-${date.month.toString().padLeft(2, '0')}';
-      
-      final count = state.storyItems.where((item) =>
-          item.timestamp.year == date.year &&
-          item.timestamp.month == date.month).length;
-      
+
+      final count = state.storyItems
+          .where((item) =>
+              item.timestamp.year == date.year &&
+              item.timestamp.month == date.month)
+          .length;
+
       result[monthKey] = count;
     }
-    
+
     return result;
   }
-  
+
   /// 🎯 마일스톤 완료 시 호출
   Future<void> onMilestoneCompleted(MilestoneTracker milestone) async {
     // 마일스톤 완료 스토리 항목 생성
@@ -332,18 +351,19 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
       significanceScore: 0.9,
       tags: ['milestone', 'completed', milestone.category],
     );
-    
+
     await addStoryItem(storyItem);
   }
-  
+
   /// 📈 성장 추세 분석
   Map<String, dynamic> analyzeGrowthTrend({int days = 30}) {
     final now = DateTime.now();
     final startDate = now.subtract(Duration(days: days));
-    
-    final recentItems = state.storyItems.where((item) =>
-        item.timestamp.isAfter(startDate)).toList();
-    
+
+    final recentItems = state.storyItems
+        .where((item) => item.timestamp.isAfter(startDate))
+        .toList();
+
     if (recentItems.isEmpty) {
       return {
         'trend': 'no_data',
@@ -352,16 +372,21 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
         'average_significance': 0.0,
       };
     }
-    
+
     final averageSignificance = recentItems.fold<double>(
-      0.0, (sum, item) => sum + item.significanceScore) / recentItems.length;
-    
-    final trend = averageSignificance >= 0.7 ? 'excellent' :
-                  averageSignificance >= 0.5 ? 'good' :
-                  averageSignificance >= 0.3 ? 'moderate' : 'needs_improvement';
-    
+            0.0, (sum, item) => sum + item.significanceScore) /
+        recentItems.length;
+
+    final trend = averageSignificance >= 0.7
+        ? 'excellent'
+        : averageSignificance >= 0.5
+            ? 'good'
+            : averageSignificance >= 0.3
+                ? 'moderate'
+                : 'needs_improvement';
+
     final message = _getTrendMessage(trend, recentItems.length);
-    
+
     return {
       'trend': trend,
       'message': message,
@@ -370,7 +395,7 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
       'category_breakdown': _getCategoryBreakdown(recentItems),
     };
   }
-  
+
   /// 📝 추세 메시지 생성
   String _getTrendMessage(String trend, int itemsCount) {
     switch (trend) {
@@ -386,7 +411,7 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
         return '성장 데이터를 분석할 수 없어요.';
     }
   }
-  
+
   /// 📊 카테고리별 분석
   Map<String, int> _getCategoryBreakdown(List<GrowthStoryItem> items) {
     final breakdown = <String, int>{};
@@ -398,7 +423,8 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
 }
 
 /// 📈 성장 스토리 Provider
-final growthStoryProvider = StateNotifierProvider<GrowthStoryNotifier, GrowthStoryState>((ref) {
+final growthStoryProvider =
+    StateNotifierProvider<GrowthStoryNotifier, GrowthStoryState>((ref) {
   return GrowthStoryNotifier();
 });
 

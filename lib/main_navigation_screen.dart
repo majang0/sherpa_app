@@ -21,7 +21,8 @@ import 'shared/widgets/sherpi_message_card.dart';
 
 class MainNavigationScreen extends ConsumerStatefulWidget {
   @override
-  ConsumerState<MainNavigationScreen> createState() => _MainNavigationScreenState();
+  ConsumerState<MainNavigationScreen> createState() =>
+      _MainNavigationScreenState();
 }
 
 class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
@@ -32,12 +33,12 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    
+
     // 🚫 arguments 중복 처리 방지 - 한 번만 처리하고 플래그 설정
     if (_argumentsProcessed) {
       return; // 이미 처리했으면 스킵
     }
-    
+
     // arguments로 전달된 인덱스를 받아서 해당 탭으로 이동
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is int && args >= 0 && args < 5) {
@@ -51,7 +52,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
       // Map으로 전달된 경우 (탭 인덱스와 하위 탭 인덱스)
       final tabIndex = args['tabIndex'] as int?;
       final subTabIndex = args['subTabIndex'] as int?;
-      
+
       if (tabIndex != null && tabIndex >= 0 && tabIndex < 5) {
         _argumentsProcessed = true; // 처리 완료 플래그 설정
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -89,15 +90,13 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
     setState(() {
       _selectedIndex = index;
     });
-    
+
     // 🎯 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
     final tabNames = ['홈', '레벨업', '퀘스트', '모임', '프로필'];
     if (index >= 0 && index < tabNames.length) {
       ref.read(questProviderV2.notifier).recordTabVisit(tabNames[index]);
     }
-    
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -110,12 +109,12 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
           Consumer(
             builder: (context, ref, child) {
               final sherpiState = ref.watch(sherpiProvider);
-              
+
               // 메시지가 표시 중일 때는 플로팅 셰르피 숨김
               if (sherpiState.isVisible && sherpiState.dialogue.isNotEmpty) {
                 return const SizedBox.shrink();
               }
-              
+
               return const GlobalSherpiWidget();
             },
           ),
@@ -123,14 +122,14 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
           Consumer(
             builder: (context, ref, child) {
               final sherpiState = ref.watch(sherpiProvider);
-              
+
               // 메시지가 있고 visible일 때만 표시
               if (sherpiState.isVisible && sherpiState.dialogue.isNotEmpty) {
                 return const SherpiMessageCard(
                   bottomOffset: 140, // BottomNavigationBar 위 여백
                 );
               }
-              
+
               return const SizedBox.shrink();
             },
           ),
@@ -180,21 +179,22 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
 // 퀘스트 탭 화면 (퀘스트/기록)
 class QuestTabScreen extends StatefulWidget {
   final int? initialTabIndex;
-  
+
   const QuestTabScreen({Key? key, this.initialTabIndex}) : super(key: key);
-  
+
   @override
   _QuestTabScreenState createState() => _QuestTabScreenState();
 }
 
-class _QuestTabScreenState extends State<QuestTabScreen> with SingleTickerProviderStateMixin {
+class _QuestTabScreenState extends State<QuestTabScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(
-      length: 2, 
+      length: 2,
       vsync: this,
       initialIndex: widget.initialTabIndex ?? 0, // 초기 탭 설정
     );
@@ -210,7 +210,8 @@ class _QuestTabScreenState extends State<QuestTabScreen> with SingleTickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight + 46), // AppBar + TabBar 높이 조정
+        preferredSize:
+            const Size.fromHeight(kToolbarHeight + 46), // AppBar + TabBar 높이 조정
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -251,4 +252,3 @@ class _QuestTabScreenState extends State<QuestTabScreen> with SingleTickerProvid
     );
   }
 }
-

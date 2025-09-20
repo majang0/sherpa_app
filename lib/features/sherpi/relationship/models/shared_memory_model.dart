@@ -1,5 +1,5 @@
 // 💭 공유 메모리 및 추억 시스템 모델
-// 
+//
 // 사용자와 셰르피가 함께 만들어가는 추억과 공유 경험을 저장하고 관리하는 모델
 
 import 'package:flutter/foundation.dart';
@@ -16,7 +16,7 @@ enum MemoryCategory {
   special('special', '특별', '✨', '잊을 수 없는 순간들');
 
   const MemoryCategory(this.id, this.displayName, this.emoji, this.description);
-  
+
   final String id;
   final String displayName;
   final String emoji;
@@ -32,7 +32,7 @@ enum MemoryImportance {
   unforgettable('unforgettable', '잊을 수 없는', 5, 1.0);
 
   const MemoryImportance(this.id, this.displayName, this.level, this.weight);
-  
+
   final String id;
   final String displayName;
   final int level;
@@ -56,7 +56,7 @@ class SharedMemory {
   final String? associatedActivityId;
   final Map<String, dynamic> emotionalContext;
   final bool isPrivate; // 사용자가 비공개로 설정한 추억
-  
+
   const SharedMemory({
     required this.id,
     required this.title,
@@ -73,28 +73,29 @@ class SharedMemory {
     this.emotionalContext = const {},
     this.isPrivate = false,
   });
-  
+
   /// 추억의 나이 (일 단위)
   int get ageInDays => DateTime.now().difference(createdAt).inDays;
-  
+
   /// 추억의 신선도 (최근일수록 높음)
   double get freshness {
     final daysSinceCreated = ageInDays;
     if (daysSinceCreated == 0) return 1.0;
     return (1.0 / (1.0 + daysSinceCreated * 0.01)).clamp(0.0, 1.0);
   }
-  
+
   /// 추억의 관련성 점수 (참조 빈도와 중요도 기반)
   double get relevanceScore {
     final referenceFactor = (referenceCount / 10.0).clamp(0.0, 1.0);
     final importanceFactor = importance.weight;
     final freshnessFactor = freshness;
-    
-    return (referenceFactor * 0.3 + 
-            importanceFactor * 0.5 + 
-            freshnessFactor * 0.2).clamp(0.0, 1.0);
+
+    return (referenceFactor * 0.3 +
+            importanceFactor * 0.5 +
+            freshnessFactor * 0.2)
+        .clamp(0.0, 1.0);
   }
-  
+
   /// 추억 업데이트 (참조 시)
   SharedMemory referenced() {
     return copyWith(
@@ -102,7 +103,7 @@ class SharedMemory {
       referenceCount: referenceCount + 1,
     );
   }
-  
+
   /// 복사본 생성
   SharedMemory copyWith({
     String? id,
@@ -137,7 +138,7 @@ class SharedMemory {
       isPrivate: isPrivate ?? this.isPrivate,
     );
   }
-  
+
   /// JSON 직렬화
   Map<String, dynamic> toJson() {
     return {
@@ -157,7 +158,7 @@ class SharedMemory {
       'isPrivate': isPrivate,
     };
   }
-  
+
   /// JSON 역직렬화
   factory SharedMemory.fromJson(Map<String, dynamic> json) {
     return SharedMemory(
@@ -171,8 +172,8 @@ class SharedMemory {
         (i) => i.id == json['importance'],
       ),
       createdAt: DateTime.parse(json['createdAt']),
-      lastReferencedAt: json['lastReferencedAt'] != null 
-          ? DateTime.parse(json['lastReferencedAt']) 
+      lastReferencedAt: json['lastReferencedAt'] != null
+          ? DateTime.parse(json['lastReferencedAt'])
           : null,
       referenceCount: json['referenceCount'] ?? 0,
       context: json['context'] ?? {},
@@ -195,7 +196,7 @@ class MemorySnapshot {
   final String? imageData; // Base64 인코딩된 이미지
   final String mood;
   final double satisfactionScore;
-  
+
   const MemorySnapshot({
     required this.id,
     required this.timestamp,
@@ -205,7 +206,7 @@ class MemorySnapshot {
     required this.mood,
     required this.satisfactionScore,
   });
-  
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -217,7 +218,7 @@ class MemorySnapshot {
       'satisfactionScore': satisfactionScore,
     };
   }
-  
+
   factory MemorySnapshot.fromJson(Map<String, dynamic> json) {
     return MemorySnapshot(
       id: json['id'],
@@ -242,7 +243,7 @@ class MemoryCollection {
   final DateTime lastUpdatedAt;
   final String coverImageUrl;
   final Map<String, dynamic> metadata;
-  
+
   const MemoryCollection({
     required this.id,
     required this.name,
@@ -253,17 +254,17 @@ class MemoryCollection {
     required this.coverImageUrl,
     this.metadata = const {},
   });
-  
+
   /// 컬렉션에 추억 추가
   MemoryCollection addMemory(String memoryId) {
     if (memoryIds.contains(memoryId)) return this;
-    
+
     return copyWith(
       memoryIds: [...memoryIds, memoryId],
       lastUpdatedAt: DateTime.now(),
     );
   }
-  
+
   /// 컬렉션에서 추억 제거
   MemoryCollection removeMemory(String memoryId) {
     return copyWith(
@@ -271,7 +272,7 @@ class MemoryCollection {
       lastUpdatedAt: DateTime.now(),
     );
   }
-  
+
   MemoryCollection copyWith({
     String? id,
     String? name,
@@ -293,7 +294,7 @@ class MemoryCollection {
       metadata: metadata ?? this.metadata,
     );
   }
-  
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -306,7 +307,7 @@ class MemoryCollection {
       'metadata': metadata,
     };
   }
-  
+
   factory MemoryCollection.fromJson(Map<String, dynamic> json) {
     return MemoryCollection(
       id: json['id'],
@@ -333,7 +334,7 @@ class MemorySearchFilter {
   final bool includePrivate;
   final SortBy sortBy;
   final bool ascending;
-  
+
   const MemorySearchFilter({
     this.keyword,
     this.categories,
@@ -345,7 +346,7 @@ class MemorySearchFilter {
     this.sortBy = SortBy.relevance,
     this.ascending = false,
   });
-  
+
   /// 빈 필터인지 확인
   bool get isEmpty =>
       keyword == null &&
@@ -365,7 +366,7 @@ enum SortBy {
   freshness('freshness', '최신순');
 
   const SortBy(this.id, this.displayName);
-  
+
   final String id;
   final String displayName;
 }
@@ -378,7 +379,7 @@ class MemoryTrigger {
   final Map<String, dynamic> triggerData;
   final List<String> associatedMemoryIds;
   final double triggerStrength; // 0.0 ~ 1.0
-  
+
   const MemoryTrigger({
     required this.id,
     required this.triggerType,
@@ -386,7 +387,7 @@ class MemoryTrigger {
     required this.associatedMemoryIds,
     required this.triggerStrength,
   });
-  
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -396,7 +397,7 @@ class MemoryTrigger {
       'triggerStrength': triggerStrength,
     };
   }
-  
+
   factory MemoryTrigger.fromJson(Map<String, dynamic> json) {
     return MemoryTrigger(
       id: json['id'],
@@ -431,7 +432,7 @@ class MemoryTemplate {
       },
     );
   }
-  
+
   static SharedMemory createCelebrationMemory({
     required String title,
     required String celebration,
@@ -453,7 +454,7 @@ class MemoryTemplate {
       },
     );
   }
-  
+
   static SharedMemory createChallengeMemory({
     required String title,
     required String challenge,
@@ -476,7 +477,7 @@ class MemoryTemplate {
       },
     );
   }
-  
+
   static SharedMemory createDailyMemory({
     required String title,
     required String moment,

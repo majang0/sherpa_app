@@ -7,7 +7,8 @@ import '../../../../shared/models/global_user_model.dart'; // ✅ GlobalUser imp
 
 /// 📱 소셜 탐험 헤더 위젯
 /// RPG 게임의 '모험가 상태 정보' 컨셉으로 설계
-class SocialExplorationHeaderWidget extends ConsumerWidget { // ✅ ConsumerWidget 사용
+class SocialExplorationHeaderWidget extends ConsumerWidget {
+  // ✅ ConsumerWidget 사용
   final bool isChallenge;
 
   const SocialExplorationHeaderWidget({
@@ -16,7 +17,8 @@ class SocialExplorationHeaderWidget extends ConsumerWidget { // ✅ ConsumerWidg
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) { // ✅ ref 매개변수 추가
+  Widget build(BuildContext context, WidgetRef ref) {
+    // ✅ ref 매개변수 추가
     final user = ref.watch(globalUserProvider);
 
     return Container(

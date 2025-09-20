@@ -19,24 +19,25 @@ class PointData {
 
   /// 가입 시 기본 포인트 (3000 포인트)
   static PointData get initial => PointData(
-    totalPoints: PointSystemConfig.SIGNUP_BONUS_POINTS,
-    withdrawablePoints: 0,
-    transactions: [
-      PointTransaction(
-        id: 'welcome_bonus',
-        amount: PointSystemConfig.SIGNUP_BONUS_POINTS,
-        isEarned: true,
-        description: '가입 축하 보너스',
-        createdAt: DateTime.now(),
-        source: PointSource.signup,
-      ),
-    ],
-    lastUpdated: DateTime.now(),
-  );
+        totalPoints: PointSystemConfig.SIGNUP_BONUS_POINTS,
+        withdrawablePoints: 0,
+        transactions: [
+          PointTransaction(
+            id: 'welcome_bonus',
+            amount: PointSystemConfig.SIGNUP_BONUS_POINTS,
+            isEarned: true,
+            description: '가입 축하 보너스',
+            createdAt: DateTime.now(),
+            source: PointSource.signup,
+          ),
+        ],
+        lastUpdated: DateTime.now(),
+      );
 
   /// 출금 가능한 포인트 계산 (10,000 포인트 단위)
   int get actualWithdrawablePoints {
-    return (totalPoints ~/ PointSystemConfig.MIN_WITHDRAWAL_POINTS) * PointSystemConfig.MIN_WITHDRAWAL_POINTS;
+    return (totalPoints ~/ PointSystemConfig.MIN_WITHDRAWAL_POINTS) *
+        PointSystemConfig.MIN_WITHDRAWAL_POINTS;
   }
 
   /// 출금 시 수수료 계산 (10%)
@@ -74,52 +75,57 @@ class PointData {
   }
 
   Map<String, dynamic> toJson() => {
-    'totalPoints': totalPoints,
-    'withdrawablePoints': withdrawablePoints,
-    'transactions': transactions.map((t) => t.toJson()).toList(),
-    'lastUpdated': lastUpdated.toIso8601String(),
-  };
+        'totalPoints': totalPoints,
+        'withdrawablePoints': withdrawablePoints,
+        'transactions': transactions.map((t) => t.toJson()).toList(),
+        'lastUpdated': lastUpdated.toIso8601String(),
+      };
 
   factory PointData.fromJson(Map<String, dynamic> json) => PointData(
-    totalPoints: json['totalPoints']?.toInt() ?? PointSystemConfig.SIGNUP_BONUS_POINTS,
-    withdrawablePoints: json['withdrawablePoints']?.toInt() ?? 0,
-    transactions: (json['transactions'] as List?)
-        ?.map((t) => PointTransaction(
-          id: t['id'] ?? '',
-          amount: t['amount']?.toInt() ?? 0,
-          isEarned: t['isEarned'] ?? true,
-          description: t['description'] ?? '',
-          createdAt: DateTime.tryParse(t['createdAt'] ?? '') ?? DateTime.now(),
-          source: t['source'] != null 
-              ? PointSource.values.firstWhere(
-                  (e) => e.name == t['source'],
-                  orElse: () => PointSource.signup,
-                )
-              : null,
-          spendType: t['spendType'] != null 
-              ? PointSpendType.values.firstWhere(
-                  (e) => e.name == t['spendType'],
-                  orElse: () => PointSpendType.freeMeeting,
-                )
-              : null,
-        ))
-        .toList() ?? [],
-    lastUpdated: DateTime.tryParse(json['lastUpdated'] ?? '') ?? DateTime.now(),
-  );
+        totalPoints: json['totalPoints']?.toInt() ??
+            PointSystemConfig.SIGNUP_BONUS_POINTS,
+        withdrawablePoints: json['withdrawablePoints']?.toInt() ?? 0,
+        transactions: (json['transactions'] as List?)
+                ?.map((t) => PointTransaction(
+                      id: t['id'] ?? '',
+                      amount: t['amount']?.toInt() ?? 0,
+                      isEarned: t['isEarned'] ?? true,
+                      description: t['description'] ?? '',
+                      createdAt: DateTime.tryParse(t['createdAt'] ?? '') ??
+                          DateTime.now(),
+                      source: t['source'] != null
+                          ? PointSource.values.firstWhere(
+                              (e) => e.name == t['source'],
+                              orElse: () => PointSource.signup,
+                            )
+                          : null,
+                      spendType: t['spendType'] != null
+                          ? PointSpendType.values.firstWhere(
+                              (e) => e.name == t['spendType'],
+                              orElse: () => PointSpendType.freeMeeting,
+                            )
+                          : null,
+                    ))
+                .toList() ??
+            [],
+        lastUpdated:
+            DateTime.tryParse(json['lastUpdated'] ?? '') ?? DateTime.now(),
+      );
 }
 
 /// 포인트 거래 유형 (기존 코드 호환성용)
 enum PointTransactionType {
-  bonus,        // 보너스 (가입, 이벤트 등)
-  earned,       // 획득 (등반 성공, 퀘스트 완료 등)
-  spent,        // 사용 (모임 수수료 등)
-  withdrawal,   // 출금
-  refund,       // 환불
-  other,        // 기타
+  bonus, // 보너스 (가입, 이벤트 등)
+  earned, // 획득 (등반 성공, 퀘스트 완료 등)
+  spent, // 사용 (모임 수수료 등)
+  withdrawal, // 출금
+  refund, // 환불
+  other, // 기타
 }
 
 /// 글로벌 포인트 상태 관리 Provider
-final globalPointProvider = StateNotifierProvider<GlobalPointNotifier, PointData>((ref) {
+final globalPointProvider =
+    StateNotifierProvider<GlobalPointNotifier, PointData>((ref) {
   return GlobalPointNotifier();
 });
 
@@ -131,9 +137,9 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
   /// 연속 기록 보너스 설정
   static int getStreakBonus(int consecutiveDays) {
     if (consecutiveDays >= 365) return 1000; // 1년 연속
-    if (consecutiveDays >= 100) return 500;  // 100일 연속
-    if (consecutiveDays >= 30) return 200;   // 30일 연속
-    if (consecutiveDays >= 7) return 50;     // 7일 연속
+    if (consecutiveDays >= 100) return 500; // 100일 연속
+    if (consecutiveDays >= 30) return 200; // 30일 연속
+    if (consecutiveDays >= 7) return 50; // 7일 연속
     return 0;
   }
 
@@ -141,20 +147,19 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
   Future<void> _loadPointData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // 🔧 테스트를 위해 매번 3천 포인트로 초기화
       await prefs.remove('global_point_data'); // 기존 데이터 삭제
       state = PointData.initial; // 3천 포인트로 초기화
       await _savePointData(); // 초기화된 데이터 저장
-      
+
       // ✅ 원래 로직 (주석 처리)
       // final pointJson = prefs.getString('global_point_data');
       // if (pointJson != null) {
       //   final pointData = jsonDecode(pointJson);
       //   state = PointData.fromJson(pointData);
       // }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /// SharedPreferences에 포인트 데이터 저장
@@ -162,16 +167,17 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('global_point_data', jsonEncode(state.toJson()));
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /// 포인트 추가 (등반 성공, 퀘스트 완료 등)
-  void addPoints(int amount, String description, {PointTransactionType type = PointTransactionType.earned}) {
+  void addPoints(int amount, String description,
+      {PointTransactionType type = PointTransactionType.earned}) {
     final transaction = PointTransaction(
       id: 'tx_${DateTime.now().millisecondsSinceEpoch}',
       amount: amount,
-      isEarned: type == PointTransactionType.earned || type == PointTransactionType.bonus,
+      isEarned: type == PointTransactionType.earned ||
+          type == PointTransactionType.bonus,
       description: description,
       createdAt: DateTime.now(),
     );
@@ -231,7 +237,8 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
   }
 
   /// 세분화된 포인트 사용 (유형 추적 기능 포함)
-  bool spendPointsDetailed(int amount, PointSpendType spendType, String description) {
+  bool spendPointsDetailed(
+      int amount, PointSpendType spendType, String description) {
     if (state.totalPoints < amount) {
       // 부족 메시지 추가 예정 (셀르피 연동)
       return false;
@@ -258,7 +265,8 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
 
   /// 무료 모임 수수료 지불 (1000 포인트)
   bool payFreeMeetingFee(String meetingName) {
-    return spendPoints(PointSystemConfig.FREE_MEETING_FEE, '무료 모임 수수료: $meetingName');
+    return spendPoints(
+        PointSystemConfig.FREE_MEETING_FEE, '무료 모임 수수료: $meetingName');
   }
 
   /// 유료 모임 수수료 지불 (5%)
@@ -269,7 +277,8 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
 
   /// 포인트 출금 처리
   bool withdrawPoints(int amount) {
-    if (amount < PointSystemConfig.MIN_WITHDRAWAL_POINTS || amount % PointSystemConfig.MIN_WITHDRAWAL_POINTS != 0) {
+    if (amount < PointSystemConfig.MIN_WITHDRAWAL_POINTS ||
+        amount % PointSystemConfig.MIN_WITHDRAWAL_POINTS != 0) {
       return false; // 10,000 포인트 단위가 아님
     }
 
@@ -396,7 +405,8 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
   void onStreakBonus(int consecutiveDays) {
     final bonus = getStreakBonus(consecutiveDays);
     if (bonus > 0) {
-      earnPoints(bonus, PointSource.streakBonus, '${consecutiveDays}일 연속 기록 보너스');
+      earnPoints(
+          bonus, PointSource.streakBonus, '${consecutiveDays}일 연속 기록 보너스');
     }
   }
 
@@ -467,7 +477,8 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
 
   /// 유료 챌린지 참여
   bool joinPaidChallenge(int amount) {
-    return spendPointsDetailed(amount, PointSpendType.paidChallenge, '유료 챌린지 참여');
+    return spendPointsDetailed(
+        amount, PointSpendType.paidChallenge, '유료 챌린지 참여');
   }
 
   /// 모임 홍보 부스트
@@ -477,32 +488,38 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
 
   /// 프리미엄 퀘스트 팩
   bool buyPremiumQuestPack() {
-    return spendPointsDetailed(2000, PointSpendType.premiumQuestPack, '프리미엄 퀘스트 팩 구매');
+    return spendPointsDetailed(
+        2000, PointSpendType.premiumQuestPack, '프리미엄 퀘스트 팩 구매');
   }
 
   /// 고급 분석 리포트
   bool buyAnalysisReport() {
-    return spendPointsDetailed(3000, PointSpendType.analysisReport, '고급 분석 리포트 구매');
+    return spendPointsDetailed(
+        3000, PointSpendType.analysisReport, '고급 분석 리포트 구매');
   }
 
   /// 퀘스트 완료 티켓
   bool buyQuestTicket() {
-    return spendPointsDetailed(1000, PointSpendType.questTicket, '퀘스트 완료 티켓 구매');
+    return spendPointsDetailed(
+        1000, PointSpendType.questTicket, '퀘스트 완료 티켓 구매');
   }
 
   /// 연속 기록 보호권
   bool buyStreakProtection() {
-    return spendPointsDetailed(500, PointSpendType.streakProtection, '연속 기록 보호권 구매');
+    return spendPointsDetailed(
+        500, PointSpendType.streakProtection, '연속 기록 보호권 구매');
   }
 
   /// 친구에게 포인트 선물
   bool giftPointsToFriend(int amount, String friendName) {
-    return spendPointsDetailed(amount, PointSpendType.pointGift, '${friendName}님에게 포인트 선물');
+    return spendPointsDetailed(
+        amount, PointSpendType.pointGift, '${friendName}님에게 포인트 선물');
   }
 
   /// 신규 유저 지원 팩
   bool buyNewUserSupportPack(String friendName) {
-    return spendPointsDetailed(1000, PointSpendType.newUserSupport, '${friendName}님에게 신규 유저 지원 팩 선물');
+    return spendPointsDetailed(
+        1000, PointSpendType.newUserSupport, '${friendName}님에게 신규 유저 지원 팩 선물');
   }
 
   // ==================== 메시지 시스템 ====================
@@ -560,7 +577,8 @@ final globalPointTransactionsProvider = Provider<List<PointTransaction>>((ref) {
   return pointData.transactions;
 });
 
-final globalRecentTransactionsProvider = Provider<List<PointTransaction>>((ref) {
+final globalRecentTransactionsProvider =
+    Provider<List<PointTransaction>>((ref) {
   final transactions = ref.watch(globalPointTransactionsProvider);
   return transactions.take(10).toList(); // 최근 10개 거래
 });

@@ -31,14 +31,13 @@ class EnhancedMeetingRecommendationWidget extends ConsumerStatefulWidget {
 class _EnhancedMeetingRecommendationWidgetState
     extends ConsumerState<EnhancedMeetingRecommendationWidget>
     with TickerProviderStateMixin {
-  
   // 선택된 카테고리 (기본값: 추천)
   MeetingCategory _selectedCategory = MeetingCategory.all;
-  
+
   // 애니메이션 컨트롤러
   late AnimationController _fadeController;
   late ScrollController _categoryScrollController;
-  
+
   // 카테고리 맵핑 (UI 표시용)
   final Map<MeetingCategory, String> _categoryNames = {
     MeetingCategory.all: '추천',
@@ -53,14 +52,14 @@ class _EnhancedMeetingRecommendationWidgetState
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _categoryScrollController = ScrollController();
-    
+
     // 초기 애니메이션
     _fadeController.forward();
   }
@@ -76,7 +75,7 @@ class _EnhancedMeetingRecommendationWidgetState
   void _selectCategory(MeetingCategory category) {
     if (category != _selectedCategory) {
       HapticFeedbackManager.lightImpact();
-      
+
       // 페이드 아웃
       _fadeController.reverse().then((_) {
         setState(() {
@@ -89,7 +88,8 @@ class _EnhancedMeetingRecommendationWidgetState
   }
 
   // 필터링된 모임 가져오기
-  List<AvailableMeeting> _getFilteredMeetings(List<AvailableMeeting> allMeetings) {
+  List<AvailableMeeting> _getFilteredMeetings(
+      List<AvailableMeeting> allMeetings) {
     if (_selectedCategory == MeetingCategory.all) {
       // 추천 카테고리: AI 추천 또는 인기 모임 표시
       return allMeetings.take(3).toList();
@@ -123,10 +123,10 @@ class _EnhancedMeetingRecommendationWidgetState
         children: [
           // 🎯 프리미엄 헤더 섹션
           _buildPremiumHeader(context),
-          
+
           // 🏷️ 카테고리 필터 칩
           _buildCategoryFilter(),
-          
+
           // 📋 콘텐츠 영역
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
@@ -152,12 +152,12 @@ class _EnhancedMeetingRecommendationWidgetState
                 const SizedBox(width: 4), // 아이콘을 우측으로 4픽셀 이동
                 // 🎯 섹션 아이콘 - 배경 없이 아이콘만
                 Icon(
-                  Icons.explore_rounded,  // 탐험/발견을 의미하는 아이콘
+                  Icons.explore_rounded, // 탐험/발견을 의미하는 아이콘
                   color: ModernColors.modernPrimary,
                   size: 40,
                 ),
                 const SizedBox(width: 12),
-                
+
                 // 📝 타이틀 + 서브타이틀
                 Expanded(
                   child: Column(
@@ -188,7 +188,7 @@ class _EnhancedMeetingRecommendationWidgetState
               ],
             ),
           ),
-          
+
           // 🔗 "모든 모임 보기" 링크 (compact_quest_widget 스타일)
           GestureDetector(
             onTap: () {
@@ -225,7 +225,7 @@ class _EnhancedMeetingRecommendationWidgetState
           final category = _categoryNames.keys.elementAt(index);
           final isSelected = _selectedCategory == category;
           final categoryName = _categoryNames[category]!;
-          
+
           return Padding(
             padding: EdgeInsets.only(
               right: index < _categoryNames.length - 1 ? 8 : 0,
@@ -248,13 +248,11 @@ class _EnhancedMeetingRecommendationWidgetState
     required bool isSelected,
   }) {
     // 카테고리별 이모지
-    final emoji = category == MeetingCategory.all 
-        ? '✨' 
-        : category.emoji;
-    
+    final emoji = category == MeetingCategory.all ? '✨' : category.emoji;
+
     // 카테고리별 색상
-    final color = category == MeetingCategory.all 
-        ? ModernColors.modernPrimary 
+    final color = category == MeetingCategory.all
+        ? ModernColors.modernPrimary
         : category.color;
 
     return GestureDetector(
@@ -265,9 +263,9 @@ class _EnhancedMeetingRecommendationWidgetState
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
         decoration: BoxDecoration(
           // 🎨 깔끔하게 색상 변화만으로 구분
-          color: isSelected 
-              ? ModernColors.modernPrimary  // 선택 시: 모든 카테고리 통일된 프라이머리 색상
-              : Colors.grey.shade100,  // 미선택 시: 연한 회색
+          color: isSelected
+              ? ModernColors.modernPrimary // 선택 시: 모든 카테고리 통일된 프라이머리 색상
+              : Colors.grey.shade100, // 미선택 시: 연한 회색
           borderRadius: BorderRadius.circular(18),
           // 그림자 효과 완전 제거
         ),
@@ -288,9 +286,9 @@ class _EnhancedMeetingRecommendationWidgetState
               style: GoogleFonts.notoSans(
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected 
-                    ? Colors.white  // 선택 시: 흰색 텍스트
-                    : ModernColors.textPrimary,  // 미선택 시: 기본 텍스트 색상
+                color: isSelected
+                    ? Colors.white // 선택 시: 흰색 텍스트
+                    : ModernColors.textPrimary, // 미선택 시: 기본 텍스트 색상
               ),
             ),
           ],
@@ -356,7 +354,7 @@ class _EnhancedMeetingRecommendationWidgetState
               Positioned.fill(
                 child: _buildImageWidget(meeting),
               ),
-              
+
               // 🌫️ 그라데이션 오버레이
               Positioned.fill(
                 child: Container(
@@ -373,7 +371,7 @@ class _EnhancedMeetingRecommendationWidgetState
                   ),
                 ),
               ),
-              
+
               // 📝 콘텐츠 오버레이
               Positioned.fill(
                 child: Padding(
@@ -383,9 +381,9 @@ class _EnhancedMeetingRecommendationWidgetState
                     children: [
                       // 카테고리 배지
                       _buildCompactCategoryBadge(meeting),
-                      
+
                       const Spacer(),
-                      
+
                       // 제목
                       Text(
                         meeting.title,
@@ -398,9 +396,9 @@ class _EnhancedMeetingRecommendationWidgetState
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      
+
                       const SizedBox(height: 8),
-                      
+
                       // 위치 & 시간
                       Row(
                         children: [
@@ -423,9 +421,9 @@ class _EnhancedMeetingRecommendationWidgetState
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 8),
-                      
+
                       // 참가자 & 가격
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -437,7 +435,7 @@ class _EnhancedMeetingRecommendationWidgetState
                             size: 24,
                             overlapFactor: 0.65,
                           ),
-                          
+
                           // 가격 배지
                           _buildCompactPriceBadge(meeting),
                         ],
@@ -492,24 +490,24 @@ class _EnhancedMeetingRecommendationWidgetState
   // 💰 컴팩트 가격 배지
   Widget _buildCompactPriceBadge(AvailableMeeting meeting) {
     final isLowFee = meeting.participationFee <= 1000;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: isLowFee 
+        color: isLowFee
             ? Colors.green.withValues(alpha: 0.2)
             : Colors.orange.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: isLowFee 
+          color: isLowFee
               ? Colors.green.withValues(alpha: 0.3)
               : Colors.orange.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
       child: Text(
-        meeting.type == MeetingType.free 
-            ? '무료' 
+        meeting.type == MeetingType.free
+            ? '무료'
             : '${meeting.participationFee.toInt()}P',
         style: GoogleFonts.notoSans(
           fontSize: 11,
@@ -524,16 +522,17 @@ class _EnhancedMeetingRecommendationWidgetState
   Widget _buildImageWidget(AvailableMeeting meeting) {
     if (meeting.hasImages && meeting.imageFileNames.isNotEmpty) {
       final firstImage = meeting.imageFileNames.first;
-      
+
       if (firstImage.startsWith('asset:')) {
         final assetPath = 'assets/images/meeting/${firstImage.substring(6)}';
         return Image.asset(
           assetPath,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => _buildImagePlaceholder(meeting),
+          errorBuilder: (context, error, stackTrace) =>
+              _buildImagePlaceholder(meeting),
         );
       }
-      
+
       return FutureBuilder<File?>(
         future: MeetingImageUtils.getMeetingImageFile(firstImage),
         builder: (context, snapshot) {
@@ -541,14 +540,15 @@ class _EnhancedMeetingRecommendationWidgetState
             return Image.file(
               snapshot.data!,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => _buildImagePlaceholder(meeting),
+              errorBuilder: (context, error, stackTrace) =>
+                  _buildImagePlaceholder(meeting),
             );
           }
           return _buildImagePlaceholder(meeting);
         },
       );
     }
-    
+
     return _buildImagePlaceholder(meeting);
   }
 
@@ -574,7 +574,7 @@ class _EnhancedMeetingRecommendationWidgetState
   // 🚫 빈 상태
   Widget _buildEmptyState() {
     final categoryName = _categoryNames[_selectedCategory]!;
-    
+
     return Container(
       height: 200,
       padding: const EdgeInsets.all(20),
@@ -604,7 +604,8 @@ class _EnhancedMeetingRecommendationWidgetState
                 Navigator.pushNamed(context, '/', arguments: 3);
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),

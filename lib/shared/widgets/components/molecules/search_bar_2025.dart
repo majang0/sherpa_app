@@ -17,7 +17,7 @@ class SearchBar2025 extends StatefulWidget {
   final bool showSuggestions;
   final List<String> suggestions;
   final EdgeInsets margin;
-  
+
   const SearchBar2025({
     super.key,
     this.hintText = '모임을 검색해보세요',
@@ -37,7 +37,7 @@ class SearchBar2025 extends StatefulWidget {
   State<SearchBar2025> createState() => _SearchBar2025State();
 }
 
-class _SearchBar2025State extends State<SearchBar2025> 
+class _SearchBar2025State extends State<SearchBar2025>
     with TickerProviderStateMixin {
   late TextEditingController _controller;
   late FocusNode _focusNode;
@@ -45,7 +45,7 @@ class _SearchBar2025State extends State<SearchBar2025>
   late AnimationController _suggestionController;
   late Animation<double> _focusAnimation;
   late Animation<double> _suggestionAnimation;
-  
+
   bool _isFocused = false;
   bool _showSuggestions = false;
   List<String> _filteredSuggestions = [];
@@ -53,30 +53,30 @@ class _SearchBar2025State extends State<SearchBar2025>
   @override
   void initState() {
     super.initState();
-    
+
     _controller = widget.controller ?? TextEditingController();
     _focusNode = FocusNode();
-    
+
     _focusController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _suggestionController = AnimationController(
       duration: const Duration(milliseconds: 250),
       vsync: this,
     );
-    
+
     _focusAnimation = CurvedAnimation(
       parent: _focusController,
       curve: Curves.easeOutCubic,
     );
-    
+
     _suggestionAnimation = CurvedAnimation(
       parent: _suggestionController,
       curve: Curves.easeOutCubic,
     );
-    
+
     _focusNode.addListener(_handleFocusChange);
     _controller.addListener(_handleTextChange);
   }
@@ -96,7 +96,7 @@ class _SearchBar2025State extends State<SearchBar2025>
     setState(() {
       _isFocused = _focusNode.hasFocus;
     });
-    
+
     if (_isFocused) {
       _focusController.forward();
       if (widget.showSuggestions && _controller.text.isNotEmpty) {
@@ -110,7 +110,7 @@ class _SearchBar2025State extends State<SearchBar2025>
 
   void _handleTextChange() {
     widget.onChanged?.call(_controller.text);
-    
+
     if (widget.showSuggestions) {
       _updateSuggestions(_controller.text);
     }
@@ -121,17 +121,17 @@ class _SearchBar2025State extends State<SearchBar2025>
       _hideSuggestionsPanel();
       return;
     }
-    
+
     final filtered = widget.suggestions
-        .where((suggestion) => 
+        .where((suggestion) =>
             suggestion.toLowerCase().contains(query.toLowerCase()))
         .take(5)
         .toList();
-    
+
     setState(() {
       _filteredSuggestions = filtered;
     });
-    
+
     if (filtered.isNotEmpty && _isFocused) {
       _showSuggestionsPanel();
     } else {
@@ -168,7 +168,7 @@ class _SearchBar2025State extends State<SearchBar2025>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       margin: widget.margin,
       child: Column(
@@ -184,8 +184,8 @@ class _SearchBar2025State extends State<SearchBar2025>
                   boxShadow: [
                     BoxShadow(
                       color: _isFocused
-                        ? ModernColors.primary.withOpacity(0.2)
-                        : Colors.black.withOpacity(0.04),
+                          ? ModernColors.primary.withOpacity(0.2)
+                          : Colors.black.withOpacity(0.04),
                       blurRadius: _isFocused ? 20 : 10,
                       offset: const Offset(0, 4),
                     ),
@@ -201,19 +201,19 @@ class _SearchBar2025State extends State<SearchBar2025>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: isDark
-                            ? [
-                                ModernColors.surface.withOpacity(0.1),
-                                ModernColors.surface.withOpacity(0.05),
-                              ]
-                            : [
-                                ModernColors.surface,
-                                ModernColors.surfaceElevated,
-                              ],
+                              ? [
+                                  ModernColors.surface.withOpacity(0.1),
+                                  ModernColors.surface.withOpacity(0.05),
+                                ]
+                              : [
+                                  ModernColors.surface,
+                                  ModernColors.surfaceElevated,
+                                ],
                         ),
                         border: Border.all(
                           color: _isFocused
-                            ? ModernColors.borderFocus
-                            : ModernColors.border.withOpacity(0.1),
+                              ? ModernColors.borderFocus
+                              : ModernColors.border.withOpacity(0.1),
                           width: _isFocused ? 1.5 : 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -229,12 +229,15 @@ class _SearchBar2025State extends State<SearchBar2025>
                                 Icons.search,
                                 size: 22,
                                 color: _isFocused
-                                  ? ModernColors.primary
-                                  : (isDark ? ModernColors.textOnPrimary.withOpacity(0.7) : ModernColors.textSecondary),
+                                    ? ModernColors.primary
+                                    : (isDark
+                                        ? ModernColors.textOnPrimary
+                                            .withOpacity(0.7)
+                                        : ModernColors.textSecondary),
                               ),
                             ),
                           ),
-                          
+
                           // Text Field
                           Expanded(
                             child: TextField(
@@ -242,15 +245,18 @@ class _SearchBar2025State extends State<SearchBar2025>
                               focusNode: _focusNode,
                               style: TextStyle(
                                 fontSize: 16,
-                                color: isDark ? ModernColors.textOnPrimary : ModernColors.textPrimary,
+                                color: isDark
+                                    ? ModernColors.textOnPrimary
+                                    : ModernColors.textPrimary,
                                 fontWeight: FontWeight.w500,
                               ),
                               decoration: InputDecoration(
                                 hintText: widget.hintText,
                                 hintStyle: TextStyle(
-                                  color: isDark 
-                                    ? ModernColors.textOnPrimary.withOpacity(0.5)
-                                    : ModernColors.textTertiary,
+                                  color: isDark
+                                      ? ModernColors.textOnPrimary
+                                          .withOpacity(0.5)
+                                      : ModernColors.textTertiary,
                                   fontWeight: FontWeight.w400,
                                 ),
                                 border: InputBorder.none,
@@ -259,7 +265,7 @@ class _SearchBar2025State extends State<SearchBar2025>
                               onSubmitted: widget.onSubmitted,
                             ),
                           ),
-                          
+
                           // Action Buttons
                           Row(
                             mainAxisSize: MainAxisSize.min,
@@ -273,15 +279,14 @@ class _SearchBar2025State extends State<SearchBar2025>
                                   },
                                   isDark: isDark,
                                 ),
-                              
                               if (widget.showMic && widget.onMicTap != null)
                                 _buildActionButton(
                                   icon: Icons.mic_outlined,
                                   onTap: widget.onMicTap!,
                                   isDark: isDark,
                                 ),
-                              
-                              if (widget.showFilter && widget.onFilterTap != null)
+                              if (widget.showFilter &&
+                                  widget.onFilterTap != null)
                                 _buildActionButton(
                                   icon: Icons.tune,
                                   onTap: widget.onFilterTap!,
@@ -298,7 +303,7 @@ class _SearchBar2025State extends State<SearchBar2025>
               );
             },
           ),
-          
+
           // Suggestions Panel
           if (_showSuggestions)
             AnimatedBuilder(
@@ -331,14 +336,14 @@ class _SearchBar2025State extends State<SearchBar2025>
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: isDark
-                                  ? [
-                                      ModernColors.surface.withOpacity(0.1),
-                                      ModernColors.surface.withOpacity(0.05),
-                                    ]
-                                  : [
-                                      ModernColors.surface,
-                                      ModernColors.surfaceElevated,
-                                    ],
+                                    ? [
+                                        ModernColors.surface.withOpacity(0.1),
+                                        ModernColors.surface.withOpacity(0.05),
+                                      ]
+                                    : [
+                                        ModernColors.surface,
+                                        ModernColors.surfaceElevated,
+                                      ],
                               ),
                               border: Border.all(
                                 color: ModernColors.border.withOpacity(0.1),
@@ -348,9 +353,11 @@ class _SearchBar2025State extends State<SearchBar2025>
                             ),
                             child: Column(
                               children: _filteredSuggestions.map((suggestion) {
-                                final index = _filteredSuggestions.indexOf(suggestion);
-                                final isLast = index == _filteredSuggestions.length - 1;
-                                
+                                final index =
+                                    _filteredSuggestions.indexOf(suggestion);
+                                final isLast =
+                                    index == _filteredSuggestions.length - 1;
+
                                 return _buildSuggestionItem(
                                   suggestion,
                                   isDark: isDark,
@@ -387,15 +394,17 @@ class _SearchBar2025State extends State<SearchBar2025>
           left: 4,
         ),
         decoration: BoxDecoration(
-          color: isDark 
-            ? ModernColors.surface.withOpacity(0.1)
-            : ModernColors.background.withOpacity(0.5),
+          color: isDark
+              ? ModernColors.surface.withOpacity(0.1)
+              : ModernColors.background.withOpacity(0.5),
           borderRadius: BorderRadius.circular(18),
         ),
         child: Icon(
           icon,
           size: 18,
-          color: isDark ? ModernColors.textOnPrimary.withOpacity(0.7) : ModernColors.textSecondary,
+          color: isDark
+              ? ModernColors.textOnPrimary.withOpacity(0.7)
+              : ModernColors.textSecondary,
         ),
       ),
     );
@@ -413,22 +422,24 @@ class _SearchBar2025State extends State<SearchBar2025>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           border: showDivider
-            ? Border(
-                bottom: BorderSide(
-                  color: isDark 
-                    ? ModernColors.border.withOpacity(0.1)
-                    : ModernColors.borderLight,
-                  width: 0.5,
-                ),
-              )
-            : null,
+              ? Border(
+                  bottom: BorderSide(
+                    color: isDark
+                        ? ModernColors.border.withOpacity(0.1)
+                        : ModernColors.borderLight,
+                    width: 0.5,
+                  ),
+                )
+              : null,
         ),
         child: Row(
           children: [
             Icon(
               Icons.search,
               size: 18,
-              color: isDark ? ModernColors.textOnPrimary.withOpacity(0.6) : ModernColors.textTertiary,
+              color: isDark
+                  ? ModernColors.textOnPrimary.withOpacity(0.6)
+                  : ModernColors.textTertiary,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -436,7 +447,9 @@ class _SearchBar2025State extends State<SearchBar2025>
                 suggestion,
                 style: TextStyle(
                   fontSize: 14,
-                  color: isDark ? ModernColors.textOnPrimary.withOpacity(0.7) : ModernColors.textPrimary,
+                  color: isDark
+                      ? ModernColors.textOnPrimary.withOpacity(0.7)
+                      : ModernColors.textPrimary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -444,7 +457,9 @@ class _SearchBar2025State extends State<SearchBar2025>
             Icon(
               Icons.north_west,
               size: 16,
-              color: isDark ? ModernColors.textOnPrimary.withOpacity(0.38) : ModernColors.textPlaceholder,
+              color: isDark
+                  ? ModernColors.textOnPrimary.withOpacity(0.38)
+                  : ModernColors.textPlaceholder,
             ),
           ],
         ),

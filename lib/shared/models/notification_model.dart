@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 // 알림 타입 enum
 enum NotificationType {
-  goalComplete,      // 오늘의 목표 완료
-  dailyQuestReward,  // 일일 퀘스트 보상
+  goalComplete, // 오늘의 목표 완료
+  dailyQuestReward, // 일일 퀘스트 보상
   weeklyQuestReward, // 주간 퀘스트 보상
-  firstClimb,        // 오늘의 첫 등반
-  meetingComplete,   // 모임 참가 완료
-  profileUpdate,     // 프로필 업데이트
+  firstClimb, // 오늘의 첫 등반
+  meetingComplete, // 모임 참가 완료
+  profileUpdate, // 프로필 업데이트
 }
 
 // 프로필 업데이트 타입
 enum ProfileUpdateType {
-  photo,    // 사진 변경
+  photo, // 사진 변경
   nickname, // 닉네임 변경
 }
 
@@ -22,7 +22,7 @@ class NotificationItem {
   final NotificationType type;
   final String title;
   final String message;
-  final String? detail;  // 상세 내용
+  final String? detail; // 상세 내용
   final DateTime createdAt;
   final bool isRead;
   final Map<String, dynamic>? metadata; // 추가 데이터 (퀘스트 이름, 모임 이름 등)
@@ -90,7 +90,7 @@ class NotificationItem {
       createdAt: DateTime.parse(json['createdAt']),
       isRead: json['isRead'] ?? false,
       metadata: json['metadata'],
-      profileUpdateType: json['profileUpdateType'] != null 
+      profileUpdateType: json['profileUpdateType'] != null
           ? _parseProfileUpdateType(json['profileUpdateType'])
           : null,
     );

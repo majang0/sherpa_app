@@ -66,9 +66,9 @@ class ChallengeListItem extends ConsumerWidget {
                         size: 18,
                       ),
                     ),
-                    
+
                     const SizedBox(width: 12),
-                    
+
                     // 제목과 카테고리
                     Expanded(
                       child: Column(
@@ -94,10 +94,11 @@ class ChallengeListItem extends ConsumerWidget {
                         ],
                       ),
                     ),
-                    
+
                     // 남은 기간
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: _getDaysLeftColor().withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -113,9 +114,9 @@ class ChallengeListItem extends ConsumerWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // 진행률 바
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -140,9 +141,7 @@ class ChallengeListItem extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    
                     const SizedBox(height: 6),
-                    
                     Container(
                       height: 6,
                       decoration: BoxDecoration(

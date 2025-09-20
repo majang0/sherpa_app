@@ -12,7 +12,8 @@ import '../../core/constants/sherpi_dialogues.dart';
 
 /// 🌍 글로벌 챌린지 관리 Provider
 /// 모든 챌린지 관련 데이터와 로직을 중앙에서 관리
-final globalChallengeProvider = StateNotifierProvider<GlobalChallengeNotifier, GlobalChallengeState>((ref) {
+final globalChallengeProvider =
+    StateNotifierProvider<GlobalChallengeNotifier, GlobalChallengeState>((ref) {
   return GlobalChallengeNotifier(ref);
 });
 
@@ -67,7 +68,7 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
   /// 모크 챌린지 데이터 로드
   void _loadMockChallenges() {
     final now = DateTime.now();
-    
+
     final challenges = [
       AvailableChallenge(
         id: 'challenge_1',
@@ -155,10 +156,10 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
       // 1. 참여 가능성 체크
       if (!challenge.canJoin) {
         ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: SherpiContext.encouragement,
-          customDialogue: '이미 마감되었거나 참여할 수 없는 챌린지예요! 😅',
-          emotion: SherpiEmotion.thinking,
-        );
+              context: SherpiContext.encouragement,
+              customDialogue: '이미 마감되었거나 참여할 수 없는 챌린지예요! 😅',
+              emotion: SherpiEmotion.thinking,
+            );
         return false;
       }
 
@@ -175,10 +176,11 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
         if (!success) {
           final currentPoints = ref.read(globalTotalPointsProvider);
           ref.read(sherpiProvider.notifier).showInstantMessage(
-            context: SherpiContext.encouragement,
-            customDialogue: '포인트가 부족해요! 현재 ${currentPoints}P 보유중입니다. ${fee}P가 필요해요.',
-            emotion: SherpiEmotion.thinking,
-          );
+                context: SherpiContext.encouragement,
+                customDialogue:
+                    '포인트가 부족해요! 현재 ${currentPoints}P 보유중입니다. ${fee}P가 필요해요.',
+                emotion: SherpiEmotion.thinking,
+              );
           return false;
         }
       }
@@ -226,18 +228,19 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
 
       // 7. 성공 피드백
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.achievement,
-        customDialogue: '🎉 "${challenge.title}" 챌린지 참여 완료!\n참여 보너스 경험치 +25를 획득했어요!',
-        emotion: SherpiEmotion.cheering,
-      );
+            context: SherpiContext.achievement,
+            customDialogue:
+                '🎉 "${challenge.title}" 챌린지 참여 완료!\n참여 보너스 경험치 +25를 획득했어요!',
+            emotion: SherpiEmotion.cheering,
+          );
 
       return true;
     } catch (e) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.encouragement,
-        customDialogue: '챌린지 참여 중 오류가 발생했어요. 다시 시도해주세요! 😅',
-        emotion: SherpiEmotion.thinking,
-      );
+            context: SherpiContext.encouragement,
+            customDialogue: '챌린지 참여 중 오류가 발생했어요. 다시 시도해주세요! 😅',
+            emotion: SherpiEmotion.thinking,
+          );
       return false;
     }
   }
@@ -246,11 +249,13 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
   Future<bool> completeChallenge(AvailableChallenge challenge) async {
     try {
       // 1. 완료 처리
-      final updatedJoinedChallenges = state.myJoinedChallenges
-          .where((c) => c.id != challenge.id)
-          .toList();
-      
-      final updatedCompletedChallenges = [...state.completedChallenges, challenge];
+      final updatedJoinedChallenges =
+          state.myJoinedChallenges.where((c) => c.id != challenge.id).toList();
+
+      final updatedCompletedChallenges = [
+        ...state.completedChallenges,
+        challenge
+      ];
 
       state = state.copyWith(
         myJoinedChallenges: updatedJoinedChallenges,
@@ -317,10 +322,11 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
 
       // 4. 완료 피드백
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.questComplete,
-        customDialogue: '🏆 "${challenge.title}" 챌린지 완료!\n경험치 +${challenge.experienceReward}, 포인트 +${challenge.completionReward}',
-        emotion: SherpiEmotion.cheering,
-      );
+            context: SherpiContext.questComplete,
+            customDialogue:
+                '🏆 "${challenge.title}" 챌린지 완료!\n경험치 +${challenge.experienceReward}, 포인트 +${challenge.completionReward}',
+            emotion: SherpiEmotion.cheering,
+          );
 
       return true;
     } catch (e) {
@@ -330,15 +336,15 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
 
   /// 챌린지 포기
   void quitChallenge(AvailableChallenge challenge) {
-    final updatedJoinedChallenges = state.myJoinedChallenges
-        .where((c) => c.id != challenge.id)
-        .toList();
+    final updatedJoinedChallenges =
+        state.myJoinedChallenges.where((c) => c.id != challenge.id).toList();
 
     // 참여자 수 감소
     final updatedChallenges = state.availableChallenges.map((c) {
       if (c.id == challenge.id) {
         return c.copyWith(
-          currentParticipants: (c.currentParticipants - 1).clamp(0, c.maxParticipants),
+          currentParticipants:
+              (c.currentParticipants - 1).clamp(0, c.maxParticipants),
         );
       }
       return c;
@@ -350,33 +356,42 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
     );
 
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: '다음에는 꼭 완주해보세요! 포기하지 않는 것이 중요해요! 💪',
-      emotion: SherpiEmotion.thinking,
-    );
+          context: SherpiContext.encouragement,
+          customDialogue: '다음에는 꼭 완주해보세요! 포기하지 않는 것이 중요해요! 💪',
+          emotion: SherpiEmotion.thinking,
+        );
   }
 
   /// 카테고리별 챌린지 필터링
-  List<AvailableChallenge> getChallengesByCategory(ChallengeCategory? category) {
+  List<AvailableChallenge> getChallengesByCategory(
+      ChallengeCategory? category) {
     if (category == null) return state.availableChallenges;
-    return state.availableChallenges.where((challenge) => challenge.categoryType == category).toList();
+    return state.availableChallenges
+        .where((challenge) => challenge.categoryType == category)
+        .toList();
   }
 
   /// 난이도별 챌린지 필터링
   List<AvailableChallenge> getChallengesByDifficulty(int? difficulty) {
     if (difficulty == null) return state.availableChallenges;
-    return state.availableChallenges.where((challenge) => challenge.difficulty == difficulty).toList();
+    return state.availableChallenges
+        .where((challenge) => challenge.difficulty == difficulty)
+        .toList();
   }
 
   /// 참여 가능한 챌린지만 필터링
   List<AvailableChallenge> get availableChallenges {
-    return state.availableChallenges.where((challenge) => challenge.canJoin).toList();
+    return state.availableChallenges
+        .where((challenge) => challenge.canJoin)
+        .toList();
   }
 
   /// 인기 챌린지 (참여자가 많은 순)
   List<AvailableChallenge> get popularChallenges {
-    final sortedChallenges = List<AvailableChallenge>.from(state.availableChallenges);
-    sortedChallenges.sort((a, b) => b.currentParticipants.compareTo(a.currentParticipants));
+    final sortedChallenges =
+        List<AvailableChallenge>.from(state.availableChallenges);
+    sortedChallenges
+        .sort((a, b) => b.currentParticipants.compareTo(a.currentParticipants));
     return sortedChallenges.take(5).toList();
   }
 
@@ -388,34 +403,45 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
     final sortedChallenges = List<AvailableChallenge>.from(availableChallenges);
 
     // 가장 낮은 능력치를 개선할 수 있는 챌린지 추천
-    if (stats.willpower <= stats.stamina && stats.willpower <= stats.knowledge && stats.willpower <= stats.technique) {
+    if (stats.willpower <= stats.stamina &&
+        stats.willpower <= stats.knowledge &&
+        stats.willpower <= stats.technique) {
       // 의지력이 낮으면 습관/마음챙김 챌린지 추천
       sortedChallenges.sort((a, b) {
-        final aIsWillpower = a.categoryType == ChallengeCategory.habit || a.categoryType == ChallengeCategory.mindfulness;
-        final bIsWillpower = b.categoryType == ChallengeCategory.habit || b.categoryType == ChallengeCategory.mindfulness;
+        final aIsWillpower = a.categoryType == ChallengeCategory.habit ||
+            a.categoryType == ChallengeCategory.mindfulness;
+        final bIsWillpower = b.categoryType == ChallengeCategory.habit ||
+            b.categoryType == ChallengeCategory.mindfulness;
         if (aIsWillpower && !bIsWillpower) return -1;
         if (!aIsWillpower && bIsWillpower) return 1;
         return 0;
       });
-    } else if (stats.stamina <= stats.knowledge && stats.stamina <= stats.technique) {
+    } else if (stats.stamina <= stats.knowledge &&
+        stats.stamina <= stats.technique) {
       // 체력이 낮으면 건강 챌린지 추천
       sortedChallenges.sort((a, b) {
-        if (a.categoryType == ChallengeCategory.fitness && b.categoryType != ChallengeCategory.fitness) return -1;
-        if (a.categoryType != ChallengeCategory.fitness && b.categoryType == ChallengeCategory.fitness) return 1;
+        if (a.categoryType == ChallengeCategory.fitness &&
+            b.categoryType != ChallengeCategory.fitness) return -1;
+        if (a.categoryType != ChallengeCategory.fitness &&
+            b.categoryType == ChallengeCategory.fitness) return 1;
         return 0;
       });
     } else if (stats.knowledge <= stats.technique) {
       // 지식이 낮으면 학습 챌린지 추천
       sortedChallenges.sort((a, b) {
-        if (a.categoryType == ChallengeCategory.study && b.categoryType != ChallengeCategory.study) return -1;
-        if (a.categoryType != ChallengeCategory.study && b.categoryType == ChallengeCategory.study) return 1;
+        if (a.categoryType == ChallengeCategory.study &&
+            b.categoryType != ChallengeCategory.study) return -1;
+        if (a.categoryType != ChallengeCategory.study &&
+            b.categoryType == ChallengeCategory.study) return 1;
         return 0;
       });
     } else {
       // 기술이 낮으면 라이프스타일 챌린지 추천
       sortedChallenges.sort((a, b) {
-        if (a.categoryType == ChallengeCategory.lifestyle && b.categoryType != ChallengeCategory.lifestyle) return -1;
-        if (a.categoryType != ChallengeCategory.lifestyle && b.categoryType == ChallengeCategory.lifestyle) return 1;
+        if (a.categoryType == ChallengeCategory.lifestyle &&
+            b.categoryType != ChallengeCategory.lifestyle) return -1;
+        if (a.categoryType != ChallengeCategory.lifestyle &&
+            b.categoryType == ChallengeCategory.lifestyle) return 1;
         return 0;
       });
     }
@@ -426,11 +452,12 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
   /// 시작 예정 챌린지 (24시간 이내)
   List<AvailableChallenge> get upcomingChallenges {
     final now = DateTime.now();
-    return state.availableChallenges.where((challenge) =>
-      challenge.canJoin &&
-      challenge.startDate.difference(now).inHours <= 24 &&
-      challenge.startDate.isAfter(now)
-    ).toList();
+    return state.availableChallenges
+        .where((challenge) =>
+            challenge.canJoin &&
+            challenge.startDate.difference(now).inHours <= 24 &&
+            challenge.startDate.isAfter(now))
+        .toList();
   }
 
   /// 데이터 새로고침
@@ -442,49 +469,58 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
 // ==================== UI용 Provider들 ====================
 
 /// 카테고리별 챌린지 Provider
-final globalChallengesByCategoryProvider = Provider.family<List<AvailableChallenge>, ChallengeCategory?>((ref, category) {
+final globalChallengesByCategoryProvider =
+    Provider.family<List<AvailableChallenge>, ChallengeCategory?>(
+        (ref, category) {
   final notifier = ref.read(globalChallengeProvider.notifier);
   return notifier.getChallengesByCategory(category);
 });
 
 /// 난이도별 챌린지 Provider
-final globalChallengesByDifficultyProvider = Provider.family<List<AvailableChallenge>, int?>((ref, difficulty) {
+final globalChallengesByDifficultyProvider =
+    Provider.family<List<AvailableChallenge>, int?>((ref, difficulty) {
   final notifier = ref.read(globalChallengeProvider.notifier);
   return notifier.getChallengesByDifficulty(difficulty);
 });
 
 /// 참여 가능한 챌린지 Provider
-final globalAvailableChallengesProvider = Provider<List<AvailableChallenge>>((ref) {
+final globalAvailableChallengesProvider =
+    Provider<List<AvailableChallenge>>((ref) {
   final notifier = ref.read(globalChallengeProvider.notifier);
   return notifier.availableChallenges;
 });
 
 /// 인기 챌린지 Provider
-final globalPopularChallengesProvider = Provider<List<AvailableChallenge>>((ref) {
+final globalPopularChallengesProvider =
+    Provider<List<AvailableChallenge>>((ref) {
   final notifier = ref.read(globalChallengeProvider.notifier);
   return notifier.popularChallenges;
 });
 
 /// 추천 챌린지 Provider
-final globalRecommendedChallengesProvider = Provider<List<AvailableChallenge>>((ref) {
+final globalRecommendedChallengesProvider =
+    Provider<List<AvailableChallenge>>((ref) {
   final notifier = ref.read(globalChallengeProvider.notifier);
   return notifier.getRecommendedChallenges();
 });
 
 /// 시작 예정 챌린지 Provider
-final globalUpcomingChallengesProvider = Provider<List<AvailableChallenge>>((ref) {
+final globalUpcomingChallengesProvider =
+    Provider<List<AvailableChallenge>>((ref) {
   final notifier = ref.read(globalChallengeProvider.notifier);
   return notifier.upcomingChallenges;
 });
 
 /// 내 참여 챌린지 Provider
-final globalMyJoinedChallengesProvider = Provider<List<AvailableChallenge>>((ref) {
+final globalMyJoinedChallengesProvider =
+    Provider<List<AvailableChallenge>>((ref) {
   final state = ref.watch(globalChallengeProvider);
   return state.myJoinedChallenges;
 });
 
 /// 내 완료 챌린지 Provider
-final globalMyCompletedChallengesProvider = Provider<List<AvailableChallenge>>((ref) {
+final globalMyCompletedChallengesProvider =
+    Provider<List<AvailableChallenge>>((ref) {
   final state = ref.watch(globalChallengeProvider);
   return state.completedChallenges;
 });
@@ -494,12 +530,14 @@ final globalChallengeStatsProvider = Provider<GlobalChallengeStats>((ref) {
   final state = ref.watch(globalChallengeProvider);
   final joinedCount = state.myJoinedChallenges.length;
   final completedCount = state.completedChallenges.length;
-  final completionRate = joinedCount > 0 ? (completedCount / (joinedCount + completedCount)) : 0.0;
+  final completionRate =
+      joinedCount > 0 ? (completedCount / (joinedCount + completedCount)) : 0.0;
 
   // 카테고리별 완료 횟수
   final categoryStats = <ChallengeCategory, int>{};
   for (final challenge in state.completedChallenges) {
-    categoryStats[challenge.categoryType] = (categoryStats[challenge.categoryType] ?? 0) + 1;
+    categoryStats[challenge.categoryType] =
+        (categoryStats[challenge.categoryType] ?? 0) + 1;
   }
 
   return GlobalChallengeStats(

@@ -70,16 +70,16 @@ class SampleDataGenerator {
     // 0-15일 사이의 랜덤한 연속 달성일
     return _random.nextInt(16);
   }
-  
+
   /// 실제 연속 달성일 계산 (과거 데이터 기반)
   static int _calculateActualConsecutiveDays(Map<String, List> sampleLogs) {
     final now = DateTime.now();
     int consecutiveDays = 0;
-    
+
     // 어제부터 거꾸로 확인
     for (int i = 1; i <= 30; i++) {
       final checkDate = now.subtract(Duration(days: i));
-      
+
       // 해당 날짜에 모든 목표를 달성했는지 확인
       if (_isAllGoalsCompletedOnDate(checkDate, sampleLogs)) {
         consecutiveDays++;
@@ -87,35 +87,40 @@ class SampleDataGenerator {
         break; // 연속 달성이 끊어진 지점
       }
     }
-    
+
     return consecutiveDays;
   }
-  
+
   /// 특정 날짜에 모든 목표(5개)를 달성했는지 확인
-  static bool _isAllGoalsCompletedOnDate(DateTime date, Map<String, List> sampleLogs) {
+  static bool _isAllGoalsCompletedOnDate(
+      DateTime date, Map<String, List> sampleLogs) {
     // 5개 목표: 걸음수(6000), 집중(30분), 독서(1페이지), 운동, 일기
-    
+
     // 1. 걸음수 - 6000 이상 (항상 달성으로 가정)
     bool stepsCompleted = true;
-    
-    // 2. 집중시간 - 30분 이상 (항상 달성으로 가정) 
+
+    // 2. 집중시간 - 30분 이상 (항상 달성으로 가정)
     bool focusCompleted = true;
-    
+
     // 3. 독서 - 해당 날짜에 독서 로그 존재
     final readings = sampleLogs['readings'] as List<ReadingLog>;
     bool readingCompleted = readings.any((log) => _isSameDay(log.date, date));
-    
+
     // 4. 운동 - 해당 날짜에 운동 로그 존재
     final exercises = sampleLogs['exercises'] as List<ExerciseLog>;
     bool exerciseCompleted = exercises.any((log) => _isSameDay(log.date, date));
-    
+
     // 5. 일기 - 해당 날짜에 일기 로그 존재
     final diaries = sampleLogs['diaries'] as List<DiaryLog>;
     bool diaryCompleted = diaries.any((log) => _isSameDay(log.date, date));
-    
-    return stepsCompleted && focusCompleted && readingCompleted && exerciseCompleted && diaryCompleted;
+
+    return stepsCompleted &&
+        focusCompleted &&
+        readingCompleted &&
+        exerciseCompleted &&
+        diaryCompleted;
   }
-  
+
   /// 날짜 비교 헬퍼 메서드
   static bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
@@ -546,26 +551,25 @@ class SampleDataGenerator {
         title.contains('코드') ||
         title.contains('자바') ||
         title.contains('리팩토링')) {
-      return '과학';  // IT를 과학으로 변경
+      return '과학'; // IT를 과학으로 변경
     } else if (title.contains('대화') || title.contains('기술')) {
-      return '경영';  // 커뮤니케이션을 경영으로 변경
+      return '경영'; // 커뮤니케이션을 경영으로 변경
     } else if (title.contains('부의')) {
       return '경영';
-    } else if (title.contains('총, 균, 쇠') ||
-               title.contains('문명')) {
+    } else if (title.contains('총, 균, 쇠') || title.contains('문명')) {
       return '인문학';
     } else if (title.contains('정의란') ||
-               title.contains('죽음에') ||
-               title.contains('윤리학')) {
+        title.contains('죽음에') ||
+        title.contains('윤리학')) {
       return '철학';
     } else if (title.contains('생각') ||
-               title.contains('설득') ||
-               title.contains('몰입') ||
-               title.contains('심리')) {
+        title.contains('설득') ||
+        title.contains('몰입') ||
+        title.contains('심리')) {
       return '심리학';
     } else if (title.contains('듄') ||
-               title.contains('파운데이션') ||
-               title.contains('삼체')) {
+        title.contains('파운데이션') ||
+        title.contains('삼체')) {
       return 'SF';
     } else {
       return '기타';

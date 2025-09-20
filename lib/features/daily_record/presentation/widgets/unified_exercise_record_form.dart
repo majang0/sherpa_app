@@ -69,15 +69,16 @@ class UnifiedExerciseRecordFormState
     Future.delayed(const Duration(milliseconds: 200), () {
       _scaleController.forward();
     });
-    
+
     // 초기 폼 유효성 상태 전달
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkFormValidity();
     });
   }
-  
+
   void _checkFormValidity() {
-    final bool isValid = _durationMinutes != null && _selectedDifficulty != null;
+    final bool isValid =
+        _durationMinutes != null && _selectedDifficulty != null;
     widget.onFormValidityChanged?.call(isValid);
   }
 
@@ -179,15 +180,17 @@ class UnifiedExerciseRecordFormState
             child: Column(
               children: [
                 Text(
-                  _durationMinutes != null 
-                    ? _formatDuration(_durationMinutes!)
-                    : '시간을 선택하세요',
+                  _durationMinutes != null
+                      ? _formatDuration(_durationMinutes!)
+                      : '시간을 선택하세요',
                   style: GoogleFonts.notoSans(
                     fontSize: _durationMinutes != null ? 32 : 24,
-                    fontWeight: _durationMinutes != null ? FontWeight.w800 : FontWeight.w600,
-                    color: _durationMinutes != null 
-                      ? ModernColors.exercise 
-                      : Colors.grey.shade500,
+                    fontWeight: _durationMinutes != null
+                        ? FontWeight.w800
+                        : FontWeight.w600,
+                    color: _durationMinutes != null
+                        ? ModernColors.exercise
+                        : Colors.grey.shade500,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -320,8 +323,9 @@ class UnifiedExerciseRecordFormState
                       duration: const Duration(milliseconds: 250),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
-                        color:
-                            isSelected ? ModernColors.exercise : Colors.grey.shade50,
+                        color: isSelected
+                            ? ModernColors.exercise
+                            : Colors.grey.shade50,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: isSelected
@@ -491,15 +495,15 @@ class UnifiedExerciseRecordFormState
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _achievementScore != null 
-                          ? ModernColors.exercise 
-                          : Colors.grey.shade400,
+                        color: _achievementScore != null
+                            ? ModernColors.exercise
+                            : Colors.grey.shade400,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        _achievementScore != null 
-                          ? '${_achievementScore!.toInt()}/10'
-                          : '?/10',
+                        _achievementScore != null
+                            ? '${_achievementScore!.toInt()}/10'
+                            : '?/10',
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
@@ -537,15 +541,15 @@ class UnifiedExerciseRecordFormState
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  _achievementScore != null 
-                    ? _getAchievementLabel(_achievementScore!)
-                    : '만족도를 선택해주세요',
+                  _achievementScore != null
+                      ? _getAchievementLabel(_achievementScore!)
+                      : '만족도를 선택해주세요',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: _achievementScore != null 
-                      ? ModernColors.textSecondary
-                      : Colors.grey.shade500,
+                    color: _achievementScore != null
+                        ? ModernColors.textSecondary
+                        : Colors.grey.shade500,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -829,15 +833,17 @@ class UnifiedExerciseRecordFormState
 
   Widget _buildSubmitButton() {
     // 필수 항목이 모두 선택되었는지 확인 (성취도는 선택사항)
-    final bool isFormValid = _durationMinutes != null && 
-                            _selectedDifficulty != null;
-    
+    final bool isFormValid =
+        _durationMinutes != null && _selectedDifficulty != null;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SherpaButton(
         text: isFormValid ? '운동 기록 완료' : '필수 항목을 모두 선택해주세요',
-        onPressed: (_isSubmitting || !isFormValid) ? null : _submitExerciseRecord,
-        backgroundColor: isFormValid ? ModernColors.exercise : Colors.grey.shade400,
+        onPressed:
+            (_isSubmitting || !isFormValid) ? null : _submitExerciseRecord,
+        backgroundColor:
+            isFormValid ? ModernColors.exercise : Colors.grey.shade400,
         height: 56,
         isLoading: _isSubmitting,
       ),
@@ -930,13 +936,13 @@ class UnifiedExerciseRecordFormState
   Future<void> submitExerciseRecord() async {
     return _submitExerciseRecord();
   }
-  
+
   Future<void> _submitExerciseRecord() async {
     // null 체크 - 성취도는 선택사항
     if (_durationMinutes == null || _selectedDifficulty == null) {
       return;
     }
-    
+
     setState(() {
       _isSubmitting = true;
     });
@@ -952,7 +958,9 @@ class UnifiedExerciseRecordFormState
         durationMinutes: _durationMinutes!,
         intensity: ExerciseUtils.difficultyToIntensity(_selectedDifficulty!),
         note: _detailsController.text.isEmpty ? null : _detailsController.text,
-        imageUrl: _selectedImage != null ? 'local_image_${DateTime.now().millisecondsSinceEpoch}' : null,
+        imageUrl: _selectedImage != null
+            ? 'local_image_${DateTime.now().millisecondsSinceEpoch}'
+            : null,
         isShared: _isShared,
       );
 
@@ -962,7 +970,7 @@ class UnifiedExerciseRecordFormState
       // 운동 기록 생성시 보상 완전 제거
       // handleActivityCompletion 호출 자체를 제거하여 어떤 보상도 지급되지 않도록 함
       // 퀘스트 추적은 addExerciseLog 내부의 _notifyQuestSystem에서 처리됨
-      
+
       // 아래 코드 주석 처리 - 운동 기록 생성시 보상 없음
       // ref.read(globalUserProvider.notifier).handleActivityCompletion(
       //       activityType: 'exercise',
@@ -1038,7 +1046,6 @@ class UnifiedExerciseRecordFormState
       }
     }
   }
-
 
   Widget _buildTimePreset(int minutes, String label) {
     final isSelected = _durationMinutes == minutes;
@@ -1133,7 +1140,8 @@ class UnifiedExerciseRecordFormState
     if (_selectedDifficulty == null || _durationMinutes == null) {
       return 0;
     }
-    final intensity = CalorieCalculator.difficultyToIntensity(_selectedDifficulty!);
+    final intensity =
+        CalorieCalculator.difficultyToIntensity(_selectedDifficulty!);
     return CalorieCalculator.calculateCalories(
       exerciseType: widget.exerciseType,
       durationMinutes: _durationMinutes!,

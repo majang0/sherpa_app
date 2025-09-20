@@ -186,10 +186,13 @@ SherpaButton(
 
 ### Sherpi AI Companion
 
+> 최신 Sherpi 시스템 레퍼런스: `docs/sherpi_system.md`
+
 **Overview**: Static message-based AI companion (manual AI mode by default)
 
 **Key Files**:
-- `core/ai/smart_sherpi_manager_openai.dart` - Message management
+- `core/ai/managers/openai_sherpi_manager.dart` - Hybrid message management
+- `core/ai/managers/static_sherpi_manager.dart` - Static fallback implementation
 - `shared/providers/global_sherpi_provider.dart` - State management
 
 **Available APIs**:

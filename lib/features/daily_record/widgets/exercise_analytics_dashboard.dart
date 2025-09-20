@@ -13,7 +13,7 @@ import '../../../shared/utils/haptic_feedback_manager.dart';
 class ExerciseAnalyticsDashboard extends ConsumerStatefulWidget {
   final String? focusExerciseType; // 특정 운동 타입에 집중할 경우
   final DateTimeRange? dateRange; // 분석 기간 설정
-  
+
   const ExerciseAnalyticsDashboard({
     super.key,
     this.focusExerciseType,
@@ -21,19 +21,21 @@ class ExerciseAnalyticsDashboard extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ExerciseAnalyticsDashboard> createState() => _ExerciseAnalyticsDashboardState();
+  ConsumerState<ExerciseAnalyticsDashboard> createState() =>
+      _ExerciseAnalyticsDashboardState();
 }
 
-class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDashboard>
+class _ExerciseAnalyticsDashboardState
+    extends ConsumerState<ExerciseAnalyticsDashboard>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
-  
+
   // 분석 필터 상태
   String _selectedPeriod = '30일'; // 7일, 30일, 90일, 전체
   String _selectedMetric = '시간'; // 시간, 횟수, 강도
   bool _showTrends = true;
-  
+
   // 차트 데이터 캐시
   List<FlSpot>? _cachedTrendData;
   Map<String, double>? _cachedTypeDistribution;
@@ -41,12 +43,12 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
@@ -63,7 +65,8 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
   @override
   Widget build(BuildContext context) {
     final globalUser = ref.watch(globalUserProvider);
-    final exerciseLogs = _getFilteredExercises(globalUser.dailyRecords.exerciseLogs);
+    final exerciseLogs =
+        _getFilteredExercises(globalUser.dailyRecords.exerciseLogs);
 
     return FadeTransition(
       opacity: _fadeAnimation,
@@ -72,36 +75,48 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
         child: Column(
           children: [
             const SizedBox(height: 20),
-            
+
             // 분석 컨트롤 패널
-            _buildAnalyticsControls().animate().slide(duration: 600.ms, delay: 100.ms),
-            
+            _buildAnalyticsControls()
+                .animate()
+                .slide(duration: 600.ms, delay: 100.ms),
+
             const SizedBox(height: 24),
-            
+
             // 핵심 지표 카드들
-            _buildKeyMetrics(exerciseLogs).animate().slide(duration: 600.ms, delay: 200.ms),
-            
+            _buildKeyMetrics(exerciseLogs)
+                .animate()
+                .slide(duration: 600.ms, delay: 200.ms),
+
             const SizedBox(height: 24),
-            
+
             // 트렌드 차트
             if (_showTrends)
-              _buildTrendChart(exerciseLogs).animate().slide(duration: 600.ms, delay: 300.ms),
-            
+              _buildTrendChart(exerciseLogs)
+                  .animate()
+                  .slide(duration: 600.ms, delay: 300.ms),
+
             const SizedBox(height: 24),
-            
+
             // 운동 타입별 심화 분석
-            _buildExerciseTypeAnalysis(exerciseLogs).animate().slide(duration: 600.ms, delay: 400.ms),
-            
+            _buildExerciseTypeAnalysis(exerciseLogs)
+                .animate()
+                .slide(duration: 600.ms, delay: 400.ms),
+
             const SizedBox(height: 24),
-            
+
             // 성과 분석 및 목표 추천
-            _buildPerformanceInsights(exerciseLogs).animate().slide(duration: 600.ms, delay: 500.ms),
-            
+            _buildPerformanceInsights(exerciseLogs)
+                .animate()
+                .slide(duration: 600.ms, delay: 500.ms),
+
             const SizedBox(height: 24),
-            
+
             // 주간/월간 비교 분석
-            _buildComparativeAnalysis(exerciseLogs).animate().slide(duration: 600.ms, delay: 600.ms),
-            
+            _buildComparativeAnalysis(exerciseLogs)
+                .animate()
+                .slide(duration: 600.ms, delay: 600.ms),
+
             const SizedBox(height: 40),
           ],
         ),
@@ -153,7 +168,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // 기간 선택
           Row(
             children: [
@@ -169,9 +184,9 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
               ..._buildPeriodChips(),
             ],
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // 지표 선택 및 트렌드 토글
           Row(
             children: [
@@ -285,7 +300,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
 
   Widget _buildKeyMetrics(List<ExerciseLog> exercises) {
     final stats = _calculateKeyStats(exercises);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -300,7 +315,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // 2x2 그리드로 핵심 지표 표시
           Row(
             children: [
@@ -325,9 +340,9 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
               ),
             ],
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           Row(
             children: [
               Expanded(
@@ -356,7 +371,8 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
     );
   }
 
-  Widget _buildMetricCard(String title, String value, String subtitle, IconData icon, Color color) {
+  Widget _buildMetricCard(
+      String title, String value, String subtitle, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -422,7 +438,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
 
   Widget _buildTrendChart(List<ExerciseLog> exercises) {
     final trendData = _getTrendData(exercises);
-    
+
     if (trendData.isEmpty) {
       return _buildEmptyChart('트렌드 데이터가 없습니다');
     }
@@ -470,7 +486,6 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             ],
           ),
           const SizedBox(height: 24),
-          
           SizedBox(
             height: 200,
             child: LineChart(
@@ -506,7 +521,9 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                     sideTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 30,
-                      interval: trendData.length > 10 ? (trendData.length / 5).ceilToDouble() : null,
+                      interval: trendData.length > 10
+                          ? (trendData.length / 5).ceilToDouble()
+                          : null,
                       getTitlesWidget: (value, meta) {
                         final index = value.toInt();
                         if (index >= 0 && index < trendData.length) {
@@ -522,8 +539,10 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
                       },
                     ),
                   ),
-                  topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles:
+                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles:
+                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
@@ -559,7 +578,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
 
   Widget _buildExerciseTypeAnalysis(List<ExerciseLog> exercises) {
     final typeStats = _getExerciseTypeStats(exercises);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(24),
@@ -603,7 +622,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // 타입별 상세 통계
           ...typeStats.entries.take(5).map((entry) {
             final stats = entry.value as Map<String, dynamic>;
@@ -619,10 +638,11 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
     );
   }
 
-  Widget _buildTypeStatsRow(String exerciseType, int count, int totalMinutes, String avgIntensity) {
+  Widget _buildTypeStatsRow(
+      String exerciseType, int count, int totalMinutes, String avgIntensity) {
     final color = _getExerciseColor(exerciseType);
     final emoji = _getExerciseEmoji(exerciseType);
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -691,7 +711,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
 
   Widget _buildPerformanceInsights(List<ExerciseLog> exercises) {
     final insights = _generateInsights(exercises);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(24),
@@ -735,7 +755,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // 인사이트 카드들
           ...insights.map((insight) => _buildInsightCard(insight)).toList(),
         ],
@@ -808,7 +828,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
 
   Widget _buildComparativeAnalysis(List<ExerciseLog> exercises) {
     final comparison = _getComparativeStats(exercises);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(24),
@@ -852,7 +872,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // 이번 주 vs 지난 주
           _buildComparisonRow(
             '이번 주',
@@ -861,9 +881,9 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
             '${comparison['lastWeek']['count']}회 • ${comparison['lastWeek']['minutes']}분',
             comparison['weeklyChange'] as double,
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // 이번 달 vs 지난 달
           _buildComparisonRow(
             '이번 달',
@@ -877,10 +897,11 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
     );
   }
 
-  Widget _buildComparisonRow(String period1, String stats1, String period2, String stats2, double change) {
+  Widget _buildComparisonRow(String period1, String stats1, String period2,
+      String stats2, double change) {
     final isPositive = change >= 0;
     final changeColor = isPositive ? ModernColors.success : ModernColors.error;
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1016,7 +1037,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
   List<ExerciseLog> _getFilteredExercises(List<ExerciseLog> allExercises) {
     final now = DateTime.now();
     DateTime startDate;
-    
+
     switch (_selectedPeriod) {
       case '7일':
         startDate = now.subtract(const Duration(days: 7));
@@ -1028,17 +1049,23 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
         startDate = now.subtract(const Duration(days: 90));
         break;
       default: // '전체'
-        return widget.focusExerciseType != null 
-            ? allExercises.where((e) => e.exerciseType == widget.focusExerciseType).toList()
+        return widget.focusExerciseType != null
+            ? allExercises
+                .where((e) => e.exerciseType == widget.focusExerciseType)
+                .toList()
             : allExercises;
     }
-    
-    var filtered = allExercises.where((exercise) => exercise.date.isAfter(startDate)).toList();
-    
+
+    var filtered = allExercises
+        .where((exercise) => exercise.date.isAfter(startDate))
+        .toList();
+
     if (widget.focusExerciseType != null) {
-      filtered = filtered.where((e) => e.exerciseType == widget.focusExerciseType).toList();
+      filtered = filtered
+          .where((e) => e.exerciseType == widget.focusExerciseType)
+          .toList();
     }
-    
+
     return filtered;
   }
 
@@ -1055,15 +1082,21 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
       };
     }
 
-    final totalMinutes = exercises.fold<int>(0, (sum, e) => sum + e.durationMinutes);
+    final totalMinutes =
+        exercises.fold<int>(0, (sum, e) => sum + e.durationMinutes);
     final totalCount = exercises.length;
     final daysDifference = _getDaysDifference();
-    final avgMinutesPerDay = daysDifference > 0 ? totalMinutes / daysDifference : 0.0;
-    final weeklyAverage = daysDifference > 0 ? (totalCount * 7) / daysDifference : 0.0;
+    final avgMinutesPerDay =
+        daysDifference > 0 ? totalMinutes / daysDifference : 0.0;
+    final weeklyAverage =
+        daysDifference > 0 ? (totalCount * 7) / daysDifference : 0.0;
 
     // 평균 강도 계산
-    final intensityScores = exercises.map((e) => _getIntensityScore(e.intensity)).toList();
-    final avgIntensityScore = intensityScores.fold<double>(0, (sum, score) => sum + score) / intensityScores.length;
+    final intensityScores =
+        exercises.map((e) => _getIntensityScore(e.intensity)).toList();
+    final avgIntensityScore =
+        intensityScores.fold<double>(0, (sum, score) => sum + score) /
+            intensityScores.length;
     final avgIntensity = _getIntensityFromScore(avgIntensityScore);
 
     // 연속 기록 계산
@@ -1082,40 +1115,45 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
 
   List<FlSpot> _getTrendData(List<ExerciseLog> exercises) {
     if (_cachedTrendData != null) return _cachedTrendData!;
-    
+
     if (exercises.isEmpty) return [];
 
     // 날짜별로 그룹화
     final dateGroups = <DateTime, List<ExerciseLog>>{};
     for (final exercise in exercises) {
-      final date = DateTime(exercise.date.year, exercise.date.month, exercise.date.day);
+      final date =
+          DateTime(exercise.date.year, exercise.date.month, exercise.date.day);
       dateGroups.putIfAbsent(date, () => []).add(exercise);
     }
 
     // 날짜 순 정렬
     final sortedDates = dateGroups.keys.toList()..sort();
-    
+
     final spots = <FlSpot>[];
     for (int i = 0; i < sortedDates.length; i++) {
       final date = sortedDates[i];
       final dayExercises = dateGroups[date]!;
-      
+
       double value;
       switch (_selectedMetric) {
         case '시간':
-          value = dayExercises.fold<int>(0, (sum, e) => sum + e.durationMinutes).toDouble();
+          value = dayExercises
+              .fold<int>(0, (sum, e) => sum + e.durationMinutes)
+              .toDouble();
           break;
         case '횟수':
           value = dayExercises.length.toDouble();
           break;
         case '강도':
-          value = dayExercises.map((e) => _getIntensityScore(e.intensity))
-              .fold<double>(0, (sum, score) => sum + score) / dayExercises.length;
+          value = dayExercises
+                  .map((e) => _getIntensityScore(e.intensity))
+                  .fold<double>(0, (sum, score) => sum + score) /
+              dayExercises.length;
           break;
         default:
           value = 0;
       }
-      
+
       spots.add(FlSpot(i.toDouble(), value));
     }
 
@@ -1123,12 +1161,13 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
     return spots;
   }
 
-  Map<String, Map<String, dynamic>> _getExerciseTypeStats(List<ExerciseLog> exercises) {
+  Map<String, Map<String, dynamic>> _getExerciseTypeStats(
+      List<ExerciseLog> exercises) {
     final typeStats = <String, Map<String, dynamic>>{};
-    
+
     for (final exercise in exercises) {
       final type = exercise.exerciseType;
-      
+
       if (!typeStats.containsKey(type)) {
         typeStats[type] = {
           'count': 0,
@@ -1136,25 +1175,28 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
           'intensityScores': <double>[],
         };
       }
-      
+
       typeStats[type]!['count'] = (typeStats[type]!['count'] as int) + 1;
-      typeStats[type]!['totalMinutes'] = (typeStats[type]!['totalMinutes'] as int) + exercise.durationMinutes;
-      (typeStats[type]!['intensityScores'] as List<double>).add(_getIntensityScore(exercise.intensity));
+      typeStats[type]!['totalMinutes'] =
+          (typeStats[type]!['totalMinutes'] as int) + exercise.durationMinutes;
+      (typeStats[type]!['intensityScores'] as List<double>)
+          .add(_getIntensityScore(exercise.intensity));
     }
-    
+
     // 평균 강도 계산
     for (final type in typeStats.keys) {
       final scores = typeStats[type]!['intensityScores'] as List<double>;
-      final avgScore = scores.fold<double>(0, (sum, score) => sum + score) / scores.length;
+      final avgScore =
+          scores.fold<double>(0, (sum, score) => sum + score) / scores.length;
       typeStats[type]!['avgIntensity'] = _getIntensityFromScore(avgScore);
     }
-    
+
     return typeStats;
   }
 
   List<Map<String, dynamic>> _generateInsights(List<ExerciseLog> exercises) {
     final insights = <Map<String, dynamic>>[];
-    
+
     if (exercises.isEmpty) {
       insights.add({
         'title': '운동을 시작해보세요!',
@@ -1167,12 +1209,13 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
 
     final stats = _calculateKeyStats(exercises);
     final typeStats = _getExerciseTypeStats(exercises);
-    
+
     // 가장 많이 한 운동
     final mostFrequentType = typeStats.entries
-        .reduce((a, b) => (a.value['count'] as int) > (b.value['count'] as int) ? a : b)
+        .reduce((a, b) =>
+            (a.value['count'] as int) > (b.value['count'] as int) ? a : b)
         .key;
-    
+
     insights.add({
       'title': '선호 운동: $mostFrequentType',
       'description': '가장 자주 하는 운동입니다. 다양한 운동도 시도해보세요!',
@@ -1202,7 +1245,8 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
     } else if (avgMinutes > 0) {
       insights.add({
         'title': '운동 시간 늘리기',
-        'description': '일일 평균 ${avgMinutes.toStringAsFixed(1)}분입니다. 30분을 목표로 해보세요!',
+        'description':
+            '일일 평균 ${avgMinutes.toStringAsFixed(1)}분입니다. 30분을 목표로 해보세요!',
         'icon': Icons.trending_up,
         'color': ModernColors.warning,
       });
@@ -1213,44 +1257,68 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
 
   Map<String, dynamic> _getComparativeStats(List<ExerciseLog> exercises) {
     final now = DateTime.now();
-    
+
     // 이번 주 vs 지난 주
     final thisWeekStart = now.subtract(Duration(days: now.weekday - 1));
     final lastWeekStart = thisWeekStart.subtract(const Duration(days: 7));
-    
-    final thisWeekExercises = exercises.where((e) => 
-        e.date.isAfter(thisWeekStart.subtract(const Duration(days: 1)))).toList();
-    final lastWeekExercises = exercises.where((e) => 
-        e.date.isAfter(lastWeekStart.subtract(const Duration(days: 1))) &&
-        e.date.isBefore(thisWeekStart)).toList();
-    
+
+    final thisWeekExercises = exercises
+        .where((e) =>
+            e.date.isAfter(thisWeekStart.subtract(const Duration(days: 1))))
+        .toList();
+    final lastWeekExercises = exercises
+        .where((e) =>
+            e.date.isAfter(lastWeekStart.subtract(const Duration(days: 1))) &&
+            e.date.isBefore(thisWeekStart))
+        .toList();
+
     // 이번 달 vs 지난 달
     final thisMonthStart = DateTime(now.year, now.month, 1);
     final lastMonthStart = DateTime(now.year, now.month - 1, 1);
-    
-    final thisMonthExercises = exercises.where((e) => 
-        e.date.isAfter(thisMonthStart.subtract(const Duration(days: 1)))).toList();
-    final lastMonthExercises = exercises.where((e) => 
-        e.date.isAfter(lastMonthStart.subtract(const Duration(days: 1))) &&
-        e.date.isBefore(thisMonthStart)).toList();
-    
-    final thisWeekMinutes = thisWeekExercises.fold<int>(0, (sum, e) => sum + e.durationMinutes);
-    final lastWeekMinutes = lastWeekExercises.fold<int>(0, (sum, e) => sum + e.durationMinutes);
-    final thisMonthMinutes = thisMonthExercises.fold<int>(0, (sum, e) => sum + e.durationMinutes);
-    final lastMonthMinutes = lastMonthExercises.fold<int>(0, (sum, e) => sum + e.durationMinutes);
-    
-    final weeklyChange = lastWeekMinutes > 0 
+
+    final thisMonthExercises = exercises
+        .where((e) =>
+            e.date.isAfter(thisMonthStart.subtract(const Duration(days: 1))))
+        .toList();
+    final lastMonthExercises = exercises
+        .where((e) =>
+            e.date.isAfter(lastMonthStart.subtract(const Duration(days: 1))) &&
+            e.date.isBefore(thisMonthStart))
+        .toList();
+
+    final thisWeekMinutes =
+        thisWeekExercises.fold<int>(0, (sum, e) => sum + e.durationMinutes);
+    final lastWeekMinutes =
+        lastWeekExercises.fold<int>(0, (sum, e) => sum + e.durationMinutes);
+    final thisMonthMinutes =
+        thisMonthExercises.fold<int>(0, (sum, e) => sum + e.durationMinutes);
+    final lastMonthMinutes =
+        lastMonthExercises.fold<int>(0, (sum, e) => sum + e.durationMinutes);
+
+    final weeklyChange = lastWeekMinutes > 0
         ? ((thisWeekMinutes - lastWeekMinutes) / lastWeekMinutes) * 100
         : 0.0;
-    final monthlyChange = lastMonthMinutes > 0 
+    final monthlyChange = lastMonthMinutes > 0
         ? ((thisMonthMinutes - lastMonthMinutes) / lastMonthMinutes) * 100
         : 0.0;
 
     return {
-      'thisWeek': {'count': thisWeekExercises.length, 'minutes': thisWeekMinutes},
-      'lastWeek': {'count': lastWeekExercises.length, 'minutes': lastWeekMinutes},
-      'thisMonth': {'count': thisMonthExercises.length, 'minutes': thisMonthMinutes},
-      'lastMonth': {'count': lastMonthExercises.length, 'minutes': lastMonthMinutes},
+      'thisWeek': {
+        'count': thisWeekExercises.length,
+        'minutes': thisWeekMinutes
+      },
+      'lastWeek': {
+        'count': lastWeekExercises.length,
+        'minutes': lastWeekMinutes
+      },
+      'thisMonth': {
+        'count': thisMonthExercises.length,
+        'minutes': thisMonthMinutes
+      },
+      'lastMonth': {
+        'count': lastMonthExercises.length,
+        'minutes': lastMonthMinutes
+      },
       'weeklyChange': weeklyChange,
       'monthlyChange': monthlyChange,
     };
@@ -1259,24 +1327,33 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
   // 유틸리티 메서드들
   int _getDaysDifference() {
     switch (_selectedPeriod) {
-      case '7일': return 7;
-      case '30일': return 30;
-      case '90일': return 90;
-      default: return 365; // 전체
+      case '7일':
+        return 7;
+      case '30일':
+        return 30;
+      case '90일':
+        return 90;
+      default:
+        return 365; // 전체
     }
   }
 
   double _getIntensityScore(String intensity) {
     switch (intensity.toLowerCase()) {
       case 'low':
-      case '낮음': return 1.0;
+      case '낮음':
+        return 1.0;
       case 'medium':
-      case '보통': return 2.0;
+      case '보통':
+        return 2.0;
       case 'high':
-      case '높음': return 3.0;
+      case '높음':
+        return 3.0;
       case 'very_high':
-      case '매우높음': return 4.0;
-      default: return 2.0;
+      case '매우높음':
+        return 4.0;
+      default:
+        return 2.0;
     }
   }
 
@@ -1294,7 +1371,8 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
     final exerciseDates = exercises
         .map((e) => DateTime(e.date.year, e.date.month, e.date.day))
         .toSet()
-        .toList()..sort();
+        .toList()
+      ..sort();
 
     int currentStreak = 0;
     int maxStreak = 0;
@@ -1306,7 +1384,8 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
     // 현재 연속 기록 계산
     if (exerciseDates.isNotEmpty) {
       final lastExerciseDate = exerciseDates.last;
-      if (_isSameDay(lastExerciseDate, today) || _isSameDay(lastExerciseDate, yesterday)) {
+      if (_isSameDay(lastExerciseDate, today) ||
+          _isSameDay(lastExerciseDate, yesterday)) {
         currentStreak = 1;
         for (int i = exerciseDates.length - 2; i >= 0; i--) {
           final currentDate = exerciseDates[i];
@@ -1324,7 +1403,7 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
     for (int i = 1; i < exerciseDates.length; i++) {
       final prevDate = exerciseDates[i - 1];
       final currentDate = exerciseDates[i];
-      
+
       if (currentDate.difference(prevDate).inDays == 1) {
         tempStreak++;
       } else {
@@ -1338,9 +1417,9 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
   }
 
   bool _isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && 
-           date1.month == date2.month && 
-           date1.day == date2.day;
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 
   int _getTotalExerciseCount() {
@@ -1382,33 +1461,51 @@ class _ExerciseAnalyticsDashboardState extends ConsumerState<ExerciseAnalyticsDa
 
   String _getExerciseEmoji(String exerciseType) {
     switch (exerciseType) {
-      case '러닝': return '🏃';
-      case '클라이밍': return '🧗';
-      case '등산': return '🥾';
-      case '헬스': return '🏋️';
-      case '배드민턴': return '🏸';
-      case '수영': return '🏊';
-      case '자전거': return '🚴';
-      case '요가': return '🧘';
-      case '골프': return '⛳';
-      case '축구': return '⚽';
-      case '농구': return '🏀';
-      case '테니스': return '🎾';
-      default: return '💪';
+      case '러닝':
+        return '🏃';
+      case '클라이밍':
+        return '🧗';
+      case '등산':
+        return '🥾';
+      case '헬스':
+        return '🏋️';
+      case '배드민턴':
+        return '🏸';
+      case '수영':
+        return '🏊';
+      case '자전거':
+        return '🚴';
+      case '요가':
+        return '🧘';
+      case '골프':
+        return '⛳';
+      case '축구':
+        return '⚽';
+      case '농구':
+        return '🏀';
+      case '테니스':
+        return '🎾';
+      default:
+        return '💪';
     }
   }
 
   String _getIntensityLabel(String intensity) {
     switch (intensity.toLowerCase()) {
       case 'low':
-      case '낮음': return '편안함';
+      case '낮음':
+        return '편안함';
       case 'medium':
-      case '보통': return '적당함';
+      case '보통':
+        return '적당함';
       case 'high':
-      case '높음': return '힘듬';
+      case '높음':
+        return '힘듬';
       case 'very_high':
-      case '매우높음': return '매우 힘듬';
-      default: return intensity;
+      case '매우높음':
+        return '매우 힘듬';
+      default:
+        return intensity;
     }
   }
 }

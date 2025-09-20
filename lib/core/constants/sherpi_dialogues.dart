@@ -8,51 +8,51 @@ export '../../core/constants/sherpi_emotions.dart';
 // 셰르피가 등장하는 상황 정의
 enum SherpiContext {
   // 기본 상호작용
-  welcome,              // 앱 첫 실행 환영
-  dailyGreeting,        // 일일 첫 접속
-  longTimeNoSee,        // 오랜만에 접속 (7일 이상)
-  general,              // 일반적인 상황
+  welcome, // 앱 첫 실행 환영
+  dailyGreeting, // 일일 첫 접속
+  longTimeNoSee, // 오랜만에 접속 (7일 이상)
+  general, // 일반적인 상황
 
   // 성장 관련
-  levelUp,              // 레벨업 축하
-  statIncrease,         // 능력치 상승
-  badgeEarned,          // 뱃지 획득
-  titleEarned,          // 칭호 획득
+  levelUp, // 레벨업 축하
+  statIncrease, // 능력치 상승
+  badgeEarned, // 뱃지 획득
+  titleEarned, // 칭호 획득
 
   // 등반 관련
-  climbingStart,        // 등반 시작
-  climbingSuccess,      // 등반 성공
-  climbingFailure,      // 등반 실패
-  questComplete,        // 퀘스트 완료
-  firstClimb,           // 첫 등반
+  climbingStart, // 등반 시작
+  climbingSuccess, // 등반 성공
+  climbingFailure, // 등반 실패
+  questComplete, // 퀘스트 완료
+  firstClimb, // 첫 등반
 
   // 일상 기록 관련
-  exerciseComplete,     // 운동 완료
-  readingComplete,      // 독서 완료
-  diaryWritten,         // 일기 작성
-  focusComplete,        // 집중 타이머 완료
+  exerciseComplete, // 운동 완료
+  readingComplete, // 독서 완료
+  diaryWritten, // 일기 작성
+  focusComplete, // 집중 타이머 완료
 
   // 경고 및 안내
-  tiredWarning,         // 피로도 경고
-  encouragement,        // 격려
-  guidance,             // 안내/설명
-  tutorial,             // 튜토리얼
+  tiredWarning, // 피로도 경고
+  encouragement, // 격려
+  guidance, // 안내/설명
+  tutorial, // 튜토리얼
 
   // 커뮤니티 관련
-  meetingJoined,        // 모임 참가
-  meetingCreated,       // 모임 개설 성공
-  friendActivity,       // 친구 활동 알림
-  guildRankUp,          // 길드 랭킹 상승
+  meetingJoined, // 모임 참가
+  meetingCreated, // 모임 개설 성공
+  friendActivity, // 친구 활동 알림
+  guildRankUp, // 길드 랭킹 상승
 
   // 특별 이벤트
-  specialEvent,         // 특별 이벤트
-  achievement,          // 특별 성취
-  milestone,            // 마일스톤 달성
-  seasonalGreeting,     // 계절 인사
-  allGoalsComplete,     // 오늘의 모든 목표 완료
+  specialEvent, // 특별 이벤트
+  achievement, // 특별 성취
+  milestone, // 마일스톤 달성
+  seasonalGreeting, // 계절 인사
+  allGoalsComplete, // 오늘의 모든 목표 완료
 }
 
-// 감성적이고 개인화된 대화 데이터 
+// 감성적이고 개인화된 대화 데이터
 const Map<SherpiContext, List<String>> sherpiDialogues = {
   // 기본 상호작용
   SherpiContext.welcome: [
@@ -276,7 +276,7 @@ const Map<SherpiContext, List<String>> sherpiDialogues = {
     '자연의 변화처럼 당신도 끊임없이 새로워지고 계시네요. 정말 아름다워요!',
     '새로운 계절, 새로운 마음으로! 이번에는 어떤 멋진 모험이 기다리고 있을까요?',
   ],
-  
+
   SherpiContext.allGoalsComplete: [
     '''🎊 축하드려요! 오늘의 모든 목표를 완벽하게 달성하셨네요! 🏆
 
@@ -637,33 +637,34 @@ String getCategorySpecificMeetingMessage({
     'outdoor': '아웃도어',
     'hobby': '취미',
   };
-  
+
   // 영어 카테고리를 한글로 변환 (이미 한글인 경우 그대로 사용)
   final koreanCategory = categoryMap[category.toLowerCase()] ?? category;
-  
+
   // 디버그: 카테고리 확인
-  print('[DEBUG] Meeting Category - Original: "$category", Korean: "$koreanCategory"');
+  print(
+      '[DEBUG] Meeting Category - Original: "$category", Korean: "$koreanCategory"');
   print('[DEBUG] User: "$userName", Title: "$meetingTitle"');
-  
+
   // 해당 카테고리의 메시지 리스트 가져오기
   final messages = meetingCategoryMessages[koreanCategory];
-  
+
   if (messages == null || messages.isEmpty) {
     // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
     print('[DEBUG] No messages found for category: "$koreanCategory"');
     return '$userName님, "$meetingTitle" 모임을 개설하셨어요! 🎉 함께 성장할 동료들이 곧 모일 거예요!';
   }
-  
+
   // 랜덤으로 메시지 선택
   final randomIndex = Random().nextInt(messages.length);
   var message = messages[randomIndex];
-  
+
   // 플레이스홀더 치환
   message = message.replaceAll('{userName}', userName);
   message = message.replaceAll('{meetingTitle}', meetingTitle);
-  
+
   print('[DEBUG] Selected message: "$message"');
-  
+
   return message;
 }
 
@@ -683,33 +684,34 @@ String getCategorySpecificMeetingJoinedMessage({
     'outdoor': '아웃도어',
     'hobby': '취미',
   };
-  
+
   // 영어 카테고리를 한글로 변환 (이미 한글인 경우 그대로 사용)
   final koreanCategory = categoryMap[category.toLowerCase()] ?? category;
-  
+
   // 디버그: 카테고리 확인
-  print('[DEBUG] Meeting Joined Category - Original: "$category", Korean: "$koreanCategory"');
+  print(
+      '[DEBUG] Meeting Joined Category - Original: "$category", Korean: "$koreanCategory"');
   print('[DEBUG] User: "$userName", Title: "$meetingTitle"');
-  
+
   // 해당 카테고리의 메시지 리스트 가져오기
   final messages = meetingJoinedCategoryMessages[koreanCategory];
-  
+
   if (messages == null || messages.isEmpty) {
     // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
     print('[DEBUG] No joined messages found for category: "$koreanCategory"');
     return '$userName님, "$meetingTitle" 모임에 참가하셨어요! 🎉 함께 성장하는 즐거움을 느껴보세요!';
   }
-  
+
   // 랜덤으로 메시지 선택
   final randomIndex = Random().nextInt(messages.length);
   var message = messages[randomIndex];
-  
+
   // 플레이스홀더 치환
   message = message.replaceAll('{userName}', userName);
   message = message.replaceAll('{meetingTitle}', meetingTitle);
-  
+
   print('[DEBUG] Selected joined message: "$message"');
-  
+
   return message;
 }
 
@@ -742,13 +744,16 @@ final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
 
   // 경고 및 안내
   SherpiContext.tiredWarning: SherpiEmotion.warning,
-  SherpiContext.encouragement: SherpiEmotion.smile,  // cheering -> smile 변경: 격려는 웃으며
+  SherpiContext.encouragement:
+      SherpiEmotion.smile, // cheering -> smile 변경: 격려는 웃으며
   SherpiContext.guidance: SherpiEmotion.guiding,
   SherpiContext.tutorial: SherpiEmotion.guiding,
 
   // 커뮤니티 관련
-  SherpiContext.meetingJoined: SherpiEmotion.talking,  // happy -> talking 변경 (카테고리별 메시지와 함께)
-  SherpiContext.meetingCreated: SherpiEmotion.special,  // cheering -> special 변경 (모임 개설은 특별한 순간)
+  SherpiContext.meetingJoined:
+      SherpiEmotion.talking, // happy -> talking 변경 (카테고리별 메시지와 함께)
+  SherpiContext.meetingCreated:
+      SherpiEmotion.special, // cheering -> special 변경 (모임 개설은 특별한 순간)
   SherpiContext.friendActivity: SherpiEmotion.defaults,
   SherpiContext.guildRankUp: SherpiEmotion.cheering,
 
@@ -763,10 +768,10 @@ final Map<SherpiContext, SherpiEmotion> contextEmotionMap = {
 // 백엔드 연동을 위한 대화 소스 인터페이스
 abstract class SherpiDialogueSource {
   Future<String> getDialogue(
-      SherpiContext context,
-      Map<String, dynamic>? userContext,
-      Map<String, dynamic>? gameContext,
-      );
+    SherpiContext context,
+    Map<String, dynamic>? userContext,
+    Map<String, dynamic>? gameContext,
+  );
 }
 
 // 😊 감정별 일기 작성 완료 메시지 선택 함수
@@ -776,23 +781,23 @@ String getDiaryCompletionMessage({
 }) {
   // 디버그: 감정 확인
   print('[DEBUG] Diary Completion - Mood: "$mood", User: "$userName"');
-  
+
   // 해당 감정의 메시지 리스트 가져오기
   final messages = diaryMoodMessages[mood];
-  
+
   if (messages == null || messages.isEmpty) {
     // 감정을 찾을 수 없는 경우 기본 메시지 반환
     print('[DEBUG] No diary messages found for mood: "$mood", using default');
     return '$userName님, 오늘의 이야기를 일기에 담으셨네요! 📝 일기 내용은 비밀로 할게요. 내일은 더 좋은 하루가 되길!';
   }
-  
+
   // 랜덤으로 메시지 선택
   final randomIndex = Random().nextInt(messages.length);
   var selectedMessage = messages[randomIndex];
-  
+
   // 플레이스홀더 치환
   selectedMessage = selectedMessage.replaceAll('{userName}', userName);
-  
+
   print('[DEBUG] Selected diary message: "$selectedMessage"');
   return selectedMessage;
 }
@@ -805,28 +810,30 @@ String getReadingCompletionMessage({
   required int pages,
 }) {
   // 디버그: 독서 정보 확인
-  print('[DEBUG] Reading Completion - Category: "$category", Book: "$bookTitle", Pages: $pages');
+  print(
+      '[DEBUG] Reading Completion - Category: "$category", Book: "$bookTitle", Pages: $pages');
   print('[DEBUG] User: "$userName"');
-  
+
   // 해당 카테고리의 메시지 리스트 가져오기
   final messages = readingCategoryMessages[category];
-  
+
   if (messages == null || messages.isEmpty) {
     // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
-    print('[DEBUG] No reading messages found for category: "$category", using default');
+    print(
+        '[DEBUG] No reading messages found for category: "$category", using default');
     return '$userName님, "$bookTitle" $pages페이지 독서 완료! 📚 오늘도 책과 함께한 시간이 의미있었길 바라요!';
   }
-  
+
   // 랜덤으로 메시지 선택
   final randomIndex = Random().nextInt(messages.length);
   var selectedMessage = messages[randomIndex];
-  
+
   // 플레이스홀더 치환
   selectedMessage = selectedMessage
       .replaceAll('{userName}', userName)
       .replaceAll('{bookTitle}', bookTitle)
       .replaceAll('{pages}', pages.toString());
-  
+
   print('[DEBUG] Selected reading message: "$selectedMessage"');
   return selectedMessage;
 }
@@ -835,26 +842,26 @@ String getReadingCompletionMessage({
 class StaticDialogueSource implements SherpiDialogueSource {
   @override
   Future<String> getDialogue(
-      SherpiContext context,
-      Map<String, dynamic>? userContext,
-      Map<String, dynamic>? gameContext,
-      ) async {
+    SherpiContext context,
+    Map<String, dynamic>? userContext,
+    Map<String, dynamic>? gameContext,
+  ) async {
     // 사용자 이름 가져오기 (공통)
-    final userName = gameContext?['userPreferredName'] ?? 
-                     gameContext?['userName'] ?? 
-                     '친구';
-    
+    final userName =
+        gameContext?['userPreferredName'] ?? gameContext?['userName'] ?? '친구';
+
     // welcome과 dailyGreeting 메시지 처리 (사용자 이름 치환)
-    if (context == SherpiContext.welcome || context == SherpiContext.dailyGreeting) {
+    if (context == SherpiContext.welcome ||
+        context == SherpiContext.dailyGreeting) {
       final dialogues = sherpiDialogues[context] ?? ['안녕하세요!'];
       final randomIndex = Random().nextInt(dialogues.length);
       String message = dialogues[randomIndex];
-      
+
       // {userName} 플레이스홀더를 실제 이름으로 치환
       message = message.replaceAll('{userName}', userName);
       return message;
     }
-    
+
     // 일기 작성 완료 시 감정별 메시지 처리
     if (context == SherpiContext.diaryWritten && userContext != null) {
       // 감정 정보가 있으면 감정별 메시지 생성
@@ -863,9 +870,10 @@ class StaticDialogueSource implements SherpiDialogueSource {
         print('[DEBUG StaticDialogueSource] Diary completion detected');
         print('[DEBUG StaticDialogueSource] userContext: $userContext');
         print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
-        
-        print('[DEBUG StaticDialogueSource] Extracted - userName: "$userName", mood: "$mood"');
-        
+
+        print(
+            '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", mood: "$mood"');
+
         // 감정별 메시지 생성
         return getDiaryCompletionMessage(
           mood: mood,
@@ -873,7 +881,7 @@ class StaticDialogueSource implements SherpiDialogueSource {
         );
       }
     }
-    
+
     // 독서 완료 시 카테고리별 메시지 처리
     if (context == SherpiContext.readingComplete && userContext != null) {
       // 독서 활동인지 확인 (additionalData에서 bookTitle이 있으면 독서)
@@ -882,13 +890,14 @@ class StaticDialogueSource implements SherpiDialogueSource {
         print('[DEBUG StaticDialogueSource] Reading completion detected');
         print('[DEBUG StaticDialogueSource] userContext: $userContext');
         print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
-        
+
         // 독서 정보 가져오기
         final pages = userContext['pages'] as int? ?? 0;
         final category = userContext['category'] as String? ?? '기타';
-        
-        print('[DEBUG StaticDialogueSource] Extracted - userName: "$userName", bookTitle: "$bookTitle", pages: $pages, category: "$category"');
-        
+
+        print(
+            '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", bookTitle: "$bookTitle", pages: $pages, category: "$category"');
+
         // 카테고리별 메시지 생성
         return getReadingCompletionMessage(
           category: category,
@@ -898,21 +907,22 @@ class StaticDialogueSource implements SherpiDialogueSource {
         );
       }
     }
-    
+
     // 운동 완료 시 메시지 처리
     if (context == SherpiContext.exerciseComplete && userContext != null) {
       print('[DEBUG StaticDialogueSource] Exercise completion detected');
       print('[DEBUG StaticDialogueSource] userContext: $userContext');
       print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
-      
+
       // 운동 정보 가져오기
       final exerciseType = userContext['exerciseType'] as String? ?? '운동';
       final duration = userContext['duration'] as int? ?? 0;
       final difficulty = userContext['difficulty'] as String? ?? 'moderate';
       final calories = userContext['calories'] as int? ?? 0;
-      
-      print('[DEBUG StaticDialogueSource] Extracted - userName: "$userName", exerciseType: "$exerciseType", duration: $duration, difficulty: "$difficulty", calories: $calories');
-      
+
+      print(
+          '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", exerciseType: "$exerciseType", duration: $duration, difficulty: "$difficulty", calories: $calories');
+
       // 난이도를 한국어로 변환 (DifficultyLevel.name 형식과 intensity 형식 모두 지원)
       String difficultyKr;
       switch (difficulty) {
@@ -935,18 +945,21 @@ class StaticDialogueSource implements SherpiDialogueSource {
         default:
           difficultyKr = '적당한';
       }
-      
+
       // 운동 종류별 메시지 선택 (모든 데이터 포함)
-      final messages = exerciseTypeMessages[exerciseType] ?? exerciseTypeMessages['기타'] ?? [];
-      
+      final messages = exerciseTypeMessages[exerciseType] ??
+          exerciseTypeMessages['기타'] ??
+          [];
+
       String selectedMessage;
       if (messages.isEmpty) {
-        selectedMessage = '$userName님, $duration분 동안 $difficultyKr 강도로 운동하셔서 ${calories}kcal 소모! 🏃 정말 대단해요!';
+        selectedMessage =
+            '$userName님, $duration분 동안 $difficultyKr 강도로 운동하셔서 ${calories}kcal 소모! 🏃 정말 대단해요!';
       } else {
         final random = Random();
         selectedMessage = messages[random.nextInt(messages.length)];
       }
-      
+
       // 플레이스홀더 치환
       selectedMessage = selectedMessage
           .replaceAll('{userName}', userName)
@@ -954,23 +967,25 @@ class StaticDialogueSource implements SherpiDialogueSource {
           .replaceAll('{difficulty}', difficultyKr)
           .replaceAll('{calories}', calories.toString())
           .replaceAll('{exerciseType}', exerciseType);
-      
-      print('[DEBUG StaticDialogueSource] Selected exercise message: "$selectedMessage"');
+
+      print(
+          '[DEBUG StaticDialogueSource] Selected exercise message: "$selectedMessage"');
       return selectedMessage;
     }
-    
+
     // 모임 개설 시 카테고리별 메시지 처리
     if (context == SherpiContext.meetingCreated && userContext != null) {
       print('[DEBUG StaticDialogueSource] meetingCreated context detected');
       print('[DEBUG StaticDialogueSource] userContext: $userContext');
       print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
-      
+
       // 모임 정보 가져오기
       final meetingTitle = userContext['meetingTitle'] ?? '새로운 모임';
       final category = userContext['category'] ?? '';
-      
-      print('[DEBUG StaticDialogueSource] Extracted - userName: "$userName", title: "$meetingTitle", category: "$category"');
-      
+
+      print(
+          '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", title: "$meetingTitle", category: "$category"');
+
       // 카테고리별 메시지 생성
       return getCategorySpecificMeetingMessage(
         category: category,
@@ -978,21 +993,22 @@ class StaticDialogueSource implements SherpiDialogueSource {
         meetingTitle: meetingTitle,
       );
     }
-    
+
     // 모임 참가 시 카테고리별 메시지 처리
     if (context == SherpiContext.meetingJoined && userContext != null) {
       print('[DEBUG StaticDialogueSource] meetingJoined context detected');
       print('[DEBUG StaticDialogueSource] userContext: $userContext');
       print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
-      
+
       // 모임 정보 가져오기
-      final meetingTitle = userContext['meeting_title'] ?? 
-                          userContext['meetingTitle'] ?? 
-                          '새로운 모임';
+      final meetingTitle = userContext['meeting_title'] ??
+          userContext['meetingTitle'] ??
+          '새로운 모임';
       final category = userContext['category'] ?? '';
-      
-      print('[DEBUG StaticDialogueSource] Extracted - userName: "$userName", title: "$meetingTitle", category: "$category"');
-      
+
+      print(
+          '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", title: "$meetingTitle", category: "$category"');
+
       // 카테고리별 메시지 생성
       return getCategorySpecificMeetingJoinedMessage(
         category: category,
@@ -1000,7 +1016,7 @@ class StaticDialogueSource implements SherpiDialogueSource {
         meetingTitle: meetingTitle,
       );
     }
-    
+
     // 일반 메시지 처리
     final dialogues = sherpiDialogues[context] ?? ['안녕하세요!'];
     final randomIndex = Random().nextInt(dialogues.length);
@@ -1016,10 +1032,10 @@ class BackendDialogueSource implements SherpiDialogueSource {
 
   @override
   Future<String> getDialogue(
-      SherpiContext context,
-      Map<String, dynamic>? userContext,
-      Map<String, dynamic>? gameContext,
-      ) async {
+    SherpiContext context,
+    Map<String, dynamic>? userContext,
+    Map<String, dynamic>? gameContext,
+  ) async {
     // TODO: 백엔드 API 호출
     // POST /api/sherpi/dialogue
     // Body: { context, userContext, gameContext }
@@ -1037,10 +1053,10 @@ class AIDialogueSource implements SherpiDialogueSource {
 
   @override
   Future<String> getDialogue(
-      SherpiContext context,
-      Map<String, dynamic>? userContext,
-      Map<String, dynamic>? gameContext,
-      ) async {
+    SherpiContext context,
+    Map<String, dynamic>? userContext,
+    Map<String, dynamic>? gameContext,
+  ) async {
     // TODO: OpenAI API 호출
     // 사용자 컨텍스트와 게임 상황을 고려한 개인화된 대사 생성
     throw UnimplementedError('AI 대화 시스템은 추후 구현 예정입니다.');

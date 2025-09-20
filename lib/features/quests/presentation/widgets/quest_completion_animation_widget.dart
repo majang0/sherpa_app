@@ -20,7 +20,8 @@ class QuestCompletionAnimationWidget extends ConsumerStatefulWidget {
       QuestCompletionAnimationState();
 }
 
-class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimationWidget>
+class QuestCompletionAnimationState
+    extends ConsumerState<QuestCompletionAnimationWidget>
     with SingleTickerProviderStateMixin {
   QuestInstance? _completedQuest;
   QuestCompletionBonus? _completionBonus;
@@ -36,7 +37,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
   @override
   void initState() {
     super.initState();
-    
+
     _internalController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
@@ -86,7 +87,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
       _bonusTitle = null;
       _generateParticles();
     });
-    
+
     // 내부 컨트롤러만 사용 (외부 컨트롤러 조작 제거)
     _internalController.forward(from: 0.0);
   }
@@ -99,10 +100,9 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
       _bonusTitle = title;
       _generateParticles();
     });
-    
+
     _internalController.forward(from: 0.0);
   }
-
 
   void _hideAnimation() {
     _internalController.reverse().then((_) {
@@ -120,7 +120,7 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
 
   void _generateParticles() {
     _particles.clear();
-    
+
     // 다양한 색상의 파티클 생성
     final colors = [
       ModernColors.primary,
@@ -160,7 +160,8 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
                 child: GestureDetector(
                   onTap: _hideAnimation,
                   child: Container(
-                    color: Colors.black.withValues(alpha: _fadeAnimation.value * 0.5),
+                    color: Colors.black
+                        .withValues(alpha: _fadeAnimation.value * 0.5),
                   ),
                 ),
               ),
@@ -177,9 +178,9 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
                   child: FadeTransition(
                     opacity: _fadeAnimation,
                     child: GestureDetector(
-                        onTap: _hideAnimation,
-                        child: _buildCompletionCard(),
-                      ),
+                      onTap: _hideAnimation,
+                      child: _buildCompletionCard(),
+                    ),
                   ),
                 ),
               ),
@@ -194,7 +195,8 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
     return _particles.map((particle) {
       final progress = _internalController.value;
       final x = particle.x * 200 * progress * particle.velocity;
-      final y = particle.y * 200 * progress * particle.velocity + (progress * progress * 100);
+      final y = particle.y * 200 * progress * particle.velocity +
+          (progress * progress * 100);
       final opacity = math.max(0.0, 1.0 - progress);
 
       return Positioned(
@@ -254,9 +256,9 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
               size: 48,
             ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // 퀘스트 완료 메시지
           Text(
             _completionBonus != null ? '보상상자 오픈!' : '퀘스트 완료!',
@@ -266,9 +268,9 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
               color: ModernColors.textPrimary,
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           Text(
             _getDisplayTitle(),
             style: GoogleFonts.notoSans(
@@ -278,9 +280,9 @@ class QuestCompletionAnimationState extends ConsumerState<QuestCompletionAnimati
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // 보상 정보
           Container(
             padding: const EdgeInsets.all(16),

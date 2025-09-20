@@ -70,7 +70,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
     final userPower = ref.watch(userClimbingPowerProvider);
     final totalPoints = ref.watch(globalTotalPointsProvider);
     final climbingStats = ref.watch(climbingStatisticsProvider);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -101,7 +101,8 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -118,7 +119,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
               ],
             ),
           ),
-          
+
           // 메인 콘텐츠
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -133,12 +134,13 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                 // 오른쪽: 통계 리스트
                 Expanded(
                   flex: 5,
-                  child: _buildStatsList(user, userPower, totalPoints, climbingStats),
+                  child: _buildStatsList(
+                      user, userPower, totalPoints, climbingStats),
                 ),
               ],
             ),
           ),
-          
+
           // 하단 인사이트
           Container(
             padding: const EdgeInsets.all(16),
@@ -201,11 +203,12 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                   AnimatedBuilder(
                     animation: _numberAnimation,
                     builder: (context, child) {
-                      final avgStat = (user.stats.stamina + 
-                                      user.stats.knowledge + 
-                                      user.stats.technique + 
-                                      user.stats.sociality + 
-                                      user.stats.willpower) / 5;
+                      final avgStat = (user.stats.stamina +
+                              user.stats.knowledge +
+                              user.stats.technique +
+                              user.stats.sociality +
+                              user.stats.willpower) /
+                          5;
                       return Text(
                         '${(avgStat * _numberAnimation.value).toStringAsFixed(1)}',
                         style: GoogleFonts.notoSans(
@@ -232,7 +235,8 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
     );
   }
 
-  Widget _buildStatsList(GlobalUser user, double userPower, int totalPoints, ClimbingStatistics stats) {
+  Widget _buildStatsList(GlobalUser user, double userPower, int totalPoints,
+      ClimbingStatistics stats) {
     return Column(
       children: [
         _buildStatItem(
@@ -315,9 +319,12 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                       ),
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: (trendPositive ? AppColors.success : AppColors.error)
+                          color: (trendPositive
+                                  ? AppColors.success
+                                  : AppColors.error)
                               .withOpacity(0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
@@ -326,7 +333,9 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: trendPositive ? AppColors.success : AppColors.error,
+                            color: trendPositive
+                                ? AppColors.success
+                                : AppColors.error,
                           ),
                         ),
                       ),
@@ -346,9 +355,11 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
       return '${stats.currentStreak}일 연속 등반 중! 꾸준한 성장이 인상적이에요.';
     } else if (stats.successRate > 0.8) {
       return '성공률이 매우 높아요! 더 어려운 산에 도전해보세요.';
-    } else if (user.stats.stamina > user.stats.knowledge && user.stats.stamina > user.stats.technique) {
+    } else if (user.stats.stamina > user.stats.knowledge &&
+        user.stats.stamina > user.stats.technique) {
       return '체력이 뛰어나네요! 운동 관련 퀘스트를 더 해보세요.';
-    } else if (user.stats.knowledge > user.stats.stamina && user.stats.knowledge > user.stats.technique) {
+    } else if (user.stats.knowledge > user.stats.stamina &&
+        user.stats.knowledge > user.stats.technique) {
       return '지식이 풍부하시네요! 독서 모임에 참여해보세요.';
     } else {
       return '균형잡힌 성장을 하고 계세요! 계속 이대로 가세요.';

@@ -15,18 +15,18 @@ class StepAnalysisWidget extends ConsumerWidget {
     final stepData = user.dailyRecords;
     final stepHistoryAsync = ref.watch(stepHistoryProvider);
     final stepStatsAsync = ref.watch(stepStatisticsProvider);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 메인 카드: 걸음수 분석 헤더 + 오늘의 걸음수 + 랭킹
         _buildMainCard(stepData, stepStatsAsync),
         const SizedBox(height: 16),
-        
+
         // 트렌드 카드: 14일 흐름 그래프
         _buildTrendCard(stepHistoryAsync),
         const SizedBox(height: 16),
-        
+
         // 통계 카드: 요약 정보
         _buildStatsCard(stepStatsAsync),
       ],
@@ -34,7 +34,8 @@ class StepAnalysisWidget extends ConsumerWidget {
   }
 
   /// 메인 카드: 걸음수 분석 헤더 + 오늘의 걸음수 + 랭킹
-  Widget _buildMainCard(dynamic stepData, AsyncValue<StepStatistics> stepStatsAsync) {
+  Widget _buildMainCard(
+      dynamic stepData, AsyncValue<StepStatistics> stepStatsAsync) {
     final target = 6000;
     final currentSteps = (stepData.todaySteps as num).toInt();
     final progress = (currentSteps / target).clamp(0.0, 1.0);
@@ -86,14 +87,13 @@ class StepAnalysisWidget extends ConsumerWidget {
                         ),
                       ],
                     ),
-
                   ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 32),
-          
+
           // 오늘의 걸음수 섹션
           Row(
             children: [
@@ -123,7 +123,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    
+
                     // 현재 걸음수 (가장 중요한 정보)
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -150,7 +150,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // 목표 정보
                     Row(
                       children: [
@@ -158,20 +158,24 @@ class StepAnalysisWidget extends ConsumerWidget {
                           width: 8,
                           height: 8,
                           decoration: BoxDecoration(
-                            color: isCompleted ? ModernColors.success : ModernColors.primary,
+                            color: isCompleted
+                                ? ModernColors.success
+                                : ModernColors.primary,
                             shape: BoxShape.circle,
                           ),
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            isCompleted 
+                            isCompleted
                                 ? '목표 달성 완료! 축하해요 🎉'
                                 : '목표까지 ${_formatStepsExact(remainingSteps)} 남았어요',
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: isCompleted ? ModernColors.success : ModernColors.textSecondary,
+                              color: isCompleted
+                                  ? ModernColors.success
+                                  : ModernColors.textSecondary,
                             ),
                           ),
                         ),
@@ -180,9 +184,9 @@ class StepAnalysisWidget extends ConsumerWidget {
                   ],
                 ),
               ),
-              
+
               const SizedBox(width: 24),
-              
+
               // 오른쪽: 원형 진행률 그래프
               SizedBox(
                 width: 100,
@@ -211,7 +215,9 @@ class StepAnalysisWidget extends ConsumerWidget {
                         strokeWidth: 8,
                         backgroundColor: Colors.transparent,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          isCompleted ? ModernColors.success : ModernColors.primary,
+                          isCompleted
+                              ? ModernColors.success
+                              : ModernColors.primary,
                         ),
                       ),
                     ),
@@ -226,7 +232,9 @@ class StepAnalysisWidget extends ConsumerWidget {
                               style: GoogleFonts.notoSans(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
-                                color: isCompleted ? ModernColors.success : ModernColors.primary,
+                                color: isCompleted
+                                    ? ModernColors.success
+                                    : ModernColors.primary,
                               ),
                             ),
                             Text(
@@ -285,7 +293,6 @@ class StepAnalysisWidget extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 24),
-          
           stepHistoryAsync.when(
             data: (stepHistory) => _buildLineChart(stepHistory),
             loading: () => Container(
@@ -293,7 +300,8 @@ class StepAnalysisWidget extends ConsumerWidget {
               child: Center(
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(ModernColors.primary),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(ModernColors.primary),
                 ),
               ),
             ),
@@ -330,8 +338,10 @@ class StepAnalysisWidget extends ConsumerWidget {
       );
     }
 
-    final maxSteps = stepHistory.map((d) => d.steps).reduce((a, b) => a > b ? a : b);
-    final minSteps = stepHistory.map((d) => d.steps).reduce((a, b) => a < b ? a : b);
+    final maxSteps =
+        stepHistory.map((d) => d.steps).reduce((a, b) => a > b ? a : b);
+    final minSteps =
+        stepHistory.map((d) => d.steps).reduce((a, b) => a < b ? a : b);
     final goal = 6000;
 
     // 차트 데이터 생성
@@ -373,21 +383,24 @@ class StepAnalysisWidget extends ConsumerWidget {
                 reservedSize: 25,
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
-                  if (index < 0 || index >= stepHistory.length) return const SizedBox();
-                  
+                  if (index < 0 || index >= stepHistory.length)
+                    return const SizedBox();
+
                   final data = stepHistory[index];
                   final isToday = index == stepHistory.length - 1;
                   final showLabel = isToday || index % 7 == 0;
-                  
+
                   if (!showLabel) return const SizedBox();
-                  
+
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       isToday ? '오늘' : '${data.date.month}/${data.date.day}',
                       style: GoogleFonts.notoSans(
                         fontSize: 10,
-                        color: isToday ? ModernColors.primary : ModernColors.textSecondary,
+                        color: isToday
+                            ? ModernColors.primary
+                            : ModernColors.textSecondary,
                         fontWeight: isToday ? FontWeight.w600 : FontWeight.w400,
                       ),
                     ),
@@ -415,12 +428,12 @@ class StepAnalysisWidget extends ConsumerWidget {
                   final isToday = index == stepHistory.length - 1;
                   final steps = spot.y.toInt();
                   final isGoalAchieved = steps >= goal;
-                  
+
                   return FlDotCirclePainter(
                     radius: isToday ? 5 : 3,
-                    color: isToday 
+                    color: isToday
                         ? ModernColors.primary
-                        : isGoalAchieved 
+                        : isGoalAchieved
                             ? ModernColors.success
                             : ModernColors.textTertiary,
                     strokeWidth: isToday ? 2 : 1,
@@ -445,7 +458,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                   final date = stepHistory[index].date;
                   final isToday = index == stepHistory.length - 1;
                   final dateText = isToday ? '오늘' : '${date.month}/${date.day}';
-                  
+
                   return LineTooltipItem(
                     '$dateText\n${_formatStepsExact(steps)} 걸음',
                     GoogleFonts.notoSans(
@@ -498,7 +511,6 @@ class StepAnalysisWidget extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 24),
-          
           stepStatsAsync.when(
             data: (stats) => _buildStatsGrid(stats),
             loading: () => Container(
@@ -506,7 +518,8 @@ class StepAnalysisWidget extends ConsumerWidget {
               child: Center(
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(ModernColors.primary),
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(ModernColors.primary),
                 ),
               ),
             ),
@@ -588,7 +601,7 @@ class StepAnalysisWidget extends ConsumerWidget {
   Widget _buildRankingBadge(int totalSteps) {
     final ranking = _calculateRanking(totalSteps);
     final rankingText = '상위 ${ranking}%';
-    
+
     Color badgeColor;
     if (ranking <= 10) {
       badgeColor = ModernColors.success;
@@ -599,7 +612,7 @@ class StepAnalysisWidget extends ConsumerWidget {
     } else {
       badgeColor = ModernColors.textTertiary;
     }
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -636,12 +649,12 @@ class StepAnalysisWidget extends ConsumerWidget {
   int _calculateRanking(int totalSteps) {
     // 실제로는 서버에서 전체 사용자 데이터를 기반으로 계산해야 하지만,
     // 현재는 샘플 로직으로 구현
-    if (totalSteps >= 500000) return 5;  // 50만보 이상: 상위 5%
+    if (totalSteps >= 500000) return 5; // 50만보 이상: 상위 5%
     if (totalSteps >= 300000) return 15; // 30만보 이상: 상위 15%
     if (totalSteps >= 200000) return 25; // 20만보 이상: 상위 25%
     if (totalSteps >= 100000) return 40; // 10만보 이상: 상위 40%
-    if (totalSteps >= 50000) return 60;  // 5만보 이상: 상위 60%
-    if (totalSteps >= 20000) return 75;  // 2만보 이상: 상위 75%
+    if (totalSteps >= 50000) return 60; // 5만보 이상: 상위 60%
+    if (totalSteps >= 20000) return 75; // 2만보 이상: 상위 75%
     return 90; // 그 외: 상위 90%
   }
 

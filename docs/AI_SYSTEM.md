@@ -1,5 +1,7 @@
 # Appendix B: AI System Details
 
+> **참고**: 최신 Sherpi 구조 및 아키텍처는 `docs/sherpi_system.md`에서 관리됩니다. 본 문서는 역사적 레퍼런스로 유지됩니다.
+
 ## Sherpi AI Companion System - Complete Documentation
 
 ### System Architecture
@@ -8,10 +10,18 @@
 lib/
 ├── core/
 │   ├── ai/
-│   │   ├── openai_dialogue_source.dart      # OpenAI GPT-5 integration
-│   │   ├── gemini_dialogue_source.dart      # Gemini API (fallback)
-│   │   ├── smart_sherpi_manager_openai.dart # Hybrid message management
-│   │   ├── ai_message_cache.dart            # Performance caching system
+│   │   ├── cache/
+│   │   │   └── ai_message_cache.dart            # Performance caching system
+│   │   ├── managers/
+│   │   │   ├── sherpi_message_manager.dart      # Base DI contract
+│   │   │   ├── static_sherpi_manager.dart       # Static-only implementation
+│   │   │   └── openai_sherpi_manager.dart       # Hybrid message management
+│   │   ├── sources/
+│   │   │   ├── openai_dialogue_source.dart      # OpenAI GPT-5 integration
+│   │   │   └── enhanced_gemini_dialogue_source.dart # Gemini API (fallback)
+│   │   ├── services/
+│   │   │   ├── activity_prompt_templates.dart   # Prompt builders
+│   │   │   └── real_data_connector.dart         # Context builders
 │   │   └── AI_MESSAGE_DECISION_CRITERIA.md  # AI usage criteria
 │   ├── config/
 │   │   └── api_config.dart                  # API key configuration

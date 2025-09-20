@@ -12,7 +12,8 @@ import 'exercise_full_view_widget.dart';
 
 class ExerciseSummaryWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<ExerciseSummaryWidget> createState() => _ExerciseSummaryWidgetState();
+  ConsumerState<ExerciseSummaryWidget> createState() =>
+      _ExerciseSummaryWidgetState();
 }
 
 class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
@@ -30,22 +31,22 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
   @override
   void initState() {
     super.initState();
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _donutController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
@@ -53,7 +54,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       parent: _slideController,
       curve: Curves.easeOutBack,
     ));
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -61,7 +62,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       parent: _fadeController,
       curve: Curves.easeOut,
     ));
-    
+
     _donutAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -69,12 +70,12 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       parent: _donutController,
       curve: Curves.easeOutBack,
     ));
-    
+
     Future.delayed(const Duration(milliseconds: 1200), () {
       _slideController.forward();
       _fadeController.forward();
     });
-    
+
     Future.delayed(const Duration(milliseconds: 1800), () {
       _donutController.forward();
     });
@@ -92,7 +93,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
   Widget build(BuildContext context) {
     final user = ref.watch(globalUserProvider);
     final exerciseLogs = user.dailyRecords.exerciseLogs;
-    
+
     return SlideTransition(
       position: _slideAnimation,
       child: FadeTransition(
@@ -170,12 +171,16 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [const Color(0xFF059669), const Color(0xFF047857)],
+                                colors: [
+                                  const Color(0xFF059669),
+                                  const Color(0xFF047857)
+                                ],
                               ),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: const Color(0xFF059669).withOpacity(0.3),
+                                  color:
+                                      const Color(0xFF059669).withOpacity(0.3),
                                   blurRadius: 6,
                                   offset: const Offset(0, 2),
                                 ),
@@ -189,13 +194,13 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                           ),
                         ),
                       if (exerciseLogs.length >= 5) const SizedBox(width: 8),
-                      
+
                       // 운동 추가 버튼
                       GestureDetector(
                         onTap: () {
                           HapticFeedbackManager.mediumImpact();
                           Navigator.pushNamed(
-                            context, 
+                            context,
                             '/exercise_selection',
                             arguments: DateTime.now(),
                           );
@@ -204,7 +209,10 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [const Color(0xFFF97316), const Color(0xFFEA580C)],
+                              colors: [
+                                const Color(0xFFF97316),
+                                const Color(0xFFEA580C)
+                              ],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
@@ -224,35 +232,34 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       ),
                     ],
                   ),
-            ],
-          ),
-          
-          const SizedBox(height: 20),
-              
-              // 최고 운동 (Top Exercise)
-              if (exerciseLogs.isNotEmpty)
-                _buildTopExercise(exerciseLogs),
-              
+                ],
+              ),
+
               const SizedBox(height: 20),
-              
+
+              // 최고 운동 (Top Exercise)
+              if (exerciseLogs.isNotEmpty) _buildTopExercise(exerciseLogs),
+
+              const SizedBox(height: 20),
+
               // 주간 운동 캘린더
               _buildWeeklyCalendar(exerciseLogs),
-              
+
               const SizedBox(height: 16),
-              
+
               // 전체 운동 보기 버튼
               _buildFullViewButton(),
-              
+
               const SizedBox(height: 20),
-              
+
               // 운동 분석 대시보드
-              if (exerciseLogs.isNotEmpty) 
+              if (exerciseLogs.isNotEmpty)
                 _buildExerciseAnalytics(exerciseLogs)
               else
                 _buildEmptyState(),
-              
+
               const SizedBox(height: 24),
-              
+
               // 운동 기록 작성하기 버튼
               _buildAddExerciseButton(),
             ],
@@ -266,15 +273,18 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
     // 운동 유형별 총 시간 계산
     final exerciseMap = <String, int>{};
     for (final log in exerciseLogs) {
-      exerciseMap[log.exerciseType] = (exerciseMap[log.exerciseType] ?? 0) + log.durationMinutes;
+      exerciseMap[log.exerciseType] =
+          (exerciseMap[log.exerciseType] ?? 0) + log.durationMinutes;
     }
-    
+
     if (exerciseMap.isEmpty) return const SizedBox.shrink();
-    
+
     // 가장 많이 한 운동 찾기
-    final topExercise = exerciseMap.entries.reduce((a, b) => a.value > b.value ? a : b);
-    final topExerciseCount = exerciseLogs.where((log) => log.exerciseType == topExercise.key).length;
-    
+    final topExercise =
+        exerciseMap.entries.reduce((a, b) => a.value > b.value ? a : b);
+    final topExerciseCount =
+        exerciseLogs.where((log) => log.exerciseType == topExercise.key).length;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -330,7 +340,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             ),
           ),
           const SizedBox(width: 16),
-          
+
           // 운동 정보
           Expanded(
             child: Column(
@@ -407,8 +417,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
   // 주간 운동 캘린더
   Widget _buildWeeklyCalendar(List<ExerciseLog> exerciseLogs) {
     final now = DateTime.now();
-    final weekDays = List.generate(7, (index) => now.subtract(Duration(days: 6 - index)));
-    
+    final weekDays =
+        List.generate(7, (index) => now.subtract(Duration(days: 6 - index)));
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -433,7 +444,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: weekDays.map((day) => _buildWeeklyDay(day, exerciseLogs)).toList(),
+            children: weekDays
+                .map((day) => _buildWeeklyDay(day, exerciseLogs))
+                .toList(),
           ),
         ],
       ),
@@ -441,11 +454,12 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
   }
 
   Widget _buildWeeklyDay(DateTime day, List<ExerciseLog> exerciseLogs) {
-    final dayExercises = exerciseLogs.where((log) => _isSameDay(log.date, day)).toList();
+    final dayExercises =
+        exerciseLogs.where((log) => _isSameDay(log.date, day)).toList();
     final isToday = _isSameDay(day, DateTime.now());
     final weekdayName = ['월', '화', '수', '목', '금', '토', '일'][day.weekday - 1];
     final hasExercises = dayExercises.isNotEmpty;
-    
+
     return GestureDetector(
       onTap: () {
         HapticFeedbackManager.lightImpact();
@@ -455,10 +469,13 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
         width: 40,
         height: 60,
         decoration: BoxDecoration(
-          color: isToday ? const Color(0xFFF97316).withOpacity(0.1) : Colors.white,
+          color:
+              isToday ? const Color(0xFFF97316).withOpacity(0.1) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isToday ? const Color(0xFFF97316) : ModernColors.textTertiary.withOpacity(0.2),
+            color: isToday
+                ? const Color(0xFFF97316)
+                : ModernColors.textTertiary.withOpacity(0.2),
             width: isToday ? 2 : 1,
           ),
         ),
@@ -479,7 +496,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: isToday ? const Color(0xFFF97316) : ModernColors.textPrimary,
+                color: isToday
+                    ? const Color(0xFFF97316)
+                    : ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 4),
@@ -602,20 +621,19 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
         // 14일 막대 차트
         _buildWeeklyBarChart(exerciseLogs),
         const SizedBox(height: 20),
-        
+
         // 5회 이상 운동 시 월간 히트맵
         if (exerciseLogs.length >= 5) ...[
           _buildMonthlyHeatmap(exerciseLogs),
           const SizedBox(height: 20),
         ],
-        
+
         // 기본 운동 유형별 분석
         _buildExerciseTypeAnalysis(exerciseLogs),
       ],
     );
   }
 
-  
   Widget _buildTodayStatItem(String label, String value, Color color) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -639,8 +657,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       ],
     );
   }
-  
-  Widget _buildExerciseTypeItem(String type, String emoji, int count, int totalMinutes) {
+
+  Widget _buildExerciseTypeItem(
+      String type, String emoji, int count, int totalMinutes) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
@@ -674,7 +693,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // 운동 정보
           Expanded(
             child: Column(
@@ -700,7 +719,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               ],
             ),
           ),
-          
+
           // 강도 표시 (간단한 막대 그래프)
           Container(
             width: 60,
@@ -726,11 +745,11 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       ),
     );
   }
-  
+
   Widget _buildExerciseTypeAnalysis(List<ExerciseLog> exerciseLogs) {
     // 운동 유형별 통계 계산
     final exerciseStats = <String, Map<String, dynamic>>{};
-    
+
     for (final log in exerciseLogs) {
       if (!exerciseStats.containsKey(log.exerciseType)) {
         exerciseStats[log.exerciseType] = {
@@ -742,11 +761,12 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       exerciseStats[log.exerciseType]!['count']++;
       exerciseStats[log.exerciseType]!['totalMinutes'] += log.durationMinutes;
     }
-    
+
     // 총 시간 기준으로 정렬
     final sortedExercises = exerciseStats.entries.toList()
-      ..sort((a, b) => b.value['totalMinutes'].compareTo(a.value['totalMinutes']));
-    
+      ..sort(
+          (a, b) => b.value['totalMinutes'].compareTo(a.value['totalMinutes']));
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -760,11 +780,11 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
         ),
         const SizedBox(height: 12),
         ...sortedExercises.take(5).map((entry) => _buildExerciseTypeItem(
-          entry.key,
-          entry.value['emoji'],
-          entry.value['count'],
-          entry.value['totalMinutes'],
-        )),
+              entry.key,
+              entry.value['emoji'],
+              entry.value['count'],
+              entry.value['totalMinutes'],
+            )),
       ],
     );
   }
@@ -809,7 +829,6 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
     );
   }
 
-
   // 날짜별 운동 모달
   void _showDateExerciseModal(DateTime date, List<ExerciseLog> dayExercises) {
     showModalBottomSheet(
@@ -838,7 +857,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // 헤더
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
@@ -848,7 +867,10 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [const Color(0xFFF97316), const Color(0xFFEA580C)],
+                          colors: [
+                            const Color(0xFFF97316),
+                            const Color(0xFFEA580C)
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -886,7 +908,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                   ],
                 ),
               ),
-              
+
               // 운동 기록이 있는 경우
               if (dayExercises.isNotEmpty) ...[
                 if (dayExercises.length == 1) ...[
@@ -898,7 +920,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                 // 운동 기록이 없는 경우
                 _buildEmptyDayContent(date),
               ],
-              
+
               const SizedBox(height: 24),
             ],
           ),
@@ -992,7 +1014,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             ],
           ),
         ),
-        
+
         // 액션 버튼들
         Padding(
           padding: const EdgeInsets.all(24),
@@ -1014,7 +1036,8 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: const Color(0xFFF97316),
-                        side: BorderSide(color: const Color(0xFFF97316), width: 1.5),
+                        side: BorderSide(
+                            color: const Color(0xFFF97316), width: 1.5),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -1036,9 +1059,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(width: 12),
-                  
+
                   // 수정하기 버튼
                   Expanded(
                     child: ElevatedButton(
@@ -1078,9 +1101,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // 운동 기록 추가하기 버튼
               SizedBox(
                 width: double.infinity,
@@ -1213,7 +1236,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             },
           ),
         ),
-        
+
         // 운동 기록 추가하기 버튼
         Padding(
           padding: const EdgeInsets.all(24),
@@ -1264,13 +1287,13 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
     final isToday = _isSameDay(date, now);
     final isPast = date.isBefore(now.subtract(const Duration(days: 1)));
     final isFuture = date.isAfter(now);
-    
+
     // 날짜별 맞춤 메시지 생성
     String emoji;
     String title;
     String subtitle;
     List<String> suggestions;
-    
+
     if (isToday) {
       emoji = '💪';
       title = '오늘의 운동을 시작해보세요';
@@ -1302,7 +1325,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
         '준비물을 체크해보세요'
       ];
     }
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
@@ -1357,48 +1380,51 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               ],
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // 제안 사항들
-          ...suggestions.map((suggestion) => Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: ModernColors.textTertiary.withOpacity(0.2),
-                width: 1,
-              ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF97316),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    suggestion,
-                    style: GoogleFonts.notoSans(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: ModernColors.textSecondary,
+          ...suggestions
+              .map((suggestion) => Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: ModernColors.textTertiary.withOpacity(0.2),
+                        width: 1,
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-          )).toList(),
-          
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF97316),
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            suggestion,
+                            style: GoogleFonts.notoSans(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: ModernColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ))
+              .toList(),
+
           const SizedBox(height: 24),
-          
+
           // 운동 기록 작성하기 버튼
           SizedBox(
             width: double.infinity,
@@ -1503,8 +1529,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
   // 14일 막대 차트 구현
   Widget _buildWeeklyBarChart(List<ExerciseLog> exerciseLogs) {
     final now = DateTime.now();
-    final days = List.generate(14, (index) => now.subtract(Duration(days: 13 - index)));
-    
+    final days =
+        List.generate(14, (index) => now.subtract(Duration(days: 13 - index)));
+
     // 최대 운동 시간 계산 (차트 스케일링용)
     int maxMinutes = 120; // 기본 최소값
     for (final day in days) {
@@ -1517,7 +1544,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
     }
     // 차트 높이를 위한 적절한 스케일 설정 (10분 단위로 올림)
     maxMinutes = ((maxMinutes + 9) ~/ 10) * 10;
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -1579,7 +1606,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // 색상 레전드
           Row(
             children: [
@@ -1591,7 +1618,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // 막대 차트
           Container(
             height: 160,
@@ -1601,14 +1628,18 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                 final dayMinutes = exerciseLogs
                     .where((log) => _isSameDay(log.date, day))
                     .fold(0, (sum, log) => sum + log.durationMinutes);
-                
+
                 return Expanded(
                   child: Tooltip(
-                    message: dayMinutes > 0 ? '${day.month}월 ${day.day}일: ${dayMinutes}분 운동' : '',
+                    message: dayMinutes > 0
+                        ? '${day.month}월 ${day.day}일: ${dayMinutes}분 운동'
+                        : '',
                     preferBelow: false,
                     verticalOffset: 20,
                     decoration: BoxDecoration(
-                      color: dayMinutes > 0 ? _getBarColor(dayMinutes) : Colors.transparent,
+                      color: dayMinutes > 0
+                          ? _getBarColor(dayMinutes)
+                          : Colors.transparent,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     textStyle: GoogleFonts.notoSans(
@@ -1637,13 +1668,17 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                             // 막대
                             Container(
                               width: double.infinity,
-                              height: dayMinutes > 0 
-                                  ? math.max(4, (dayMinutes / maxMinutes * 140).clamp(4, 140))
+                              height: dayMinutes > 0
+                                  ? math.max(
+                                      4,
+                                      (dayMinutes / maxMinutes * 140)
+                                          .clamp(4, 140))
                                   : 2,
                               decoration: BoxDecoration(
-                                color: dayMinutes > 0 
+                                color: dayMinutes > 0
                                     ? _getBarColor(dayMinutes)
-                                    : ModernColors.textTertiary.withOpacity(0.2),
+                                    : ModernColors.textTertiary
+                                        .withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
@@ -1654,7 +1689,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                               style: GoogleFonts.notoSans(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
-                                color: _isSameDay(day, now) 
+                                color: _isSameDay(day, now)
                                     ? const Color(0xFFF97316)
                                     : ModernColors.textSecondary,
                               ),
@@ -1672,7 +1707,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       ),
     );
   }
-  
+
   Widget _buildLegendItem(String color, String description, Color dotColor) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -1697,7 +1732,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       ],
     );
   }
-  
+
   Color _getBarColor(int minutes) {
     if (minutes < 30) {
       return Colors.grey;
@@ -1707,7 +1742,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       return const Color(0xFFF59E0B);
     }
   }
-  
+
   // 월간 히트맵 구현 (5회 이상일 때)
   Widget _buildMonthlyHeatmap(List<ExerciseLog> exerciseLogs) {
     return Container(
@@ -1772,9 +1807,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // 월 네비게이션 (별도 영역)
           Container(
             padding: const EdgeInsets.all(16),
@@ -1794,7 +1829,8 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month - 1);
+                          _selectedMonth = DateTime(
+                              _selectedMonth.year, _selectedMonth.month - 1);
                         });
                         HapticFeedbackManager.lightImpact();
                       },
@@ -1816,7 +1852,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                         ),
                       ),
                     ),
-                    
+
                     // 중앙 월 표시
                     Expanded(
                       child: Container(
@@ -1848,12 +1884,13 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                         ),
                       ),
                     ),
-                    
+
                     // 다음 달 버튼
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          _selectedMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1);
+                          _selectedMonth = DateTime(
+                              _selectedMonth.year, _selectedMonth.month + 1);
                         });
                         HapticFeedbackManager.lightImpact();
                       },
@@ -1877,9 +1914,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // 오늘 바로가기 버튼
                 GestureDetector(
                   onTap: () {
@@ -1889,7 +1926,8 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                     HapticFeedbackManager.lightImpact();
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       color: const Color(0xFF8B5CF6).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -1922,14 +1960,14 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               ],
             ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // 히트맵 그리드
           _buildHeatmapGrid(exerciseLogs),
-          
+
           const SizedBox(height: 20),
-          
+
           // 색상 설명 (개선된 버전)
           Container(
             padding: const EdgeInsets.all(16),
@@ -1981,15 +2019,16 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       ),
     );
   }
-  
+
   Widget _buildHeatmapGrid(List<ExerciseLog> exerciseLogs) {
     final startOfMonth = DateTime(_selectedMonth.year, _selectedMonth.month, 1);
-    final endOfMonth = DateTime(_selectedMonth.year, _selectedMonth.month + 1, 0);
+    final endOfMonth =
+        DateTime(_selectedMonth.year, _selectedMonth.month + 1, 0);
     final days = List.generate(
       endOfMonth.day,
       (index) => DateTime(_selectedMonth.year, _selectedMonth.month, index + 1),
     );
-    
+
     return Column(
       children: [
         // 요일 헤더
@@ -2009,7 +2048,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               .toList(),
         ),
         const SizedBox(height: 12),
-        
+
         // 주별 그리드
         ...List.generate(6, (weekIndex) {
           return Padding(
@@ -2017,19 +2056,22 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             child: Row(
               children: List.generate(7, (dayIndex) {
                 final dayOffset = weekIndex * 7 + dayIndex;
-                final adjustedDayOffset = dayOffset - (startOfMonth.weekday - 1);
-                
-                if (adjustedDayOffset < 0 || adjustedDayOffset >= endOfMonth.day) {
+                final adjustedDayOffset =
+                    dayOffset - (startOfMonth.weekday - 1);
+
+                if (adjustedDayOffset < 0 ||
+                    adjustedDayOffset >= endOfMonth.day) {
                   return const Expanded(child: SizedBox());
                 }
-                
-                final date = DateTime(_selectedMonth.year, _selectedMonth.month, adjustedDayOffset + 1);
+
+                final date = DateTime(_selectedMonth.year, _selectedMonth.month,
+                    adjustedDayOffset + 1);
                 final dayExercises = exerciseLogs
                     .where((log) => _isSameDay(log.date, date))
                     .toList();
-                
+
                 final isToday = _isSameDay(date, DateTime.now());
-                
+
                 return Expanded(
                   child: Container(
                     height: 32,
@@ -2037,18 +2079,21 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                     decoration: BoxDecoration(
                       color: _getHeatmapColor(dayExercises.length),
                       borderRadius: BorderRadius.circular(6),
-                      border: isToday ? Border.all(
-                        color: const Color(0xFF8B5CF6),
-                        width: 2,
-                      ) : null,
+                      border: isToday
+                          ? Border.all(
+                              color: const Color(0xFF8B5CF6),
+                              width: 2,
+                            )
+                          : null,
                     ),
                     child: Center(
                       child: Text(
                         '${date.day}',
                         style: GoogleFonts.notoSans(
                           fontSize: 11,
-                          fontWeight: isToday ? FontWeight.w700 : FontWeight.w600,
-                          color: dayExercises.isNotEmpty 
+                          fontWeight:
+                              isToday ? FontWeight.w700 : FontWeight.w600,
+                          color: dayExercises.isNotEmpty
                               ? Colors.white
                               : ModernColors.textSecondary,
                         ),
@@ -2063,7 +2108,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       ],
     );
   }
-  
+
   Color _getHeatmapColor(int exerciseCount) {
     if (exerciseCount == 0) {
       return ModernColors.borderLight;
@@ -2075,7 +2120,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       return const Color(0xFF8B5CF6);
     }
   }
-  
+
   Widget _buildColorLegendItem(Color color, String label, Color textColor) {
     return Column(
       children: [
@@ -2099,27 +2144,39 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       ],
     );
   }
-  
-  
-  
-  
+
   String _getExerciseEmoji(String exerciseType) {
     switch (exerciseType) {
-      case '러닝': return '🏃';
-      case '걷기': return '🚶';
-      case '자전거': return '🚴';
-      case '수영': return '🏊';
-      case '요가': return '🧘';
-      case '헬스': return '🏋️';
-      case '필라테스': return '🤸';
-      case '테니스': return '🎾';
-      case '축구': return '⚽';
-      case '농구': return '🏀';
-      case '클라이밍': return '🧗';
-      case '등산': return '🥾';
-      case '배드민턴': return '🏸';
-      case '골프': return '⛳';
-      default: return '💪';
+      case '러닝':
+        return '🏃';
+      case '걷기':
+        return '🚶';
+      case '자전거':
+        return '🚴';
+      case '수영':
+        return '🏊';
+      case '요가':
+        return '🧘';
+      case '헬스':
+        return '🏋️';
+      case '필라테스':
+        return '🤸';
+      case '테니스':
+        return '🎾';
+      case '축구':
+        return '⚽';
+      case '농구':
+        return '🏀';
+      case '클라이밍':
+        return '🧗';
+      case '등산':
+        return '🥾';
+      case '배드민턴':
+        return '🏸';
+      case '골프':
+        return '⛳';
+      default:
+        return '💪';
     }
   }
 }
@@ -2128,37 +2185,37 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
 class DonutChartPainter extends CustomPainter {
   final double progress;
   final int minutes;
-  
+
   DonutChartPainter({
     required this.progress,
     required this.minutes,
   });
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width, size.height) / 2 - 10;
-    
+
     // 배경 원
     final backgroundPaint = Paint()
       ..color = ModernColors.borderLight
       ..style = PaintingStyle.stroke
       ..strokeWidth = 12
       ..strokeCap = StrokeCap.round;
-    
+
     canvas.drawCircle(center, radius, backgroundPaint);
-    
+
     // 진행 원
     final progressPaint = Paint()
       ..shader = LinearGradient(
-        colors: progress >= 1.0 
+        colors: progress >= 1.0
             ? [const Color(0xFF059669), const Color(0xFF047857)]
             : [const Color(0xFFF97316), const Color(0xFFEA580C)],
       ).createShader(Rect.fromCircle(center: center, radius: radius))
       ..style = PaintingStyle.stroke
       ..strokeWidth = 12
       ..strokeCap = StrokeCap.round;
-    
+
     final sweepAngle = 2 * math.pi * progress.clamp(0.0, 1.0);
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
@@ -2167,7 +2224,7 @@ class DonutChartPainter extends CustomPainter {
       false,
       progressPaint,
     );
-    
+
     // 중앙 텍스트
     final textPainter = TextPainter(
       text: TextSpan(
@@ -2177,7 +2234,7 @@ class DonutChartPainter extends CustomPainter {
             style: GoogleFonts.notoSans(
               fontSize: 24,
               fontWeight: FontWeight.w800,
-              color: progress >= 1.0 
+              color: progress >= 1.0
                   ? const Color(0xFF059669)
                   : const Color(0xFFF97316),
             ),
@@ -2194,7 +2251,7 @@ class DonutChartPainter extends CustomPainter {
       ),
       textDirection: TextDirection.ltr,
     );
-    
+
     textPainter.layout();
     textPainter.paint(
       canvas,
@@ -2204,7 +2261,7 @@ class DonutChartPainter extends CustomPainter {
       ),
     );
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

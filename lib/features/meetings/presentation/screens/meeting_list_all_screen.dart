@@ -17,7 +17,7 @@ import '../../../../shared/providers/global_meeting_provider.dart';
 class MeetingListAllScreen extends ConsumerStatefulWidget {
   final MeetingCategory? initialCategory;
   final String? sectionTitle;
-  
+
   const MeetingListAllScreen({
     super.key,
     this.initialCategory,
@@ -25,47 +25,47 @@ class MeetingListAllScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<MeetingListAllScreen> createState() => _MeetingListAllScreenState();
+  ConsumerState<MeetingListAllScreen> createState() =>
+      _MeetingListAllScreenState();
 }
 
 class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
     with TickerProviderStateMixin {
-  
   // 상태 관리
   late TabController _tabController;
   late MeetingImageManager imageManager;
-  
+
   MeetingCategory _selectedCategory = MeetingCategory.all;
   MeetingType? _selectedType;
   String _searchQuery = '';
   bool _isGridView = false;
   String _sortBy = 'recent'; // recent, popular, deadline
   List<String> _bookmarkedIds = [];
-  
+
   // 필터 상태
   bool _showFilterPanel = false;
   bool _onlyAvailable = true;
   bool _freeOnly = false;
-  
+
   // 🎯 Korean UX: Quick Filter States
   String _activeQuickFilter = '';
-  
+
   @override
   void initState() {
     super.initState();
     imageManager = MeetingImageManager();
-    
+
     // 초기 카테고리 설정
     if (widget.initialCategory != null) {
       _selectedCategory = widget.initialCategory!;
     }
-    
+
     _tabController = TabController(
       length: MeetingCategory.values.length,
       vsync: this,
       initialIndex: MeetingCategory.values.indexOf(_selectedCategory),
     );
-    
+
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
         setState(() {
@@ -85,20 +85,21 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
   List<AvailableMeeting> get globalMeetings {
     return ref.watch(globalAvailableMeetingsProvider);
   }
-  
+
   // 필터링된 모임 리스트
   List<AvailableMeeting> get filteredMeetings {
     var meetings = globalMeetings.where((meeting) {
       // 카테고리 필터
-      if (_selectedCategory != MeetingCategory.all && meeting.category != _selectedCategory) {
+      if (_selectedCategory != MeetingCategory.all &&
+          meeting.category != _selectedCategory) {
         return false;
       }
-      
+
       // 타입 필터
       if (_selectedType != null && meeting.type != _selectedType) {
         return false;
       }
-      
+
       // 검색어 필터
       if (_searchQuery.isNotEmpty) {
         final query = _searchQuery.toLowerCase();
@@ -108,17 +109,18 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
           return false;
         }
       }
-      
+
       // 모집중인 모임만
-      if (_onlyAvailable && meeting.currentParticipants >= meeting.maxParticipants) {
+      if (_onlyAvailable &&
+          meeting.currentParticipants >= meeting.maxParticipants) {
         return false;
       }
-      
+
       // 무료 모임만
       if (_freeOnly && (meeting.price ?? 0) > 0) {
         return false;
       }
-      
+
       // 🎯 Korean UX: Quick Filter Logic
       if (_activeQuickFilter == '인기') {
         // 인기 모임: 참여자가 70% 이상인 모임
@@ -127,15 +129,16 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
         }
       } else if (_activeQuickFilter == '마감') {
         // 마감임박: 남은 자리가 3개 이하인 모임
-        final remainingSpots = meeting.maxParticipants - meeting.currentParticipants;
+        final remainingSpots =
+            meeting.maxParticipants - meeting.currentParticipants;
         if (remainingSpots > 3) {
           return false;
         }
       }
-      
+
       return true;
     }).toList();
-    
+
     // 정렬
     meetings.sort((a, b) {
       switch (_sortBy) {
@@ -148,7 +151,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
           return b.dateTime.compareTo(a.dateTime);
       }
     });
-    
+
     return meetings;
   }
 
@@ -164,7 +167,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       ),
     );
   }
-  
+
   void _toggleBookmark(String meetingId) {
     setState(() {
       if (_bookmarkedIds.contains(meetingId)) {
@@ -180,7 +183,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: SherpaCleanAppBar(
@@ -203,7 +206,9 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
           IconButton(
             icon: Icon(
               Icons.tune,
-              color: _showFilterPanel ? ModernColors.primary : ModernColors.textSecondary,
+              color: _showFilterPanel
+                  ? ModernColors.primary
+                  : ModernColors.textSecondary,
             ),
             onPressed: () {
               setState(() {
@@ -230,14 +235,16 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
               margin: EdgeInsets.zero,
             ),
           ),
-          
+
           // 카테고리 탭바
           Container(
             height: 48,
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1),
+                  color: isDark
+                      ? Colors.white.withOpacity(0.1)
+                      : Colors.black.withOpacity(0.1),
                   width: 1,
                 ),
               ),
@@ -270,18 +277,20 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
               }).toList(),
             ),
           ),
-          
+
           // 필터 패널 (접힘/펼침)
           if (_showFilterPanel)
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isDark 
-                  ? ModernColors.surface.withOpacity(0.1)
-                  : ModernColors.surface,
+                color: isDark
+                    ? ModernColors.surface.withOpacity(0.1)
+                    : ModernColors.surface,
                 border: Border(
                   bottom: BorderSide(
-                    color: isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1),
+                    color: isDark
+                        ? Colors.white.withOpacity(0.1)
+                        : Colors.black.withOpacity(0.1),
                     width: 1,
                   ),
                 ),
@@ -314,9 +323,9 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // 정렬 옵션
                   Row(
                     children: [
@@ -341,9 +350,9 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // 필터 옵션
                   Row(
                     children: [
@@ -378,7 +387,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
                 ],
               ),
             ),
-          
+
           // 결과 개수 및 상태
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -392,7 +401,10 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
                     color: ModernColors.textSecondary,
                   ),
                 ),
-                if (_searchQuery.isNotEmpty || _onlyAvailable || _freeOnly || _activeQuickFilter.isNotEmpty)
+                if (_searchQuery.isNotEmpty ||
+                    _onlyAvailable ||
+                    _freeOnly ||
+                    _activeQuickFilter.isNotEmpty)
                   TextButton(
                     onPressed: () {
                       setState(() {
@@ -414,20 +426,20 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
               ],
             ),
           ),
-          
+
           // 모임 리스트
           Expanded(
             child: filteredMeetings.isEmpty
-              ? _buildEmptyState()
-              : _isGridView
-                ? _buildGridView()
-                : _buildListView(),
+                ? _buildEmptyState()
+                : _isGridView
+                    ? _buildGridView()
+                    : _buildListView(),
           ),
         ],
       ),
     );
   }
-  
+
   Widget _buildSortChip(String value, String label) {
     final isSelected = _sortBy == value;
     return FilterChip(
@@ -446,7 +458,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       ),
     );
   }
-  
+
   Widget _buildFilterChip(String label, bool value, Function(bool) onChanged) {
     return FilterChip(
       label: Text(label),
@@ -460,11 +472,11 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       ),
     );
   }
-  
+
   // 🎯 Korean UX Enhancement: Quick Filter Chips
   Widget _buildQuickFilter(String label, String filterType) {
     final isSelected = _activeQuickFilter == filterType;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -475,7 +487,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
             _sortBy = 'recent';
           } else {
             _activeQuickFilter = filterType;
-            
+
             // Apply specific filter logic
             switch (filterType) {
               case '인기':
@@ -497,23 +509,21 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected 
-            ? ModernColors.primary 
-            : ModernColors.surface,
+          color: isSelected ? ModernColors.primary : ModernColors.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected 
-              ? ModernColors.primary 
-              : ModernColors.borderLight,
+            color: isSelected ? ModernColors.primary : ModernColors.borderLight,
             width: 1,
           ),
-          boxShadow: isSelected ? [
-            BoxShadow(
-              color: ModernColors.primary.withOpacity(0.2),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ] : null,
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: ModernColors.primary.withOpacity(0.2),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -531,9 +541,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: isSelected 
-                  ? Colors.white 
-                  : ModernColors.textSecondary,
+                color: isSelected ? Colors.white : ModernColors.textSecondary,
               ),
             ),
           ],
@@ -541,7 +549,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       ),
     );
   }
-  
+
   Widget _buildListView() {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -549,7 +557,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       itemBuilder: (context, index) {
         final meeting = filteredMeetings[index];
         final isBookmarked = _bookmarkedIds.contains(meeting.id);
-        
+
         return MeetingCardList2025(
           meeting: meeting,
           imageAsset: imageManager.getImageForMeeting(meeting),
@@ -567,7 +575,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       },
     );
   }
-  
+
   Widget _buildGridView() {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
@@ -581,7 +589,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       itemBuilder: (context, index) {
         final meeting = filteredMeetings[index];
         final isBookmarked = _bookmarkedIds.contains(meeting.id);
-        
+
         return MeetingCard2025(
           meeting: meeting,
           imageAsset: imageManager.getImageForMeeting(meeting),
@@ -599,7 +607,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       },
     );
   }
-  
+
   Widget _buildEmptyState() {
     return Center(
       child: Column(

@@ -28,23 +28,23 @@ class _ClimbingScreenState extends ConsumerState<ClimbingScreen> {
             // 유저 RPG 레벨 카드 (맨 위)
             AnimatedRPGLevelCard(),
             const SizedBox(height: 16),
-            
+
             // 사용자 스탯 요약
             UserStatsSummaryWidget(),
             const SizedBox(height: 16),
-            
+
             // 등반하기 대시보드 (스탯과 파워 분석 사이)
             AscentDashboardWidget(),
             const SizedBox(height: 16),
-            
+
             // 오늘의 성장
             TodayGrowthWidget(),
             const SizedBox(height: 16),
-            
+
             // 클라이밍 파워 분석
             ClimbingPowerAnalysisWidget(),
             const SizedBox(height: 16),
-            
+
             // 배지 관리
             BadgeManagementWidget(),
           ],

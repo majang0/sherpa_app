@@ -21,7 +21,8 @@ class ExerciseDetailScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ExerciseDetailScreen> createState() => _ExerciseDetailScreenState();
+  ConsumerState<ExerciseDetailScreen> createState() =>
+      _ExerciseDetailScreenState();
 }
 
 class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
@@ -33,15 +34,15 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize current exercise with the provided data
     _currentExercise = widget.exercise;
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
@@ -82,46 +83,61 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           child: Column(
             children: [
               const SizedBox(height: 20),
-              
+
               // 헤더 섹션 (exercise_record_screen.dart 패턴 사용)
               _buildHeader().animate().slide(duration: 600.ms, delay: 100.ms),
-              
+
               const SizedBox(height: 32),
-              
+
               // 운동 통계 카드
-              _buildStatsCard().animate().slide(duration: 600.ms, delay: 200.ms),
-              
+              _buildStatsCard()
+                  .animate()
+                  .slide(duration: 600.ms, delay: 200.ms),
+
               const SizedBox(height: 20),
-              
+
               // 운동 세부 정보 카드
-              _buildDetailsCard().animate().slide(duration: 600.ms, delay: 300.ms),
-              
+              _buildDetailsCard()
+                  .animate()
+                  .slide(duration: 600.ms, delay: 300.ms),
+
               const SizedBox(height: 20),
-              
+
               // 성취도 카드
-              _buildAchievementCard().animate().slide(duration: 600.ms, delay: 400.ms),
-              
+              _buildAchievementCard()
+                  .animate()
+                  .slide(duration: 600.ms, delay: 400.ms),
+
               const SizedBox(height: 20),
-              
+
               // 사진 카드 (항상 표시)
-              _buildPhotoCard().animate().slide(duration: 600.ms, delay: 500.ms),
-              
+              _buildPhotoCard()
+                  .animate()
+                  .slide(duration: 600.ms, delay: 500.ms),
+
               const SizedBox(height: 20),
-              
+
               // 메모 카드 (메모가 있는 경우만)
-              if (_currentExercise.note != null && _currentExercise.note!.isNotEmpty)
-                _buildNotesCard().animate().slide(duration: 600.ms, delay: 600.ms),
-              
+              if (_currentExercise.note != null &&
+                  _currentExercise.note!.isNotEmpty)
+                _buildNotesCard()
+                    .animate()
+                    .slide(duration: 600.ms, delay: 600.ms),
+
               const SizedBox(height: 20),
-              
+
               // 커뮤니티 공유 정보
-              _buildCommunityCard().animate().slide(duration: 600.ms, delay: 700.ms),
-              
+              _buildCommunityCard()
+                  .animate()
+                  .slide(duration: 600.ms, delay: 700.ms),
+
               const SizedBox(height: 20),
-              
+
               // 액션 버튼들
-              _buildActionButtons().animate().slide(duration: 600.ms, delay: 800.ms),
-              
+              _buildActionButtons()
+                  .animate()
+                  .slide(duration: 600.ms, delay: 800.ms),
+
               const SizedBox(height: 40),
             ],
           ),
@@ -133,7 +149,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
   Widget _buildHeader() {
     final exerciseColor = _getExerciseColor(_currentExercise.exerciseType);
     final exerciseEmoji = _getExerciseEmoji(_currentExercise.exerciseType);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
@@ -201,9 +217,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               ),
             ],
           ),
-          
           const SizedBox(height: 24),
-          
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -292,7 +306,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // 통계 그리드
           Row(
             children: [
@@ -320,9 +334,9 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // 추가 정보
           Container(
             padding: const EdgeInsets.all(16),
@@ -354,7 +368,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, Color color) {
     return Column(
       children: [
         Container(
@@ -393,7 +408,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
 
   Widget _buildDetailsCard() {
     final exerciseColor = _getExerciseColor(_currentExercise.exerciseType);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
@@ -446,7 +461,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // 사용자 친화적 운동 정보
           Container(
             padding: const EdgeInsets.all(20),
@@ -503,9 +518,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     ),
                   ],
                 ),
-                
                 const SizedBox(height: 20),
-                
                 Row(
                   children: [
                     Expanded(
@@ -555,7 +568,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                           children: [
                             Icon(
                               _getIntensityIcon(_currentExercise.intensity),
-                              color: _getIntensityColor(_currentExercise.intensity),
+                              color: _getIntensityColor(
+                                  _currentExercise.intensity),
                               size: 24,
                             ),
                             const SizedBox(height: 8),
@@ -564,7 +578,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                               style: GoogleFonts.notoSans(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
-                                color: _getIntensityColor(_currentExercise.intensity),
+                                color: _getIntensityColor(
+                                    _currentExercise.intensity),
                               ),
                             ),
                             Text(
@@ -581,9 +596,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     ),
                   ],
                 ),
-                
                 const SizedBox(height: 16),
-                
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
@@ -655,7 +668,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
     // Note: Since ExerciseLog doesn't have achievement score yet, we'll show a placeholder
     // In production, this would come from the actual exercise data
     final achievementScore = 7.0; // Default score for display
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
@@ -708,7 +721,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // Achievement score display
           Container(
             padding: const EdgeInsets.all(20),
@@ -847,7 +860,6 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             ],
           ),
           const SizedBox(height: 20),
-          
           ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: _currentExercise.hasPhoto
@@ -982,16 +994,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: _currentExercise.isShared 
+              color: _currentExercise.isShared
                   ? RecordColors.primary.withOpacity(0.1)
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              _currentExercise.isShared 
-                  ? Icons.group
-                  : Icons.lock,
-              color: _currentExercise.isShared 
+              _currentExercise.isShared ? Icons.group : Icons.lock,
+              color: _currentExercise.isShared
                   ? RecordColors.primary
                   : Colors.grey.shade600,
               size: 20,
@@ -1012,7 +1022,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _currentExercise.isShared 
+                  _currentExercise.isShared
                       ? '다른 사용자들이 이 운동 기록을 볼 수 있습니다'
                       : '이 운동 기록은 나만 볼 수 있습니다',
                   style: GoogleFonts.notoSans(
@@ -1027,7 +1037,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: _currentExercise.isShared 
+              color: _currentExercise.isShared
                   ? RecordColors.primary.withOpacity(0.1)
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
@@ -1037,7 +1047,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: _currentExercise.isShared 
+                color: _currentExercise.isShared
                     ? RecordColors.primary
                     : Colors.grey.shade600,
               ),
@@ -1101,7 +1111,6 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             ],
           ),
           const SizedBox(height: 16),
-          
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
@@ -1158,7 +1167,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
       '/exercise_edit',
       arguments: _currentExercise,
     );
-    
+
     // If edit screen returned updated data, refresh the display
     if (result != null && result is ExerciseLog) {
       setState(() {
@@ -1231,11 +1240,11 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
       // 실제 삭제 로직 구현
       final globalUserNotifier = ref.read(globalUserProvider.notifier);
       await globalUserNotifier.deleteExerciseRecord(_currentExercise.id);
-      
+
       if (mounted) {
         Navigator.pop(context); // 다이얼로그 닫기
         Navigator.pop(context); // 상세 화면 닫기
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -1263,7 +1272,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
     } catch (e) {
       if (mounted) {
         Navigator.pop(context); // 다이얼로그 닫기
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -1299,29 +1308,29 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
       case '수영':
       case '자전거':
         return const Color(0xFF2563EB);
-      
+
       // 미디엄 블루 - 근력/체조 운동
       case '요가':
       case '클라이밍':
       case '필라테스':
       case '헬스':
         return const Color(0xFF3B82F6);
-      
+
       // 스카이 블루 - 라켓 스포츠
       case '골프':
       case '배드민턴':
       case '테니스':
         return const Color(0xFF0EA5E9);
-      
+
       // 라이트 블루 - 볼 스포츠
       case '농구':
       case '축구':
         return const Color(0xFF60A5FA);
-      
+
       // 등산 - 인디고 블루
       case '등산':
         return const Color(0xFF4F46E5);
-      
+
       // 기타 - 기본 블루
       default:
         return const Color(0xFF2563EB);

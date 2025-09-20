@@ -19,34 +19,36 @@ import 'package:google_fonts/google_fonts.dart';
 
 class EnhancedDailyRecordScreen extends ConsumerStatefulWidget {
   @override
-  ConsumerState<EnhancedDailyRecordScreen> createState() => _EnhancedDailyRecordScreenState();
+  ConsumerState<EnhancedDailyRecordScreen> createState() =>
+      _EnhancedDailyRecordScreenState();
 }
 
-class _EnhancedDailyRecordScreenState extends ConsumerState<EnhancedDailyRecordScreen>
+class _EnhancedDailyRecordScreenState
+    extends ConsumerState<EnhancedDailyRecordScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late AnimationController _fabController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _fabRotation;
   late ScrollController _scrollController;
-  
+
   bool _showQuestBottomSheet = false;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fabController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -54,7 +56,7 @@ class _EnhancedDailyRecordScreenState extends ConsumerState<EnhancedDailyRecordS
       parent: _fadeController,
       curve: Curves.easeOutBack,
     ));
-    
+
     _fabRotation = Tween<double>(
       begin: 0.0,
       end: 0.125,
@@ -62,7 +64,7 @@ class _EnhancedDailyRecordScreenState extends ConsumerState<EnhancedDailyRecordS
       parent: _fabController,
       curve: Curves.easeInOut,
     ));
-    
+
     _fadeController.forward();
   }
 
@@ -95,31 +97,31 @@ class _EnhancedDailyRecordScreenState extends ConsumerState<EnhancedDailyRecordS
                 // 1. 오늘의 성장 브리핑
                 SimpleTodayGrowthWidget(),
                 const SizedBox(height: 32),
-                
+
                 // 2. 걸음수 분석
                 StepAnalysisWidget(),
                 const SizedBox(height: 32),
-                
+
                 // 3. 몰입시간 분석
                 FocusTimeAnalysisWidget(),
                 const SizedBox(height: 32),
-                
+
                 // 4. 일기 캘린더
                 EnhancedDiaryCalendarWidget(),
                 const SizedBox(height: 32),
-                
+
                 // 5. 운동 기록 요약
                 ExerciseSummaryWidget(),
                 const SizedBox(height: 32),
-                
+
                 // 6. 독서 기록 (다중 등록 지원)
                 EnhancedReadingCalendarWidget(),
                 const SizedBox(height: 32),
-                
+
                 // 7. 영화 기록
                 MovieCalendarWidget(),
                 const SizedBox(height: 32),
-                
+
                 // 8. 모임 기록 (다중 등록 지원)
                 EnhancedMeetingCalendarWidget(),
                 const SizedBox(height: 100), // 하단 여백 (FAB 공간)

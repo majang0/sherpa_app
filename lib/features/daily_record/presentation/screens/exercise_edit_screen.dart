@@ -31,33 +31,33 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
     with TickerProviderStateMixin {
   late AnimationController _scaleController;
   late Animation<double> _scaleAnimation;
-  
+
   final TextEditingController _detailsController = TextEditingController();
-  
+
   // Form state - initialized with existing data
   late int _durationMinutes;
   late DifficultyLevel _selectedDifficulty;
   bool _isShared = false;
   bool _isSubmitting = false;
   File? _selectedImage;
-  
+
   // Workout diary state
   double _achievementScore = 7.0; // 운동 성취도 (1-10)
-  
+
   final ImagePicker _imagePicker = ImagePicker();
 
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize form with existing exercise data
     _initializeFormData();
-    
+
     _scaleController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
@@ -69,7 +69,8 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
 
   void _initializeFormData() {
     _durationMinutes = widget.exercise.durationMinutes;
-    _selectedDifficulty = ExerciseUtils.intensityToDifficulty(widget.exercise.intensity);
+    _selectedDifficulty =
+        ExerciseUtils.intensityToDifficulty(widget.exercise.intensity);
     // Initialize achievement score - could be derived from intensity or default to 7
     _detailsController.text = widget.exercise.note ?? '';
     _isShared = widget.exercise.isShared;
@@ -79,7 +80,6 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
       // but we can show that there's an existing photo
     }
   }
-
 
   @override
   void dispose() {
@@ -164,22 +164,24 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션
-                  _buildHeader().animate().slide(duration: 600.ms, delay: 100.ms),
-                  
+                  _buildHeader()
+                      .animate()
+                      .slide(duration: 600.ms, delay: 100.ms),
+
                   const SizedBox(height: 32),
-                  
+
                   // 편집 폼
                   _buildEditForm(),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -192,7 +194,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
 
   Widget _buildHeader() {
     final exerciseEmoji = _getExerciseEmoji(widget.exercise.exerciseType);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
@@ -258,13 +260,21 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
     return Column(
       children: [
         // Quick summary card
-        _buildQuickSummaryCard().animate().fadeIn(duration: 600.ms, delay: 50.ms),
+        _buildQuickSummaryCard()
+            .animate()
+            .fadeIn(duration: 600.ms, delay: 50.ms),
         const SizedBox(height: 24),
-        _buildDurationSection().animate().fadeIn(duration: 600.ms, delay: 100.ms),
+        _buildDurationSection()
+            .animate()
+            .fadeIn(duration: 600.ms, delay: 100.ms),
         const SizedBox(height: 24),
-        _buildDifficultySection().animate().fadeIn(duration: 600.ms, delay: 200.ms),
+        _buildDifficultySection()
+            .animate()
+            .fadeIn(duration: 600.ms, delay: 200.ms),
         const SizedBox(height: 24),
-        _buildWorkoutDiarySection().animate().fadeIn(duration: 600.ms, delay: 300.ms),
+        _buildWorkoutDiarySection()
+            .animate()
+            .fadeIn(duration: 600.ms, delay: 300.ms),
         const SizedBox(height: 24),
         _buildPhotoSection().animate().fadeIn(duration: 600.ms, delay: 400.ms),
         const SizedBox(height: 24),
@@ -278,7 +288,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
   Widget _buildQuickSummaryCard() {
     final exerciseColor = ModernColors.exercise;
     final calories = (_calculateCalories()).round();
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
@@ -334,7 +344,8 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: exerciseColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -356,7 +367,8 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: ExerciseUtils.getDifficultyColor(_selectedDifficulty).withOpacity(0.1),
+              color: ExerciseUtils.getDifficultyColor(_selectedDifficulty)
+                  .withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
@@ -426,13 +438,14 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // Duration display with better visual hierarchy
           Center(
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   decoration: BoxDecoration(
                     color: ModernColors.exercise.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(16),
@@ -459,7 +472,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
             ),
           ),
           const SizedBox(height: 24),
-          
+
           // Enhanced slider
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
@@ -484,7 +497,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               },
             ),
           ),
-          
+
           // Enhanced time suggestions
           const SizedBox(height: 16),
           Row(
@@ -533,7 +546,9 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 10,
                 fontWeight: FontWeight.w500,
-                color: isSelected ? Colors.white.withOpacity(0.9) : ModernColors.textSecondary,
+                color: isSelected
+                    ? Colors.white.withOpacity(0.9)
+                    : ModernColors.textSecondary,
               ),
             ),
           ],
@@ -611,7 +626,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // Difficulty options grid (matching record form)
           Row(
             children: DifficultyLevel.values.map((difficulty) {
@@ -632,11 +647,13 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: isSelected ? ExerciseUtils.getDifficultyColor(difficulty) : Colors.grey.shade100,
+                        color: isSelected
+                            ? ExerciseUtils.getDifficultyColor(difficulty)
+                            : Colors.grey.shade100,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: isSelected 
-                              ? ExerciseUtils.getDifficultyColor(difficulty) 
+                          color: isSelected
+                              ? ExerciseUtils.getDifficultyColor(difficulty)
                               : Colors.transparent,
                           width: 2,
                         ),
@@ -645,7 +662,9 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                         children: [
                           Icon(
                             ExerciseUtils.getDifficultyIcon(difficulty),
-                            color: isSelected ? Colors.white : Colors.grey.shade600,
+                            color: isSelected
+                                ? Colors.white
+                                : Colors.grey.shade600,
                             size: 20,
                           ),
                           const SizedBox(height: 4),
@@ -654,7 +673,9 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: isSelected ? Colors.white : Colors.grey.shade600,
+                              color: isSelected
+                                  ? Colors.white
+                                  : Colors.grey.shade600,
                             ),
                           ),
                         ],
@@ -948,7 +969,6 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
             ],
           ),
           const SizedBox(height: 16),
-          
           TextField(
             controller: _detailsController,
             maxLines: 3,
@@ -986,7 +1006,6 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
       ),
     );
   }
-
 
   Widget _buildPhotoSection() {
     return Container(
@@ -1223,7 +1242,6 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
     );
   }
 
-
   Widget _buildSubmitButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1236,7 +1254,6 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
       ),
     );
   }
-
 
   Future<void> _submitEditedExercise() async {
     setState(() {
@@ -1253,7 +1270,8 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
         exerciseType: widget.exercise.exerciseType,
         durationMinutes: _durationMinutes,
         intensity: ExerciseUtils.difficultyToIntensity(_selectedDifficulty),
-        note: _detailsController.text.isNotEmpty ? _detailsController.text : null,
+        note:
+            _detailsController.text.isNotEmpty ? _detailsController.text : null,
         imageUrl: _selectedImage?.path ?? widget.exercise.imageUrl,
         isShared: _isShared,
       );
@@ -1340,29 +1358,29 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
       case '수영':
       case '자전거':
         return const Color(0xFF2563EB);
-      
+
       // 미디엄 블루 - 근력/체조 운동
       case '요가':
       case '클라이밍':
       case '필라테스':
       case '헬스':
         return const Color(0xFF3B82F6);
-      
+
       // 스카이 블루 - 라켓 스포츠
       case '골프':
       case '배드민턴':
       case '테니스':
         return const Color(0xFF0EA5E9);
-      
+
       // 라이트 블루 - 볼 스포츠
       case '농구':
       case '축구':
         return const Color(0xFF60A5FA);
-      
+
       // 등산 - 인디고 블루
       case '등산':
         return const Color(0xFF4F46E5);
-      
+
       // 기타 - 기본 블루
       default:
         return const Color(0xFF2563EB);
@@ -1400,14 +1418,11 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
     }
   }
 
-
   String _formatDate(DateTime date) {
     final weekdays = ['일', '월', '화', '수', '목', '금', '토'];
     final weekday = weekdays[date.weekday % 7];
     return '${date.month}월 ${date.day}일 ($weekday)';
   }
-
-
 
   String _getDifficultyDescription(DifficultyLevel difficulty) {
     switch (difficulty) {
@@ -1423,7 +1438,8 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
   }
 
   int _calculateCalories() {
-    final intensity = CalorieCalculator.difficultyToIntensity(_selectedDifficulty);
+    final intensity =
+        CalorieCalculator.difficultyToIntensity(_selectedDifficulty);
     return CalorieCalculator.calculateCalories(
       exerciseType: widget.exercise.exerciseType,
       durationMinutes: _durationMinutes,

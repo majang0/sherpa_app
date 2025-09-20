@@ -66,7 +66,8 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
     Key? key,
     required Widget child,
     bool showBadge = true,
-    SherpaNotificationBadgePosition position = SherpaNotificationBadgePosition.topRight,
+    SherpaNotificationBadgePosition position =
+        SherpaNotificationBadgePosition.topRight,
   }) {
     return SherpaNotificationBadge2025(
       key: key,
@@ -85,7 +86,8 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
     required Widget child,
     required int count,
     int maxCount = 99,
-    SherpaNotificationBadgePosition position = SherpaNotificationBadgePosition.topRight,
+    SherpaNotificationBadgePosition position =
+        SherpaNotificationBadgePosition.topRight,
     String? category,
   }) {
     return SherpaNotificationBadge2025(
@@ -165,7 +167,8 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
   factory SherpaNotificationBadge2025.newItem({
     Key? key,
     required Widget child,
-    SherpaNotificationBadgePosition position = SherpaNotificationBadgePosition.topRight,
+    SherpaNotificationBadgePosition position =
+        SherpaNotificationBadgePosition.topRight,
   }) {
     return SherpaNotificationBadge2025(
       key: key,
@@ -184,7 +187,8 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
     Key? key,
     required Widget child,
     bool isOnline = true,
-    SherpaNotificationBadgePosition position = SherpaNotificationBadgePosition.bottomRight,
+    SherpaNotificationBadgePosition position =
+        SherpaNotificationBadgePosition.bottomRight,
   }) {
     return SherpaNotificationBadge2025(
       key: key,
@@ -193,17 +197,19 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
       position: position,
       variant: SherpaNotificationBadgeVariant2025.dot,
       type: SherpaNotificationBadgeType.status,
-      backgroundColor: isOnline ? ModernColors.success : ModernColors.textPlaceholder,
+      backgroundColor:
+          isOnline ? ModernColors.success : ModernColors.textPlaceholder,
       size: SherpaNotificationBadgeSize2025.small,
     );
   }
 
   @override
-  State<SherpaNotificationBadge2025> createState() => _SherpaNotificationBadge2025State();
+  State<SherpaNotificationBadge2025> createState() =>
+      _SherpaNotificationBadge2025State();
 }
 
-class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge2025>
-    with TickerProviderStateMixin {
+class _SherpaNotificationBadge2025State
+    extends State<SherpaNotificationBadge2025> with TickerProviderStateMixin {
   late AnimationController _scaleController;
   late AnimationController _pulseController;
   late Animation<double> _scaleAnimation;
@@ -212,12 +218,12 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
   @override
   void initState() {
     super.initState();
-    
+
     _scaleController = AnimationController(
       duration: MicroInteractions.fast,
       vsync: this,
     );
-    
+
     _pulseController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
@@ -243,7 +249,8 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
       _scaleController.forward();
     }
 
-    if (widget.type == SherpaNotificationBadgeType.notification && widget.enableAnimation) {
+    if (widget.type == SherpaNotificationBadgeType.notification &&
+        widget.enableAnimation) {
       _pulseController.repeat(reverse: true);
     }
   }
@@ -251,7 +258,7 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
   @override
   void didUpdateWidget(SherpaNotificationBadge2025 oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     if (oldWidget.showBadge != widget.showBadge) {
       if (widget.showBadge && widget.enableAnimation) {
         _scaleController.forward();
@@ -323,10 +330,10 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
         animation: Listenable.merge([_scaleAnimation, _pulseAnimation]),
         builder: (context, child) {
           return Transform.scale(
-            scale: _scaleAnimation.value * 
-                   (widget.type == SherpaNotificationBadgeType.notification 
-                       ? _pulseAnimation.value 
-                       : 1.0),
+            scale: _scaleAnimation.value *
+                (widget.type == SherpaNotificationBadgeType.notification
+                    ? _pulseAnimation.value
+                    : 1.0),
             child: child,
           );
         },
@@ -358,14 +365,14 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
     switch (widget.variant) {
       case SherpaNotificationBadgeVariant2025.dot:
         return const SizedBox.shrink();
-        
+
       case SherpaNotificationBadgeVariant2025.count:
       case SherpaNotificationBadgeVariant2025.pill:
       case SherpaNotificationBadgeVariant2025.chip:
         return Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (widget.icon != null) ...[ 
+            if (widget.icon != null) ...[
               IconTheme(
                 data: IconThemeData(
                   color: config.textColor,
@@ -393,7 +400,7 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
               ),
           ],
         );
-        
+
       case SherpaNotificationBadgeVariant2025.diamond:
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -467,7 +474,8 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
     switch (widget.size) {
       case SherpaNotificationBadgeSize2025.small:
         return BadgeConfiguration(
-          minSize: widget.variant == SherpaNotificationBadgeVariant2025.dot ? 8 : 16,
+          minSize:
+              widget.variant == SherpaNotificationBadgeVariant2025.dot ? 8 : 16,
           fontSize: 10,
           iconSize: 12,
           borderRadius: _getBorderRadius(),
@@ -479,7 +487,9 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
         );
       case SherpaNotificationBadgeSize2025.medium:
         return BadgeConfiguration(
-          minSize: widget.variant == SherpaNotificationBadgeVariant2025.dot ? 12 : 20,
+          minSize: widget.variant == SherpaNotificationBadgeVariant2025.dot
+              ? 12
+              : 20,
           fontSize: 12,
           iconSize: 14,
           borderRadius: _getBorderRadius(),
@@ -491,7 +501,9 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
         );
       case SherpaNotificationBadgeSize2025.large:
         return BadgeConfiguration(
-          minSize: widget.variant == SherpaNotificationBadgeVariant2025.dot ? 16 : 24,
+          minSize: widget.variant == SherpaNotificationBadgeVariant2025.dot
+              ? 16
+              : 24,
           fontSize: 14,
           iconSize: 16,
           borderRadius: _getBorderRadius(),
@@ -526,7 +538,9 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
   Color _getTextColor(Color backgroundColor) {
     // 배경색의 밝기에 따라 텍스트 색상 결정
     final luminance = backgroundColor.computeLuminance();
-    return luminance > 0.5 ? ModernColors.textPrimary : ModernColors.textOnPrimary;
+    return luminance > 0.5
+        ? ModernColors.textPrimary
+        : ModernColors.textOnPrimary;
   }
 
   double _getBorderRadius() {
@@ -633,34 +647,34 @@ class _SherpaNotificationBadge2025State extends State<SherpaNotificationBadge202
 // ==================== 열거형 정의 ====================
 
 enum SherpaNotificationBadgeVariant2025 {
-  dot,          // 작은 점 (알림 표시)
-  count,        // 카운트 뱃지 (숫자)
-  pill,         // 알약 형태 (텍스트)
-  chip,         // 칩 형태 (아이콘 + 텍스트)
-  diamond,      // 다이아몬드 형태 (특별한 뱃지)
+  dot, // 작은 점 (알림 표시)
+  count, // 카운트 뱃지 (숫자)
+  pill, // 알약 형태 (텍스트)
+  chip, // 칩 형태 (아이콘 + 텍스트)
+  diamond, // 다이아몬드 형태 (특별한 뱃지)
 }
 
 enum SherpaNotificationBadgeSize2025 {
-  small,        // 작은 크기
-  medium,       // 중간 크기
-  large,        // 큰 크기
+  small, // 작은 크기
+  medium, // 중간 크기
+  large, // 큰 크기
 }
 
 enum SherpaNotificationBadgeType {
   notification, // 알림 (빨간색)
-  success,      // 성공 (초록색)
-  warning,      // 경고 (노란색)
-  error,        // 오류 (빨간색)
-  info,         // 정보 (파란색)
-  status,       // 상태 (기본색)
-  special,      // 특별 (보라색)
+  success, // 성공 (초록색)
+  warning, // 경고 (노란색)
+  error, // 오류 (빨간색)
+  info, // 정보 (파란색)
+  status, // 상태 (기본색)
+  special, // 특별 (보라색)
 }
 
 enum SherpaNotificationBadgePosition {
-  topLeft,      // 왼쪽 위
-  topRight,     // 오른쪽 위
-  bottomLeft,   // 왼쪽 아래
-  bottomRight,  // 오른쪽 아래
+  topLeft, // 왼쪽 위
+  topRight, // 오른쪽 위
+  bottomLeft, // 왼쪽 아래
+  bottomRight, // 오른쪽 아래
 }
 
 // ==================== 도우미 클래스들 ====================

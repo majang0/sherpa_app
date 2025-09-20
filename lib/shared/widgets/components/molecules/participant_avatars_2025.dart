@@ -12,7 +12,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
   final double size;
   final double overlapFactor;
   final int maxVisible;
-  
+
   const ParticipantAvatars2025({
     super.key,
     required this.currentParticipants,
@@ -30,9 +30,11 @@ class ParticipantAvatars2025 extends StatelessWidget {
       return _buildEmptyState();
     }
 
-    final visibleCount = currentParticipants > maxVisible ? maxVisible : currentParticipants;
-    final remainingCount = currentParticipants > maxVisible ? currentParticipants - maxVisible : 0;
-    
+    final visibleCount =
+        currentParticipants > maxVisible ? maxVisible : currentParticipants;
+    final remainingCount =
+        currentParticipants > maxVisible ? currentParticipants - maxVisible : 0;
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -52,7 +54,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
                   ),
                 );
               }),
-              
+
               // 나머지 참가자 수 표시
               if (remainingCount > 0)
                 Positioned(
@@ -62,9 +64,9 @@ class ParticipantAvatars2025 extends StatelessWidget {
             ],
           ),
         ),
-        
+
         const SizedBox(width: 8),
-        
+
         // 참가자 수 텍스트
         _buildParticipantText(),
       ],
@@ -77,7 +79,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
     String? imageUrl,
   }) {
     final isDark = false; // Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       width: size,
       height: size,
@@ -97,23 +99,23 @@ class ParticipantAvatars2025 extends StatelessWidget {
         ],
       ),
       child: imageUrl != null && imageUrl.isNotEmpty
-        ? ClipRRect(
-            borderRadius: BorderRadius.circular(size / 2),
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return _buildInitialAvatar(name, index);
-              },
-            ),
-          )
-        : _buildInitialAvatar(name, index),
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(size / 2),
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return _buildInitialAvatar(name, index);
+                },
+              ),
+            )
+          : _buildInitialAvatar(name, index),
     );
   }
 
   Widget _buildInitialAvatar(String name, int index) {
     final initial = name.isNotEmpty ? name[0].toUpperCase() : '?';
-    
+
     return Center(
       child: Text(
         initial,
@@ -161,15 +163,15 @@ class ParticipantAvatars2025 extends StatelessWidget {
   Widget _buildParticipantText() {
     final isDark = false; // Theme.of(context).brightness == Brightness.dark;
     final isNearFull = currentParticipants / maxParticipants > 0.8;
-    
+
     return Text(
       '$currentParticipants/$maxParticipants명',
       style: TextStyle(
         fontSize: size * 0.375, // 12px when size is 32
         fontWeight: FontWeight.w600,
-        color: isNearFull 
-          ? ModernColors.warning 
-          : (isDark ? Colors.white70 : ModernColors.textSecondary),
+        color: isNearFull
+            ? ModernColors.warning
+            : (isDark ? Colors.white70 : ModernColors.textSecondary),
       ),
     );
   }
@@ -210,14 +212,14 @@ class ParticipantAvatars2025 extends StatelessWidget {
 
   double _calculateTotalWidth(int visibleCount, bool hasMore) {
     if (visibleCount == 0) return size;
-    
+
     double width = size; // 첫 번째 아바타
     width += (visibleCount - 1) * size * overlapFactor; // 겹친 아바타들
-    
+
     if (hasMore) {
       width += size * overlapFactor; // +N 표시
     }
-    
+
     return width;
   }
 
@@ -225,13 +227,21 @@ class ParticipantAvatars2025 extends StatelessWidget {
     if (participantNames != null && index < participantNames!.length) {
       return participantNames![index];
     }
-    
+
     // 더미 이름들
     final dummyNames = [
-      '김민수', '이영희', '박철수', '정미영', '최준호', 
-      '송하나', '윤지수', '장태영', '임소라', '한동준'
+      '김민수',
+      '이영희',
+      '박철수',
+      '정미영',
+      '최준호',
+      '송하나',
+      '윤지수',
+      '장태영',
+      '임소라',
+      '한동준'
     ];
-    
+
     return index < dummyNames.length ? dummyNames[index] : '참가자${index + 1}';
   }
 
@@ -251,7 +261,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
       ModernColors.focus,
       ModernColors.diary,
     ];
-    
+
     return colors[index % colors.length];
   }
 }
@@ -263,7 +273,7 @@ class ParticipantCount2025 extends StatelessWidget {
   final double fontSize;
   final Color? textColor;
   final IconData icon;
-  
+
   const ParticipantCount2025({
     super.key,
     required this.currentParticipants,
@@ -277,11 +287,11 @@ class ParticipantCount2025 extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isNearFull = currentParticipants / maxParticipants > 0.8;
-    final color = textColor ?? 
-        (isNearFull 
-          ? ModernColors.warning 
-          : (isDark ? Colors.white70 : ModernColors.textSecondary));
-    
+    final color = textColor ??
+        (isNearFull
+            ? ModernColors.warning
+            : (isDark ? Colors.white70 : ModernColors.textSecondary));
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [

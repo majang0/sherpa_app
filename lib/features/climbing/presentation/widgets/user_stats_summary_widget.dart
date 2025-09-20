@@ -14,7 +14,8 @@ import '../../../../shared/providers/global_game_provider.dart';
 
 class UserStatsSummaryWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<UserStatsSummaryWidget> createState() => _UserStatsSummaryWidgetState();
+  ConsumerState<UserStatsSummaryWidget> createState() =>
+      _UserStatsSummaryWidgetState();
 }
 
 class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
@@ -96,7 +97,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
 
                   // 레이더 차트 섹션
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 16),
                     child: _buildRPGRadarChart(user, screenWidth),
                   ),
 
@@ -164,7 +166,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withOpacity(0.05 * _glowController.value),
+                          color: AppColors.primary
+                              .withOpacity(0.05 * _glowController.value),
                           blurRadius: 30,
                           spreadRadius: 5,
                         ),
@@ -276,13 +279,18 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
             RadarChartData(
               radarTouchData: RadarTouchData(
                 enabled: true,
-                touchCallback: (FlTouchEvent event, RadarTouchResponse? touchResponse) {
-                  if (event is FlTapUpEvent && touchResponse?.touchedSpot != null) {
-                    final touchedDataSetIndex = touchResponse!.touchedSpot!.touchedDataSetIndex;
+                touchCallback:
+                    (FlTouchEvent event, RadarTouchResponse? touchResponse) {
+                  if (event is FlTapUpEvent &&
+                      touchResponse?.touchedSpot != null) {
+                    final touchedDataSetIndex =
+                        touchResponse!.touchedSpot!.touchedDataSetIndex;
                     if (touchedDataSetIndex == 2) {
-                      final touchedRadarEntry = touchResponse.touchedSpot!.touchedRadarEntry;
+                      final touchedRadarEntry =
+                          touchResponse.touchedSpot!.touchedRadarEntry;
                       if (touchedRadarEntry != null) {
-                        final index = touchResponse.touchedSpot!.touchedRadarEntryIndex;
+                        final index =
+                            touchResponse.touchedSpot!.touchedRadarEntryIndex;
                         if (index >= 0 && index < labels.length) {
                           HapticFeedbackManager.lightImpact();
                           _showStatQuickInfo(labels[index], values[index]);
@@ -299,7 +307,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                   borderColor: AppColors.divider,
                   borderWidth: 1,
                   entryRadius: 0,
-                  dataEntries: List.generate(5, (index) => RadarEntry(value: chartMaxValue)),
+                  dataEntries: List.generate(
+                      5, (index) => RadarEntry(value: chartMaxValue)),
                 ),
                 // 중간 가이드 (최대값의 50%)
                 RadarDataSet(
@@ -307,7 +316,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                   borderColor: AppColors.divider.withOpacity(0.5),
                   borderWidth: 0.5,
                   entryRadius: 0,
-                  dataEntries: List.generate(5, (index) => RadarEntry(value: chartMaxValue / 2)),
+                  dataEntries: List.generate(
+                      5, (index) => RadarEntry(value: chartMaxValue / 2)),
                 ),
                 // 실제 데이터
                 RadarDataSet(
@@ -315,14 +325,16 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                   borderColor: AppColors.primary,
                   borderWidth: 2,
                   entryRadius: 4,
-                  dataEntries: values.map((value) =>
-                      RadarEntry(value: value * _radarController.value)
-                  ).toList(),
+                  dataEntries: values
+                      .map((value) =>
+                          RadarEntry(value: value * _radarController.value))
+                      .toList(),
                 ),
               ],
               radarBackgroundColor: Colors.transparent,
               borderData: FlBorderData(show: false),
-              radarBorderData: BorderSide(color: AppColors.divider.withOpacity(0.5), width: 1),
+              radarBorderData: BorderSide(
+                  color: AppColors.divider.withOpacity(0.5), width: 1),
               titlePositionPercentageOffset: 0.15,
               titleTextStyle: GoogleFonts.notoSans(
                 color: AppColors.textPrimary,
@@ -418,7 +430,9 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                             // 프로그레스 바 배경
                             Container(
                               height: 60,
-                              width: (screenWidth - 72) * (value / 100) * delayedAnimation,
+                              width: (screenWidth - 72) *
+                                  (value / 100) *
+                                  delayedAnimation,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
@@ -432,7 +446,9 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                             // 프로그레스 바 전경
                             Container(
                               height: 60,
-                              width: (screenWidth - 72) * (value / 100) * delayedAnimation,
+                              width: (screenWidth - 72) *
+                                  (value / 100) *
+                                  delayedAnimation,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
@@ -562,7 +578,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.info_outline_rounded, color: Colors.white, size: 16),
+            const Icon(Icons.info_outline_rounded,
+                color: Colors.white, size: 16),
             const SizedBox(width: 8),
             Text(
               '$statName: ${value.toStringAsFixed(1)}%',
@@ -583,7 +600,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
   }
 
   // ✅ 개선된 RPG 스타일 상세 정보 다이얼로그 (BuildContext 추가)
-  void _showRPGStatDetails(BuildContext context, String statName, double value, String grade) {
+  void _showRPGStatDetails(
+      BuildContext context, String statName, double value, String grade) {
     final statDetails = _getStatDetails(statName);
     final gradeColor = _getGradeColor(grade);
 
@@ -701,7 +719,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                   runSpacing: 6,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12, vertical: 6),
                                       decoration: BoxDecoration(
                                         color: gradeColor.withOpacity(0.15),
                                         borderRadius: BorderRadius.circular(8),
@@ -727,7 +746,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                             style: GoogleFonts.notoSans(
                                               fontSize: 10,
                                               fontWeight: FontWeight.w600,
-                                              color: gradeColor.withOpacity(0.8),
+                                              color:
+                                                  gradeColor.withOpacity(0.8),
                                               letterSpacing: 1,
                                             ),
                                           ),
@@ -735,7 +755,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                       ),
                                     ),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
                                       decoration: BoxDecoration(
                                         color: gradeColor.withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(6),
@@ -870,7 +891,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
   }
 
   // ✅ 개선된 정보 섹션
-  Widget _buildRPGInfoSection(String title, String content, IconData icon, Color color) {
+  Widget _buildRPGInfoSection(
+      String title, String content, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(

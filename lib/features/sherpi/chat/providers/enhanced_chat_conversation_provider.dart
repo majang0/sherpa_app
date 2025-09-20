@@ -22,14 +22,15 @@ import '../../emotion/services/behavior_emotion_analyzer.dart';
 // Personalization Integration (removed)
 
 /// 💬 개인화 기능이 통합된 채팅 대화 관리 프로바이더
-/// 
+///
 /// 기존 ChatConversationProvider에 개인화 시스템을 통합하여
 /// 사용자별 맞춤형 응답과 학습 기능을 제공합니다.
-class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> {
+class EnhancedChatConversationNotifier
+    extends StateNotifier<ConversationState> {
   final SmartSherpiManager _smartManager = SmartSherpiManager();
   final Ref _ref;
   Timer? _typingTimer;
-  
+
   EnhancedChatConversationNotifier(this._ref) : super(_createInitialState()) {
     // 개인화 통합 서비스 초기화
     _initializePersonalizationIntegration();
@@ -76,7 +77,7 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
       currentEmotion: context?.defaultEmotion ?? SherpiEmotion.happy,
       sessionMetadata: metadata ?? {},
     );
-    
+
     // 환영 메시지 생성
     _addWelcomeMessage(context ?? ConversationContext.general);
   }
@@ -98,7 +99,6 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
 
     state = state.addMessage(welcomeMessage);
   }
-
 
   /// 🎯 기본 환영 메시지 가져오기
   String _getDefaultWelcomeMessage(ConversationContext context) {
@@ -150,11 +150,12 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
       _showTypingIndicator();
 
       // 1. 대화 컨텍스트 분석
-      final conversationContext = _analyzeConversationContext(userMessage.content);
-      
+      final conversationContext =
+          _analyzeConversationContext(userMessage.content);
+
       // 2. 기본 사용자 컨텍스트 구성
       final userContext = _buildUserContext(userMessage);
-      
+
       // 3. 게임 컨텍스트 구성
       final gameContext = _buildGameContext();
 
@@ -165,10 +166,11 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
       final emotionState = _ref.read(emotionStateProvider);
       String emotionEnhancedResponse = '';
       Map<String, dynamic> emotionMetadata = {};
-      
+
       if (emotionState.currentEmotion != null) {
         // 감정 적응형 응답 생성
-        final adaptiveResponse = _ref.read(emotionStateProvider.notifier).generateAdaptiveResponse(
+        final adaptiveResponse =
+            _ref.read(emotionStateProvider.notifier).generateAdaptiveResponse(
           conversationContext: {
             'conversation_type': conversationContext.name,
             'message_count': state.messageCount,
@@ -176,13 +178,16 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
           },
           customTrigger: userMessage.content,
         );
-        
+
         // 감정 컨텍스트를 AI 응답에 추가
-        enhancedContext['user_emotion'] = emotionState.currentEmotion!.type.displayName;
-        enhancedContext['emotion_intensity'] = emotionState.currentEmotion!.intensity.displayName;
+        enhancedContext['user_emotion'] =
+            emotionState.currentEmotion!.type.displayName;
+        enhancedContext['emotion_intensity'] =
+            emotionState.currentEmotion!.intensity.displayName;
         enhancedContext['emotion_adaptive_hint'] = adaptiveResponse['message'];
-        
-        emotionMetadata = adaptiveResponse['adaptation_metadata'] as Map<String, dynamic>;
+
+        emotionMetadata =
+            adaptiveResponse['adaptation_metadata'] as Map<String, dynamic>;
       }
 
       // 6. AI 응답 생성 (개인화 및 감정 컨텍스트 포함)
@@ -196,9 +201,11 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
       _hideTypingIndicator();
 
       // 8. 감정 기반 셰르피 감정 선택 개선
-      final selectedEmotion = emotionState.currentEmotion != null 
-          ? _selectEmotionBasedOnUserEmotion(emotionState.currentEmotion!, conversationContext)
-          : _selectEmotionForResponse(conversationContext, sherpiResponse.message);
+      final selectedEmotion = emotionState.currentEmotion != null
+          ? _selectEmotionBasedOnUserEmotion(
+              emotionState.currentEmotion!, conversationContext)
+          : _selectEmotionForResponse(
+              conversationContext, sherpiResponse.message);
 
       // 9. 셰르피 메시지 추가
       final sherpiMessage = ChatMessage(
@@ -207,10 +214,12 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
         sender: MessageSender.sherpi,
         timestamp: DateTime.now(),
         emotion: selectedEmotion,
-        type: _determineMessageType(conversationContext, sherpiResponse.message),
+        type:
+            _determineMessageType(conversationContext, sherpiResponse.message),
         metadata: {
           'response_source': sherpiResponse.source.name,
-          'generation_duration_ms': sherpiResponse.generationDuration?.inMilliseconds,
+          'generation_duration_ms':
+              sherpiResponse.generationDuration?.inMilliseconds,
           'conversation_context': conversationContext.name,
           'user_emotion': emotionState.currentEmotion?.type.id,
           'emotion_adaptation': emotionMetadata,
@@ -220,14 +229,14 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
       state = state.addMessage(sherpiMessage);
 
       // 8. 글로벌 셰르피 상태 업데이트
-      _ref.read(sherpiProvider.notifier).changeEmotion(sherpiMessage.emotion ?? SherpiEmotion.happy);
-
+      _ref
+          .read(sherpiProvider.notifier)
+          .changeEmotion(sherpiMessage.emotion ?? SherpiEmotion.happy);
     } catch (e) {
       print('❌ 셰르피 응답 생성 실패: $e');
       _addErrorMessage();
     }
   }
-
 
   /// ⌨️ 타이핑 표시
   void _showTypingIndicator() {
@@ -239,23 +248,22 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
       type: MessageType.system,
       metadata: {'is_typing': true},
     );
-    
+
     state = state.addMessage(typingMessage);
   }
 
-  /// 🚫 타이핑 표시 제거  
+  /// 🚫 타이핑 표시 제거
   void _hideTypingIndicator() {
-    final messages = state.messages.where((m) => 
-      m.metadata?['is_typing'] != true
-    ).toList();
-    
+    final messages =
+        state.messages.where((m) => m.metadata?['is_typing'] != true).toList();
+
     state = state.updateMessages(messages);
   }
 
   /// 🔍 대화 컨텍스트 분석 (기존과 동일)
   ConversationContext _analyzeConversationContext(String userMessage) {
     final message = userMessage.toLowerCase();
-    
+
     if (message.contains(RegExp(r'축하|기뻐|성공|달성|완료'))) {
       return ConversationContext.celebration;
     }
@@ -274,7 +282,7 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
     if (message.contains(RegExp(r'위기|문제|곤란|절망'))) {
       return ConversationContext.crisis;
     }
-    
+
     return ConversationContext.general;
   }
 
@@ -313,9 +321,10 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
   }
 
   /// 😊 응답에 맞는 감정 선택 (기존과 동일)
-  SherpiEmotion _selectEmotionForResponse(ConversationContext context, String response) {
+  SherpiEmotion _selectEmotionForResponse(
+      ConversationContext context, String response) {
     final responseText = response.toLowerCase();
-    
+
     if (responseText.contains(RegExp(r'축하|대단|멋져|훌륭'))) {
       return SherpiEmotion.cheering;
     }
@@ -328,14 +337,15 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
     if (responseText.contains(RegExp(r'괜찮|힘내|위로'))) {
       return SherpiEmotion.sad;
     }
-    
+
     return context.defaultEmotion;
   }
 
   /// 📝 메시지 타입 결정 (기존과 동일)
-  MessageType _determineMessageType(ConversationContext context, String response) {
+  MessageType _determineMessageType(
+      ConversationContext context, String response) {
     final responseText = response.toLowerCase();
-    
+
     if (responseText.contains(RegExp(r'축하|대단|성취'))) {
       return MessageType.celebration;
     }
@@ -348,7 +358,7 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
     if (responseText.contains(RegExp(r'\?|궁금|어떤'))) {
       return MessageType.question;
     }
-    
+
     return MessageType.text;
   }
 
@@ -363,7 +373,7 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
       type: MessageType.system,
       metadata: {'is_error': true},
     );
-    
+
     state = state.addMessage(errorMessage);
   }
 
@@ -393,9 +403,11 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
     try {
       final prefs = await SharedPreferences.getInstance();
       final conversationJson = jsonEncode(state.toJson());
-      await prefs.setString('sherpi_conversation_${state.sessionId}', conversationJson);
-      
-      final sessionList = prefs.getStringList('sherpi_conversation_sessions') ?? [];
+      await prefs.setString(
+          'sherpi_conversation_${state.sessionId}', conversationJson);
+
+      final sessionList =
+          prefs.getStringList('sherpi_conversation_sessions') ?? [];
       if (!sessionList.contains(state.sessionId)) {
         sessionList.add(state.sessionId);
         await prefs.setStringList('sherpi_conversation_sessions', sessionList);
@@ -409,10 +421,12 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
   Future<void> loadConversation(String sessionId) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final conversationJson = prefs.getString('sherpi_conversation_$sessionId');
-      
+      final conversationJson =
+          prefs.getString('sherpi_conversation_$sessionId');
+
       if (conversationJson != null) {
-        final conversationData = jsonDecode(conversationJson) as Map<String, dynamic>;
+        final conversationData =
+            jsonDecode(conversationJson) as Map<String, dynamic>;
         state = ConversationState.fromJson(conversationData);
       }
     } catch (e) {
@@ -437,14 +451,14 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
     try {
       // 텍스트 기반 감정 분석
       await _ref.read(emotionStateProvider.notifier).analyzeTextEmotion(
-        userMessage.content,
-        context: {
-          'conversation_context': state.context.name,
-          'session_id': state.sessionId,
-          'message_count': state.messageCount,
-        },
-        trigger: 'chat_message',
-      );
+            userMessage.content,
+            context: {
+              'conversation_context': state.context.name,
+              'session_id': state.sessionId,
+              'message_count': state.messageCount,
+            },
+            trigger: 'chat_message',
+          );
 
       // 행동 패턴 기반 감정 분석 (대화 기록이 충분한 경우)
       if (state.messages.length >= 5) {
@@ -467,7 +481,7 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
   /// 📊 최근 행동 패턴 추출
   List<BehaviorPattern> _extractRecentBehaviorPatterns() {
     final patterns = <BehaviorPattern>[];
-    
+
     // 대화 기록에서 행동 패턴 추출
     final userMessages = state.messages
         .where((m) => m.isUserMessage)
@@ -497,13 +511,13 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
   /// 😊 메시지에서 기분 추론
   String? _inferMoodFromMessage(String content) {
     final message = content.toLowerCase();
-    
+
     if (message.contains(RegExp(r'기뻐|행복|좋아|최고'))) return 'happy';
     if (message.contains(RegExp(r'힘들|어려|우울|스트레스'))) return 'stressed';
     if (message.contains(RegExp(r'피곤|지쳐|졸려'))) return 'tired';
     if (message.contains(RegExp(r'화나|짜증|싫어'))) return 'angry';
     if (message.contains(RegExp(r'평온|차분|괜찮'))) return 'calm';
-    
+
     return null;
   }
 
@@ -516,7 +530,7 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
     switch (userEmotion.type.category) {
       case EmotionCategory.positive:
         // 긍정적 감정에는 함께 기뻐하기
-        if (userEmotion.type == EmotionType.joy || 
+        if (userEmotion.type == EmotionType.joy ||
             userEmotion.type == EmotionType.excitement) {
           return SherpiEmotion.cheering;
         }
@@ -524,7 +538,7 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
           return SherpiEmotion.special;
         }
         return SherpiEmotion.happy;
-        
+
       case EmotionCategory.negative:
         // 부정적 감정에는 공감과 위로
         if (userEmotion.type == EmotionType.sadness ||
@@ -539,7 +553,7 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
           return SherpiEmotion.thinking; // 차분하게 대응
         }
         return SherpiEmotion.guiding;
-        
+
       case EmotionCategory.neutral:
         // 중립적 감정에는 상황에 맞게
         if (userEmotion.type == EmotionType.focused) {
@@ -552,7 +566,7 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
           return SherpiEmotion.thinking;
         }
         return SherpiEmotion.defaults;
-        
+
       case EmotionCategory.mixed:
       case EmotionCategory.unknown:
         // 복합적이거나 불분명한 감정에는 기본 대응
@@ -567,14 +581,15 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
 
   /// 🗑️ 메시지 삭제
   void deleteMessage(String messageId) {
-    final updatedMessages = state.messages.where((m) => m.id != messageId).toList();
+    final updatedMessages =
+        state.messages.where((m) => m.id != messageId).toList();
     state = state.updateMessages(updatedMessages);
   }
 
   /// 📊 대화 통계 (감정 정보 포함)
   Map<String, dynamic> getConversationStats() {
     final emotionState = _ref.read(emotionStateProvider);
-    
+
     final baseStats = {
       'total_messages': state.messageCount,
       'user_messages': state.messages.where((m) => m.isUserMessage).length,
@@ -592,7 +607,8 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
         'emotion_recognition_active': true,
         'current_user_emotion': emotionState.currentEmotion!.type.displayName,
         'emotion_intensity': emotionState.currentEmotion!.intensity.displayName,
-        'emotion_confidence': emotionState.currentEmotion!.confidence.displayName,
+        'emotion_confidence':
+            emotionState.currentEmotion!.confidence.displayName,
         'emotional_wellbeing_score': emotionState.emotionalWellbeingScore,
         'emotional_stability': emotionState.emotionalStability,
       });
@@ -603,23 +619,28 @@ class EnhancedChatConversationNotifier extends StateNotifier<ConversationState> 
 }
 
 /// 개인화 통합 채팅 프로바이더
-final enhancedChatConversationProvider = StateNotifierProvider<EnhancedChatConversationNotifier, ConversationState>((ref) {
+final enhancedChatConversationProvider =
+    StateNotifierProvider<EnhancedChatConversationNotifier, ConversationState>(
+        (ref) {
   // Chat integration service removed
-  
+
   return EnhancedChatConversationNotifier(ref);
 });
 
 /// 편의 프로바이더들 (개인화 정보 포함)
 final enhancedActiveConversationProvider = Provider<bool>((ref) {
-  return ref.watch(enhancedChatConversationProvider.select((state) => state.isActive));
+  return ref.watch(
+      enhancedChatConversationProvider.select((state) => state.isActive));
 });
 
 final enhancedConversationMessagesProvider = Provider<List<ChatMessage>>((ref) {
-  return ref.watch(enhancedChatConversationProvider.select((state) => state.messages));
+  return ref.watch(
+      enhancedChatConversationProvider.select((state) => state.messages));
 });
 
 final enhancedLastSherpiMessageProvider = Provider<ChatMessage?>((ref) {
-  return ref.watch(enhancedChatConversationProvider.select((state) => state.lastSherpiMessage));
+  return ref.watch(enhancedChatConversationProvider
+      .select((state) => state.lastSherpiMessage));
 });
 
 final enhancedConversationStatsProvider = Provider<Map<String, dynamic>>((ref) {
@@ -631,7 +652,7 @@ final enhancedConversationStatsProvider = Provider<Map<String, dynamic>>((ref) {
 final conversationAnalysisProvider = Provider<Map<String, dynamic>>((ref) {
   final conversationState = ref.watch(enhancedChatConversationProvider);
   final emotionState = ref.watch(emotionStateProvider);
-  
+
   return {
     'conversation_active': conversationState.isActive,
     'message_count': conversationState.messageCount,
@@ -639,21 +660,23 @@ final conversationAnalysisProvider = Provider<Map<String, dynamic>>((ref) {
     'emotion_recognition_active': emotionState.currentEmotion != null,
     'current_emotion': emotionState.currentEmotion?.type.displayName,
     'emotional_wellbeing': emotionState.emotionalWellbeingScore,
-    'emotion_patterns': emotionState.activePatterns.map((p) => p.patternType).toList(),
+    'emotion_patterns':
+        emotionState.activePatterns.map((p) => p.patternType).toList(),
     'last_update': DateTime.now().toIso8601String(),
   };
 });
 
 /// 🎭 감정 기반 대화 추천 프로바이더
-final emotionBasedConversationRecommendationProvider = Provider<List<String>>((ref) {
+final emotionBasedConversationRecommendationProvider =
+    Provider<List<String>>((ref) {
   final emotionState = ref.watch(emotionStateProvider);
   final recommendations = <String>[];
-  
+
   if (emotionState.currentEmotion == null) return recommendations;
-  
+
   final emotionCategory = emotionState.currentEmotion!.type.category;
   final wellbeingScore = emotionState.emotionalWellbeingScore;
-  
+
   // 감정 카테고리별 추천
   switch (emotionCategory) {
     case EmotionCategory.negative:
@@ -680,11 +703,11 @@ final emotionBasedConversationRecommendationProvider = Provider<List<String>>((r
     default:
       break;
   }
-  
+
   // 웰빙 점수가 낮은 경우 추가 추천
   if (wellbeingScore < 0.5) {
     recommendations.add('감정 상태가 걱정되시나요? 전문가와 상담하는 것도 도움이 될 수 있어요.');
   }
-  
+
   return recommendations.take(3).toList();
 });

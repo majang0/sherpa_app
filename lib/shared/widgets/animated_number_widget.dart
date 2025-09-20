@@ -99,15 +99,18 @@ class _AnimatedNumberWidgetState extends State<AnimatedNumberWidget>
         return Transform.scale(
           scale: _pulseAnimation.value,
           child: Container(
-            decoration: widget.enableGlow ? BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: widget.color.withValues(alpha: _glowAnimation.value * 0.6),
-                  blurRadius: 20 * _glowAnimation.value,
-                  spreadRadius: 5 * _glowAnimation.value,
-                ),
-              ],
-            ) : null,
+            decoration: widget.enableGlow
+                ? BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: widget.color
+                            .withValues(alpha: _glowAnimation.value * 0.6),
+                        blurRadius: 20 * _glowAnimation.value,
+                        spreadRadius: 5 * _glowAnimation.value,
+                      ),
+                    ],
+                  )
+                : null,
             child: Countup(
               begin: _previousValue.toDouble(),
               end: widget.value.toDouble(),
@@ -117,12 +120,15 @@ class _AnimatedNumberWidgetState extends State<AnimatedNumberWidget>
                 fontSize: widget.fontSize,
                 fontWeight: FontWeight.w800,
                 color: widget.color,
-                shadows: widget.enableGlow ? [
-                  Shadow(
-                    color: widget.color.withValues(alpha: _glowAnimation.value * 0.8),
-                    blurRadius: 10 * _glowAnimation.value,
-                  ),
-                ] : null,
+                shadows: widget.enableGlow
+                    ? [
+                        Shadow(
+                          color: widget.color
+                              .withValues(alpha: _glowAnimation.value * 0.8),
+                          blurRadius: 10 * _glowAnimation.value,
+                        ),
+                      ]
+                    : null,
               ),
               suffix: widget.suffix,
             ),

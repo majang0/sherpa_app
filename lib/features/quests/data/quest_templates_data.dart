@@ -2,7 +2,6 @@ import '../models/quest_template_model.dart';
 
 /// quest.md 파일의 모든 퀘스트를 정의하는 템플릿 데이터
 class QuestTemplatesData {
-  
   /// 일일 퀘스트 - 쉬움 난이도
   static final List<QuestTemplate> dailyEasyQuests = [
     QuestTemplate(
@@ -14,7 +13,6 @@ class QuestTemplatesData {
       dailyDifficulty: QuestDifficultyV2.easy,
       trackingCondition: QuestTrackingCondition.appLaunch(),
     ),
-    
     QuestTemplate(
       id: 'D_E_02',
       title: '걸음수 3000보 달성',
@@ -25,7 +23,6 @@ class QuestTemplatesData {
       trackingCondition: QuestTrackingCondition.steps(3000),
       targetProgress: 3000,
     ),
-    
     QuestTemplate(
       id: 'D_E_03',
       title: '프로필 확인하기',
@@ -35,7 +32,6 @@ class QuestTemplatesData {
       dailyDifficulty: QuestDifficultyV2.easy,
       trackingCondition: QuestTrackingCondition.tabVisit('프로필'),
     ),
-    
     QuestTemplate(
       id: 'D_E_04',
       title: '레벨업 현황 확인',
@@ -45,7 +41,6 @@ class QuestTemplatesData {
       dailyDifficulty: QuestDifficultyV2.easy,
       trackingCondition: QuestTrackingCondition.tabVisit('레벨업'),
     ),
-    
     QuestTemplate(
       id: 'D_E_05',
       title: '모임 둘러보기',
@@ -55,7 +50,6 @@ class QuestTemplatesData {
       dailyDifficulty: QuestDifficultyV2.easy,
       trackingCondition: QuestTrackingCondition.tabVisit('모임'),
     ),
-    
     QuestTemplate(
       id: 'D_E_06',
       title: '챌린지 둘러보기',
@@ -76,9 +70,9 @@ class QuestTemplatesData {
       type: QuestTypeV2.daily,
       category: QuestCategoryV2.technique,
       dailyDifficulty: QuestDifficultyV2.medium,
-      trackingCondition: QuestTrackingCondition.globalData('todayClimbingSuccess', true),
+      trackingCondition:
+          QuestTrackingCondition.globalData('todayClimbingSuccess', true),
     ),
-    
     QuestTemplate(
       id: 'D_M_02',
       title: '모임 후기 작성하기',
@@ -88,7 +82,6 @@ class QuestTemplatesData {
       dailyDifficulty: QuestDifficultyV2.medium,
       trackingCondition: QuestTrackingCondition.globalData('MeetingReview', 1),
     ),
-    
     QuestTemplate(
       id: 'D_M_03',
       title: '6000걸음 달성하기',
@@ -99,7 +92,6 @@ class QuestTemplatesData {
       trackingCondition: QuestTrackingCondition.steps(6000),
       targetProgress: 6000,
     ),
-    
     QuestTemplate(
       id: 'D_M_04',
       title: '뱃지 1개 장착하기',
@@ -120,10 +112,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.daily,
       category: QuestCategoryV2.willpower,
       dailyDifficulty: QuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.globalData('todayFocusMinutes', 30),
+      trackingCondition:
+          QuestTrackingCondition.globalData('todayFocusMinutes', 30),
       targetProgress: 30,
     ),
-    
     QuestTemplate(
       id: 'D_H_02',
       title: '10000걸음 달성하기',
@@ -134,7 +126,6 @@ class QuestTemplatesData {
       trackingCondition: QuestTrackingCondition.steps(10000),
       targetProgress: 10000,
     ),
-    
     QuestTemplate(
       id: 'D_H_03',
       title: '모든 일일 활동 완료',
@@ -142,9 +133,9 @@ class QuestTemplatesData {
       type: QuestTypeV2.daily,
       category: QuestCategoryV2.willpower,
       dailyDifficulty: QuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.globalData('allDailyActivitiesCompleted', true),
+      trackingCondition: QuestTrackingCondition.globalData(
+          'allDailyActivitiesCompleted', true),
     ),
-    
     QuestTemplate(
       id: 'D_H_04',
       title: '포인트 100P 이상 획득',
@@ -152,10 +143,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.daily,
       category: QuestCategoryV2.technique,
       dailyDifficulty: QuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.globalData('dailyPointsEarned', 100),
+      trackingCondition:
+          QuestTrackingCondition.globalData('dailyPointsEarned', 100),
       targetProgress: 100,
     ),
-    
     QuestTemplate(
       id: 'D_H_05',
       title: '독서 30페이지 이상',
@@ -166,7 +157,6 @@ class QuestTemplatesData {
       trackingCondition: QuestTrackingCondition.globalData('readingPages', 30),
       targetProgress: 30,
     ),
-    
     QuestTemplate(
       id: 'D_H_06',
       title: '영화 감상 기록',
@@ -187,10 +177,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.willpower,
       weeklyDifficulty: WeeklyQuestDifficultyV2.easy,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('appLaunches', 3),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('appLaunches', 3),
       targetProgress: 3,
     ),
-    
     QuestTemplate(
       id: 'W_E_02',
       title: '총 20000걸음 달성',
@@ -198,10 +188,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.stamina,
       weeklyDifficulty: WeeklyQuestDifficultyV2.easy,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('steps', 20000),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('steps', 20000),
       targetProgress: 20000,
     ),
-    
     QuestTemplate(
       id: 'W_E_03',
       title: '주 2회 운동 기록',
@@ -209,10 +199,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.stamina,
       weeklyDifficulty: WeeklyQuestDifficultyV2.easy,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('exerciseRecords', 2),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('exerciseRecords', 2),
       targetProgress: 2,
     ),
-    
     QuestTemplate(
       id: 'W_E_04',
       title: '등반 5회 이상 완료하기',
@@ -220,10 +210,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.technique,
       weeklyDifficulty: WeeklyQuestDifficultyV2.easy,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('climbingCompletions', 5),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('climbingCompletions', 5),
       targetProgress: 5,
     ),
-    
     QuestTemplate(
       id: 'W_E_05',
       title: '주 3회 독서 기록',
@@ -231,7 +221,8 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.knowledge,
       weeklyDifficulty: WeeklyQuestDifficultyV2.easy,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('readingRecords', 3),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('readingRecords', 3),
       targetProgress: 3,
     ),
   ];
@@ -245,10 +236,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.willpower,
       weeklyDifficulty: WeeklyQuestDifficultyV2.medium,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('diaryRecords', 5),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('diaryRecords', 5),
       targetProgress: 5,
     ),
-    
     QuestTemplate(
       id: 'W_M_02',
       title: '영화 2편 기록',
@@ -256,10 +247,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.knowledge,
       weeklyDifficulty: WeeklyQuestDifficultyV2.medium,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('movieLogs', 2),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('movieLogs', 2),
       targetProgress: 2,
     ),
-    
     QuestTemplate(
       id: 'W_M_03',
       title: '총 50000걸음 달성',
@@ -267,10 +258,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.stamina,
       weeklyDifficulty: WeeklyQuestDifficultyV2.medium,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('steps', 50000),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('steps', 50000),
       targetProgress: 50000,
     ),
-    
     QuestTemplate(
       id: 'W_M_04',
       title: '총 180분 몰입',
@@ -278,10 +269,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.willpower,
       weeklyDifficulty: WeeklyQuestDifficultyV2.medium,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('focusMinutes', 180),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('focusMinutes', 180),
       targetProgress: 180,
     ),
-    
     QuestTemplate(
       id: 'W_M_05',
       title: '모임 1회 참여',
@@ -289,10 +280,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.sociality,
       weeklyDifficulty: WeeklyQuestDifficultyV2.medium,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('meetingLogs', 1),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('meetingLogs', 1),
       targetProgress: 1,
     ),
-    
     QuestTemplate(
       id: 'W_M_06',
       title: '포인트 500P 모으기',
@@ -300,10 +291,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.technique,
       weeklyDifficulty: WeeklyQuestDifficultyV2.medium,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('pointsEarned', 500),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('pointsEarned', 500),
       targetProgress: 500,
     ),
-    
     QuestTemplate(
       id: 'W_M_07',
       title: '주 5회 영화/독서 기록',
@@ -311,10 +302,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.knowledge,
       weeklyDifficulty: WeeklyQuestDifficultyV2.medium,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('culturalRecords', 5),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('culturalRecords', 5),
       targetProgress: 5,
     ),
-    
     QuestTemplate(
       id: 'W_M_08',
       title: '모임 후기 작성',
@@ -322,7 +313,8 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.sociality,
       weeklyDifficulty: WeeklyQuestDifficultyV2.medium,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('meetingReviews', 1),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('meetingReviews', 1),
       targetProgress: 1,
     ),
   ];
@@ -336,10 +328,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.willpower,
       weeklyDifficulty: WeeklyQuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('perfectDays', 5),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('perfectDays', 5),
       targetProgress: 5,
     ),
-    
     QuestTemplate(
       id: 'W_H_02',
       title: '총 100000걸음 달성',
@@ -347,10 +339,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.stamina,
       weeklyDifficulty: WeeklyQuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('steps', 100000),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('steps', 100000),
       targetProgress: 100000,
     ),
-    
     QuestTemplate(
       id: 'W_H_03',
       title: '모든 활동 마스터',
@@ -358,10 +350,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.willpower,
       weeklyDifficulty: WeeklyQuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('allActivitiesDays', 7),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('allActivitiesDays', 7),
       targetProgress: 7,
     ),
-    
     QuestTemplate(
       id: 'W_H_04',
       title: '챌린지 참여하기',
@@ -369,10 +361,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.sociality,
       weeklyDifficulty: WeeklyQuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('challengeRecords', 1),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('challengeRecords', 1),
       targetProgress: 1,
     ),
-    
     QuestTemplate(
       id: 'W_H_05',
       title: '2개 모임 참여',
@@ -380,10 +372,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.sociality,
       weeklyDifficulty: WeeklyQuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('differentMeetings', 2),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('differentMeetings', 2),
       targetProgress: 2,
     ),
-    
     QuestTemplate(
       id: 'W_H_06',
       title: '주간 포인트 1000P 획득',
@@ -391,7 +383,8 @@ class QuestTemplatesData {
       type: QuestTypeV2.weekly,
       category: QuestCategoryV2.technique,
       weeklyDifficulty: WeeklyQuestDifficultyV2.hard,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('pointsEarned', 1000),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('pointsEarned', 1000),
       targetProgress: 1000,
     ),
   ];
@@ -405,10 +398,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.premium,
       category: QuestCategoryV2.technique,
       rarity: QuestRarityV2.rare,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('differentMountains', 3),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('differentMountains', 3),
       targetProgress: 3,
     ),
-    
     QuestTemplate(
       id: 'P_R_02',
       title: '독서왕',
@@ -416,10 +409,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.premium,
       category: QuestCategoryV2.knowledge,
       rarity: QuestRarityV2.rare,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('readingPages', 100),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('readingPages', 100),
       targetProgress: 100,
     ),
-    
     QuestTemplate(
       id: 'P_R_03',
       title: '소셜 네트워커',
@@ -427,10 +420,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.premium,
       category: QuestCategoryV2.sociality,
       rarity: QuestRarityV2.rare,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('differentMeetingCategories', 3),
+      trackingCondition: QuestTrackingCondition.weeklyAccumulation(
+          'differentMeetingCategories', 3),
       targetProgress: 3,
     ),
-    
     QuestTemplate(
       id: 'P_R_04',
       title: '지식의 탐구자',
@@ -438,7 +431,8 @@ class QuestTemplatesData {
       type: QuestTypeV2.premium,
       category: QuestCategoryV2.knowledge,
       rarity: QuestRarityV2.rare,
-      trackingCondition: QuestTrackingConditionHelper.multipleConditions(['weekly_readingPages:200', 'weekly_movieLogs:2']),
+      trackingCondition: QuestTrackingConditionHelper.multipleConditions(
+          ['weekly_readingPages:200', 'weekly_movieLogs:2']),
       targetProgress: 1,
     ),
   ];
@@ -455,7 +449,6 @@ class QuestTemplatesData {
       trackingCondition: QuestTrackingCondition.weeklyAccumulation('연속등반성공', 7),
       targetProgress: 7,
     ),
-    
     QuestTemplate(
       id: 'P_E_02',
       title: '완벽한 일주일',
@@ -463,10 +456,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.premium,
       category: QuestCategoryV2.willpower,
       rarity: QuestRarityV2.epic,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('연속일일퀘스트완료', 7),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('연속일일퀘스트완료', 7),
       targetProgress: 7,
     ),
-    
     QuestTemplate(
       id: 'P_E_03',
       title: '운동 전문가',
@@ -474,10 +467,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.premium,
       category: QuestCategoryV2.stamina,
       rarity: QuestRarityV2.epic,
-      trackingCondition: QuestTrackingConditionHelper.multipleConditions(['differentExerciseTypes:3', 'exerciseMinutes:300']),
+      trackingCondition: QuestTrackingConditionHelper.multipleConditions(
+          ['differentExerciseTypes:3', 'exerciseMinutes:300']),
       targetProgress: 1,
     ),
-    
     QuestTemplate(
       id: 'P_E_04',
       title: '주간퀘스트 전체 클리어',
@@ -485,7 +478,8 @@ class QuestTemplatesData {
       type: QuestTypeV2.premium,
       category: QuestCategoryV2.willpower,
       rarity: QuestRarityV2.epic,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('모든주간퀘스트완료', 1),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('모든주간퀘스트완료', 1),
       targetProgress: 1,
     ),
   ];
@@ -502,7 +496,6 @@ class QuestTemplatesData {
       trackingCondition: QuestTrackingCondition.weeklyAccumulation('모임주최성공', 1),
       targetProgress: 1,
     ),
-    
     QuestTemplate(
       id: 'P_L_02',
       title: '궁극의 도전',
@@ -510,10 +503,10 @@ class QuestTemplatesData {
       type: QuestTypeV2.premium,
       category: QuestCategoryV2.willpower,
       rarity: QuestRarityV2.legendary,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('30일챌린지첫주', 1),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('30일챌린지첫주', 1),
       targetProgress: 1,
     ),
-    
     QuestTemplate(
       id: 'P_L_03',
       title: '올라운드 플레이어',
@@ -521,7 +514,8 @@ class QuestTemplatesData {
       type: QuestTypeV2.premium,
       category: QuestCategoryV2.technique,
       rarity: QuestRarityV2.legendary,
-      trackingCondition: QuestTrackingCondition.weeklyAccumulation('모든카테고리퀘스트완료', 1),
+      trackingCondition:
+          QuestTrackingCondition.weeklyAccumulation('모든카테고리퀘스트완료', 1),
       targetProgress: 1,
     ),
   ];
@@ -543,7 +537,9 @@ class QuestTemplatesData {
 
   /// 퀘스트 유형별 템플릿 가져오기
   static List<QuestTemplate> getTemplatesByType(QuestTypeV2 type) {
-    return getAllTemplates().where((template) => template.type == type).toList();
+    return getAllTemplates()
+        .where((template) => template.type == type)
+        .toList();
   }
 
   /// 일일 퀘스트 템플릿 가져오기

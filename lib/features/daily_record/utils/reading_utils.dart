@@ -27,8 +27,8 @@ class ReadingUtils {
 
   /// 특정 날짜의 독서 로그 필터링
   static List<T> getLogsForDate<T>(
-    List<T> logs, 
-    DateTime date, 
+    List<T> logs,
+    DateTime date,
     DateTime Function(T) getDate,
   ) {
     return logs.where((log) => isSameDay(getDate(log), date)).toList();

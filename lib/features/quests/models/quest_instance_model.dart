@@ -16,15 +16,15 @@ enum QuestStatus {
 /// 실제 퀘스트 인스턴스 (템플릿 + 진행 상태)
 /// 사용자가 실제로 수행하는 퀘스트 객체
 class QuestInstance {
-  final String instanceId;                    // 인스턴스 고유 ID
-  final QuestTemplate template;               // 퀘스트 템플릿
-  final QuestStatus status;                   // 현재 상태
-  final int currentProgress;                  // 현재 진행도
-  final DateTime? completedAt;                // 완료 시간
-  final DateTime? claimedAt;                  // 보상 수령 시간
-  final DateTime createdAt;                   // 생성 시간
-  final bool? statGranted;                    // 능력치가 실제로 지급되었는지
-  final Map<String, dynamic> trackingData;   // 추적 데이터
+  final String instanceId; // 인스턴스 고유 ID
+  final QuestTemplate template; // 퀘스트 템플릿
+  final QuestStatus status; // 현재 상태
+  final int currentProgress; // 현재 진행도
+  final DateTime? completedAt; // 완료 시간
+  final DateTime? claimedAt; // 보상 수령 시간
+  final DateTime createdAt; // 생성 시간
+  final bool? statGranted; // 능력치가 실제로 지급되었는지
+  final Map<String, dynamic> trackingData; // 추적 데이터
 
   const QuestInstance({
     required this.instanceId,
@@ -69,7 +69,8 @@ class QuestInstance {
 
   /// 완료 가능 여부
   bool get canComplete {
-    return status == QuestStatus.inProgress && currentProgress >= targetProgress;
+    return status == QuestStatus.inProgress &&
+        currentProgress >= targetProgress;
   }
 
   /// 보상 수령 가능 여부
@@ -103,29 +104,29 @@ class QuestInstance {
         final targetSteps = trackingCondition.parameters['target'] as int;
         final currentSteps = globalData['todaySteps'] as int? ?? 0;
         return currentSteps != currentProgress && currentSteps >= targetSteps;
-        
+
       case QuestTrackingType.globalData:
         final dataPath = trackingCondition.parameters['path'] as String;
         final targetValue = trackingCondition.parameters['target'];
         final currentValue = _getValueFromPath(globalData, dataPath);
-        return currentValue != currentProgress && 
-               _compareValues(currentValue, targetValue) >= 0;
-        
+        return currentValue != currentProgress &&
+            _compareValues(currentValue, targetValue) >= 0;
+
       case QuestTrackingType.weeklyAccumulation:
         final dataType = trackingCondition.parameters['dataType'] as String;
         final targetValue = trackingCondition.parameters['target'];
         final currentValue = globalData['weekly_$dataType'] ?? 0;
         return currentValue != currentProgress && currentValue >= targetValue;
-        
+
       case QuestTrackingType.appLaunch:
-        return status == QuestStatus.notStarted && 
-               globalData['appLaunched'] == true;
-        
+        return status == QuestStatus.notStarted &&
+            globalData['appLaunched'] == true;
+
       case QuestTrackingType.tabVisit:
         final targetTab = trackingCondition.parameters['tab'] as String;
         final visitedTab = globalData['visitedTab'] as String?;
         return visitedTab == targetTab && status != QuestStatus.completed;
-        
+
       default:
         return false;
     }
@@ -135,7 +136,7 @@ class QuestInstance {
   dynamic _getValueFromPath(Map<String, dynamic> data, String path) {
     final parts = path.split('.');
     dynamic current = data;
-    
+
     for (final part in parts) {
       if (current is Map<String, dynamic> && current.containsKey(part)) {
         current = current[part];
@@ -143,14 +144,14 @@ class QuestInstance {
         return null;
       }
     }
-    
+
     return current;
   }
 
   /// 값 비교
   int _compareValues(dynamic a, dynamic b) {
     if (a == null || b == null) return -1;
-    
+
     if (a is num && b is num) {
       return a.compareTo(b);
     } else if (a is bool && b is bool) {
@@ -185,35 +186,36 @@ class QuestInstance {
   }
 
   Map<String, dynamic> toJson() => {
-    'instanceId': instanceId,
-    'template': template.toJson(),
-    'status': status.name,
-    'currentProgress': currentProgress,
-    'completedAt': completedAt?.toIso8601String(),
-    'claimedAt': claimedAt?.toIso8601String(),
-    'createdAt': createdAt.toIso8601String(),
-    'statGranted': statGranted,
-    'trackingData': trackingData,
-  };
+        'instanceId': instanceId,
+        'template': template.toJson(),
+        'status': status.name,
+        'currentProgress': currentProgress,
+        'completedAt': completedAt?.toIso8601String(),
+        'claimedAt': claimedAt?.toIso8601String(),
+        'createdAt': createdAt.toIso8601String(),
+        'statGranted': statGranted,
+        'trackingData': trackingData,
+      };
 
   factory QuestInstance.fromJson(Map<String, dynamic> json) => QuestInstance(
-    instanceId: json['instanceId'] ?? '',
-    template: QuestTemplate.fromJson(json['template'] ?? {}),
-    status: QuestStatus.values.firstWhere(
-      (e) => e.name == json['status'],
-      orElse: () => QuestStatus.notStarted,
-    ),
-    currentProgress: json['currentProgress'] ?? 0,
-    completedAt: json['completedAt'] != null
-        ? DateTime.parse(json['completedAt'])
-        : null,
-    claimedAt: json['claimedAt'] != null
-        ? DateTime.parse(json['claimedAt'])
-        : null,
-    createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
-    statGranted: json['statGranted'],
-    trackingData: json['trackingData'] ?? {},
-  );
+        instanceId: json['instanceId'] ?? '',
+        template: QuestTemplate.fromJson(json['template'] ?? {}),
+        status: QuestStatus.values.firstWhere(
+          (e) => e.name == json['status'],
+          orElse: () => QuestStatus.notStarted,
+        ),
+        currentProgress: json['currentProgress'] ?? 0,
+        completedAt: json['completedAt'] != null
+            ? DateTime.parse(json['completedAt'])
+            : null,
+        claimedAt: json['claimedAt'] != null
+            ? DateTime.parse(json['claimedAt'])
+            : null,
+        createdAt: DateTime.parse(
+            json['createdAt'] ?? DateTime.now().toIso8601String()),
+        statGranted: json['statGranted'],
+        trackingData: json['trackingData'] ?? {},
+      );
 }
 
 /// 퀘스트 진행 요약 정보 (새 시스템)

@@ -18,40 +18,39 @@ import '../../../utils/meeting_image_utils.dart';
 /// AI 추천 결과 카드들
 class AIRecommendationResultCards extends ConsumerStatefulWidget {
   final List<AIRecommendedMeeting> recommendations;
-  
+
   const AIRecommendationResultCards({
     super.key,
     required this.recommendations,
   });
 
   @override
-  ConsumerState<AIRecommendationResultCards> createState() => 
+  ConsumerState<AIRecommendationResultCards> createState() =>
       _AIRecommendationResultCardsState();
 }
 
-class _AIRecommendationResultCardsState 
-    extends ConsumerState<AIRecommendationResultCards> 
+class _AIRecommendationResultCardsState
+    extends ConsumerState<AIRecommendationResultCards>
     with TickerProviderStateMixin {
-  
   late PageController _pageController;
   int _currentPage = 0;
-  
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(viewportFraction: 0.9);
   }
-  
+
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    
+
     return Container(
       height: screenHeight * 0.85,
       decoration: BoxDecoration(
@@ -70,10 +69,10 @@ class _AIRecommendationResultCardsState
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          
+
           // 헤더
           _buildHeader(),
-          
+
           // 추천 카드들
           Expanded(
             child: PageView.builder(
@@ -95,21 +94,21 @@ class _AIRecommendationResultCardsState
               },
             ),
           ),
-          
+
           // 페이지 인디케이터
           _buildPageIndicator(),
-          
+
           const SizedBox(height: 20),
         ],
       ),
     ).animate().slideY(
-      begin: 1,
-      end: 0,
-      duration: 400.ms,
-      curve: Curves.easeOutCubic,
-    );
+          begin: 1,
+          end: 0,
+          duration: 400.ms,
+          curve: Curves.easeOutCubic,
+        );
   }
-  
+
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -151,9 +150,9 @@ class _AIRecommendationResultCardsState
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // AI 분석 요약
           Container(
             padding: const EdgeInsets.all(12),
@@ -189,8 +188,9 @@ class _AIRecommendationResultCardsState
       ),
     );
   }
-  
-  Widget _buildRecommendationCard(AIRecommendedMeeting recommendation, int index) {
+
+  Widget _buildRecommendationCard(
+      AIRecommendedMeeting recommendation, int index) {
     return GestureDetector(
       onTap: () {
         HapticFeedbackManager.lightImpact();
@@ -218,7 +218,7 @@ class _AIRecommendationResultCardsState
           children: [
             // 이미지 섹션
             _buildImageSection(recommendation.meeting),
-            
+
             // 콘텐츠 섹션
             Expanded(
               child: SingleChildScrollView(
@@ -228,24 +228,24 @@ class _AIRecommendationResultCardsState
                   children: [
                     // 우선순위 & 매칭 점수
                     _buildMatchScore(recommendation, index),
-                    
+
                     const SizedBox(height: 12),
-                    
+
                     // 모임 정보
                     _buildMeetingInfo(recommendation.meeting),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // AI 추천 이유
                     _buildRecommendationReason(recommendation),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // 핵심 포인트
                     _buildKeyPoints(recommendation),
-                    
+
                     const SizedBox(height: 20),
-                    
+
                     // 액션 버튼
                     _buildActionButton(recommendation.meeting),
                   ],
@@ -254,12 +254,13 @@ class _AIRecommendationResultCardsState
             ),
           ],
         ),
-      ).animate(delay: Duration(milliseconds: 100 * index))
-        .fadeIn(duration: 400.ms)
-        .slideX(begin: 0.1, end: 0),
+      )
+          .animate(delay: Duration(milliseconds: 100 * index))
+          .fadeIn(duration: 400.ms)
+          .slideX(begin: 0.1, end: 0),
     );
   }
-  
+
   Widget _buildImageSection(AvailableMeeting meeting) {
     return Container(
       height: 160,
@@ -296,7 +297,7 @@ class _AIRecommendationResultCardsState
                 ),
               ),
             ),
-          
+
           // 카테고리 배지
           Positioned(
             top: 16,
@@ -331,10 +332,10 @@ class _AIRecommendationResultCardsState
       ),
     );
   }
-  
+
   Widget _buildMeetingImage(AvailableMeeting meeting) {
     final firstImage = meeting.imageFileNames.first;
-    
+
     if (firstImage.startsWith('asset:')) {
       final assetPath = 'assets/images/meeting/${firstImage.substring(6)}';
       return ClipRRect(
@@ -349,7 +350,7 @@ class _AIRecommendationResultCardsState
         ),
       );
     }
-    
+
     return FutureBuilder<File?>(
       future: MeetingImageUtils.getMeetingImageFile(firstImage),
       builder: (context, snapshot) {
@@ -369,7 +370,7 @@ class _AIRecommendationResultCardsState
       },
     );
   }
-  
+
   Widget _buildMatchScore(AIRecommendedMeeting recommendation, int index) {
     return Row(
       children: [
@@ -378,7 +379,7 @@ class _AIRecommendationResultCardsState
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: index == 0 
+              colors: index == 0
                   ? [Colors.amber, Colors.orange]
                   : [ModernColors.primary, ModernColors.secondary],
             ),
@@ -404,9 +405,9 @@ class _AIRecommendationResultCardsState
             ],
           ),
         ),
-        
+
         const SizedBox(width: 12),
-        
+
         // 매칭 점수
         Expanded(
           child: Column(
@@ -421,8 +422,8 @@ class _AIRecommendationResultCardsState
                         value: recommendation.matchScore,
                         backgroundColor: ModernColors.border,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          recommendation.matchScore >= 0.8 
-                              ? Colors.green 
+                          recommendation.matchScore >= 0.8
+                              ? Colors.green
                               : recommendation.matchScore >= 0.6
                                   ? Colors.orange
                                   : ModernColors.primary,
@@ -456,7 +457,7 @@ class _AIRecommendationResultCardsState
       ],
     );
   }
-  
+
   Widget _buildMeetingInfo(AvailableMeeting meeting) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -471,9 +472,9 @@ class _AIRecommendationResultCardsState
             height: 1.3,
           ),
         ),
-        
+
         const SizedBox(height: 8),
-        
+
         // 위치 & 시간
         Row(
           children: [
@@ -506,9 +507,9 @@ class _AIRecommendationResultCardsState
             ),
           ],
         ),
-        
+
         const SizedBox(height: 8),
-        
+
         // 참가자 & 가격
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -520,7 +521,7 @@ class _AIRecommendationResultCardsState
               size: 28,
               overlapFactor: 0.65,
             ),
-            
+
             // 가격
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -537,8 +538,8 @@ class _AIRecommendationResultCardsState
                 ),
               ),
               child: Text(
-                meeting.type == MeetingType.free 
-                    ? '무료' 
+                meeting.type == MeetingType.free
+                    ? '무료'
                     : '${meeting.participationFee.toInt()}P',
                 style: GoogleFonts.notoSans(
                   fontSize: 12,
@@ -554,7 +555,7 @@ class _AIRecommendationResultCardsState
       ],
     );
   }
-  
+
   Widget _buildRecommendationReason(AIRecommendedMeeting recommendation) {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -600,7 +601,7 @@ class _AIRecommendationResultCardsState
       ),
     );
   }
-  
+
   Widget _buildKeyPoints(AIRecommendedMeeting recommendation) {
     return Wrap(
       spacing: 8,
@@ -638,7 +639,7 @@ class _AIRecommendationResultCardsState
       }).toList(),
     );
   }
-  
+
   Widget _buildActionButton(AvailableMeeting meeting) {
     return SizedBox(
       width: double.infinity,
@@ -677,7 +678,7 @@ class _AIRecommendationResultCardsState
       ),
     );
   }
-  
+
   Widget _buildPageIndicator() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -688,13 +689,14 @@ class _AIRecommendationResultCardsState
           width: _currentPage == index ? 24 : 8,
           height: 8,
           decoration: BoxDecoration(
-            color: _currentPage == index 
-                ? ModernColors.primary 
+            color: _currentPage == index
+                ? ModernColors.primary
                 : ModernColors.border,
             borderRadius: BorderRadius.circular(4),
           ),
-        ).animate(target: _currentPage == index ? 1 : 0)
-          .scaleX(begin: 1, end: 3, duration: 200.ms),
+        )
+            .animate(target: _currentPage == index ? 1 : 0)
+            .scaleX(begin: 1, end: 3, duration: 200.ms),
       ),
     );
   }

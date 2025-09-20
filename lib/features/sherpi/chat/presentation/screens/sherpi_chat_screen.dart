@@ -23,7 +23,7 @@ import '../../../../../core/constants/app_colors.dart';
 import '../../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
 /// 💬 셰르피 채팅 화면
-/// 
+///
 /// 셰르피와 실시간으로 대화할 수 있는 전체 화면 채팅 인터페이스
 class SherpiChatScreen extends ConsumerStatefulWidget {
   final ConversationContext? initialContext;
@@ -49,14 +49,14 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _backgroundAnimationController = AnimationController(
       duration: const Duration(seconds: 30),
       vsync: this,
     );
-    
+
     _scrollController.addListener(_onScroll);
-    
+
     // 초기 대화 시작
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeConversation();
@@ -72,7 +72,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
 
   void _initializeConversation() {
     final chatNotifier = ref.read(enhancedChatConversationProvider.notifier);
-    
+
     // 새 대화 세션 시작
     chatNotifier.startNewConversation(
       context: widget.initialContext ?? ConversationContext.general,
@@ -95,9 +95,9 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
   }
 
   void _onScroll() {
-    final showButton = _scrollController.hasClients &&
-        _scrollController.offset > 200;
-        
+    final showButton =
+        _scrollController.hasClients && _scrollController.offset > 200;
+
     if (showButton != _showScrollToBottom) {
       setState(() {
         _showScrollToBottom = showButton;
@@ -125,16 +125,17 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
     });
 
     try {
-      await ref.read(enhancedChatConversationProvider.notifier).sendUserMessage(message);
-      
+      await ref
+          .read(enhancedChatConversationProvider.notifier)
+          .sendUserMessage(message);
+
       // 새 메시지 후 스크롤 이동
       Future.delayed(const Duration(milliseconds: 100), () {
         _scrollToBottom();
       });
-      
+
       // 햅틱 피드백
       HapticFeedback.lightImpact();
-      
     } catch (e) {
       // 에러 처리
       ScaffoldMessenger.of(context).showSnackBar(
@@ -196,7 +197,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
               ),
             ),
           ),
-          
+
           // 메뉴 버튼
           IconButton(
             icon: const Icon(Icons.more_vert, color: Colors.white),
@@ -208,19 +209,19 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
         children: [
           // 배경 그라데이션
           _buildAnimatedBackground(conversationState.context),
-          
+
           // 메인 콘텐츠
           Column(
             children: [
               // 대화 상태 표시 (선택적)
               if (conversationState.context != ConversationContext.general)
                 _buildContextBanner(conversationState.context),
-              
+
               // 메시지 목록
               Expanded(
                 child: _buildMessageList(conversationState.messages),
               ),
-              
+
               // 입력창
               ChatInputField(
                 onSendMessage: _sendMessage,
@@ -231,10 +232,9 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
               ),
             ],
           ),
-          
+
           // 스크롤 투 바텀 버튼
-          if (_showScrollToBottom)
-            _buildScrollToBottomButton(),
+          if (_showScrollToBottom) _buildScrollToBottomButton(),
         ],
       ),
     );
@@ -337,7 +337,8 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              transform: GradientRotation(_backgroundAnimationController.value * 0.5),
+              transform:
+                  GradientRotation(_backgroundAnimationController.value * 0.5),
               colors: _getGradientColors(conversationContext),
             ),
           ),
@@ -422,10 +423,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
               ),
             ),
           ],
-        )
-        .animate()
-        .fadeIn(delay: 500.ms)
-        .scale(begin: const Offset(0.8, 0.8)),
+        ).animate().fadeIn(delay: 500.ms).scale(begin: const Offset(0.8, 0.8)),
       );
     }
 
@@ -436,22 +434,26 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
       itemBuilder: (context, index) {
         final message = messages[index];
         final isLastMessage = index == messages.length - 1;
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ChatMessageBubble(
               message: message,
               showAvatar: true,
-              showTimestamp: isLastMessage || 
-                  (index < messages.length - 1 && 
-                   messages[index + 1].timestamp.difference(message.timestamp).inMinutes > 5),
+              showTimestamp: isLastMessage ||
+                  (index < messages.length - 1 &&
+                      messages[index + 1]
+                              .timestamp
+                              .difference(message.timestamp)
+                              .inMinutes >
+                          5),
               onTap: () => _onMessageTap(message),
               onLongPress: () => _onMessageLongPress(message),
             ),
-            
+
             // 피드백 버튼 추가 (셰르피 메시지만)
-            if (message.isSherpiMessage && 
+            if (message.isSherpiMessage &&
                 message.metadata?['is_typing'] != true &&
                 message.metadata?['is_error'] != true)
               _buildFeedbackButtons(message),
@@ -472,10 +474,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
         foregroundColor: AppColors.primary,
         elevation: 4,
         child: const Icon(Icons.keyboard_arrow_down),
-      )
-      .animate()
-      .slideY(begin: 1, end: 0, duration: 300.ms)
-      .fade(),
+      ).animate().slideY(begin: 1, end: 0, duration: 300.ms).fade(),
     );
   }
 
@@ -556,20 +555,23 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
         ),
       ),
     ).animate().scale(
-      duration: const Duration(milliseconds: 150),
-      curve: Curves.easeOut,
-    );
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeOut,
+        );
   }
 
   /// ⚡ 빠른 피드백 추가
-  Future<void> _addQuickFeedback(ChatMessage message, double rating, String comment) async {
+  Future<void> _addQuickFeedback(
+      ChatMessage message, double rating, String comment) async {
     try {
-      await ref.read(enhancedChatConversationProvider.notifier).addMessageFeedback(
-        messageId: message.id ?? 'unknown',
-        rating: rating,
-        comment: comment,
-        // feedbackType 제거됨
-      );
+      await ref
+          .read(enhancedChatConversationProvider.notifier)
+          .addMessageFeedback(
+            messageId: message.id ?? 'unknown',
+            rating: rating,
+            comment: comment,
+            // feedbackType 제거됨
+          );
 
       // 성공 메시지 표시 (선택적)
       ScaffoldMessenger.of(context).showSnackBar(
@@ -582,7 +584,6 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
 
       // 햅틱 피드백
       HapticFeedback.lightImpact();
-      
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -625,16 +626,15 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
     });
   }
 
-
   /// 📋 대화 메뉴
   Widget _buildConversationMenu() {
     // 대화 통계를 간단하게 처리 (enhancedConversationStatsProvider 제거됨)
     final conversationState = ref.read(enhancedChatConversationProvider);
     final messageCount = conversationState.messages.length;
-    final duration = conversationState.isActive 
+    final duration = conversationState.isActive
         ? DateTime.now().difference(conversationState.startTime).inMinutes
         : 0;
-    
+
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -656,9 +656,9 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // 대화 통계
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -683,31 +683,35 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
               ],
             ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // 메뉴 항목들
           _buildMenuTile(
             icon: Icons.save_alt,
             title: '대화 저장',
             onTap: () {
-              ref.read(enhancedChatConversationProvider.notifier).saveConversation();
+              ref
+                  .read(enhancedChatConversationProvider.notifier)
+                  .saveConversation();
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('대화가 저장되었습니다')),
               );
             },
           ),
-          
+
           _buildMenuTile(
             icon: Icons.refresh,
             title: '새 대화 시작',
             onTap: () {
               Navigator.pop(context);
-              ref.read(enhancedChatConversationProvider.notifier).startNewConversation();
+              ref
+                  .read(enhancedChatConversationProvider.notifier)
+                  .startNewConversation();
             },
           ),
-          
+
           _buildMenuTile(
             icon: Icons.close,
             title: '대화 종료',
@@ -717,7 +721,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
               _endConversation();
             },
           ),
-          
+
           const SizedBox(height: 20),
         ],
       ),
@@ -755,7 +759,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
   /// 📱 메시지 롱 프레스 처리
   void _onMessageLongPress(ChatMessage message) {
     HapticFeedback.mediumImpact();
-    
+
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
@@ -776,7 +780,9 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
                 leading: const Icon(Icons.delete),
                 title: const Text('메시지 삭제'),
                 onTap: () {
-                  ref.read(enhancedChatConversationProvider.notifier).deleteMessage(message.id);
+                  ref
+                      .read(enhancedChatConversationProvider.notifier)
+                      .deleteMessage(message.id);
                   Navigator.pop(context);
                 },
               ),
@@ -807,10 +813,8 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
             Text('발신자: ${message.sender.name}'),
             Text('시간: ${message.timestamp}'),
             Text('타입: ${message.type.description}'),
-            if (message.emotion != null)
-              Text('감정: ${message.emotion!.name}'),
-            if (message.metadata != null)
-              Text('메타데이터: ${message.metadata}'),
+            if (message.emotion != null) Text('감정: ${message.emotion!.name}'),
+            if (message.metadata != null) Text('메타데이터: ${message.metadata}'),
           ],
         ),
         actions: [

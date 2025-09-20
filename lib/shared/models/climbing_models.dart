@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 
 /// 등반 세션 상태
 enum ClimbingSessionStatus {
-  active,      // 등반 중
-  completed,   // 성공 완료
-  failed,      // 실패 완료
-  cancelled,   // 취소됨
+  active, // 등반 중
+  completed, // 성공 완료
+  failed, // 실패 완료
+  cancelled, // 취소됨
 }
 
 /// 등반 세션 정보
@@ -40,27 +40,30 @@ class ClimbingSession {
   /// 등반 진행률 (0.0 ~ 1.0)
   double get progress {
     if (!isActive) return 1.0;
-    
+
     final now = DateTime.now();
-    final elapsed = now.difference(startTime).inMilliseconds / (1000 * 3600); // 시간 단위
+    final elapsed =
+        now.difference(startTime).inMilliseconds / (1000 * 3600); // 시간 단위
     return (elapsed / durationHours).clamp(0.0, 1.0);
   }
 
   /// 남은 시간
   Duration get remainingTime {
     if (!isActive) return Duration.zero;
-    
+
     final now = DateTime.now();
     final elapsed = now.difference(startTime);
-    final totalDuration = Duration(milliseconds: (durationHours * 3600 * 1000).round());
+    final totalDuration =
+        Duration(milliseconds: (durationHours * 3600 * 1000).round());
     final remaining = totalDuration - elapsed;
-    
+
     return remaining.isNegative ? Duration.zero : remaining;
   }
 
   /// 예상 완료 시간
   DateTime get expectedEndTime {
-    return startTime.add(Duration(milliseconds: (durationHours * 3600 * 1000).round()));
+    return startTime
+        .add(Duration(milliseconds: (durationHours * 3600 * 1000).round()));
   }
 
   ClimbingSession copyWith({
@@ -144,41 +147,48 @@ class ClimbingRewards {
     this.specialReward,
   });
 
-  bool get hasRewards => experience > 0 || points > 0 || statIncreases.isNotEmpty;
+  bool get hasRewards =>
+      experience > 0 || points > 0 || statIncreases.isNotEmpty;
 
   String get summaryText {
     final parts = <String>[];
-    
+
     if (experience > 0) {
       parts.add('경험치 +${experience.toStringAsFixed(1)}');
     }
-    
+
     if (points > 0) {
       parts.add('포인트 +$points');
     }
-    
+
     if (statIncreases.isNotEmpty) {
       final statText = statIncreases.entries
           .map((e) => '${_getStatName(e.key)} +${e.value.toStringAsFixed(1)}')
           .join(', ');
       parts.add(statText);
     }
-    
+
     if (newBadgeIds.isNotEmpty) {
       parts.add('새 뱃지 ${newBadgeIds.length}개');
     }
-    
+
     return parts.join(', ');
   }
 
   String _getStatName(String key) {
     switch (key) {
-      case 'stamina': return '체력';
-      case 'knowledge': return '지식';
-      case 'technique': return '기술';
-      case 'sociality': return '사교성';
-      case 'willpower': return '의지';
-      default: return key;
+      case 'stamina':
+        return '체력';
+      case 'knowledge':
+        return '지식';
+      case 'technique':
+        return '기술';
+      case 'sociality':
+        return '사교성';
+      case 'willpower':
+        return '의지';
+      default:
+        return key;
     }
   }
 
@@ -405,29 +415,30 @@ class ClimbingStatistics {
     final totalAttempts = records.length;
     final successfulClimbs = records.where((r) => r.isSuccess).length;
     final failedClimbs = totalAttempts - successfulClimbs;
-    
+
     final totalExperience = records.fold<double>(
-      0.0, 
+      0.0,
       (sum, r) => sum + r.rewards.experience,
     );
-    
+
     final totalPoints = records.fold<int>(
-      0, 
+      0,
       (sum, r) => sum + r.rewards.points,
     );
-    
+
     final totalClimbingHours = records.fold<double>(
-      0.0, 
+      0.0,
       (sum, r) => sum + r.durationHours,
     );
-    
-    final highestDifficulty = records.isEmpty 
-        ? 0 
+
+    final highestDifficulty = records.isEmpty
+        ? 0
         : records.map((r) => r.difficulty).reduce((a, b) => a > b ? a : b);
-    
-    final averageSuccessRate = records.isEmpty 
-        ? 0.0 
-        : records.map((r) => r.successProbability).reduce((a, b) => a + b) / records.length;
+
+    final averageSuccessRate = records.isEmpty
+        ? 0.0
+        : records.map((r) => r.successProbability).reduce((a, b) => a + b) /
+            records.length;
 
     return ClimbingStatistics(
       totalAttempts: totalAttempts,
@@ -507,20 +518,20 @@ class ClimbingState {
 
   /// 초기 상태
   static ClimbingState get initial => ClimbingState(
-    currentSession: null,
-    history: [],
-    statistics: const ClimbingStatistics(
-      totalAttempts: 0,
-      successfulClimbs: 0,
-      failedClimbs: 0,
-      totalExperience: 0.0,
-      totalPoints: 0,
-      totalClimbingHours: 0.0,
-      highestDifficulty: 0,
-      averageSuccessRate: 0.0,
-    ),
-    lastUpdated: DateTime.now(),
-  );
+        currentSession: null,
+        history: [],
+        statistics: const ClimbingStatistics(
+          totalAttempts: 0,
+          successfulClimbs: 0,
+          failedClimbs: 0,
+          totalExperience: 0.0,
+          totalPoints: 0,
+          totalClimbingHours: 0.0,
+          highestDifficulty: 0,
+          averageSuccessRate: 0.0,
+        ),
+        lastUpdated: DateTime.now(),
+      );
 
   /// 현재 등반 중인지 확인
   bool get isCurrentlyClimbing => currentSession?.isActive == true;
@@ -529,15 +540,16 @@ class ClimbingState {
   double get currentProgress => currentSession?.progress ?? 0.0;
 
   /// 현재 등반 남은 시간
-  Duration get currentRemainingTime => currentSession?.remainingTime ?? Duration.zero;
+  Duration get currentRemainingTime =>
+      currentSession?.remainingTime ?? Duration.zero;
 
   /// 오늘의 등반 기록
   List<ClimbingRecord> get todayRecords {
     final today = DateTime.now();
     return history.where((record) {
       return record.startTime.year == today.year &&
-             record.startTime.month == today.month &&
-             record.startTime.day == today.day;
+          record.startTime.month == today.month &&
+          record.startTime.day == today.day;
     }).toList();
   }
 
@@ -573,14 +585,16 @@ class ClimbingState {
 
   factory ClimbingState.fromJson(Map<String, dynamic> json) {
     return ClimbingState(
-      currentSession: json['currentSession'] != null 
+      currentSession: json['currentSession'] != null
           ? ClimbingSession.fromJson(json['currentSession'])
           : null,
       history: (json['history'] as List?)
-          ?.map((r) => ClimbingRecord.fromJson(r))
-          .toList() ?? [],
+              ?.map((r) => ClimbingRecord.fromJson(r))
+              .toList() ??
+          [],
       statistics: ClimbingStatistics.fromJson(json['statistics'] ?? {}),
-      lastUpdated: DateTime.tryParse(json['lastUpdated'] ?? '') ?? DateTime.now(),
+      lastUpdated:
+          DateTime.tryParse(json['lastUpdated'] ?? '') ?? DateTime.now(),
     );
   }
 }

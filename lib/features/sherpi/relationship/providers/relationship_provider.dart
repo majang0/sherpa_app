@@ -10,8 +10,7 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
   static const String _storageKey = 'sherpi/relationship';
   final SharedPreferences _prefs;
 
-  SherpiRelationshipNotifier(this._prefs) 
-      : super(_loadInitialState(_prefs)) {
+  SherpiRelationshipNotifier(this._prefs) : super(_loadInitialState(_prefs)) {
     // 상태 변경 시 자동 저장
     addListener((state) {
       _saveToStorage(state);
@@ -29,7 +28,7 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
         print('❌ 관계 데이터 로드 실패: $e');
       }
     }
-    
+
     // 기본 상태
     return SherpiRelationship(
       firstMeetingDate: DateTime.now(),
@@ -54,11 +53,11 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
   }) {
     final now = DateTime.now();
     final lastDate = state.lastInteractionDate;
-    
+
     // 연속 일수 계산
     int newConsecutiveDays = state.consecutiveDays;
-    if (lastDate.day != now.day || 
-        lastDate.month != now.month || 
+    if (lastDate.day != now.day ||
+        lastDate.month != now.month ||
         lastDate.year != now.year) {
       // 하루가 지났는지 확인
       final daysDiff = now.difference(lastDate).inDays;
@@ -78,9 +77,7 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
 
     // 친밀도 레벨 재계산
     final newIntimacyLevel = SherpiRelationship.calculateIntimacyLevel(
-      newTotalInteractions, 
-      newConsecutiveDays
-    );
+        newTotalInteractions, newConsecutiveDays);
 
     // 성격 인사이트 업데이트
     final updatedInsights = state.personalityInsights.updateFromInteraction(
@@ -124,7 +121,7 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
     );
 
     final updatedMoments = [...state.specialMoments, moment];
-    
+
     // 최대 50개까지만 보관
     if (updatedMoments.length > 50) {
       updatedMoments.removeAt(0);
@@ -150,8 +147,9 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
 
   /// 📊 관계 통계 가져오기
   Map<String, dynamic> getRelationshipStats() {
-    final daysSinceMeeting = DateTime.now().difference(state.firstMeetingDate).inDays;
-    final averageInteractionsPerDay = daysSinceMeeting > 0 
+    final daysSinceMeeting =
+        DateTime.now().difference(state.firstMeetingDate).inDays;
+    final averageInteractionsPerDay = daysSinceMeeting > 0
         ? (state.totalInteractions / daysSinceMeeting).toStringAsFixed(1)
         : '0';
 
@@ -184,12 +182,12 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
   /// 다음 레벨 진행률 계산 (0.0 ~ 1.0)
   double _calculateNextLevelProgress() {
     if (state.intimacyLevel >= 10) return 1.0;
-    
+
     final currentLevelRequirement = state.intimacyLevel * 100;
     final nextLevelRequirement = (state.intimacyLevel + 1) * 100;
     final range = nextLevelRequirement - currentLevelRequirement;
     final progress = state.totalInteractions - currentLevelRequirement;
-    
+
     return (progress / range).clamp(0.0, 1.0);
   }
 
@@ -200,11 +198,12 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
       lastInteractionDate: DateTime.now(),
     );
   }
-  
+
   /// 🎨 Phase 2: 관계 정보 직접 업데이트 (개인화 설정 등)
   void updateRelationship(SherpiRelationship newRelationship) {
     state = newRelationship;
-    print('🎨 관계 정보 직접 업데이트 완료: ${newRelationship.personalizationSettings.personalityType.displayName}');
+    print(
+        '🎨 관계 정보 직접 업데이트 완료: ${newRelationship.personalizationSettings.personalityType.displayName}');
   }
 
   /// 💭 특별한 순간 회상하기
@@ -213,14 +212,16 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
 
     if (type != null) {
       // 특정 타입의 순간 찾기
-      final filtered = state.specialMoments.where((m) => m.type == type).toList();
+      final filtered =
+          state.specialMoments.where((m) => m.type == type).toList();
       if (filtered.isNotEmpty) {
         return filtered[DateTime.now().millisecond % filtered.length];
       }
     }
 
     // 랜덤하게 하나 선택
-    return state.specialMoments[DateTime.now().millisecond % state.specialMoments.length];
+    return state.specialMoments[
+        DateTime.now().millisecond % state.specialMoments.length];
   }
 
   /// 💖 감정 동기화 점수 업데이트 (감정 분석 시스템 연동)
@@ -228,11 +229,11 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
     // 현재 점수와 새 점수의 가중 평균 계산 (점진적 변화)
     final currentScore = state.emotionalSync;
     final weightedScore = (currentScore * 0.7) + (newSyncScore * 0.3);
-    
+
     final updatedScore = weightedScore.clamp(0.0, 1.0);
-    
+
     state = state.copyWith(emotionalSync: updatedScore);
-    
+
     // 감정 동기화 수준이 크게 향상된 경우 특별한 순간으로 기록
     if (updatedScore - currentScore >= 0.2) {
       _recordEmotionalSyncImprovement(updatedScore);
@@ -243,7 +244,7 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
   void _recordEmotionalSyncImprovement(double newScore) {
     String title;
     String description;
-    
+
     if (newScore >= 0.8) {
       title = '마음이 완전히 통했어요!';
       description = '셰르피와의 감정 동기화가 완벽해졌어요. 이제 서로를 완전히 이해해요!';
@@ -275,7 +276,7 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
     final syncMoments = state.specialMoments
         .where((m) => m.type == 'emotional_sync_improvement')
         .toList();
-    
+
     if (syncMoments.isEmpty) {
       return {
         'trend': 'stable',
@@ -288,14 +289,14 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
     // 최근 5개 개선 기록 분석
     final recentMoments = syncMoments.take(5).toList();
     double totalGrowth = 0.0;
-    
+
     for (final moment in recentMoments) {
       final improvement = moment.metadata['improvement'] as double? ?? 0.0;
       totalGrowth += improvement;
     }
-    
+
     final averageGrowth = totalGrowth / recentMoments.length;
-    
+
     String trend = 'stable';
     if (averageGrowth > 0.1) {
       trend = 'rapidly_improving';
@@ -308,7 +309,7 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
     return {
       'trend': trend,
       'improvements': syncMoments.length,
-      'lastImprovement': syncMoments.isNotEmpty 
+      'lastImprovement': syncMoments.isNotEmpty
           ? syncMoments.first.timestamp.toIso8601String()
           : null,
       'averageGrowth': averageGrowth,
@@ -318,7 +319,9 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
 }
 
 /// 🌟 셰르피 관계 프로바이더
-final relationshipProvider = StateNotifierProvider<SherpiRelationshipNotifier, SherpiRelationship>((ref) {
+final relationshipProvider =
+    StateNotifierProvider<SherpiRelationshipNotifier, SherpiRelationship>(
+        (ref) {
   throw UnimplementedError('SharedPreferences를 main.dart에서 제공해야 합니다');
 });
 

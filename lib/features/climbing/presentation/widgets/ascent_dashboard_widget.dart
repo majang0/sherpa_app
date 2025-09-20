@@ -22,7 +22,8 @@ import '../../../../shared/models/mountain.dart';
 
 class AscentDashboardWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<AscentDashboardWidget> createState() => _AscentDashboardWidgetState();
+  ConsumerState<AscentDashboardWidget> createState() =>
+      _AscentDashboardWidgetState();
 }
 
 class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
@@ -182,7 +183,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     final durationMs = (session.durationHours * 3600 * 1000).round();
 
     _progressTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
-      final currentSession = ref.read(globalUserProvider).currentClimbingSession;
+      final currentSession =
+          ref.read(globalUserProvider).currentClimbingSession;
       if (currentSession == null || !currentSession.isActive) {
         timer.cancel();
         setState(() => _currentProgress = 0.0);
@@ -226,7 +228,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
       }
 
       setState(() {
-        _sherpiMessageIndex = (_sherpiMessageIndex + 1) % _sherpiMessages.length;
+        _sherpiMessageIndex =
+            (_sherpiMessageIndex + 1) % _sherpiMessages.length;
       });
     });
   }
@@ -253,7 +256,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         // 디버그 로그 추가
         print('🎯 등반 완료 - 산: ${lastRecord.mountainName}');
         print('✅ 성공 여부: ${lastRecord.isSuccess}');
-        print('🎁 보상 - XP: ${lastRecord.rewards.experience}, Points: ${lastRecord.rewards.points}');
+        print(
+            '🎁 보상 - XP: ${lastRecord.rewards.experience}, Points: ${lastRecord.rewards.points}');
 
         // 보상이 없는 경우 경고
         if (!lastRecord.rewards.hasRewards) {
@@ -321,7 +325,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         _startClimbing(_lastClimbedMountain!);
       } else {
         final userPower = ref.read(userClimbingPowerProvider);
-        final mountains = MountainData.getRecommendedMountainsByPower(userPower);
+        final mountains =
+            MountainData.getRecommendedMountainsByPower(userPower);
         if (mountains.isNotEmpty) {
           _startClimbing(mountains.first);
         }
@@ -375,7 +380,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               top: 100,
               left: 0,
               right: 0,
-              child: _buildRewardAnimation(_lastRewards!, _lastClimbSuccess ?? false),
+              child: _buildRewardAnimation(
+                  _lastRewards!, _lastClimbSuccess ?? false),
             ),
         ],
       ),
@@ -529,30 +535,32 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           height: 310, // 🔧 수정: 높이를 다시 280으로 축소
           child: mountains.isEmpty
               ? Center(
-            child: Text(
-              '추천 등반지가 없습니다', // 🔧 수정: 원정지 -> 등반지
-              style: GoogleFonts.notoSans(
-                fontSize: 14,
-                color: AppColors.textSecondary,
-              ),
-            ),
-          )
+                  child: Text(
+                    '추천 등반지가 없습니다', // 🔧 수정: 원정지 -> 등반지
+                    style: GoogleFonts.notoSans(
+                      fontSize: 14,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                )
               : ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            itemCount: mountains.length,
-            padding: const EdgeInsets.only(right: 4),
-            itemBuilder: (context, index) {
-              final mountain = mountains[index];
-              return _buildMountainCard(mountain, userPower, user, badges);
-            },
-          ),
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: mountains.length,
+                  padding: const EdgeInsets.only(right: 4),
+                  itemBuilder: (context, index) {
+                    final mountain = mountains[index];
+                    return _buildMountainCard(
+                        mountain, userPower, user, badges);
+                  },
+                ),
         ),
       ],
     );
   }
 
-  Widget _buildMountainCard(Mountain mountain, double userPower, GlobalUser user, List<GlobalBadge> badges) {
+  Widget _buildMountainCard(Mountain mountain, double userPower,
+      GlobalUser user, List<GlobalBadge> badges) {
     final successProb = GameConstants.calculateSuccessProbability(
       userPower: userPower,
       mountainPower: mountain.requiredPower,
@@ -576,14 +584,14 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         : 0;
 
     return MouseRegion(
-      onEnter: (_) => setState(() => _selectedMountainId = mountain.id.toString()),
+      onEnter: (_) =>
+          setState(() => _selectedMountainId = mountain.id.toString()),
       onExit: (_) => setState(() => _selectedMountainId = ''),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: 200,
         margin: const EdgeInsets.only(right: 12),
-        transform: Matrix4.identity()
-          ..translate(0.0, isSelected ? -8.0 : 0.0),
+        transform: Matrix4.identity()..translate(0.0, isSelected ? -8.0 : 0.0),
         child: GestureDetector(
           onTap: canClimb ? () => _startClimbing(mountain) : null,
           child: Container(
@@ -617,7 +625,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(18)),
                   ),
                   child: Stack(
                     children: [
@@ -631,7 +640,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                         top: 8,
                         right: 8,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.6),
                             borderRadius: BorderRadius.circular(12),
@@ -681,7 +691,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _buildPowerComparison(userPower, mountain.requiredPower),
+                            _buildPowerComparison(
+                                userPower, mountain.requiredPower),
                             _buildCompactSuccessRate(successProb),
                           ],
                         ),
@@ -693,14 +704,19 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.timer, size: 12, color: AppColors.textSecondary),
+                                Icon(Icons.timer,
+                                    size: 12, color: AppColors.textSecondary),
                                 const SizedBox(width: 4),
                                 Text(
                                   _formatDuration(originalTime),
                                   style: GoogleFonts.notoSans(
                                     fontSize: 11,
-                                    color: timeReduction ? AppColors.textLight : AppColors.textSecondary,
-                                    decoration: timeReduction ? TextDecoration.lineThrough : null,
+                                    color: timeReduction
+                                        ? AppColors.textLight
+                                        : AppColors.textSecondary,
+                                    decoration: timeReduction
+                                        ? TextDecoration.lineThrough
+                                        : null,
                                   ),
                                 ),
                                 if (timeReduction) ...[
@@ -730,7 +746,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
 
                         // 🔧 수정: 보상 정보를 하단에 조화롭게 배치
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 6),
                           decoration: BoxDecoration(
                             color: AppColors.primary.withOpacity(0.05),
                             borderRadius: BorderRadius.circular(8),
@@ -738,17 +755,21 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              _buildMiniReward('✨', GameConstants.calculateDisplayXp(
-                                mountain.difficultyLevel,
-                                mountain.durationHours,
-                                playerLevel: user.level,
-                              ).toInt()),
+                              _buildMiniReward(
+                                  '✨',
+                                  GameConstants.calculateDisplayXp(
+                                    mountain.difficultyLevel,
+                                    mountain.durationHours,
+                                    playerLevel: user.level,
+                                  ).toInt()),
                               const SizedBox(width: 16),
-                              _buildMiniReward('💰', GameConstants.calculateDisplayPoints(
-                                mountain.difficultyLevel,
-                                mountain.durationHours,
-                                playerLevel: user.level,
-                              )),
+                              _buildMiniReward(
+                                  '💰',
+                                  GameConstants.calculateDisplayPoints(
+                                    mountain.difficultyLevel,
+                                    mountain.durationHours,
+                                    playerLevel: user.level,
+                                  )),
                             ],
                           ),
                         ),
@@ -777,7 +798,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
-                            color: canClimb ? Colors.white : Colors.grey.shade600,
+                            color:
+                                canClimb ? Colors.white : Colors.grey.shade600,
                           ),
                         ),
                       ),
@@ -845,7 +867,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
   }
 
   Widget _buildClimbingMonitor(ClimbingSession session) {
-    final mountain = ref.watch(globalGameProvider).getMountainById(session.mountainId);
+    final mountain =
+        ref.watch(globalGameProvider).getMountainById(session.mountainId);
     if (mountain == null) return const SizedBox();
 
     return Container(
@@ -875,7 +898,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
@@ -953,8 +977,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           const SizedBox(height: 24),
 
           // 등반 중 셰르피 격려 메시지
-          if (_showSherpiMessage)
-            _buildSherpiEncouragement(),
+          if (_showSherpiMessage) _buildSherpiEncouragement(),
           const SizedBox(height: 20),
 
           // 실시간 상태
@@ -1088,15 +1111,15 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                 child: ClipOval(
                   child: Transform.scale(
                     scale: 1.4,
-                  child: Image.asset(
-                    SherpiEmotion.thinking.imagePath,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Center(
-                        child: Text('🎯', style: TextStyle(fontSize: 28)),
-                      );
-                    },
-                  ),
+                    child: Image.asset(
+                      SherpiEmotion.thinking.imagePath,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Text('🎯', style: TextStyle(fontSize: 28)),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -1294,7 +1317,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           ),
           if (record.rewards.hasRewards) ...[
             if (record.rewards.experience > 0)
-              _buildRewardChip('+${record.rewards.experience.toInt()} XP', AppColors.quest),
+              _buildRewardChip(
+                  '+${record.rewards.experience.toInt()} XP', AppColors.quest),
             const SizedBox(width: 4),
             if (record.rewards.points > 0)
               _buildRewardChip('+${record.rewards.points} P', AppColors.point),
@@ -1318,7 +1342,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               child: Center(
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
@@ -1351,7 +1376,9 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                             style: GoogleFonts.notoSans(
                               fontSize: 20,
                               fontWeight: FontWeight.w800,
-                              color: isSuccess ? AppColors.success : AppColors.error,
+                              color: isSuccess
+                                  ? AppColors.success
+                                  : AppColors.error,
                             ),
                           ),
                         ],
@@ -1362,9 +1389,9 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             if (rewards.experience > 0) ...[
-                              _buildInlineReward('✨', '+${rewards.experience.toInt()} XP'),
-                              if (rewards.points > 0)
-                                const SizedBox(width: 20),
+                              _buildInlineReward(
+                                  '✨', '+${rewards.experience.toInt()} XP'),
+                              if (rewards.points > 0) const SizedBox(width: 20),
                             ],
                             if (rewards.points > 0)
                               _buildInlineReward('💰', '+${rewards.points} P'),
@@ -1421,8 +1448,11 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
 
   Widget _buildPowerComparison(double userPower, double requiredPower) {
     final ratio = userPower / requiredPower;
-    final color = ratio >= 1.0 ? AppColors.success :
-    ratio >= 0.7 ? AppColors.warning : AppColors.error;
+    final color = ratio >= 1.0
+        ? AppColors.success
+        : ratio >= 0.7
+            ? AppColors.warning
+            : AppColors.error;
 
     return Row(
       children: [
@@ -1624,24 +1654,25 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
 
     // 디버그 모드에서는 시간 단축
     final adjustedDuration = _debugMode
-        ? mountain.durationHours / 360  // 10초로 변환 (테스트용)
-        : mountain.durationHours;       // 실제 시간
+        ? mountain.durationHours / 360 // 10초로 변환 (테스트용)
+        : mountain.durationHours; // 실제 시간
 
     if (_debugMode) {
       print('🏔️ 등반 시작 - ${mountain.name}');
       print('📊 난이도: ${mountain.difficultyLevel}');
-      print('⏱️ 원래 시간: ${mountain.durationHours}h → 테스트: ${(adjustedDuration * 3600).toInt()}초');
+      print(
+          '⏱️ 원래 시간: ${mountain.durationHours}h → 테스트: ${(adjustedDuration * 3600).toInt()}초');
     }
 
     ref.read(globalUserProvider.notifier).startClimbing(
-      mountainId: mountain.id,
-      mountainName: mountain.name,
-      region: mountain.region,
-      difficulty: mountain.difficultyLevel,
-      durationHours: adjustedDuration,  // 테스트용 짧은 시간
-      mountainPower: mountain.requiredPower,
-      originalDuration: mountain.durationHours,
-    );
+          mountainId: mountain.id,
+          mountainName: mountain.name,
+          region: mountain.region,
+          difficulty: mountain.difficultyLevel,
+          durationHours: adjustedDuration, // 테스트용 짧은 시간
+          mountainPower: mountain.requiredPower,
+          originalDuration: mountain.durationHours,
+        );
 
     _startProgressTracking();
     _startSherpiMessages(); // 등반 중 격려 메시지는 유지

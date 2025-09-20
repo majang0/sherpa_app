@@ -10,7 +10,7 @@ import '../../../../shared/models/global_user_model.dart';
 
 class MovieEditScreen extends ConsumerStatefulWidget {
   final MovieLog movie;
-  
+
   const MovieEditScreen({required this.movie});
 
   @override
@@ -34,7 +34,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -47,11 +47,12 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
@@ -104,7 +105,8 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
         actions: [
@@ -150,60 +152,60 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildHeader(),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 변경 불가능한 정보 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildReadOnlyInfo(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 평점 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildRatingSection(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 리뷰 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildReviewSection(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 공유 설정 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildShareSection(),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 저장 버튼
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildSaveButton(),
                   ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -339,9 +341,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -358,17 +358,18 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                   const SizedBox(height: 12),
                   _buildReadOnlyInfoRow('🎭', '감독', widget.movie.director),
                   const SizedBox(height: 12),
-                  _buildReadOnlyInfoRow(_getGenreEmoji(widget.movie.genre), '장르', widget.movie.genre),
+                  _buildReadOnlyInfoRow(_getGenreEmoji(widget.movie.genre),
+                      '장르', widget.movie.genre),
                   const SizedBox(height: 12),
-                  _buildReadOnlyInfoRow('📅', '관람일', _formatDate(widget.movie.date)),
+                  _buildReadOnlyInfoRow(
+                      '📅', '관람일', _formatDate(widget.movie.date)),
                   const SizedBox(height: 12),
-                  _buildReadOnlyInfoRow('⏰', '상영시간', '${widget.movie.watchTimeMinutes}분'),
+                  _buildReadOnlyInfoRow(
+                      '⏰', '상영시간', '${widget.movie.watchTimeMinutes}분'),
                 ],
               ),
             ),
-            
             const SizedBox(height: 12),
-            
             Text(
               '영화 제목, 감독, 장르, 관람일, 상영시간은 수정할 수 없습니다',
               style: GoogleFonts.notoSans(
@@ -470,9 +471,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -492,8 +491,9 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                       (index) {
                         final starValue = index + 1;
                         final isFullStar = _rating >= starValue;
-                        final isHalfStar = _rating >= starValue - 0.5 && _rating < starValue;
-                        
+                        final isHalfStar =
+                            _rating >= starValue - 0.5 && _rating < starValue;
+
                         return GestureDetector(
                           onTap: () {
                             setState(() {
@@ -539,13 +539,12 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                       },
                     ),
                   ),
-                  
                   const SizedBox(height: 16),
-                  
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
                       activeTrackColor: const Color(0xFFFBBF24),
-                      inactiveTrackColor: const Color(0xFFFBBF24).withOpacity(0.2),
+                      inactiveTrackColor:
+                          const Color(0xFFFBBF24).withOpacity(0.2),
                       thumbColor: const Color(0xFFFBBF24),
                       overlayColor: const Color(0xFFFBBF24).withOpacity(0.2),
                       trackHeight: 6,
@@ -626,9 +625,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -711,9 +708,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -836,26 +831,40 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
 
   String _getGenreEmoji(String genre) {
     switch (genre) {
-      case '드라마': return '🎭';
-      case '액션': return '💥';
-      case 'SF': return '🚀';
-      case '로맨스': return '💕';
-      case '코미디': return '😂';
-      case '스릴러': return '😱';
-      case '공포': return '👻';
-      case '애니메이션': return '🎨';
-      case '다큐멘터리': return '📹';
-      case '뮤지컬': return '🎵';
-      case '범죄': return '🔍';
-      case '전쟁': return '⚔️';
-      case '판타지': return '🪄';
-      default: return '🎬';
+      case '드라마':
+        return '🎭';
+      case '액션':
+        return '💥';
+      case 'SF':
+        return '🚀';
+      case '로맨스':
+        return '💕';
+      case '코미디':
+        return '😂';
+      case '스릴러':
+        return '😱';
+      case '공포':
+        return '👻';
+      case '애니메이션':
+        return '🎨';
+      case '다큐멘터리':
+        return '📹';
+      case '뮤지컬':
+        return '🎵';
+      case '범죄':
+        return '🔍';
+      case '전쟁':
+        return '⚔️';
+      case '판타지':
+        return '🪄';
+      default:
+        return '🎬';
     }
   }
 
   void _saveMovie() async {
     if (_isSubmitting) return;
-    
+
     setState(() {
       _isSubmitting = true;
     });
@@ -883,18 +892,18 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
         }
         return log;
       }).toList();
-      
+
       final updatedRecords = user.dailyRecords.copyWith(
         movieLogs: updatedMovieLogs,
       );
-      
+
       final updatedUser = user.copyWith(dailyRecords: updatedRecords);
       ref.read(globalUserProvider.notifier).state = updatedUser;
 
       if (mounted) {
         Navigator.pop(context);
         Navigator.pop(context); // 상세보기 화면도 닫기
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -903,7 +912,8 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
             ),
             backgroundColor: const Color(0xFFEF4444),
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             margin: const EdgeInsets.all(16),
           ),
         );
@@ -918,7 +928,8 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
             ),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             margin: const EdgeInsets.all(16),
           ),
         );

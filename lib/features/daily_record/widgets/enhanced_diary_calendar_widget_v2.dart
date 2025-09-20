@@ -17,23 +17,25 @@ class EnhancedDiaryCalendarWidget extends ConsumerStatefulWidget {
   const EnhancedDiaryCalendarWidget({super.key});
 
   @override
-  ConsumerState<EnhancedDiaryCalendarWidget> createState() => _EnhancedDiaryCalendarWidgetState();
+  ConsumerState<EnhancedDiaryCalendarWidget> createState() =>
+      _EnhancedDiaryCalendarWidgetState();
 }
 
-class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalendarWidget>
+class _EnhancedDiaryCalendarWidgetState
+    extends ConsumerState<EnhancedDiaryCalendarWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -41,7 +43,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
       parent: _animationController,
       curve: Curves.easeOut,
     ));
-    
+
     _animationController.forward();
   }
 
@@ -55,11 +57,11 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
   Widget build(BuildContext context) {
     final user = ref.watch(globalUserProvider);
     final diaryLogs = user.dailyRecords.diaryLogs;
-    
+
     // 날짜순으로 정렬 (최신순)
     final sortedDiaryLogs = List<DiaryLog>.from(diaryLogs)
       ..sort((a, b) => b.date.compareTo(a.date));
-    
+
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
@@ -78,7 +80,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             const SizedBox(height: 10),
             _buildFullViewButton(),
             const SizedBox(height: 12),
-            
+
             // 최근 기록들
             if (sortedDiaryLogs.isNotEmpty) ...[
               _buildRecentHeader(),
@@ -86,7 +88,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               ...sortedDiaryLogs.take(3).map((diary) => _buildDiaryItem(diary)),
             ] else
               _buildEmptyState(),
-            
+
             const SizedBox(height: 12),
             _buildActionButtons(),
           ],
@@ -172,8 +174,9 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
 
   Widget _buildWeeklyCalendar(List<DiaryLog> diaryLogs) {
     final now = DateTime.now();
-    final weekDays = List.generate(7, (index) => now.subtract(Duration(days: 6 - index)));
-    
+    final weekDays =
+        List.generate(7, (index) => now.subtract(Duration(days: 6 - index)));
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -215,14 +218,14 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: weekDays.map((day) => 
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
-                  child: _buildCalendarDay(day, diaryLogs),
-                ),
-              )
-            ).toList(),
+            children: weekDays
+                .map((day) => Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: _buildCalendarDay(day, diaryLogs),
+                      ),
+                    ))
+                .toList(),
           ),
         ],
       ),
@@ -230,12 +233,13 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
   }
 
   Widget _buildCalendarDay(DateTime day, List<DiaryLog> diaryLogs) {
-    final dayLogs = diaryLogs.where((log) => _isSameDay(log.date, day)).toList();
+    final dayLogs =
+        diaryLogs.where((log) => _isSameDay(log.date, day)).toList();
     final latestDiary = dayLogs.isNotEmpty ? dayLogs.first : null;
     final hasMultipleDiaries = dayLogs.length > 1;
     final isToday = _isSameDay(day, DateTime.now());
     final weekdayName = ['월', '화', '수', '목', '금', '토', '일'][day.weekday - 1];
-    
+
     return GestureDetector(
       onTap: () {
         HapticFeedbackManager.mediumImpact();
@@ -252,22 +256,20 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               style: GoogleFonts.notoSans(
                 fontSize: 8,
                 fontWeight: FontWeight.w600,
-                color: isToday 
-                    ? ModernColors.diary
-                    : ModernColors.textTertiary,
+                color: isToday ? ModernColors.diary : ModernColors.textTertiary,
                 letterSpacing: 0.2,
               ),
             ),
             const SizedBox(height: 3),
-            
+
             // 날짜
             Container(
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: isToday 
+                color: isToday
                     ? ModernColors.diary
-                    : latestDiary != null 
+                    : latestDiary != null
                         ? ModernColors.diaryLight
                         : ModernColors.surface,
                 borderRadius: BorderRadius.circular(14),
@@ -287,9 +289,9 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                   style: GoogleFonts.notoSans(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
-                    color: isToday 
-                        ? Colors.white 
-                        : latestDiary != null 
+                    color: isToday
+                        ? Colors.white
+                        : latestDiary != null
                             ? ModernColors.diary
                             : ModernColors.textSecondary,
                   ),
@@ -297,7 +299,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               ),
             ),
             const SizedBox(height: 4),
-            
+
             // 감정 이모지 또는 상태 표시
             if (latestDiary != null) ...[
               if (hasMultipleDiaries)
@@ -309,7 +311,8 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                     ),
                     const SizedBox(height: 2),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 1),
                       decoration: BoxDecoration(
                         color: ModernColors.diary,
                         borderRadius: BorderRadius.circular(8),
@@ -436,10 +439,14 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
                           gradient: const LinearGradient(
-                            colors: [ModernColors.diary, ModernColors.diaryAccent],
+                            colors: [
+                              ModernColors.diary,
+                              ModernColors.diaryAccent
+                            ],
                           ),
                           borderRadius: BorderRadius.circular(6),
                         ),
@@ -633,7 +640,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
   Widget _buildActionButtons() {
     final user = ref.watch(globalUserProvider);
     final hasDiaryLogs = user.dailyRecords.diaryLogs.isNotEmpty;
-    
+
     return Row(
       children: [
         // 일기 작성 버튼
@@ -662,7 +669,8 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.edit_rounded, size: 18, color: Colors.white),
+                      const Icon(Icons.edit_rounded,
+                          size: 18, color: Colors.white),
                       const SizedBox(width: 6),
                       Text(
                         '일기 작성',
@@ -680,7 +688,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             ),
           ),
         ),
-        
+
         // 일기가 있을 때만 분석 버튼 표시
         if (hasDiaryLogs) ...[
           const SizedBox(width: 8),
@@ -716,7 +724,8 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.insights_rounded, size: 18, color: Colors.white),
+                        const Icon(Icons.insights_rounded,
+                            size: 18, color: Colors.white),
                         const SizedBox(width: 6),
                         Text(
                           '감정 분석',
@@ -819,7 +828,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                   borderRadius: BorderRadius.circular(2.5),
                 ),
               ),
-              
+
               // 모달 내용...
               _buildModalContent(date, dayLogs),
             ],
@@ -885,20 +894,20 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
               ),
             ],
           ),
-          
+
           const SizedBox(height: 28),
-          
+
           // 일기 내용 표시
           if (dayLogs.isNotEmpty) ...[
-            if (dayLogs.length == 1) 
+            if (dayLogs.length == 1)
               _buildSingleDiaryPreview(dayLogs.first)
-            else 
+            else
               _buildMultipleDiariesList(dayLogs),
           ] else
             _buildEmptyDayContent(date),
-          
+
           const SizedBox(height: 20),
-          
+
           // 작성 버튼
           _buildModalWriteButton(date, dayLogs.isNotEmpty),
         ],
@@ -959,7 +968,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
   }
 
   // 기타 헬퍼 메서드들...
-  
+
   Widget _buildSingleDiaryPreview(DiaryLog diary) {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -989,10 +998,14 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 3),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [ModernColors.diary, ModernColors.diaryAccent],
+                          colors: [
+                            ModernColors.diary,
+                            ModernColors.diaryAccent
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -1035,7 +1048,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 20),
-          
+
           // 액션 버튼들
           Row(
             children: [
@@ -1096,14 +1109,18 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isOutlined ? Colors.white : null,
-            gradient: isOutlined ? null : const LinearGradient(
-              colors: [ModernColors.diary, ModernColors.diaryAccent],
-            ),
+            gradient: isOutlined
+                ? null
+                : const LinearGradient(
+                    colors: [ModernColors.diary, ModernColors.diaryAccent],
+                  ),
             borderRadius: BorderRadius.circular(12),
-            border: isOutlined ? Border.all(
-              color: ModernColors.diary,
-              width: 1.5,
-            ) : null,
+            border: isOutlined
+                ? Border.all(
+                    color: ModernColors.diary,
+                    width: 1.5,
+                  )
+                : null,
             boxShadow: [
               if (!isOutlined)
                 BoxShadow(
@@ -1141,11 +1158,11 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
     final now = DateTime.now();
     final isToday = _isSameDay(date, now);
     final isPast = date.isBefore(now.subtract(const Duration(days: 1)));
-    
+
     String emoji;
     String title;
     String subtitle;
-    
+
     if (isToday) {
       emoji = '✨';
       title = '오늘의 이야기를 시작해보세요';
@@ -1159,7 +1176,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
       title = '미래의 나에게 메시지를';
       subtitle = '앞으로의 계획이나 기대감을 미리 적어보세요';
     }
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(28),
@@ -1224,9 +1241,10 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
         itemBuilder: (context, index) {
           final diary = dayLogs[index];
           final isLatest = index == 0;
-          
+
           return Container(
-            margin: EdgeInsets.only(bottom: index == dayLogs.length - 1 ? 0 : 12),
+            margin:
+                EdgeInsets.only(bottom: index == dayLogs.length - 1 ? 0 : 12),
             child: Material(
               color: Colors.transparent,
               child: InkWell(
@@ -1243,7 +1261,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isLatest 
+                    color: isLatest
                         ? ModernColors.diaryLight.withOpacity(0.6)
                         : ModernColors.surface,
                     borderRadius: BorderRadius.circular(14),
@@ -1262,13 +1280,13 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                         width: 32,
                         height: 32,
                         decoration: BoxDecoration(
-                          color: isLatest 
+                          color: isLatest
                               ? ModernColors.diary
                               : ModernColors.textTertiary,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
-                              color: isLatest 
+                              color: isLatest
                                   ? ModernColors.diary.withOpacity(0.2)
                                   : Colors.black.withOpacity(0.05),
                               blurRadius: 6,
@@ -1288,14 +1306,14 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                         ),
                       ),
                       const SizedBox(width: 14),
-                      
+
                       // 기분 이모지
                       Text(
                         _getMoodEmoji(diary.mood),
                         style: const TextStyle(fontSize: 22),
                       ),
                       const SizedBox(width: 14),
-                      
+
                       // 내용
                       Expanded(
                         child: Column(
@@ -1314,10 +1332,14 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                                 if (isLatest) ...[
                                   const SizedBox(width: 8),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 7, vertical: 2),
                                     decoration: BoxDecoration(
                                       gradient: const LinearGradient(
-                                        colors: [ModernColors.diary, ModernColors.diaryAccent],
+                                        colors: [
+                                          ModernColors.diary,
+                                          ModernColors.diaryAccent
+                                        ],
                                       ),
                                       borderRadius: BorderRadius.circular(8),
                                     ),
@@ -1360,7 +1382,7 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
                           ],
                         ),
                       ),
-                      
+
                       // 화살표 아이콘
                       Icon(
                         Icons.chevron_right_rounded,
@@ -1380,29 +1402,47 @@ class _EnhancedDiaryCalendarWidgetState extends ConsumerState<EnhancedDiaryCalen
 
   String _getMoodEmoji(String mood) {
     switch (mood) {
-      case 'excited': return '🥰';
-      case 'happy': return '😄';
-      case 'good': return '😊';
-      case 'normal': return '😐';
-      case 'thoughtful': return '🤔';
-      case 'tired': return '😴';
-      case 'sad': return '😢';
-      case 'angry': return '😠';
-      default: return '😊';
+      case 'excited':
+        return '🥰';
+      case 'happy':
+        return '😄';
+      case 'good':
+        return '😊';
+      case 'normal':
+        return '😐';
+      case 'thoughtful':
+        return '🤔';
+      case 'tired':
+        return '😴';
+      case 'sad':
+        return '😢';
+      case 'angry':
+        return '😠';
+      default:
+        return '😊';
     }
   }
 
   String _getMoodLabel(String mood) {
     switch (mood) {
-      case 'excited': return '설레요';
-      case 'happy': return '기뻐요';
-      case 'good': return '좋아요';
-      case 'normal': return '보통이에요';
-      case 'thoughtful': return '생각이 많아요';
-      case 'tired': return '피곤해요';
-      case 'sad': return '슬퍼요';
-      case 'angry': return '화나요';
-      default: return '기뻐요';
+      case 'excited':
+        return '설레요';
+      case 'happy':
+        return '기뻐요';
+      case 'good':
+        return '좋아요';
+      case 'normal':
+        return '보통이에요';
+      case 'thoughtful':
+        return '생각이 많아요';
+      case 'tired':
+        return '피곤해요';
+      case 'sad':
+        return '슬퍼요';
+      case 'angry':
+        return '화나요';
+      default:
+        return '기뻐요';
     }
   }
 

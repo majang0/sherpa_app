@@ -6,7 +6,6 @@ import '../models/mountain.dart';
 import '../../core/constants/game_constants.dart';
 import '../../core/constants/mountain_data.dart';
 
-
 /// 게임 시스템 데이터 관리 Provider
 /// 게임 공식, 상수, 마스터 데이터 등 모든 사용자가 공유하는 게임 시스템
 final globalGameProvider = Provider<GameSystem>((ref) {
@@ -129,8 +128,6 @@ class GameSystem {
     return GlobalBadgeData.getBadgeById(badgeId);
   }
 
-
-
   // ==================== 산 목록 및 지역 시스템 ====================
 
   /// 모든 산 목록
@@ -150,7 +147,6 @@ class GameSystem {
   List<Mountain> get gatewayMountains => MountainData.getGatewayMountains();
 
   // ==================== 메시지 시스템 ====================
-
 
   // ==================== 뱃지 시스템 통합 ====================
 

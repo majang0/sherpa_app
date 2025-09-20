@@ -141,26 +141,26 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
   late AnimationController _voiceAnimationController;
   late Animation<double> _filterAnimation;
   late Animation<double> _voiceAnimation;
-  
+
   bool _isSearchFocused = false;
   bool _isVoiceRecording = false;
 
   @override
   void initState() {
     super.initState();
-    
+
     _searchController = TextEditingController(text: widget.searchQuery);
-    
+
     _filterAnimationController = AnimationController(
       duration: MicroInteractions.normal,
       vsync: this,
     );
-    
+
     _voiceAnimationController = AnimationController(
       duration: MicroInteractions.fast,
       vsync: this,
     );
-    
+
     _filterAnimation = Tween<double>(
       begin: 0,
       end: 1,
@@ -168,7 +168,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
       parent: _filterAnimationController,
       curve: MicroInteractions.easeOutQuart,
     ));
-    
+
     _voiceAnimation = Tween<double>(
       begin: 1,
       end: 1.2,
@@ -176,7 +176,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
       parent: _voiceAnimationController,
       curve: MicroInteractions.bounceOut,
     ));
-    
+
     if (widget.showDetailedFilters) {
       _filterAnimationController.forward();
     }
@@ -185,11 +185,11 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
   @override
   void didUpdateWidget(SherpaSmartFilter2025 oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     if (oldWidget.searchQuery != widget.searchQuery) {
       _searchController.text = widget.searchQuery ?? '';
     }
-    
+
     if (oldWidget.showDetailedFilters != widget.showDetailedFilters) {
       if (widget.showDetailedFilters) {
         _filterAnimationController.forward();
@@ -231,7 +231,9 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
 
   void _handleVoiceSearch() {
     setState(() => _isVoiceRecording = !_isVoiceRecording);
-    _voiceAnimationController.forward().then((_) => _voiceAnimationController.reverse());
+    _voiceAnimationController
+        .forward()
+        .then((_) => _voiceAnimationController.reverse());
     widget.onVoiceSearch?.call();
     if (widget.enableHapticFeedback) {
       HapticFeedback.mediumImpact();
@@ -249,17 +251,19 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
   @override
   Widget build(BuildContext context) {
     final config = _getFilterConfiguration();
-    
+
     Widget filter = Container(
-      padding: widget.padding ?? EdgeInsets.symmetric(
-        horizontal: AppSizes.paddingL,
-        vertical: AppSizes.paddingM,
-      ),
+      padding: widget.padding ??
+          EdgeInsets.symmetric(
+            horizontal: AppSizes.paddingL,
+            vertical: AppSizes.paddingM,
+          ),
       margin: widget.margin,
       child: Column(
         children: [
           _buildMainFilterRow(config),
-          if (widget.showDetailedFilters && widget.style != SherpaSmartFilterStyle.compact)
+          if (widget.showDetailedFilters &&
+              widget.style != SherpaSmartFilterStyle.compact)
             _buildDetailedFiltersIndicator(config),
         ],
       ),
@@ -283,16 +287,16 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
         Expanded(
           child: _buildSearchBar(config),
         ),
-        
+
         SizedBox(width: config.spacing),
-        
+
         // 온라인 필터 버튼
-        if (widget.onOnlineToggle != null)
-          _buildOnlineFilterButton(config),
-        
-        if (widget.onOnlineToggle != null && widget.onDetailedFiltersToggle != null)
+        if (widget.onOnlineToggle != null) _buildOnlineFilterButton(config),
+
+        if (widget.onOnlineToggle != null &&
+            widget.onDetailedFiltersToggle != null)
           SizedBox(width: config.spacing * 0.5),
-        
+
         // 상세 필터 토글 버튼
         if (widget.onDetailedFiltersToggle != null)
           _buildDetailedFilterButton(config),
@@ -301,8 +305,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
   }
 
   Widget _buildSearchBar(SmartFilterConfiguration config) {
-    final baseColor = widget.customColor ?? 
-        (widget.category != null 
+    final baseColor = widget.customColor ??
+        (widget.category != null
             ? ModernColors.getFunctionColor(widget.category!)
             : ModernColors.primary);
 
@@ -316,13 +320,11 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
             padding: EdgeInsets.only(left: config.searchPadding),
             child: Icon(
               Icons.search_rounded,
-              color: _isSearchFocused 
-                  ? baseColor 
-                  : ModernColors.textTertiary,
+              color: _isSearchFocused ? baseColor : ModernColors.textTertiary,
               size: config.iconSize,
             ),
           ),
-          
+
           // 검색 입력 필드
           Expanded(
             child: TextField(
@@ -348,7 +350,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
               ),
             ),
           ),
-          
+
           // 오른쪽 액션 버튼들
           _buildSearchActions(config, baseColor),
         ],
@@ -368,7 +370,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
             color: ModernColors.secondary,
             config: config,
           ),
-        
+
         // 음성 검색 버튼
         if (widget.enableVoiceSearch)
           AnimatedBuilder(
@@ -377,19 +379,17 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
               return Transform.scale(
                 scale: _voiceAnimation.value,
                 child: _buildActionButton(
-                  icon: _isVoiceRecording 
-                      ? Icons.mic 
-                      : Icons.mic_outlined,
+                  icon: _isVoiceRecording ? Icons.mic : Icons.mic_outlined,
                   onTap: _handleVoiceSearch,
-                  color: _isVoiceRecording 
-                      ? ModernColors.error 
+                  color: _isVoiceRecording
+                      ? ModernColors.error
                       : ModernColors.textTertiary,
                   config: config,
                 ),
               );
             },
           ),
-        
+
         // 검색어 지우기 버튼
         if (_searchController.text.isNotEmpty)
           _buildActionButton(
@@ -428,8 +428,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
 
   Widget _buildOnlineFilterButton(SmartFilterConfiguration config) {
     final isActive = widget.showOnlineOnly;
-    final activeColor = widget.customColor ?? 
-        (widget.category != null 
+    final activeColor = widget.customColor ??
+        (widget.category != null
             ? ModernColors.getFunctionColor(widget.category!)
             : ModernColors.primary);
 
@@ -439,8 +439,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
         height: config.filterButtonHeight,
         padding: EdgeInsets.symmetric(horizontal: config.filterPadding),
         decoration: _getFilterButtonDecoration(
-          config, 
-          isActive, 
+          config,
+          isActive,
           isActive ? activeColor : ModernColors.surface,
         ),
         child: Row(
@@ -448,8 +448,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
           children: [
             Icon(
               Icons.videocam_rounded,
-              color: isActive 
-                  ? ModernColors.textOnPrimary 
+              color: isActive
+                  ? ModernColors.textOnPrimary
                   : ModernColors.textSecondary,
               size: config.filterIconSize,
             ),
@@ -459,8 +459,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
               style: GoogleFonts.notoSans(
                 fontSize: config.filterTextSize,
                 fontWeight: FontWeight.w600,
-                color: isActive 
-                    ? ModernColors.textOnPrimary 
+                color: isActive
+                    ? ModernColors.textOnPrimary
                     : ModernColors.textSecondary,
               ),
             ),
@@ -472,8 +472,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
 
   Widget _buildDetailedFilterButton(SmartFilterConfiguration config) {
     final isActive = widget.showDetailedFilters || widget.activeFilterCount > 0;
-    final activeColor = widget.customColor ?? 
-        (widget.category != null 
+    final activeColor = widget.customColor ??
+        (widget.category != null
             ? ModernColors.getFunctionColor(widget.category!)
             : ModernColors.primary);
 
@@ -485,22 +485,22 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
             height: config.filterButtonHeight,
             width: config.filterButtonHeight,
             decoration: _getFilterButtonDecoration(
-              config, 
-              isActive, 
+              config,
+              isActive,
               isActive ? activeColor : ModernColors.surface,
             ),
             child: Icon(
-              widget.showDetailedFilters 
-                  ? Icons.filter_list_off_rounded 
+              widget.showDetailedFilters
+                  ? Icons.filter_list_off_rounded
                   : Icons.filter_list_rounded,
-              color: isActive 
-                  ? ModernColors.textOnPrimary 
+              color: isActive
+                  ? ModernColors.textOnPrimary
                   : ModernColors.textSecondary,
               size: config.filterIconSize,
             ),
           ),
         ),
-        
+
         // 활성 필터 개수 표시
         if (widget.activeFilterCount > 0 && !widget.showDetailedFilters)
           Positioned(
@@ -666,9 +666,10 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
     }
   }
 
-  BoxDecoration _getSearchBarDecoration(SmartFilterConfiguration config, Color baseColor) {
+  BoxDecoration _getSearchBarDecoration(
+      SmartFilterConfiguration config, Color baseColor) {
     final focusedColor = _isSearchFocused ? baseColor : ModernColors.surface;
-    
+
     switch (widget.variant) {
       case SherpaSmartFilterVariant2025.glass:
         return GlassNeuStyle.glassMorphism(
@@ -706,14 +707,15 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
   }
 
   BoxDecoration _getFilterButtonDecoration(
-    SmartFilterConfiguration config, 
-    bool isActive, 
+    SmartFilterConfiguration config,
+    bool isActive,
     Color color,
   ) {
     switch (widget.variant) {
       case SherpaSmartFilterVariant2025.glass:
         return GlassNeuStyle.glassMorphism(
-          elevation: isActive ? GlassNeuElevation.medium : GlassNeuElevation.low,
+          elevation:
+              isActive ? GlassNeuElevation.medium : GlassNeuElevation.low,
           color: color,
           borderRadius: config.borderRadius,
           opacity: isActive ? 1.0 : 0.95,
@@ -721,7 +723,8 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
 
       case SherpaSmartFilterVariant2025.neu:
         return GlassNeuStyle.neumorphism(
-          elevation: isActive ? GlassNeuElevation.medium : GlassNeuElevation.low,
+          elevation:
+              isActive ? GlassNeuElevation.medium : GlassNeuElevation.low,
           baseColor: color,
           borderRadius: config.borderRadius,
         );
@@ -750,16 +753,16 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
 // ==================== 열거형 정의 ====================
 
 enum SherpaSmartFilterVariant2025 {
-  glass,       // 글래스모피즘
-  neu,         // 뉴모피즘
-  hybrid,      // 하이브리드 (글래스 + 뉴모피즘)
-  minimal,     // 미니멀 (기본 테두리)
+  glass, // 글래스모피즘
+  neu, // 뉴모피즘
+  hybrid, // 하이브리드 (글래스 + 뉴모피즘)
+  minimal, // 미니멀 (기본 테두리)
 }
 
 enum SherpaSmartFilterStyle {
-  horizontal,  // 가로형 레이아웃 (기본)
-  modern,      // 모던 스타일 (AI 기능 포함)
-  compact,     // 컴팩트 스타일 (공간 절약)
+  horizontal, // 가로형 레이아웃 (기본)
+  modern, // 모던 스타일 (AI 기능 포함)
+  compact, // 컴팩트 스타일 (공간 절약)
 }
 
 // ==================== 도우미 클래스들 ====================

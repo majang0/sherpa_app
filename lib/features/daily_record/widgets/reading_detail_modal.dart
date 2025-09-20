@@ -20,12 +20,12 @@ class ReadingDetailModal extends StatelessWidget {
   }) : super(key: key);
 
   static void show(
-    BuildContext context, 
+    BuildContext context,
     ReadingLog readingLog, {
     DateTime? selectedDate,
   }) {
     HapticFeedbackManager.lightImpact();
-    
+
     // 새로운 전체 화면으로 네비게이션
     Navigator.push(
       context,

@@ -12,7 +12,7 @@ import 'movie_edit_screen.dart';
 
 class MovieDetailScreen extends ConsumerStatefulWidget {
   final MovieLog movie;
-  
+
   const MovieDetailScreen({required this.movie});
 
   @override
@@ -31,7 +31,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -44,17 +44,18 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
-    
+
     _fadeController.forward();
     Future.delayed(const Duration(milliseconds: 200), () {
       _slideController.forward();
@@ -95,7 +96,8 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
         actions: [
@@ -163,54 +165,54 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션 (날짜, 영화정보)
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildHeader(),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 영화 정보 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildMovieInfo(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 평점 및 상영시간 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildRatingWatchTime(),
                   ),
-                  
+
                   if (widget.movie.review != null) ...[
                     const SizedBox(height: 20),
-                    
+
                     // 리뷰 섹션
                     ScaleTransition(
                       scale: _scaleAnimation,
                       child: _buildReview(),
                     ),
                   ],
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 액션 버튼들
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildActionButtons(),
                   ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -331,9 +333,9 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // 영화 제목
           Container(
             width: double.infinity,
@@ -405,9 +407,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -424,9 +424,11 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                   const SizedBox(height: 12),
                   _buildInfoRow('🎭', '감독', widget.movie.director),
                   const SizedBox(height: 12),
-                  _buildInfoRow('📅', '관람일', _formatFullDate(widget.movie.date)),
+                  _buildInfoRow(
+                      '📅', '관람일', _formatFullDate(widget.movie.date)),
                   const SizedBox(height: 12),
-                  _buildInfoRow('🔗', '공유', widget.movie.isShared ? '공개' : '비공개'),
+                  _buildInfoRow(
+                      '🔗', '공유', widget.movie.isShared ? '공개' : '비공개'),
                 ],
               ),
             ),
@@ -480,9 +482,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Row(
               children: [
                 // 평점
@@ -530,9 +530,9 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // 상영시간
                 Expanded(
                   child: Container(
@@ -625,9 +625,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -737,9 +735,9 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                   ),
                 ),
               ),
-              
+
               const SizedBox(width: 16),
-              
+
               // 공유하기 버튼
               Container(
                 height: 56,
@@ -770,9 +768,9 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // 삭제하기 버튼
           Container(
             width: double.infinity,
@@ -831,20 +829,34 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
 
   String _getGenreEmoji(String genre) {
     switch (genre) {
-      case '드라마': return '🎭';
-      case '액션': return '💥';
-      case 'SF': return '🚀';
-      case '로맨스': return '💕';
-      case '코미디': return '😂';
-      case '스릴러': return '😱';
-      case '공포': return '👻';
-      case '애니메이션': return '🎨';
-      case '다큐멘터리': return '📹';
-      case '뮤지컬': return '🎵';
-      case '범죄': return '🔍';
-      case '전쟁': return '⚔️';
-      case '판타지': return '🪄';
-      default: return '🎬';
+      case '드라마':
+        return '🎭';
+      case '액션':
+        return '💥';
+      case 'SF':
+        return '🚀';
+      case '로맨스':
+        return '💕';
+      case '코미디':
+        return '😂';
+      case '스릴러':
+        return '😱';
+      case '공포':
+        return '👻';
+      case '애니메이션':
+        return '🎨';
+      case '다큐멘터리':
+        return '📹';
+      case '뮤지컬':
+        return '🎵';
+      case '범죄':
+        return '🔍';
+      case '전쟁':
+        return '⚔️';
+      case '판타지':
+        return '🪄';
+      default:
+        return '🎬';
     }
   }
 
@@ -860,7 +872,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
 
   void _shareMovie() {
     HapticFeedbackManager.lightImpact();
-    
+
     final shareText = '''
 ${widget.movie.movieTitle}
 
@@ -876,7 +888,7 @@ ${widget.movie.review ?? ''}
 ''';
 
     Clipboard.setData(ClipboardData(text: shareText));
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -893,7 +905,7 @@ ${widget.movie.review ?? ''}
 
   void _deleteMovie() {
     HapticFeedbackManager.mediumImpact();
-    
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -980,29 +992,31 @@ ${widget.movie.review ?? ''}
             ElevatedButton(
               onPressed: () async {
                 Navigator.pop(context); // 다이얼로그 닫기
-                
+
                 try {
                   // 영화 기록 삭제
                   final user = ref.read(globalUserProvider);
                   final updatedMovieLogs = user.dailyRecords.movieLogs
                       .where((log) => log.id != widget.movie.id)
                       .toList();
-                  
+
                   final updatedRecords = user.dailyRecords.copyWith(
                     movieLogs: updatedMovieLogs,
                   );
-                  
-                  final updatedUser = user.copyWith(dailyRecords: updatedRecords);
+
+                  final updatedUser =
+                      user.copyWith(dailyRecords: updatedRecords);
                   ref.read(globalUserProvider.notifier).state = updatedUser;
-                  
+
                   if (mounted) {
                     Navigator.pop(context); // 상세 화면 닫기
-                    
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
                           '영화 기록이 삭제되었습니다',
-                          style: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
+                          style:
+                              GoogleFonts.notoSans(fontWeight: FontWeight.w600),
                         ),
                         backgroundColor: Colors.red.shade600,
                         behavior: SnackBarBehavior.floating,
@@ -1019,7 +1033,8 @@ ${widget.movie.review ?? ''}
                       SnackBar(
                         content: Text(
                           '삭제 중 오류가 발생했습니다. 다시 시도해주세요.',
-                          style: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
+                          style:
+                              GoogleFonts.notoSans(fontWeight: FontWeight.w600),
                         ),
                         backgroundColor: Colors.red.shade600,
                         behavior: SnackBarBehavior.floating,

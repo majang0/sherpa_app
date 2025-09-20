@@ -75,11 +75,13 @@ class CommunityScreen extends ConsumerWidget {
               ),
               const SizedBox(width: 20),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
+                  border:
+                      Border.all(color: Colors.white.withValues(alpha: 0.25)),
                 ),
                 child: Text(
                   '개발 중',
@@ -93,7 +95,7 @@ class CommunityScreen extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 24),
-          
+
           // 메인 제목
           Text(
             '커뮤니티 기능을\n열심히 준비하고 있어요!',
@@ -107,7 +109,7 @@ class CommunityScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // 서브 텍스트
           Text(
             '셰르파들이 함께 소통하고 성장할 수 있는\n특별한 공간을 만들고 있어요',
@@ -119,13 +121,14 @@ class CommunityScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 24),
-          
+
           // 사용자 정보
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(14),
@@ -152,7 +155,8 @@ class CommunityScreen extends ConsumerWidget {
               ),
               const SizedBox(width: 16),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(14),
@@ -201,7 +205,7 @@ class CommunityScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 20),
-        
+
         // 피드 기능
         _buildFeatureCard(
           '📱',
@@ -212,7 +216,7 @@ class CommunityScreen extends ConsumerWidget {
           ['실시간 피드', '좋아요 & 댓글', '성장 응원'],
         ),
         const SizedBox(height: 20),
-        
+
         // 랭킹 기능
         _buildFeatureCard(
           '🏆',
@@ -223,7 +227,7 @@ class CommunityScreen extends ConsumerWidget {
           ['주간 랭킹', '월간 랭킹', '분야별 순위'],
         ),
         const SizedBox(height: 20),
-        
+
         // 이벤트 기능
         _buildFeatureCard(
           '🎉',
@@ -294,7 +298,8 @@ class CommunityScreen extends ConsumerWidget {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
                       color: themeColor.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(10),
@@ -314,7 +319,7 @@ class CommunityScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              
+
               // 설명
               Text(
                 description,
@@ -325,30 +330,33 @@ class CommunityScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // 기능 태그들
               Wrap(
                 spacing: 10,
                 runSpacing: 10,
-                children: features.map((feature) => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: themeColor.withValues(alpha: 0.06),
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(
-                      color: themeColor.withValues(alpha: 0.15),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    feature,
-                    style: GoogleFonts.notoSans(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: themeColor,
-                    ),
-                  ),
-                )).toList(),
+                children: features
+                    .map((feature) => Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: themeColor.withValues(alpha: 0.06),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: themeColor.withValues(alpha: 0.15),
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            feature,
+                            style: GoogleFonts.notoSans(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: themeColor,
+                            ),
+                          ),
+                        ))
+                    .toList(),
               ),
             ],
           ),
@@ -405,7 +413,8 @@ class CommunityScreen extends ConsumerWidget {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(12),
@@ -422,7 +431,7 @@ class CommunityScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              
+
               // 진행률 바
               Container(
                 height: 8,
@@ -447,7 +456,7 @@ class CommunityScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              
+
               // 개발 단계
               Row(
                 children: [
@@ -459,7 +468,7 @@ class CommunityScreen extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              
+
               // 알림 설정
               Container(
                 padding: const EdgeInsets.all(16),
@@ -506,7 +515,9 @@ class CommunityScreen extends ConsumerWidget {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              color: isCompleted ? AppColors.primary : AppColors.textSecondary.withValues(alpha: 0.15),
+              color: isCompleted
+                  ? AppColors.primary
+                  : AppColors.textSecondary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(14),
             ),
             child: isCompleted

@@ -8,7 +8,8 @@ import 'dart:ui' as ui;
 
 class UniversityGuildWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<UniversityGuildWidget> createState() => _UniversityGuildWidgetState();
+  ConsumerState<UniversityGuildWidget> createState() =>
+      _UniversityGuildWidgetState();
 }
 
 class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
@@ -130,7 +131,8 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                   boxShadow: [
                     // 코랄색 글로우
                     BoxShadow(
-                      color: const Color(0xFFFF7F50).withOpacity(0.15 * _glowAnimation.value),
+                      color: const Color(0xFFFF7F50)
+                          .withOpacity(0.15 * _glowAnimation.value),
                       blurRadius: 30,
                       spreadRadius: 2,
                     ),
@@ -189,7 +191,8 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFFFF7F50).withOpacity(0.15 * _sunriseAnimation.value),
+                    const Color(0xFFFF7F50)
+                        .withOpacity(0.15 * _sunriseAnimation.value),
                     const Color(0xFF483D8B),
                     const Color(0xFF483D8B).withOpacity(0.9),
                   ],
@@ -209,8 +212,10 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
             decoration: BoxDecoration(
               gradient: RadialGradient(
                 colors: [
-                  const Color(0xFFFF7F50).withOpacity(0.2 * _glowAnimation.value),
-                  const Color(0xFFFFB347).withOpacity(0.1 * _glowAnimation.value),
+                  const Color(0xFFFF7F50)
+                      .withOpacity(0.2 * _glowAnimation.value),
+                  const Color(0xFFFFB347)
+                      .withOpacity(0.1 * _glowAnimation.value),
                   Colors.transparent,
                 ],
               ),
@@ -250,7 +255,8 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFFF7F50).withOpacity(0.5 * _glowAnimation.value),
+                color: const Color(0xFFFF7F50)
+                    .withOpacity(0.5 * _glowAnimation.value),
                 blurRadius: 25,
                 spreadRadius: 5,
               ),
@@ -303,7 +309,8 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -368,7 +375,8 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                   const SizedBox(width: 16),
                   // 온라인 상태 (여명의 빛)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
@@ -472,13 +480,15 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: isMain ? [
-            const Color(0xFFFF7F50).withOpacity(0.15),
-            const Color(0xFFFFB347).withOpacity(0.1),
-          ] : [
-            const Color(0xFF6B5B95).withOpacity(0.3),
-            const Color(0xFF6B5B95).withOpacity(0.2),
-          ],
+          colors: isMain
+              ? [
+                  const Color(0xFFFF7F50).withOpacity(0.15),
+                  const Color(0xFFFFB347).withOpacity(0.1),
+                ]
+              : [
+                  const Color(0xFF6B5B95).withOpacity(0.3),
+                  const Color(0xFF6B5B95).withOpacity(0.2),
+                ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
@@ -494,12 +504,14 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
             icon,
             size: 24,
             color: isMain ? const Color(0xFFFF7F50) : const Color(0xFFE6E6FA),
-            shadows: isMain ? [
-              Shadow(
-                color: const Color(0xFFFF7F50).withOpacity(0.5),
-                blurRadius: 10,
-              ),
-            ] : null,
+            shadows: isMain
+                ? [
+                    Shadow(
+                      color: const Color(0xFFFF7F50).withOpacity(0.5),
+                      blurRadius: 10,
+                    ),
+                  ]
+                : null,
           ),
           const SizedBox(height: 8),
           Row(
@@ -512,7 +524,9 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                 style: GoogleFonts.montserrat(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
-                  color: isMain ? const Color(0xFFFF7F50) : const Color(0xFFE6E6FA),
+                  color: isMain
+                      ? const Color(0xFFFF7F50)
+                      : const Color(0xFFE6E6FA),
                 ),
               ),
               const SizedBox(width: 2),
@@ -611,7 +625,8 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -800,13 +815,15 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: isFirst ? [
-            const Color(0xFFFF7F50).withOpacity(0.1),
-            const Color(0xFFFFB347).withOpacity(0.05),
-          ] : [
-            const Color(0xFF6B5B95).withOpacity(0.2),
-            const Color(0xFF6B5B95).withOpacity(0.1),
-          ],
+          colors: isFirst
+              ? [
+                  const Color(0xFFFF7F50).withOpacity(0.1),
+                  const Color(0xFFFFB347).withOpacity(0.05),
+                ]
+              : [
+                  const Color(0xFF6B5B95).withOpacity(0.2),
+                  const Color(0xFF6B5B95).withOpacity(0.1),
+                ],
         ),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
@@ -827,13 +844,15 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                 colors: _getRankColors(rank),
               ),
               borderRadius: BorderRadius.circular(10),
-              boxShadow: isFirst ? [
-                BoxShadow(
-                  color: const Color(0xFFFF7F50).withOpacity(0.3),
-                  blurRadius: 10,
-                  spreadRadius: 1,
-                ),
-              ] : null,
+              boxShadow: isFirst
+                  ? [
+                      BoxShadow(
+                        color: const Color(0xFFFF7F50).withOpacity(0.3),
+                        blurRadius: 10,
+                        spreadRadius: 1,
+                      ),
+                    ]
+                  : null,
             ),
             child: Center(
               child: Text(
@@ -870,7 +889,8 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: const Color(0xFFE6E6FA).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(6),
@@ -908,13 +928,15 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
             children: [
               ShaderMask(
                 shaderCallback: (bounds) => LinearGradient(
-                  colors: isFirst ? [
-                    const Color(0xFFFF7F50),
-                    const Color(0xFFFFB347),
-                  ] : [
-                    const Color(0xFFE6E6FA),
-                    const Color(0xFFE6E6FA),
-                  ],
+                  colors: isFirst
+                      ? [
+                          const Color(0xFFFF7F50),
+                          const Color(0xFFFFB347),
+                        ]
+                      : [
+                          const Color(0xFFE6E6FA),
+                          const Color(0xFFE6E6FA),
+                        ],
                 ).createShader(bounds),
                 child: Text(
                   '+${member['weeklyXP']}',

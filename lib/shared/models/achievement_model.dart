@@ -27,7 +27,8 @@ class AchievementBadge {
     required this.rarity,
   });
 
-  double get progressPercentage => (currentProgress / requiredValue).clamp(0.0, 1.0);
+  double get progressPercentage =>
+      (currentProgress / requiredValue).clamp(0.0, 1.0);
 
   bool get isNearCompletion => progressPercentage >= 0.8;
 
@@ -77,7 +78,8 @@ class AchievementBadge {
 
 class GrowthFeedback {
   final String message;
-  final String type; // 'encouragement', 'achievement', 'suggestion', 'milestone'
+  final String
+      type; // 'encouragement', 'achievement', 'suggestion', 'milestone'
   final String emoji;
   final Color color;
   final DateTime timestamp;

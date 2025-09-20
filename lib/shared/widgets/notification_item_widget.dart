@@ -13,7 +13,7 @@ class NotificationItemWidget extends StatelessWidget {
 
   // 정적 초기화 블록에서 한 번만 설정
   static bool _isTimeagoInitialized = false;
-  
+
   static void _initializeTimeago() {
     if (!_isTimeagoInitialized) {
       timeago.setLocaleMessages('ko', timeago.KoMessages());
@@ -40,10 +40,12 @@ class NotificationItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _initializeTimeago();
-    
+
     return Dismissible(
       key: Key(notification.id),
-      direction: onDismiss != null ? DismissDirection.endToStart : DismissDirection.none,
+      direction: onDismiss != null
+          ? DismissDirection.endToStart
+          : DismissDirection.none,
       onDismissed: onDismiss != null ? (_) => onDismiss!() : null,
       background: Container(
         alignment: Alignment.centerRight,
@@ -66,32 +68,30 @@ class NotificationItemWidget extends StatelessWidget {
         child: Container(
           margin: EdgeInsets.only(bottom: _itemMargin),
           decoration: BoxDecoration(
-            color: notification.isRead 
-                ? Colors.white
-                : Colors.blue.shade50,
+            color: notification.isRead ? Colors.white : Colors.blue.shade50,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: notification.isRead 
+              color: notification.isRead
                   ? ModernColors.borderLight
                   : ModernColors.primary.withValues(alpha: 0.3),
               width: notification.isRead ? 1 : 1.5,
             ),
-            boxShadow: notification.isRead 
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 0,
-                    offset: const Offset(0, 1),
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: ModernColors.primary.withValues(alpha: 0.15),
-                    blurRadius: 0,
-                    offset: const Offset(0, 2),
-                    spreadRadius: 0,
-                  ),
-                ],
+            boxShadow: notification.isRead
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 0,
+                      offset: const Offset(0, 1),
+                    ),
+                  ]
+                : [
+                    BoxShadow(
+                      color: ModernColors.primary.withValues(alpha: 0.15),
+                      blurRadius: 0,
+                      offset: const Offset(0, 2),
+                      spreadRadius: 0,
+                    ),
+                  ],
           ),
           child: Padding(
             padding: EdgeInsets.all(_itemPadding),
@@ -109,14 +109,18 @@ class NotificationItemWidget extends StatelessWidget {
                           width: _iconSize,
                           height: _iconSize,
                           decoration: BoxDecoration(
-                            color: notification.isRead 
-                                ? notification.type.color.withValues(alpha: 0.08)
-                                : notification.type.color.withValues(alpha: 0.12),
+                            color: notification.isRead
+                                ? notification.type.color
+                                    .withValues(alpha: 0.08)
+                                : notification.type.color
+                                    .withValues(alpha: 0.12),
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: notification.isRead
-                                  ? notification.type.color.withValues(alpha: 0.2)
-                                  : notification.type.color.withValues(alpha: 0.3),
+                                  ? notification.type.color
+                                      .withValues(alpha: 0.2)
+                                  : notification.type.color
+                                      .withValues(alpha: 0.3),
                               width: notification.isRead ? 1 : 1.5,
                             ),
                           ),
@@ -148,7 +152,7 @@ class NotificationItemWidget extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // 제목과 메시지
                     Expanded(
                       child: Column(
@@ -170,7 +174,8 @@ class NotificationItemWidget extends StatelessWidget {
                               if (!notification.isRead) ...[
                                 const SizedBox(width: 8),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
                                   decoration: BoxDecoration(
                                     color: ModernColors.primary,
                                     borderRadius: BorderRadius.circular(4),
@@ -189,7 +194,7 @@ class NotificationItemWidget extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: _itemSpacing),
-                          
+
                           // 메시지
                           Text(
                             notification.message,
@@ -200,7 +205,7 @@ class NotificationItemWidget extends StatelessWidget {
                               height: 1.3,
                             ),
                           ),
-                          
+
                           // 상세 내용 (showDetail이 true일 때만)
                           if (showDetail && notification.detail != null) ...[
                             const SizedBox(height: 8),
@@ -224,9 +229,10 @@ class NotificationItemWidget extends StatelessWidget {
                               ),
                             ),
                           ],
-                          
+
                           // 메타데이터 표시
-                          if (notification.metadata != null && notification.metadata!.isNotEmpty) ...[
+                          if (notification.metadata != null &&
+                              notification.metadata!.isNotEmpty) ...[
                             const SizedBox(height: 8),
                             Wrap(
                               spacing: 8,
@@ -238,7 +244,7 @@ class NotificationItemWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 // 시간 표시
                 SizedBox(height: _bottomSpacing),
                 Row(
@@ -249,7 +255,7 @@ class NotificationItemWidget extends StatelessWidget {
                         Icon(
                           Icons.access_time,
                           size: 12,
-                          color: notification.isRead 
+                          color: notification.isRead
                               ? ModernColors.textTertiary
                               : ModernColors.primary.withValues(alpha: 0.6),
                         ),
@@ -258,21 +264,23 @@ class NotificationItemWidget extends StatelessWidget {
                           timeago.format(notification.createdAt, locale: 'ko'),
                           style: GoogleFonts.notoSans(
                             fontSize: 11,
-                            fontWeight: notification.isRead ? FontWeight.w400 : FontWeight.w600,
-                            color: notification.isRead 
+                            fontWeight: notification.isRead
+                                ? FontWeight.w400
+                                : FontWeight.w600,
+                            color: notification.isRead
                                 ? ModernColors.textTertiary
                                 : ModernColors.primary.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
                     ),
-                    
+
                     // 화살표 아이콘 (탭 가능한 경우)
                     if (onTap != null && !showDetail)
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: notification.isRead 
+                          color: notification.isRead
                               ? Colors.transparent
                               : ModernColors.primary.withValues(alpha: 0.08),
                           shape: BoxShape.circle,
@@ -280,7 +288,7 @@ class NotificationItemWidget extends StatelessWidget {
                         child: Icon(
                           Icons.arrow_forward_ios_rounded,
                           size: 12,
-                          color: notification.isRead 
+                          color: notification.isRead
                               ? ModernColors.textTertiary
                               : ModernColors.primary,
                         ),
@@ -299,25 +307,25 @@ class NotificationItemWidget extends StatelessWidget {
   List<Widget> _buildMetadataChips() {
     final chips = <Widget>[];
     final metadata = notification.metadata!;
-    
+
     // XP (경험치)
     if (metadata['xp'] != null) {
       chips.add(_buildChip(
-        icon: Icons.trending_up,  // 퀘스트 완료창과 동일한 아이콘
+        icon: Icons.trending_up, // 퀘스트 완료창과 동일한 아이콘
         label: '${metadata['xp']} XP',
         color: ModernColors.primary,
       ));
     }
-    
+
     // 포인트
     if (metadata['points'] != null) {
       chips.add(_buildChip(
-        icon: Icons.monetization_on,  // 퀘스트 완료창과 동일한 아이콘
+        icon: Icons.monetization_on, // 퀘스트 완료창과 동일한 아이콘
         label: '${metadata['points']}P',
         color: ModernColors.warning,
       ));
     }
-    
+
     // 보상 타입
     if (metadata['reward'] != null) {
       String rewardLabel = '';
@@ -340,7 +348,7 @@ class NotificationItemWidget extends StatelessWidget {
         color: ModernColors.accent,
       ));
     }
-    
+
     // 참가자 수
     if (metadata['participants'] != null) {
       chips.add(_buildChip(
@@ -349,7 +357,7 @@ class NotificationItemWidget extends StatelessWidget {
         color: ModernColors.success,
       ));
     }
-    
+
     // 고도
     if (metadata['altitude'] != null) {
       chips.add(_buildChip(
@@ -358,10 +366,10 @@ class NotificationItemWidget extends StatelessWidget {
         color: ModernColors.primary,
       ));
     }
-    
+
     return chips;
   }
-  
+
   Widget _buildChip({
     required IconData icon,
     required String label,

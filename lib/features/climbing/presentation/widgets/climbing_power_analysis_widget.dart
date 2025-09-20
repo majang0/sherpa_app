@@ -17,10 +17,12 @@ import '../../../../shared/models/global_badge_model.dart';
 
 class ClimbingPowerAnalysisWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<ClimbingPowerAnalysisWidget> createState() => _ClimbingPowerAnalysisWidgetState();
+  ConsumerState<ClimbingPowerAnalysisWidget> createState() =>
+      _ClimbingPowerAnalysisWidgetState();
 }
 
-class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnalysisWidget>
+class _ClimbingPowerAnalysisWidgetState
+    extends ConsumerState<ClimbingPowerAnalysisWidget>
     with TickerProviderStateMixin {
   late AnimationController _auroraController;
   late AnimationController _starController;
@@ -80,18 +82,21 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
       equippedBadges: equippedBadges,
     );
 
-    final history = user.dailyRecords.climbingLogs.map((log) => {
-      'mountainId': log.mountainId,
-      'success': log.isSuccess,
-      'experience': log.rewards.experience,
-      'points': log.rewards.points,
-    }).toList();
+    final history = user.dailyRecords.climbingLogs
+        .map((log) => {
+              'mountainId': log.mountainId,
+              'success': log.isSuccess,
+              'experience': log.rewards.experience,
+              'points': log.rewards.points,
+            })
+        .toList();
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     // 📱 반응형 사이즈 계산
-    final ResponsiveSizes sizes = _calculateResponsiveSizes(screenWidth, screenHeight);
+    final ResponsiveSizes sizes =
+        _calculateResponsiveSizes(screenWidth, screenHeight);
 
     if (_previousPower != userPower) {
       _previousPower = userPower;
@@ -124,7 +129,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
               children: [
                 _buildWarmAuroraWaves(),
                 _buildGoldenSparkles(),
-                _buildFlexibleContent(user, userPower, history, totalPoints, sizes),
+                _buildFlexibleContent(
+                    user, userPower, history, totalPoints, sizes),
               ],
             ),
           ),
@@ -134,7 +140,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
   }
 
   // 📱 반응형 사이즈 계산 클래스
-  ResponsiveSizes _calculateResponsiveSizes(double screenWidth, double screenHeight) {
+  ResponsiveSizes _calculateResponsiveSizes(
+      double screenWidth, double screenHeight) {
     final isSmallPhone = screenWidth < 360;
     final isMediumPhone = screenWidth < 400;
     final isSmallHeight = screenHeight < 600;
@@ -178,8 +185,10 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
           children: [
             _buildAuroraWave(
               colors: [
-                Color(0x55FFDAB9).withOpacity(0.4 + 0.2 * math.sin(_auroraController.value * math.pi * 2)),
-                Color(0x55FFE4B5).withOpacity(0.3 + 0.1 * math.sin(_auroraController.value * math.pi * 2)),
+                Color(0x55FFDAB9).withOpacity(0.4 +
+                    0.2 * math.sin(_auroraController.value * math.pi * 2)),
+                Color(0x55FFE4B5).withOpacity(0.3 +
+                    0.1 * math.sin(_auroraController.value * math.pi * 2)),
                 Colors.transparent,
               ],
               offset: _auroraController.value * 100,
@@ -187,8 +196,14 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
             ),
             _buildAuroraWave(
               colors: [
-                Color(0x55FFB6C1).withOpacity(0.3 + 0.15 * math.sin((_auroraController.value + 0.3) * math.pi * 2)),
-                Color(0x55FFC0CB).withOpacity(0.2 + 0.1 * math.sin((_auroraController.value + 0.3) * math.pi * 2)),
+                Color(0x55FFB6C1).withOpacity(0.3 +
+                    0.15 *
+                        math.sin(
+                            (_auroraController.value + 0.3) * math.pi * 2)),
+                Color(0x55FFC0CB).withOpacity(0.2 +
+                    0.1 *
+                        math.sin(
+                            (_auroraController.value + 0.3) * math.pi * 2)),
                 Colors.transparent,
               ],
               offset: (_auroraController.value + 0.5) * 80,
@@ -196,8 +211,14 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
             ),
             _buildAuroraWave(
               colors: [
-                Color(0x55FFA07A).withOpacity(0.35 + 0.15 * math.sin((_auroraController.value + 0.6) * math.pi * 2)),
-                Color(0x55FFCCCB).withOpacity(0.25 + 0.1 * math.sin((_auroraController.value + 0.6) * math.pi * 2)),
+                Color(0x55FFA07A).withOpacity(0.35 +
+                    0.15 *
+                        math.sin(
+                            (_auroraController.value + 0.6) * math.pi * 2)),
+                Color(0x55FFCCCB).withOpacity(0.25 +
+                    0.1 *
+                        math.sin(
+                            (_auroraController.value + 0.6) * math.pi * 2)),
                 Colors.transparent,
               ],
               offset: (_auroraController.value + 0.8) * 120,
@@ -238,7 +259,12 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
   }
 
   // 📱 반응형 콘텐츠
-  Widget _buildFlexibleContent(user, double userPower, List<Map<String, dynamic>> history, int totalPoints, ResponsiveSizes sizes) {
+  Widget _buildFlexibleContent(
+      user,
+      double userPower,
+      List<Map<String, dynamic>> history,
+      int totalPoints,
+      ResponsiveSizes sizes) {
     return Positioned.fill(
       child: Padding(
         padding: EdgeInsets.all(sizes.padding),
@@ -359,7 +385,9 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                 },
                 child: Container(
                   height: sizes.buttonHeight,
-                  padding: EdgeInsets.symmetric(horizontal: sizes.itemSpacing * 1.5, vertical: sizes.itemSpacing),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: sizes.itemSpacing * 1.5,
+                      vertical: sizes.itemSpacing),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -401,8 +429,7 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
       builder: (context, constraints) {
         final size = math.min(
             math.min(constraints.maxHeight * 0.8, constraints.maxWidth * 0.5),
-            sizes.crystalSize * 2
-        );
+            sizes.crystalSize * 2);
 
         return Center(
           child: AnimatedBuilder(
@@ -421,8 +448,10 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            Color(0xFFFFD700).withOpacity(0.3 * _crystalController.value),
-                            Color(0xFFFFA500).withOpacity(0.2 * _crystalController.value),
+                            Color(0xFFFFD700)
+                                .withOpacity(0.3 * _crystalController.value),
+                            Color(0xFFFFA500)
+                                .withOpacity(0.2 * _crystalController.value),
                             Colors.transparent,
                           ],
                         ),
@@ -466,10 +495,12 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                               final animatedValue = Tween<double>(
                                 begin: _previousPower,
                                 end: power,
-                              ).animate(CurvedAnimation(
-                                parent: _powerController,
-                                curve: Curves.easeOutCubic,
-                              )).value;
+                              )
+                                  .animate(CurvedAnimation(
+                                    parent: _powerController,
+                                    curve: Curves.easeOutCubic,
+                                  ))
+                                  .value;
 
                               return Text(
                                 animatedValue.toInt().toString(),
@@ -513,7 +544,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
   Widget _buildBrightFrostedCards(user, ResponsiveSizes sizes) {
     final titleBonus = _getTitleBonus(user.level).toDouble();
     final basePower = (user.level * 10).toDouble() + titleBonus;
-    final statsBonus = user.stats.stamina + user.stats.knowledge + user.stats.technique;
+    final statsBonus =
+        user.stats.stamina + user.stats.knowledge + user.stats.technique;
 
     final equippedBadges = ref.watch(globalEquippedBadgesProvider);
     final badgeBonus = _calculateRealBadgeBonus(equippedBadges);
@@ -545,7 +577,9 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: sizes.itemSpacing * 1.5, vertical: sizes.itemSpacing * 0.75),
+          padding: EdgeInsets.symmetric(
+              horizontal: sizes.itemSpacing * 1.5,
+              vertical: sizes.itemSpacing * 0.75),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.7),
             borderRadius: BorderRadius.circular(10),
@@ -570,7 +604,7 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
               // 화면 너비에 따라 레이아웃 결정
               final screenWidth = MediaQuery.of(context).size.width;
               final isVerySmall = screenWidth < 320;
-              
+
               if (isVerySmall) {
                 // 매우 작은 화면: 세로 스크롤 가능한 레이아웃
                 return SingleChildScrollView(
@@ -590,7 +624,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                   children: cards.map((card) {
                     return Expanded(
                       child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: sizes.itemSpacing * 0.5),
+                        margin: EdgeInsets.symmetric(
+                            horizontal: sizes.itemSpacing * 0.5),
                         child: _buildBrightFrostedCard(card, sizes),
                       ),
                     );
@@ -604,7 +639,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
     );
   }
 
-  Widget _buildBrightFrostedCard(Map<String, dynamic> card, ResponsiveSizes sizes) {
+  Widget _buildBrightFrostedCard(
+      Map<String, dynamic> card, ResponsiveSizes sizes) {
     return GestureDetector(
       onTap: () {
         HapticFeedbackManager.lightImpact();
@@ -665,8 +701,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                 child: Text(
                   card['isPercentage'] as bool
                       ? (card['value'] as double) > 0
-                      ? '+${(card['value'] as double).toStringAsFixed(1)}%'
-                      : '0%'
+                          ? '+${(card['value'] as double).toStringAsFixed(1)}%'
+                          : '0%'
                       : (card['value'] as double).toInt().toString(),
                   style: GoogleFonts.notoSans(
                     fontSize: sizes.subtitleFont,
@@ -687,18 +723,32 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
   }
 
   // 📊 통계 (반응형 개선)
-  Widget _buildCompactFrostedStats(List<Map<String, dynamic>> history, int totalPoints, ResponsiveSizes sizes) {
+  Widget _buildCompactFrostedStats(List<Map<String, dynamic>> history,
+      int totalPoints, ResponsiveSizes sizes) {
     final totalClimbs = history.length;
     final successfulClimbs = history.where((s) => s['success'] == true).length;
-    final successRate = totalClimbs > 0 ? (successfulClimbs / totalClimbs) * 100 : 0.0;
-    final totalXp = history.fold<double>(0, (sum, session) => sum + ((session['experience'] as num?)?.toDouble() ?? 0));
-    final earnedPoints = history.fold<double>(0, (sum, session) => sum + ((session['points'] as num?)?.toDouble() ?? 0));
+    final successRate =
+        totalClimbs > 0 ? (successfulClimbs / totalClimbs) * 100 : 0.0;
+    final totalXp = history.fold<double>(
+        0,
+        (sum, session) =>
+            sum + ((session['experience'] as num?)?.toDouble() ?? 0));
+    final earnedPoints = history.fold<double>(0,
+        (sum, session) => sum + ((session['points'] as num?)?.toDouble() ?? 0));
 
     final stats = [
       {'icon': '🏔️', 'value': totalClimbs.toString(), 'label': '총 등반'},
-      {'icon': '📈', 'value': '${successRate.toStringAsFixed(1)}%', 'label': '성공률'},
+      {
+        'icon': '📈',
+        'value': '${successRate.toStringAsFixed(1)}%',
+        'label': '성공률'
+      },
       {'icon': '⭐', 'value': totalXp.toStringAsFixed(0), 'label': '획득 XP'},
-      {'icon': '💰', 'value': earnedPoints.toStringAsFixed(0), 'label': '누적 포인트'},
+      {
+        'icon': '💰',
+        'value': earnedPoints.toStringAsFixed(0),
+        'label': '누적 포인트'
+      },
     ];
 
     return Column(
@@ -706,8 +756,7 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
         Container(
           padding: EdgeInsets.symmetric(
               horizontal: sizes.itemSpacing * 1.5,
-              vertical: sizes.itemSpacing * 0.75
-          ),
+              vertical: sizes.itemSpacing * 0.75),
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.7),
             borderRadius: BorderRadius.circular(10),
@@ -734,14 +783,16 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                   children: [
                     Expanded(
                       child: Container(
-                        constraints: BoxConstraints(minHeight: sizes.cardMinHeight),
+                        constraints:
+                            BoxConstraints(minHeight: sizes.cardMinHeight),
                         child: _buildCompactStatCard(stats[0], sizes),
                       ),
                     ),
                     SizedBox(width: sizes.itemSpacing),
                     Expanded(
                       child: Container(
-                        constraints: BoxConstraints(minHeight: sizes.cardMinHeight),
+                        constraints:
+                            BoxConstraints(minHeight: sizes.cardMinHeight),
                         child: _buildCompactStatCard(stats[1], sizes),
                       ),
                     ),
@@ -754,14 +805,16 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                   children: [
                     Expanded(
                       child: Container(
-                        constraints: BoxConstraints(minHeight: sizes.cardMinHeight),
+                        constraints:
+                            BoxConstraints(minHeight: sizes.cardMinHeight),
                         child: _buildCompactStatCard(stats[2], sizes),
                       ),
                     ),
                     SizedBox(width: sizes.itemSpacing),
                     Expanded(
                       child: Container(
-                        constraints: BoxConstraints(minHeight: sizes.cardMinHeight),
+                        constraints:
+                            BoxConstraints(minHeight: sizes.cardMinHeight),
                         child: _buildCompactStatCard(stats[3], sizes),
                       ),
                     ),
@@ -775,7 +828,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
     );
   }
 
-  Widget _buildCompactStatCard(Map<String, dynamic> stat, ResponsiveSizes sizes) {
+  Widget _buildCompactStatCard(
+      Map<String, dynamic> stat, ResponsiveSizes sizes) {
     return Container(
       padding: EdgeInsets.all(sizes.itemSpacing),
       decoration: BoxDecoration(
@@ -848,22 +902,25 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
     switch (type) {
       case '기본력':
         title = '🔥 기본 등반력';
-        explanation = '레벨과 칭호에 따른 순수한 힘입니다.\n\n꾸준한 등반으로 레벨을 올리고, 10레벨마다 새로운 칭호를 획득하여 기본력을 강화하세요!';
+        explanation =
+            '레벨과 칭호에 따른 순수한 힘입니다.\n\n꾸준한 등반으로 레벨을 올리고, 10레벨마다 새로운 칭호를 획득하여 기본력을 강화하세요!';
         formula = '계산식: (레벨 × 10) + 칭호 보너스';
         break;
       case '능력치':
         title = '💪 능력치 보너스';
-        explanation = '체력, 지식, 기술의 조화로 만들어지는 핵심 보너스입니다.\n\n각 능력치의 퍼센트를 모두 더해 최종 등반력에 곱하기로 적용됩니다.';
+        explanation =
+            '체력, 지식, 기술의 조화로 만들어지는 핵심 보너스입니다.\n\n각 능력치의 퍼센트를 모두 더해 최종 등반력에 곱하기로 적용됩니다.';
         formula = '계산식: (체력% + 지식% + 기술%) × 기본력';
         break;
       case '뱃지':
         title = '🏅 뱃지 보너스';
 
         final equippedBadges = ref.read(globalEquippedBadgesProvider);
-        final badgeList = equippedBadges.where((badge) =>
-        badge.effectType == 'climbing_power_bonus' ||
-            badge.effectType == 'CLIMBING_POWER_MULTIPLY'
-        ).toList();
+        final badgeList = equippedBadges
+            .where((badge) =>
+                badge.effectType == 'climbing_power_bonus' ||
+                badge.effectType == 'CLIMBING_POWER_MULTIPLY')
+            .toList();
 
         if (badgeList.isNotEmpty) {
           explanation = '특별한 성취와 전략적 선택의 결과입니다.\n\n현재 장착 중인 등반력 보너스 뱃지:\n';
@@ -871,7 +928,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
             explanation += '• ${badge.name}: +${badge.effectValue}%\n';
           }
         } else {
-          explanation = '아직 등반력 보너스를 주는 뱃지를 장착하지 않았습니다.\n\n다양한 활동을 통해 뱃지를 얻어 등반력을 강화해보세요!';
+          explanation =
+              '아직 등반력 보너스를 주는 뱃지를 장착하지 않았습니다.\n\n다양한 활동을 통해 뱃지를 얻어 등반력을 강화해보세요!';
         }
 
         formula = '계산식: 모든 등반력 뱃지 보너스% 합산';
@@ -992,7 +1050,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
             style: TextButton.styleFrom(
               backgroundColor: iconColor,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -1034,12 +1093,14 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
 
   void _showLegendaryJourney() {
     final user = ref.read(globalUserProvider);
-    final history = user.dailyRecords.climbingLogs.map((log) => {
-      'mountainId': log.mountainId,
-      'success': log.isSuccess,
-      'experience': log.rewards.experience,
-      'points': log.rewards.points,
-    }).toList();
+    final history = user.dailyRecords.climbingLogs
+        .map((log) => {
+              'mountainId': log.mountainId,
+              'success': log.isSuccess,
+              'experience': log.rewards.experience,
+              'points': log.rewards.points,
+            })
+        .toList();
 
     final mountains = [
       {'id': 1, 'name': '북한산'},
@@ -1075,7 +1136,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                 ],
               ),
               child: Center(
-                child: Icon(Icons.history_edu_rounded, color: AppColors.primaryDark, size: 20),
+                child: Icon(Icons.history_edu_rounded,
+                    color: AppColors.primaryDark, size: 20),
               ),
             ),
             SizedBox(width: 12),
@@ -1098,7 +1160,7 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
             itemBuilder: (context, index) {
               final session = history[index];
               final mountainName = mountains.firstWhere(
-                    (m) => m['id'] == (session['mountainId'] ?? 1),
+                (m) => m['id'] == (session['mountainId'] ?? 1),
                 orElse: () => {'name': '알 수 없는 산'},
               )['name'] as String;
 
@@ -1122,11 +1184,15 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                       height: 28,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: (session['success'] == true) ? AppColors.success : AppColors.error,
+                        color: (session['success'] == true)
+                            ? AppColors.success
+                            : AppColors.error,
                       ),
                       child: Center(
                         child: Icon(
-                          (session['success'] == true) ? Icons.check_rounded : Icons.close_rounded,
+                          (session['success'] == true)
+                              ? Icons.check_rounded
+                              : Icons.close_rounded,
                           color: Colors.white,
                           size: 14,
                         ),
@@ -1153,7 +1219,9 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
                                 style: GoogleFonts.notoSans(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: (session['success'] == true) ? AppColors.success : AppColors.error,
+                                  color: (session['success'] == true)
+                                      ? AppColors.success
+                                      : AppColors.error,
                                 ),
                               ),
                               SizedBox(width: 6),
@@ -1191,7 +1259,8 @@ class _ClimbingPowerAnalysisWidgetState extends ConsumerState<ClimbingPowerAnaly
             style: TextButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),

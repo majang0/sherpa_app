@@ -192,12 +192,12 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
   @override
   void initState() {
     super.initState();
-    
+
     _animationController = AnimationController(
       duration: MicroInteractions.medium,
       vsync: this,
     );
-    
+
     _itemAnimationControllers = List.generate(
       widget.items.length,
       (index) => AnimationController(
@@ -205,7 +205,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
         vsync: this,
       ),
     );
-    
+
     _itemAnimations = _itemAnimationControllers.map((controller) {
       return Tween<double>(
         begin: 1.0,
@@ -215,7 +215,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
         curve: MicroInteractions.bounceOut,
       ));
     }).toList();
-    
+
     _animationController.forward();
   }
 
@@ -231,29 +231,29 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
   void _handleFilterToggle(String filterKey) {
     final newActiveFilters = Set<String>.from(widget.activeFilters);
     final itemIndex = widget.items.indexWhere((item) => item.key == filterKey);
-    
+
     if (itemIndex != -1) {
       _itemAnimationControllers[itemIndex].forward().then((_) {
         _itemAnimationControllers[itemIndex].reverse();
       });
     }
-    
+
     if (newActiveFilters.contains(filterKey)) {
       newActiveFilters.remove(filterKey);
     } else {
       if (!widget.enableMultiSelect) {
         newActiveFilters.clear();
       }
-      
-      if (widget.maxSelection == null || 
+
+      if (widget.maxSelection == null ||
           newActiveFilters.length < widget.maxSelection!) {
         newActiveFilters.add(filterKey);
       }
     }
-    
+
     widget.onFiltersChanged?.call(newActiveFilters);
     widget.onFilterToggle?.call(filterKey);
-    
+
     if (widget.enableHapticFeedback) {
       HapticFeedback.lightImpact();
     }
@@ -270,22 +270,19 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
   @override
   Widget build(BuildContext context) {
     final config = _getFilterConfiguration();
-    
+
     Widget quickFilter = Container(
-      padding: widget.padding ?? EdgeInsets.symmetric(
-        horizontal: AppSizes.paddingL,
-        vertical: AppSizes.paddingM,
-      ),
+      padding: widget.padding ??
+          EdgeInsets.symmetric(
+            horizontal: AppSizes.paddingL,
+            vertical: AppSizes.paddingM,
+          ),
       margin: widget.margin,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.title != null)
-            _buildTitle(config),
-          
-          if (widget.title != null)
-            SizedBox(height: config.spacing),
-          
+          if (widget.title != null) _buildTitle(config),
+          if (widget.title != null) SizedBox(height: config.spacing),
           _buildFilterItems(config),
         ],
       ),
@@ -309,14 +306,14 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
           Icon(
             widget.titleIcon,
             size: config.titleIconSize,
-            color: widget.customColor ?? 
-                (widget.category != null 
+            color: widget.customColor ??
+                (widget.category != null
                     ? ModernColors.getFunctionColor(widget.category!)
                     : ModernColors.primary),
           ),
           SizedBox(width: config.spacing * 0.5),
         ],
-        
+
         Text(
           widget.title!,
           style: GoogleFonts.notoSans(
@@ -325,9 +322,9 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
             color: ModernColors.textPrimary,
           ),
         ),
-        
+
         const Spacer(),
-        
+
         // 활성 필터 개수 표시
         if (widget.activeFilters.isNotEmpty) ...[
           Container(
@@ -348,10 +345,9 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
               ),
             ),
           ),
-          
           SizedBox(width: config.spacing * 0.5),
         ],
-        
+
         // 전체 지우기 버튼
         if (widget.activeFilters.isNotEmpty && widget.onClearAll != null)
           GestureDetector(
@@ -418,7 +414,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
       children: widget.items.asMap().entries.map((entry) {
         final index = entry.key;
         final item = entry.value;
-        
+
         return AnimatedBuilder(
           animation: _itemAnimations[index],
           builder: (context, child) {
@@ -462,7 +458,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
       children: widget.items.asMap().entries.map((entry) {
         final index = entry.key;
         final item = entry.value;
-        
+
         return Padding(
           padding: EdgeInsets.only(bottom: config.spacing),
           child: AnimatedBuilder(
@@ -479,15 +475,16 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
     );
   }
 
-  Widget _buildFilterItem(SherpaQuickFilterItem2025 item, QuickFilterConfiguration config) {
+  Widget _buildFilterItem(
+      SherpaQuickFilterItem2025 item, QuickFilterConfiguration config) {
     final isActive = widget.activeFilters.contains(item.key);
     final itemColor = item.color ?? ModernColors.primary;
-    
+
     return GestureDetector(
       onTap: () => _handleFilterToggle(item.key),
       child: Container(
-        height: widget.layout == SherpaQuickFilterLayout.horizontal 
-            ? config.itemHeight 
+        height: widget.layout == SherpaQuickFilterLayout.horizontal
+            ? config.itemHeight
             : null,
         padding: EdgeInsets.symmetric(
           horizontal: config.itemPadding,
@@ -503,9 +500,9 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
               size: config.iconSize,
               color: isActive ? ModernColors.textOnPrimary : itemColor,
             ),
-            
+
             SizedBox(width: config.spacing * 0.5),
-            
+
             // 라벨
             Flexible(
               child: Text(
@@ -513,14 +510,14 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
                 style: GoogleFonts.notoSans(
                   fontSize: config.textSize,
                   fontWeight: FontWeight.w600,
-                  color: isActive 
-                      ? ModernColors.textOnPrimary 
+                  color: isActive
+                      ? ModernColors.textOnPrimary
                       : ModernColors.textPrimary,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            
+
             // 개수 표시 (선택사항)
             if (widget.showItemCount && item.count != null) ...[
               SizedBox(width: config.spacing * 0.5),
@@ -530,7 +527,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
                   vertical: 2,
                 ),
                 decoration: BoxDecoration(
-                  color: isActive 
+                  color: isActive
                       ? ModernColors.textOnPrimary.withOpacity(0.2)
                       : itemColor.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(AppSizes.radiusS),
@@ -540,21 +537,18 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
                   style: GoogleFonts.notoSans(
                     fontSize: config.countTextSize,
                     fontWeight: FontWeight.w700,
-                    color: isActive 
-                        ? ModernColors.textOnPrimary 
-                        : itemColor,
+                    color: isActive ? ModernColors.textOnPrimary : itemColor,
                   ),
                 ),
               ),
             ],
           ],
         ),
-      ).animate(target: isActive ? 1 : 0)
-        .scale(
-          duration: MicroInteractions.fast,
-          begin: const Offset(1, 1),
-          end: const Offset(1.02, 1.02),
-        ),
+      ).animate(target: isActive ? 1 : 0).scale(
+            duration: MicroInteractions.fast,
+            begin: const Offset(1, 1),
+            end: const Offset(1.02, 1.02),
+          ),
     );
   }
 
@@ -612,16 +606,17 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
   }
 
   BoxDecoration _getItemDecoration(
-    QuickFilterConfiguration config, 
-    bool isActive, 
+    QuickFilterConfiguration config,
+    bool isActive,
     Color itemColor,
   ) {
     final backgroundColor = isActive ? itemColor : ModernColors.surface;
-    
+
     switch (widget.variant) {
       case SherpaQuickFilterVariant2025.glass:
         return GlassNeuStyle.glassMorphism(
-          elevation: isActive ? GlassNeuElevation.medium : GlassNeuElevation.low,
+          elevation:
+              isActive ? GlassNeuElevation.medium : GlassNeuElevation.low,
           color: backgroundColor,
           borderRadius: AppSizes.radiusL,
           opacity: isActive ? 1.0 : 0.95,
@@ -629,7 +624,8 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
 
       case SherpaQuickFilterVariant2025.neu:
         return GlassNeuStyle.neumorphism(
-          elevation: isActive ? GlassNeuElevation.medium : GlassNeuElevation.low,
+          elevation:
+              isActive ? GlassNeuElevation.medium : GlassNeuElevation.low,
           baseColor: backgroundColor,
           borderRadius: AppSizes.radiusL,
         );
@@ -700,17 +696,17 @@ class SherpaQuickFilterItem2025 {
 // ==================== 열거형 정의 ====================
 
 enum SherpaQuickFilterVariant2025 {
-  glass,       // 글래스모피즘
-  neu,         // 뉴모피즘
-  hybrid,      // 하이브리드 (글래스 + 뉴모피즘)
-  minimal,     // 미니멀 (기본 테두리)
+  glass, // 글래스모피즘
+  neu, // 뉴모피즘
+  hybrid, // 하이브리드 (글래스 + 뉴모피즘)
+  minimal, // 미니멀 (기본 테두리)
 }
 
 enum SherpaQuickFilterLayout {
-  horizontal,  // 가로 스크롤 (기본)
-  wrap,        // 랩 레이아웃
-  grid,        // 그리드 레이아웃
-  vertical,    // 세로 배치
+  horizontal, // 가로 스크롤 (기본)
+  wrap, // 랩 레이아웃
+  grid, // 그리드 레이아웃
+  vertical, // 세로 배치
 }
 
 // ==================== 도우미 클래스들 ====================

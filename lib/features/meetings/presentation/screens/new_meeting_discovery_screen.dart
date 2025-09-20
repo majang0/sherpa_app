@@ -127,7 +127,8 @@ class MeetingCreationData {
     if (meetingType == MeetingType.paid) {
       return price != null && price! >= 3000;
     }
-    return minParticipants >= 2 && maxParticipants >= minParticipants &&
+    return minParticipants >= 2 &&
+        maxParticipants >= minParticipants &&
         maxParticipants <= 50;
   }
 

@@ -42,13 +42,15 @@ class SherpaButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.radiusL),
         boxShadow: enabled
             ? [
-          BoxShadow(
-            color: (gradient?.colors.first ?? backgroundColor ?? AppColors.primary)
-                .withOpacity(0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ]
+                BoxShadow(
+                  color: (gradient?.colors.first ??
+                          backgroundColor ??
+                          AppColors.primary)
+                      .withOpacity(0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ]
             : null,
       ),
       child: Material(
@@ -59,21 +61,22 @@ class SherpaButton extends StatelessWidget {
           child: Center(
             child: isLoading
                 ? const SizedBox(
-              width: 24,
-              height: 24,
-              child: CircularProgressIndicator(
-                color: Colors.white,
-                strokeWidth: 2,
-              ),
-            )
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
                 : Text(
-              text,
-              style: GoogleFonts.notoSans(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: textColor ?? (enabled ? Colors.white : AppColors.textSecondary),
-              ),
-            ),
+                    text,
+                    style: GoogleFonts.notoSans(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: textColor ??
+                          (enabled ? Colors.white : AppColors.textSecondary),
+                    ),
+                  ),
           ),
         ),
       ),

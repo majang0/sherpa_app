@@ -2,58 +2,58 @@ import 'package:flutter/material.dart';
 
 // 포인트 시스템 기본 설정
 class PointSystemConfig {
-  static const int POINT_TO_WON_RATIO = 1;           // 1포인트 = 1원
-  static const double WITHDRAWAL_FEE_RATE = 0.10;    // 출금 수수료 10%
-  static const int MIN_WITHDRAWAL_POINTS = 10000;    // 최소 출금 포인트
-  static const int SIGNUP_BONUS_POINTS = 3000;       // 가입 보너스
-  static const int FREE_MEETING_FEE = 1000;          // 무료 모임 수수료
-  static const double PAID_MEETING_FEE_RATE = 0.05;  // 유료 모임 수수료 5%
+  static const int POINT_TO_WON_RATIO = 1; // 1포인트 = 1원
+  static const double WITHDRAWAL_FEE_RATE = 0.10; // 출금 수수료 10%
+  static const int MIN_WITHDRAWAL_POINTS = 10000; // 최소 출금 포인트
+  static const int SIGNUP_BONUS_POINTS = 3000; // 가입 보너스
+  static const int FREE_MEETING_FEE = 1000; // 무료 모임 수수료
+  static const double PAID_MEETING_FEE_RATE = 0.05; // 유료 모임 수수료 5%
 }
 
 enum PointSource {
   // 퀘스트 관련
-  dailyQuestAd,         // 일일 퀘스트 전체 완료 후 광고
-  weeklyQuestHard,      // 어려운 주간 퀘스트
-  weeklyQuestAd,        // 주간 퀘스트 전체 완료 후 광고
-  premiumQuestRare,     // 레어 프리미엄 퀘스트
-  premiumQuestEpic,     // 에픽 프리미엄 퀘스트
-  premiumQuestLegend,   // 전설 프리미엄 퀘스트
+  dailyQuestAd, // 일일 퀘스트 전체 완료 후 광고
+  weeklyQuestHard, // 어려운 주간 퀘스트
+  weeklyQuestAd, // 주간 퀘스트 전체 완료 후 광고
+  premiumQuestRare, // 레어 프리미엄 퀘스트
+  premiumQuestEpic, // 에픽 프리미엄 퀘스트
+  premiumQuestLegend, // 전설 프리미엄 퀘스트
 
   // 일일 목표
-  dailyGoalAd,          // 일일 목표 전체 완료 후 광고
-  streakBonus,          // 연속 기록 보너스
+  dailyGoalAd, // 일일 목표 전체 완료 후 광고
+  streakBonus, // 연속 기록 보너스
 
   // 모임 관련
-  meetingAttend,        // 모임 참석
-  meetingHost,          // 모임 호스팅
-  firstHostBonus,       // 첫 호스팅 보너스
-  monthlyAttendBonus,   // 월 5회 이상 참석 보너스
-  monthlyHostBonus,     // 월 5회 이상 호스팅 보너스
+  meetingAttend, // 모임 참석
+  meetingHost, // 모임 호스팅
+  firstHostBonus, // 첫 호스팅 보너스
+  monthlyAttendBonus, // 월 5회 이상 참석 보너스
+  monthlyHostBonus, // 월 5회 이상 호스팅 보너스
 
   // 커뮤니티
-  popularPost,          // 인기 게시글
-  helpfulAnswer,        // 도움되는 답변
-  dailyActivity,        // 일일 활동
+  popularPost, // 인기 게시글
+  helpfulAnswer, // 도움되는 답변
+  dailyActivity, // 일일 활동
 
   // 기타
-  levelUp,              // 레벨업
-  signup,               // 가입 보너스
-  goalCompletion,       // 목표 완료
+  levelUp, // 레벨업
+  signup, // 가입 보너스
+  goalCompletion, // 목표 완료
 }
 
 enum PointSpendType {
-  freeMeeting,          // 무료 모임 참여
-  paidMeeting,          // 유료 모임 참여
-  freeChallenge,        // 무료 챌린지 참여
-  paidChallenge,        // 유료 챌린지 참여
-  meetingBoost,         // 모임 홍보 부스트
-  premiumQuestPack,     // 프리미엄 퀘스트 팩
-  analysisReport,       // 고급 분석 리포트
-  questTicket,          // 퀘스트 완료 티켓
-  streakProtection,     // 연속 기록 보호권
-  pointGift,            // 포인트 선물
-  pointDonation,        // 포인트 기부
-  newUserSupport,       // 신규 유저 지원 팩
+  freeMeeting, // 무료 모임 참여
+  paidMeeting, // 유료 모임 참여
+  freeChallenge, // 무료 챌린지 참여
+  paidChallenge, // 유료 챌린지 참여
+  meetingBoost, // 모임 홍보 부스트
+  premiumQuestPack, // 프리미엄 퀘스트 팩
+  analysisReport, // 고급 분석 리포트
+  questTicket, // 퀘스트 완료 티켓
+  streakProtection, // 연속 기록 보호권
+  pointGift, // 포인트 선물
+  pointDonation, // 포인트 기부
+  newUserSupport, // 신규 유저 지원 팩
 }
 
 // ✅ 통합된 PointTransaction 클래스 (중복 제거)
@@ -84,7 +84,7 @@ class PointTransaction {
     required this.amount,
     required this.description,
     required this.createdAt,
-  }) : source = null,
+  })  : source = null,
         spendType = null,
         isEarned = true,
         metadata = null;

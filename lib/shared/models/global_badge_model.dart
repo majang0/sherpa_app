@@ -117,7 +117,7 @@ class GlobalBadge {
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       tier: GlobalBadgeTier.values.firstWhere(
-            (e) => e.name == json['tier'],
+        (e) => e.name == json['tier'],
         orElse: () => GlobalBadgeTier.common,
       ),
       effectType: json['effectType'] ?? '',

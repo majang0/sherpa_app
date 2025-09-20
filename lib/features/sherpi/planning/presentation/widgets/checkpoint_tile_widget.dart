@@ -20,13 +20,12 @@ class CheckpointTileWidget extends StatefulWidget {
   State<CheckpointTileWidget> createState() => _CheckpointTileWidgetState();
 }
 
-class _CheckpointTileWidgetState extends State<CheckpointTileWidget> 
+class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
     with SingleTickerProviderStateMixin {
-  
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +41,7 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
       curve: Curves.easeInOut,
     ));
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final isCompleted = widget.checkpoint['completed'] ?? false;
@@ -50,7 +49,7 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
     final mountain = widget.checkpoint['mountain'] ?? '';
     final points = widget.checkpoint['points'] ?? 0;
     final category = widget.checkpoint['category'] ?? 'default';
-    
+
     return GestureDetector(
       onTapDown: (_) {
         setState(() => _isPressed = true);
@@ -75,12 +74,11 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isCompleted 
-                    ? Colors.green.withOpacity(0.1)
-                    : Colors.white,
+                color:
+                    isCompleted ? Colors.green.withOpacity(0.1) : Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: isCompleted 
+                  color: isCompleted
                       ? Colors.green.withOpacity(0.3)
                       : Colors.grey[200]!,
                   width: 1.5,
@@ -103,14 +101,10 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                     width: 28,
                     height: 28,
                     decoration: BoxDecoration(
-                      color: isCompleted 
-                          ? Colors.green
-                          : Colors.transparent,
+                      color: isCompleted ? Colors.green : Colors.transparent,
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: isCompleted 
-                            ? Colors.green
-                            : Colors.grey[400]!,
+                        color: isCompleted ? Colors.green : Colors.grey[400]!,
                         width: 2,
                       ),
                     ),
@@ -119,13 +113,14 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                             Icons.check,
                             size: 18,
                             color: Colors.white,
-                          ).animate()
+                          )
+                            .animate()
                             .scale(duration: 200.ms, curve: Curves.elasticOut)
                         : null,
                   ),
-                  
+
                   const SizedBox(width: 12),
-                  
+
                   // 콘텐츠
                   Expanded(
                     child: Column(
@@ -137,12 +132,11 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            color: isCompleted 
+                            color: isCompleted
                                 ? Colors.grey[600]
                                 : const Color(0xFF2D3142),
-                            decoration: isCompleted 
-                                ? TextDecoration.lineThrough 
-                                : null,
+                            decoration:
+                                isCompleted ? TextDecoration.lineThrough : null,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -167,7 +161,7 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                       ],
                     ),
                   ),
-                  
+
                   // 상태 표시 (완료 또는 오늘)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -188,8 +182,8 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                             Icon(
                               isCompleted ? Icons.check_circle : Icons.schedule,
                               size: 14,
-                              color: isCompleted 
-                                  ? Colors.green 
+                              color: isCompleted
+                                  ? Colors.green
                                   : AppColors.primary,
                             ),
                             const SizedBox(width: 4),
@@ -198,8 +192,8 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                               style: GoogleFonts.notoSans(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
-                                color: isCompleted 
-                                    ? Colors.green 
+                                color: isCompleted
+                                    ? Colors.green
                                     : Colors.grey[600],
                               ),
                             ),
@@ -215,12 +209,10 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                             color: Colors.green,
                             fontWeight: FontWeight.bold,
                           ),
-                        ).animate()
-                          .fadeIn()
-                          .scale(
-                            begin: const Offset(0.8, 0.8),
-                            end: const Offset(1, 1),
-                          ),
+                        ).animate().fadeIn().scale(
+                              begin: const Offset(0.8, 0.8),
+                              end: const Offset(1, 1),
+                            ),
                       ],
                     ],
                   ),
@@ -232,7 +224,7 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
       ),
     );
   }
-  
+
   Color _getCategoryColor(String category) {
     switch (category) {
       case 'health':
@@ -247,7 +239,7 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
         return AppColors.primary;
     }
   }
-  
+
   IconData _getCategoryIcon(String category) {
     switch (category) {
       case 'health':
@@ -262,7 +254,7 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
         return Icons.flag;
     }
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();

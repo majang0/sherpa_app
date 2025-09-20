@@ -8,16 +8,18 @@ import '../../../../shared/utils/haptic_feedback_manager.dart';
 
 class FriendsActivityFeedWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<FriendsActivityFeedWidget> createState() => _FriendsActivityFeedWidgetState();
+  ConsumerState<FriendsActivityFeedWidget> createState() =>
+      _FriendsActivityFeedWidgetState();
 }
 
-class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedWidget>
+class _FriendsActivityFeedWidgetState
+    extends ConsumerState<FriendsActivityFeedWidget>
     with TickerProviderStateMixin {
   late AnimationController _feedController;
   late Animation<double> _feedAnimation;
   late AnimationController _heartController;
   late Animation<double> _heartAnimation;
-  
+
   // 실시간 업데이트를 위한 타이머
   bool _showNewActivityIndicator = false;
 
@@ -87,7 +89,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
     _feedAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _feedController, curve: Curves.easeOutExpo),
     );
-    
+
     _heartController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
@@ -97,7 +99,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
     );
 
     _feedController.forward();
-    
+
     // 새 활동 알림 시뮬레이션
     Future.delayed(Duration(seconds: 3), () {
       if (mounted) {
@@ -152,8 +154,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildHeader(),
-                  if (_showNewActivityIndicator)
-                    _buildNewActivityIndicator(),
+                  if (_showNewActivityIndicator) _buildNewActivityIndicator(),
                   _buildActivityFeed(),
                   _buildViewAllButton(),
                 ],
@@ -193,7 +194,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // 타이틀 섹션
           Expanded(
             child: Column(
@@ -235,7 +236,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
               ],
             ),
           ),
-          
+
           // 액션 버튼들
           Row(
             children: [
@@ -260,7 +261,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                 ),
               ),
               const SizedBox(width: 8),
-              
+
               // 새로고침 버튼
               GestureDetector(
                 onTap: () {
@@ -287,7 +288,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
       ),
     );
   }
-  
+
   // 새로운 활동 알림 인디케이터
   Widget _buildNewActivityIndicator() {
     return TweenAnimationBuilder<double>(
@@ -368,7 +369,8 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                 offset: Offset(0, 20 * (1 - animationValue)),
                 child: Opacity(
                   opacity: animationValue,
-                  child: _buildModernActivityItem(activity, index == _activities.take(3).length - 1),
+                  child: _buildModernActivityItem(
+                      activity, index == _activities.take(3).length - 1),
                 ),
               );
             },
@@ -420,8 +422,10 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                _getActivityColor(activity.activityType).withOpacity(0.2),
-                                _getActivityColor(activity.activityType).withOpacity(0.1),
+                                _getActivityColor(activity.activityType)
+                                    .withOpacity(0.2),
+                                _getActivityColor(activity.activityType)
+                                    .withOpacity(0.1),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -461,7 +465,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                       ],
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // 사용자 정보
                     Expanded(
                       child: Column(
@@ -480,9 +484,12 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                               const SizedBox(width: 6),
                               // 활동 타입 라벨
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 6, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color: _getActivityColor(activity.activityType).withOpacity(0.1),
+                                  color:
+                                      _getActivityColor(activity.activityType)
+                                          .withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
@@ -490,7 +497,8 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                                   style: GoogleFonts.notoSans(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w500,
-                                    color: _getActivityColor(activity.activityType),
+                                    color: _getActivityColor(
+                                        activity.activityType),
                                   ),
                                 ),
                               ),
@@ -498,7 +506,8 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                               if (activity.challengeLevel != null) ...[
                                 const SizedBox(width: 4),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 2),
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
@@ -543,7 +552,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                         ],
                       ),
                     ),
-                    
+
                     // 더보기 메뉴
                     GestureDetector(
                       onTap: () => _showMoreOptions(activity),
@@ -558,9 +567,9 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // 콘텐츠
                 Text(
                   activity.content,
@@ -571,7 +580,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                
+
                 // 모임 정보 카드 (있는 경우)
                 if (activity.meetingTitle != null) ...[
                   const SizedBox(height: 12),
@@ -633,7 +642,8 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: ModernColors.primary.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(6),
@@ -651,9 +661,9 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                     ),
                   ),
                 ],
-                
+
                 const SizedBox(height: 14),
-                
+
                 // 인터랙션 영역
                 Row(
                   children: [
@@ -662,11 +672,12 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                       onTap: () => _toggleLike(activity),
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
-                          color: activity.isLiked 
-                            ? ModernColors.error.withOpacity(0.1)
-                            : ModernColors.surface,
+                          color: activity.isLiked
+                              ? ModernColors.error.withOpacity(0.1)
+                              : ModernColors.surface,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
@@ -676,14 +687,16 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                               animation: _heartAnimation,
                               builder: (context, child) {
                                 return Transform.scale(
-                                  scale: activity.isLiked ? _heartAnimation.value : 1.0,
+                                  scale: activity.isLiked
+                                      ? _heartAnimation.value
+                                      : 1.0,
                                   child: Icon(
-                                    activity.isLiked 
-                                      ? Icons.favorite_rounded 
-                                      : Icons.favorite_outline_rounded,
-                                    color: activity.isLiked 
-                                      ? ModernColors.error
-                                      : ModernColors.textSecondary,
+                                    activity.isLiked
+                                        ? Icons.favorite_rounded
+                                        : Icons.favorite_outline_rounded,
+                                    color: activity.isLiked
+                                        ? ModernColors.error
+                                        : ModernColors.textSecondary,
                                     size: 16,
                                   ),
                                 );
@@ -695,23 +708,24 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                               style: GoogleFonts.notoSans(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: activity.isLiked 
-                                  ? ModernColors.error
-                                  : ModernColors.textSecondary,
+                                color: activity.isLiked
+                                    ? ModernColors.error
+                                    : ModernColors.textSecondary,
                               ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(width: 8),
-                    
+
                     // 댓글 버튼
                     GestureDetector(
                       onTap: () => _showComments(activity),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
                           color: ModernColors.surface,
                           borderRadius: BorderRadius.circular(8),
@@ -724,7 +738,8 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                               color: ModernColors.textSecondary,
                               size: 16,
                             ),
-                            if (activity.commentCount != null && activity.commentCount! > 0) ...[
+                            if (activity.commentCount != null &&
+                                activity.commentCount! > 0) ...[
                               const SizedBox(width: 4),
                               Text(
                                 '${activity.commentCount}',
@@ -751,13 +766,14 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                         ),
                       ),
                     ),
-                    
+
                     // 공유 버튼
                     const SizedBox(width: 8),
                     GestureDetector(
                       onTap: () => _shareActivity(activity),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
                           color: ModernColors.surface,
                           borderRadius: BorderRadius.circular(8),
@@ -769,15 +785,16 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                         ),
                       ),
                     ),
-                    
+
                     const Spacer(),
-                    
+
                     // 참여하기 버튼 (모임의 경우)
                     if (activity.meetingTitle != null)
                       GestureDetector(
                         onTap: () => _joinMeeting(activity),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 7),
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
@@ -920,12 +937,12 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
 
   void _toggleLike(FriendActivity activity) {
     HapticFeedbackManager.lightImpact();
-    
+
     // 하트 애니메이션 실행
     _heartController.forward().then((_) {
       _heartController.reverse();
     });
-    
+
     setState(() {
       final index = _activities.indexWhere((a) => a.id == activity.id);
       if (index != -1) {
@@ -954,7 +971,8 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
                 shape: BoxShape.circle,
               ),
               child: Center(
-                child: Icon(Icons.chat_bubble_outline, color: Colors.white, size: 16),
+                child: Icon(Icons.chat_bubble_outline,
+                    color: Colors.white, size: 16),
               ),
             ),
             const SizedBox(width: 10),
@@ -967,7 +985,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
       ),
     );
   }
-  
+
   void _shareActivity(FriendActivity activity) {
     HapticFeedbackManager.lightImpact();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -986,7 +1004,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
       ),
     );
   }
-  
+
   void _showMoreOptions(FriendActivity activity) {
     HapticFeedbackManager.lightImpact();
     // 더보기 옵션 메뉴 표시
@@ -1003,12 +1021,14 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: Icon(Icons.person_add_outlined, color: ModernColors.primary),
+              leading:
+                  Icon(Icons.person_add_outlined, color: ModernColors.primary),
               title: Text('${activity.friendName}님 팔로우'),
               onTap: () => Navigator.pop(context),
             ),
             ListTile(
-              leading: Icon(Icons.notifications_outlined, color: ModernColors.primary),
+              leading: Icon(Icons.notifications_outlined,
+                  color: ModernColors.primary),
               title: Text('활동 알림 받기'),
               onTap: () => Navigator.pop(context),
             ),
@@ -1022,7 +1042,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
       ),
     );
   }
-  
+
   void _toggleNotifications() {
     HapticFeedbackManager.lightImpact();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -1053,7 +1073,10 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
               height: 28,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.white.withOpacity(0.3), Colors.white.withOpacity(0.1)],
+                  colors: [
+                    Colors.white.withOpacity(0.3),
+                    Colors.white.withOpacity(0.1)
+                  ],
                 ),
                 shape: BoxShape.circle,
               ),
@@ -1081,11 +1104,11 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
     setState(() {
       _showNewActivityIndicator = false;
     });
-    
+
     // 새로고침 애니메이션
     _feedController.reset();
     _feedController.forward();
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -1108,7 +1131,7 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
         duration: const Duration(seconds: 1),
       ),
     );
-    
+
     // 실제 데이터 새로고침 시뮬레이션
     Future.delayed(Duration(seconds: 1), () {
       if (mounted) {
@@ -1123,7 +1146,8 @@ class _FriendsActivityFeedWidgetState extends ConsumerState<FriendsActivityFeedW
             ),
             backgroundColor: ModernColors.success,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             duration: const Duration(seconds: 2),
           ),
         );

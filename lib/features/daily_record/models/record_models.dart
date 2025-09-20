@@ -14,18 +14,17 @@ class StepData {
   });
 
   Map<String, dynamic> toJson() => {
-    'date': date.toIso8601String(),
-    'stepCount': stepCount,
-    'target': target,
-  };
+        'date': date.toIso8601String(),
+        'stepCount': stepCount,
+        'target': target,
+      };
 
   factory StepData.fromJson(Map<String, dynamic> json) => StepData(
-    date: DateTime.parse(json['date']),
-    stepCount: json['stepCount'] ?? 0,
-    target: json['target'] ?? 6000,
-  );
+        date: DateTime.parse(json['date']),
+        stepCount: json['stepCount'] ?? 0,
+        target: json['target'] ?? 6000,
+      );
 }
-
 
 /// 모임 기록 모델
 class MeetingLog {
@@ -53,35 +52,41 @@ class MeetingLog {
   /// 기분별 아이콘
   String get moodIcon {
     switch (mood) {
-      case 'very_happy': return '😄';
-      case 'happy': return '😊';
-      case 'good': return '🙂';
-      case 'normal': return '😐';
-      case 'tired': return '😪';
-      case 'stressed': return '😤';
-      default: return '😊';
+      case 'very_happy':
+        return '😄';
+      case 'happy':
+        return '😊';
+      case 'good':
+        return '🙂';
+      case 'normal':
+        return '😐';
+      case 'tired':
+        return '😪';
+      case 'stressed':
+        return '😤';
+      default:
+        return '😊';
     }
   }
 
   Map<String, dynamic> toJson() => {
-    'date': date.toIso8601String(),
-    'meetingName': meetingName,
-    'category': category,
-    'satisfaction': satisfaction,
-    'mood': mood,
-    'note': note,
-  };
+        'date': date.toIso8601String(),
+        'meetingName': meetingName,
+        'category': category,
+        'satisfaction': satisfaction,
+        'mood': mood,
+        'note': note,
+      };
 
   factory MeetingLog.fromJson(Map<String, dynamic> json) => MeetingLog(
-    date: DateTime.parse(json['date']),
-    meetingName: json['meetingName'] ?? '',
-    category: json['category'] ?? '스터디',
-    satisfaction: (json['satisfaction'] ?? 4.0).toDouble(),
-    mood: json['mood'] ?? 'happy',
-    note: json['note'],
-  );
+        date: DateTime.parse(json['date']),
+        meetingName: json['meetingName'] ?? '',
+        category: json['category'] ?? '스터디',
+        satisfaction: (json['satisfaction'] ?? 4.0).toDouble(),
+        mood: json['mood'] ?? 'happy',
+        note: json['note'],
+      );
 }
-
 
 /// 일일 목표 모델
 class DailyGoal {
@@ -120,24 +125,24 @@ class DailyGoal {
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'title': title,
-    'description': description,
-    'icon': icon,
-    'isCompleted': isCompleted,
-    'completedAt': completedAt?.toIso8601String(),
-  };
+        'id': id,
+        'title': title,
+        'description': description,
+        'icon': icon,
+        'isCompleted': isCompleted,
+        'completedAt': completedAt?.toIso8601String(),
+      };
 
   factory DailyGoal.fromJson(Map<String, dynamic> json) => DailyGoal(
-    id: json['id'] ?? '',
-    title: json['title'] ?? '',
-    description: json['description'] ?? '',
-    icon: json['icon'] ?? '📝',
-    isCompleted: json['isCompleted'] ?? false,
-    completedAt: json['completedAt'] != null 
-        ? DateTime.parse(json['completedAt'])
-        : null,
-  );
+        id: json['id'] ?? '',
+        title: json['title'] ?? '',
+        description: json['description'] ?? '',
+        icon: json['icon'] ?? '📝',
+        isCompleted: json['isCompleted'] ?? false,
+        completedAt: json['completedAt'] != null
+            ? DateTime.parse(json['completedAt'])
+            : null,
+      );
 }
 
 /// 기록 상태 모델
@@ -170,10 +175,10 @@ class RecordState {
   }
 
   factory RecordState.initial() => const RecordState(
-    meetingLogs: [],
-    dailyGoals: [],
-    isLoading: false,
-  );
+        meetingLogs: [],
+        dailyGoals: [],
+        isLoading: false,
+      );
 }
 
 /// 오늘의 기록 모델
@@ -193,12 +198,12 @@ class TodayRecord {
   });
 
   factory TodayRecord.empty() => const TodayRecord(
-    stepCount: 0,
-    focusMinutes: 0,
-    readingPages: 0,
-    completedGoalsCount: 0,
-    completionRate: 0.0,
-  );
+        stepCount: 0,
+        focusMinutes: 0,
+        readingPages: 0,
+        completedGoalsCount: 0,
+        completionRate: 0.0,
+      );
 }
 
 /// 기록 통계 모델
@@ -218,10 +223,10 @@ class RecordStatistics {
   });
 
   factory RecordStatistics.empty() => const RecordStatistics(
-    streakDays: 0,
-    totalSteps: 0,
-    totalReadingPages: 0,
-    totalMeetings: 0,
-    totalFocusMinutes: 0,
-  );
+        streakDays: 0,
+        totalSteps: 0,
+        totalReadingPages: 0,
+        totalMeetings: 0,
+        totalFocusMinutes: 0,
+      );
 }

@@ -5,19 +5,19 @@ class AnalysisConstants {
   static const int analysisDataPeriodDays = 30; // 분석 기간 (일)
   static const int weekDays = 7; // 일주일
   static const int streakTargetDays = 7; // 연속 기록 목표 일수
-  
+
   // === 임계값 및 기준치 ===
   static const int minimumActivityCount = 5; // 최소 활동 횟수
   static const double moodStabilityThreshold = 70.0; // 기분 안정성 기준 (%)
   static const double highGoalCompletionRate = 90.0; // 높은 목표 달성률 (%)
   static const double consistencyScoreMax = 100.0; // 일관성 점수 최대값
-  
+
   // === 성과 지표 가중치 ===
   static const double activityWeightFactor = 0.3; // 활동 빈도 가중치
   static const double consistencyWeightFactor = 0.3; // 일관성 가중치
   static const double goalWeightFactor = 0.2; // 목표 달성 가중치
   static const double streakWeightFactor = 0.2; // 연속 기록 가중치
-  
+
   // === 분석 진행 단계별 진행률 ===
   static const double progressDataValidation = 0.2; // 데이터 검증 (20%)
   static const double progressActivityAnalysis = 0.4; // 활동 패턴 분석 (40%)
@@ -25,13 +25,13 @@ class AnalysisConstants {
   static const double progressMetricsCalculation = 0.8; // 성과 지표 계산 (80%)
   static const double progressInsightGeneration = 0.95; // 인사이트 생성 (95%)
   static const double progressComplete = 1.0; // 완료 (100%)
-  
+
   // === 우선순위 레벨 ===
   static const int priorityLow = 1;
   static const int priorityMedium = 3;
   static const int priorityHigh = 4;
   static const int priorityCritical = 5;
-  
+
   // === 요일 이름 ===
   static const Map<int, String> weekdayNames = {
     1: '월요일',
@@ -42,7 +42,7 @@ class AnalysisConstants {
     6: '토요일',
     7: '일요일',
   };
-  
+
   // === 시간대 구분 ===
   static const Map<String, List<int>> timePeriods = {
     '새벽': [0, 1, 2, 3, 4, 5],
@@ -50,7 +50,7 @@ class AnalysisConstants {
     '오후': [12, 13, 14, 15, 16, 17],
     '저녁': [18, 19, 20, 21, 22, 23],
   };
-  
+
   // === 활동 타입 ===
   static const Map<String, String> activityTypes = {
     'exercise': '운동',
@@ -58,7 +58,7 @@ class AnalysisConstants {
     'diary': '일기',
     'meeting': '모임',
   };
-  
+
   // === 추천 메시지 템플릿 ===
   static const Map<String, String> recommendationTemplates = {
     'increase_activity': '이번 주에 {activity} 활동을 2회 이상 해보는 것은 어떨까요?',
@@ -67,13 +67,13 @@ class AnalysisConstants {
     'improve_mood': '규칙적인 운동과 충분한 휴식으로 기분의 안정성을 높여보세요.',
     'set_higher_goal': '현재 목표를 잘 달성하고 계세요! 조금 더 도전적인 목표를 설정해보는 건 어떨까요?',
   };
-  
+
   // === 애니메이션 지속 시간 (밀리초) ===
   static const int animationDurationShort = 300;
   static const int animationDurationMedium = 500;
   static const int animationDurationLong = 800;
   static const int animationDelayBetweenSteps = 1200;
-  
+
   // === 차트 설정 ===
   static const double chartBarWidth = 8.0;
   static const double chartBorderRadius = 4.0;

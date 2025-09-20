@@ -25,7 +25,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _directorController = TextEditingController();
   final TextEditingController _reviewController = TextEditingController();
-  
+
   String _selectedGenre = '드라마';
   double _rating = 3.0;
   int _watchTimeMinutes = 120;
@@ -33,14 +33,25 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
   bool _isSubmitting = false;
 
   final List<String> _genres = [
-    '드라마', '액션', 'SF', '로맨스', '코미디', '스릴러', '공포', 
-    '애니메이션', '다큐멘터리', '뮤지컬', '범죄', '전쟁', '판타지'
+    '드라마',
+    '액션',
+    'SF',
+    '로맨스',
+    '코미디',
+    '스릴러',
+    '공포',
+    '애니메이션',
+    '다큐멘터리',
+    '뮤지컬',
+    '범죄',
+    '전쟁',
+    '판타지'
   ];
 
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -53,17 +64,18 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
-    
+
     _fadeController.forward();
     Future.delayed(const Duration(milliseconds: 200), () {
       _slideController.forward();
@@ -107,7 +119,8 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
         actions: [
@@ -153,84 +166,84 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildHeader(),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 영화 제목 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildTitleSection(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 감독 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildDirectorSection(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 장르 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildGenreSection(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 평점 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildRatingSection(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 상영시간 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildWatchTimeSection(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 리뷰 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildReviewSection(),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 공유 설정 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildShareSection(),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 저장 버튼
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildSaveButton(),
                   ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -374,9 +387,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -463,9 +474,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -544,9 +553,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -563,23 +570,25 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
                 ),
-                items: _genres.map((genre) => DropdownMenuItem(
-                  value: genre,
-                  child: Row(
-                    children: [
-                      Text(_getGenreEmoji(genre)),
-                      const SizedBox(width: 8),
-                      Text(
-                        genre,
-                        style: GoogleFonts.notoSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: RecordColors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                )).toList(),
+                items: _genres
+                    .map((genre) => DropdownMenuItem(
+                          value: genre,
+                          child: Row(
+                            children: [
+                              Text(_getGenreEmoji(genre)),
+                              const SizedBox(width: 8),
+                              Text(
+                                genre,
+                                style: GoogleFonts.notoSans(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: RecordColors.textPrimary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ))
+                    .toList(),
                 onChanged: (value) {
                   setState(() {
                     _selectedGenre = value!;
@@ -652,9 +661,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -674,8 +681,9 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                       (index) {
                         final starValue = index + 1;
                         final isFullStar = _rating >= starValue;
-                        final isHalfStar = _rating >= starValue - 0.5 && _rating < starValue;
-                        
+                        final isHalfStar =
+                            _rating >= starValue - 0.5 && _rating < starValue;
+
                         return GestureDetector(
                           onTap: () {
                             setState(() {
@@ -721,13 +729,12 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                       },
                     ),
                   ),
-                  
                   const SizedBox(height: 16),
-                  
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
                       activeTrackColor: const Color(0xFFFBBF24),
-                      inactiveTrackColor: const Color(0xFFFBBF24).withOpacity(0.2),
+                      inactiveTrackColor:
+                          const Color(0xFFFBBF24).withOpacity(0.2),
                       thumbColor: const Color(0xFFFBBF24),
                       overlayColor: const Color(0xFFFBBF24).withOpacity(0.2),
                       trackHeight: 6,
@@ -808,9 +815,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -903,9 +908,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -988,9 +991,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -1108,20 +1109,34 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
 
   String _getGenreEmoji(String genre) {
     switch (genre) {
-      case '드라마': return '🎭';
-      case '액션': return '💥';
-      case 'SF': return '🚀';
-      case '로맨스': return '💕';
-      case '코미디': return '😂';
-      case '스릴러': return '😱';
-      case '공포': return '👻';
-      case '애니메이션': return '🎨';
-      case '다큐멘터리': return '📹';
-      case '뮤지컬': return '🎵';
-      case '범죄': return '🔍';
-      case '전쟁': return '⚔️';
-      case '판타지': return '🪄';
-      default: return '🎬';
+      case '드라마':
+        return '🎭';
+      case '액션':
+        return '💥';
+      case 'SF':
+        return '🚀';
+      case '로맨스':
+        return '💕';
+      case '코미디':
+        return '😂';
+      case '스릴러':
+        return '😱';
+      case '공포':
+        return '👻';
+      case '애니메이션':
+        return '🎨';
+      case '다큐멘터리':
+        return '📹';
+      case '뮤지컬':
+        return '🎵';
+      case '범죄':
+        return '🔍';
+      case '전쟁':
+        return '⚔️';
+      case '판타지':
+        return '🪄';
+      default:
+        return '🎬';
     }
   }
 
@@ -1153,7 +1168,9 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
         director: _directorController.text.trim(),
         genre: _selectedGenre,
         rating: _rating,
-        review: _reviewController.text.trim().isEmpty ? null : _reviewController.text.trim(),
+        review: _reviewController.text.trim().isEmpty
+            ? null
+            : _reviewController.text.trim(),
         watchTimeMinutes: _watchTimeMinutes,
         isShared: _isShared,
       );
@@ -1162,7 +1179,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
 
       if (mounted) {
         Navigator.pop(context);
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -1171,7 +1188,8 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
             ),
             backgroundColor: const Color(0xFFEF4444),
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             margin: const EdgeInsets.all(16),
           ),
         );

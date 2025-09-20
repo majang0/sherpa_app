@@ -156,8 +156,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
             const SizedBox(height: 12),
 
             // 뱃지 컬렉션
-            if (user.ownedBadgeIds.isNotEmpty)
-              _buildBadgeCollection(user),
+            if (user.ownedBadgeIds.isNotEmpty) _buildBadgeCollection(user),
           ],
         ),
       ),
@@ -195,7 +194,8 @@ class ProfileHeaderWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, Color color) {
     return Column(
       children: [
         Container(
@@ -250,22 +250,26 @@ class ProfileHeaderWidget extends ConsumerWidget {
           Wrap(
             spacing: 8,
             runSpacing: 4,
-            children: user.ownedBadgeIds.take(5).map((badgeId) =>
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: AppColors.primary.withValues(alpha: 0.2),
+            children: user.ownedBadgeIds
+                .take(5)
+                .map(
+                  (badgeId) => Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: AppColors.primary.withValues(alpha: 0.2),
+                      ),
+                    ),
+                    child: Text(
+                      '🏆', // 추후 실제 뱃지 이모지로 대체 가능
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ),
-                  child: Text(
-                    '🏆', // 추후 실제 뱃지 이모지로 대체 가능
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ),
-            ).toList(),
+                )
+                .toList(),
           ),
           if (user.ownedBadgeIds.length > 5)
             Padding(

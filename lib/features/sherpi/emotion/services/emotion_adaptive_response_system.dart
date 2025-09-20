@@ -1,5 +1,5 @@
 // 🎭 감정 기반 적응형 응답 시스템
-// 
+//
 // 사용자의 감정 상태에 따라 셰르피의 응답 스타일과 내용을 적응시키는 시스템
 
 import 'dart:math';
@@ -11,30 +11,30 @@ import '../../../../core/constants/sherpi_dialogues.dart';
 enum ResponseStyle {
   /// 🤗 공감적 - 사용자의 감정에 깊이 공감하고 위로
   empathetic('empathetic', '공감적', '사용자의 감정에 깊이 공감하며 따뜻하게 반응'),
-  
+
   /// 💪 격려적 - 긍정적이고 동기부여하는 메시지
   encouraging('encouraging', '격려적', '긍정적 에너지로 사용자를 격려하고 동기부여'),
-  
+
   /// 🧘 차분한 - 안정적이고 평온한 톤
   calming('calming', '차분한', '평온하고 안정적인 톤으로 마음을 진정시킴'),
-  
+
   /// 🎉 축하하는 - 기쁨과 성취를 함께 축하
   celebratory('celebratory', '축하하는', '기쁨과 성취를 함께 축하하며 즐거워함'),
-  
+
   /// 🤔 사려깊은 - 신중하고 깊이 있는 조언
   thoughtful('thoughtful', '사려깊은', '신중하고 깊이 있는 조언과 통찰 제공'),
-  
+
   /// 🚀 동기부여 - 목표 달성을 위한 에너지 제공
   motivational('motivational', '동기부여', '목표 달성을 위한 강한 동기와 에너지 제공'),
-  
+
   /// 😌 지지적 - 무조건적 지지와 이해
   supportive('supportive', '지지적', '무조건적인 지지와 이해로 안전감 제공'),
-  
+
   /// 💡 조언적 - 실용적이고 구체적인 도움
   advisory('advisory', '조언적', '실용적이고 구체적인 조언과 해결책 제시');
 
   const ResponseStyle(this.id, this.displayName, this.description);
-  
+
   final String id;
   final String displayName;
   final String description;
@@ -49,7 +49,7 @@ class ResponseTemplate {
   final SherpiEmotion sherpiEmotion;
   final Map<String, dynamic> contextRequirements;
   final double effectivenessScore; // 이 템플릿의 효과성 점수
-  
+
   const ResponseTemplate({
     required this.templateId,
     required this.targetEmotion,
@@ -59,7 +59,7 @@ class ResponseTemplate {
     this.contextRequirements = const {},
     this.effectivenessScore = 0.7,
   });
-  
+
   /// 컨텍스트와 사용자 정보로 메시지 개인화
   String generateMessage({
     required Map<String, dynamic> userContext,
@@ -68,9 +68,9 @@ class ResponseTemplate {
   }) {
     final random = Random();
     final template = messageTemplates[random.nextInt(messageTemplates.length)];
-    
+
     String message = template;
-    
+
     // 사용자 이름 치환
     if (userName != null && userName.isNotEmpty) {
       message = message.replaceAll('{user_name}', userName);
@@ -80,33 +80,41 @@ class ResponseTemplate {
       message = message.replaceAll('{user_name}', '');
       message = message.replaceAll('{name}', '');
     }
-    
+
     // 감정 컨텍스트 치환
-    final emotionIntensity = emotionContext['intensity'] as String? ?? 'moderate';
+    final emotionIntensity =
+        emotionContext['intensity'] as String? ?? 'moderate';
     final emotionTrigger = emotionContext['trigger'] as String? ?? '';
-    
-    message = message.replaceAll('{emotion_intensity}', _getIntensityWord(emotionIntensity));
+
+    message = message.replaceAll(
+        '{emotion_intensity}', _getIntensityWord(emotionIntensity));
     message = message.replaceAll('{trigger}', emotionTrigger);
-    
+
     // 활동 컨텍스트 치환
     final recentActivity = userContext['recent_activity'] as String? ?? '';
     final achievement = userContext['recent_achievement'] as String? ?? '';
-    
+
     message = message.replaceAll('{recent_activity}', recentActivity);
     message = message.replaceAll('{achievement}', achievement);
-    
+
     return message.trim();
   }
-  
+
   /// 강도를 표현하는 단어 변환
   String _getIntensityWord(String intensity) {
     switch (intensity) {
-      case 'very_high': return '매우';
-      case 'high': return '정말';
-      case 'moderate': return '꽤';
-      case 'low': return '조금';
-      case 'very_low': return '살짝';
-      default: return '';
+      case 'very_high':
+        return '매우';
+      case 'high':
+        return '정말';
+      case 'moderate':
+        return '꽤';
+      case 'low':
+        return '조금';
+      case 'very_low':
+        return '살짝';
+      default:
+        return '';
     }
   }
 }
@@ -129,7 +137,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.9,
     ),
-    
+
     // 흥분 (Excitement)
     ResponseTemplate(
       templateId: 'excitement_motivational_1',
@@ -144,7 +152,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.85,
     ),
-    
+
     // 만족 (Satisfaction)
     ResponseTemplate(
       templateId: 'satisfaction_supportive_1',
@@ -159,7 +167,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.8,
     ),
-    
+
     // 자부심 (Pride)
     ResponseTemplate(
       templateId: 'pride_celebratory_1',
@@ -175,7 +183,7 @@ class EmotionResponseTemplates {
       effectivenessScore: 0.85,
     ),
   ];
-  
+
   /// 😢 부정적 감정 응답 템플릿들
   static const List<ResponseTemplate> negativeEmotionTemplates = [
     // 슬픔 (Sadness)
@@ -192,7 +200,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.9,
     ),
-    
+
     // 분노 (Anger)
     ResponseTemplate(
       templateId: 'anger_calming_1',
@@ -207,8 +215,8 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.75,
     ),
-    
-    // 좌절 (Frustration) 
+
+    // 좌절 (Frustration)
     ResponseTemplate(
       templateId: 'frustration_encouraging_1',
       targetEmotion: EmotionType.frustration,
@@ -222,7 +230,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.8,
     ),
-    
+
     // 불안 (Anxiety)
     ResponseTemplate(
       templateId: 'anxiety_calming_1',
@@ -237,7 +245,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.85,
     ),
-    
+
     // 실망 (Disappointment)
     ResponseTemplate(
       templateId: 'disappointment_supportive_1',
@@ -253,7 +261,7 @@ class EmotionResponseTemplates {
       effectivenessScore: 0.8,
     ),
   ];
-  
+
   /// 😐 중립적 감정 응답 템플릿들
   static const List<ResponseTemplate> neutralEmotionTemplates = [
     // 평온 (Calm)
@@ -270,7 +278,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.7,
     ),
-    
+
     // 집중 (Focused)
     ResponseTemplate(
       templateId: 'focused_motivational_1',
@@ -285,7 +293,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.75,
     ),
-    
+
     // 피곤 (Tired)
     ResponseTemplate(
       templateId: 'tired_calming_1',
@@ -300,7 +308,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.8,
     ),
-    
+
     // 지루함 (Bored)
     ResponseTemplate(
       templateId: 'bored_encouraging_1',
@@ -315,7 +323,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.7,
     ),
-    
+
     // 호기심 (Curious)
     ResponseTemplate(
       templateId: 'curious_thoughtful_1',
@@ -331,7 +339,7 @@ class EmotionResponseTemplates {
       effectivenessScore: 0.75,
     ),
   ];
-  
+
   /// 🤔 복합 감정 응답 템플릿들
   static const List<ResponseTemplate> mixedEmotionTemplates = [
     // 씁쓸함 (Bittersweet)
@@ -348,7 +356,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.75,
     ),
-    
+
     // 압도됨 (Overwhelmed)
     ResponseTemplate(
       templateId: 'overwhelmed_calming_1',
@@ -363,7 +371,7 @@ class EmotionResponseTemplates {
       ],
       effectivenessScore: 0.8,
     ),
-    
+
     // 갈등 (Conflicted)
     ResponseTemplate(
       templateId: 'conflicted_thoughtful_1',
@@ -379,7 +387,7 @@ class EmotionResponseTemplates {
       effectivenessScore: 0.75,
     ),
   ];
-  
+
   /// 모든 템플릿 통합
   static List<ResponseTemplate> get allTemplates {
     return [
@@ -395,9 +403,9 @@ class EmotionResponseTemplates {
 class EmotionAdaptiveResponseSystem {
   static const double _minimumTemplateScore = 0.6;
   static const int _maxResponseOptions = 3;
-  
+
   /// 🎯 감정 상태에 맞는 응답 생성
-  /// 
+  ///
   /// 사용자의 감정 상태를 분석하여 가장 적절한 응답을 생성
   static Map<String, dynamic> generateEmotionAdaptiveResponse(
     EmotionSnapshot emotionState, {
@@ -412,18 +420,18 @@ class EmotionAdaptiveResponseSystem {
       userContext,
       conversationContext,
     );
-    
+
     if (suitableTemplates.isEmpty) {
       return _generateFallbackResponse(emotionState, userContext, userName);
     }
-    
+
     // 최적 템플릿 선택
     final selectedTemplate = _selectBestTemplate(
       suitableTemplates,
       emotionState,
       userContext,
     );
-    
+
     // 응답 메시지 생성
     final responseMessage = selectedTemplate.generateMessage(
       userContext: userContext,
@@ -434,7 +442,7 @@ class EmotionAdaptiveResponseSystem {
       },
       userName: userName,
     );
-    
+
     // 응답 메타데이터 구성
     return {
       'message': responseMessage,
@@ -442,7 +450,8 @@ class EmotionAdaptiveResponseSystem {
       'response_style': selectedTemplate.style.id,
       'template_id': selectedTemplate.templateId,
       'effectiveness_score': selectedTemplate.effectivenessScore,
-      'emotion_alignment': _calculateEmotionAlignment(emotionState, selectedTemplate),
+      'emotion_alignment':
+          _calculateEmotionAlignment(emotionState, selectedTemplate),
       'personalization_level': _calculatePersonalizationLevel(userContext),
       'adaptation_metadata': {
         'target_emotion': emotionState.type.id,
@@ -454,7 +463,7 @@ class EmotionAdaptiveResponseSystem {
       },
     };
   }
-  
+
   /// 🔍 적합한 템플릿 찾기
   static List<ResponseTemplate> _findSuitableTemplates(
     EmotionSnapshot emotionState,
@@ -462,33 +471,34 @@ class EmotionAdaptiveResponseSystem {
     Map<String, dynamic> conversationContext,
   ) {
     final candidates = <ResponseTemplate>[];
-    
+
     // 직접 매칭되는 템플릿들
     final directMatches = EmotionResponseTemplates.allTemplates
         .where((template) => template.targetEmotion == emotionState.type)
         .toList();
-    
+
     candidates.addAll(directMatches);
-    
+
     // 같은 카테고리의 템플릿들 (가중치 감소)
     if (candidates.length < _maxResponseOptions) {
       final categoryMatches = EmotionResponseTemplates.allTemplates
-          .where((template) => 
+          .where((template) =>
               template.targetEmotion.category == emotionState.type.category &&
               template.targetEmotion != emotionState.type)
           .toList();
-      
+
       candidates.addAll(categoryMatches);
     }
-    
+
     // 효과성 점수로 필터링
     final filteredCandidates = candidates
-        .where((template) => template.effectivenessScore >= _minimumTemplateScore)
+        .where(
+            (template) => template.effectivenessScore >= _minimumTemplateScore)
         .toList();
-    
+
     return filteredCandidates;
   }
-  
+
   /// 🎯 최적 템플릿 선택
   static ResponseTemplate _selectBestTemplate(
     List<ResponseTemplate> templates,
@@ -496,29 +506,30 @@ class EmotionAdaptiveResponseSystem {
     Map<String, dynamic> userContext,
   ) {
     if (templates.length == 1) return templates.first;
-    
+
     // 점수 계산
     final scoredTemplates = templates.map((template) {
       double score = template.effectivenessScore;
-      
+
       // 감정 강도 일치도
       score += _calculateIntensityMatch(emotionState.intensity, template);
-      
+
       // 사용자 선호도 (과거 피드백 기반)
       score += _calculateUserPreference(template, userContext);
-      
+
       // 컨텍스트 적합성
       score += _calculateContextFit(template, userContext);
-      
+
       return {'template': template, 'score': score};
     }).toList();
-    
+
     // 점수 순으로 정렬
-    scoredTemplates.sort((a, b) => (b['score'] as double).compareTo(a['score'] as double));
-    
+    scoredTemplates
+        .sort((a, b) => (b['score'] as double).compareTo(a['score'] as double));
+
     return scoredTemplates.first['template'] as ResponseTemplate;
   }
-  
+
   /// 💪 강도 일치도 계산
   static double _calculateIntensityMatch(
     EmotionIntensity intensity,
@@ -549,51 +560,55 @@ class EmotionAdaptiveResponseSystem {
         }
         break;
     }
-    
+
     return 0.0;
   }
-  
+
   /// 👤 사용자 선호도 계산
   static double _calculateUserPreference(
     ResponseTemplate template,
     Map<String, dynamic> userContext,
   ) {
     // 과거 피드백 데이터가 있다면 활용
-    final feedbackHistory = userContext['feedback_history'] as Map<String, dynamic>?;
+    final feedbackHistory =
+        userContext['feedback_history'] as Map<String, dynamic>?;
     if (feedbackHistory == null) return 0.0;
-    
-    final stylePreferences = feedbackHistory[template.style.id] as Map<String, dynamic>?;
+
+    final stylePreferences =
+        feedbackHistory[template.style.id] as Map<String, dynamic>?;
     if (stylePreferences == null) return 0.0;
-    
+
     final averageRating = stylePreferences['average_rating'] as double? ?? 0.0;
     final feedbackCount = stylePreferences['count'] as int? ?? 0;
-    
+
     // 피드백이 충분하고 평가가 좋다면 가중치 추가
     if (feedbackCount >= 3 && averageRating >= 4.0) {
       return 0.3;
     } else if (feedbackCount >= 1 && averageRating >= 3.5) {
       return 0.15;
     }
-    
+
     return 0.0;
   }
-  
+
   /// 🎯 컨텍스트 적합성 계산
   static double _calculateContextFit(
     ResponseTemplate template,
     Map<String, dynamic> userContext,
   ) {
     double score = 0.0;
-    
+
     // 시간대별 적합성
     final currentHour = DateTime.now().hour;
-    if (currentHour >= 22 || currentHour <= 6) { // 밤/새벽
+    if (currentHour >= 22 || currentHour <= 6) {
+      // 밤/새벽
       if (template.style == ResponseStyle.calming) score += 0.1;
-    } else if (currentHour >= 6 && currentHour <= 10) { // 아침
+    } else if (currentHour >= 6 && currentHour <= 10) {
+      // 아침
       if (template.style == ResponseStyle.motivational ||
           template.style == ResponseStyle.encouraging) score += 0.1;
     }
-    
+
     // 최근 활동 기반 적합성
     final recentActivity = userContext['recent_activity'] as String?;
     if (recentActivity != null) {
@@ -614,17 +629,17 @@ class EmotionAdaptiveResponseSystem {
           break;
       }
     }
-    
+
     return score;
   }
-  
+
   /// 📊 감정 일치도 계산
   static double _calculateEmotionAlignment(
     EmotionSnapshot emotionState,
     ResponseTemplate template,
   ) {
     double alignment = 0.0;
-    
+
     // 정확한 감정 매칭
     if (template.targetEmotion == emotionState.type) {
       alignment = 1.0;
@@ -633,30 +648,31 @@ class EmotionAdaptiveResponseSystem {
     } else {
       alignment = 0.3;
     }
-    
+
     // 신뢰도 보정
     alignment *= emotionState.confidence.value;
-    
+
     return alignment.clamp(0.0, 1.0);
   }
-  
+
   /// 🎯 개인화 수준 계산
-  static double _calculatePersonalizationLevel(Map<String, dynamic> userContext) {
+  static double _calculatePersonalizationLevel(
+      Map<String, dynamic> userContext) {
     double level = 0.0;
-    
+
     // 사용자 이름이 있으면 기본 개인화
     if (userContext['user_name'] != null) level += 0.3;
-    
+
     // 최근 활동 정보가 있으면 맞춤화 가능
     if (userContext['recent_activity'] != null) level += 0.2;
     if (userContext['recent_achievement'] != null) level += 0.2;
-    
+
     // 피드백 히스토리가 있으면 고도화된 개인화
     if (userContext['feedback_history'] != null) level += 0.3;
-    
+
     return level.clamp(0.0, 1.0);
   }
-  
+
   /// 🔄 폴백 응답 생성
   static Map<String, dynamic> _generateFallbackResponse(
     EmotionSnapshot emotionState,
@@ -670,14 +686,14 @@ class EmotionAdaptiveResponseSystem {
       '마음을 알아주는 사람이 있다는 걸 기억해주세요.',
       '어떤 감정이든 소중해요. 함께 이야기해봐요.',
     ];
-    
+
     final random = Random();
     String message = fallbackMessages[random.nextInt(fallbackMessages.length)];
-    
+
     if (userName != null && userName.isNotEmpty) {
       message = '$userName님, $message';
     }
-    
+
     return {
       'message': message,
       'sherpi/emotion': SherpiEmotion.defaults,
@@ -693,9 +709,9 @@ class EmotionAdaptiveResponseSystem {
       },
     };
   }
-  
+
   /// 📊 다중 감정 대응 응답 생성
-  /// 
+  ///
   /// 복합적인 감정 상태에 대한 통합적 응답
   static Map<String, dynamic> generateMultiEmotionResponse(
     List<EmotionSnapshot> emotionStates, {
@@ -716,7 +732,7 @@ class EmotionAdaptiveResponseSystem {
         userName,
       );
     }
-    
+
     if (emotionStates.length == 1) {
       return generateEmotionAdaptiveResponse(
         emotionStates.first,
@@ -725,17 +741,15 @@ class EmotionAdaptiveResponseSystem {
         userName: userName,
       );
     }
-    
+
     // 주요 감정과 보조 감정 구분
     final primaryEmotion = emotionStates.first;
     final secondaryEmotions = emotionStates.skip(1).take(2).toList();
-    
+
     // 복합 감정 인식 메시지
-    final emotionNames = emotionStates
-        .map((e) => e.type.displayName)
-        .take(3)
-        .join(', ');
-    
+    final emotionNames =
+        emotionStates.map((e) => e.type.displayName).take(3).join(', ');
+
     // 주요 감정 기반 응답 생성
     final primaryResponse = generateEmotionAdaptiveResponse(
       primaryEmotion,
@@ -743,27 +757,30 @@ class EmotionAdaptiveResponseSystem {
       conversationContext: conversationContext,
       userName: userName,
     );
-    
+
     // 복합 감정 대응 메시지로 보강
     String enhancedMessage = primaryResponse['message'] as String;
-    
+
     if (secondaryEmotions.isNotEmpty) {
-      enhancedMessage += '\n\n복잡한 감정들($emotionNames)을 동시에 느끼고 계시는군요. 마음이 여러 갈래로 나뉘어 있으시는 것 같아요.';
+      enhancedMessage +=
+          '\n\n복잡한 감정들($emotionNames)을 동시에 느끼고 계시는군요. 마음이 여러 갈래로 나뉘어 있으시는 것 같아요.';
     }
-    
+
     return {
       ...primaryResponse,
       'message': enhancedMessage,
       'is_multi_emotion': true,
-      'detected_emotions': emotionStates.map((e) => {
-        'type': e.type.id,
-        'intensity': e.intensity.id,
-        'confidence': e.confidence.id,
-      }).toList(),
+      'detected_emotions': emotionStates
+          .map((e) => {
+                'type': e.type.id,
+                'intensity': e.intensity.id,
+                'confidence': e.confidence.id,
+              })
+          .toList(),
       'emotion_complexity': emotionStates.length,
     };
   }
-  
+
   /// 📈 응답 효과성 분석
   static Map<String, dynamic> analyzeResponseEffectiveness(
     Map<String, dynamic> response,
@@ -773,29 +790,27 @@ class EmotionAdaptiveResponseSystem {
     final emotionAlignment = response['emotion_alignment'] as double;
     final personalizationLevel = response['personalization_level'] as double;
     final effectivenessScore = response['effectiveness_score'] as double;
-    
+
     // 전체 효과성 점수 계산
-    final overallEffectiveness = (
-      emotionAlignment * 0.4 +
-      personalizationLevel * 0.3 +
-      effectivenessScore * 0.3
-    );
-    
+    final overallEffectiveness = (emotionAlignment * 0.4 +
+        personalizationLevel * 0.3 +
+        effectivenessScore * 0.3);
+
     // 개선 제안
     final improvements = <String>[];
-    
+
     if (emotionAlignment < 0.7) {
       improvements.add('감정 매칭 정확도 향상 필요');
     }
-    
+
     if (personalizationLevel < 0.5) {
       improvements.add('사용자 맞춤화 강화 필요');
     }
-    
+
     if (effectivenessScore < 0.7) {
       improvements.add('템플릿 품질 개선 필요');
     }
-    
+
     return {
       'overall_effectiveness': overallEffectiveness,
       'emotion_alignment': emotionAlignment,
@@ -806,7 +821,7 @@ class EmotionAdaptiveResponseSystem {
       'analysis_timestamp': DateTime.now().toIso8601String(),
     };
   }
-  
+
   /// 🏆 품질 등급 계산
   static String _getQualityGrade(double effectiveness) {
     if (effectiveness >= 0.9) return 'A+';

@@ -157,7 +157,9 @@ class GlobalBadgeData {
 
   /// 효과 타입별 뱃지 목록
   static List<GlobalBadge> getBadgesByEffectType(String effectType) {
-    return allBadges.values.where((badge) => badge.effectType == effectType).toList();
+    return allBadges.values
+        .where((badge) => badge.effectType == effectType)
+        .toList();
   }
 
   /// 모든 뱃지 목록
@@ -167,6 +169,8 @@ class GlobalBadgeData {
 
   /// 레벨 달성 뱃지 목록
   static List<GlobalBadge> getLevelAchievementBadges() {
-    return allBadges.values.where((badge) => badge.effectType == 'level_achievement').toList();
+    return allBadges.values
+        .where((badge) => badge.effectType == 'level_achievement')
+        .toList();
   }
 }

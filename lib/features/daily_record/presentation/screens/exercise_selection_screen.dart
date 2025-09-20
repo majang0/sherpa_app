@@ -17,10 +17,12 @@ class ExerciseSelectionScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ExerciseSelectionScreen> createState() => _ExerciseSelectionScreenState();
+  ConsumerState<ExerciseSelectionScreen> createState() =>
+      _ExerciseSelectionScreenState();
 }
 
-class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScreen>
+class _ExerciseSelectionScreenState
+    extends ConsumerState<ExerciseSelectionScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late AnimationController _slideController;
@@ -37,8 +39,16 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
     {'name': '수영', 'emoji': '🏊‍♂️', 'color': '0xFF059669'}, // 초록색 - 자연적인 운동
     {'name': '자전거', 'emoji': '🚴‍♂️', 'color': '0xFF059669'}, // 초록색 - 자연적인 운동
     {'name': '요가', 'emoji': '🧘‍♀️', 'color': '0xFF8B5CF6'}, // 보라색 - 몸과 소통하는 느낌
-    {'name': '필라테스', 'emoji': '🤸‍♀️', 'color': '0xFF8B5CF6'}, // 보라색 - 몸과 소통하는 느낌
-    {'name': '클라이밍', 'emoji': '🧗‍♂️', 'color': '0xFF8B5CF6'}, // 보라색 - 몸과 소통하는 느낌
+    {
+      'name': '필라테스',
+      'emoji': '🤸‍♀️',
+      'color': '0xFF8B5CF6'
+    }, // 보라색 - 몸과 소통하는 느낌
+    {
+      'name': '클라이밍',
+      'emoji': '🧗‍♂️',
+      'color': '0xFF8B5CF6'
+    }, // 보라색 - 몸과 소통하는 느낌
     {'name': '테니스', 'emoji': '🎾', 'color': '0xFFFBBF24'}, // 노란색 - 밝은 느낌
     {'name': '배드민턴', 'emoji': '🏸', 'color': '0xFFFBBF24'}, // 노란색 - 밝은 느낌
     {'name': '골프', 'emoji': '⛳', 'color': '0xFFFBBF24'}, // 노란색 - 밝은 느낌
@@ -49,30 +59,31 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _scaleController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
-    
+
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
@@ -103,7 +114,8 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new,
+              color: Colors.black87, size: 20),
         ),
         centerTitle: true,
         title: Text(
@@ -122,21 +134,21 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
           child: Column(
             children: [
               const SizedBox(height: 20),
-              
+
               // 헤더 섹션
               SlideTransition(
                 position: _slideAnimation,
                 child: _buildHeader(),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // 운동 목록
               ScaleTransition(
                 scale: _scaleAnimation,
                 child: _buildExerciseList(),
               ),
-              
+
               const SizedBox(height: 40),
             ],
           ),
@@ -237,7 +249,7 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
           final index = entry.key;
           final exercise = entry.value;
           final isLast = index == _exercises.length - 1;
-          
+
           return _buildExerciseItem(
             exercise['name']!,
             exercise['emoji']!,
@@ -249,7 +261,8 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
     );
   }
 
-  Widget _buildExerciseItem(String name, String emoji, Color color, bool isLast) {
+  Widget _buildExerciseItem(
+      String name, String emoji, Color color, bool isLast) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -272,12 +285,14 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
           decoration: BoxDecoration(
-            border: isLast ? null : Border(
-              bottom: BorderSide(
-                color: RecordColors.textLight.withOpacity(0.1),
-                width: 1,
-              ),
-            ),
+            border: isLast
+                ? null
+                : Border(
+                    bottom: BorderSide(
+                      color: RecordColors.textLight.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
           ),
           child: Row(
             children: [
@@ -296,9 +311,9 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
                   ),
                 ),
               ),
-              
+
               const SizedBox(width: 16),
-              
+
               // 운동 이름
               Expanded(
                 child: Text(
@@ -310,7 +325,7 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
                   ),
                 ),
               ),
-              
+
               // 색상 동그라미
               Container(
                 width: 12,
@@ -320,9 +335,9 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
                   shape: BoxShape.circle,
                 ),
               ),
-              
+
               const SizedBox(width: 12),
-              
+
               // 화살표 아이콘
               Icon(
                 Icons.chevron_right,
@@ -335,6 +350,4 @@ class _ExerciseSelectionScreenState extends ConsumerState<ExerciseSelectionScree
       ),
     );
   }
-
-
 }

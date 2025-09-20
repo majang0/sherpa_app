@@ -17,10 +17,12 @@ class ExerciseDashboardScreen extends ConsumerStatefulWidget {
   const ExerciseDashboardScreen({super.key});
 
   @override
-  ConsumerState<ExerciseDashboardScreen> createState() => _ExerciseDashboardScreenState();
+  ConsumerState<ExerciseDashboardScreen> createState() =>
+      _ExerciseDashboardScreenState();
 }
 
-class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScreen>
+class _ExerciseDashboardScreenState
+    extends ConsumerState<ExerciseDashboardScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
@@ -28,12 +30,12 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
@@ -60,7 +62,8 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
         actions: [
           IconButton(
             icon: const Icon(Icons.analytics_outlined),
-            onPressed: () => Navigator.pushNamed(context, '/exercise_analytics'),
+            onPressed: () =>
+                Navigator.pushNamed(context, '/exercise_analytics'),
             tooltip: '상세 분석',
           ),
         ],
@@ -72,30 +75,40 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
           child: Column(
             children: [
               const SizedBox(height: 20),
-              
+
               // 요약 통계 카드들
-              _buildSummaryStats(exerciseLogs).animate().slide(duration: 600.ms, delay: 100.ms),
-              
+              _buildSummaryStats(exerciseLogs)
+                  .animate()
+                  .slide(duration: 600.ms, delay: 100.ms),
+
               const SizedBox(height: 24),
-              
+
               // 운동 타입별 분포 차트
-              _buildExerciseTypeChart(exerciseLogs).animate().slide(duration: 600.ms, delay: 200.ms),
-              
+              _buildExerciseTypeChart(exerciseLogs)
+                  .animate()
+                  .slide(duration: 600.ms, delay: 200.ms),
+
               const SizedBox(height: 24),
-              
+
               // Smart Insights
-              _buildSmartInsights(exerciseLogs).animate().slide(duration: 600.ms, delay: 300.ms),
-              
+              _buildSmartInsights(exerciseLogs)
+                  .animate()
+                  .slide(duration: 600.ms, delay: 300.ms),
+
               const SizedBox(height: 24),
-              
+
               // Quick Actions
-              _buildQuickActions().animate().slide(duration: 600.ms, delay: 400.ms),
-              
+              _buildQuickActions()
+                  .animate()
+                  .slide(duration: 600.ms, delay: 400.ms),
+
               const SizedBox(height: 24),
-              
+
               // 최근 운동 기록
-              _buildRecentExercises(exerciseLogs).animate().slide(duration: 600.ms, delay: 500.ms),
-              
+              _buildRecentExercises(exerciseLogs)
+                  .animate()
+                  .slide(duration: 600.ms, delay: 500.ms),
+
               const SizedBox(height: 40),
             ],
           ),
@@ -108,26 +121,32 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
     final now = DateTime.now();
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
     final monthStart = DateTime(now.year, now.month, 1);
-    
+
     // 이번 주 운동 통계
-    final thisWeekExercises = exerciseLogs.where((log) => 
-      log.date.isAfter(weekStart.subtract(const Duration(days: 1)))
-    ).toList();
-    
+    final thisWeekExercises = exerciseLogs
+        .where((log) =>
+            log.date.isAfter(weekStart.subtract(const Duration(days: 1))))
+        .toList();
+
     // 이번 달 운동 통계
-    final thisMonthExercises = exerciseLogs.where((log) => 
-      log.date.isAfter(monthStart.subtract(const Duration(days: 1)))
-    ).toList();
-    
-    final weeklyMinutes = thisWeekExercises.fold<int>(0, (sum, log) => sum + log.durationMinutes);
+    final thisMonthExercises = exerciseLogs
+        .where((log) =>
+            log.date.isAfter(monthStart.subtract(const Duration(days: 1))))
+        .toList();
+
+    final weeklyMinutes =
+        thisWeekExercises.fold<int>(0, (sum, log) => sum + log.durationMinutes);
     final monthlyCount = thisMonthExercises.length;
-    final avgDuration = exerciseLogs.isNotEmpty 
-        ? exerciseLogs.fold<int>(0, (sum, log) => sum + log.durationMinutes) ~/ exerciseLogs.length
+    final avgDuration = exerciseLogs.isNotEmpty
+        ? exerciseLogs.fold<int>(0, (sum, log) => sum + log.durationMinutes) ~/
+            exerciseLogs.length
         : 0;
-    
+
     // 개인 기록 계산
-    final longestSession = exerciseLogs.isNotEmpty 
-        ? exerciseLogs.map((e) => e.durationMinutes).reduce((a, b) => a > b ? a : b)
+    final longestSession = exerciseLogs.isNotEmpty
+        ? exerciseLogs
+            .map((e) => e.durationMinutes)
+            .reduce((a, b) => a > b ? a : b)
         : 0;
     final totalCalories = _calculateTotalCalories(exerciseLogs);
     final currentStreak = _calculateCurrentStreak(exerciseLogs);
@@ -148,12 +167,16 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
                   color: RecordColors.textPrimary,
                 ),
               ),
-              if (currentStreak > 0) 
+              if (currentStreak > 0)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [RecordColors.success, RecordColors.success.withOpacity(0.8)],
+                      colors: [
+                        RecordColors.success,
+                        RecordColors.success.withOpacity(0.8)
+                      ],
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -180,7 +203,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // 주요 통계 (2x2 그리드)
           Row(
             children: [
@@ -207,9 +230,9 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
               ),
             ],
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           Row(
             children: [
               Expanded(
@@ -241,10 +264,10 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
   }
 
   Widget _buildEnhancedStatCard(
-    String title, 
-    String value, 
-    String subtitle, 
-    IconData icon, 
+    String title,
+    String value,
+    String subtitle,
+    IconData icon,
     Color color,
     double? progressValue,
   ) {
@@ -281,9 +304,12 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
               ),
               if (progressValue != null && progressValue > 0)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: progressValue >= 1.0 ? RecordColors.success : color.withOpacity(0.1),
+                    color: progressValue >= 1.0
+                        ? RecordColors.success
+                        : color.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -324,7 +350,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
               color: RecordColors.textSecondary,
             ),
           ),
-          
+
           // Progress bar if progress value is provided
           if (progressValue != null) ...[
             const SizedBox(height: 8),
@@ -359,7 +385,8 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
     // 운동 타입별 횟수 계산
     final typeCountMap = <String, int>{};
     for (final log in exerciseLogs) {
-      typeCountMap[log.exerciseType] = (typeCountMap[log.exerciseType] ?? 0) + 1;
+      typeCountMap[log.exerciseType] =
+          (typeCountMap[log.exerciseType] ?? 0) + 1;
     }
 
     final sortedEntries = typeCountMap.entries.toList()
@@ -408,7 +435,6 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
             ],
           ),
           const SizedBox(height: 24),
-          
           SizedBox(
             height: 200,
             child: Row(
@@ -424,7 +450,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
                     ),
                   ),
                 ),
-                
+
                 // 범례
                 Expanded(
                   flex: 2,
@@ -514,9 +540,10 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
     );
   }
 
-  List<PieChartSectionData> _buildPieChartSections(List<MapEntry<String, int>> entries) {
+  List<PieChartSectionData> _buildPieChartSections(
+      List<MapEntry<String, int>> entries) {
     final total = entries.fold<int>(0, (sum, entry) => sum + entry.value);
-    
+
     return entries.take(5).map((entry) {
       final percentage = (entry.value / total * 100);
       return PieChartSectionData(
@@ -539,7 +566,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
     }
 
     final insights = _generateInsights(exerciseLogs);
-    
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(24),
@@ -583,20 +610,21 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // 인사이트 카드들
           ...insights.map((insight) => _buildInsightItem(
-            insight['icon'] as IconData,
-            insight['title'] as String,
-            insight['description'] as String,
-            insight['color'] as Color,
-          )),
+                insight['icon'] as IconData,
+                insight['title'] as String,
+                insight['description'] as String,
+                insight['color'] as Color,
+              )),
         ],
       ),
     );
   }
 
-  Widget _buildInsightItem(IconData icon, String title, String description, Color color) {
+  Widget _buildInsightItem(
+      IconData icon, String title, String description, Color color) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -696,7 +724,6 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
             ],
           ),
           const SizedBox(height: 20),
-          
           Row(
             children: [
               Expanded(
@@ -705,7 +732,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
                   onPressed: () {
                     HapticFeedbackManager.lightImpact();
                     Navigator.pushNamed(
-                      context, 
+                      context,
                       '/daily_record',
                     );
                   },
@@ -734,7 +761,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
 
   Widget _buildRecentExercises(List<ExerciseLog> exerciseLogs) {
     final recentExercises = exerciseLogs.take(5).toList();
-    
+
     if (recentExercises.isEmpty) {
       return _buildEmptyRecentExercises();
     }
@@ -783,7 +810,6 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
             ],
           ),
           const SizedBox(height: 16),
-          
           ...recentExercises.map((exercise) => _buildExerciseItem(exercise)),
         ],
       ),
@@ -798,7 +824,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
       durationMinutes: exercise.durationMinutes,
       intensity: exercise.intensity,
     );
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
@@ -848,7 +874,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
                 ),
               ),
               const SizedBox(width: 16),
-              
+
               // Exercise details
               Expanded(
                 child: Column(
@@ -866,7 +892,8 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
                             color: exerciseColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -928,7 +955,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
                   ],
                 ),
               ),
-              
+
               // Action buttons
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -1031,10 +1058,9 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
     });
   }
 
-
   int _calculateCurrentStreak(List<ExerciseLog> exerciseLogs) {
     if (exerciseLogs.isEmpty) return 0;
-    
+
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final sortedLogs = exerciseLogs
@@ -1042,12 +1068,12 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
         .toSet()
         .toList()
       ..sort((a, b) => b.compareTo(a));
-    
+
     if (sortedLogs.isEmpty) return 0;
-    
+
     int streak = 0;
     DateTime checkDate = today;
-    
+
     for (final logDate in sortedLogs) {
       if (logDate.isAtSameMomentAs(checkDate)) {
         streak++;
@@ -1056,55 +1082,60 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
         break;
       }
     }
-    
+
     return streak;
   }
 
   List<Map<String, dynamic>> _generateInsights(List<ExerciseLog> exerciseLogs) {
     final insights = <Map<String, dynamic>>[];
-    
+
     if (exerciseLogs.isEmpty) return insights;
-    
+
     // 가장 좋아하는 운동 타입
     final typeCountMap = <String, int>{};
     for (final log in exerciseLogs) {
-      typeCountMap[log.exerciseType] = (typeCountMap[log.exerciseType] ?? 0) + 1;
+      typeCountMap[log.exerciseType] =
+          (typeCountMap[log.exerciseType] ?? 0) + 1;
     }
-    
+
     if (typeCountMap.isNotEmpty) {
-      final favoriteType = typeCountMap.entries
-          .reduce((a, b) => a.value > b.value ? a : b);
-      
+      final favoriteType =
+          typeCountMap.entries.reduce((a, b) => a.value > b.value ? a : b);
+
       insights.add({
         'icon': Icons.favorite,
         'title': '선호 운동',
-        'description': '${favoriteType.key}을(를) 가장 많이 하셨네요! (${favoriteType.value}회)',
+        'description':
+            '${favoriteType.key}을(를) 가장 많이 하셨네요! (${favoriteType.value}회)',
         'color': RecordColors.secondary,
       });
     }
-    
+
     // 가장 활동적인 요일
     final weekdayCountMap = <int, int>{};
     for (final log in exerciseLogs) {
       final weekday = log.date.weekday;
       weekdayCountMap[weekday] = (weekdayCountMap[weekday] ?? 0) + 1;
     }
-    
+
     if (weekdayCountMap.isNotEmpty) {
-      final mostActiveWeekday = weekdayCountMap.entries
-          .reduce((a, b) => a.value > b.value ? a : b);
+      final mostActiveWeekday =
+          weekdayCountMap.entries.reduce((a, b) => a.value > b.value ? a : b);
       final weekdayNames = ['월', '화', '수', '목', '금', '토', '일'];
-      
+
       insights.add({
         'icon': Icons.calendar_today,
         'title': '활동적인 요일',
-        'description': '${weekdayNames[mostActiveWeekday.key - 1]}요일에 가장 활발하게 운동하세요!',
+        'description':
+            '${weekdayNames[mostActiveWeekday.key - 1]}요일에 가장 활발하게 운동하세요!',
         'color': RecordColors.primary,
       });
     }
-    
+
     // 평균 운동 시간 분석
-    final avgDuration = exerciseLogs.fold<int>(0, (sum, log) => sum + log.durationMinutes) / exerciseLogs.length;
+    final avgDuration =
+        exerciseLogs.fold<int>(0, (sum, log) => sum + log.durationMinutes) /
+            exerciseLogs.length;
     if (avgDuration > 45) {
       insights.add({
         'icon': Icons.trending_up,
@@ -1120,12 +1151,13 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
         'color': RecordColors.warning,
       });
     }
-    
+
     // 최근 일주일 운동 빈도
     final now = DateTime.now();
     final weekAgo = now.subtract(const Duration(days: 7));
-    final recentExercises = exerciseLogs.where((log) => log.date.isAfter(weekAgo)).length;
-    
+    final recentExercises =
+        exerciseLogs.where((log) => log.date.isAfter(weekAgo)).length;
+
     if (recentExercises >= 5) {
       insights.add({
         'icon': Icons.emoji_events,
@@ -1141,7 +1173,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
         'color': RecordColors.info,
       });
     }
-    
+
     return insights;
   }
 
@@ -1262,7 +1294,7 @@ class _ExerciseDashboardScreenState extends ConsumerState<ExerciseDashboardScree
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date).inDays;
-    
+
     if (difference == 0) {
       return '오늘';
     } else if (difference == 1) {

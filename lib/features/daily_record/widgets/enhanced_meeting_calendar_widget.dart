@@ -14,10 +14,12 @@ import '../presentation/screens/meeting_edit_screen.dart';
 
 class EnhancedMeetingCalendarWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<EnhancedMeetingCalendarWidget> createState() => _EnhancedMeetingCalendarWidgetState();
+  ConsumerState<EnhancedMeetingCalendarWidget> createState() =>
+      _EnhancedMeetingCalendarWidgetState();
 }
 
-class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingCalendarWidget>
+class _EnhancedMeetingCalendarWidgetState
+    extends ConsumerState<EnhancedMeetingCalendarWidget>
     with TickerProviderStateMixin {
   late AnimationController _slideController;
   late Animation<Offset> _slideAnimation;
@@ -27,17 +29,17 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
   @override
   void initState() {
     super.initState();
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
@@ -45,7 +47,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
       parent: _slideController,
       curve: Curves.easeOutBack,
     ));
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -53,7 +55,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
       parent: _fadeController,
       curve: Curves.easeOut,
     ));
-    
+
     Future.delayed(const Duration(milliseconds: 1000), () {
       _slideController.forward();
       _fadeController.forward();
@@ -71,12 +73,11 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
   Widget build(BuildContext context) {
     final user = ref.watch(globalUserProvider);
     final meetingLogs = user.dailyRecords.meetingLogs;
-    
-    
+
     // 날짜순으로 정렬 (최신순)
     final sortedMeetingLogs = List<MeetingLog>.from(meetingLogs)
       ..sort((a, b) => b.date.compareTo(a.date));
-    
+
     return SlideTransition(
       position: _slideAnimation,
       child: FadeTransition(
@@ -150,7 +151,10 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [const Color(0xFF8B5CF6), const Color(0xFF7C3AED)],
+                          colors: [
+                            const Color(0xFF8B5CF6),
+                            const Color(0xFF7C3AED)
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
@@ -170,31 +174,31 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // 월간 통계 및 인사이트
               _buildMonthlyInsights(sortedMeetingLogs),
-              
+
               const SizedBox(height: 20),
-              
+
               // 카테고리별 분석
               _buildCategoryAnalysis(sortedMeetingLogs),
-              
+
               const SizedBox(height: 20),
-              
+
               // 주간 모임 현황
               _buildWeeklyMeetings(sortedMeetingLogs),
-              
+
               const SizedBox(height: 16),
-              
+
               // 전체 모임 보기 버튼
               _buildFullViewButton(),
-              
+
               const SizedBox(height: 20),
-              
+
               // 최근 모임 기록들
-              if (sortedMeetingLogs.isNotEmpty) ...[ 
+              if (sortedMeetingLogs.isNotEmpty) ...[
                 Row(
                   children: [
                     Text(
@@ -217,7 +221,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                   ],
                 ),
                 const SizedBox(height: 12),
-                ...sortedMeetingLogs.take(3).map((meeting) => _buildMeetingItem(meeting)),
+                ...sortedMeetingLogs
+                    .take(3)
+                    .map((meeting) => _buildMeetingItem(meeting)),
               ] else
                 _buildEmptyState(),
             ],
@@ -229,12 +235,14 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
 
   Widget _buildTodayStats(List<MeetingLog> meetingLogs) {
     final today = DateTime.now();
-    final todayMeetings = meetingLogs.where((log) => _isSameDay(log.date, today)).toList();
+    final todayMeetings =
+        meetingLogs.where((log) => _isSameDay(log.date, today)).toList();
     final sessionCount = todayMeetings.length;
-    final avgSatisfaction = todayMeetings.isEmpty 
-        ? 0.0 
-        : todayMeetings.fold<double>(0, (sum, log) => sum + log.satisfaction) / todayMeetings.length;
-    
+    final avgSatisfaction = todayMeetings.isEmpty
+        ? 0.0
+        : todayMeetings.fold<double>(0, (sum, log) => sum + log.satisfaction) /
+            todayMeetings.length;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -267,7 +275,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
           Expanded(
             child: _buildStatItem(
               '⭐',
-              avgSatisfaction > 0 ? '${avgSatisfaction.toStringAsFixed(1)}/5.0' : '-',
+              avgSatisfaction > 0
+                  ? '${avgSatisfaction.toStringAsFixed(1)}/5.0'
+                  : '-',
               '평균 만족도',
             ),
           ),
@@ -309,25 +319,33 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
     final now = DateTime.now();
     final currentMonth = DateTime(now.year, now.month);
     final previousMonth = DateTime(now.year, now.month - 1);
-    
+
     // 이번 달 모임 데이터
-    final currentMonthMeetings = meetingLogs.where((log) => 
-      log.date.year == currentMonth.year && log.date.month == currentMonth.month
-    ).toList();
-    
+    final currentMonthMeetings = meetingLogs
+        .where((log) =>
+            log.date.year == currentMonth.year &&
+            log.date.month == currentMonth.month)
+        .toList();
+
     // 지난 달 모임 데이터
-    final previousMonthMeetings = meetingLogs.where((log) => 
-      log.date.year == previousMonth.year && log.date.month == previousMonth.month
-    ).toList();
-    
+    final previousMonthMeetings = meetingLogs
+        .where((log) =>
+            log.date.year == previousMonth.year &&
+            log.date.month == previousMonth.month)
+        .toList();
+
     final currentCount = currentMonthMeetings.length;
     final previousCount = previousMonthMeetings.length;
-    final growthRate = previousCount > 0 ? ((currentCount - previousCount) / previousCount * 100).round() : 0;
-    
-    final avgSatisfaction = currentMonthMeetings.isEmpty 
-        ? 0.0 
-        : currentMonthMeetings.fold<double>(0, (sum, log) => sum + log.satisfaction) / currentMonthMeetings.length;
-    
+    final growthRate = previousCount > 0
+        ? ((currentCount - previousCount) / previousCount * 100).round()
+        : 0;
+
+    final avgSatisfaction = currentMonthMeetings.isEmpty
+        ? 0.0
+        : currentMonthMeetings.fold<double>(
+                0, (sum, log) => sum + log.satisfaction) /
+            currentMonthMeetings.length;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -372,7 +390,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               Expanded(
                 child: _buildStatItem(
                   '⭐',
-                  avgSatisfaction > 0 ? '${avgSatisfaction.toStringAsFixed(1)}' : '-',
+                  avgSatisfaction > 0
+                      ? '${avgSatisfaction.toStringAsFixed(1)}'
+                      : '-',
                   '평균 만족도',
                 ),
               ),
@@ -383,7 +403,11 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               ),
               Expanded(
                 child: _buildStatItem(
-                  growthRate > 0 ? '📈' : growthRate < 0 ? '📉' : '➖',
+                  growthRate > 0
+                      ? '📈'
+                      : growthRate < 0
+                          ? '📉'
+                          : '➖',
                   '${growthRate > 0 ? '+' : ''}$growthRate%',
                   '전월 대비',
                 ),
@@ -398,14 +422,15 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
   // 카테고리별 분석
   Widget _buildCategoryAnalysis(List<MeetingLog> meetingLogs) {
     final now = DateTime.now();
-    final currentMonthMeetings = meetingLogs.where((log) => 
-      log.date.year == now.year && log.date.month == now.month
-    ).toList();
-    
+    final currentMonthMeetings = meetingLogs
+        .where(
+            (log) => log.date.year == now.year && log.date.month == now.month)
+        .toList();
+
     if (currentMonthMeetings.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     // 카테고리별 통계
     final categoryStats = <String, Map<String, dynamic>>{};
     for (final meeting in currentMonthMeetings) {
@@ -421,11 +446,11 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
       categoryStats[category]!['count'] += 1;
       categoryStats[category]!['totalSatisfaction'] += meeting.satisfaction;
     }
-    
+
     // 가장 많은 카테고리 찾기
     final topCategory = categoryStats.entries
         .reduce((a, b) => a.value['count'] > b.value['count'] ? a : b);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -495,13 +520,13 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
     );
   }
 
-
   Widget _buildWeeklyMeetings(List<MeetingLog> meetingLogs) {
     final now = DateTime.now();
     // 퀘스트 시스템과 동일한 주간 계산 (월요일~일요일)
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    final weekDays = List.generate(7, (index) => weekStart.add(Duration(days: index)));
-    
+    final weekDays =
+        List.generate(7, (index) => weekStart.add(Duration(days: index)));
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -529,18 +554,24 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               // 주간 모임 수 표시 (퀘스트 디버깅용)
               Builder(
                 builder: (context) {
-                  final weekStart = now.subtract(Duration(days: now.weekday - 1));
+                  final weekStart =
+                      now.subtract(Duration(days: now.weekday - 1));
                   final weekEnd = weekStart.add(Duration(days: 6));
                   final weekMeetings = meetingLogs.where((log) {
                     // 이번 주 월요일 0시부터 일요일 23시59분까지만 포함
-                    final logDate = DateTime(log.date.year, log.date.month, log.date.day);
-                    final startDate = DateTime(weekStart.year, weekStart.month, weekStart.day);
-                    final endDate = DateTime(weekEnd.year, weekEnd.month, weekEnd.day);
-                    return !logDate.isBefore(startDate) && !logDate.isAfter(endDate);
+                    final logDate =
+                        DateTime(log.date.year, log.date.month, log.date.day);
+                    final startDate = DateTime(
+                        weekStart.year, weekStart.month, weekStart.day);
+                    final endDate =
+                        DateTime(weekEnd.year, weekEnd.month, weekEnd.day);
+                    return !logDate.isBefore(startDate) &&
+                        !logDate.isAfter(endDate);
                   }).length;
-                  
+
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: ModernColors.textTertiary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -565,7 +596,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: weekDays.map((day) => _buildWeeklyDay(day, meetingLogs)).toList(),
+            children: weekDays
+                .map((day) => _buildWeeklyDay(day, meetingLogs))
+                .toList(),
           ),
         ],
       ),
@@ -573,10 +606,11 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
   }
 
   Widget _buildWeeklyDay(DateTime day, List<MeetingLog> meetingLogs) {
-    final dayMeetings = meetingLogs.where((log) => _isSameDay(log.date, day)).toList();
+    final dayMeetings =
+        meetingLogs.where((log) => _isSameDay(log.date, day)).toList();
     final isToday = _isSameDay(day, DateTime.now());
     final weekdayName = ['월', '화', '수', '목', '금', '토', '일'][day.weekday - 1];
-    
+
     return GestureDetector(
       onTap: () {
         // 모임이 있는 날짜만 클릭 가능
@@ -589,10 +623,13 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
         width: 36,
         height: 60,
         decoration: BoxDecoration(
-          color: isToday ? const Color(0xFF8B5CF6).withOpacity(0.1) : Colors.white,
+          color:
+              isToday ? const Color(0xFF8B5CF6).withOpacity(0.1) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isToday ? const Color(0xFF8B5CF6) : ModernColors.textTertiary.withOpacity(0.2),
+            color: isToday
+                ? const Color(0xFF8B5CF6)
+                : ModernColors.textTertiary.withOpacity(0.2),
             width: isToday ? 2 : 1,
           ),
         ),
@@ -613,7 +650,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: isToday ? const Color(0xFF8B5CF6) : ModernColors.textPrimary,
+                color: isToday
+                    ? const Color(0xFF8B5CF6)
+                    : ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 4),
@@ -680,10 +719,12 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: MeetingCategories.getColor(meeting.category).withOpacity(0.1),
+                color: MeetingCategories.getColor(meeting.category)
+                    .withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: MeetingCategories.getColor(meeting.category).withOpacity(0.3),
+                  color: MeetingCategories.getColor(meeting.category)
+                      .withOpacity(0.3),
                   width: 1,
                 ),
               ),
@@ -695,7 +736,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
               ),
             ),
             const SizedBox(width: 12),
-            
+
             // 모임 정보
             Expanded(
               child: Column(
@@ -843,8 +884,6 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
     );
   }
 
-
-
   bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
         date1.month == date2.month &&
@@ -879,9 +918,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // 일러스트 아이콘
             Container(
               padding: const EdgeInsets.all(24),
@@ -895,9 +934,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 color: const Color(0xFF8B5CF6),
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // 안내 텍스트
             Text(
               '모임에 참여하고 싶으신가요?',
@@ -907,9 +946,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 color: ModernColors.textPrimary,
               ),
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(
@@ -923,9 +962,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 textAlign: TextAlign.center,
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // 버튼들
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -994,9 +1033,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // 힌트 텍스트
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -1030,7 +1069,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
           ],
         ),
@@ -1116,7 +1155,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // 헤더
               Padding(
                 padding: const EdgeInsets.fromLTRB(24, 8, 24, 20),
@@ -1126,7 +1165,10 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [const Color(0xFF8B5CF6), const Color(0xFF7C3AED)],
+                          colors: [
+                            const Color(0xFF8B5CF6),
+                            const Color(0xFF7C3AED)
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -1164,7 +1206,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                   ],
                 ),
               ),
-              
+
               // 모임이 한 개인 경우
               if (dayMeetings.length == 1) ...[
                 _buildSingleMeetingPreview(dayMeetings.first),
@@ -1172,7 +1214,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                 // 여러 개인 경우 목록으로 표시
                 _buildMultipleMeetingsList(dayMeetings),
               ],
-              
+
               const SizedBox(height: 24),
             ],
           ),
@@ -1205,7 +1247,8 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: MeetingCategories.getColor(meeting.category).withOpacity(0.1),
+                      color: MeetingCategories.getColor(meeting.category)
+                          .withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
@@ -1277,7 +1320,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
             ],
           ),
         ),
-        
+
         // 액션 버튼들
         Padding(
           padding: const EdgeInsets.all(24),
@@ -1291,13 +1334,15 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MeetingLogDetailScreen(meeting: meeting),
+                        builder: (context) =>
+                            MeetingLogDetailScreen(meeting: meeting),
                       ),
                     );
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: const Color(0xFF8B5CF6),
-                    side: BorderSide(color: const Color(0xFF8B5CF6), width: 1.5),
+                    side:
+                        BorderSide(color: const Color(0xFF8B5CF6), width: 1.5),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -1319,9 +1364,9 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                   ),
                 ),
               ),
-              
+
               const SizedBox(width: 12),
-              
+
               // 수정하기 버튼
               Expanded(
                 child: ElevatedButton(
@@ -1330,7 +1375,8 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MeetingEditScreen(meeting: meeting),
+                        builder: (context) =>
+                            MeetingEditScreen(meeting: meeting),
                       ),
                     );
                   },
@@ -1378,16 +1424,18 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
         itemCount: meetings.length,
         itemBuilder: (context, index) {
           final meeting = meetings[index];
-          
+
           return Container(
-            margin: EdgeInsets.only(bottom: index == meetings.length - 1 ? 0 : 12),
+            margin:
+                EdgeInsets.only(bottom: index == meetings.length - 1 ? 0 : 12),
             child: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MeetingLogDetailScreen(meeting: meeting),
+                    builder: (context) =>
+                        MeetingLogDetailScreen(meeting: meeting),
                   ),
                 );
               },
@@ -1408,7 +1456,8 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: MeetingCategories.getColor(meeting.category).withOpacity(0.1),
+                        color: MeetingCategories.getColor(meeting.category)
+                            .withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
@@ -1419,7 +1468,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                       ),
                     ),
                     const SizedBox(width: 12),
-                    
+
                     // 내용
                     Expanded(
                       child: Column(
@@ -1465,7 +1514,7 @@ class _EnhancedMeetingCalendarWidgetState extends ConsumerState<EnhancedMeetingC
                         ],
                       ),
                     ),
-                    
+
                     // 화살표
                     Icon(
                       Icons.chevron_right,

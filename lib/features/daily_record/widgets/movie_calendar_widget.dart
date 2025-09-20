@@ -13,7 +13,8 @@ import '../presentation/screens/movie_add_screen.dart';
 
 class MovieCalendarWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<MovieCalendarWidget> createState() => _MovieCalendarWidgetState();
+  ConsumerState<MovieCalendarWidget> createState() =>
+      _MovieCalendarWidgetState();
 }
 
 class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
@@ -26,17 +27,17 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
   @override
   void initState() {
     super.initState();
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.3),
       end: Offset.zero,
@@ -44,7 +45,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
       parent: _slideController,
       curve: Curves.easeOutBack,
     ));
-    
+
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -52,7 +53,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
       parent: _fadeController,
       curve: Curves.easeOut,
     ));
-    
+
     Future.delayed(const Duration(milliseconds: 1400), () {
       _slideController.forward();
       _fadeController.forward();
@@ -70,7 +71,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
   Widget build(BuildContext context) {
     final user = ref.watch(globalUserProvider);
     final movieLogs = user.dailyRecords.movieLogs;
-    
+
     return SlideTransition(
       position: _slideAnimation,
       child: FadeTransition(
@@ -149,7 +150,10 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [const Color(0xFFEF4444), const Color(0xFFDC2626)],
+                          colors: [
+                            const Color(0xFFEF4444),
+                            const Color(0xFFDC2626)
+                          ],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
@@ -169,27 +173,26 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // 이번 달 통계
               _buildMonthlyStats(movieLogs),
-              
+
               const SizedBox(height: 20),
-              
+
               // 장르별 분석
-              if (movieLogs.isNotEmpty)
-                _buildGenreAnalysis(movieLogs),
-              
+              if (movieLogs.isNotEmpty) _buildGenreAnalysis(movieLogs),
+
               const SizedBox(height: 20),
-              
+
               // 전체 보기 버튼
               _buildFullViewButton(),
-              
+
               const SizedBox(height: 20),
-              
+
               // 최근 영화 기록들
-              if (movieLogs.isNotEmpty) ...[ 
+              if (movieLogs.isNotEmpty) ...[
                 Text(
                   '최근 감상 영화',
                   style: GoogleFonts.notoSans(
@@ -202,9 +205,9 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                 ...movieLogs.take(3).map((movie) => _buildMovieItem(movie)),
               ] else
                 _buildEmptyState(),
-              
+
               const SizedBox(height: 24),
-              
+
               // 영화 기록 작성하기 버튼
               _buildWriteButton(),
             ],
@@ -217,16 +220,19 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
   Widget _buildMonthlyStats(List<MovieLog> movieLogs) {
     final now = DateTime.now();
     final monthStart = DateTime(now.year, now.month, 1);
-    final thisMonthMovies = movieLogs.where((log) => 
-        log.date.isAfter(monthStart.subtract(const Duration(days: 1)))
-    ).toList();
-    
+    final thisMonthMovies = movieLogs
+        .where((log) =>
+            log.date.isAfter(monthStart.subtract(const Duration(days: 1))))
+        .toList();
+
     final totalMovies = thisMonthMovies.length;
-    final totalWatchTime = thisMonthMovies.fold<int>(0, (sum, log) => sum + log.watchTimeMinutes);
-    final avgRating = thisMonthMovies.isEmpty 
-        ? 0.0 
-        : thisMonthMovies.fold<double>(0, (sum, log) => sum + log.rating) / thisMonthMovies.length;
-    
+    final totalWatchTime =
+        thisMonthMovies.fold<int>(0, (sum, log) => sum + log.watchTimeMinutes);
+    final avgRating = thisMonthMovies.isEmpty
+        ? 0.0
+        : thisMonthMovies.fold<double>(0, (sum, log) => sum + log.rating) /
+            thisMonthMovies.length;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -311,7 +317,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
   Widget _buildGenreAnalysis(List<MovieLog> movieLogs) {
     // 장르별 통계 계산
     final genreStats = <String, Map<String, dynamic>>{};
-    
+
     for (final log in movieLogs) {
       if (!genreStats.containsKey(log.genre)) {
         genreStats[log.genre] = {
@@ -323,11 +329,11 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
       genreStats[log.genre]!['count']++;
       genreStats[log.genre]!['totalRating'] += log.rating;
     }
-    
+
     // 개수 기준으로 정렬
     final sortedGenres = genreStats.entries.toList()
       ..sort((a, b) => b.value['count'].compareTo(a.value['count']));
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -360,12 +366,12 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: isFirst 
+                        color: isFirst
                             ? const Color(0xFFEF4444).withOpacity(0.15)
                             : Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: isFirst 
+                          color: isFirst
                               ? const Color(0xFFEF4444).withOpacity(0.3)
                               : ModernColors.textTertiary.withOpacity(0.2),
                           width: 1,
@@ -384,7 +390,9 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: isFirst ? const Color(0xFFEF4444) : ModernColors.textPrimary,
+                        color: isFirst
+                            ? const Color(0xFFEF4444)
+                            : ModernColors.textPrimary,
                       ),
                     ),
                     Text(
@@ -449,7 +457,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
               ),
             ),
             const SizedBox(width: 12),
-            
+
             // 영화 정보
             Expanded(
               child: Column(
@@ -513,7 +521,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                 ],
               ),
             ),
-            
+
             // 공유 아이콘
             if (movie.isShared)
               Icon(
@@ -611,7 +619,6 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
     );
   }
 
-
   Widget _buildFullViewButton() {
     return Container(
       width: double.infinity,
@@ -704,20 +711,34 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
 
   String _getGenreEmoji(String genre) {
     switch (genre) {
-      case '드라마': return '🎭';
-      case '액션': return '💥';
-      case 'SF': return '🚀';
-      case '로맨스': return '💕';
-      case '코미디': return '😂';
-      case '스릴러': return '😱';
-      case '공포': return '👻';
-      case '애니메이션': return '🎨';
-      case '다큐멘터리': return '📹';
-      case '뮤지컬': return '🎵';
-      case '범죄': return '🔍';
-      case '전쟁': return '⚔️';
-      case '판타지': return '🪄';
-      default: return '🎬';
+      case '드라마':
+        return '🎭';
+      case '액션':
+        return '💥';
+      case 'SF':
+        return '🚀';
+      case '로맨스':
+        return '💕';
+      case '코미디':
+        return '😂';
+      case '스릴러':
+        return '😱';
+      case '공포':
+        return '👻';
+      case '애니메이션':
+        return '🎨';
+      case '다큐멘터리':
+        return '📹';
+      case '뮤지컬':
+        return '🎵';
+      case '범죄':
+        return '🔍';
+      case '전쟁':
+        return '⚔️';
+      case '판타지':
+        return '🪄';
+      default:
+        return '🎬';
     }
   }
 }

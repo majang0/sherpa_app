@@ -6,7 +6,7 @@ import 'dart:ui';
 import 'modern_colors.dart';
 
 /// 글래스모피즘과 뉴모피즘을 결합한 2025 스타일 시스템
-/// 
+///
 /// 사용법:
 /// ```dart
 /// Container(
@@ -18,9 +18,8 @@ import 'modern_colors.dart';
 /// )
 /// ```
 class GlassNeuStyle {
-  
   // ==================== 엘리베이션 레벨 ====================
-  
+
   /// 엘리베이션 레벨 정의
   static const Map<GlassNeuElevation, double> _elevationValues = {
     GlassNeuElevation.none: 0,
@@ -32,7 +31,7 @@ class GlassNeuStyle {
   };
 
   // ==================== 글래스모피즘 스타일 ====================
-  
+
   /// 기본 글래스모피즘 데코레이션
   static BoxDecoration glassMorphism({
     GlassNeuElevation elevation = GlassNeuElevation.medium,
@@ -44,11 +43,12 @@ class GlassNeuStyle {
     bool enableBlur = true,
   }) {
     final elevationValue = _elevationValues[elevation] ?? 8;
-    
+
     return BoxDecoration(
-      color: (color ?? ModernColors.surface.withOpacity(0.2)).withOpacity(opacity),
+      color:
+          (color ?? ModernColors.surface.withOpacity(0.2)).withOpacity(opacity),
       borderRadius: BorderRadius.circular(borderRadius),
-      border: borderColor != null 
+      border: borderColor != null
           ? Border.all(
               color: borderColor.withOpacity(0.3),
               width: borderWidth,
@@ -98,9 +98,10 @@ class GlassNeuStyle {
     double borderRadius = 16,
     double opacity = 0.15,
   }) {
-    final categoryColor = ModernColors.getFunctionColor(category).withOpacity(0.2);
+    final categoryColor =
+        ModernColors.getFunctionColor(category).withOpacity(0.2);
     final baseColor = ModernColors.getFunctionColor(category);
-    
+
     return glassMorphism(
       elevation: elevation,
       color: categoryColor,
@@ -111,7 +112,7 @@ class GlassNeuStyle {
   }
 
   // ==================== 뉴모피즘 스타일 ====================
-  
+
   /// 기본 뉴모피즘 데코레이션 (볼록한 효과)
   static BoxDecoration neumorphism({
     GlassNeuElevation elevation = GlassNeuElevation.medium,
@@ -122,25 +123,25 @@ class GlassNeuStyle {
   }) {
     final elevationValue = _elevationValues[elevation] ?? 8;
     final base = baseColor ?? ModernColors.background;
-    
+
     // 눌렸을 때는 오목한 효과
     if (isPressed) {
       return _createInsetNeumorphism(base, elevationValue, borderRadius);
     }
-    
+
     // 반전 모드 (오목한 효과)
     if (isInverted) {
       return _createInsetNeumorphism(base, elevationValue, borderRadius);
     }
-    
+
     // 기본 볼록한 효과
     return _createRaisedNeumorphism(base, elevationValue, borderRadius);
   }
 
   /// 볼록한 뉴모피즘 생성
   static BoxDecoration _createRaisedNeumorphism(
-    Color baseColor, 
-    double elevation, 
+    Color baseColor,
+    double elevation,
     double borderRadius,
   ) {
     return BoxDecoration(
@@ -167,8 +168,8 @@ class GlassNeuStyle {
 
   /// 오목한 뉴모피즘 생성
   static BoxDecoration _createInsetNeumorphism(
-    Color baseColor, 
-    double elevation, 
+    Color baseColor,
+    double elevation,
     double borderRadius,
   ) {
     return BoxDecoration(
@@ -208,7 +209,7 @@ class GlassNeuStyle {
   }
 
   // ==================== 하이브리드 스타일 (글래스 + 뉴모피즘) ====================
-  
+
   /// 글래스모피즘과 뉴모피즘을 결합한 하이브리드 스타일
   static BoxDecoration hybrid({
     GlassNeuElevation elevation = GlassNeuElevation.medium,
@@ -219,12 +220,14 @@ class GlassNeuStyle {
   }) {
     final elevationValue = _elevationValues[elevation] ?? 8;
     final baseColor = color ?? ModernColors.primary;
-    
+
     if (isPressed) {
-      return _createPressedHybrid(baseColor, elevationValue, borderRadius, glassOpacity);
+      return _createPressedHybrid(
+          baseColor, elevationValue, borderRadius, glassOpacity);
     }
-    
-    return _createRaisedHybrid(baseColor, elevationValue, borderRadius, glassOpacity);
+
+    return _createRaisedHybrid(
+        baseColor, elevationValue, borderRadius, glassOpacity);
   }
 
   /// 볼록한 하이브리드 스타일
@@ -303,7 +306,7 @@ class GlassNeuStyle {
   }
 
   // ==================== 특수 효과 ====================
-  
+
   /// 플로팅 글래스 효과 (강한 블러와 그림자)
   static BoxDecoration floatingGlass({
     Color? color,
@@ -351,7 +354,7 @@ class GlassNeuStyle {
     double intensity = 0.05,
   }) {
     final base = baseColor ?? ModernColors.background;
-    
+
     return BoxDecoration(
       color: base,
       borderRadius: BorderRadius.circular(borderRadius),
@@ -375,18 +378,19 @@ class GlassNeuStyle {
   }
 
   // ==================== 인터랙티브 효과 ====================
-  
+
   /// 호버 효과를 위한 스타일 전환
   static BoxDecoration getHoverStyle(BoxDecoration baseDecoration) {
     // 기존 그림자들을 더 강하게 만들기
     final newShadows = baseDecoration.boxShadow?.map((shadow) {
-      return BoxShadow(
-        color: shadow.color,
-        blurRadius: shadow.blurRadius * 1.2,
-        offset: shadow.offset * 1.1,
-        spreadRadius: shadow.spreadRadius,
-      );
-    }).toList() ?? [];
+          return BoxShadow(
+            color: shadow.color,
+            blurRadius: shadow.blurRadius * 1.2,
+            offset: shadow.offset * 1.1,
+            spreadRadius: shadow.spreadRadius,
+          );
+        }).toList() ??
+        [];
 
     return baseDecoration.copyWith(
       boxShadow: newShadows,
@@ -397,13 +401,14 @@ class GlassNeuStyle {
   static BoxDecoration getTapStyle(BoxDecoration baseDecoration) {
     // 그림자를 줄여서 눌린 효과 연출
     final newShadows = baseDecoration.boxShadow?.map((shadow) {
-      return BoxShadow(
-        color: shadow.color,
-        blurRadius: shadow.blurRadius * 0.5,
-        offset: shadow.offset * 0.3,
-        spreadRadius: shadow.spreadRadius,
-      );
-    }).toList() ?? [];
+          return BoxShadow(
+            color: shadow.color,
+            blurRadius: shadow.blurRadius * 0.5,
+            offset: shadow.offset * 0.3,
+            spreadRadius: shadow.spreadRadius,
+          );
+        }).toList() ??
+        [];
 
     return baseDecoration.copyWith(
       boxShadow: newShadows,
@@ -411,7 +416,7 @@ class GlassNeuStyle {
   }
 
   // ==================== 유틸리티 메서드 ====================
-  
+
   /// BackdropFilter를 사용한 블러 효과
   static Widget createBlurEffect({
     required Widget child,
@@ -443,14 +448,16 @@ class GlassNeuStyle {
   }) {
     final elevationValue = _elevationValues[elevation] ?? 8;
     final linearGradient = gradient as LinearGradient;
-    
+
     return BoxDecoration(
       gradient: LinearGradient(
         begin: linearGradient.begin,
         end: linearGradient.end,
-        colors: linearGradient.colors.map(
-          (color) => color.withOpacity(opacity),
-        ).toList(),
+        colors: linearGradient.colors
+            .map(
+              (color) => color.withOpacity(opacity),
+            )
+            .toList(),
         stops: linearGradient.stops,
       ),
       borderRadius: BorderRadius.circular(borderRadius),
@@ -472,28 +479,28 @@ class GlassNeuStyle {
 
 /// 엘리베이션 레벨 열거형
 enum GlassNeuElevation {
-  none,        // 0px
-  subtle,      // 2px
-  low,         // 4px  
-  medium,      // 8px
-  high,        // 16px
-  extraHigh,   // 24px
+  none, // 0px
+  subtle, // 2px
+  low, // 4px
+  medium, // 8px
+  high, // 16px
+  extraHigh, // 24px
 }
 
 /// 스타일 타입 열거형
 enum GlassNeuStyleType {
-  glass,       // 순수 글래스모피즘
-  neu,         // 순수 뉴모피즘
-  hybrid,      // 하이브리드 (글래스 + 뉴모피즘)
-  floating,    // 플로팅 글래스
-  soft,        // 소프트 뉴모피즘
+  glass, // 순수 글래스모피즘
+  neu, // 순수 뉴모피즘
+  hybrid, // 하이브리드 (글래스 + 뉴모피즘)
+  floating, // 플로팅 글래스
+  soft, // 소프트 뉴모피즘
 }
 
 /// 2025 스타일 확장 클래스 (더 쉬운 사용을 위한)
 extension GlassNeuStyleExtension on BoxDecoration {
   /// 호버 효과 추가
   BoxDecoration withHover() => GlassNeuStyle.getHoverStyle(this);
-  
+
   /// 탭 효과 추가
   BoxDecoration withTap() => GlassNeuStyle.getTapStyle(this);
 }

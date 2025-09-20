@@ -16,7 +16,7 @@ class CachedMeetingImage extends StatelessWidget {
   final BoxFit fit;
   final BorderRadius? borderRadius;
   final bool showShimmer;
-  
+
   const CachedMeetingImage({
     super.key,
     this.meeting,
@@ -27,15 +27,15 @@ class CachedMeetingImage extends StatelessWidget {
     this.borderRadius,
     this.showShimmer = true,
   }) : assert(
-    meeting != null || imagePath != null,
-    'Either meeting or imagePath must be provided',
-  );
-  
+          meeting != null || imagePath != null,
+          'Either meeting or imagePath must be provided',
+        );
+
   @override
   Widget build(BuildContext context) {
     final imageManager = MeetingImageManager();
     final cacheManager = MeetingImageCacheManager();
-    
+
     // 이미지 경로 결정
     String? finalImagePath;
     if (imagePath != null) {
@@ -43,22 +43,24 @@ class CachedMeetingImage extends StatelessWidget {
     } else if (meeting != null) {
       finalImagePath = imageManager.getImageForMeeting(meeting!);
     }
-    
+
     // 이미지가 없는 경우 이모지 플레이스홀더 표시
     if (finalImagePath == null) {
       return _buildEmojiPlaceholder(meeting);
     }
-    
+
     // 캐시된 이미지 위젯
     Widget imageWidget = cacheManager.getCachedImage(
       finalImagePath,
       width: width,
       height: height,
       fit: fit,
-      placeholder: showShimmer ? _buildShimmerPlaceholder() : _buildEmojiPlaceholder(meeting),
+      placeholder: showShimmer
+          ? _buildShimmerPlaceholder()
+          : _buildEmojiPlaceholder(meeting),
       errorWidget: _buildEmojiPlaceholder(meeting),
     );
-    
+
     // BorderRadius 적용
     if (borderRadius != null) {
       imageWidget = ClipRRect(
@@ -66,15 +68,15 @@ class CachedMeetingImage extends StatelessWidget {
         child: imageWidget,
       );
     }
-    
+
     return imageWidget;
   }
-  
+
   /// 이모지 플레이스홀더
   Widget _buildEmojiPlaceholder(AvailableMeeting? meeting) {
     final categoryColor = meeting?.category.color ?? ModernColors.primary;
     final categoryEmoji = meeting?.category.emoji ?? '👥';
-    
+
     return Container(
       width: width,
       height: height,
@@ -100,7 +102,7 @@ class CachedMeetingImage extends StatelessWidget {
       ),
     );
   }
-  
+
   /// 쉬머 플레이스홀더
   Widget _buildShimmerPlaceholder() {
     return Container(
@@ -126,7 +128,7 @@ class CachedMeetingImage extends StatelessWidget {
 /// 쉬머 애니메이션 위젯
 class _ShimmerAnimation extends StatefulWidget {
   const _ShimmerAnimation();
-  
+
   @override
   State<_ShimmerAnimation> createState() => _ShimmerAnimationState();
 }
@@ -135,7 +137,7 @@ class _ShimmerAnimationState extends State<_ShimmerAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  
+
   @override
   void initState() {
     super.initState();
@@ -152,13 +154,13 @@ class _ShimmerAnimationState extends State<_ShimmerAnimation>
     ));
     _controller.repeat();
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(

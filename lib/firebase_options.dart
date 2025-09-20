@@ -64,7 +64,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '989890540978',
     projectId: 'sherpa-app-production',
     storageBucket: 'sherpa-app-production.firebasestorage.app',
-    iosClientId: '989890540978-j4kncp6fvcnmq62j82n6rji6790lbjvp.apps.googleusercontent.com',
+    iosClientId:
+        '989890540978-j4kncp6fvcnmq62j82n6rji6790lbjvp.apps.googleusercontent.com',
     iosBundleId: 'com.sherpa.app',
   );
 
@@ -74,7 +75,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '989890540978',
     projectId: 'sherpa-app-production',
     storageBucket: 'sherpa-app-production.firebasestorage.app',
-    iosClientId: '989890540978-75qf04g2svl0k1ok2fu28cp615oa68ci.apps.googleusercontent.com',
+    iosClientId:
+        '989890540978-75qf04g2svl0k1ok2fu28cp615oa68ci.apps.googleusercontent.com',
     iosBundleId: 'com.example.sherpaApp',
   );
 

@@ -14,7 +14,8 @@ class GameConstants {
   }
 
   /// 능력치 보너스 계산: 체력% + 지식% + 기술%
-  static double calculateStatsBonus(double stamina, double knowledge, double technique) {
+  static double calculateStatsBonus(
+      double stamina, double knowledge, double technique) {
     return stamina + knowledge + technique;
   }
 
@@ -55,12 +56,12 @@ class GameConstants {
 
   /// 레벨별 칭호 보너스
   static const Map<int, double> titleBonuses = {
-    1: 0,     // 초보 등반가 (Novice)
-    10: 50,   // 숙련된 등반가 (Adept)
-    20: 120,  // 전문 산악인 (Expert)
-    30: 250,  // 셰르파 (Sherpa)
-    40: 400,  // 마스터 셰르파 (Master Sherpa)
-    50: 600,  // 전설의 셰르파 (Legendary Sherpa)
+    1: 0, // 초보 등반가 (Novice)
+    10: 50, // 숙련된 등반가 (Adept)
+    20: 120, // 전문 산악인 (Expert)
+    30: 250, // 셰르파 (Sherpa)
+    40: 400, // 마스터 셰르파 (Master Sherpa)
+    50: 600, // 전설의 셰르파 (Legendary Sherpa)
   };
 
   /// 레벨별 칭호 이름
@@ -172,7 +173,8 @@ class GameConstants {
   /// 성공 시 경험치 계산: (산 난이도 × 소요 시간 × 0.5) ±10%
   /// ✅ 초반 완화 + 중급 가속을 적용한 성공 시 경험치 계산
   /// 공식: 지수 감쇠 곡선 + 초반 페널티 + 중급 가속 보너스
-  static double calculateSuccessXp(int difficulty, double durationHours, {int playerLevel = 1}) {
+  static double calculateSuccessXp(int difficulty, double durationHours,
+      {int playerLevel = 1}) {
     final k = 0.12; // 감쇠 상수 (곡선의 가파름 조절)
 
     // 🎯 마스터 배수 조정: 65.0 → 32.5 (정확히 절반으로 하향)
@@ -182,76 +184,96 @@ class GameConstants {
     final difficultyFactor = 1.0 - math.exp(-k * difficulty);
 
     // 중급산 이상 가속 보정 (난이도 15 이상에서만 적용)
-    final accelerationBonus = difficulty >= 15 ?
-    1.0 + ((difficulty - 15) * 0.015) : 1.0;
+    final accelerationBonus =
+        difficulty >= 15 ? 1.0 + ((difficulty - 15) * 0.015) : 1.0;
 
     // 초반 부분 추가 하향 조정 (난이도 20 미만)
-    final earlyGamePenalty = difficulty < 20 ?
-    0.8 + (difficulty * 0.01) : 1.0;
+    final earlyGamePenalty = difficulty < 20 ? 0.8 + (difficulty * 0.01) : 1.0;
 
-    final baseXp = maxReward * difficultyFactor * (difficulty / 80.0 + 0.4) * accelerationBonus * earlyGamePenalty;
+    final baseXp = maxReward *
+        difficultyFactor *
+        (difficulty / 80.0 + 0.4) *
+        accelerationBonus *
+        earlyGamePenalty;
 
     final randomFactor = 0.9 + (math.Random().nextDouble() * 0.2); // ±10%
     return baseXp * randomFactor;
   }
 
   /// ✅ 포인트 계산 공식은 그대로 유지 (int 반환으로 변경)
-  static double calculateSuccessPoints(int difficulty, double durationHours, {int playerLevel = 1}) {
+  static double calculateSuccessPoints(int difficulty, double durationHours,
+      {int playerLevel = 1}) {
     final k = 0.09;
     final maxReward = durationHours * 30.0;
 
     final difficultyFactor = 1.0 - math.exp(-k * difficulty);
 
-    final accelerationBonus = difficulty >= 15 ?
-    1.0 + ((difficulty - 15) * 0.012) : 1.0;
+    final accelerationBonus =
+        difficulty >= 15 ? 1.0 + ((difficulty - 15) * 0.012) : 1.0;
 
-    final earlyGamePenalty = difficulty < 20 ?
-    0.85 + (difficulty * 0.0075) : 1.0;
+    final earlyGamePenalty =
+        difficulty < 20 ? 0.85 + (difficulty * 0.0075) : 1.0;
 
-    final basePoints = maxReward * difficultyFactor * (difficulty / 80.0 + 0.3) * accelerationBonus * earlyGamePenalty;
+    final basePoints = maxReward *
+        difficultyFactor *
+        (difficulty / 80.0 + 0.3) *
+        accelerationBonus *
+        earlyGamePenalty;
 
     final randomFactor = 0.8 + (math.Random().nextDouble() * 0.4); // ±20%
     return basePoints * randomFactor;
   }
 
   /// ✅ 실패 시 경험치 계산 (성공 시의 25% 수준)
-  static double calculateFailureXp(int difficulty, double durationHours, {int playerLevel = 1}) {
+  static double calculateFailureXp(int difficulty, double durationHours,
+      {int playerLevel = 1}) {
     // 자동으로 조정된 calculateSuccessXp를 기반으로 계산됩니다.
-    return calculateSuccessXp(difficulty, durationHours, playerLevel: playerLevel) * 0.25;
+    return calculateSuccessXp(difficulty, durationHours,
+            playerLevel: playerLevel) *
+        0.25;
   }
 
-  static double calculateDisplayXp(int difficulty, double durationHours, {int playerLevel = 1}) {
+  static double calculateDisplayXp(int difficulty, double durationHours,
+      {int playerLevel = 1}) {
     final k = 0.12;
     final maxReward = durationHours * 32.5;
 
     final difficultyFactor = 1.0 - math.exp(-k * difficulty);
 
-    final accelerationBonus = difficulty >= 15 ?
-    1.0 + ((difficulty - 15) * 0.015) : 1.0;
+    final accelerationBonus =
+        difficulty >= 15 ? 1.0 + ((difficulty - 15) * 0.015) : 1.0;
 
-    final earlyGamePenalty = difficulty < 20 ?
-    0.8 + (difficulty * 0.01) : 1.0;
+    final earlyGamePenalty = difficulty < 20 ? 0.8 + (difficulty * 0.01) : 1.0;
 
-    final baseXp = maxReward * difficultyFactor * (difficulty / 80.0 + 0.4) * accelerationBonus * earlyGamePenalty;
+    final baseXp = maxReward *
+        difficultyFactor *
+        (difficulty / 80.0 + 0.4) *
+        accelerationBonus *
+        earlyGamePenalty;
 
     // ✅ 랜덤 요소 대신 중간값(1.0) 사용
     return baseXp * 1.0;
   }
 
   /// ✅ UI 표시용 중간값 포인트 계산 (랜덤 요소 완전 제거, int 반환)
-  static int calculateDisplayPoints(int difficulty, double durationHours, {int playerLevel = 1}) {
+  static int calculateDisplayPoints(int difficulty, double durationHours,
+      {int playerLevel = 1}) {
     final k = 0.09;
     final maxReward = durationHours * 30.0;
 
     final difficultyFactor = 1.0 - math.exp(-k * difficulty);
 
-    final accelerationBonus = difficulty >= 15 ?
-    1.0 + ((difficulty - 15) * 0.012) : 1.0;
+    final accelerationBonus =
+        difficulty >= 15 ? 1.0 + ((difficulty - 15) * 0.012) : 1.0;
 
-    final earlyGamePenalty = difficulty < 20 ?
-    0.85 + (difficulty * 0.0075) : 1.0;
+    final earlyGamePenalty =
+        difficulty < 20 ? 0.85 + (difficulty * 0.0075) : 1.0;
 
-    final basePoints = maxReward * difficultyFactor * (difficulty / 80.0 + 0.3) * accelerationBonus * earlyGamePenalty;
+    final basePoints = maxReward *
+        difficultyFactor *
+        (difficulty / 80.0 + 0.3) *
+        accelerationBonus *
+        earlyGamePenalty;
 
     // ✅ 랜덤 요소 대신 중간값(1.0) 사용, int로 반환
     return (basePoints * 1.0).round();
@@ -319,7 +341,8 @@ class GameConstants {
   /// 사교성에 따른 등반 시간 단축 계산
   /// 사교성 능력치에 따라 등반 시간을 단축 (정보 공유 컨셉)
   /// 공식: 원래 시간 × (1 - (사교성 × 0.002)) (최대 50% 단축)
-  static double calculateAdjustedClimbingTime(double originalTimeHours, double socialityLevel) {
+  static double calculateAdjustedClimbingTime(
+      double originalTimeHours, double socialityLevel) {
     // 사교성 1마다 등반 시간 1% 단축, 최대 10% 단축
     final reductionRate = math.min(socialityLevel * 0.002, 0.10);
     final adjustedTime = originalTimeHours * (1.0 - reductionRate);
@@ -364,13 +387,18 @@ class GameConstants {
   /// 레벨업 보상 뱃지 ID 계산
   static String? getLevelUpBadgeId(int level) {
     switch (level) {
-      case 10: return 'level_10_adept';
-      case 20: return 'level_20_expert';
-      case 30: return 'level_30_sherpa';
-      case 40: return 'level_40_master';
-      case 50: return 'level_50_legend';
-      default: return null;
+      case 10:
+        return 'level_10_adept';
+      case 20:
+        return 'level_20_expert';
+      case 30:
+        return 'level_30_sherpa';
+      case 40:
+        return 'level_40_master';
+      case 50:
+        return 'level_50_legend';
+      default:
+        return null;
     }
   }
-
 }

@@ -15,7 +15,7 @@ class RepresentativeDashboard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(globalUserProvider);
     final pointData = ref.watch(globalPointProvider);
-    
+
     // ✅ 실제 데이터 계산
     final totalReadingPages = user.dailyRecords.totalReadingPages;
     final totalMeetings = user.dailyRecords.totalMeetings;
@@ -70,9 +70,9 @@ class RepresentativeDashboard extends ConsumerWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // ✅ 실제 데이터 기반 대표 기록 카드들
                 Row(
                   children: [
@@ -97,9 +97,9 @@ class RepresentativeDashboard extends ConsumerWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 Row(
                   children: [
                     Expanded(
@@ -123,9 +123,9 @@ class RepresentativeDashboard extends ConsumerWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // ✅ 추가: 연속 접속과 성공률 카드
                 Row(
                   children: [
@@ -150,9 +150,9 @@ class RepresentativeDashboard extends ConsumerWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // ✅ 실제 데이터 기반 요약 메시지
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -194,7 +194,7 @@ class RepresentativeDashboard extends ConsumerWidget {
     final consecutiveDays = user.dailyRecords.consecutiveDays;
     final level = user.level;
     final climbingCount = user.dailyRecords.climbingLogs.length;
-    
+
     if (consecutiveDays >= 30) {
       return '타지하는 일관성! $consecutiveDays일 연속 접속 중 🔥';
     } else if (level >= 20) {
@@ -206,7 +206,8 @@ class RepresentativeDashboard extends ConsumerWidget {
     }
   }
 
-  Widget _buildRecordCard(String title, String value, String period, IconData icon, Color color) {
+  Widget _buildRecordCard(
+      String title, String value, String period, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -247,9 +248,7 @@ class RepresentativeDashboard extends ConsumerWidget {
               ),
             ],
           ),
-          
           const SizedBox(height: 8),
-          
           Text(
             value,
             style: GoogleFonts.notoSans(
@@ -259,7 +258,6 @@ class RepresentativeDashboard extends ConsumerWidget {
             ),
             overflow: TextOverflow.ellipsis,
           ),
-          
           Text(
             period,
             style: GoogleFonts.notoSans(

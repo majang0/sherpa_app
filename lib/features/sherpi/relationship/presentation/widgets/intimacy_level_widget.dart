@@ -8,7 +8,7 @@ import '../../providers/relationship_provider.dart';
 import '../../../../../shared/models/sherpi_relationship_model.dart';
 
 /// 💝 친밀도 레벨 표시 위젯
-/// 
+///
 /// 셰르피와의 관계 진행 상황을 시각적으로 표시합니다.
 class IntimacyLevelWidget extends ConsumerWidget {
   final bool showDetails;
@@ -55,7 +55,8 @@ class IntimacyLevelWidget extends ConsumerWidget {
               color: _getIntimacyColor(relationship.intimacyLevel),
               boxShadow: [
                 BoxShadow(
-                  color: _getIntimacyColor(relationship.intimacyLevel).withOpacity(0.3),
+                  color: _getIntimacyColor(relationship.intimacyLevel)
+                      .withOpacity(0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -71,15 +72,13 @@ class IntimacyLevelWidget extends ConsumerWidget {
                 ),
               ),
             ),
-          )
-          .animate()
-          .scale(
-            duration: 600.ms,
-            curve: Curves.elasticOut,
-          ),
-          
+          ).animate().scale(
+                duration: 600.ms,
+                curve: Curves.elasticOut,
+              ),
+
           const SizedBox(width: 16),
-          
+
           // 관계 정보
           Expanded(
             child: Column(
@@ -95,9 +94,9 @@ class IntimacyLevelWidget extends ConsumerWidget {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                
+
                 const SizedBox(height: 4),
-                
+
                 if (showDetails) ...[
                   // 진행률 바
                   Row(
@@ -114,7 +113,8 @@ class IntimacyLevelWidget extends ConsumerWidget {
                             widthFactor: progress,
                             child: Container(
                               decoration: BoxDecoration(
-                                color: _getIntimacyColor(relationship.intimacyLevel),
+                                color: _getIntimacyColor(
+                                    relationship.intimacyLevel),
                                 borderRadius: BorderRadius.circular(3),
                               ),
                             ),
@@ -132,12 +132,12 @@ class IntimacyLevelWidget extends ConsumerWidget {
                       ),
                     ],
                   )
-                  .animate()
-                  .fadeIn(delay: 300.ms)
-                  .slideX(begin: -0.2, duration: 400.ms),
-                  
+                      .animate()
+                      .fadeIn(delay: 300.ms)
+                      .slideX(begin: -0.2, duration: 400.ms),
+
                   const SizedBox(height: 4),
-                  
+
                   // 통계 정보
                   Text(
                     '함께한 ${stats['daysTogether']}일 • ${stats['totalInteractions']}번의 만남',
@@ -150,7 +150,7 @@ class IntimacyLevelWidget extends ConsumerWidget {
               ],
             ),
           ),
-          
+
           // 감정 동기화 표시
           if (showDetails && relationship.emotionalSync > 0.1)
             Column(
@@ -172,15 +172,12 @@ class IntimacyLevelWidget extends ConsumerWidget {
                 ),
               ],
             )
-            .animate()
-            .fadeIn(delay: 600.ms)
-            .scale(begin: const Offset(0.8, 0.8)),
+                .animate()
+                .fadeIn(delay: 600.ms)
+                .scale(begin: const Offset(0.8, 0.8)),
         ],
       ),
-    )
-    .animate()
-    .fadeIn()
-    .slideY(begin: 0.3, duration: 500.ms);
+    ).animate().fadeIn().slideY(begin: 0.3, duration: 500.ms);
   }
 
   /// 친밀도 레벨별 색상
@@ -228,7 +225,7 @@ class CompactIntimacyWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final relationship = ref.watch(relationshipProvider);
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(

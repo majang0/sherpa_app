@@ -29,9 +29,7 @@ class MeetingScopeTabsWidget extends StatelessWidget {
       ),
       child: TabBar(
         controller: controller,
-        labelColor: isChallenge
-            ? ModernColors.secondary
-            : ModernColors.primary,
+        labelColor: isChallenge ? ModernColors.secondary : ModernColors.primary,
         unselectedLabelColor: ModernColors.textSecondary,
         labelStyle: GoogleFonts.notoSans(
           fontSize: 13,

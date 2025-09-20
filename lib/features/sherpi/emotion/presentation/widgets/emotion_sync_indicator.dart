@@ -9,7 +9,7 @@ import '../../models/emotion_analysis_model.dart';
 import '../../../relationship/providers/relationship_provider.dart';
 
 /// 💕 감정 동기화 지표 위젯
-/// 
+///
 /// 사용자와 Sherpi의 감정 동기화 상태를 시각적으로 표시합니다.
 class EmotionSyncIndicator extends ConsumerWidget {
   final bool isCompact;
@@ -25,10 +25,11 @@ class EmotionSyncIndicator extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final emotionState = ref.watch(emotionAnalysisProvider);
     final relationship = ref.watch(relationshipProvider);
-    
-    final syncLevel = EmotionalSyncLevelExtension.fromValue(relationship.emotionalSync);
+
+    final syncLevel =
+        EmotionalSyncLevelExtension.fromValue(relationship.emotionalSync);
     final currentEmotion = emotionState.currentAnalysis?.primaryEmotion;
-    
+
     return Container(
       padding: EdgeInsets.all(isCompact ? 8 : 12),
       decoration: BoxDecoration(
@@ -46,12 +47,15 @@ class EmotionSyncIndicator extends ConsumerWidget {
           width: 1,
         ),
       ),
-      child: isCompact ? _buildCompactView(syncLevel, currentEmotion) : _buildFullView(syncLevel, currentEmotion, relationship),
+      child: isCompact
+          ? _buildCompactView(syncLevel, currentEmotion)
+          : _buildFullView(syncLevel, currentEmotion, relationship),
     );
   }
 
   /// 🎯 간단한 뷰 (컴팩트 모드)
-  Widget _buildCompactView(EmotionalSyncLevel syncLevel, UserEmotionState? currentEmotion) {
+  Widget _buildCompactView(
+      EmotionalSyncLevel syncLevel, UserEmotionState? currentEmotion) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -70,7 +74,7 @@ class EmotionSyncIndicator extends ConsumerWidget {
             ),
           ),
         ),
-        
+
         if (showLabel) ...[
           const SizedBox(width: 6),
           Text(
@@ -87,7 +91,8 @@ class EmotionSyncIndicator extends ConsumerWidget {
   }
 
   /// 📊 전체 뷰
-  Widget _buildFullView(EmotionalSyncLevel syncLevel, UserEmotionState? currentEmotion, relationship) {
+  Widget _buildFullView(EmotionalSyncLevel syncLevel,
+      UserEmotionState? currentEmotion, relationship) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,12 +119,10 @@ class EmotionSyncIndicator extends ConsumerWidget {
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
-            )
-            .animate()
-            .scale(duration: 600.ms, curve: Curves.elasticOut),
-            
+            ).animate().scale(duration: 600.ms, curve: Curves.elasticOut),
+
             const SizedBox(width: 12),
-            
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,7 +145,7 @@ class EmotionSyncIndicator extends ConsumerWidget {
                 ],
               ),
             ),
-            
+
             // 동기화 퍼센트
             Text(
               '${(relationship.emotionalSync * 100).toInt()}%',
@@ -154,9 +157,9 @@ class EmotionSyncIndicator extends ConsumerWidget {
             ),
           ],
         ),
-        
+
         const SizedBox(height: 12),
-        
+
         // 진행률 바
         Container(
           height: 6,
@@ -174,11 +177,8 @@ class EmotionSyncIndicator extends ConsumerWidget {
               ),
             ),
           ),
-        )
-        .animate()
-        .fadeIn(delay: 300.ms)
-        .slideX(begin: -0.2, duration: 400.ms),
-        
+        ).animate().fadeIn(delay: 300.ms).slideX(begin: -0.2, duration: 400.ms),
+
         // 현재 감정 상태 (있는 경우)
         if (currentEmotion != null) ...[
           const SizedBox(height: 8),

@@ -30,7 +30,10 @@ class SherpaCard extends StatelessWidget {
           borderRadius: borderRadius ?? BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.textLight.withValues(alpha: elevation != null ? (elevation! / 20) : 0.08), // ✅ elevation에 따른 그림자 조절
+              color: AppColors.textLight.withValues(
+                  alpha: elevation != null
+                      ? (elevation! / 20)
+                      : 0.08), // ✅ elevation에 따른 그림자 조절
               blurRadius: elevation ?? 8,
               offset: Offset(0, (elevation ?? 8) / 4), // ✅ elevation에 따른 오프셋 조절
             ),

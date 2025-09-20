@@ -14,7 +14,7 @@ class MeetingCardList2025 extends StatefulWidget {
   final bool isBookmarked;
   final String? imageAsset;
   final bool showDivider;
-  
+
   const MeetingCardList2025({
     super.key,
     required this.meeting,
@@ -29,11 +29,11 @@ class MeetingCardList2025 extends StatefulWidget {
   State<MeetingCardList2025> createState() => _MeetingCardList2025State();
 }
 
-class _MeetingCardList2025State extends State<MeetingCardList2025> 
+class _MeetingCardList2025State extends State<MeetingCardList2025>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _backgroundAnimation;
-  
+
   bool _isHovered = false;
 
   @override
@@ -43,7 +43,7 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    
+
     _backgroundAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -83,7 +83,7 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return AnimatedBuilder(
       animation: _backgroundAnimation,
       builder: (context, child) {
@@ -95,37 +95,38 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
             child: Container(
               decoration: BoxDecoration(
                 color: isDark
-                  ? Color.lerp(
-                      Colors.transparent,
-                      Colors.white.withOpacity(0.03),
-                      _backgroundAnimation.value,
-                    )
-                  : Color.lerp(
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.02),
-                      _backgroundAnimation.value,
-                    ),
-                border: widget.showDivider 
-                  ? Border(
-                      bottom: BorderSide(
-                        color: isDark 
-                          ? Colors.white.withOpacity(0.08)
-                          : Colors.black.withOpacity(0.08),
-                        width: 0.5,
+                    ? Color.lerp(
+                        Colors.transparent,
+                        Colors.white.withOpacity(0.03),
+                        _backgroundAnimation.value,
+                      )
+                    : Color.lerp(
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.02),
+                        _backgroundAnimation.value,
                       ),
-                    )
-                  : null,
+                border: widget.showDivider
+                    ? Border(
+                        bottom: BorderSide(
+                          color: isDark
+                              ? Colors.white.withOpacity(0.08)
+                              : Colors.black.withOpacity(0.08),
+                          width: 0.5,
+                        ),
+                      )
+                    : null,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Image Section
                     _buildImageSection(isDark),
-                    
+
                     const SizedBox(width: 16),
-                    
+
                     // Content Section
                     Expanded(
                       child: Column(
@@ -144,7 +145,9 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
-                                        color: isDark ? Colors.white : Colors.black87,
+                                        color: isDark
+                                            ? Colors.white
+                                            : Colors.black87,
                                         height: 1.2,
                                         letterSpacing: -0.2,
                                       ),
@@ -161,7 +164,8 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
-                                            color: widget.meeting.category.color,
+                                            color:
+                                                widget.meeting.category.color,
                                           ),
                                         ),
                                       ],
@@ -174,9 +178,9 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
                                 _buildBookmarkButton(isDark),
                             ],
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // Description
                           if (widget.meeting.description.isNotEmpty)
                             Padding(
@@ -185,14 +189,15 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
                                 widget.meeting.description,
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: isDark ? Colors.white70 : Colors.black54,
+                                  color:
+                                      isDark ? Colors.white70 : Colors.black54,
                                   height: 1.3,
                                 ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                          
+
                           // Info Row
                           Row(
                             children: [
@@ -211,9 +216,9 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
                               ),
                             ],
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // Bottom Row
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -221,8 +226,10 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
                               Row(
                                 children: [
                                   ParticipantAvatars2025(
-                                    currentParticipants: widget.meeting.currentParticipants,
-                                    maxParticipants: widget.meeting.maxParticipants,
+                                    currentParticipants:
+                                        widget.meeting.currentParticipants,
+                                    maxParticipants:
+                                        widget.meeting.maxParticipants,
                                     size: 24,
                                     overlapFactor: 0.6,
                                     maxVisible: 2,
@@ -267,23 +274,24 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
       ),
     );
   }
-  
+
   /// 이미지 컨텐츠 생성 (실제 이미지 또는 이모지)
   Widget _buildImageContent() {
     // 모임에 이미지가 있으면 확인
     if (widget.meeting.hasImages && widget.meeting.imageFileNames.isNotEmpty) {
       final firstImage = widget.meeting.imageFileNames.first;
-      
+
       // asset: 플래그로 시작하면 assets 폴더에서 로드
       if (firstImage.startsWith('asset:')) {
         final assetPath = 'assets/images/meeting/${firstImage.substring(6)}';
         return Image.asset(
           assetPath,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+          errorBuilder: (context, error, stackTrace) =>
+              _buildEmojiPlaceholder(),
         );
       }
-      
+
       // 일반 이미지 파일은 MeetingImageUtils를 사용하여 로드
       return FutureBuilder<File?>(
         future: MeetingImageUtils.getMeetingImageFile(firstImage),
@@ -292,22 +300,23 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
             return Image.file(
               snapshot.data!,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => _buildEmojiPlaceholder(),
+              errorBuilder: (context, error, stackTrace) =>
+                  _buildEmojiPlaceholder(),
             );
           }
           return _buildEmojiPlaceholder();
         },
       );
     }
-    
+
     // imageAsset이 제공된 경우 (하위 호환성)
     if (widget.imageAsset != null) {
       return _buildRealImage(widget.imageAsset!);
     }
-    
+
     return _buildEmojiPlaceholder();
   }
-  
+
   /// 실제 이미지 표시
   Widget _buildRealImage(String imagePath) {
     // 동적 이미지인지 확인
@@ -325,12 +334,13 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
       );
     }
   }
-  
+
   /// 동적 이미지 경로인지 확인
   bool _isDynamicImagePath(String path) {
-    return !path.startsWith('assets/') && (path.contains('/') || path.endsWith('.jpg') || path.endsWith('.png'));
+    return !path.startsWith('assets/') &&
+        (path.contains('/') || path.endsWith('.jpg') || path.endsWith('.png'));
   }
-  
+
   /// 이모지 플레이스홀더 (이미지가 없거나 로드 실패시)
   Widget _buildEmojiPlaceholder() {
     return Container(
@@ -374,16 +384,18 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
         height: 32,
         decoration: BoxDecoration(
           color: _isHovered
-            ? (isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.05))
-            : Colors.transparent,
+              ? (isDark
+                  ? Colors.white.withOpacity(0.1)
+                  : Colors.black.withOpacity(0.05))
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Icon(
           widget.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
           size: 18,
           color: widget.isBookmarked
-            ? widget.meeting.category.color
-            : (isDark ? Colors.white60 : Colors.black45),
+              ? widget.meeting.category.color
+              : (isDark ? Colors.white60 : Colors.black45),
         ),
       ),
     );
@@ -398,7 +410,7 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
   }) {
     // 위치 텍스트인 경우 포맷팅 적용
     final displayText = isLocation ? _formatLocationText(text) : text;
-    
+
     final child = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -421,9 +433,7 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
       ],
     );
 
-    return flex 
-      ? Expanded(child: child)
-      : child;
+    return flex ? Expanded(child: child) : child;
   }
 
   Widget _buildDivider(bool isDark) {
@@ -441,18 +451,22 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
   Widget _buildParticipantChip(bool isDark) {
     final progress = widget.meeting.participationRate;
     final isNearFull = progress > 0.8;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isNearFull
-          ? Colors.orange.withOpacity(0.1)
-          : (isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05)),
+            ? Colors.orange.withOpacity(0.1)
+            : (isDark
+                ? Colors.white.withOpacity(0.05)
+                : Colors.black.withOpacity(0.05)),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isNearFull
-            ? Colors.orange.withOpacity(0.3)
-            : (isDark ? Colors.white.withOpacity(0.1) : Colors.black.withOpacity(0.1)),
+              ? Colors.orange.withOpacity(0.3)
+              : (isDark
+                  ? Colors.white.withOpacity(0.1)
+                  : Colors.black.withOpacity(0.1)),
           width: 0.5,
         ),
       ),
@@ -462,9 +476,9 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
           Icon(
             Icons.people_outline,
             size: 12,
-            color: isNearFull 
-              ? Colors.orange 
-              : (isDark ? Colors.white60 : Colors.black54),
+            color: isNearFull
+                ? Colors.orange
+                : (isDark ? Colors.white60 : Colors.black54),
           ),
           const SizedBox(width: 4),
           Text(
@@ -472,9 +486,9 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: isNearFull 
-                ? Colors.orange 
-                : (isDark ? Colors.white60 : Colors.black54),
+              color: isNearFull
+                  ? Colors.orange
+                  : (isDark ? Colors.white60 : Colors.black54),
             ),
           ),
         ],
@@ -484,25 +498,25 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
 
   Widget _buildPriceChip(bool isDark) {
     final isLowFee = widget.meeting.participationFee <= 1000;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: isLowFee 
-          ? Colors.green.withOpacity(0.1)
-          : Colors.orange.withOpacity(0.1),
+        color: isLowFee
+            ? Colors.green.withOpacity(0.1)
+            : Colors.orange.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isLowFee 
-            ? Colors.green.withOpacity(0.3)
-            : Colors.orange.withOpacity(0.3),
+          color: isLowFee
+              ? Colors.green.withOpacity(0.3)
+              : Colors.orange.withOpacity(0.3),
           width: 0.5,
         ),
       ),
       child: Text(
-        widget.meeting.type == MeetingType.free 
-          ? '무료' 
-          : '${widget.meeting.participationFee.toInt()}P',
+        widget.meeting.type == MeetingType.free
+            ? '무료'
+            : '${widget.meeting.participationFee.toInt()}P',
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w600,

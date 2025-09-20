@@ -24,14 +24,14 @@ class AnalysisResult {
 
 /// 활동 패턴 분석 결과
 class ActivityPatterns {
-  final Map<String, int> activityFrequency;      // 활동별 빈도
-  final Map<int, double> weeklyDistribution;    // 요일별 활동 분포
-  final Map<int, double> hourlyDistribution;    // 시간대별 활동 분포
-  final String mostActiveDay;                    // 가장 활발한 요일
-  final String mostActiveTime;                   // 가장 활발한 시간대
-  final double consistencyScore;                 // 일관성 점수 (0-100)
-  final int currentStreak;                       // 현재 연속 일수
-  final int longestStreak;                       // 최장 연속 일수
+  final Map<String, int> activityFrequency; // 활동별 빈도
+  final Map<int, double> weeklyDistribution; // 요일별 활동 분포
+  final Map<int, double> hourlyDistribution; // 시간대별 활동 분포
+  final String mostActiveDay; // 가장 활발한 요일
+  final String mostActiveTime; // 가장 활발한 시간대
+  final double consistencyScore; // 일관성 점수 (0-100)
+  final int currentStreak; // 현재 연속 일수
+  final int longestStreak; // 최장 연속 일수
 
   const ActivityPatterns({
     required this.activityFrequency,
@@ -47,11 +47,11 @@ class ActivityPatterns {
 
 /// 기분 분석 결과
 class MoodAnalysis {
-  final Map<String, double> moodDistribution;    // 기분별 분포
-  final String dominantMood;                     // 주요 기분
-  final double moodStability;                    // 기분 안정성 점수
-  final Map<String, String> activityMoodMap;     // 활동별 주요 기분
-  final List<MoodTrend> recentTrends;           // 최근 기분 트렌드
+  final Map<String, double> moodDistribution; // 기분별 분포
+  final String dominantMood; // 주요 기분
+  final double moodStability; // 기분 안정성 점수
+  final Map<String, String> activityMoodMap; // 활동별 주요 기분
+  final List<MoodTrend> recentTrends; // 최근 기분 트렌드
 
   const MoodAnalysis({
     required this.moodDistribution,
@@ -77,11 +77,11 @@ class MoodTrend {
 
 /// 성과 지표
 class PerformanceMetrics {
-  final double goalCompletionRate;              // 목표 달성률
-  final Map<String, double> statGrowthRate;     // 스탯별 성장률
-  final double overallProgress;                 // 전체 진행도
-  final int totalActivities;                    // 총 활동 수
-  final double averageSatisfaction;             // 평균 만족도
+  final double goalCompletionRate; // 목표 달성률
+  final Map<String, double> statGrowthRate; // 스탯별 성장률
+  final double overallProgress; // 전체 진행도
+  final int totalActivities; // 총 활동 수
+  final double averageSatisfaction; // 평균 만족도
   final Map<String, double> categoryPerformance; // 카테고리별 성과
 
   const PerformanceMetrics({
@@ -112,10 +112,10 @@ class Insight {
 }
 
 enum InsightType {
-  strength,    // 강점
-  weakness,    // 약점
+  strength, // 강점
+  weakness, // 약점
   opportunity, // 기회
-  trend,       // 트렌드
+  trend, // 트렌드
   achievement, // 성취
 }
 
@@ -139,16 +139,15 @@ class Recommendation {
 }
 
 enum RecommendationType {
-  goal,        // 목표 설정
-  activity,    // 활동 추천
+  goal, // 목표 설정
+  activity, // 활동 추천
   improvement, // 개선 사항
-  challenge,   // 도전 과제
-  balance,     // 균형 조정
+  challenge, // 도전 과제
+  balance, // 균형 조정
 }
 
 /// 사용자 데이터 분석 서비스
 class UserDataAnalyzer {
-  
   /// 전체 분석 수행
   static AnalysisResult analyzeUserData(GlobalUser user) {
     try {
@@ -157,9 +156,11 @@ class UserDataAnalyzer {
       final activityPatterns = _analyzeActivityPatterns(user);
       final moodAnalysis = _analyzeMoodPatterns(user);
       final performanceMetrics = _analyzePerformance(user);
-      final insights = _generateInsights(user, activityPatterns, moodAnalysis, performanceMetrics);
-      final recommendations = _generateRecommendations(user, activityPatterns, moodAnalysis, performanceMetrics);
-      
+      final insights = _generateInsights(
+          user, activityPatterns, moodAnalysis, performanceMetrics);
+      final recommendations = _generateRecommendations(
+          user, activityPatterns, moodAnalysis, performanceMetrics);
+
       return AnalysisResult(
         activityPatterns: activityPatterns,
         moodAnalysis: moodAnalysis,
@@ -174,11 +175,11 @@ class UserDataAnalyzer {
       return _createDefaultAnalysisResult(user, DateTime.now());
     }
   }
-  
+
   /// 활동 패턴 분석
   static ActivityPatterns _analyzeActivityPatterns(GlobalUser user) {
     final records = user.dailyRecords;
-    
+
     // 활동별 빈도 계산
     final activityFrequency = <String, int>{
       '운동': records.exerciseLogs.length,
@@ -186,30 +187,32 @@ class UserDataAnalyzer {
       '일기': records.diaryLogs.length,
       '모임': records.meetingLogs.length,
     };
-    
+
     // 요일별 분포 계산
     final weeklyDistribution = <int, double>{};
     final hourlyDistribution = <int, double>{};
-    
+
     // 모든 활동의 날짜/시간 수집
     final allDates = <DateTime>[];
     allDates.addAll(records.exerciseLogs.map((e) => e.date));
     allDates.addAll(records.readingLogs.map((e) => e.date));
     allDates.addAll(records.diaryLogs.map((e) => e.date));
     allDates.addAll(records.meetingLogs.map((e) => e.date));
-    
+
     // 요일별 분포 계산 (1=월요일, 7=일요일)
     for (int i = 1; i <= 7; i++) {
       final count = allDates.where((date) => date.weekday == i).length;
-      weeklyDistribution[i] = allDates.isEmpty ? 0.0 : (count / allDates.length) * 100;
+      weeklyDistribution[i] =
+          allDates.isEmpty ? 0.0 : (count / allDates.length) * 100;
     }
-    
+
     // 시간대별 분포 계산
     for (int i = 0; i < 24; i++) {
       final count = allDates.where((date) => date.hour == i).length;
-      hourlyDistribution[i] = allDates.isEmpty ? 0.0 : (count / allDates.length) * 100;
+      hourlyDistribution[i] =
+          allDates.isEmpty ? 0.0 : (count / allDates.length) * 100;
     }
-    
+
     // 가장 활발한 요일 찾기
     String mostActiveDay = '월요일';
     double maxDayActivity = 0.0;
@@ -219,31 +222,35 @@ class UserDataAnalyzer {
         mostActiveDay = _getDayName(day);
       }
     });
-    
+
     // 가장 활발한 시간대 찾기
     String mostActiveTime = '오전';
     double morningActivity = 0.0;
     double afternoonActivity = 0.0;
     double eveningActivity = 0.0;
-    
+
     hourlyDistribution.forEach((hour, percentage) {
-      if (hour >= 6 && hour < 12) morningActivity += percentage;
-      else if (hour >= 12 && hour < 18) afternoonActivity += percentage;
+      if (hour >= 6 && hour < 12)
+        morningActivity += percentage;
+      else if (hour >= 12 && hour < 18)
+        afternoonActivity += percentage;
       else if (hour >= 18 && hour < 24) eveningActivity += percentage;
     });
-    
-    if (afternoonActivity > morningActivity && afternoonActivity > eveningActivity) {
+
+    if (afternoonActivity > morningActivity &&
+        afternoonActivity > eveningActivity) {
       mostActiveTime = '오후';
-    } else if (eveningActivity > morningActivity && eveningActivity > afternoonActivity) {
+    } else if (eveningActivity > morningActivity &&
+        eveningActivity > afternoonActivity) {
       mostActiveTime = '저녁';
     }
-    
+
     // 일관성 점수 계산
     final consistencyScore = _calculateConsistencyScore(allDates);
-    
+
     // 연속 일수 계산
     final streaks = _calculateStreaks(allDates);
-    
+
     return ActivityPatterns(
       activityFrequency: activityFrequency,
       weeklyDistribution: weeklyDistribution,
@@ -255,25 +262,25 @@ class UserDataAnalyzer {
       longestStreak: streaks['longest'] ?? 0,
     );
   }
-  
+
   /// 기분 패턴 분석
   static MoodAnalysis _analyzeMoodPatterns(GlobalUser user) {
     final records = user.dailyRecords;
     final moodCounts = <String, int>{};
     final activityMoods = <String, List<String>>{};
-    
+
     // 일기의 기분 수집
     for (final diary in records.diaryLogs) {
       moodCounts[diary.mood] = (moodCounts[diary.mood] ?? 0) + 1;
       activityMoods.putIfAbsent('일기', () => []).add(diary.mood);
     }
-    
+
     // 모임의 기분 수집
     for (final meeting in records.meetingLogs) {
       moodCounts[meeting.mood] = (moodCounts[meeting.mood] ?? 0) + 1;
       activityMoods.putIfAbsent('모임', () => []).add(meeting.mood);
     }
-    
+
     // 독서의 기분 수집 (있는 경우)
     for (final reading in records.readingLogs) {
       if (reading.mood != null) {
@@ -281,14 +288,15 @@ class UserDataAnalyzer {
         activityMoods.putIfAbsent('독서', () => []).add(reading.mood!);
       }
     }
-    
+
     // 기분 분포 계산
     final totalMoods = moodCounts.values.fold(0, (sum, count) => sum + count);
     final moodDistribution = <String, double>{};
     moodCounts.forEach((mood, count) {
-      moodDistribution[mood] = totalMoods > 0 ? (count / totalMoods) * 100 : 0.0;
+      moodDistribution[mood] =
+          totalMoods > 0 ? (count / totalMoods) * 100 : 0.0;
     });
-    
+
     // 주요 기분 찾기
     String dominantMood = 'happy';
     int maxCount = 0;
@@ -298,7 +306,7 @@ class UserDataAnalyzer {
         dominantMood = mood;
       }
     });
-    
+
     // 활동별 주요 기분 매핑
     final activityMoodMap = <String, String>{};
     activityMoods.forEach((activity, moods) {
@@ -307,7 +315,7 @@ class UserDataAnalyzer {
         for (final mood in moods) {
           moodCount[mood] = (moodCount[mood] ?? 0) + 1;
         }
-        
+
         String dominantActivityMood = moods.first;
         int maxActivityCount = 0;
         moodCount.forEach((mood, count) {
@@ -319,13 +327,13 @@ class UserDataAnalyzer {
         activityMoodMap[activity] = dominantActivityMood;
       }
     });
-    
+
     // 기분 안정성 점수 계산
     final moodStability = _calculateMoodStability(moodDistribution);
-    
+
     // 최근 기분 트렌드
     final recentTrends = _getRecentMoodTrends(records);
-    
+
     return MoodAnalysis(
       moodDistribution: moodDistribution,
       dominantMood: dominantMood,
@@ -334,14 +342,14 @@ class UserDataAnalyzer {
       recentTrends: recentTrends,
     );
   }
-  
+
   /// 성과 분석
   static PerformanceMetrics _analyzePerformance(GlobalUser user) {
     final records = user.dailyRecords;
-    
+
     // 목표 달성률
     final goalCompletionRate = records.todayCompletionRate * 100;
-    
+
     // 스탯 성장률 계산 (임시로 랜덤 값 사용)
     final statGrowthRate = <String, double>{
       '체력': 15.5,
@@ -350,36 +358,35 @@ class UserDataAnalyzer {
       '사회성': 25.1,
       '의지력': 20.4,
     };
-    
+
     // 전체 진행도
     final overallProgress = user.level * 10.0 + (user.experience / 100);
-    
+
     // 총 활동 수
     final totalActivities = records.exerciseLogs.length +
         records.readingLogs.length +
         records.diaryLogs.length +
         records.meetingLogs.length;
-    
+
     // 평균 만족도 계산
     double totalSatisfaction = 0.0;
     int satisfactionCount = 0;
-    
+
     for (final meeting in records.meetingLogs) {
       totalSatisfaction += meeting.satisfaction;
       satisfactionCount++;
     }
-    
+
     for (final reading in records.readingLogs) {
       if (reading.rating != null) {
         totalSatisfaction += reading.rating!;
         satisfactionCount++;
       }
     }
-    
-    final averageSatisfaction = satisfactionCount > 0 
-        ? totalSatisfaction / satisfactionCount 
-        : 0.0;
-    
+
+    final averageSatisfaction =
+        satisfactionCount > 0 ? totalSatisfaction / satisfactionCount : 0.0;
+
     // 카테고리별 성과
     final categoryPerformance = <String, double>{
       '운동': _calculateCategoryScore(records.exerciseLogs.length, 30),
@@ -387,7 +394,7 @@ class UserDataAnalyzer {
       '일기': _calculateCategoryScore(records.diaryLogs.length, 30),
       '모임': _calculateCategoryScore(records.meetingLogs.length, 10),
     };
-    
+
     return PerformanceMetrics(
       goalCompletionRate: goalCompletionRate,
       statGrowthRate: statGrowthRate,
@@ -397,7 +404,7 @@ class UserDataAnalyzer {
       categoryPerformance: categoryPerformance,
     );
   }
-  
+
   /// 인사이트 생성
   static List<Insight> _generateInsights(
     GlobalUser user,
@@ -406,18 +413,19 @@ class UserDataAnalyzer {
     PerformanceMetrics metrics,
   ) {
     final insights = <Insight>[];
-    
+
     // 강점 인사이트
     if (patterns.consistencyScore > 70) {
       insights.add(Insight(
         title: '꾸준한 활동 습관',
-        description: '${patterns.currentStreak}일 연속으로 활동을 기록하고 있어요! 일관성 점수가 ${patterns.consistencyScore.toStringAsFixed(0)}%로 매우 우수합니다.',
+        description:
+            '${patterns.currentStreak}일 연속으로 활동을 기록하고 있어요! 일관성 점수가 ${patterns.consistencyScore.toStringAsFixed(0)}%로 매우 우수합니다.',
         type: InsightType.strength,
         importance: 0.9,
         icon: Icons.trending_up,
       ));
     }
-    
+
     // 기분 관련 인사이트
     if (mood.dominantMood == 'happy' || mood.dominantMood == 'very_happy') {
       insights.add(Insight(
@@ -428,50 +436,53 @@ class UserDataAnalyzer {
         icon: Icons.sentiment_very_satisfied,
       ));
     }
-    
+
     // 활동 패턴 인사이트
     final mostActiveActivity = patterns.activityFrequency.entries
         .reduce((a, b) => a.value > b.value ? a : b);
-    
+
     insights.add(Insight(
       title: '${mostActiveActivity.key} 활동 선호',
-      description: '${mostActiveActivity.key} 활동을 ${mostActiveActivity.value}회로 가장 많이 하셨네요. ${patterns.mostActiveTime}에 주로 활동하시는 패턴이 보입니다.',
+      description:
+          '${mostActiveActivity.key} 활동을 ${mostActiveActivity.value}회로 가장 많이 하셨네요. ${patterns.mostActiveTime}에 주로 활동하시는 패턴이 보입니다.',
       type: InsightType.trend,
       importance: 0.7,
       icon: Icons.insights,
     ));
-    
+
     // 개선 기회 인사이트
     final leastActiveActivity = patterns.activityFrequency.entries
         .reduce((a, b) => a.value < b.value ? a : b);
-    
+
     if (leastActiveActivity.value < 5) {
       insights.add(Insight(
         title: '${leastActiveActivity.key} 활동 강화 기회',
-        description: '${leastActiveActivity.key} 활동이 상대적으로 적어요. 이 영역을 강화하면 더욱 균형잡힌 성장이 가능합니다.',
+        description:
+            '${leastActiveActivity.key} 활동이 상대적으로 적어요. 이 영역을 강화하면 더욱 균형잡힌 성장이 가능합니다.',
         type: InsightType.opportunity,
         importance: 0.6,
         icon: Icons.lightbulb,
       ));
     }
-    
+
     // 성과 관련 인사이트
     if (metrics.goalCompletionRate > 80) {
       insights.add(Insight(
         title: '높은 목표 달성률',
-        description: '목표 달성률이 ${metrics.goalCompletionRate.toStringAsFixed(0)}%로 매우 우수합니다! 계속 이 페이스를 유지해보세요.',
+        description:
+            '목표 달성률이 ${metrics.goalCompletionRate.toStringAsFixed(0)}%로 매우 우수합니다! 계속 이 페이스를 유지해보세요.',
         type: InsightType.achievement,
         importance: 0.85,
         icon: Icons.emoji_events,
       ));
     }
-    
+
     // 정렬 (중요도 순)
     insights.sort((a, b) => b.importance.compareTo(a.importance));
-    
+
     return insights;
   }
-  
+
   /// 추천사항 생성
   static List<Recommendation> _generateRecommendations(
     GlobalUser user,
@@ -480,11 +491,11 @@ class UserDataAnalyzer {
     PerformanceMetrics metrics,
   ) {
     final recommendations = <Recommendation>[];
-    
+
     // 활동 균형 추천
     final leastActiveActivity = patterns.activityFrequency.entries
         .reduce((a, b) => a.value < b.value ? a : b);
-    
+
     if (leastActiveActivity.value < AnalysisConstants.minimumActivityCount) {
       recommendations.add(Recommendation(
         title: '${leastActiveActivity.key} 활동 늘리기',
@@ -495,29 +506,32 @@ class UserDataAnalyzer {
         icon: Icons.balance,
       ));
     }
-    
+
     // 연속 기록 도전
-    if (patterns.currentStreak > 0 && patterns.currentStreak < AnalysisConstants.streakTargetDays) {
+    if (patterns.currentStreak > 0 &&
+        patterns.currentStreak < AnalysisConstants.streakTargetDays) {
       recommendations.add(Recommendation(
         title: '${AnalysisConstants.streakTargetDays}일 연속 도전',
-        description: '현재 ${patterns.currentStreak}일 연속 기록 중! ${AnalysisConstants.streakTargetDays}일 연속 달성에 도전해보세요.',
+        description:
+            '현재 ${patterns.currentStreak}일 연속 기록 중! ${AnalysisConstants.streakTargetDays}일 연속 달성에 도전해보세요.',
         actionText: '도전하기',
         type: RecommendationType.challenge,
         priority: AnalysisConstants.priorityCritical,
         icon: Icons.local_fire_department,
       ));
     }
-    
+
     // 시간대 최적화 추천
     recommendations.add(Recommendation(
       title: '${patterns.mostActiveTime} 활동 강화',
-      description: '${patterns.mostActiveTime}에 가장 활발하시네요. 이 시간대에 중요한 활동을 배치해보세요.',
+      description:
+          '${patterns.mostActiveTime}에 가장 활발하시네요. 이 시간대에 중요한 활동을 배치해보세요.',
       actionText: '일정 조정',
       type: RecommendationType.improvement,
       priority: AnalysisConstants.priorityMedium,
       icon: Icons.schedule,
     ));
-    
+
     // 기분 개선 추천
     if (mood.moodStability < AnalysisConstants.moodStabilityThreshold) {
       recommendations.add(Recommendation(
@@ -529,7 +543,7 @@ class UserDataAnalyzer {
         icon: Icons.self_improvement,
       ));
     }
-    
+
     // 새로운 목표 추천
     if (metrics.goalCompletionRate > AnalysisConstants.highGoalCompletionRate) {
       recommendations.add(Recommendation(
@@ -541,54 +555,58 @@ class UserDataAnalyzer {
         icon: Icons.rocket_launch,
       ));
     }
-    
+
     // 우선순위 순으로 정렬
     recommendations.sort((a, b) => b.priority.compareTo(a.priority));
-    
+
     return recommendations;
   }
-  
+
   // === 헬퍼 메서드들 ===
-  
+
   static String _getDayName(int weekday) {
     return AnalysisConstants.weekdayNames[weekday] ?? '월요일';
   }
-  
+
   static double _calculateConsistencyScore(List<DateTime> dates) {
     if (dates.isEmpty) return 0.0;
-    
+
     // 날짜별로 정렬
     dates.sort();
-    
+
     // 최근 30일 기준으로 계산
     final now = DateTime.now();
     final thirtyDaysAgo = now.subtract(const Duration(days: 30));
-    final recentDates = dates.where((date) => date.isAfter(thirtyDaysAgo)).toList();
-    
+    final recentDates =
+        dates.where((date) => date.isAfter(thirtyDaysAgo)).toList();
+
     if (recentDates.isEmpty) return 0.0;
-    
+
     // 30일 중 활동한 날 비율
-    final uniqueDays = recentDates.map((date) => 
-        DateTime(date.year, date.month, date.day)).toSet();
-    
+    final uniqueDays = recentDates
+        .map((date) => DateTime(date.year, date.month, date.day))
+        .toSet();
+
     return math.min((uniqueDays.length / 30) * 100, 100.0);
   }
-  
+
   static Map<String, int> _calculateStreaks(List<DateTime> dates) {
     if (dates.isEmpty) return {'current': 0, 'longest': 0};
-    
+
     // 날짜별로 정렬
-    final uniqueDates = dates.map((date) => 
-        DateTime(date.year, date.month, date.day)).toSet().toList();
+    final uniqueDates = dates
+        .map((date) => DateTime(date.year, date.month, date.day))
+        .toSet()
+        .toList();
     uniqueDates.sort();
-    
+
     int currentStreak = 0;
     int longestStreak = 0;
     int tempStreak = 1;
-    
+
     for (int i = 1; i < uniqueDates.length; i++) {
       final diff = uniqueDates[i].difference(uniqueDates[i - 1]).inDays;
-      
+
       if (diff == 1) {
         tempStreak++;
       } else {
@@ -596,60 +614,61 @@ class UserDataAnalyzer {
         tempStreak = 1;
       }
     }
-    
+
     longestStreak = math.max(longestStreak, tempStreak);
-    
+
     // 현재 연속 일수 계산
     final today = DateTime.now();
     final todayDate = DateTime(today.year, today.month, today.day);
-    
+
     if (uniqueDates.isNotEmpty) {
       final lastDate = uniqueDates.last;
-      if (lastDate == todayDate || 
+      if (lastDate == todayDate ||
           lastDate == todayDate.subtract(const Duration(days: 1))) {
         currentStreak = tempStreak;
       }
     }
-    
+
     return {'current': currentStreak, 'longest': longestStreak};
   }
-  
+
   static double _calculateMoodStability(Map<String, double> distribution) {
     if (distribution.isEmpty) return 0.0;
-    
+
     // 기분 분포의 표준편차를 기반으로 안정성 계산
-    final mean = distribution.values.fold(0.0, (sum, val) => sum + val) / distribution.length;
+    final mean = distribution.values.fold(0.0, (sum, val) => sum + val) /
+        distribution.length;
     double variance = 0.0;
-    
+
     for (final value in distribution.values) {
       variance += math.pow(value - mean, 2);
     }
-    
+
     final standardDeviation = math.sqrt(variance / distribution.length);
-    
+
     // 표준편차가 낮을수록 안정성이 높음 (0-100 스케일로 변환)
     return math.max(0, 100 - (standardDeviation * 2));
   }
-  
+
   static List<MoodTrend> _getRecentMoodTrends(DailyRecordData records) {
     final trends = <MoodTrend>[];
     final allMoods = <DateTime, String>{};
-    
+
     // 모든 기분 데이터 수집
     for (final diary in records.diaryLogs) {
       allMoods[diary.date] = diary.mood;
     }
-    
+
     for (final meeting in records.meetingLogs) {
       allMoods[meeting.date] = meeting.mood;
     }
-    
+
     // 최근 7일 트렌드
     final now = DateTime.now();
     for (int i = 6; i >= 0; i--) {
       final date = now.subtract(Duration(days: i));
       final dateKey = DateTime(date.year, date.month, date.day);
-      
+
       if (allMoods.containsKey(dateKey)) {
         trends.add(MoodTrend(
           date: dateKey,
@@ -658,28 +677,36 @@ class UserDataAnalyzer {
         ));
       }
     }
-    
+
     return trends;
   }
-  
+
   static double _getMoodScore(String mood) {
     switch (mood) {
-      case 'very_happy': return 5.0;
-      case 'happy': return 4.0;
-      case 'good': return 3.5;
-      case 'normal': return 3.0;
-      case 'tired': return 2.0;
-      case 'stressed': return 1.0;
-      default: return 3.0;
+      case 'very_happy':
+        return 5.0;
+      case 'happy':
+        return 4.0;
+      case 'good':
+        return 3.5;
+      case 'normal':
+        return 3.0;
+      case 'tired':
+        return 2.0;
+      case 'stressed':
+        return 1.0;
+      default:
+        return 3.0;
     }
   }
-  
+
   static double _calculateCategoryScore(int count, int target) {
     return math.min((count / target) * 100, 100.0);
   }
-  
+
   /// 기본 분석 결과 생성 (오류 발생 시 사용)
-  static AnalysisResult _createDefaultAnalysisResult(GlobalUser user, DateTime now) {
+  static AnalysisResult _createDefaultAnalysisResult(
+      GlobalUser user, DateTime now) {
     return AnalysisResult(
       activityPatterns: ActivityPatterns(
         activityFrequency: {'운동': 0, '독서': 0, '일기': 0, '모임': 0},
@@ -700,7 +727,13 @@ class UserDataAnalyzer {
       ),
       performanceMetrics: PerformanceMetrics(
         goalCompletionRate: 0.0,
-        statGrowthRate: {'체력': 0.0, '지식': 0.0, '기술': 0.0, '사회성': 0.0, '의지력': 0.0},
+        statGrowthRate: {
+          '체력': 0.0,
+          '지식': 0.0,
+          '기술': 0.0,
+          '사회성': 0.0,
+          '의지력': 0.0
+        },
         overallProgress: user.level.toDouble(),
         totalActivities: 0,
         averageSatisfaction: 0.0,
@@ -709,7 +742,8 @@ class UserDataAnalyzer {
       insights: [
         Insight(
           title: '새로운 시작',
-          description: '아직 충분한 데이터가 없지만, 지금부터 시작해보세요! 작은 활동부터 기록해나가면 멋진 성장 패턴을 만들 수 있어요.',
+          description:
+              '아직 충분한 데이터가 없지만, 지금부터 시작해보세요! 작은 활동부터 기록해나가면 멋진 성장 패턴을 만들 수 있어요.',
           type: InsightType.opportunity,
           importance: 0.8,
           icon: Icons.star,

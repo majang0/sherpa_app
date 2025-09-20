@@ -23,7 +23,29 @@ class MeetingImageManager {
 
   /// 전체 이미지 리스트 (카테고리 미분류용)
   static const List<int> _allImages = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
   ];
 
   /// 모임에 적절한 이미지 경로 반환 (실제 이미지만 반환, 없으면 null)
@@ -33,7 +55,7 @@ class MeetingImageManager {
       final dynamicPath = _getDynamicImagePath(meeting.imageFileNames.first);
       return dynamicPath;
     }
-    
+
     // 이미지가 없으면 null 반환 (UI에서 이모지 표시하도록)
     return null;
   }
@@ -45,7 +67,7 @@ class MeetingImageManager {
       // asset:1.jpg -> assets/images/meeting/1.jpg
       return 'assets/images/meeting/${fileName.substring(6)}';
     }
-    
+
     // 일반 동적 이미지는 파일 경로를 직접 반환
     // 실제 파일 존재 여부는 UI에서 처리
     return fileName;
@@ -59,7 +81,7 @@ class MeetingImageManager {
   /// 카테고리별 랜덤 이미지 경로 반환
   String getImageForCategory(MeetingCategory category, [String? seed]) {
     final imageNumbers = _categoryImageMap[category] ?? _allImages;
-    
+
     int imageNumber;
     if (seed != null) {
       // 시드가 있으면 동일한 모임은 항상 같은 이미지 사용
@@ -69,7 +91,7 @@ class MeetingImageManager {
       // 시드가 없으면 완전 랜덤
       imageNumber = imageNumbers[_random.nextInt(imageNumbers.length)];
     }
-    
+
     return getSafeImagePath(imageNumber);
   }
 
@@ -78,7 +100,7 @@ class MeetingImageManager {
     final imageNumber = _allImages[index % _allImages.length];
     return getSafeImagePath(imageNumber);
   }
-  
+
   /// 안전한 이미지 경로 반환 (존재하는 이미지만 반환)
   String getSafeImagePath(int imageNumber) {
     // 1-23 범위의 이미지만 허용
@@ -99,13 +121,13 @@ class MeetingImageManager {
 
   /// 여러 이미지를 섞어서 반환 (갤러리용)
   List<String> getRandomImages(int count, {MeetingCategory? category}) {
-    final imageNumbers = category != null 
+    final imageNumbers = category != null
         ? (_categoryImageMap[category] ?? _allImages)
         : _allImages;
-    
+
     final shuffled = List<int>.from(imageNumbers)..shuffle(_random);
     final selected = shuffled.take(count).toList();
-    
+
     return selected.map((num) => getSafeImagePath(num)).toList();
   }
 
@@ -121,8 +143,8 @@ class MeetingImageManager {
 
   /// 모든 카테고리의 이미지 정보 반환 (디버깅용)
   Map<MeetingCategory, List<String>> getAllCategoryImages() {
-    return _categoryImageMap.map((category, imageNumbers) => 
-        MapEntry(category, imageNumbers.map((num) => getSafeImagePath(num)).toList()));
+    return _categoryImageMap.map((category, imageNumbers) => MapEntry(
+        category, imageNumbers.map((num) => getSafeImagePath(num)).toList()));
   }
 }
 
@@ -132,5 +154,4 @@ extension MeetingImageManagerExtension on MeetingImageManager {
   List<String?> generateImageSequence(List<AvailableMeeting> meetings) {
     return meetings.map((meeting) => getImageForMeeting(meeting)).toList();
   }
-
 }

@@ -18,12 +18,12 @@ import '../../../quests/providers/quest_provider_v2.dart';
 /// 깔끔하고 모던한 블루/화이트 디자인
 class MeetingTabScreen extends ConsumerStatefulWidget {
   final int? initialTabIndex;
-  
+
   const MeetingTabScreen({
-    super.key, 
+    super.key,
     this.initialTabIndex,
   });
-  
+
   @override
   ConsumerState<MeetingTabScreen> createState() => _MeetingTabScreenState();
 }
@@ -32,7 +32,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0; // 🎯 핵심 상태 변수 추가
-  
+
   // 탭 정보
   static const List<TabInfo> _tabs = [
     TabInfo(
@@ -54,26 +54,26 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
   @override
   void initState() {
     super.initState();
-    
+
     _tabController = TabController(
       length: _tabs.length,
       vsync: this,
       initialIndex: widget.initialTabIndex ?? 0,
     );
-    
+
     _selectedIndex = _tabController.index; // 초기 인덱스 설정
-    
+
     // 🔥 개선된 리스너 - setState로 확실한 UI 업데이트
     _tabController.addListener(_handleTabChange);
-    
+
     // 🎯 초기 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _recordTabVisit(_selectedIndex);
     });
   }
-  
+
   void _handleTabChange() {
-    if (!_tabController.indexIsChanging && 
+    if (!_tabController.indexIsChanging &&
         _tabController.index != _selectedIndex) {
       setState(() {
         _selectedIndex = _tabController.index;
@@ -83,7 +83,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
       HapticFeedback.lightImpact();
     }
   }
-  
+
   /// 🎯 직접 탭 선택 핸들러
   void _selectTab(int index) {
     if (index != _selectedIndex && index >= 0 && index < _tabs.length) {
@@ -96,7 +96,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
       _recordTabVisit(index);
     }
   }
-  
+
   /// 🎯 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
   void _recordTabVisit(int index) {
     final tabNames = ['모임', '챌린지'];
@@ -115,13 +115,13 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ModernColors.background,
-      
+
       // 🎯 SherpaCleanAppBar 사용
       appBar: SherpaCleanAppBar(
         title: '모임',
         backgroundColor: ModernColors.surface,
       ),
-      
+
       // 🎨 클린 모던 탭바와 바디
       body: Column(
         children: [
@@ -131,7 +131,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
             hint: '좌우 스와이프 또는 탭을 눌러 다른 섹션으로 이동할 수 있습니다',
             child: _buildPremiumModernTabSelector(),
           ),
-          
+
           // 탭 콘텐츠
           Expanded(
             child: Semantics(
@@ -156,10 +156,10 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
   Widget _buildPremiumModernTabSelector() {
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth < 360;
-    
+
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: isSmallScreen ? 12 : 16, 
+        horizontal: isSmallScreen ? 12 : 16,
         vertical: 8,
       ),
       decoration: BoxDecoration(
@@ -193,7 +193,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
     final isSelected = index == _selectedIndex;
     final screenWidth = MediaQuery.of(context).size.width;
     final isSmallScreen = screenWidth < 360;
-    
+
     return GestureDetector(
       onTap: () => _selectTab(index),
       child: Container(

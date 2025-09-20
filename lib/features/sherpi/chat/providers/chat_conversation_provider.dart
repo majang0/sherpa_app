@@ -15,13 +15,13 @@ import '../../../../core/ai/smart_sherpi_manager.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 
 /// 💬 채팅 대화 관리 프로바이더
-/// 
+///
 /// 셰르피와의 실시간 대화를 관리하고 메시지 히스토리를 보관합니다.
 class ChatConversationNotifier extends StateNotifier<ConversationState> {
   final SmartSherpiManager _smartManager = SmartSherpiManager();
   final Ref _ref;
   Timer? _typingTimer;
-  
+
   ChatConversationNotifier(this._ref) : super(_createInitialState());
 
   /// 초기 대화 상태 생성
@@ -59,7 +59,7 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
       currentEmotion: context?.defaultEmotion ?? SherpiEmotion.happy,
       sessionMetadata: metadata ?? {},
     );
-    
+
     // 첫 인사 메시지 자동 생성
     _addWelcomeMessage(context ?? ConversationContext.general);
   }
@@ -81,7 +81,8 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
 
     final welcomeMessage = ChatMessage(
       id: _generateMessageId(),
-      content: welcomeMessages[context] ?? welcomeMessages[ConversationContext.general]!,
+      content: welcomeMessages[context] ??
+          welcomeMessages[ConversationContext.general]!,
       sender: MessageSender.sherpi,
       timestamp: DateTime.now(),
       emotion: context.defaultEmotion,
@@ -126,11 +127,12 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
       _showTypingIndicator();
 
       // 대화 컨텍스트 분석
-      final conversationContext = _analyzeConversationContext(userMessage.content);
-      
+      final conversationContext =
+          _analyzeConversationContext(userMessage.content);
+
       // 사용자 컨텍스트 구성
       final userContext = _buildUserContext(userMessage);
-      
+
       // 게임 컨텍스트 구성 (기존 시스템과 연동)
       final gameContext = _buildGameContext();
 
@@ -150,11 +152,14 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
         content: sherpiResponse.message,
         sender: MessageSender.sherpi,
         timestamp: DateTime.now(),
-        emotion: _selectEmotionForResponse(conversationContext, sherpiResponse.message),
-        type: _determineMessageType(conversationContext, sherpiResponse.message),
+        emotion: _selectEmotionForResponse(
+            conversationContext, sherpiResponse.message),
+        type:
+            _determineMessageType(conversationContext, sherpiResponse.message),
         metadata: {
           'response_source': sherpiResponse.source.name,
-          'generation_duration_ms': sherpiResponse.generationDuration?.inMilliseconds,
+          'generation_duration_ms':
+              sherpiResponse.generationDuration?.inMilliseconds,
           'conversation_context': conversationContext.name,
         },
       );
@@ -162,8 +167,9 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
       state = state.addMessage(sherpiMessage);
 
       // 글로벌 셰르피 상태도 업데이트
-      _ref.read(sherpiProvider.notifier).changeEmotion(sherpiMessage.emotion ?? SherpiEmotion.happy);
-
+      _ref
+          .read(sherpiProvider.notifier)
+          .changeEmotion(sherpiMessage.emotion ?? SherpiEmotion.happy);
     } catch (e) {
       print('❌ 셰르피 응답 생성 실패: $e');
       _addErrorMessage();
@@ -181,23 +187,22 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
       type: MessageType.system,
       metadata: {'is_typing': true},
     );
-    
+
     state = state.addMessage(typingMessage);
   }
 
-  /// 🚫 타이핑 표시 제거  
+  /// 🚫 타이핑 표시 제거
   void _hideTypingIndicator() {
-    final messages = state.messages.where((m) => 
-      m.metadata?['is_typing'] != true
-    ).toList();
-    
+    final messages =
+        state.messages.where((m) => m.metadata?['is_typing'] != true).toList();
+
     state = state.updateMessages(messages);
   }
 
   /// 🔍 대화 컨텍스트 분석
   ConversationContext _analyzeConversationContext(String userMessage) {
     final message = userMessage.toLowerCase();
-    
+
     // 키워드 기반 컨텍스트 분석
     if (message.contains(RegExp(r'축하|기뻐|성공|달성|완료'))) {
       return ConversationContext.celebration;
@@ -217,7 +222,7 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
     if (message.contains(RegExp(r'위기|문제|곤란|절망'))) {
       return ConversationContext.crisis;
     }
-    
+
     return ConversationContext.general;
   }
 
@@ -265,10 +270,11 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
   }
 
   /// 😊 응답에 맞는 감정 선택
-  SherpiEmotion _selectEmotionForResponse(ConversationContext context, String response) {
+  SherpiEmotion _selectEmotionForResponse(
+      ConversationContext context, String response) {
     // 응답 내용 분석
     final responseText = response.toLowerCase();
-    
+
     if (responseText.contains(RegExp(r'축하|대단|멋져|훌륭'))) {
       return SherpiEmotion.cheering;
     }
@@ -281,15 +287,16 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
     if (responseText.contains(RegExp(r'괜찮|힘내|위로'))) {
       return SherpiEmotion.sad;
     }
-    
+
     // 컨텍스트 기본 감정
     return context.defaultEmotion;
   }
 
   /// 📝 메시지 타입 결정
-  MessageType _determineMessageType(ConversationContext context, String response) {
+  MessageType _determineMessageType(
+      ConversationContext context, String response) {
     final responseText = response.toLowerCase();
-    
+
     if (responseText.contains(RegExp(r'축하|대단|성취'))) {
       return MessageType.celebration;
     }
@@ -302,7 +309,7 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
     if (responseText.contains(RegExp(r'\?|궁금|어떤'))) {
       return MessageType.question;
     }
-    
+
     return MessageType.text;
   }
 
@@ -317,7 +324,7 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
       type: MessageType.system,
       metadata: {'is_error': true},
     );
-    
+
     state = state.addMessage(errorMessage);
   }
 
@@ -326,10 +333,12 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final conversationJson = jsonEncode(state.toJson());
-      await prefs.setString('sherpi_conversation_${state.sessionId}', conversationJson);
-      
+      await prefs.setString(
+          'sherpi_conversation_${state.sessionId}', conversationJson);
+
       // 세션 목록에도 추가
-      final sessionList = prefs.getStringList('sherpi_conversation_sessions') ?? [];
+      final sessionList =
+          prefs.getStringList('sherpi_conversation_sessions') ?? [];
       if (!sessionList.contains(state.sessionId)) {
         sessionList.add(state.sessionId);
         await prefs.setStringList('sherpi_conversation_sessions', sessionList);
@@ -343,10 +352,12 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
   Future<void> loadConversation(String sessionId) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final conversationJson = prefs.getString('sherpi_conversation_$sessionId');
-      
+      final conversationJson =
+          prefs.getString('sherpi_conversation_$sessionId');
+
       if (conversationJson != null) {
-        final conversationData = jsonDecode(conversationJson) as Map<String, dynamic>;
+        final conversationData =
+            jsonDecode(conversationJson) as Map<String, dynamic>;
         state = ConversationState.fromJson(conversationData);
       }
     } catch (e) {
@@ -373,7 +384,8 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
 
   /// 🗑️ 메시지 삭제
   void deleteMessage(String messageId) {
-    final updatedMessages = state.messages.where((m) => m.id != messageId).toList();
+    final updatedMessages =
+        state.messages.where((m) => m.id != messageId).toList();
     state = state.updateMessages(updatedMessages);
   }
 
@@ -393,7 +405,8 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
 }
 
 /// 프로바이더 정의
-final chatConversationProvider = StateNotifierProvider<ChatConversationNotifier, ConversationState>((ref) {
+final chatConversationProvider =
+    StateNotifierProvider<ChatConversationNotifier, ConversationState>((ref) {
   return ChatConversationNotifier(ref);
 });
 
@@ -407,7 +420,8 @@ final conversationMessagesProvider = Provider<List<ChatMessage>>((ref) {
 });
 
 final lastSherpiMessageProvider = Provider<ChatMessage?>((ref) {
-  return ref.watch(chatConversationProvider.select((state) => state.lastSherpiMessage));
+  return ref.watch(
+      chatConversationProvider.select((state) => state.lastSherpiMessage));
 });
 
 final conversationStatsProvider = Provider<Map<String, dynamic>>((ref) {

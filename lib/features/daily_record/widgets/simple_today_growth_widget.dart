@@ -12,27 +12,29 @@ import '../../home/presentation/widgets/all_goals_reward_modal.dart';
 
 class SimpleTodayGrowthWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<SimpleTodayGrowthWidget> createState() => _SimpleTodayGrowthWidgetState();
+  ConsumerState<SimpleTodayGrowthWidget> createState() =>
+      _SimpleTodayGrowthWidgetState();
 }
 
-class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidget>
+class _SimpleTodayGrowthWidgetState
+    extends ConsumerState<SimpleTodayGrowthWidget>
     with TickerProviderStateMixin {
   late AnimationController _pulseController;
   late AnimationController _progressController;
   late Animation<double> _pulseAnimation;
   late Animation<double> _progressAnimation;
-  
+
   bool _showGoalsBottomSheet = false;
 
   @override
   void initState() {
     super.initState();
-    
+
     _pulseController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     _progressController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
@@ -45,7 +47,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
       parent: _pulseController,
       curve: Curves.easeInOut,
     ));
-    
+
     _progressAnimation = CurvedAnimation(
       parent: _progressController,
       curve: Curves.easeOutCubic,
@@ -65,29 +67,35 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
   Widget build(BuildContext context) {
     final user = ref.watch(globalUserProvider);
     final todayRecord = ref.watch(todayRecordProvider);
-    
+
     return _buildEnhancedHeader(context, ref, todayRecord, user);
   }
 
-  Widget _buildEnhancedHeader(BuildContext context, WidgetRef ref, dynamic todayRecord, dynamic user) {
+  Widget _buildEnhancedHeader(
+      BuildContext context, WidgetRef ref, dynamic todayRecord, dynamic user) {
     // daily_quest_widget.dart 방식으로 실제 데이터 기반 완료 상태 계산
     final records = user.dailyRecords;
     final today = DateTime.now();
-    
+
     // 실제 달성된 목표 수 계산
     int actuallyCompletedCount = 0;
     if (records.todaySteps >= 6000) actuallyCompletedCount++;
     if (records.todayFocusMinutes >= 30) actuallyCompletedCount++;
-    if (records.readingLogs.any((log) => _isSameDay(log.date, today) && log.pages >= 1)) actuallyCompletedCount++;
-    if (records.diaryLogs.any((log) => _isSameDay(log.date, today))) actuallyCompletedCount++;
-    if (records.exerciseLogs.any((log) => _isSameDay(log.date, today))) actuallyCompletedCount++;
-    
+    if (records.readingLogs
+        .any((log) => _isSameDay(log.date, today) && log.pages >= 1))
+      actuallyCompletedCount++;
+    if (records.diaryLogs.any((log) => _isSameDay(log.date, today)))
+      actuallyCompletedCount++;
+    if (records.exerciseLogs.any((log) => _isSameDay(log.date, today)))
+      actuallyCompletedCount++;
+
     final totalGoals = 5;
     final completionRate = actuallyCompletedCount / totalGoals;
     final completedCount = actuallyCompletedCount;
     final isAllCompleted = actuallyCompletedCount == totalGoals;
-    final canClaimReward = isAllCompleted && !user.dailyRecords.isAllGoalsRewardClaimed;
-    
+    final canClaimReward =
+        isAllCompleted && !user.dailyRecords.isAllGoalsRewardClaimed;
+
     // 디버깅용 로그 (Simple Today Growth Widget - completed: $actuallyCompletedCount/$totalGoals)
 
     return Container(
@@ -107,17 +115,19 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
           // 📋 1. 헤더 제목 섹션
           _buildHeaderTitle(),
           const SizedBox(height: 32),
-          
+
           // 📊 2. 핵심 성과 섹션 (기존 + 목표 현황)
           _buildKeyMetrics(todayRecord, completedCount, isAllCompleted),
           const SizedBox(height: 28),
-          
+
           // 📈 3. 목표 진행률 섹션
-          _buildProgressOverview(context, completionRate, completedCount, isAllCompleted),
+          _buildProgressOverview(
+              context, completionRate, completedCount, isAllCompleted),
           const SizedBox(height: 24),
-          
+
           // 🎁 4. 액션 버튼 섹션 (통합)
-          _buildActionSection(context, ref, isAllCompleted, canClaimReward, user),
+          _buildActionSection(
+              context, ref, isAllCompleted, canClaimReward, user),
         ],
       ),
     );
@@ -138,23 +148,23 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
           ),
         ),
         const SizedBox(height: 8),
-
       ],
     );
   }
 
   // 📊 2. 핵심 성과 섹션 (실제 데이터 기반 완료 상태 확인)
-  Widget _buildKeyMetrics(dynamic todayRecord, int completedCount, bool isAllCompleted) {
+  Widget _buildKeyMetrics(
+      dynamic todayRecord, int completedCount, bool isAllCompleted) {
     final user = ref.watch(globalUserProvider);
     final records = user.dailyRecords;
     final today = DateTime.now();
-    
+
     // daily_quest_widget.dart 방식으로 실제 데이터 기반 완료 상태 확인
     final stepsGoalCompleted = records.todaySteps >= 6000;
     final focusGoalCompleted = records.todayFocusMinutes >= 30;
-    final readingGoalCompleted = records.readingLogs.any((log) => 
-      _isSameDay(log.date, today) && log.pages >= 1);
-    
+    final readingGoalCompleted = records.readingLogs
+        .any((log) => _isSameDay(log.date, today) && log.pages >= 1);
+
     return Row(
       children: [
         Expanded(
@@ -233,9 +243,9 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
     );
   }
 
-
   // 📈 3. 목표 진행률 섹션 (향상된 디자인)
-  Widget _buildProgressOverview(BuildContext context, double completionRate, int completedCount, bool isAllCompleted) {
+  Widget _buildProgressOverview(BuildContext context, double completionRate,
+      int completedCount, bool isAllCompleted) {
     return AnimatedBuilder(
       animation: _progressAnimation,
       builder: (context, child) {
@@ -259,13 +269,15 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
-                    color: isAllCompleted ? ModernColors.success : ModernColors.primary,
+                    color: isAllCompleted
+                        ? ModernColors.success
+                        : ModernColors.primary,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            
+
             // 진행률 바
             Container(
               height: 8,
@@ -279,11 +291,14 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
                     widthFactor: completionRate * _progressAnimation.value,
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: isAllCompleted 
-                          ? LinearGradient(
-                              colors: [ModernColors.success, ModernColors.success.withOpacity(0.8)],
-                            )
-                          : ModernColors.primaryGradient,
+                        gradient: isAllCompleted
+                            ? LinearGradient(
+                                colors: [
+                                  ModernColors.success,
+                                  ModernColors.success.withOpacity(0.8)
+                                ],
+                              )
+                            : ModernColors.primaryGradient,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -292,15 +307,15 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
               ),
             ),
             const SizedBox(height: 8),
-            
+
             // 진행률 텍스트
 
-            
             // 보상 정보 표시 (목표 달성 시)
             if (isAllCompleted) ...[
               const SizedBox(height: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -344,7 +359,8 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
   }
 
   // 🎁 4. 액션 섹션 (통합 버튼)
-  Widget _buildActionSection(BuildContext context, WidgetRef ref, bool isAllCompleted, bool canClaimReward, dynamic user) {
+  Widget _buildActionSection(BuildContext context, WidgetRef ref,
+      bool isAllCompleted, bool canClaimReward, dynamic user) {
     if (isAllCompleted && canClaimReward) {
       return _buildClaimRewardButton(context, ref, user);
     } else if (isAllCompleted && !canClaimReward) {
@@ -411,7 +427,7 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
           ),
         ),
         const SizedBox(height: 12),
-        
+
         // 목표 확인 버튼
         AnimatedBuilder(
           animation: _pulseAnimation,
@@ -455,16 +471,17 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
   }
 
   // 보상 받기 버튼 (NEW 배지 포함)
-  Widget _buildClaimRewardButton(BuildContext context, WidgetRef ref, dynamic user) {
+  Widget _buildClaimRewardButton(
+      BuildContext context, WidgetRef ref, dynamic user) {
     return Container(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
           HapticFeedbackManager.heavyImpact();
-          
+
           // 보상 받기 실행 (내부에서 셰르피 메시지 자동 호출됨)
           ref.read(globalUserProvider.notifier).claimAllGoalsReward();
-          
+
           // AllGoalsRewardModal 표시 (오버레이 방식)
           Navigator.push(
             context,
@@ -482,7 +499,8 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
               reverseTransitionDuration: const Duration(milliseconds: 300),
               opaque: false, // 배경 투명하게
               barrierColor: Colors.transparent, // 배경색 제거
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return FadeTransition(
                   opacity: animation,
                   child: child,
@@ -617,11 +635,11 @@ class _SimpleTodayGrowthWidgetState extends ConsumerState<SimpleTodayGrowthWidge
     }
     return steps.toString();
   }
-  
+
   // 날짜 비교 헬퍼 메서드 (daily_quest_widget.dart와 동일)
   bool _isSameDay(DateTime date, DateTime today) {
     return date.year == today.year &&
-           date.month == today.month &&
-           date.day == today.day;
+        date.month == today.month &&
+        date.day == today.day;
   }
 }

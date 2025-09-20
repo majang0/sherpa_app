@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'dart:math' as math;
 import '../models/global_user_model.dart';
 import '../../features/daily_record/services/sample_data_generator.dart';
-import '../../features/daily_record/models/detailed_exercise_models.dart' as detailed;
+import '../../features/daily_record/models/detailed_exercise_models.dart'
+    as detailed;
 import '../models/user_level_progress.dart';
 import '../models/point_system_model.dart';
 import '../models/global_badge_model.dart';
@@ -20,7 +21,8 @@ import 'notification_provider.dart'; // 알림 Provider 추가
 import '../../core/ai/activity_analysis_service.dart'; // 활동 분석 서비스 추가
 
 /// 글로벌 사용자 데이터 관리 Provider (완전 독립형)
-final globalUserProvider = StateNotifierProvider<GlobalUserNotifier, GlobalUser>((ref) {
+final globalUserProvider =
+    StateNotifierProvider<GlobalUserNotifier, GlobalUser>((ref) {
   final notifier = GlobalUserNotifier(ref);
   // 샘플 데이터 테스트를 위해 자동 초기화 비활성화
   // notifier._initializeAndClearData();
@@ -39,9 +41,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
       // 초기화 후, 현재 상태(초기값)를 저장하여 일관성을 유지합니다.
       await _saveUserData();
-
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /// 60일간 샘플 일일 기록 생성 (SampleDataGenerator 사용)
@@ -57,16 +57,76 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     // 14일간 독서 기록 샘플 데이터
     final sampleBooks = [
-      {'title': '원칙', 'author': '게리 콜러', 'pages': 25, 'rating': 4.5, 'category': '자기계발'},
-      {'title': '아토믹 해빗', 'author': '제임스 클리어', 'pages': 32, 'rating': 5.0, 'category': '자기계발'},
-      {'title': '사피엔스', 'author': '유발 하라리', 'pages': 28, 'rating': 4.0, 'category': '역사'},
-      {'title': '코스모스', 'author': '칼 세이건', 'pages': 22, 'rating': 4.5, 'category': '과학'},
-      {'title': '데일 카네기 인간관계론', 'author': '데일 카네기', 'pages': 35, 'rating': 4.0, 'category': '자기계발'},
-      {'title': '부의 추월차선', 'author': 'MJ 드마코', 'pages': 40, 'rating': 4.5, 'category': '경영'},
-      {'title': '완벽한 공부법', 'author': '고영성', 'pages': 18, 'rating': 3.5, 'category': '자기계발'},
-      {'title': '미드나잇 라이브러리', 'author': '매트 헤이그', 'pages': 45, 'rating': 5.0, 'category': '소설'},
-      {'title': '넛지', 'author': '리처드 탈러', 'pages': 30, 'rating': 4.0, 'category': '경영'},
-      {'title': '생각, 빠르고 느리게', 'author': '대니얼 카너먼', 'pages': 26, 'rating': 4.5, 'category': '과학'},
+      {
+        'title': '원칙',
+        'author': '게리 콜러',
+        'pages': 25,
+        'rating': 4.5,
+        'category': '자기계발'
+      },
+      {
+        'title': '아토믹 해빗',
+        'author': '제임스 클리어',
+        'pages': 32,
+        'rating': 5.0,
+        'category': '자기계발'
+      },
+      {
+        'title': '사피엔스',
+        'author': '유발 하라리',
+        'pages': 28,
+        'rating': 4.0,
+        'category': '역사'
+      },
+      {
+        'title': '코스모스',
+        'author': '칼 세이건',
+        'pages': 22,
+        'rating': 4.5,
+        'category': '과학'
+      },
+      {
+        'title': '데일 카네기 인간관계론',
+        'author': '데일 카네기',
+        'pages': 35,
+        'rating': 4.0,
+        'category': '자기계발'
+      },
+      {
+        'title': '부의 추월차선',
+        'author': 'MJ 드마코',
+        'pages': 40,
+        'rating': 4.5,
+        'category': '경영'
+      },
+      {
+        'title': '완벽한 공부법',
+        'author': '고영성',
+        'pages': 18,
+        'rating': 3.5,
+        'category': '자기계발'
+      },
+      {
+        'title': '미드나잇 라이브러리',
+        'author': '매트 헤이그',
+        'pages': 45,
+        'rating': 5.0,
+        'category': '소설'
+      },
+      {
+        'title': '넛지',
+        'author': '리처드 탈러',
+        'pages': 30,
+        'rating': 4.0,
+        'category': '경영'
+      },
+      {
+        'title': '생각, 빠르고 느리게',
+        'author': '대니얼 카너먼',
+        'pages': 26,
+        'rating': 4.5,
+        'category': '과학'
+      },
     ];
 
     // 14일간 모임 기록 샘플 데이터
@@ -80,7 +140,14 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         final bookIndex = math.Random().nextInt(sampleBooks.length);
         final book = sampleBooks[bookIndex];
 
-        final moods = ['happy', 'excited', 'thoughtful', 'moved', 'surprised', 'calm'];
+        final moods = [
+          'happy',
+          'excited',
+          'thoughtful',
+          'moved',
+          'surprised',
+          'calm'
+        ];
         sampleReadingLogs.add(ReadingLog(
           id: 'reading_${date.millisecondsSinceEpoch}',
           date: date,
@@ -89,7 +156,9 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           pages: book['pages'] as int,
           rating: book['rating'] as double,
           category: book['category'] as String,
-          mood: math.Random().nextDouble() < 0.7 ? moods[math.Random().nextInt(moods.length)] : null,
+          mood: math.Random().nextDouble() < 0.7
+              ? moods[math.Random().nextInt(moods.length)]
+              : null,
           note: _getRandomReadingNote(),
           isShared: math.Random().nextBool(),
         ));
@@ -124,7 +193,6 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     ];
     return notes[math.Random().nextInt(notes.length)];
   }
-
 
   /// 초기 사용자 데이터 생성 (12레벨, 적정 경험치)
   static GlobalUser _createInitialUser() {
@@ -177,21 +245,21 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       experience: currentXp,
       // ✅ 능력치 0-10 범위로 복원
       stats: GlobalStats(
-        stamina: 8.5,    // 체력 8.5
-        knowledge: 6.2,  // 지식 6.2
-        technique: 4.3,  // 기술 4.3
-        sociality: 7.1,  // 사교성 7.1
-        willpower: 20,  // 의지 20 (원래대로 복원)
+        stamina: 8.5, // 체력 8.5
+        knowledge: 6.2, // 지식 6.2
+        technique: 4.3, // 기술 4.3
+        sociality: 7.1, // 사교성 7.1
+        willpower: 20, // 의지 20 (원래대로 복원)
       ),
       equippedBadgeIds: [
-        'epic_will',         // 굳건한 의지 (성공률 +8%)
-        'common_explorer',   // 탐험가의 발걸음 (기본 등반력 +5%)
+        'epic_will', // 굳건한 의지 (성공률 +8%)
+        'common_explorer', // 탐험가의 발걸음 (기본 등반력 +5%)
       ],
       ownedBadgeIds: [
-        'epic_will',         // 굳건한 의지 (성공률 +8%)
-        'common_luck',       // 초심자의 행운 (성공률 +3%)
-        'common_explorer',   // 탐험가의 발걸음 (기본 등반력 +5%)
-        'common_stamina',    // 꾸준함의 증표 (경험치 +10%)
+        'epic_will', // 굳건한 의지 (성공률 +8%)
+        'common_luck', // 초심자의 행운 (성공률 +3%)
+        'common_explorer', // 탐험가의 발걸음 (기본 등반력 +5%)
+        'common_stamina', // 꾸준함의 증표 (경험치 +10%)
       ],
       dailyRecords: _createSampleDailyRecords(),
       planningData: UserPlanningData(
@@ -213,8 +281,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('global_user_data', jsonEncode(state.toJson()));
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /// 경험치 추가 및 레벨업 처리
@@ -279,7 +346,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     state = state.copyWith(stats: newStats);
     _saveUserData();
   }
-  
+
   /// 사용자 이름 업데이트
   void updateUserName(String newName) {
     if (newName.trim().isNotEmpty) {
@@ -287,7 +354,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       _saveUserData();
     }
   }
-  
+
   /// 프로필 이미지 업데이트
   void updateProfileImage(String? imageUrl) {
     // null을 빈 문자열로 변환하여 copyWith가 확실히 값을 업데이트하도록 함
@@ -328,7 +395,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 뱃지 해제
   void unequipBadge(String badgeId) {
     state = state.copyWith(
-      equippedBadgeIds: state.equippedBadgeIds.where((id) => id != badgeId).toList(),
+      equippedBadgeIds:
+          state.equippedBadgeIds.where((id) => id != badgeId).toList(),
     );
     _saveUserData();
   }
@@ -372,7 +440,6 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       knowledge: state.stats.knowledge,
       technique: state.stats.technique,
       equippedBadges: equippedBadges,
-
     );
 
     // ⏰ 사교성에 따른 등반 시간 계산
@@ -405,7 +472,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         'region': region,
         'difficulty': difficulty,
         'originalDuration': originalDuration ?? durationHours, // 원래 시간 저장
-        'timeReduction': durationHours > adjustedDuration ? ((durationHours - adjustedDuration) / durationHours * 100).toStringAsFixed(1) : '0',
+        'timeReduction': durationHours > adjustedDuration
+            ? ((durationHours - adjustedDuration) / durationHours * 100)
+                .toStringAsFixed(1)
+            : '0',
       },
     );
 
@@ -413,7 +483,6 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     _saveUserData();
 
     // 등반 시작 시에는 셰르피 메시지 없음
-
   }
 
   /// 등반 완료 (수동 또는 자동)
@@ -426,9 +495,11 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     }
 
     final now = DateTime.now();
-    final actualDuration = now.difference(session.startTime).inMilliseconds / (1000 * 3600);
+    final actualDuration =
+        now.difference(session.startTime).inMilliseconds / (1000 * 3600);
 
-    final originalDuration = session.metadata?['originalDuration'] as double? ?? session.durationHours;
+    final originalDuration = session.metadata?['originalDuration'] as double? ??
+        session.durationHours;
 
     // 성공/실패 결정
     bool isSuccess;
@@ -443,11 +514,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     final difficulty = session.metadata?['difficulty'] ?? 1;
     final region = session.metadata?['region'] ?? '미알';
 
-
     final rewards = _calculateClimbingRewards(
       gameSystem: gameSystem,
       difficulty: difficulty,
-      durationHours: originalDuration,  // 원래 시간 사용
+      durationHours: originalDuration, // 원래 시간 사용
       isSuccess: isSuccess,
     );
 
@@ -473,20 +543,20 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     if (isSuccess) {
       final today = DateTime.now();
       final todayStart = DateTime(today.year, today.month, today.day);
-      
+
       // 오늘의 등반 기록 중 성공한 기록이 있는지 확인 (현재 state 기준)
-      final todaySuccessfulClimbs = state.dailyRecords.climbingLogs.where((log) {
-        return log.startTime.isAfter(todayStart) && 
-               log.isSuccess;
+      final todaySuccessfulClimbs =
+          state.dailyRecords.climbingLogs.where((log) {
+        return log.startTime.isAfter(todayStart) && log.isSuccess;
       }).toList();
-      
+
       // 현재 등반이 오늘의 첫 성공이면 알림 생성
       if (todaySuccessfulClimbs.isEmpty) {
         ref.read(notificationProvider.notifier).notifyFirstClimb(
-          session.mountainName,
-          xp: rewards.experience.toInt(),  // 실제 경험치
-          points: rewards.points,  // 실제 포인트
-        );
+              session.mountainName,
+              xp: rewards.experience.toInt(), // 실제 경험치
+              points: rewards.points, // 실제 포인트
+            );
       }
     }
 
@@ -505,7 +575,9 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       dailyRecords: updatedRecords,
       currentClimbingSession: session.copyWith(
         isActive: false,
-        status: isSuccess ? ClimbingSessionStatus.completed : ClimbingSessionStatus.failed,
+        status: isSuccess
+            ? ClimbingSessionStatus.completed
+            : ClimbingSessionStatus.failed,
       ),
     );
 
@@ -537,10 +609,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     print('⛰️ [GlobalUser] 등반 완료: ${session.mountainName}');
     print('⛰️ [GlobalUser] 등반 성공 여부: $isSuccess');
     print('⛰️ [GlobalUser] 등반 기록 추가됨 - 총 ${updatedClimbingLogs.length}개 기록');
-    
+
     // 데이터 저장을 먼저 완료
     _saveUserData();
-    
+
     // 등반 성공 시 퀘스트 시스템 업데이트
     if (isSuccess) {
       print('✅ [GlobalUser] 등반 성공! 퀘스트 시스템 업데이트 요청');
@@ -549,52 +621,53 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         // state 업데이트가 완전히 적용되도록 더 긴 지연 시간 적용
         await Future.delayed(const Duration(seconds: 1));
         print('🔄 [GlobalUser] 퀘스트 시스템 동기화 시작');
-        
+
         // 현재 상태를 직접 체크
         final currentUser = ref.read(globalUserProvider);
-        final todayClimbingSuccess = currentUser.dailyRecords.climbingLogs
-            .where((log) {
-              final today = DateTime.now();
-              return log.startTime.year == today.year &&
-                     log.startTime.month == today.month &&
-                     log.startTime.day == today.day &&
-                     log.isSuccess;
-            }).isNotEmpty;
-        
+        final todayClimbingSuccess =
+            currentUser.dailyRecords.climbingLogs.where((log) {
+          final today = DateTime.now();
+          return log.startTime.year == today.year &&
+              log.startTime.month == today.month &&
+              log.startTime.day == today.day &&
+              log.isSuccess;
+        }).isNotEmpty;
+
         print('🔍 [GlobalUser] 오늘 등반 성공 기록 확인: $todayClimbingSuccess');
-        
+
         // 퀘스트 동기화
         await ref.read(questProviderV2.notifier).syncWithGlobalData();
         print('✅ [GlobalUser] 퀘스트 시스템 동기화 완료');
       });
     }
-    
+
     // 셀르피 결과 메시지
     // 성공 시에는 성공 메시지를 직접 표시, 실패 시에는 sherpi_dialogues에서 랜덤 선택
     if (isSuccess) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.climbingSuccess,
-        customDialogue: '등반 성공!\n' + rewards.summaryText,
-        emotion: SherpiEmotion.cheering,
-      );
+            context: SherpiContext.climbingSuccess,
+            customDialogue: '등반 성공!\n' + rewards.summaryText,
+            emotion: SherpiEmotion.cheering,
+          );
     } else {
       // 실패 시: sherpi_dialogues.dart의 메시지 중 랜덤 선택 + 보상 요약
-      final failureMessages = sherpiDialogues[SherpiContext.climbingFailure] ?? [];
-      final randomMessage = failureMessages.isNotEmpty 
+      final failureMessages =
+          sherpiDialogues[SherpiContext.climbingFailure] ?? [];
+      final randomMessage = failureMessages.isNotEmpty
           ? failureMessages[math.Random().nextInt(failureMessages.length)]
           : '아쉽지만 실패했습니다';
-      
+
       // 보상 요약이 있을 때만 추가
       final summaryText = rewards.summaryText;
-      final messageToShow = summaryText.isNotEmpty 
+      final messageToShow = summaryText.isNotEmpty
           ? randomMessage + '\n' + summaryText
           : randomMessage;
-      
+
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.climbingFailure,
-        customDialogue: messageToShow,
-        emotion: SherpiEmotion.happy,
-      );
+            context: SherpiContext.climbingFailure,
+            customDialogue: messageToShow,
+            emotion: SherpiEmotion.happy,
+          );
     }
   }
 
@@ -637,10 +710,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     required int difficulty,
     required double durationHours,
     required bool isSuccess,
-
   }) {
-
-
     double experience = 0;
     int points = 0;
     Map<String, double> statIncreases = {};
@@ -653,7 +723,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     if (isSuccess) {
       // 성공 시 보상
       experience = gameSystem.calculateSuccessXp(difficulty, durationHours);
-      points = gameSystem.calculateSuccessPoints(difficulty, durationHours).toInt();
+      points =
+          gameSystem.calculateSuccessPoints(difficulty, durationHours).toInt();
 
       // 🎲 숨겨진 보상 발견 확률 체크
       final hiddenChance = GameConstants.calculateHiddenTreasureChance(
@@ -676,7 +747,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       }
 
       // 특별한 산 등반 시 뱃지 획득 기회
-      if (difficulty == 200) { // 에베레스트
+      if (difficulty == 200) {
+        // 에베레스트
         newBadgeIds.add('legendary_everest_conqueror');
         specialReward = '전설의 에베레스트 정복자 뱃지 획득!';
       } else if (difficulty >= 100) {
@@ -688,11 +760,11 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       // 실패 시 보상 (성공 시의 25%)
       // playerLevel을 전달하지 않으면 레벨 1로 계산되어 경험치가 너무 작아짐
       final failXp = GameConstants.calculateFailureXp(
-        difficulty, 
-        durationHours, 
+        difficulty,
+        durationHours,
         playerLevel: state.level,
       );
-      
+
       experience = failXp;
       points = 0;
       statIncreases = {};
@@ -712,9 +784,9 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     final allBadges = ref.read(globalAllBadgesProvider);
     return state.equippedBadgeIds
         .map((id) => allBadges.firstWhere(
-          (badge) => badge.id == id,
-      orElse: () => allBadges.first, // 기본값으로 첫 번째 뱃지 반환
-    ))
+              (badge) => badge.id == id,
+              orElse: () => allBadges.first, // 기본값으로 첫 번째 뱃지 반환
+            ))
         .toList();
   }
 
@@ -823,13 +895,13 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     _triggerSherpiReaction(
       'reading',
       '독서 기록 완료! 📚',
-      0.0,  // 경험치 없음
-      0,    // 포인트 없음
+      0.0, // 경험치 없음
+      0, // 포인트 없음
       {
         'bookTitle': readingLog.bookTitle,
         'pages': readingLog.pages,
         'rating': readingLog.rating,
-        'category': readingLog.category,  // 카테고리 정보 추가
+        'category': readingLog.category, // 카테고리 정보 추가
       },
     );
 
@@ -842,19 +914,19 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 독서 기록 수정
   void updateReadingLog(ReadingLog updatedLog) {
     final currentLogs = state.dailyRecords.readingLogs;
-    final updatedLogs = currentLogs.map((log) => 
-      log.id == updatedLog.id ? updatedLog : log
-    ).toList();
+    final updatedLogs = currentLogs
+        .map((log) => log.id == updatedLog.id ? updatedLog : log)
+        .toList();
 
     final updatedRecords = state.dailyRecords.copyWith(
       readingLogs: updatedLogs,
     );
 
     state = state.copyWith(dailyRecords: updatedRecords);
-    
+
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
-    
+
     _saveUserData();
   }
 
@@ -880,14 +952,15 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     _triggerSherpiReaction(
       'exercise',
       '운동 기록 완료! 💪',
-      0.0,  // 경험치 없음
-      0,    // 포인트 없음
+      0.0, // 경험치 없음
+      0, // 포인트 없음
       {
         'exerciseType': exerciseLog.exerciseType,
         'duration': exerciseLog.durationMinutes,
-        'difficulty': exerciseLog.intensity,  // difficulty로 전달 (intensity -> difficulty 매핑)
-        'calories': calories,  // 계산된 칼로리 정보
-        'intensity': exerciseLog.intensity,  // 원본 intensity도 유지
+        'difficulty': exerciseLog
+            .intensity, // difficulty로 전달 (intensity -> difficulty 매핑)
+        'calories': calories, // 계산된 칼로리 정보
+        'intensity': exerciseLog.intensity, // 원본 intensity도 유지
       },
     );
 
@@ -900,36 +973,37 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 운동 기록 수정
   Future<void> updateExerciseRecord(ExerciseLog updatedLog) async {
     final currentLogs = state.dailyRecords.exerciseLogs;
-    final updatedLogs = currentLogs.map((log) => 
-      log.id == updatedLog.id ? updatedLog : log
-    ).toList();
+    final updatedLogs = currentLogs
+        .map((log) => log.id == updatedLog.id ? updatedLog : log)
+        .toList();
 
     final updatedRecords = state.dailyRecords.copyWith(
       exerciseLogs: updatedLogs,
     );
 
     state = state.copyWith(dailyRecords: updatedRecords);
-    
+
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
-    
+
     _saveUserData();
   }
 
   /// 운동 기록 삭제
   Future<void> deleteExerciseRecord(String exerciseId) async {
     final currentLogs = state.dailyRecords.exerciseLogs;
-    final updatedLogs = currentLogs.where((log) => log.id != exerciseId).toList();
+    final updatedLogs =
+        currentLogs.where((log) => log.id != exerciseId).toList();
 
     final updatedRecords = state.dailyRecords.copyWith(
       exerciseLogs: updatedLogs,
     );
 
     state = state.copyWith(dailyRecords: updatedRecords);
-    
+
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
-    
+
     _saveUserData();
   }
 
@@ -953,37 +1027,35 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   }
 
   /// 상세 운동 기록을 SharedPreferences에 저장
-  Future<void> _saveDetailedExerciseRecord(detailed.DetailedExerciseRecord record) async {
+  Future<void> _saveDetailedExerciseRecord(
+      detailed.DetailedExerciseRecord record) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final key = 'detailed_exercise_records';
-      
+
       // 기존 기록들 불러오기
       final existingRecordsJson = prefs.getStringList(key) ?? [];
-      final existingRecords = existingRecordsJson.map((json) => 
-        Map<String, dynamic>.from(jsonDecode(json))
-      ).toList();
-      
+      final existingRecords = existingRecordsJson
+          .map((json) => Map<String, dynamic>.from(jsonDecode(json)))
+          .toList();
+
       // 새 기록 추가
       existingRecords.add(record.toJson());
-      
+
       // 최신 순으로 정렬 (최근 100개만 유지)
-      existingRecords.sort((a, b) => 
-        DateTime.parse(b['date']).compareTo(DateTime.parse(a['date']))
-      );
-      
+      existingRecords.sort((a, b) =>
+          DateTime.parse(b['date']).compareTo(DateTime.parse(a['date'])));
+
       if (existingRecords.length > 100) {
         existingRecords.removeRange(100, existingRecords.length);
       }
-      
+
       // 저장
-      final updatedRecordsJson = existingRecords.map((record) => 
-        jsonEncode(record)
-      ).toList();
-      
+      final updatedRecordsJson =
+          existingRecords.map((record) => jsonEncode(record)).toList();
+
       await prefs.setStringList(key, updatedRecordsJson);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /// 상세 운동 기록들 불러오기
@@ -995,32 +1067,33 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     try {
       final prefs = await SharedPreferences.getInstance();
       final key = 'detailed_exercise_records';
-      
+
       final recordsJson = prefs.getStringList(key) ?? [];
       final records = <detailed.DetailedExerciseRecord>[];
-      
+
       for (final json in recordsJson) {
         try {
           final recordData = Map<String, dynamic>.from(jsonDecode(json));
           final recordDate = DateTime.parse(recordData['date']);
-          
+
           // 필터링
-          if (exerciseType != null && recordData['exerciseType'] != exerciseType) {
+          if (exerciseType != null &&
+              recordData['exerciseType'] != exerciseType) {
             continue;
           }
-          
+
           if (fromDate != null && recordDate.isBefore(fromDate)) {
             continue;
           }
-          
+
           if (toDate != null && recordDate.isAfter(toDate)) {
             continue;
           }
-          
+
           // 운동 타입에 맞는 모델로 변환
           final type = recordData['exerciseType'] as String;
           detailed.DetailedExerciseRecord record;
-          
+
           switch (type) {
             case '러닝':
               record = detailed.RunningRecord.fromJson(recordData);
@@ -1041,13 +1114,13 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
               // 기본 구현 (향후 확장 가능)
               continue;
           }
-          
+
           records.add(record);
         } catch (e) {
           continue;
         }
       }
-      
+
       return records;
     } catch (e) {
       return [];
@@ -1069,8 +1142,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     _triggerSherpiReaction(
       'diary',
       '일기 작성 완료! 📝',
-      0.0,  // 경험치 없음
-      0,    // 포인트 없음
+      0.0, // 경험치 없음
+      0, // 포인트 없음
       {
         'mood': diaryLog.mood,
         'content': diaryLog.content,
@@ -1086,19 +1159,19 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 일기 기록 수정
   void updateDiaryLog(DiaryLog updatedLog) {
     final currentLogs = state.dailyRecords.diaryLogs;
-    final updatedLogs = currentLogs.map((log) => 
-      log.id == updatedLog.id ? updatedLog : log
-    ).toList();
+    final updatedLogs = currentLogs
+        .map((log) => log.id == updatedLog.id ? updatedLog : log)
+        .toList();
 
     final updatedRecords = state.dailyRecords.copyWith(
       diaryLogs: updatedLogs,
     );
 
     state = state.copyWith(dailyRecords: updatedRecords);
-    
+
     // ✅ 실시간 목표 상태 업데이트
     _updateGoalStatusBasedOnActivity();
-    
+
     _saveUserData();
   }
 
@@ -1113,7 +1186,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // 기록 작성 자체로는 보상 없음 - 퀘스트/목표 달성 시에만 보상
 
     // 🔄 퀘스트 시스템과 연동
-    _notifyQuestSystem('movie', {'title': movieLog.movieTitle, 'duration': movieLog.watchTimeMinutes});
+    _notifyQuestSystem('movie',
+        {'title': movieLog.movieTitle, 'duration': movieLog.watchTimeMinutes});
 
     _saveUserData();
   }
@@ -1167,25 +1241,26 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     switch (goalId) {
       case 'steps':
-      // 6000걸음 이상인지 검사
+        // 6000걸음 이상인지 검사
         return records.todaySteps >= 6000;
 
       case 'focus':
-      // 30분 이상 집중했는지 검사
+        // 30분 이상 집중했는지 검사
         return records.todayFocusMinutes >= 30;
 
       case 'diary':
-      // 오늘 일기를 작성했는지 검사
+        // 오늘 일기를 작성했는지 검사
         return records.diaryLogs.any((diary) => _isSameDay(diary.date, today));
 
       case 'exercise':
-      // 오늘 운동 기록을 작성했는지 검사
-        return records.exerciseLogs.any((exercise) => _isSameDay(exercise.date, today));
+        // 오늘 운동 기록을 작성했는지 검사
+        return records.exerciseLogs
+            .any((exercise) => _isSameDay(exercise.date, today));
 
       case 'reading':
-      // 오늘 독서 기록을 작성했는지 검사 (최소 1페이지)
-        return records.readingLogs.any((reading) =>
-        _isSameDay(reading.date, today) && reading.pages >= 1);
+        // 오늘 독서 기록을 작성했는지 검사 (최소 1페이지)
+        return records.readingLogs.any(
+            (reading) => _isSameDay(reading.date, today) && reading.pages >= 1);
 
       default:
         return false;
@@ -1222,10 +1297,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     // 셰르피 메시지로 안내
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: message,
-      emotion: SherpiEmotion.happy,
-    );
+          context: SherpiContext.encouragement,
+          customDialogue: message,
+          emotion: SherpiEmotion.happy,
+        );
   }
 
   /// 실시간 목표 상태 업데이트 (활동 완료 시 자동 호출)
@@ -1293,42 +1368,44 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     int actuallyCompletedCount = 0;
     if (records.todaySteps >= 6000) actuallyCompletedCount++;
     if (records.todayFocusMinutes >= 30) actuallyCompletedCount++;
-    if (records.readingLogs.any((log) => 
-      log.date.year == today.year && 
-      log.date.month == today.month && 
-      log.date.day == today.day && 
-      log.pages >= 1)) actuallyCompletedCount++;
-    if (records.diaryLogs.any((log) => 
-      log.date.year == today.year && 
-      log.date.month == today.month && 
-      log.date.day == today.day)) actuallyCompletedCount++;
-    if (records.exerciseLogs.any((log) => 
-      log.date.year == today.year && 
-      log.date.month == today.month && 
-      log.date.day == today.day)) actuallyCompletedCount++;
-    
+    if (records.readingLogs.any((log) =>
+        log.date.year == today.year &&
+        log.date.month == today.month &&
+        log.date.day == today.day &&
+        log.pages >= 1)) actuallyCompletedCount++;
+    if (records.diaryLogs.any((log) =>
+        log.date.year == today.year &&
+        log.date.month == today.month &&
+        log.date.day == today.day)) actuallyCompletedCount++;
+    if (records.exerciseLogs.any((log) =>
+        log.date.year == today.year &&
+        log.date.month == today.month &&
+        log.date.day == today.day)) actuallyCompletedCount++;
+
     // 모든 목표(5개)가 완료되지 않았다면 리턴
     if (actuallyCompletedCount < 5) {
       return;
     }
 
     // 통합된 포인트 시스템으로 일일 목표 완료 보너스 직접 지급
-    final bonusPoints = ref.read(globalPointProvider.notifier).onDailyGoalAllClear();
+    final bonusPoints =
+        ref.read(globalPointProvider.notifier).onDailyGoalAllClear();
 
     // ✅ 먼저 보상 수령 상태로 변경 및 오늘 날짜를 전체 클리어 보상 받은 날짜 리스트에 추가
     final updatedClaimedDates = [...records.allGoalsRewardClaimedDates];
-    final todayDate = DateTime(today.year, today.month, today.day); // 시간 정보 제거한 날짜만
-    
+    final todayDate =
+        DateTime(today.year, today.month, today.day); // 시간 정보 제거한 날짜만
+
     // 중복 방지: 이미 오늘 날짜가 있는지 확인
-    if (!updatedClaimedDates.any((date) => 
-        date.year == todayDate.year && 
-        date.month == todayDate.month && 
+    if (!updatedClaimedDates.any((date) =>
+        date.year == todayDate.year &&
+        date.month == todayDate.month &&
         date.day == todayDate.day)) {
       updatedClaimedDates.add(todayDate);
     }
-    
+
     final updatedRecords = records.copyWith(
-      isAllGoalsCompleted: true,  // 실제 데이터 기반으로 확인했으므로 true로 설정
+      isAllGoalsCompleted: true, // 실제 데이터 기반으로 확인했으므로 true로 설정
       isAllGoalsRewardClaimed: true,
       allGoalsRewardClaimedDates: updatedClaimedDates, // ✅ 보상 받은 날짜 리스트 업데이트
     );
@@ -1338,13 +1415,14 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     // 오늘의 목표 완료 알림 생성
     ref.read(notificationProvider.notifier).notifyGoalComplete(
-      '오늘의 목표 전체 완료',
-      xp: 200,  // 실제 XP 보상
-      points: bonusPoints,  // 실제 포인트 보상 (50P)
-    );
+          '오늘의 목표 전체 완료',
+          xp: 200, // 실제 XP 보상
+          points: bonusPoints, // 실제 포인트 보상 (50P)
+        );
 
     // 달성한 목표 리스트 구성
-    final completedGoals = updatedRecords.dailyGoals.where((g) => g.isCompleted).toList();
+    final completedGoals =
+        updatedRecords.dailyGoals.where((g) => g.isCompleted).toList();
     final goalDetails = {
       'totalGoals': completedGoals.length,
       'goalList': completedGoals.map((g) => g.title).toList(),
@@ -1380,19 +1458,20 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // 포인트 지급 (통합된 시스템 사용)
     if (points > 0) {
       // 활동 유형에 따른 세분화된 포인트 지급
-      final pointSource = _getPointSourceFromActivity(activityType, additionalData);
+      final pointSource =
+          _getPointSourceFromActivity(activityType, additionalData);
       if (pointSource != null) {
         ref.read(globalPointProvider.notifier).earnPoints(
-          points,
-          pointSource,
-          message,
-        );
+              points,
+              pointSource,
+              message,
+            );
       } else {
         // 기본 포인트 지급 (레거시 호환)
         ref.read(globalPointProvider.notifier).addPoints(
-          points,
-          '활동 완료: $activityType',
-        );
+              points,
+              '활동 완료: $activityType',
+            );
       }
     }
 
@@ -1411,14 +1490,14 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     if (activityType != 'climbing') {
       _triggerSherpiReaction(activityType, message, xp, points, additionalData);
     }
-    
+
     // 🔄 퀘스트 시스템에 활동 알림
     _notifyQuestSystem(activityType, additionalData ?? {});
-
   }
 
   /// 활동 유형에서 포인트 소스로 매핑
-  PointSource? _getPointSourceFromActivity(String activityType, Map<String, dynamic>? additionalData) {
+  PointSource? _getPointSourceFromActivity(
+      String activityType, Map<String, dynamic>? additionalData) {
     switch (activityType) {
       case 'meeting':
       case 'meeting_participant':
@@ -1570,8 +1649,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         // V2에서는 자동 동기화되므로 수동 동기화 불필요
         // ref.read(questProviderV2.notifier).onDailyGoalCompleted(goalId);
       });
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /// 연속 접속일 업데이트
@@ -1640,10 +1718,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   Future<void> _saveDailySteps(DateTime date, int steps) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+      final dateKey =
+          '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
       await prefs.setInt('daily_steps_$dateKey', steps);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   /// 14일간 걸음수 데이터 조회
@@ -1661,7 +1739,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
       for (int i = 13; i >= 0; i--) {
         final date = now.subtract(Duration(days: i));
-        final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+        final dateKey =
+            '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 
         int steps;
         if (i == 0) {
@@ -1693,10 +1772,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
   /// 🎭 활동 유형별 셰르피 반응 트리거 (Phase 2: 빠른 응답 자동 표시 포함)
   void _triggerSherpiReaction(
-    String activityType, 
-    String message, 
-    double xp, 
-    int points, 
+    String activityType,
+    String message,
+    double xp,
+    int points,
     Map<String, dynamic>? additionalData,
   ) {
     SherpiContext context;
@@ -1708,45 +1787,46 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       // 📚 독서 완료
       case 'reading':
         context = SherpiContext.readingComplete;
-        emotion = SherpiEmotion.thinking;  // 독서는 thinking 감정이 적절
+        emotion = SherpiEmotion.thinking; // 독서는 thinking 감정이 적절
         break;
-        
+
       // 💪 운동 완료
       case 'exercise':
         context = SherpiContext.exerciseComplete;
         emotion = SherpiEmotion.surprised;
         break;
-        
+
       // 📝 일기 작성
       case 'diary':
         context = SherpiContext.diaryWritten;
-        emotion = SherpiEmotion.guiding;  // 일기 작성 시 guiding 감정
+        emotion = SherpiEmotion.guiding; // 일기 작성 시 guiding 감정
         break;
-        
+
       // 🎯 퀘스트 완료 (단순 탭 방문 퀘스트 제외)
       case String() when activityType.startsWith('quest_'):
         // 탭 방문이나 단순 조회 퀘스트는 셰르피 메시지 없음
         final questType = additionalData?['questType'] as String? ?? '';
-        final questDescription = additionalData?['description'] as String? ?? '';
-        
-        if (questType.contains('tabVisit') || 
-            questDescription.contains('확인') || 
+        final questDescription =
+            additionalData?['description'] as String? ?? '';
+
+        if (questType.contains('tabVisit') ||
+            questDescription.contains('확인') ||
             questDescription.contains('둘러보기') ||
             questDescription.contains('현황') ||
             questDescription.contains('진행상황')) {
           // 단순 조회/방문 퀘스트는 조용히 처리
           return; // 셰르피 메시지 없이 종료
         }
-        
+
         context = SherpiContext.questComplete;
         emotion = SherpiEmotion.cheering;
         break;
-        
+
       // 🏔️ 등반 관련 - 더 이상 사용하지 않음 (GlobalClimbingProvider에서 직접 처리)
       case 'climbing':
         // climbing은 handleActivityCompletion에서 제외되므로 이 코드는 실행되지 않음
         return;
-        
+
       // 🤝 모임 관련
       case 'meeting_host':
       case 'meeting_participant':
@@ -1758,19 +1838,19 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           customMessage = '모임 후기 작성 완료! ⭐ 소중한 경험을 공유해주셔서 감사해요!';
         }
         break;
-        
+
       // 🏆 챌린지 및 특별 성취
       case 'challenge':
         context = SherpiContext.achievement;
         emotion = SherpiEmotion.special;
         break;
-        
+
       // 🎊 일일 목표 전체 달성 - 가장 특별한 성취!
       case 'all_goals_reward':
         context = SherpiContext.allGoalsComplete;
         emotion = SherpiEmotion.special;
         break;
-        
+
       // 🎉 높은 경험치 획득 (레벨업이 아닌 경우) - 메시지 비활성화
       case String() when xp >= 100:
         // achievement 메시지가 나오지 않도록 기본 격려로 변경
@@ -1778,15 +1858,15 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         emotion = SherpiEmotion.cheering;
         customMessage = '대단해요! 🎉 ${xp.toInt()} 경험치를 획득했어요!';
         break;
-        
-      // 🌟 높은 포인트 획득 - 메시지 비활성화  
+
+      // 🌟 높은 포인트 획득 - 메시지 비활성화
       case String() when points >= 100:
         // achievement 메시지가 나오지 않도록 기본 격려로 변경
         context = SherpiContext.encouragement;
         emotion = SherpiEmotion.special;
         customMessage = '대박 포인트 획득! ✨ ${points}P를 얻었어요!';
         break;
-        
+
       // 기본 격려
       default:
         context = SherpiContext.encouragement;
@@ -1803,18 +1883,20 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       'points': points,
       'level': state.level,
     };
-    
+
     // 활동별 추가 데이터 포함
     if (additionalData != null) {
       enrichedUserContext.addAll(additionalData);
     }
-    
+
     // 활동 유형별 특별 데이터 추가
     switch (activityType) {
       case 'exercise':
-        enrichedUserContext['exerciseType'] = additionalData?['exerciseType'] ?? 'general';
+        enrichedUserContext['exerciseType'] =
+            additionalData?['exerciseType'] ?? 'general';
         enrichedUserContext['duration'] = additionalData?['duration'] ?? 30;
-        enrichedUserContext['difficulty'] = additionalData?['difficulty'] ?? 'moderate';
+        enrichedUserContext['difficulty'] =
+            additionalData?['difficulty'] ?? 'moderate';
         enrichedUserContext['calories'] = additionalData?['calories'] ?? 0;
         print('[DEBUG] Exercise data in handleActivityCompletion:');
         print('  exerciseType: ${enrichedUserContext['exerciseType']}');
@@ -1823,26 +1905,31 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         print('  calories: ${enrichedUserContext['calories']}');
         break;
       case 'reading':
-        enrichedUserContext['bookTitle'] = additionalData?['bookTitle'] ?? 'Unknown Book';
+        enrichedUserContext['bookTitle'] =
+            additionalData?['bookTitle'] ?? 'Unknown Book';
         enrichedUserContext['pages'] = additionalData?['pages'] ?? 10;
         enrichedUserContext['rating'] = additionalData?['rating'];
-        enrichedUserContext['category'] = additionalData?['category'] ?? '기타';  // 카테고리 추가
+        enrichedUserContext['category'] =
+            additionalData?['category'] ?? '기타'; // 카테고리 추가
         break;
       case 'diary':
         enrichedUserContext['mood'] = additionalData?['mood'] ?? 'normal';
         enrichedUserContext['content'] = additionalData?['content'] ?? '';
         break;
       case String() when activityType.startsWith('quest_'):
-        enrichedUserContext['questName'] = additionalData?['questName'] ?? 'Quest';
-        enrichedUserContext['questType'] = additionalData?['questType'] ?? 'daily';
-        enrichedUserContext['difficulty'] = additionalData?['difficulty'] ?? 'normal';
+        enrichedUserContext['questName'] =
+            additionalData?['questName'] ?? 'Quest';
+        enrichedUserContext['questType'] =
+            additionalData?['questType'] ?? 'daily';
+        enrichedUserContext['difficulty'] =
+            additionalData?['difficulty'] ?? 'normal';
         enrichedUserContext['rewardPoints'] = points;
         break;
     }
-    
+
     // 🎯 백그라운드 활동 분석 생성 (운동, 독서, 일기)
     _triggerBackgroundAnalysis(activityType, enrichedUserContext);
-    
+
     // 셰르피 메시지 표시 + 빠른 응답 자동 트리거
     Future.delayed(const Duration(milliseconds: 500), () {
       // all_goals_reward는 특별 처리 - 정적 메시지 사용
@@ -1859,21 +1946,21 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 🎁 보상: 200 경험치 + 보너스 포인트 + 의지력 0.1 증가!
 
 정말 대단한 하루였어요! 이런 꾸준함이 큰 변화를 만들어냅니다! 💪✨''';
-        
+
         ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: context,  // SherpiContext.allGoalsComplete
-          customDialogue: allGoalsMessage,
-          emotion: emotion,  // SherpiEmotion.special
-          duration: const Duration(seconds: 8),
-        );
+              context: context, // SherpiContext.allGoalsComplete
+              customDialogue: allGoalsMessage,
+              emotion: emotion, // SherpiEmotion.special
+              duration: const Duration(seconds: 8),
+            );
       } else if (customMessage != null) {
         // 레벨업이나 특별 상황: 커스텀 메시지 표시
         ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: context,
-          customDialogue: customMessage!,
-          emotion: emotion,
-          duration: const Duration(seconds: 5),
-        );
+              context: context,
+              customDialogue: customMessage!,
+              emotion: emotion,
+              duration: const Duration(seconds: 5),
+            );
       } else {
         // 일반 활동 완료: Phase 2 강화된 데이터로 AI 메시지 표시
         ref.read(sherpiProvider.notifier).showMessage(
@@ -1888,22 +1975,17 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           },
         );
       }
-
     });
   }
-
-
-
-
 
   /// 총 활동 수 계산
   int _getTotalActivitiesCount() {
     final records = state.dailyRecords;
-    return records.exerciseLogs.length + 
-           records.readingLogs.length + 
-           records.diaryLogs.length + 
-           records.climbingLogs.length +
-           records.meetingLogs.length;
+    return records.exerciseLogs.length +
+        records.readingLogs.length +
+        records.diaryLogs.length +
+        records.climbingLogs.length +
+        records.meetingLogs.length;
   }
 
   /// 현재 연속 기록 계산
@@ -1912,7 +1994,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   }
 
   /// 백그라운드 활동 분석 트리거
-  Future<void> _triggerBackgroundAnalysis(String activityType, Map<String, dynamic> userContext) async {
+  Future<void> _triggerBackgroundAnalysis(
+      String activityType, Map<String, dynamic> userContext) async {
     // 운동, 독서, 일기 활동에 대해서만 분석 생성
     if (!['exercise', 'reading', 'diary'].contains(activityType)) {
       return;
@@ -1923,12 +2006,12 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       final userName = state.name;
       final records = state.dailyRecords;
       final today = DateTime.now();
-      
+
       // 오늘의 활동 데이터 찾기
       ExerciseLog? todayExercise;
       ReadingLog? todayReading;
       DiaryLog? todayDiary;
-      
+
       // 오늘 운동 기록 찾기
       for (final log in records.exerciseLogs) {
         if (_isSameDay(log.date, today)) {
@@ -1936,7 +2019,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           break;
         }
       }
-      
+
       // 오늘 독서 기록 찾기
       for (final log in records.readingLogs) {
         if (_isSameDay(log.date, today)) {
@@ -1944,7 +2027,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           break;
         }
       }
-      
+
       // 오늘 일기 기록 찾기
       for (final log in records.diaryLogs) {
         if (_isSameDay(log.date, today)) {
@@ -1952,41 +2035,40 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           break;
         }
       }
-      
+
       // 각 활동 타입에 따라 분석 생성 (백그라운드)
       switch (activityType) {
         case 'exercise':
           if (todayExercise != null) {
             // 이전 운동 기록 찾기 (최근 7일 이내)
             final previousExercise = _findPreviousActivity('exercise');
-            
+
             // caloriesBurned 계산 (임시 - 실제로는 다른 곳에서 계산됨)
             final calories = _calculateCalories(
-              todayExercise.durationMinutes, 
-              todayExercise.intensity
-            );
-            
+                todayExercise.durationMinutes, todayExercise.intensity);
+
             final exerciseData = {
               'type': todayExercise.exerciseType,
               'duration': todayExercise.durationMinutes,
               'intensity': todayExercise.intensity,
               'calories': calories,
             };
-            
+
             // 백그라운드에서 분석 생성
             // 0. 기존 운동 분석 캐시 삭제 (새로운 기록이므로)
             await analysisService.clearTodayExerciseCache();
-            
+
             // 종합 운동 분석 생성 (운동 완료 시점에 미리 생성)
             // await를 사용하여 API 응답을 기다림
             try {
-              final analysis = await analysisService.analyzeExerciseComprehensive(
+              final analysis =
+                  await analysisService.analyzeExerciseComprehensive(
                 todayExercise: exerciseData,
                 previousExercise: previousExercise,
                 userName: userName,
-                forceRegenerate: true,  // 강제로 새로 생성 (캐시 무시)
+                forceRegenerate: true, // 강제로 새로 생성 (캐시 무시)
               );
-              
+
               // 🔍 디버그: 캐시 저장 확인
               print('===== 운동 분석 캐시 저장 완료 =====');
               print('📊 섹션 1 - 비교: ${analysis.comparison}');
@@ -1999,12 +2081,12 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
             }
           }
           break;
-          
+
         case 'reading':
           if (todayReading != null) {
             // 이전 독서 기록 찾기 (최근 7일 이내)
             final previousReading = _findPreviousActivity('reading');
-            
+
             final readingData = {
               'title': todayReading.bookTitle,
               'category': todayReading.category,
@@ -2012,29 +2094,32 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
               'rating': todayReading.rating ?? 0,
               'memo': todayReading.note ?? '',
             };
-            
+
             // 백그라운드에서 분석 생성
             // 종합 독서 분석 생성 (독서 완료 시점에 미리 생성)
             // forceRegenerate: true가 캐시를 무시하고 새로 생성하므로 별도 캐시 삭제 불필요
-            
+
             // 전체 독서 기록을 Map 형태로 변환
-            final allReadingLogs = state.dailyRecords.readingLogs.map((log) => {
-              'title': log.bookTitle,
-              'category': log.category,
-              'pagesRead': log.pages,
-              'rating': log.rating,
-              'date': log.date.toIso8601String(),
-            }).toList();
-            
+            final allReadingLogs = state.dailyRecords.readingLogs
+                .map((log) => {
+                      'title': log.bookTitle,
+                      'category': log.category,
+                      'pagesRead': log.pages,
+                      'rating': log.rating,
+                      'date': log.date.toIso8601String(),
+                    })
+                .toList();
+
             try {
-              final analysis = await analysisService.analyzeReadingComprehensive(
+              final analysis =
+                  await analysisService.analyzeReadingComprehensive(
                 todayReading: readingData,
                 previousReading: previousReading,
                 userName: userName,
-                allReadingLogs: allReadingLogs,  // 전체 독서 기록 전달
-                forceRegenerate: true,  // 강제로 새로 생성 (캐시 무시)
+                allReadingLogs: allReadingLogs, // 전체 독서 기록 전달
+                forceRegenerate: true, // 강제로 새로 생성 (캐시 무시)
               );
-              
+
               // 🔍 디버그: 캐시 저장 확인
               print('===== 독서 분석 캐시 저장 완료 =====');
               print('📊 섹션 1 - 이전 책 인사이트: ${analysis.previousInsight}');
@@ -2047,12 +2132,12 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
             }
           }
           break;
-          
+
         case 'diary':
           if (todayDiary != null) {
             // 이전 일기 감정 찾기 (최근 7일 이내)
             final previousDiary = _findPreviousDiary();
-            
+
             // 최근 7일간 감정 기록 수집 (List<String> 형태로)
             final recentMoodHistory = <String>[];
             final today = DateTime.now();
@@ -2061,25 +2146,25 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
               final diary = state.dailyRecords.diaryLogs.where((log) {
                 return _isSameDay(log.date, targetDate);
               }).firstOrNull;
-              
+
               if (diary != null) {
                 recentMoodHistory.add(diary.mood);
               }
             }
-            
+
             // 백그라운드에서 분석 생성
             // 캐시 삭제 후 새로 생성
             await analysisService.clearComprehensiveDiaryCache();
-            
+
             try {
               final analysis = await analysisService.analyzeDiaryComprehensive(
                 currentMood: todayDiary.mood,
                 previousMood: previousDiary?.mood,
                 userName: userName,
                 recentMoodHistory: recentMoodHistory,
-                forceRegenerate: true,  // 강제로 새로 생성 (캐시 무시)
+                forceRegenerate: true, // 강제로 새로 생성 (캐시 무시)
               );
-              
+
               // 🔍 디버그: 캐시 저장 확인
               print('===== 일기 분석 캐시 저장 완료 =====');
               print('📊 섹션 1 - 감정 전환: ${analysis.emotionTransition}');
@@ -2093,14 +2178,13 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           }
           break;
       }
-      
+
       // 종합 AI 분석 제거됨 - 리소스 최적화
-      
     } catch (e) {
       print('❌ 백그라운드 분석 트리거 실패: $e');
     }
   }
-  
+
   /// 칼로리 계산 헬퍼 메서드
   int _calculateCalories(int durationMinutes, String intensity) {
     // 강도별 분당 칼로리 소모량
@@ -2117,7 +2201,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   Map<String, dynamic>? _findPreviousActivity(String activityType) {
     final records = state.dailyRecords;
     final today = DateTime.now();
-    
+
     switch (activityType) {
       case 'exercise':
         // 최근 7일 이내의 운동 기록 찾기
@@ -2126,13 +2210,11 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           final log = records.exerciseLogs.where((log) {
             return _isSameDay(log.date, targetDate);
           }).firstOrNull;
-          
+
           if (log != null) {
-            final calories = _calculateCalories(
-              log.durationMinutes, 
-              log.intensity
-            );
-            
+            final calories =
+                _calculateCalories(log.durationMinutes, log.intensity);
+
             return {
               'type': log.exerciseType,
               'duration': log.durationMinutes,
@@ -2143,7 +2225,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           }
         }
         break;
-        
+
       case 'reading':
         // 최근 7일 이내의 독서 기록 찾기
         for (int i = 1; i <= 7; i++) {
@@ -2151,7 +2233,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           final log = records.readingLogs.where((log) {
             return _isSameDay(log.date, targetDate);
           }).firstOrNull;
-          
+
           if (log != null) {
             return {
               'title': log.bookTitle,
@@ -2163,7 +2245,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           }
         }
         break;
-        
+
       case 'diary':
         // 최근 7일 이내의 일기 기록 찾기
         for (int i = 1; i <= 7; i++) {
@@ -2171,7 +2253,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
           final log = records.diaryLogs.where((log) {
             return _isSameDay(log.date, targetDate);
           }).firstOrNull;
-          
+
           if (log != null) {
             return {
               'mood': log.mood,
@@ -2182,7 +2264,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         }
         break;
     }
-    
+
     return null;
   }
 
@@ -2190,40 +2272,40 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   DiaryLog? _findPreviousDiary() {
     final records = state.dailyRecords;
     final today = DateTime.now();
-    
+
     // 오늘을 제외하고 최근 7일 이내의 일기 찾기
     for (int i = 1; i <= 7; i++) {
       final targetDate = today.subtract(Duration(days: i));
       final diary = records.diaryLogs.where((log) {
         return _isSameDay(log.date, targetDate);
       }).firstOrNull;
-      
+
       if (diary != null) {
         return diary;
       }
     }
-    
+
     return null;
   }
-  
+
   /// 최근 감정 히스토리 가져오기
   Map<String, int> _getRecentMoodHistory(int days) {
     final records = state.dailyRecords;
     final today = DateTime.now();
     final moodCount = <String, int>{};
-    
+
     // 오늘을 포함하여 최근 N일간의 감정 수집
     for (int i = 0; i < days; i++) {
       final targetDate = today.subtract(Duration(days: i));
       final diary = records.diaryLogs.where((log) {
         return _isSameDay(log.date, targetDate);
       }).firstOrNull;
-      
+
       if (diary != null) {
         moodCount[diary.mood] = (moodCount[diary.mood] ?? 0) + 1;
       }
     }
-    
+
     return moodCount;
   }
 
@@ -2237,35 +2319,41 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 새로운 목표 저장 (기존 목표 유지하면서 추가)
   void saveGoals(List<Map<String, dynamic>> rawGoals) {
     final currentPlanningData = planningData;
-    
+
     // Map을 UserGoal로 변환
-    final newGoals = rawGoals.map((goalMap) => UserGoal(
-      id: goalMap['id'] ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      title: goalMap['title'] ?? '',
-      description: goalMap['description'],
-      category: goalMap['category'] ?? 'growth',
-      duration: goalMap['duration'] ?? 7,
-      schedule: goalMap['schedule'],
-      createdAt: goalMap['createdAt'] ?? DateTime.now(),
-      progress: (goalMap['progress'] ?? 0).toDouble(),
-      isActive: goalMap['isActive'] ?? true,
-      metadata: goalMap['metadata'],
-    )).toList();
-    
+    final newGoals = rawGoals
+        .map((goalMap) => UserGoal(
+              id: goalMap['id'] ??
+                  DateTime.now().millisecondsSinceEpoch.toString(),
+              title: goalMap['title'] ?? '',
+              description: goalMap['description'],
+              category: goalMap['category'] ?? 'growth',
+              duration: goalMap['duration'] ?? 7,
+              schedule: goalMap['schedule'],
+              createdAt: goalMap['createdAt'] ?? DateTime.now(),
+              progress: (goalMap['progress'] ?? 0).toDouble(),
+              isActive: goalMap['isActive'] ?? true,
+              metadata: goalMap['metadata'],
+            ))
+        .toList();
+
     // 기존 목표와 새 목표를 합침
     final allGoals = [...currentPlanningData.goals, ...newGoals];
 
     // 카테고리별 통계 업데이트
-    final updatedCategoryStats = Map<String, int>.from(currentPlanningData.categoryStats);
+    final updatedCategoryStats =
+        Map<String, int>.from(currentPlanningData.categoryStats);
     for (final goal in newGoals) {
-      updatedCategoryStats[goal.category] = (updatedCategoryStats[goal.category] ?? 0) + 1;
+      updatedCategoryStats[goal.category] =
+          (updatedCategoryStats[goal.category] ?? 0) + 1;
     }
 
     // 새로운 계획 데이터 생성
     final updatedPlanningData = currentPlanningData.copyWith(
       goals: allGoals,
       lastPlanningDate: DateTime.now(),
-      totalGoalsCreated: currentPlanningData.totalGoalsCreated + newGoals.length,
+      totalGoalsCreated:
+          currentPlanningData.totalGoalsCreated + newGoals.length,
       categoryStats: updatedCategoryStats,
     );
 
@@ -2275,31 +2363,32 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     // 계획 저장 시 셰르피 반응
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.general,
-      customDialogue: '${newGoals.length}개의 새로운 목표가 설정되었어요! 함께 달성해봐요! 💪',
-      emotion: SherpiEmotion.cheering,
-    );
+          context: SherpiContext.general,
+          customDialogue: '${newGoals.length}개의 새로운 목표가 설정되었어요! 함께 달성해봐요! 💪',
+          emotion: SherpiEmotion.cheering,
+        );
   }
 
   /// 목표 진행률 업데이트
   void updateGoalProgress(String goalId, double progress) {
     final currentPlanningData = planningData;
-    
+
     final updatedGoals = currentPlanningData.goals.map((goal) {
       if (goal.id == goalId) {
         final updatedGoal = goal.copyWith(progress: progress);
-        
+
         // 100% 달성 시 완료 처리
         if (progress >= 100.0) {
           return _completeGoal(updatedGoal);
         }
-        
+
         return updatedGoal;
       }
       return goal;
     }).toList();
 
-    final updatedPlanningData = currentPlanningData.copyWith(goals: updatedGoals);
+    final updatedPlanningData =
+        currentPlanningData.copyWith(goals: updatedGoals);
     state = state.copyWith(planningData: updatedPlanningData);
     _saveUserData();
   }
@@ -2307,7 +2396,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 목표 완료 처리 (내부 메서드)
   UserGoal _completeGoal(UserGoal goal) {
     final currentPlanningData = planningData;
-    
+
     // 완료된 목표로 이동
     final completedGoal = goal.copyWith(
       completedAt: DateTime.now(),
@@ -2316,8 +2405,12 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     );
 
     // 활성 목표에서 제거하고 완료 목표에 추가
-    final updatedGoals = currentPlanningData.goals.where((g) => g.id != goal.id).toList();
-    final updatedCompletedGoals = [...currentPlanningData.completedGoals, completedGoal];
+    final updatedGoals =
+        currentPlanningData.goals.where((g) => g.id != goal.id).toList();
+    final updatedCompletedGoals = [
+      ...currentPlanningData.completedGoals,
+      completedGoal
+    ];
 
     // 전체 통계 업데이트
     final updatedPlanningData = currentPlanningData.copyWith(
@@ -2332,17 +2425,17 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     // 목표 완료 보상
     addExperience(100);
     ref.read(globalPointProvider.notifier).earnPoints(
-      500,
-      PointSource.goalCompletion,
-      '목표 달성: ${goal.title}',
-    );
-    
+          500,
+          PointSource.goalCompletion,
+          '목표 달성: ${goal.title}',
+        );
+
     // 셰르피 축하 메시지
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.general,
-      customDialogue: '목표를 달성하셨네요! 정말 대단해요! 🎉',
-      emotion: SherpiEmotion.special,
-    );
+          context: SherpiContext.general,
+          customDialogue: '목표를 달성하셨네요! 정말 대단해요! 🎉',
+          emotion: SherpiEmotion.special,
+        );
 
     return completedGoal;
   }
@@ -2350,10 +2443,12 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 목표 삭제
   void deleteGoal(String goalId) {
     final currentPlanningData = planningData;
-    
-    final updatedGoals = currentPlanningData.goals.where((g) => g.id != goalId).toList();
-    final updatedPlanningData = currentPlanningData.copyWith(goals: updatedGoals);
-    
+
+    final updatedGoals =
+        currentPlanningData.goals.where((g) => g.id != goalId).toList();
+    final updatedPlanningData =
+        currentPlanningData.copyWith(goals: updatedGoals);
+
     state = state.copyWith(planningData: updatedPlanningData);
     _saveUserData();
   }
@@ -2361,7 +2456,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 목표 수정
   void updateGoal(String goalId, Map<String, dynamic> updates) {
     final currentPlanningData = planningData;
-    
+
     final updatedGoals = currentPlanningData.goals.map((goal) {
       if (goal.id == goalId) {
         return goal.copyWith(
@@ -2377,7 +2472,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       return goal;
     }).toList();
 
-    final updatedPlanningData = currentPlanningData.copyWith(goals: updatedGoals);
+    final updatedPlanningData =
+        currentPlanningData.copyWith(goals: updatedGoals);
     state = state.copyWith(planningData: updatedPlanningData);
     _saveUserData();
   }
@@ -2385,7 +2481,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   /// 목표 일시정지/재개
   void toggleGoalStatus(String goalId) {
     final currentPlanningData = planningData;
-    
+
     final updatedGoals = currentPlanningData.goals.map((goal) {
       if (goal.id == goalId) {
         return goal.copyWith(isActive: !goal.isActive);
@@ -2393,7 +2489,8 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       return goal;
     }).toList();
 
-    final updatedPlanningData = currentPlanningData.copyWith(goals: updatedGoals);
+    final updatedPlanningData =
+        currentPlanningData.copyWith(goals: updatedGoals);
     state = state.copyWith(planningData: updatedPlanningData);
     _saveUserData();
   }
@@ -2410,9 +2507,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
   /// 기한 임박 목표 가져오기 (3일 이내)
   List<UserGoal> getUpcomingDeadlines() {
-    return planningData.goals.where((g) => g.isActive && g.daysRemaining <= 3).toList();
+    return planningData.goals
+        .where((g) => g.isActive && g.daysRemaining <= 3)
+        .toList();
   }
-
 }
 
 // ==================== UI용 Provider들 ====================
@@ -2468,24 +2566,24 @@ final recordStatisticsProvider = Provider<RecordStatistics>((ref) {
 });
 
 /// 월별 모임 기록 Provider
-final meetingCalendarProvider = Provider.family<List<MeetingLog>, DateTime>((ref, month) {
+final meetingCalendarProvider =
+    Provider.family<List<MeetingLog>, DateTime>((ref, month) {
   final user = ref.watch(globalUserProvider);
   final meetings = user.dailyRecords.meetingLogs;
 
   return meetings.where((meeting) {
-    return meeting.date.year == month.year &&
-        meeting.date.month == month.month;
+    return meeting.date.year == month.year && meeting.date.month == month.month;
   }).toList();
 });
 
 /// 월별 독서 기록 Provider
-final readingCalendarProvider = Provider.family<List<ReadingLog>, DateTime>((ref, month) {
+final readingCalendarProvider =
+    Provider.family<List<ReadingLog>, DateTime>((ref, month) {
   final user = ref.watch(globalUserProvider);
   final readings = user.dailyRecords.readingLogs;
 
   return readings.where((reading) {
-    return reading.date.year == month.year &&
-        reading.date.month == month.month;
+    return reading.date.year == month.year && reading.date.month == month.month;
   }).toList();
 });
 
@@ -2518,22 +2616,26 @@ final stepStatisticsProvider = FutureProvider<StepStatistics>((ref) async {
         ? stepHistory.sublist(stepHistory.length - 7)
         : stepHistory;
     final weeklyAverage = recent7Days.isNotEmpty
-        ? recent7Days.map((d) => d.steps).reduce((a, b) => a + b) / recent7Days.length
+        ? recent7Days.map((d) => d.steps).reduce((a, b) => a + b) /
+            recent7Days.length
         : 0.0;
 
     // 14일 전체 평균
-    final avgSteps = stepHistory.map((d) => d.steps).reduce((a, b) => a + b) / stepHistory.length;
+    final avgSteps = stepHistory.map((d) => d.steps).reduce((a, b) => a + b) /
+        stepHistory.length;
 
     // 14일 총 걸음수
     final totalSteps = stepHistory.map((d) => d.steps).reduce((a, b) => a + b);
 
     // 최고 걸음수
-    final maxSteps = stepHistory.map((d) => d.steps).reduce((a, b) => a > b ? a : b);
+    final maxSteps =
+        stepHistory.map((d) => d.steps).reduce((a, b) => a > b ? a : b);
 
     // 목표 달성일
     final goalAchievedDays = stepHistory.where((d) => d.isGoalAchieved).length;
     final totalDays = stepHistory.length;
-    final goalAchievementRate = totalDays > 0 ? goalAchievedDays / totalDays : 0.0;
+    final goalAchievementRate =
+        totalDays > 0 ? goalAchievedDays / totalDays : 0.0;
 
     return StepStatistics(
       weeklyAverage: weeklyAverage,
@@ -2726,7 +2828,8 @@ final recommendedMountainsProvider = Provider<List<dynamic>>((ref) {
 });
 
 /// 산 성공 확률 계산 Provider (실제 뱃지 효과 적용)
-final mountainSuccessProbabilityProvider = Provider.family<double, dynamic>((ref, mountain) {
+final mountainSuccessProbabilityProvider =
+    Provider.family<double, dynamic>((ref, mountain) {
   final user = ref.watch(globalUserProvider);
   final gameSystem = ref.watch(globalGameProvider);
   final equippedBadges = ref.watch(globalEquippedBadgesProvider); // ✅ 실제 뱃지 사용
@@ -2739,7 +2842,6 @@ final mountainSuccessProbabilityProvider = Provider.family<double, dynamic>((ref
     knowledge: user.stats.knowledge,
     technique: user.stats.technique,
     equippedBadges: equippedBadges,
-
   );
 
   return gameSystem.calculateSuccessProbability(

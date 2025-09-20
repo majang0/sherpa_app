@@ -17,13 +17,13 @@ class NotificationScreen extends ConsumerStatefulWidget {
 class _NotificationScreenState extends ConsumerState<NotificationScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
@@ -63,7 +63,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
                   _showSnackBar('모든 알림을 읽음으로 표시했습니다');
                   break;
                 case 'remove_read':
-                  ref.read(notificationProvider.notifier).removeReadNotifications();
+                  ref
+                      .read(notificationProvider.notifier)
+                      .removeReadNotifications();
                   _showSnackBar('읽은 알림을 모두 삭제했습니다');
                   break;
                 case 'clear_all':
@@ -120,7 +122,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
         children: [
           // 읽지 않은 알림 탭
           _buildNotificationList(unreadNotifications, isUnreadTab: true),
-          
+
           // 모든 알림 탭
           _buildNotificationList(notifications, isUnreadTab: false),
         ],
@@ -128,7 +130,8 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
     );
   }
 
-  Widget _buildNotificationList(List<NotificationItem> notifications, {required bool isUnreadTab}) {
+  Widget _buildNotificationList(List<NotificationItem> notifications,
+      {required bool isUnreadTab}) {
     if (notifications.isEmpty) {
       return Center(
         child: Column(
@@ -158,9 +161,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              isUnreadTab 
-                  ? '새로운 활동이 있으면 여기에 표시됩니다'
-                  : '활동 알림이 여기에 표시됩니다',
+              isUnreadTab ? '새로운 활동이 있으면 여기에 표시됩니다' : '활동 알림이 여기에 표시됩니다',
               style: GoogleFonts.notoSans(
                 fontSize: 13,
                 color: ModernColors.textTertiary,
@@ -180,7 +181,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
           notification: notification,
           onTap: () => _showNotificationDetail(notification),
           onDismiss: () {
-            ref.read(notificationProvider.notifier).removeNotification(notification.id);
+            ref
+                .read(notificationProvider.notifier)
+                .removeNotification(notification.id);
             _showSnackBar('알림을 삭제했습니다');
           },
         );
@@ -223,7 +226,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            
+
             // 헤더
             Padding(
               padding: const EdgeInsets.all(20),
@@ -273,7 +276,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
                 ],
               ),
             ),
-            
+
             // 상세 내용
             if (notification.detail != null) ...[
               Container(
@@ -297,9 +300,10 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
                 ),
               ),
             ],
-            
+
             // 메타데이터
-            if (notification.metadata != null && notification.metadata!.isNotEmpty) ...[
+            if (notification.metadata != null &&
+                notification.metadata!.isNotEmpty) ...[
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Wrap(
@@ -309,7 +313,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
                 ),
               ),
             ],
-            
+
             // 액션 버튼
             Padding(
               padding: const EdgeInsets.all(20),
@@ -318,7 +322,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        ref.read(notificationProvider.notifier).removeNotification(notification.id);
+                        ref
+                            .read(notificationProvider.notifier)
+                            .removeNotification(notification.id);
                         Navigator.pop(context);
                         _showSnackBar('알림을 삭제했습니다');
                       },
@@ -373,7 +379,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
 
   List<Widget> _buildDetailMetadata(Map<String, dynamic> metadata) {
     final widgets = <Widget>[];
-    
+
     if (metadata['points'] != null) {
       widgets.add(_buildMetadataCard(
         icon: Icons.star_rounded,
@@ -382,7 +388,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
         color: ModernColors.warning,
       ));
     }
-    
+
     if (metadata['goalName'] != null) {
       widgets.add(_buildMetadataCard(
         icon: Icons.flag_rounded,
@@ -391,7 +397,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
         color: ModernColors.success,
       ));
     }
-    
+
     if (metadata['questName'] != null) {
       widgets.add(_buildMetadataCard(
         icon: Icons.task_alt_rounded,
@@ -400,7 +406,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
         color: ModernColors.primary,
       ));
     }
-    
+
     if (metadata['mountain'] != null) {
       widgets.add(_buildMetadataCard(
         icon: Icons.terrain_rounded,
@@ -409,7 +415,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
         color: ModernColors.accent,
       ));
     }
-    
+
     if (metadata['meetingName'] != null) {
       widgets.add(_buildMetadataCard(
         icon: Icons.group_rounded,
@@ -418,7 +424,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
         color: ModernColors.secondary,
       ));
     }
-    
+
     return widgets;
   }
 
@@ -537,14 +543,16 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
           Icon(
             icon,
             size: 20,
-            color: isDestructive ? ModernColors.error : ModernColors.textSecondary,
+            color:
+                isDestructive ? ModernColors.error : ModernColors.textSecondary,
           ),
           const SizedBox(width: 12),
           Text(
             title,
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: isDestructive ? ModernColors.error : ModernColors.textPrimary,
+              color:
+                  isDestructive ? ModernColors.error : ModernColors.textPrimary,
             ),
           ),
         ],

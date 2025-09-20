@@ -15,7 +15,8 @@ class SherpiFloatingWidget extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<SherpiFloatingWidget> createState() => _SherpiFloatingWidgetState();
+  ConsumerState<SherpiFloatingWidget> createState() =>
+      _SherpiFloatingWidgetState();
 }
 
 class _SherpiFloatingWidgetState extends ConsumerState<SherpiFloatingWidget> {
@@ -42,31 +43,31 @@ class _SherpiFloatingWidgetState extends ConsumerState<SherpiFloatingWidget> {
       top: _position.dy,
       child: widget.isDraggable
           ? Draggable(
-        feedback: SherpiWidget(
-          width: 100,
-          height: 100,
-          showDialogue: false,
-        ),
-        childWhenDragging: Container(),
-        onDragEnd: (details) {
-          setState(() {
-            _position = Offset(
-              details.offset.dx.clamp(0, screenSize.width - 120),
-              details.offset.dy.clamp(0, screenSize.height - 120),
-            );
-          });
-        },
-        child: SherpiWidget(
-          width: 100,
-          height: 100,
-          showDialogue: true,
-        ),
-      )
+              feedback: SherpiWidget(
+                width: 100,
+                height: 100,
+                showDialogue: false,
+              ),
+              childWhenDragging: Container(),
+              onDragEnd: (details) {
+                setState(() {
+                  _position = Offset(
+                    details.offset.dx.clamp(0, screenSize.width - 120),
+                    details.offset.dy.clamp(0, screenSize.height - 120),
+                  );
+                });
+              },
+              child: SherpiWidget(
+                width: 100,
+                height: 100,
+                showDialogue: true,
+              ),
+            )
           : SherpiWidget(
-        width: 100,
-        height: 100,
-        showDialogue: true,
-      ),
+              width: 100,
+              height: 100,
+              showDialogue: true,
+            ),
     );
   }
 }

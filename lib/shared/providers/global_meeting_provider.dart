@@ -12,7 +12,8 @@ import 'notification_provider.dart';
 
 /// 🌍 글로벌 모임 관리 Provider
 /// 모든 모임 관련 데이터와 로직을 중앙에서 관리
-final globalMeetingProvider = StateNotifierProvider<GlobalMeetingNotifier, GlobalMeetingState>((ref) {
+final globalMeetingProvider =
+    StateNotifierProvider<GlobalMeetingNotifier, GlobalMeetingState>((ref) {
   return GlobalMeetingNotifier(ref);
 });
 
@@ -63,7 +64,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
   /// 샘플 모임 데이터 로드
   void _loadSampleMeetings() {
     final now = DateTime.now();
-    
+
     // 정상적인 시간대를 위한 헬퍼 함수
     DateTime _getDateTime(int daysFromNow, int hour, int minute) {
       final date = now.add(Duration(days: daysFromNow));
@@ -424,10 +425,10 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
       // 1. 참여 가능성 체크
       if (!meeting.canJoin) {
         ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: SherpiContext.encouragement,
-          customDialogue: '이미 마감되었거나 시간이 지난 모임이에요! 😅',
-          emotion: SherpiEmotion.thinking,
-        );
+              context: SherpiContext.encouragement,
+              customDialogue: '이미 마감되었거나 시간이 지난 모임이에요! 😅',
+              emotion: SherpiEmotion.thinking,
+            );
         return false;
       }
 
@@ -443,19 +444,20 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
       if (!success) {
         final currentPoints = ref.read(globalTotalPointsProvider);
         ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: SherpiContext.encouragement,
-          customDialogue: '포인트가 부족해요! 현재 ${currentPoints}P 보유중입니다. ${fee.toInt()}P가 필요해요.',
-          emotion: SherpiEmotion.thinking,
-        );
+              context: SherpiContext.encouragement,
+              customDialogue:
+                  '포인트가 부족해요! 현재 ${currentPoints}P 보유중입니다. ${fee.toInt()}P가 필요해요.',
+              emotion: SherpiEmotion.thinking,
+            );
         return false;
       }
 
       // 모임 참가 결제 알림 생성
       ref.read(notificationProvider.notifier).notifyMeetingComplete(
-        meeting.title,
-        meeting.currentParticipants + 1,
-        fee: fee.toInt(),
-      );
+            meeting.title,
+            meeting.currentParticipants + 1,
+            fee: fee.toInt(),
+          );
 
       // 3. 글로벌 사용자 데이터에 기록 추가
       final userNotifier = ref.read(globalUserProvider.notifier);
@@ -510,24 +512,24 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
 
       // 9. 성공 피드백 (카테고리별 맞춤 메시지)
       ref.read(sherpiProvider.notifier).showMessage(
-        context: SherpiContext.meetingJoined,
-        emotion: SherpiEmotion.talking,  // talking 감정 사용
-        userContext: {
-          'meeting_title': meeting.title,
-          'category': meeting.category.name,  // 카테고리 정보 추가
-          'experience_gained': meeting.experienceReward,
-          'points_gained': meeting.participationReward,
-        },
-        duration: const Duration(seconds: 5),
-      );
+            context: SherpiContext.meetingJoined,
+            emotion: SherpiEmotion.talking, // talking 감정 사용
+            userContext: {
+              'meeting_title': meeting.title,
+              'category': meeting.category.name, // 카테고리 정보 추가
+              'experience_gained': meeting.experienceReward,
+              'points_gained': meeting.participationReward,
+            },
+            duration: const Duration(seconds: 5),
+          );
 
       return true;
     } catch (e) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.encouragement,
-        customDialogue: '모임 참여 중 오류가 발생했어요. 다시 시도해주세요! 😅',
-        emotion: SherpiEmotion.thinking,
-      );
+            context: SherpiContext.encouragement,
+            customDialogue: '모임 참여 중 오류가 발생했어요. 다시 시도해주세요! 😅',
+            emotion: SherpiEmotion.thinking,
+          );
       return false;
     }
   }
@@ -540,7 +542,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
     String? note,
   }) {
     final userNotifier = ref.read(globalUserProvider.notifier);
-    
+
     // 참여한 모임 정보 찾기
     final meeting = state.availableMeetings.firstWhere(
       (m) => m.id == meetingId,
@@ -563,7 +565,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
         ),
       ),
     );
-    
+
     // 🔥 모임 로그 추가 (퀘스트 추적을 위해 필수!)
     final meetingLog = MeetingLog(
       id: '${meetingId}_${DateTime.now().millisecondsSinceEpoch}',
@@ -575,7 +577,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
       note: note,
       isShared: false,
     );
-    
+
     userNotifier.addMeetingLog(meetingLog);
 
     // 후기 완료 보너스
@@ -599,7 +601,7 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
       },
     );
   }
-  
+
   /// 기분 이모티콘 매핑
   String _getMoodIcon(String mood) {
     switch (mood) {
@@ -623,13 +625,17 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
     if (category == null) return state.availableMeetings;
     // '전체' 카테고리인 경우 모든 모임 반환
     if (category == MeetingCategory.all) return state.availableMeetings;
-    return state.availableMeetings.where((meeting) => meeting.category == category).toList();
+    return state.availableMeetings
+        .where((meeting) => meeting.category == category)
+        .toList();
   }
 
   /// 범위별 모임 필터링
   List<AvailableMeeting> getMeetingsByScope(MeetingScope? scope) {
     if (scope == null) return state.availableMeetings;
-    return state.availableMeetings.where((meeting) => meeting.scope == scope).toList();
+    return state.availableMeetings
+        .where((meeting) => meeting.scope == scope)
+        .toList();
   }
 
   /// 참여 가능한 모임만 필터링
@@ -640,7 +646,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
   /// 인기 모임 (참여자가 많은 순)
   List<AvailableMeeting> get popularMeetings {
     final sortedMeetings = List<AvailableMeeting>.from(state.availableMeetings);
-    sortedMeetings.sort((a, b) => b.currentParticipants.compareTo(a.currentParticipants));
+    sortedMeetings
+        .sort((a, b) => b.currentParticipants.compareTo(a.currentParticipants));
     return sortedMeetings.take(5).toList();
   }
 
@@ -654,8 +661,10 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
     if (stats.stamina >= stats.knowledge && stats.stamina >= stats.technique) {
       // 체력이 높으면 운동/아웃도어 모임 추천
       sortedMeetings.sort((a, b) {
-        final aIsActive = a.category == MeetingCategory.exercise || a.category == MeetingCategory.outdoor;
-        final bIsActive = b.category == MeetingCategory.exercise || b.category == MeetingCategory.outdoor;
+        final aIsActive = a.category == MeetingCategory.exercise ||
+            a.category == MeetingCategory.outdoor;
+        final bIsActive = b.category == MeetingCategory.exercise ||
+            b.category == MeetingCategory.outdoor;
         if (aIsActive && !bIsActive) return -1;
         if (!aIsActive && bIsActive) return 1;
         return 0;
@@ -663,8 +672,10 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
     } else if (stats.knowledge >= stats.technique) {
       // 지식이 높으면 스터디/독서 모임 추천
       sortedMeetings.sort((a, b) {
-        final aIsStudy = a.category == MeetingCategory.study || a.category == MeetingCategory.reading;
-        final bIsStudy = b.category == MeetingCategory.study || b.category == MeetingCategory.reading;
+        final aIsStudy = a.category == MeetingCategory.study ||
+            a.category == MeetingCategory.reading;
+        final bIsStudy = b.category == MeetingCategory.study ||
+            b.category == MeetingCategory.reading;
         if (aIsStudy && !bIsStudy) return -1;
         if (!aIsStudy && bIsStudy) return 1;
         return 0;
@@ -672,8 +683,10 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
     } else {
       // 기술이 높으면 문화/네트워킹 모임 추천
       sortedMeetings.sort((a, b) {
-        final aIsSocial = a.category == MeetingCategory.networking || a.category == MeetingCategory.culture;
-        final bIsSocial = b.category == MeetingCategory.networking || b.category == MeetingCategory.culture;
+        final aIsSocial = a.category == MeetingCategory.networking ||
+            a.category == MeetingCategory.culture;
+        final bIsSocial = b.category == MeetingCategory.networking ||
+            b.category == MeetingCategory.culture;
         if (aIsSocial && !bIsSocial) return -1;
         if (!aIsSocial && bIsSocial) return 1;
         return 0;
@@ -685,23 +698,26 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
 
   /// 임박한 모임 (7일 이내)
   List<AvailableMeeting> get upcomingMeetings {
-    return state.availableMeetings.where((meeting) =>
-      meeting.canJoin &&
-      meeting.timeUntilStart.inDays <= 7 &&
-      meeting.timeUntilStart.inMinutes > 0 // 과거가 아닌 미래 모임만
-    ).toList();
+    return state.availableMeetings
+        .where((meeting) =>
+                meeting.canJoin &&
+                meeting.timeUntilStart.inDays <= 7 &&
+                meeting.timeUntilStart.inMinutes > 0 // 과거가 아닌 미래 모임만
+            )
+        .toList();
   }
 
   /// 새 모임 추가 (모임 개설 시 사용)
   Future<bool> addMeeting(AvailableMeeting newMeeting) async {
     try {
       // 1. 중복 ID 체크
-      if (state.availableMeetings.any((meeting) => meeting.id == newMeeting.id)) {
+      if (state.availableMeetings
+          .any((meeting) => meeting.id == newMeeting.id)) {
         ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: SherpiContext.encouragement,
-          customDialogue: '이미 존재하는 모임입니다! 😅',
-          emotion: SherpiEmotion.thinking,
-        );
+              context: SherpiContext.encouragement,
+              customDialogue: '이미 존재하는 모임입니다! 😅',
+              emotion: SherpiEmotion.thinking,
+            );
         return false;
       }
 
@@ -716,10 +732,10 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
       return true;
     } catch (e) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.encouragement,
-        customDialogue: '모임 개설 중 오류가 발생했어요. 다시 시도해주세요! 😅',
-        emotion: SherpiEmotion.thinking,
-      );
+            context: SherpiContext.encouragement,
+            customDialogue: '모임 개설 중 오류가 발생했어요. 다시 시도해주세요! 😅',
+            emotion: SherpiEmotion.thinking,
+          );
       return false;
     }
   }
@@ -733,13 +749,15 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
 // ==================== UI용 Provider들 ====================
 
 /// 카테고리별 모임 Provider
-final globalMeetingsByCategoryProvider = Provider.family<List<AvailableMeeting>, MeetingCategory?>((ref, category) {
+final globalMeetingsByCategoryProvider =
+    Provider.family<List<AvailableMeeting>, MeetingCategory?>((ref, category) {
   final notifier = ref.read(globalMeetingProvider.notifier);
   return notifier.getMeetingsByCategory(category);
 });
 
 /// 범위별 모임 Provider
-final globalMeetingsByScopeProvider = Provider.family<List<AvailableMeeting>, MeetingScope?>((ref, scope) {
+final globalMeetingsByScopeProvider =
+    Provider.family<List<AvailableMeeting>, MeetingScope?>((ref, scope) {
   final notifier = ref.read(globalMeetingProvider.notifier);
   return notifier.getMeetingsByScope(scope);
 });
@@ -757,7 +775,8 @@ final globalPopularMeetingsProvider = Provider<List<AvailableMeeting>>((ref) {
 });
 
 /// 추천 모임 Provider
-final globalRecommendedMeetingsProvider = Provider<List<AvailableMeeting>>((ref) {
+final globalRecommendedMeetingsProvider =
+    Provider<List<AvailableMeeting>>((ref) {
   final notifier = ref.read(globalMeetingProvider.notifier);
   return notifier.getRecommendedMeetings();
 });
@@ -791,9 +810,9 @@ final globalThisMonthMeetingCountProvider = Provider<int>((ref) {
   final meetingLogs = ref.watch(globalMyMeetingLogsProvider);
   final now = DateTime.now();
 
-  return meetingLogs.where((log) =>
-    log.date.year == now.year && log.date.month == now.month
-  ).length;
+  return meetingLogs
+      .where((log) => log.date.year == now.year && log.date.month == now.month)
+      .length;
 });
 
 /// 모임 통계 Provider
@@ -804,8 +823,9 @@ final globalMeetingStatsProvider = Provider<GlobalMeetingStats>((ref) {
   final totalMeetings = meetingLogs.length;
   final thisMonthCount = ref.watch(globalThisMonthMeetingCountProvider);
   final averageSatisfaction = meetingLogs.isNotEmpty
-    ? meetingLogs.map((log) => log.satisfaction).reduce((a, b) => a + b) / meetingLogs.length
-    : 0.0;
+      ? meetingLogs.map((log) => log.satisfaction).reduce((a, b) => a + b) /
+          meetingLogs.length
+      : 0.0;
 
   // 카테고리별 참여 횟수
   final categoryStats = <String, int>{};

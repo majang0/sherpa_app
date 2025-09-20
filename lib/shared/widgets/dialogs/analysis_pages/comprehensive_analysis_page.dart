@@ -10,7 +10,7 @@ import '../../../../core/constants/sherpi_emotions.dart';
 // import '../../../models/global_user_model.dart';
 
 /// 🌟 종합 분석 페이지 - 하루 전체를 아우르는 통찰력 있는 분석
-/// 
+///
 /// 운동, 독서, 일기를 하나의 스토리로 엮어내어
 /// 사용자의 하루를 더 깊이 이해하고 의미를 찾을 수 있도록 돕습니다.
 class ComprehensiveAnalysisPage extends ConsumerStatefulWidget {
@@ -18,7 +18,7 @@ class ComprehensiveAnalysisPage extends ConsumerStatefulWidget {
   final Map<String, dynamic>? readingData;
   final Map<String, dynamic>? diaryData;
   final String userName;
-  
+
   const ComprehensiveAnalysisPage({
     super.key,
     this.exerciseData,
@@ -26,48 +26,48 @@ class ComprehensiveAnalysisPage extends ConsumerStatefulWidget {
     this.diaryData,
     required this.userName,
   });
-  
+
   @override
-  ConsumerState<ComprehensiveAnalysisPage> createState() => 
+  ConsumerState<ComprehensiveAnalysisPage> createState() =>
       _ComprehensiveAnalysisPageState();
 }
 
-class _ComprehensiveAnalysisPageState 
+class _ComprehensiveAnalysisPageState
     extends ConsumerState<ComprehensiveAnalysisPage>
     with TickerProviderStateMixin {
-  
   // AI 분석 서비스
-  final ActivityAnalysisService _analysisService = ActivityAnalysisService.instance;
-  
+  final ActivityAnalysisService _analysisService =
+      ActivityAnalysisService.instance;
+
   // 종합 분석 데이터
   ComprehensiveDayAnalysis? _analysisData;
   bool _isLoading = false;
-  bool _hasGenerated = false;  // 분석 생성 여부
+  bool _hasGenerated = false; // 분석 생성 여부
   String _loadingMessage = '오늘의 데이터를 모으고 있어요...';
   double _loadingProgress = 0.0;
-  
+
   // 애니메이션 컨트롤러들
   late AnimationController _pageAnimationController;
   late AnimationController _floatingAnimationController;
   late AnimationController _shimmerController;
   late AnimationController _progressController;
   late AnimationController _chartAnimationController;
-  
+
   // 애니메이션들
   late Animation<double> _fadeInAnimation;
   late Animation<double> _floatingAnimation;
   // late Animation<double> _scaleAnimation;
-  
+
   // UI 상태
   // int _selectedSection = 0; // 선택된 섹션 (0: 전체, 1: 균형, 2: 성장, 3: 내일)
-  
+
   @override
   void initState() {
     super.initState();
     _initializeAnimations();
     // 자동 로딩 제거 - 버튼 클릭 시에만 로딩
   }
-  
+
   @override
   void dispose() {
     _pageAnimationController.dispose();
@@ -77,7 +77,7 @@ class _ComprehensiveAnalysisPageState
     _chartAnimationController.dispose();
     super.dispose();
   }
-  
+
   /// 애니메이션 초기화
   void _initializeAnimations() {
     // 페이지 전환 애니메이션
@@ -85,37 +85,37 @@ class _ComprehensiveAnalysisPageState
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     // 떠다니는 애니메이션 (셰르피 등)
     _floatingAnimationController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     // 쉬머 효과 애니메이션
     _shimmerController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat();
-    
+
     // 진행 바 애니메이션
     _progressController = AnimationController(
       duration: const Duration(seconds: 5),
       vsync: this,
     );
-    
+
     // 차트 애니메이션
     _chartAnimationController = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
-    
+
     // 애니메이션 곡선 설정
     _fadeInAnimation = CurvedAnimation(
       parent: _pageAnimationController,
       curve: Curves.easeInOut,
     );
-    
+
     _floatingAnimation = Tween<double>(
       begin: -10,
       end: 10,
@@ -123,18 +123,18 @@ class _ComprehensiveAnalysisPageState
       parent: _floatingAnimationController,
       curve: Curves.easeInOut,
     ));
-    
+
     // _scaleAnimation = CurvedAnimation(
     //   parent: _pageAnimationController,
     //   curve: Curves.easeOutBack,
     // );
   }
-  
+
   /// 종합 분석 데이터 로드
   Future<void> _loadAnalysisData() async {
     // 로딩 프로그레스 애니메이션 시작
     _progressController.forward();
-    
+
     try {
       // 로딩 메시지 업데이트 (순차적으로)
       await Future.delayed(const Duration(milliseconds: 500));
@@ -142,38 +142,37 @@ class _ComprehensiveAnalysisPageState
         _loadingMessage = '운동 데이터 분석 중...';
         _loadingProgress = 0.25;
       });
-      
+
       await Future.delayed(const Duration(milliseconds: 800));
       setState(() {
         _loadingMessage = '독서 기록 확인 중...';
         _loadingProgress = 0.5;
       });
-      
+
       await Future.delayed(const Duration(milliseconds: 800));
       setState(() {
         _loadingMessage = '감정 패턴 파악 중...';
         _loadingProgress = 0.75;
       });
-      
+
       await Future.delayed(const Duration(milliseconds: 800));
       setState(() {
         _loadingMessage = '종합 인사이트 생성 중...';
         _loadingProgress = 0.9;
       });
-      
+
       // 실제 AI 분석 호출 - forceRegenerate: true로 항상 새로 생성
       await _performAnalysis(forceRefresh: true);
-      
+
       // 로딩 완료
       setState(() {
         _loadingProgress = 1.0;
         _isLoading = false;
       });
-      
+
       // 페이지 애니메이션 시작
       _pageAnimationController.forward();
       _chartAnimationController.forward();
-      
     } catch (e) {
       print('종합 분석 로드 에러: $e');
       setState(() {
@@ -181,7 +180,7 @@ class _ComprehensiveAnalysisPageState
       });
     }
   }
-  
+
   /// AI 분석 수행
   Future<void> _performAnalysis({bool forceRefresh = false}) async {
     try {
@@ -191,18 +190,20 @@ class _ComprehensiveAnalysisPageState
         readingData: widget.readingData ?? {},
         diaryData: widget.diaryData ?? {},
         userName: widget.userName,
-        forceRegenerate: forceRefresh,  // 강제 새로고침 옵션
+        forceRegenerate: forceRefresh, // 강제 새로고침 옵션
       );
     } catch (e) {
       print('종합 분석 수행 중 에러: $e');
       // 에러 발생 시 기본 데이터 사용
       _analysisData = ComprehensiveDayAnalysis(
         dayTheme: '성실한 하루 ✨',
-        emotionalJourney: '오늘 하루도 열심히 보내셨네요. 운동, 독서, 일기를 통해 몸과 마음을 돌보는 시간을 가지셨어요.',
+        emotionalJourney:
+            '오늘 하루도 열심히 보내셨네요. 운동, 독서, 일기를 통해 몸과 마음을 돌보는 시간을 가지셨어요.',
         balanceReport: '신체와 정신, 감정이 조화를 이루며 균형잡힌 하루를 보내셨습니다.',
         growthInsight: '꾸준한 기록과 활동이 당신의 성장을 만들어가고 있어요.',
         tomorrowGuide: '오늘의 좋은 흐름을 내일도 이어가보세요.',
-        sherpiMessage: '${widget.userName}님, 오늘 하루도 수고 많으셨어요! 내일도 함께 멋진 하루를 만들어가요!',
+        sherpiMessage:
+            '${widget.userName}님, 오늘 하루도 수고 많으셨어요! 내일도 함께 멋진 하루를 만들어가요!',
         balanceScore: 75.0,
         scores: {
           '신체': 80.0,
@@ -212,20 +213,20 @@ class _ComprehensiveAnalysisPageState
       );
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
       return _buildLoadingScreen();
     }
-    
+
     if (!_hasGenerated) {
       return _buildGenerateButton();
     }
-    
+
     return _buildAnalysisContent();
   }
-  
+
   /// 분석 생성 버튼 화면
   Widget _buildGenerateButton() {
     return Center(
@@ -303,24 +304,25 @@ class _ComprehensiveAnalysisPageState
                 ],
               ),
             ),
-          ).animate()
-            .fadeIn(duration: 500.ms)
-            .scale(begin: const Offset(0.8, 0.8), end: const Offset(1, 1)),
+          )
+              .animate()
+              .fadeIn(duration: 500.ms)
+              .scale(begin: const Offset(0.8, 0.8), end: const Offset(1, 1)),
         ],
       ),
     );
   }
-  
+
   /// 분석 생성 실행
   Future<void> _generateAnalysis() async {
     setState(() {
       _isLoading = true;
       _hasGenerated = true;
     });
-    
+
     await _loadAnalysisData();
   }
-  
+
   /// 로딩 화면 구성
   Widget _buildLoadingScreen() {
     return Center(
@@ -352,7 +354,7 @@ class _ComprehensiveAnalysisPageState
             },
           ),
           const SizedBox(height: 32),
-          
+
           // 로딩 메시지
           Text(
             _loadingMessage,
@@ -361,12 +363,13 @@ class _ComprehensiveAnalysisPageState
               fontWeight: FontWeight.w600,
               color: ModernColors.textPrimary,
             ),
-          ).animate(key: ValueKey(_loadingMessage))
-            .fadeIn(duration: 300.ms)
-            .slideY(begin: 0.2, end: 0),
-          
+          )
+              .animate(key: ValueKey(_loadingMessage))
+              .fadeIn(duration: 300.ms)
+              .slideY(begin: 0.2, end: 0),
+
           const SizedBox(height: 24),
-          
+
           // 진행 바
           Container(
             width: 200,
@@ -390,7 +393,7 @@ class _ComprehensiveAnalysisPageState
       ),
     );
   }
-  
+
   /// 분석 콘텐츠 구성
   Widget _buildAnalysisContent() {
     return FadeTransition(
@@ -416,11 +419,11 @@ class _ComprehensiveAnalysisPageState
       ),
     );
   }
-  
+
   /// 오늘의 테마 카드
   Widget _buildThemeCard() {
     return Container(
-      width: double.infinity,  // 전체 너비 사용
+      width: double.infinity, // 전체 너비 사용
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: ModernColors.surface,
@@ -502,11 +505,12 @@ class _ComprehensiveAnalysisPageState
           ),
         ],
       ),
-    ).animate()
-      .fadeIn(delay: 100.ms, duration: 500.ms)
-      .slideY(begin: 0.2, end: 0);
+    )
+        .animate()
+        .fadeIn(delay: 100.ms, duration: 500.ms)
+        .slideY(begin: 0.2, end: 0);
   }
-  
+
   /// 균형 차트 (레이더 차트)
   Widget _buildBalanceChart() {
     return Container(
@@ -535,7 +539,8 @@ class _ComprehensiveAnalysisPageState
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
                   color: ModernColors.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
@@ -613,16 +618,16 @@ class _ComprehensiveAnalysisPageState
                         entryRadius: 4,
                         dataEntries: [
                           RadarEntry(
-                            value: (_analysisData?.scores['신체'] ?? 0) * 
-                                   _chartAnimationController.value,
+                            value: (_analysisData?.scores['신체'] ?? 0) *
+                                _chartAnimationController.value,
                           ),
                           RadarEntry(
-                            value: (_analysisData?.scores['정신'] ?? 0) * 
-                                   _chartAnimationController.value,
+                            value: (_analysisData?.scores['정신'] ?? 0) *
+                                _chartAnimationController.value,
                           ),
                           RadarEntry(
-                            value: (_analysisData?.scores['감정'] ?? 0) * 
-                                   _chartAnimationController.value,
+                            value: (_analysisData?.scores['감정'] ?? 0) *
+                                _chartAnimationController.value,
                           ),
                         ],
                       ),
@@ -656,11 +661,12 @@ class _ComprehensiveAnalysisPageState
           ),
         ],
       ),
-    ).animate()
-      .fadeIn(delay: 200.ms, duration: 500.ms)
-      .slideY(begin: 0.2, end: 0);
+    )
+        .animate()
+        .fadeIn(delay: 200.ms, duration: 500.ms)
+        .slideY(begin: 0.2, end: 0);
   }
-  
+
   /// 점수 레전드 위젯
   Widget _buildScoreLegend(String label, double score, Color color) {
     return Row(
@@ -685,7 +691,7 @@ class _ComprehensiveAnalysisPageState
       ],
     );
   }
-  
+
   /// 스토리 섹션
   Widget _buildStorySection() {
     return Container(
@@ -741,11 +747,12 @@ class _ComprehensiveAnalysisPageState
           ),
         ],
       ),
-    ).animate()
-      .fadeIn(delay: 300.ms, duration: 500.ms)
-      .slideY(begin: 0.2, end: 0);
+    )
+        .animate()
+        .fadeIn(delay: 300.ms, duration: 500.ms)
+        .slideY(begin: 0.2, end: 0);
   }
-  
+
   /// 성장 인사이트
   Widget _buildGrowthInsights() {
     return Container(
@@ -797,11 +804,12 @@ class _ComprehensiveAnalysisPageState
           ),
         ],
       ),
-    ).animate()
-      .fadeIn(delay: 400.ms, duration: 500.ms)
-      .slideY(begin: 0.2, end: 0);
+    )
+        .animate()
+        .fadeIn(delay: 400.ms, duration: 500.ms)
+        .slideY(begin: 0.2, end: 0);
   }
-  
+
   /// 내일을 위한 제안
   Widget _buildTomorrowGuide() {
     return Container(
@@ -846,11 +854,12 @@ class _ComprehensiveAnalysisPageState
           ),
         ],
       ),
-    ).animate()
-      .fadeIn(delay: 500.ms, duration: 500.ms)
-      .slideY(begin: 0.2, end: 0);
+    )
+        .animate()
+        .fadeIn(delay: 500.ms, duration: 500.ms)
+        .slideY(begin: 0.2, end: 0);
   }
-  
+
   /// 셰르피 메시지
   Widget _buildSherpiMessage() {
     return Container(
@@ -898,10 +907,12 @@ class _ComprehensiveAnalysisPageState
           ),
         ],
       ),
-    ).animate()
-      .fadeIn(delay: 600.ms, duration: 500.ms)
-      .slideY(begin: 0.2, end: 0)
-      .then()
-      .shimmer(duration: 2000.ms, color: ModernColors.primary.withOpacity(0.1));
+    )
+        .animate()
+        .fadeIn(delay: 600.ms, duration: 500.ms)
+        .slideY(begin: 0.2, end: 0)
+        .then()
+        .shimmer(
+            duration: 2000.ms, color: ModernColors.primary.withOpacity(0.1));
   }
 }

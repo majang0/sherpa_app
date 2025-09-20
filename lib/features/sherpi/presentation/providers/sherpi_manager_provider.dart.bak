@@ -1,0 +1,20 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/config/api_config.dart';
+
+// Try relative imports as a workaround for analyzer issue
+import '../../../../core/ai/managers/sherpi_message_manager.dart';
+import '../../../../core/ai/managers/openai_sherpi_manager.dart';
+import '../../../../core/ai/managers/static_sherpi_manager.dart';
+
+/// Provides the concrete [SherpiMessageManager] implementation.
+///
+/// Defaults to the static manager, but transparently switches to the
+/// OpenAI-backed manager when the API key is configured. Callers can
+/// override this provider in tests to inject fakes.
+final sherpiMessageManagerProvider = Provider<SherpiMessageManager>((ref) {
+  if (ApiConfig.isOpenAIApiKeyValid) {
+    return OpenAISherpiManager();
+  }
+
+  return StaticSherpiManager();
+});

@@ -11,7 +11,7 @@ class CategorySelector2025 extends StatefulWidget {
   final Function(MeetingCategory) onCategorySelected;
   final bool isScrollable;
   final EdgeInsets padding;
-  
+
   const CategorySelector2025({
     super.key,
     required this.categories,
@@ -25,31 +25,31 @@ class CategorySelector2025 extends StatefulWidget {
   State<CategorySelector2025> createState() => _CategorySelector2025State();
 }
 
-class _CategorySelector2025State extends State<CategorySelector2025> 
+class _CategorySelector2025State extends State<CategorySelector2025>
     with TickerProviderStateMixin {
   late AnimationController _selectionController;
   late Animation<double> _selectionAnimation;
-  
+
   ScrollController? _scrollController;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _selectionController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _selectionAnimation = CurvedAnimation(
       parent: _selectionController,
       curve: Curves.easeOutCubic,
     );
-    
+
     if (widget.isScrollable) {
       _scrollController = ScrollController();
     }
-    
+
     // 초기 애니메이션
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _selectionController.forward();
@@ -68,7 +68,7 @@ class _CategorySelector2025State extends State<CategorySelector2025>
       // 선택 변경 애니메이션
       _selectionController.reset();
       _selectionController.forward();
-      
+
       widget.onCategorySelected(category);
     }
   }
@@ -76,13 +76,13 @@ class _CategorySelector2025State extends State<CategorySelector2025>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Container(
       height: 50,
       padding: widget.padding,
       child: widget.isScrollable
-        ? _buildScrollableCategories(isDark)
-        : _buildFixedCategories(isDark),
+          ? _buildScrollableCategories(isDark)
+          : _buildFixedCategories(isDark),
     );
   }
 
@@ -115,7 +115,7 @@ class _CategorySelector2025State extends State<CategorySelector2025>
 
   Widget _buildCategoryChip(MeetingCategory category, bool isDark) {
     final isSelected = category == widget.selectedCategory;
-    
+
     return AnimatedBuilder(
       animation: _selectionAnimation,
       builder: (context, child) {
@@ -127,49 +127,49 @@ class _CategorySelector2025State extends State<CategorySelector2025>
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               gradient: isSelected
-                ? LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      category.color,
-                      category.color.withOpacity(0.8),
-                    ],
-                  )
-                : null,
+                  ? LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        category.color,
+                        category.color.withOpacity(0.8),
+                      ],
+                    )
+                  : null,
               color: isSelected
-                ? null
-                : isDark
-                  ? ModernColors.surface.withOpacity(0.1)
-                  : ModernColors.background.withOpacity(0.5),
+                  ? null
+                  : isDark
+                      ? ModernColors.surface.withOpacity(0.1)
+                      : ModernColors.background.withOpacity(0.5),
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
                 color: isSelected
-                  ? category.color.withOpacity(0.3)
-                  : isDark
-                    ? ModernColors.border.withOpacity(0.1)
-                    : ModernColors.borderLight,
+                    ? category.color.withOpacity(0.3)
+                    : isDark
+                        ? ModernColors.border.withOpacity(0.1)
+                        : ModernColors.borderLight,
                 width: isSelected ? 1.5 : 1,
               ),
               boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: category.color.withOpacity(0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                    BoxShadow(
-                      color: category.color.withOpacity(0.1),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ]
-                : [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+                  ? [
+                      BoxShadow(
+                        color: category.color.withOpacity(0.3),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                      BoxShadow(
+                        color: category.color.withOpacity(0.1),
+                        blurRadius: 20,
+                        offset: const Offset(0, 8),
+                      ),
+                    ]
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -184,9 +184,9 @@ class _CategorySelector2025State extends State<CategorySelector2025>
                     style: const TextStyle(fontSize: 16),
                   ),
                 ),
-                
+
                 const SizedBox(width: 6),
-                
+
                 // Category name with color transition
                 AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 200),
@@ -194,15 +194,15 @@ class _CategorySelector2025State extends State<CategorySelector2025>
                     fontSize: 14,
                     fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
                     color: isSelected
-                      ? Colors.white
-                      : isDark
-                        ? ModernColors.textOnPrimary
-                        : ModernColors.textPrimary,
+                        ? Colors.white
+                        : isDark
+                            ? ModernColors.textOnPrimary
+                            : ModernColors.textPrimary,
                     letterSpacing: isSelected ? 0.3 : 0,
                   ),
                   child: Text(category.displayName),
                 ),
-                
+
                 // Selection indicator
                 if (isSelected)
                   AnimatedContainer(
@@ -238,7 +238,7 @@ class CategoryFilterChip2025 extends StatelessWidget {
   final VoidCallback onTap;
   final bool showCount;
   final int? count;
-  
+
   const CategoryFilterChip2025({
     super.key,
     required this.category,
@@ -251,7 +251,7 @@ class CategoryFilterChip2025 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -259,28 +259,28 @@ class CategoryFilterChip2025 extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-            ? category.color.withOpacity(0.9)
-            : isDark
-              ? Colors.white.withOpacity(0.05)
-              : Colors.black.withOpacity(0.05),
+              ? category.color.withOpacity(0.9)
+              : isDark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.black.withOpacity(0.05),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
-              ? category.color.withOpacity(0.3)
-              : isDark
-                ? Colors.white.withOpacity(0.1)
-                : Colors.black.withOpacity(0.1),
+                ? category.color.withOpacity(0.3)
+                : isDark
+                    ? Colors.white.withOpacity(0.1)
+                    : Colors.black.withOpacity(0.1),
             width: 1,
           ),
           boxShadow: isSelected
-            ? [
-                BoxShadow(
-                  color: category.color.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
+              ? [
+                  BoxShadow(
+                    color: category.color.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -296,10 +296,10 @@ class CategoryFilterChip2025 extends StatelessWidget {
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: isSelected
-                  ? Colors.white
-                  : isDark
-                    ? Colors.white.withOpacity(0.8)
-                    : Colors.black.withOpacity(0.7),
+                    ? Colors.white
+                    : isDark
+                        ? Colors.white.withOpacity(0.8)
+                        : Colors.black.withOpacity(0.7),
               ),
             ),
             if (showCount && count != null) ...[
@@ -308,8 +308,8 @@ class CategoryFilterChip2025 extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: isSelected
-                    ? Colors.white.withOpacity(0.2)
-                    : category.color.withOpacity(0.1),
+                      ? Colors.white.withOpacity(0.2)
+                      : category.color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -317,9 +317,7 @@ class CategoryFilterChip2025 extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: isSelected
-                      ? Colors.white
-                      : category.color,
+                    color: isSelected ? Colors.white : category.color,
                   ),
                 ),
               ),

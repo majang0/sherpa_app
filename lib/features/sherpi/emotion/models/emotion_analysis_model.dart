@@ -37,7 +37,8 @@ class EmotionAnalysisResult {
     return {
       'primaryEmotion': primaryEmotion.name,
       'confidence': confidence,
-      'emotionScores': emotionScores.map((key, value) => MapEntry(key.name, value)),
+      'emotionScores':
+          emotionScores.map((key, value) => MapEntry(key.name, value)),
       'analyzedAt': analyzedAt.toIso8601String(),
       'analysisContext': analysisContext,
     };
@@ -68,25 +69,25 @@ class EmotionAnalysisResult {
 enum UserEmotionState {
   /// 😊 긍정적인 감정 - 성과 달성, 목표 완수 시
   positive,
-  
+
   /// 😔 부정적인 감정 - 실패, 좌절 시
   negative,
-  
+
   /// 😐 중립적인 감정 - 평상시
   neutral,
-  
+
   /// 💪 동기부여된 상태 - 새로운 도전, 계획 세울 때
   motivated,
-  
+
   /// 😴 피곤한 상태 - 장시간 활동 후, 늦은 시간
   tired,
-  
+
   /// 🎉 흥분된 상태 - 큰 성취, 특별한 순간
   excited,
-  
+
   /// 😰 스트레스 상태 - 연속 실패, 압박감
   stressed,
-  
+
   /// 🤔 고민하는 상태 - 결정이 필요한 순간
   contemplative,
 }
@@ -141,16 +142,16 @@ class EmotionAnalysisContext {
 enum EmotionalSyncLevel {
   /// 💔 동기화 안됨 (0.0 - 0.2)
   none,
-  
+
   /// 😐 기본 동기화 (0.2 - 0.4)
   basic,
-  
+
   /// 😊 좋은 동기화 (0.4 - 0.6)
   good,
-  
+
   /// 💖 강한 동기화 (0.6 - 0.8)
   strong,
-  
+
   /// 💕 완벽한 동기화 (0.8 - 1.0)
   perfect,
 }

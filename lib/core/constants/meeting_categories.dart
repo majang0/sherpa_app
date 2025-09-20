@@ -3,13 +3,13 @@
 import 'package:flutter/material.dart';
 
 /// 🎯 모임 카테고리 중앙집중식 관리 시스템
-/// 
+///
 /// 기존 8개 파일에 중복되었던 카테고리 데이터를 통합 관리하여
 /// 데이터 일관성과 유지보수성을 크게 향상시킵니다.
-/// 
+///
 /// 통합 대상 파일들:
 /// - global_user_model.dart
-/// - meeting_full_view_widget.dart  
+/// - meeting_full_view_widget.dart
 /// - meeting_edit_screen.dart
 /// - available_meeting_detail_screen.dart, meeting_log_detail_screen.dart
 /// - enhanced_meeting_calendar_widget.dart
@@ -17,7 +17,6 @@ import 'package:flutter/material.dart';
 /// - record_models.dart
 /// - available_meeting_model.dart
 class MeetingCategories {
-  
   /// 🎨 카테고리별 완전한 메타데이터
   static const Map<String, MeetingCategoryData> _categoryMap = {
     '스터디': MeetingCategoryData(
@@ -112,35 +111,36 @@ class MeetingCategories {
 
   /// 📝 모든 카테고리 목록 (통합)
   static List<String> get allCategories => [
-    ..._categoryMap.keys,
-    ..._additionalCategories.keys,
-  ];
+        ..._categoryMap.keys,
+        ..._additionalCategories.keys,
+      ];
 
   /// 🎨 카테고리별 이모지 가져오기 (확장 지원)
   static String getEmoji(String category) {
-    return _categoryMap[category]?.emoji ?? 
-           _additionalCategories[category]?.emoji ?? '📋';
+    return _categoryMap[category]?.emoji ??
+        _additionalCategories[category]?.emoji ??
+        '📋';
   }
 
   /// 🌈 카테고리별 색상 가져오기 (확장 지원)
   static Color getColor(String category) {
-    return _categoryMap[category]?.color ?? 
-           _additionalCategories[category]?.color ?? 
-           const Color(0xFF6B7280);
+    return _categoryMap[category]?.color ??
+        _additionalCategories[category]?.color ??
+        const Color(0xFF6B7280);
   }
 
   /// 🎨 카테고리별 그라데이션 가져오기 (확장 지원)
   static List<Color> getGradient(String category) {
-    return _categoryMap[category]?.gradient ?? 
-           _additionalCategories[category]?.gradient ??
-           [const Color(0xFF6B7280), const Color(0xFF4B5563)];
+    return _categoryMap[category]?.gradient ??
+        _additionalCategories[category]?.gradient ??
+        [const Color(0xFF6B7280), const Color(0xFF4B5563)];
   }
 
   /// 🔤 카테고리별 영문명 가져오기 (확장 지원)
   static String getEnglishName(String category) {
-    return _categoryMap[category]?.englishName ?? 
-           _additionalCategories[category]?.englishName ?? 
-           'general';
+    return _categoryMap[category]?.englishName ??
+        _additionalCategories[category]?.englishName ??
+        'general';
   }
 
   /// 📊 카테고리별 완전한 데이터 가져오기 (확장 지원)
@@ -150,14 +150,14 @@ class MeetingCategories {
 
   /// ✅ 유효한 카테고리인지 확인 (확장 지원)
   static bool isValidCategory(String category) {
-    return _categoryMap.containsKey(category) || 
-           _additionalCategories.containsKey(category);
+    return _categoryMap.containsKey(category) ||
+        _additionalCategories.containsKey(category);
   }
 
   /// 🔄 레거시 호환성을 위한 Map 형태 데이터 (확장 지원)
   static Map<String, Map<String, dynamic>> get legacyFormat {
     final combined = <String, Map<String, dynamic>>{};
-    
+
     // 기본 카테고리 추가
     _categoryMap.forEach((key, value) {
       combined[key] = {
@@ -167,7 +167,7 @@ class MeetingCategories {
         'english': value.englishName,
       };
     });
-    
+
     // 확장 카테고리 추가
     _additionalCategories.forEach((key, value) {
       combined[key] = {
@@ -177,7 +177,7 @@ class MeetingCategories {
         'english': value.englishName,
       };
     });
-    
+
     return combined;
   }
 
@@ -191,14 +191,22 @@ class MeetingCategories {
   /// 🔗 Enum 매핑 헬퍼 (available_meeting_model.dart용)
   static String enumToDisplayName(String enumName) {
     switch (enumName) {
-      case 'all': return '전체';
-      case 'exercise': return '운동';
-      case 'study': return '스터디';
-      case 'reading': return '독서';
-      case 'networking': return '네트워킹';
-      case 'culture': return '문화';
-      case 'outdoor': return '아웃도어';
-      default: return enumName;
+      case 'all':
+        return '전체';
+      case 'exercise':
+        return '운동';
+      case 'study':
+        return '스터디';
+      case 'reading':
+        return '독서';
+      case 'networking':
+        return '네트워킹';
+      case 'culture':
+        return '문화';
+      case 'outdoor':
+        return '아웃도어';
+      default:
+        return enumName;
     }
   }
 }
@@ -221,10 +229,10 @@ class MeetingCategoryData {
 
   /// JSON 직렬화 지원
   Map<String, dynamic> toJson() => {
-    'name': name,
-    'emoji': emoji,
-    'color': color.toARGB32(),
-    'gradient': gradient.map((c) => c.toARGB32()).toList(),
-    'englishName': englishName,
-  };
+        'name': name,
+        'emoji': emoji,
+        'color': color.toARGB32(),
+        'gradient': gradient.map((c) => c.toARGB32()).toList(),
+        'englishName': englishName,
+      };
 }

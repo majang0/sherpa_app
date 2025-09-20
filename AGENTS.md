@@ -58,3 +58,15 @@
 - API keys: configure via `core/config/api_config.dart` and env. Do not call `ApiConfig.debugApiKeyStatus()` in release builds.
 - Localization: default locale is `ko_KR`; keep user-facing strings Korean unless i18n is introduced.
 - Tests: repository has minimal tests; when adding, mirror `lib/` under `test/` and prefer fast, deterministic provider/widget tests. Use `flutter test --coverage` as needed.
+
+## Latest Meeting-System Update (2025-09-18)
+- Removed redundant artifacts per `모임시스템_최종_최적화계획.md`: `codex/meeting_system_cleanup_plan.md`, `codex/meeting_system_asset_review.md`, `codex/widget_integration_report.md`, `structure/모임시스템_최종분석보고서.md`.
+- Inlined `meeting_creation_provider.dart` into `lib/features/meetings/presentation/screens/new_meeting_discovery_screen.dart` via `_MeetingCreationNotifier`/`_meetingCreationProvider`; deleted the standalone provider directory.
+- Reflected changes across documentation: updated `structure/모임시스템_최종_최적화계획.md`, `codex/meeting_system_review.md`, and `lib/OPTIMIZATION_REPORT.md` to describe the new state and remaining action items (AI recommendation unification, analyzer debt, large-screen partitioning).
+- Analyzer/tests were not rerun: Windows-distributed Flutter scripts currently use CRLF (`#!/usr/bin/env bash\r`), causing WSL execution failures. Before running `dart format`/`flutter analyze`, convert `/mnt/c/flutter/bin/dart` (and peers) to LF or execute from Windows PowerShell.
+
+### Follow-up Priorities
+1. Implement global AI recommendation provider per `codex/ai_recommendation_refactoring_guide.md` and add coverage in `test/features/meetings/ai/`.
+2. Address legacy analyzer warnings concentrated under `lib/core/ai/` and `lib/shared/widgets/sherpi_widget.dart`.
+3. Break down `new_meeting_discovery_screen.dart` / `available_meeting_detail_screen.dart` into smaller parts for maintainability.
+4. Restore lint/test automation once Flutter tool scripts are runnable in the current environment.

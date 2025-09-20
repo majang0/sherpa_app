@@ -1,19 +1,19 @@
 // lib/features/daily_record/presentation/screens/focus_timer_record_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';  // SystemChrome 추가
+import 'package:flutter/services.dart'; // SystemChrome 추가
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import '../../../../core/theme/modern_colors.dart';
-import '../../../../core/constants/sherpi_dialogues.dart';  // 셰르피 컨텍스트 + 감정 포함
+import '../../../../core/constants/sherpi_dialogues.dart'; // 셰르피 컨텍스트 + 감정 포함
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_sherpi_provider.dart';  // 셰르피 Provider 추가
-import '../../../../shared/providers/global_point_provider.dart';  // 포인트 Provider 추가
-import '../../../../shared/models/point_system_model.dart';  // 포인트 시스템 모델 추가
+import '../../../../shared/providers/global_sherpi_provider.dart'; // 셰르피 Provider 추가
+import '../../../../shared/providers/global_point_provider.dart'; // 포인트 Provider 추가
+import '../../../../shared/models/point_system_model.dart'; // 포인트 시스템 모델 추가
 
 // 🎯 집중 유형 enum
 enum FocusType {
@@ -21,8 +21,9 @@ enum FocusType {
   deep('깊은 집중', '60분', '깊이 있는 장시간 몰입', SherpiEmotion.thinking),
   challenge('도전 집중', '120분', '극한의 초집중 도전', SherpiEmotion.cheering);
 
-  const FocusType(this.title, this.timeRange, this.description, this.sherpiEmotion);
-  
+  const FocusType(
+      this.title, this.timeRange, this.description, this.sherpiEmotion);
+
   final String title;
   final String timeRange;
   final String description;
@@ -31,9 +32,10 @@ enum FocusType {
 
 class FocusTimerRecordScreen extends ConsumerStatefulWidget {
   const FocusTimerRecordScreen({super.key});
-  
+
   @override
-  ConsumerState<FocusTimerRecordScreen> createState() => _FocusTimerRecordScreenState();
+  ConsumerState<FocusTimerRecordScreen> createState() =>
+      _FocusTimerRecordScreenState();
 }
 
 class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
@@ -51,16 +53,16 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
   int _remainingSeconds = 0;
   bool _isRunning = false;
   bool _isPaused = false;
-  
+
   // 🎮 게이미피케이션 시스템
-  int _focusHP = 100;                      // HP 시스템
-  int _exitAttempts = 0;                   // 이탈 시도 횟수
-  bool _isInFocusMode = false;             // 몰입 모드 상태
-  int _backgroundSeconds = 0;              // 백그라운드 시간
-  
+  int _focusHP = 100; // HP 시스템
+  int _exitAttempts = 0; // 이탈 시도 횟수
+  bool _isInFocusMode = false; // 몰입 모드 상태
+  int _backgroundSeconds = 0; // 백그라운드 시간
+
   // UI 관련
   bool _isExitDialogShowing = false;
-  
+
   // 🎨 새로운 카드 기반 UI 상태
   FocusType? _selectedFocusType;
   bool _showTimeAdjustment = false;
@@ -68,10 +70,10 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
   @override
   void initState() {
     super.initState();
-    
+
     // 🎮 생명주기 옵저버 등록
     WidgetsBinding.instance.addObserver(this);
-    
+
     // 애니메이션 컨트롤러 초기화
     _pulseController = AnimationController(
       duration: const Duration(milliseconds: 1500),
@@ -102,45 +104,45 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
     _rippleController.dispose();
     super.dispose();
   }
-  
+
   // 🎮 앱 생명주기 변화 감지
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    
+
     if (!_isInFocusMode) return;
-    
+
     switch (state) {
       case AppLifecycleState.paused:
         // 앱이 백그라운드로
         _onAppBackground();
         break;
-        
+
       case AppLifecycleState.resumed:
         // 앱이 다시 활성화
         _onAppResumed();
         break;
-        
+
       case AppLifecycleState.inactive:
         // 앱이 비활성 상태 (다이얼로그, 다른 앱 오버레이 등)
         _onAppInactive();
         break;
-        
+
       default:
         break;
     }
   }
-  
+
   void _onAppBackground() {
     if (!_isInFocusMode) return;
-    
+
     _backgroundSeconds = 0;
     _backgroundTimer?.cancel();
-    
+
     // 10초 카운트다운
     _backgroundTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _backgroundSeconds++;
-      
+
       if (_backgroundSeconds >= 10) {
         timer.cancel();
         // 몰입 실패 처리
@@ -148,34 +150,35 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       }
     });
   }
-  
+
   void _onAppResumed() {
     _backgroundTimer?.cancel();
-    
+
     if (_backgroundSeconds > 0 && _backgroundSeconds < 10) {
       // HP 감소 (백그라운드 전환 시 30 감소)
       setState(() {
         _focusHP = math.max(0, _focusHP - 30);
       });
-      
+
       // HP가 0이 되면 실패 처리
       if (_focusHP <= 0) {
         _handleHPFailure('백그라운드 전환으로 인한 HP 소진');
         return;
       }
-      
+
       // 셰르피 반응
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.general,
-        customDialogue: '다시 오셨네요! HP가 $_focusHP% 남았어요!',
-        emotion: _focusHP > 50 ? SherpiEmotion.happy : SherpiEmotion.warning,
-        duration: const Duration(seconds: 3),
-      );
+            context: SherpiContext.general,
+            customDialogue: '다시 오셨네요! HP가 $_focusHP% 남았어요!',
+            emotion:
+                _focusHP > 50 ? SherpiEmotion.happy : SherpiEmotion.warning,
+            duration: const Duration(seconds: 3),
+          );
     }
-    
+
     _backgroundSeconds = 0;
   }
-  
+
   void _onAppInactive() {
     // iOS 특수 상태 처리 (전화 등)
     if (_isInFocusMode && !_isPaused) {
@@ -185,31 +188,31 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       _pulseController.stop();
     }
   }
-  
+
   void _handleFocusFailure() {
     if (!mounted) return;
-    
+
     // 타이머 정지
     _timer?.cancel();
     _backgroundTimer?.cancel();
     _pulseController.stop();
     _rippleController.stop();
-    
+
     setState(() {
       _isRunning = false;
       _isInFocusMode = false;
       _focusHP = 0;
     });
-    
+
     // 전체화면 모드 종료
     _exitImmersiveMode();
-    
+
     // 실패 패널티 (10초 이탈은 20포인트)
     ref.read(globalPointProvider.notifier).spendPoints(
-      20,
-      '10초 이탈 실패 패널티',
-    );
-    
+          20,
+          '10초 이탈 실패 패널티',
+        );
+
     // 실패 알림창 표시
     _showBackgroundFailureDialog();
   }
@@ -217,28 +220,28 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
   // 🎮 HP 소진으로 인한 실패 처리
   void _handleHPFailure(String reason) {
     if (!mounted) return;
-    
+
     // 타이머 정지
     _timer?.cancel();
     _backgroundTimer?.cancel();
     _pulseController.stop();
     _rippleController.stop();
-    
+
     setState(() {
       _isRunning = false;
       _isInFocusMode = false;
       _focusHP = 0;
     });
-    
+
     // 전체화면 모드 종료
     _exitImmersiveMode();
-    
+
     // 실패 패널티
     ref.read(globalPointProvider.notifier).spendPoints(
-      20,
-      'HP 소진 패널티',
-    );
-    
+          20,
+          'HP 소진 패널티',
+        );
+
     // 실패 알림창 표시
     _showHPFailureDialog(reason);
   }
@@ -248,52 +251,52 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        backgroundColor: _isRunning 
-            ? const Color(0xFF1A1A2E) 
-            : const Color(0xFFF7F9FB),
-        appBar: _isRunning ? null : SherpaCleanAppBar(
-          title: '몰입 타이머',
-          backgroundColor: Colors.white,
-          foregroundColor: null,
-        ),
+        backgroundColor:
+            _isRunning ? const Color(0xFF1A1A2E) : const Color(0xFFF7F9FB),
+        appBar: _isRunning
+            ? null
+            : SherpaCleanAppBar(
+                title: '몰입 타이머',
+                backgroundColor: Colors.white,
+                foregroundColor: null,
+              ),
         body: AnimatedContainer(
           duration: const Duration(milliseconds: 500),
-          child: _isRunning 
-              ? _buildImmersiveRunningTimer()
-              : _buildTimerSetup(),
+          child:
+              _isRunning ? _buildImmersiveRunningTimer() : _buildTimerSetup(),
         ),
       ),
     );
   }
-  
+
   // 🎮 뒤로가기 처리
   Future<bool> _onWillPop() async {
     if (!_isInFocusMode) return true;
-    
+
     _exitAttempts++;
-    
+
     // HP 감소
     setState(() {
       _focusHP = math.max(0, _focusHP - 20);
     });
-    
+
     // HP가 0이 되면 실패 처리
     if (_focusHP <= 0) {
       _handleHPFailure('뒤로가기 시도로 인한 HP 소진');
       return true;
     }
-    
+
     // 셰르피 걱정 표현
     if (_exitAttempts == 1) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.tiredWarning,
-        customDialogue: '벌써 포기하시려구요? 조금만 더 해봐요! 😢',
-        emotion: SherpiEmotion.warning,
-        duration: const Duration(seconds: 3),
-      );
+            context: SherpiContext.tiredWarning,
+            customDialogue: '벌써 포기하시려구요? 조금만 더 해봐요! 😢',
+            emotion: SherpiEmotion.warning,
+            duration: const Duration(seconds: 3),
+          );
       return false;
     }
-    
+
     // 3번째 시도 시 확인 다이얼로그
     if (_exitAttempts >= 3) {
       final shouldExit = await _showExitConfirmDialog();
@@ -302,7 +305,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       }
       return shouldExit;
     }
-    
+
     return false;
   }
 
@@ -382,18 +385,18 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
   // 🎯 집중 유형 카드들
   Widget _buildFocusTypeCards() {
     return Column(
-      children: FocusType.values.map((type) => 
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: _buildFocusTypeCard(type),
-        )
-      ).toList(),
+      children: FocusType.values
+          .map((type) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _buildFocusTypeCard(type),
+              ))
+          .toList(),
     );
   }
 
   Widget _buildFocusTypeCard(FocusType type) {
     final isSelected = _selectedFocusType == type;
-    
+
     return GestureDetector(
       onTap: () {
         HapticFeedbackManager.lightImpact();
@@ -414,26 +417,23 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           }
           _remainingSeconds = _selectedMinutes * 60;
         });
-        
+
         // 셰르피 반응
         ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: SherpiContext.general,
-          customDialogue: '${type.title}을 선택하셨네요! 좋은 선택이에요!',
-          emotion: type.sherpiEmotion,
-          duration: const Duration(seconds: 2),
-        );
+              context: SherpiContext.general,
+              customDialogue: '${type.title}을 선택하셨네요! 좋은 선택이에요!',
+              emotion: type.sherpiEmotion,
+              duration: const Duration(seconds: 2),
+            );
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOutCubic,
-        transform: Matrix4.identity()
-          ..scale(isSelected ? 1.02 : 1.0),
+        transform: Matrix4.identity()..scale(isSelected ? 1.02 : 1.0),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected 
-              ? const Color(0xFFFAFBFC)
-              : Colors.white,
-          border: isSelected 
+          color: isSelected ? const Color(0xFFFAFBFC) : Colors.white,
+          border: isSelected
               ? Border.all(
                   color: const Color(0xFF0EA5E9).withOpacity(0.2),
                   width: 1.5,
@@ -442,7 +442,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: isSelected 
+              color: isSelected
                   ? const Color(0xFF0EA5E9).withOpacity(0.15)
                   : Colors.black.withOpacity(0.06),
               blurRadius: isSelected ? 20 : 8,
@@ -458,17 +458,19 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
               duration: const Duration(milliseconds: 300),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isSelected 
+                color: isSelected
                     ? const Color(0xFFE0F2FE)
                     : const Color(0xFFF8FAFC),
                 shape: BoxShape.circle,
-                boxShadow: isSelected ? [
-                  BoxShadow(
-                    color: const Color(0xFF0EA5E9).withOpacity(0.15),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ] : [],
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: const Color(0xFF0EA5E9).withOpacity(0.15),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : [],
               ),
               child: Hero(
                 tag: 'sherpi_${type.name}',
@@ -489,7 +491,9 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: isSelected ? ModernColors.primary : ModernColors.textPrimary,
+                      color: isSelected
+                          ? ModernColors.primary
+                          : ModernColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 3),
@@ -498,7 +502,9 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: isSelected ? ModernColors.primary.withOpacity(0.9) : ModernColors.secondary,
+                      color: isSelected
+                          ? ModernColors.primary.withOpacity(0.9)
+                          : ModernColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -549,7 +555,6 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
 
   // ⏱️ 시간 조정 위젯
   Widget _buildTimeAdjustment() {
-    
     return AnimatedOpacity(
       opacity: 1.0,
       duration: const Duration(milliseconds: 500),
@@ -598,7 +603,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                 ),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF1F5F9),
                     borderRadius: BorderRadius.circular(20),
@@ -661,7 +667,9 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
             ),
             const SizedBox(height: 8),
             Text(
-              _selectedFocusType != null ? '추천: ${_selectedFocusType!.timeRange}' : '원하는 시간을 설정하세요',
+              _selectedFocusType != null
+                  ? '추천: ${_selectedFocusType!.timeRange}'
+                  : '원하는 시간을 설정하세요',
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 color: ModernColors.textSecondary,
@@ -718,7 +726,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
     FocusType currentType;
     SherpiEmotion currentEmotion;
     List<String> messages;
-    
+
     if (_selectedMinutes >= 5 && _selectedMinutes <= 45) {
       // 가벼운 집중 (5분~45분)
       currentType = FocusType.light;
@@ -747,9 +755,10 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
         '당신의 한계를 뛰어넘어보세요! 🚀'
       ];
     }
-    
-    final randomMessage = messages[DateTime.now().millisecond % messages.length];
-    
+
+    final randomMessage =
+        messages[DateTime.now().millisecond % messages.length];
+
     return AnimatedOpacity(
       opacity: 1.0, // 항상 표시
       duration: const Duration(milliseconds: 500),
@@ -758,8 +767,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              currentEmotion == SherpiEmotion.happy 
-                  ? const Color(0xFFE6F7FF).withOpacity(0.7) 
+              currentEmotion == SherpiEmotion.happy
+                  ? const Color(0xFFE6F7FF).withOpacity(0.7)
                   : currentEmotion == SherpiEmotion.thinking
                       ? const Color(0xFFF0F4FF).withOpacity(0.7)
                       : const Color(0xFFFFF0E6).withOpacity(0.7),
@@ -1023,9 +1032,10 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                   ),
                   const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     decoration: BoxDecoration(
-                      color: _selectedMinutes >= 30 
+                      color: _selectedMinutes >= 30
                           ? ModernColors.success.withOpacity(0.1)
                           : ModernColors.warning.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -1035,7 +1045,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: _selectedMinutes >= 30 
+                        color: _selectedMinutes >= 30
                             ? ModernColors.success
                             : ModernColors.warning,
                       ),
@@ -1162,7 +1172,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
               final minutes = presetMinutes[index];
               final isSelected = _selectedMinutes == minutes;
               final isRecommended = minutes == 30;
-              
+
               return GestureDetector(
                 onTap: () {
                   setState(() {
@@ -1175,12 +1185,10 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                   duration: const Duration(milliseconds: 200),
                   width: isRecommended ? 100 : 80,
                   decoration: BoxDecoration(
-                    color: isSelected 
-                        ? ModernColors.primary
-                        : Colors.white,
+                    color: isSelected ? ModernColors.primary : Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isSelected 
+                      color: isSelected
                           ? ModernColors.primary
                           : isRecommended
                               ? ModernColors.success.withOpacity(0.5)
@@ -1189,7 +1197,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: isSelected 
+                        color: isSelected
                             ? ModernColors.primary.withOpacity(0.25)
                             : Colors.black.withOpacity(0.05),
                         blurRadius: isSelected ? 15 : 10,
@@ -1205,8 +1213,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: isSelected 
-                              ? Colors.white 
+                          color: isSelected
+                              ? Colors.white
                               : ModernColors.textPrimary,
                         ),
                       ),
@@ -1217,7 +1225,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
-                            color: isSelected 
+                            color: isSelected
                                 ? Colors.white.withOpacity(0.9)
                                 : ModernColors.success,
                           ),
@@ -1375,7 +1383,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           children: [
             // 배경 효과
             _buildParticleBackground(),
-            
+
             // 메인 UI
             SafeArea(
               child: Column(
@@ -1388,19 +1396,19 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                       child: _buildGiveUpButton(),
                     ),
                   ),
-                  
+
                   const Spacer(flex: 1),
-                  
+
                   // 타이머
                   _buildCircularTimer(progress, minutes, seconds),
-                  
+
                   const SizedBox(height: 30),
-                  
+
                   // HP 바
                   _buildFocusHPBar(),
-                  
+
                   const SizedBox(height: 30),
-                  
+
                   // 시간 텍스트
                   Text(
                     '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
@@ -1411,9 +1419,9 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                       letterSpacing: 4,
                     ),
                   ),
-                  
+
                   const SizedBox(height: 10),
-                  
+
                   // 상태 텍스트
                   Text(
                     _isPaused ? '일시정지됨' : _getMotivationalText(),
@@ -1423,24 +1431,24 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                       color: Colors.white.withOpacity(0.9),
                     ),
                   ),
-                  
+
                   const Spacer(flex: 1),
-                  
+
                   // 컨트롤 버튼들
                   _buildSimpleControlButtons(),
-                  
+
                   const SizedBox(height: 100),
                 ],
               ),
             ),
-            
+
             // 셰르피 (오른쪽 하단)
           ],
         ),
       ),
     );
   }
-  
+
   // 심플한 컨트롤 버튼 (새로운 메서드)
   Widget _buildSimpleControlButtons() {
     return Row(
@@ -1467,9 +1475,9 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
             size: 32,
           ),
         ),
-        
+
         const SizedBox(width: 40),
-        
+
         // 정지 버튼
         ElevatedButton(
           onPressed: () {
@@ -1494,14 +1502,14 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       ],
     );
   }
-  
+
   // 🎮 HP 바 위젯 (강화된 색상 시스템)
   Widget _buildFocusHPBar() {
     // HP 상태별 색상 및 아이콘
     Color hpColor;
     IconData hpIcon;
     String hpStatus;
-    
+
     if (_focusHP > 60) {
       hpColor = const Color(0xFF10B981); // 초록색 (안전)
       hpIcon = Icons.favorite;
@@ -1515,7 +1523,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       hpIcon = Icons.warning;
       hpStatus = '위험';
     }
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Column(
@@ -1541,11 +1549,13 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: hpColor.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: hpColor.withOpacity(0.5), width: 1),
+                      border:
+                          Border.all(color: hpColor.withOpacity(0.5), width: 1),
                     ),
                     child: Text(
                       hpStatus,
@@ -1602,7 +1612,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       ),
     );
   }
-  
+
   // 동기부여 텍스트
   String _getMotivationalText() {
     final progress = 1.0 - (_remainingSeconds / (_selectedMinutes * 60));
@@ -1613,7 +1623,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
   }
 
   Widget _buildCircularTimer(double progress, int minutes, int seconds) {
-    return IgnorePointer(  // 터치 이벤트 무시
+    return IgnorePointer(
+      // 터치 이벤트 무시
       child: AnimatedBuilder(
         animation: _pulseAnimation,
         builder: (context, child) {
@@ -1672,7 +1683,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
   }
 
   Widget _buildParticleBackground() {
-    return IgnorePointer(  // 터치 이벤트 무시
+    return IgnorePointer(
+      // 터치 이벤트 무시
       child: AnimatedBuilder(
         animation: _rippleAnimation,
         builder: (context, child) {
@@ -1699,29 +1711,29 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
               _togglePause();
             },
             borderRadius: BorderRadius.circular(40),
-            splashColor: _isPaused 
+            splashColor: _isPaused
                 ? Colors.green.withOpacity(0.3)
                 : Colors.white.withOpacity(0.3),
-            highlightColor: _isPaused 
+            highlightColor: _isPaused
                 ? Colors.green.withOpacity(0.1)
                 : Colors.white.withOpacity(0.1),
             child: Container(
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: _isPaused 
+                color: _isPaused
                     ? Colors.green.withOpacity(0.3)
                     : Colors.white.withOpacity(0.2),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: _isPaused 
+                  color: _isPaused
                       ? Colors.green.withOpacity(0.8)
                       : Colors.white.withOpacity(0.6),
                   width: 2.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: _isPaused 
+                    color: _isPaused
                         ? Colors.green.withOpacity(0.4)
                         : Colors.white.withOpacity(0.2),
                     blurRadius: 12,
@@ -1740,7 +1752,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           ),
         ),
         const SizedBox(width: 60),
-        
+
         // 정지 버튼
         Material(
           color: Colors.transparent,
@@ -1784,11 +1796,11 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       ],
     );
   }
-  
+
   // 정지 확인 다이얼로그
   Future<void> _showStopConfirmDialog() async {
     print('📋 정지 확인 다이얼로그 표시');
-    
+
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -1869,7 +1881,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
         );
       },
     );
-    
+
     if (result == true) {
       _handleGiveUp();
     }
@@ -1880,20 +1892,20 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       _isRunning = true;
       _isPaused = false;
       _isInFocusMode = true;
-      _focusHP = 100;  // HP 초기화
+      _focusHP = 100; // HP 초기화
       _exitAttempts = 0;
     });
-    
+
     // 🎯 전체화면 모드 진입
     _enterImmersiveMode();
 
     // 🎮 셰르피 응원 모드
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.focusComplete,
-      customDialogue: '$_selectedMinutes분 몰입 시작! 제가 옆에서 응원할게요! 💪',
-      emotion: SherpiEmotion.cheering,
-      duration: const Duration(seconds: 4),
-    );
+          context: SherpiContext.focusComplete,
+          customDialogue: '$_selectedMinutes분 몰입 시작! 제가 옆에서 응원할게요! 💪',
+          emotion: SherpiEmotion.cheering,
+          duration: const Duration(seconds: 4),
+        );
 
     HapticFeedbackManager.heavyImpact();
     _pulseController.repeat(reverse: true);
@@ -1903,7 +1915,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       if (!_isPaused && _isInFocusMode) {
         setState(() {
           _remainingSeconds--;
-          
+
           // 진행 상황에 따른 셰르피 반응
           _updateSherpiByProgress();
         });
@@ -1914,19 +1926,19 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       }
     });
   }
-  
+
   // 🎯 전체화면 몰입 모드 진입
   void _enterImmersiveMode() {
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.immersiveSticky,
       overlays: [], // 모든 시스템 UI 숨기기
     );
-    
+
     // 화면 방향 고정 (세로)
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    
+
     // 상태바 스타일 (다크 모드)
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -1937,21 +1949,21 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       ),
     );
   }
-  
+
   // 🎯 몰입 모드 종료
   void _exitImmersiveMode() {
     SystemChrome.setEnabledSystemUIMode(
       SystemUiMode.manual,
       overlays: SystemUiOverlay.values, // 모든 UI 복원
     );
-    
+
     // 화면 방향 제한 해제
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-    
+
     // 기본 상태바 스타일
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -1962,69 +1974,69 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       ),
     );
   }
-  
+
   // 진행 상황에 따른 셰르피 업데이트
   void _updateSherpiByProgress() {
     final progress = 1.0 - (_remainingSeconds / (_selectedMinutes * 60));
-    
+
     // 25% 달성
     if (progress >= 0.25 && progress < 0.26) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.encouragement,
-        customDialogue: '25% 완료! 잘하고 있어요! 🎯',
-        emotion: SherpiEmotion.happy,
-        duration: const Duration(seconds: 3),
-      );
+            context: SherpiContext.encouragement,
+            customDialogue: '25% 완료! 잘하고 있어요! 🎯',
+            emotion: SherpiEmotion.happy,
+            duration: const Duration(seconds: 3),
+          );
     }
-    
+
     // 50% 달성
     else if (progress >= 0.50 && progress < 0.51) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.encouragement,
-        customDialogue: '절반 왔어요! 조금만 더 힘내요! 💙',
-        emotion: SherpiEmotion.cheering,
-        duration: const Duration(seconds: 3),
-      );
+            context: SherpiContext.encouragement,
+            customDialogue: '절반 왔어요! 조금만 더 힘내요! 💙',
+            emotion: SherpiEmotion.cheering,
+            duration: const Duration(seconds: 3),
+          );
     }
-    
+
     // 75% 달성
     else if (progress >= 0.75 && progress < 0.76) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.encouragement,
-        customDialogue: '거의 다 왔어요! 마지막 스퍼트! 🔥',
-        emotion: SherpiEmotion.confidence,
-        duration: const Duration(seconds: 3),
-      );
+            context: SherpiContext.encouragement,
+            customDialogue: '거의 다 왔어요! 마지막 스퍼트! 🔥',
+            emotion: SherpiEmotion.confidence,
+            duration: const Duration(seconds: 3),
+          );
     }
   }
 
   void _togglePause() {
     print('🎮 일시정지 토글: 현재 상태 = $_isPaused');
-    
+
     setState(() {
       _isPaused = !_isPaused;
     });
-    
+
     if (_isPaused) {
       _pulseController.stop();
       _rippleController.stop();
-        print('⏸️ 일시정지됨');
+      print('⏸️ 일시정지됨');
     } else {
       _pulseController.repeat(reverse: true);
       _rippleController.repeat();
-        print('▶️ 재시작됨');
+      print('▶️ 재시작됨');
     }
-    
+
     HapticFeedbackManager.mediumImpact();
   }
 
   void _stopTimer() {
     print('🛑 타이머 정지 시작');
-    
+
     _timer?.cancel();
     _pulseController.stop();
     _rippleController.stop();
-    
+
     setState(() {
       _isRunning = false;
       _isPaused = false;
@@ -2033,10 +2045,10 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       _focusHP = 100;
       _exitAttempts = 0;
     });
-    
+
     // 전체화면 모드 종료
     _exitImmersiveMode();
-    
+
     HapticFeedbackManager.mediumImpact();
     print('✅ 타이머 정지 완료');
   }
@@ -2045,34 +2057,35 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
     _timer?.cancel();
     _pulseController.stop();
     _rippleController.stop();
-    
+
     // 🎮 성공 포인트 계산
-    final basePoints = _selectedMinutes * 2;  // 분당 2포인트
-    final hpBonus = (_focusHP / 100 * 50).round();  // HP 보너스 최대 50점
+    final basePoints = _selectedMinutes * 2; // 분당 2포인트
+    final hpBonus = (_focusHP / 100 * 50).round(); // HP 보너스 최대 50점
     final totalPoints = basePoints + hpBonus;
-    
+
     // 🎮 globalUserProvider로 데이터 업데이트
     ref.read(globalUserProvider.notifier).handleActivityCompletion(
-      activityType: 'focus',
-      xp: _selectedMinutes.toDouble(),  // 분당 1 XP
-      points: totalPoints,
-      statIncreases: {'willpower': 0.2, 'technique': 0.1},
-      message: '몰입 시간 완료! $_selectedMinutes분 집중',
-      additionalData: {
-        'minutes': _selectedMinutes,
-        'hp_remaining': _focusHP,
-        'completed_at': DateTime.now().toIso8601String(),
-      },
-    );
-    
+          activityType: 'focus',
+          xp: _selectedMinutes.toDouble(), // 분당 1 XP
+          points: totalPoints,
+          statIncreases: {'willpower': 0.2, 'technique': 0.1},
+          message: '몰입 시간 완료! $_selectedMinutes분 집중',
+          additionalData: {
+            'minutes': _selectedMinutes,
+            'hp_remaining': _focusHP,
+            'completed_at': DateTime.now().toIso8601String(),
+          },
+        );
+
     // 🎮 셰르피 축하
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.achievement,
-      customDialogue: '대단해요! $_selectedMinutes분 몰입 완료! 🎉\n$totalPoints 포인트를 획득했어요!',
-      emotion: SherpiEmotion.special,
-      duration: const Duration(seconds: 5),
-    );
-    
+          context: SherpiContext.achievement,
+          customDialogue:
+              '대단해요! $_selectedMinutes분 몰입 완료! 🎉\n$totalPoints 포인트를 획득했어요!',
+          emotion: SherpiEmotion.special,
+          duration: const Duration(seconds: 5),
+        );
+
     // 전체화면 모드 종료
     _exitImmersiveMode();
 
@@ -2186,12 +2199,12 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       ),
     );
   }
-  
+
   // 🎮 종료 확인 다이얼로그
   Future<bool> _showExitConfirmDialog() async {
     if (_isExitDialogShowing) return false;
     _isExitDialogShowing = true;
-    
+
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -2202,7 +2215,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
         backgroundColor: const Color(0xFF1A1A2E),
         title: Row(
           children: [
-            Icon(Icons.warning_amber_rounded, color: ModernColors.warning, size: 28),
+            Icon(Icons.warning_amber_rounded,
+                color: ModernColors.warning, size: 28),
             const SizedBox(width: 12),
             Text(
               '정말 포기하시겠어요?',
@@ -2235,7 +2249,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
               ),
               child: Row(
                 children: [
-                  Icon(Icons.info_outline, size: 20, color: ModernColors.warning),
+                  Icon(Icons.info_outline,
+                      size: 20, color: ModernColors.warning),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -2258,11 +2273,11 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
               // 계속하기 보상
               _exitAttempts = 0;
               ref.read(sherpiProvider.notifier).showInstantMessage(
-                context: SherpiContext.encouragement,
-                customDialogue: '잘 선택하셨어요! 계속 힘내봐요! 💪',
-                emotion: SherpiEmotion.cheering,
-                duration: const Duration(seconds: 3),
-              );
+                    context: SherpiContext.encouragement,
+                    customDialogue: '잘 선택하셨어요! 계속 힘내봐요! 💪',
+                    emotion: SherpiEmotion.cheering,
+                    duration: const Duration(seconds: 3),
+                  );
             },
             child: Text(
               '계속하기',
@@ -2291,11 +2306,11 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
         ],
       ),
     );
-    
+
     _isExitDialogShowing = false;
     return result ?? false;
   }
-  
+
   // 🎮 포기 처리
   void _handleGiveUp() {
     _timer?.cancel();
@@ -2303,33 +2318,33 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       _isRunning = false;
       _isInFocusMode = false;
     });
-    
+
     // 포기 패널티
-    final penalty = 20;  // 20포인트 차감
-    
+    final penalty = 20; // 20포인트 차감
+
     ref.read(globalPointProvider.notifier).spendPoints(
-      penalty,
-      '몰입 포기 패널티',
-    );
-    
+          penalty,
+          '몰입 포기 패널티',
+        );
+
     // 셰르피 실망
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.climbingFailure,
-      customDialogue: '아쉬워요... 다음엔 꼭 성공해봐요! 😢\n${penalty}포인트가 차감되었어요.',
-      emotion: SherpiEmotion.sad,
-      duration: const Duration(seconds: 4),
-    );
-    
+          context: SherpiContext.climbingFailure,
+          customDialogue: '아쉬워요... 다음엔 꼭 성공해봐요! 😢\n${penalty}포인트가 차감되었어요.',
+          emotion: SherpiEmotion.sad,
+          duration: const Duration(seconds: 4),
+        );
+
     // 전체화면 모드 종료
     _exitImmersiveMode();
-    
+
     Navigator.of(context).pop();
   }
-  
+
   // 🎮 HP 실패 알림창
   void _showHPFailureDialog(String reason) {
     if (!mounted) return;
-    
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -2492,7 +2507,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
   // 🎮 백그라운드 10초 이탈 실패 알림창
   void _showBackgroundFailureDialog() {
     if (!mounted) return;
-    
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -2667,11 +2682,11 @@ class ParticlePainter extends CustomPainter {
 
     // 배경에 떠다니는 파티클들
     for (int i = 0; i < 20; i++) {
-      final x = (size.width / 20) * i + 
-                math.sin(animationValue * 2 * math.pi + i) * 30;
-      final y = (size.height / 10) * (i % 10) + 
-                math.cos(animationValue * 2 * math.pi + i) * 20;
-      
+      final x = (size.width / 20) * i +
+          math.sin(animationValue * 2 * math.pi + i) * 30;
+      final y = (size.height / 10) * (i % 10) +
+          math.cos(animationValue * 2 * math.pi + i) * 20;
+
       canvas.drawCircle(
         Offset(x, y),
         2 + math.sin(animationValue * 4 * math.pi + i) * 1,

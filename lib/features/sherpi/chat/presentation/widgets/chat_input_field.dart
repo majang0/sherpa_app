@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/constants/app_colors.dart';
 
 /// ⌨️ 채팅 입력창 위젯
-/// 
+///
 /// 사용자가 셰르피에게 메시지를 입력할 수 있는 입력창과 전송 버튼
 class ChatInputField extends StatefulWidget {
   final Function(String) onSendMessage;
@@ -36,24 +36,24 @@ class _ChatInputFieldState extends State<ChatInputField>
   final FocusNode _focusNode = FocusNode();
   late AnimationController _buttonAnimationController;
   late AnimationController _suggestionsAnimationController;
-  
+
   bool _showSuggestions = false;
   bool _hasText = false;
 
   @override
   void initState() {
     super.initState();
-    
+
     _buttonAnimationController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    
+
     _suggestionsAnimationController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     _textController.addListener(_onTextChanged);
     _focusNode.addListener(_onFocusChanged);
   }
@@ -73,7 +73,7 @@ class _ChatInputFieldState extends State<ChatInputField>
       setState(() {
         _hasText = hasText;
       });
-      
+
       if (hasText) {
         _buttonAnimationController.forward();
       } else {
@@ -83,7 +83,9 @@ class _ChatInputFieldState extends State<ChatInputField>
   }
 
   void _onFocusChanged() {
-    if (_focusNode.hasFocus && widget.suggestions != null && widget.suggestions!.isNotEmpty) {
+    if (_focusNode.hasFocus &&
+        widget.suggestions != null &&
+        widget.suggestions!.isNotEmpty) {
       setState(() {
         _showSuggestions = true;
       });
@@ -101,10 +103,10 @@ class _ChatInputFieldState extends State<ChatInputField>
     if (text.isNotEmpty && widget.isEnabled && !widget.isLoading) {
       widget.onSendMessage(text);
       _textController.clear();
-      
+
       // 햅틱 피드백
       HapticFeedback.lightImpact();
-      
+
       // 포커스 유지 (연속 대화를 위해)
       _focusNode.requestFocus();
     }
@@ -128,9 +130,8 @@ class _ChatInputFieldState extends State<ChatInputField>
       mainAxisSize: MainAxisSize.min,
       children: [
         // 제안 목록
-        if (_showSuggestions && widget.suggestions != null)
-          _buildSuggestions(),
-        
+        if (_showSuggestions && widget.suggestions != null) _buildSuggestions(),
+
         // 입력창 영역
         Container(
           padding: const EdgeInsets.all(16),
@@ -159,7 +160,7 @@ class _ChatInputFieldState extends State<ChatInputField>
                       color: Colors.grey.shade50,
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
-                        color: _focusNode.hasFocus 
+                        color: _focusNode.hasFocus
                             ? AppColors.primary.withOpacity(0.5)
                             : Colors.grey.shade200,
                       ),
@@ -187,7 +188,7 @@ class _ChatInputFieldState extends State<ChatInputField>
                           vertical: 14,
                         ),
                         // 로딩 중일 때 표시
-                        suffixIcon: widget.isLoading 
+                        suffixIcon: widget.isLoading
                             ? Padding(
                                 padding: const EdgeInsets.all(12),
                                 child: SizedBox(
@@ -206,9 +207,9 @@ class _ChatInputFieldState extends State<ChatInputField>
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(width: 12),
-                
+
                 // 전송 버튼
                 AnimatedBuilder(
                   animation: _buttonAnimationController,
@@ -219,28 +220,37 @@ class _ChatInputFieldState extends State<ChatInputField>
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: _hasText && widget.isEnabled && !widget.isLoading
-                              ? AppColors.primary
-                              : Colors.grey.shade300,
+                          color:
+                              _hasText && widget.isEnabled && !widget.isLoading
+                                  ? AppColors.primary
+                                  : Colors.grey.shade300,
                           shape: BoxShape.circle,
-                          boxShadow: _hasText && widget.isEnabled && !widget.isLoading ? [
-                            BoxShadow(
-                              color: AppColors.primary.withOpacity(0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ] : [],
+                          boxShadow: _hasText &&
+                                  widget.isEnabled &&
+                                  !widget.isLoading
+                              ? [
+                                  BoxShadow(
+                                    color: AppColors.primary.withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ]
+                              : [],
                         ),
                         child: Material(
                           color: Colors.transparent,
                           child: InkWell(
                             borderRadius: BorderRadius.circular(24),
-                            onTap: _hasText && widget.isEnabled && !widget.isLoading 
-                                ? _sendMessage 
+                            onTap: _hasText &&
+                                    widget.isEnabled &&
+                                    !widget.isLoading
+                                ? _sendMessage
                                 : null,
                             child: Icon(
                               Icons.send_rounded,
-                              color: _hasText && widget.isEnabled && !widget.isLoading
+                              color: _hasText &&
+                                      widget.isEnabled &&
+                                      !widget.isLoading
                                   ? Colors.white
                                   : Colors.grey.shade500,
                               size: 20,

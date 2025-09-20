@@ -9,42 +9,43 @@ import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../../core/ai/activity_analysis_service.dart';
 
 /// 📖 독서 분석 페이지 - 감성적인 독서 여정
-/// 
+///
 /// StoryGraph와 같은 무드 기반 독서 경험을 제공합니다.
 /// 셰르피가 함께하는 감성적인 독서 여정을 구현합니다.
 class ReadingAnalysisPage extends ConsumerStatefulWidget {
   const ReadingAnalysisPage({super.key});
 
   @override
-  ConsumerState<ReadingAnalysisPage> createState() => _ReadingAnalysisPageState();
+  ConsumerState<ReadingAnalysisPage> createState() =>
+      _ReadingAnalysisPageState();
 }
 
 class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
     with TickerProviderStateMixin {
-  
   // 애니메이션 컨트롤러들
   late AnimationController _pageAnimationController;
   late AnimationController _floatingAnimationController;
   late AnimationController _heartbeatController;
   late AnimationController _shimmerController;
-  
+
   // 애니메이션들
   late Animation<double> _fadeInAnimation;
   late Animation<double> _scaleAnimation;
   late Animation<double> _floatingAnimation;
   late Animation<double> _heartbeatAnimation;
-  
+
   // AI 분석 서비스
-  final ActivityAnalysisService _analysisService = ActivityAnalysisService.instance;
-  
+  final ActivityAnalysisService _analysisService =
+      ActivityAnalysisService.instance;
+
   // 종합 독서 분석 데이터
   ComprehensiveReadingAnalysis? _readingAnalysis;
   bool _isLoadingAnalysis = false;
-  
+
   // 오늘과 이전 독서 기록
   ReadingLog? _todayReading;
   ReadingLog? _previousReading;
-  
+
   @override
   void initState() {
     super.initState();
@@ -52,7 +53,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
     _loadReadingData();
     _loadCachedAnalysis();
   }
-  
+
   /// 애니메이션 초기화
   void _initializeAnimations() {
     // 페이지 전환 애니메이션
@@ -60,31 +61,31 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     // 떠다니는 애니메이션 (셰르피 등)
     _floatingAnimationController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     // 하트비트 애니메이션 (중요 요소 강조)
     _heartbeatController = AnimationController(
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     // 쉬머 효과 애니메이션
     _shimmerController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat();
-    
+
     // 애니메이션 곡선 설정
     _fadeInAnimation = CurvedAnimation(
       parent: _pageAnimationController,
       curve: Curves.easeInOut,
     );
-    
+
     _scaleAnimation = Tween<double>(
       begin: 0.8,
       end: 1.0,
@@ -92,7 +93,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       parent: _pageAnimationController,
       curve: Curves.elasticOut,
     ));
-    
+
     _floatingAnimation = Tween<double>(
       begin: -10,
       end: 10,
@@ -100,7 +101,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       parent: _floatingAnimationController,
       curve: Curves.easeInOut,
     ));
-    
+
     _heartbeatAnimation = Tween<double>(
       begin: 1.0,
       end: 1.05,
@@ -108,30 +109,30 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       parent: _heartbeatController,
       curve: Curves.easeInOut,
     ));
-    
+
     // 페이지 애니메이션 시작
     _pageAnimationController.forward();
   }
-  
+
   /// 독서 데이터 로드
   void _loadReadingData() {
     final user = ref.read(globalUserProvider);
     if (user.dailyRecords.readingLogs.isEmpty) return;
-    
+
     final readingLogs = user.dailyRecords.readingLogs;
-    
+
     if (readingLogs.isNotEmpty) {
       // 날짜순 정렬 (최신순)
       final sortedLogs = List<ReadingLog>.from(readingLogs)
         ..sort((a, b) => b.date.compareTo(a.date));
-      
+
       // 오늘 기록 찾기
       final today = DateTime.now();
       _todayReading = sortedLogs.firstWhere(
         (log) => _isSameDay(log.date, today),
         orElse: () => sortedLogs.first, // 오늘 기록이 없으면 가장 최근 기록
       );
-      
+
       // 이전 기록 찾기
       if (sortedLogs.length > 1) {
         _previousReading = sortedLogs.firstWhere(
@@ -141,24 +142,25 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       }
     }
   }
-  
+
   /// 같은 날짜인지 확인
   bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
-           date1.month == date2.month &&
-           date1.day == date2.day;
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
-  
+
   /// 캐시된 분석 데이터 로드
   Future<void> _loadCachedAnalysis() async {
     setState(() {
       _isLoadingAnalysis = true;
     });
-    
+
     try {
       // ActivityAnalysisService에서 캐시된 독서 분석 로드
-      final cachedAnalysis = await _analysisService.getComprehensiveReadingFromCache();
-      
+      final cachedAnalysis =
+          await _analysisService.getComprehensiveReadingFromCache();
+
       if (cachedAnalysis != null) {
         setState(() {
           _readingAnalysis = cachedAnalysis;
@@ -178,11 +180,11 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       });
     }
   }
-  
+
   // AI 분석 생성 메서드 제거됨 - 이제 GlobalUserNotifier에서 중앙 처리
-  
+
   // _saveCachedAnalysis 메서드 제거 - ActivityAnalysisService가 자체적으로 캐싱 처리
-  
+
   @override
   void dispose() {
     _pageAnimationController.dispose();
@@ -191,17 +193,16 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
     _shimmerController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ModernColors.background,
-      body: _todayReading == null
-          ? _buildEmptyState()
-          : _buildAnalysisContent(),
+      body:
+          _todayReading == null ? _buildEmptyState() : _buildAnalysisContent(),
     );
   }
-  
+
   /// 빈 상태 UI
   Widget _buildEmptyState() {
     return Center(
@@ -213,17 +214,19 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
             'assets/images/sherpi/sherpi_thinking.png',
             width: 120,
             height: 120,
-          ).animate(
-            onPlay: (controller) => controller.repeat(),
-          ).scale(
-            duration: const Duration(seconds: 2),
-            curve: Curves.easeInOut,
-            begin: const Offset(0.95, 0.95),
-            end: const Offset(1.05, 1.05),
-          ),
-          
+          )
+              .animate(
+                onPlay: (controller) => controller.repeat(),
+              )
+              .scale(
+                duration: const Duration(seconds: 2),
+                curve: Curves.easeInOut,
+                begin: const Offset(0.95, 0.95),
+                end: const Offset(1.05, 1.05),
+              ),
+
           const SizedBox(height: 24),
-          
+
           Text(
             '아직 독서 기록이 없어요',
             style: GoogleFonts.notoSans(
@@ -232,9 +235,9 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
               color: ModernColors.textPrimary,
             ),
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           Text(
             '책을 읽고 기록을 남겨보세요.\n셰르피가 함께 독서 여정을 분석해드릴게요!',
             textAlign: TextAlign.center,
@@ -248,7 +251,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       ),
     );
   }
-  
+
   /// 분석 콘텐츠
   Widget _buildAnalysisContent() {
     return CustomScrollView(
@@ -258,28 +261,28 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
         SliverToBoxAdapter(
           child: _buildHeader(),
         ),
-        
+
         // 이전 책 섹션 (있는 경우)
         if (_previousReading != null)
           SliverToBoxAdapter(
             child: _buildPreviousBookSection(),
           ),
-        
+
         // 오늘 책 섹션
         SliverToBoxAdapter(
           child: _buildTodayBookSection(),
         ),
-        
+
         // 독서 여정 응원 섹션
         SliverToBoxAdapter(
           child: _buildJourneyEncouragementSection(),
         ),
-        
+
         // 추천 도서 섹션
         SliverToBoxAdapter(
           child: _buildRecommendationsSection(),
         ),
-        
+
         // 하단 여백
         const SliverToBoxAdapter(
           child: SizedBox(height: 100),
@@ -287,7 +290,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       ],
     );
   }
-  
+
   /// 헤더
   Widget _buildHeader() {
     return Container(
@@ -312,7 +315,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
               ),
             ),
           ),
-          
+
           // 콘텐츠
           SafeArea(
             child: Padding(
@@ -321,7 +324,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Spacer(),
-                  
+
                   // 타이틀
                   FadeTransition(
                     opacity: _fadeInAnimation,
@@ -341,9 +344,9 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                             );
                           },
                         ),
-                        
+
                         const SizedBox(width: 16),
-                        
+
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,7 +381,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       ),
     ).animate().fadeIn(duration: const Duration(milliseconds: 800));
   }
-  
+
   /// 이전 책 섹션
   Widget _buildPreviousBookSection() {
     return Padding(
@@ -404,57 +407,58 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
           child: Container(
             padding: const EdgeInsets.all(24),
             child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 섹션 헤더
+                Row(
                   children: [
-                    // 섹션 헤더
-                    Row(
-                      children: [
-                        Container(
-                          width: 36,
-                          height: 36,
-                          decoration: BoxDecoration(
-                            color: ModernColors.mintPale,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '📖',
-                              style: GoogleFonts.notoSans(fontSize: 18),
-                            ),
-                          ),
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: ModernColors.mintPale,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text(
+                          '📖',
+                          style: GoogleFonts.notoSans(fontSize: 18),
                         ),
-                        const SizedBox(width: 12),
-                        Text(
-                          '지난 독서',
-                          style: GoogleFonts.notoSans(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: ModernColors.textSecondary,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                    
-                    const SizedBox(height: 20),
-                    
-                    // 책 정보
-                    _buildBookInfo(_previousReading!),
-                    
-                    const SizedBox(height: 16),
-                    
-                    // 셰르피 인사이트
-                    if (_readingAnalysis?.previousInsight != null)
-                      _buildSherpiInsight(_readingAnalysis!.previousInsight),
+                    const SizedBox(width: 12),
+                    Text(
+                      '지난 독서',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: ModernColors.textSecondary,
+                      ),
+                    ),
                   ],
                 ),
+
+                const SizedBox(height: 20),
+
+                // 책 정보
+                _buildBookInfo(_previousReading!),
+
+                const SizedBox(height: 16),
+
+                // 셰르피 인사이트
+                if (_readingAnalysis?.previousInsight != null)
+                  _buildSherpiInsight(_readingAnalysis!.previousInsight),
+              ],
+            ),
           ),
         ),
       ),
-    ).animate()
-      .fadeIn(delay: const Duration(milliseconds: 300))
-      .slideY(begin: 0.1, end: 0);
+    )
+        .animate()
+        .fadeIn(delay: const Duration(milliseconds: 300))
+        .slideY(begin: 0.1, end: 0);
   }
-  
+
   /// 오늘 책 섹션
   Widget _buildTodayBookSection() {
     return Padding(
@@ -541,14 +545,14 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // 책 정보 (더 크고 강조)
             _buildBookInfo(_todayReading!, isToday: true),
-            
+
             const SizedBox(height: 20),
-            
+
             // 셰르피 인사이트
             if (_readingAnalysis?.todayInsight != null)
               _buildSherpiInsight(
@@ -558,11 +562,12 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
           ],
         ),
       ),
-    ).animate()
-      .fadeIn(delay: const Duration(milliseconds: 600))
-      .slideY(begin: 0.1, end: 0);
+    )
+        .animate()
+        .fadeIn(delay: const Duration(milliseconds: 600))
+        .slideY(begin: 0.1, end: 0);
   }
-  
+
   /// 독서 여정 응원 섹션
   Widget _buildJourneyEncouragementSection() {
     return Padding(
@@ -582,7 +587,8 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                 animation: _floatingAnimation,
                 builder: (context, child) {
                   return Transform.translate(
-                    offset: Offset(_floatingAnimation.value * 0.5, _floatingAnimation.value),
+                    offset: Offset(_floatingAnimation.value * 0.5,
+                        _floatingAnimation.value),
                     child: Image.asset(
                       SherpiEmotion.cheering.imagePath,
                       width: 108,
@@ -591,9 +597,9 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                   );
                 },
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // 응원 메시지
               if (_readingAnalysis?.journeyEncouragement != null)
                 Text(
@@ -605,12 +611,13 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                     height: 1.5,
                     fontWeight: FontWeight.w500,
                   ),
-                ).animate()
-                  .fadeIn(delay: const Duration(milliseconds: 800))
-                  .scale(begin: const Offset(0.9, 0.9)),
-              
+                )
+                    .animate()
+                    .fadeIn(delay: const Duration(milliseconds: 800))
+                    .scale(begin: const Offset(0.9, 0.9)),
+
               const SizedBox(height: 24),
-              
+
               // 독서 통계 미니 카드들
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -636,11 +643,12 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
           ),
         ),
       ),
-    ).animate()
-      .fadeIn(delay: const Duration(milliseconds: 900))
-      .slideY(begin: 0.1, end: 0);
+    )
+        .animate()
+        .fadeIn(delay: const Duration(milliseconds: 900))
+        .slideY(begin: 0.1, end: 0);
   }
-  
+
   /// 추천 도서 섹션
   Widget _buildRecommendationsSection() {
     return Padding(
@@ -677,13 +685,14 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // 추천 도서 카드들
           if (_readingAnalysis?.recommendations == null && _isLoadingAnalysis)
             _buildLoadingRecommendations()
-          else if (_readingAnalysis?.recommendations != null && _readingAnalysis!.recommendations.isNotEmpty)
+          else if (_readingAnalysis?.recommendations != null &&
+              _readingAnalysis!.recommendations.isNotEmpty)
             ..._readingAnalysis!.recommendations.asMap().entries.map((entry) {
               final index = entry.key;
               final book = entry.value;
@@ -693,17 +702,18 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
             _buildDefaultRecommendations(),
         ],
       ),
-    ).animate()
-      .fadeIn(delay: const Duration(milliseconds: 1200))
-      .slideY(begin: 0.1, end: 0);
+    )
+        .animate()
+        .fadeIn(delay: const Duration(milliseconds: 1200))
+        .slideY(begin: 0.1, end: 0);
   }
-  
+
   /// 책 정보 위젯
   Widget _buildBookInfo(ReadingLog book, {bool isToday = false}) {
     return Container(
       padding: EdgeInsets.all(isToday ? 14 : 12),
       decoration: BoxDecoration(
-        color: isToday 
+        color: isToday
             ? Colors.white
             : ModernColors.mintPale.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(isToday ? 14 : 12),
@@ -735,7 +745,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                 width: isToday ? 60 : 50,
                 height: isToday ? 80 : 70,
                 decoration: BoxDecoration(
-                  gradient: isToday 
+                  gradient: isToday
                       ? LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -745,9 +755,11 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                           ],
                         )
                       : null,
-                  color: !isToday ? ModernColors.reading.withValues(alpha: 0.08) : null,
+                  color: !isToday
+                      ? ModernColors.reading.withValues(alpha: 0.08)
+                      : null,
                   borderRadius: BorderRadius.circular(12),
-                  border: isToday 
+                  border: isToday
                       ? Border.all(
                           color: ModernColors.deepMint.withValues(alpha: 0.1),
                           width: 1,
@@ -761,9 +773,9 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                   ),
                 ),
               ),
-              
+
               const SizedBox(width: 16),
-              
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -789,28 +801,32 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                       children: [
                         // 카테고리 태그
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
-                            gradient: isToday 
+                            gradient: isToday
                                 ? LinearGradient(
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      ModernColors.deepMintLight.withValues(alpha: 0.8),
-                                      ModernColors.deepMint.withValues(alpha: 0.9),
+                                      ModernColors.deepMintLight
+                                          .withValues(alpha: 0.8),
+                                      ModernColors.deepMint
+                                          .withValues(alpha: 0.9),
                                     ],
                                   )
                                 : null,
-                            color: !isToday ? ModernColors.reading.withValues(alpha: 0.1) : null,
+                            color: !isToday
+                                ? ModernColors.reading.withValues(alpha: 0.1)
+                                : null,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             book.category,
                             style: GoogleFonts.notoSans(
                               fontSize: 12,
-                              color: isToday 
-                                  ? Colors.white
-                                  : ModernColors.reading,
+                              color:
+                                  isToday ? Colors.white : ModernColors.reading,
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
                             ),
@@ -832,7 +848,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
               ),
             ],
           ),
-          
+
           // 평점 (있는 경우)
           if (book.rating != null && book.rating! > 0) ...[
             const SizedBox(height: 12),
@@ -862,7 +878,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       ),
     );
   }
-  
+
   /// 셰르피 인사이트 위젯
   Widget _buildSherpiInsight(String message, {bool isSpecial = false}) {
     return Container(
@@ -893,8 +909,8 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
           message,
           style: GoogleFonts.notoSans(
             fontSize: 14,
-            color: isSpecial 
-                ? ModernColors.textPrimary 
+            color: isSpecial
+                ? ModernColors.textPrimary
                 : ModernColors.textSecondary,
             height: 1.6,
             fontWeight: isSpecial ? FontWeight.w500 : FontWeight.w400,
@@ -903,7 +919,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       ),
     );
   }
-  
+
   /// 미니 통계 카드
   Widget _buildMiniStatCard({
     required String icon,
@@ -947,14 +963,13 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
           ),
         ],
       ),
-    ).animate()
-      .scale(
-        delay: Duration(milliseconds: 1000 + (100 * icon.length)),
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.elasticOut,
-      );
+    ).animate().scale(
+          delay: Duration(milliseconds: 1000 + (100 * icon.length)),
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.elasticOut,
+        );
   }
-  
+
   /// 추천 도서 카드
   Widget _buildRecommendationCard(BookRecommendation book, int index) {
     return Container(
@@ -993,9 +1008,9 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                 ),
               ),
             ),
-            
+
             const SizedBox(width: 16),
-            
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1015,7 +1030,8 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
                       ),
                       // 무드 태그
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
                           color: ModernColors.reading.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(4),
@@ -1055,20 +1071,21 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
           ],
         ),
       ),
-    ).animate()
-      .fadeIn(
-        delay: Duration(milliseconds: 1400 + (index * 200)),
-        duration: const Duration(milliseconds: 600),
-      )
-      .slideX(
-        begin: 0.2,
-        end: 0,
-        delay: Duration(milliseconds: 1400 + (index * 200)),
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeOutCubic,
-      );
+    )
+        .animate()
+        .fadeIn(
+          delay: Duration(milliseconds: 1400 + (index * 200)),
+          duration: const Duration(milliseconds: 600),
+        )
+        .slideX(
+          begin: 0.2,
+          end: 0,
+          delay: Duration(milliseconds: 1400 + (index * 200)),
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeOutCubic,
+        );
   }
-  
+
   /// 로딩 중 추천 도서
   Widget _buildLoadingRecommendations() {
     return Column(
@@ -1095,7 +1112,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       }),
     );
   }
-  
+
   /// 기본 추천 도서 (로딩 실패 시)
   Widget _buildDefaultRecommendations() {
     return Container(
@@ -1125,37 +1142,38 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
       ),
     );
   }
-  
+
   /// 총 페이지 계산
   int _calculateTotalPages() {
     final logs = ref.watch(globalUserProvider).dailyRecords.readingLogs;
     return logs.fold(0, (sum, log) => sum + log.pages);
   }
-  
+
   /// 중복 제거된 책 수 계산
   int _calculateUniqueBooks() {
     final logs = ref.watch(globalUserProvider).dailyRecords.readingLogs;
     final uniqueBookTitles = <String>{};
-    
+
     for (final log in logs) {
       if (log.bookTitle.isNotEmpty) {
         uniqueBookTitles.add(log.bookTitle);
       }
     }
-    
+
     return uniqueBookTitles.length;
   }
-  
+
   /// 평균 평점 계산
   String _calculateAverageRating() {
     final logs = ref.watch(globalUserProvider).dailyRecords.readingLogs;
-    final ratedLogs = logs.where((log) => log.rating != null && log.rating! > 0).toList();
-    
+    final ratedLogs =
+        logs.where((log) => log.rating != null && log.rating! > 0).toList();
+
     if (ratedLogs.isEmpty) return '0.0';
-    
+
     final sum = ratedLogs.fold(0.0, (sum, log) => sum + log.rating!);
     final average = sum / ratedLogs.length;
-    
+
     return average.toStringAsFixed(1);
   }
 }
@@ -1166,21 +1184,21 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
 /// 책 패턴 페인터 (배경 장식)
 class BookPatternPainter extends CustomPainter {
   final Color color;
-  
+
   BookPatternPainter({required this.color});
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
-    
+
     // 책 모양 패턴 그리기
     const bookWidth = 30.0;
     const bookHeight = 40.0;
     const spacing = 15.0;
-    
+
     for (double x = 0; x < size.width; x += bookWidth + spacing) {
       for (double y = 0; y < size.height; y += bookHeight + spacing) {
         // 책 직사각형
@@ -1190,12 +1208,12 @@ class BookPatternPainter extends CustomPainter {
           bookWidth,
           bookHeight,
         );
-        
+
         canvas.drawRRect(
           RRect.fromRectAndRadius(rect, const Radius.circular(4)),
           paint,
         );
-        
+
         // 책등 라인
         canvas.drawLine(
           Offset(rect.left + 5, rect.top),
@@ -1205,7 +1223,7 @@ class BookPatternPainter extends CustomPainter {
       }
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

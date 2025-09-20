@@ -9,7 +9,8 @@ import 'global_sherpi_provider.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 
 /// 글로벌 커뮤니티 상태 관리 Provider
-final globalCommunityProvider = StateNotifierProvider<GlobalCommunityNotifier, CommunityState>((ref) {
+final globalCommunityProvider =
+    StateNotifierProvider<GlobalCommunityNotifier, CommunityState>((ref) {
   return GlobalCommunityNotifier(ref);
 });
 
@@ -31,24 +32,24 @@ class CommunityState {
 
   /// 초기 상태 생성 (샘플 데이터 포함)
   static CommunityState get initial => CommunityState(
-    posts: _createSamplePosts(),
-    postComments: _createSampleComments(),
-    todayActivity: DailyCommunityActivity(
-      date: DateTime.now(),
-      activities: {},
-      hasReceivedDailyReward: false,
-    ),
-    statistics: const CommunityStatistics(
-      totalPosts: 0,
-      totalComments: 0,
-      totalLikes: 0,
-      popularPosts: 0,
-      helpfulComments: 0,
-      activeDays: 0,
-      totalPoints: 0,
-    ),
-    lastUpdated: DateTime.now(),
-  );
+        posts: _createSamplePosts(),
+        postComments: _createSampleComments(),
+        todayActivity: DailyCommunityActivity(
+          date: DateTime.now(),
+          activities: {},
+          hasReceivedDailyReward: false,
+        ),
+        statistics: const CommunityStatistics(
+          totalPosts: 0,
+          totalComments: 0,
+          totalLikes: 0,
+          popularPosts: 0,
+          helpfulComments: 0,
+          activeDays: 0,
+          totalPoints: 0,
+        ),
+        lastUpdated: DateTime.now(),
+      );
 
   /// 샘플 게시글 생성
   static List<CommunityPost> _createSamplePosts() {
@@ -57,7 +58,8 @@ class CommunityState {
       CommunityPost(
         id: 'post_1',
         title: '북한산 등반 후기 🏔️',
-        content: '오늘 북한산을 등반했어요! 날씨가 정말 좋아서 정상까지 무사히 올라갔습니다. 정상에서 본 서울 전경이 정말 아름다웠어요. 등반 시간은 약 3시간 정도 걸렸고, 중간에 쉬어가며 천천히 올라갔습니다.',
+        content:
+            '오늘 북한산을 등반했어요! 날씨가 정말 좋아서 정상까지 무사히 올라갔습니다. 정상에서 본 서울 전경이 정말 아름다웠어요. 등반 시간은 약 3시간 정도 걸렸고, 중간에 쉬어가며 천천히 올라갔습니다.',
         authorName: '등산러버',
         authorId: 'user_001',
         createdAt: now.subtract(const Duration(hours: 2)),
@@ -74,7 +76,8 @@ class CommunityState {
       CommunityPost(
         id: 'post_2',
         title: '아토믹 해빗 독서 완주! 📚',
-        content: '드디어 아토믹 해빗을 다 읽었어요! 습관의 복리 효과에 대해 많이 배웠습니다. 특히 1%씩 개선하면 1년 후에 37배 향상된다는 내용이 인상깊었어요. 앞으로 작은 습관들을 하나씩 만들어 보려고 합니다.',
+        content:
+            '드디어 아토믹 해빗을 다 읽었어요! 습관의 복리 효과에 대해 많이 배웠습니다. 특히 1%씩 개선하면 1년 후에 37배 향상된다는 내용이 인상깊었어요. 앞으로 작은 습관들을 하나씩 만들어 보려고 합니다.',
         authorName: '책벌레',
         authorId: 'user_002',
         createdAt: now.subtract(const Duration(hours: 5)),
@@ -91,7 +94,8 @@ class CommunityState {
       CommunityPost(
         id: 'post_3',
         title: '초보자를 위한 운동 루틴 질문 💪',
-        content: '운동을 시작한지 한 달 된 초보입니다. 현재 주 3회 헬스장에 가고 있는데, 어떤 운동을 중심으로 해야 할지 고민이에요. 목표는 근력 증가와 다이어트입니다. 조언 부탁드려요!',
+        content:
+            '운동을 시작한지 한 달 된 초보입니다. 현재 주 3회 헬스장에 가고 있는데, 어떤 운동을 중심으로 해야 할지 고민이에요. 목표는 근력 증가와 다이어트입니다. 조언 부탁드려요!',
         authorName: '운동초보',
         authorId: 'user_003',
         createdAt: now.subtract(const Duration(hours: 8)),
@@ -108,7 +112,8 @@ class CommunityState {
       CommunityPost(
         id: 'post_4',
         title: '스터디 그룹 모집합니다! 📖',
-        content: '프로그래밍 스터디 그룹을 만들려고 합니다. 매주 토요일 오후 2시에 온라인으로 모여서 함께 공부할 예정이에요. 현재 React와 Node.js를 주제로 생각하고 있습니다. 관심 있으신 분들 댓글 남겨주세요!',
+        content:
+            '프로그래밍 스터디 그룹을 만들려고 합니다. 매주 토요일 오후 2시에 온라인으로 모여서 함께 공부할 예정이에요. 현재 React와 Node.js를 주제로 생각하고 있습니다. 관심 있으신 분들 댓글 남겨주세요!',
         authorName: '개발자지망생',
         authorId: 'user_004',
         createdAt: now.subtract(const Duration(days: 1)),
@@ -125,7 +130,8 @@ class CommunityState {
       CommunityPost(
         id: 'post_5',
         title: '오늘의 작은 성취 ☀️',
-        content: '오늘은 평소보다 30분 일찍 일어나서 아침 운동을 했어요! 작은 변화지만 하루가 더 알차게 느껴집니다. 여러분도 오늘 작은 성취가 있다면 공유해 주세요!',
+        content:
+            '오늘은 평소보다 30분 일찍 일어나서 아침 운동을 했어요! 작은 변화지만 하루가 더 알차게 느껴집니다. 여러분도 오늘 작은 성취가 있다면 공유해 주세요!',
         authorName: '아침형인간',
         authorId: 'user_005',
         createdAt: now.subtract(const Duration(hours: 12)),
@@ -142,7 +148,8 @@ class CommunityState {
       CommunityPost(
         id: 'post_6',
         title: '등반 장비 추천 부탁드려요 🎒',
-        content: '등반을 시작한지 얼마 안 된 초보입니다. 기본적인 등반 장비를 구입하려고 하는데, 어떤 브랜드나 제품을 추천해 주실 수 있나요? 예산은 20만원 정도 생각하고 있습니다.',
+        content:
+            '등반을 시작한지 얼마 안 된 초보입니다. 기본적인 등반 장비를 구입하려고 하는데, 어떤 브랜드나 제품을 추천해 주실 수 있나요? 예산은 20만원 정도 생각하고 있습니다.',
         authorName: '등반초보',
         authorId: 'user_006',
         createdAt: now.subtract(const Duration(days: 2)),
@@ -162,13 +169,14 @@ class CommunityState {
   /// 샘플 댓글 생성
   static Map<String, List<CommunityComment>> _createSampleComments() {
     final now = DateTime.now();
-    
+
     return {
       'post_1': [
         CommunityComment(
           id: 'comment_1_1',
           postId: 'post_1',
-          content: '정말 멋진 후기네요! 저도 다음 주에 북한산 가려고 계획 중이었는데 많은 도움이 됐어요. 혹시 어느 코스로 올라가셨나요?',
+          content:
+              '정말 멋진 후기네요! 저도 다음 주에 북한산 가려고 계획 중이었는데 많은 도움이 됐어요. 혹시 어느 코스로 올라가셨나요?',
           authorName: '산사랑',
           authorId: 'user_007',
           createdAt: now.subtract(const Duration(hours: 1)),
@@ -179,7 +187,8 @@ class CommunityState {
         CommunityComment(
           id: 'comment_1_2',
           postId: 'post_1',
-          content: '북한산은 정말 좋은 곳이죠! 다음에는 우이암코스도 도전해보세요. 조금 더 험하지만 경치가 정말 환상적이에요.',
+          content:
+              '북한산은 정말 좋은 곳이죠! 다음에는 우이암코스도 도전해보세요. 조금 더 험하지만 경치가 정말 환상적이에요.',
           authorName: '등산베테랑',
           authorId: 'user_008',
           createdAt: now.subtract(const Duration(minutes: 45)),
@@ -205,7 +214,8 @@ class CommunityState {
         CommunityComment(
           id: 'comment_3_1',
           postId: 'post_3',
-          content: '초보자라면 우선 기본기부터 탄탄히 하시는 걸 추천해요. 스쿼트, 데드리프트, 벤치프레스 같은 대근육 운동을 중심으로 하시고, 유산소는 주 2-3회 정도면 충분해요!',
+          content:
+              '초보자라면 우선 기본기부터 탄탄히 하시는 걸 추천해요. 스쿼트, 데드리프트, 벤치프레스 같은 대근육 운동을 중심으로 하시고, 유산소는 주 2-3회 정도면 충분해요!',
           authorName: '헬스트레이너',
           authorId: 'user_010',
           createdAt: now.subtract(const Duration(hours: 6)),
@@ -247,8 +257,8 @@ class CommunityState {
   Map<String, dynamic> toJson() {
     return {
       'posts': posts.map((post) => post.toJson()).toList(),
-      'postComments': postComments.map((key, value) => 
-        MapEntry(key, value.map((comment) => comment.toJson()).toList())),
+      'postComments': postComments.map((key, value) =>
+          MapEntry(key, value.map((comment) => comment.toJson()).toList())),
       'todayActivity': todayActivity.toJson(),
       'statistics': statistics.toJson(),
       'lastUpdated': lastUpdated.toIso8601String(),
@@ -261,11 +271,16 @@ class CommunityState {
           .map((item) => CommunityPost.fromJson(item))
           .toList(),
       postComments: (json['postComments'] as Map? ?? {}).map((key, value) =>
-        MapEntry(key as String, 
-          (value as List? ?? []).map((item) => CommunityComment.fromJson(item)).toList())),
-      todayActivity: DailyCommunityActivity.fromJson(json['todayActivity'] ?? {}),
+          MapEntry(
+              key as String,
+              (value as List? ?? [])
+                  .map((item) => CommunityComment.fromJson(item))
+                  .toList())),
+      todayActivity:
+          DailyCommunityActivity.fromJson(json['todayActivity'] ?? {}),
       statistics: CommunityStatistics.fromJson(json['statistics'] ?? {}),
-      lastUpdated: DateTime.tryParse(json['lastUpdated'] ?? '') ?? DateTime.now(),
+      lastUpdated:
+          DateTime.tryParse(json['lastUpdated'] ?? '') ?? DateTime.now(),
     );
   }
 }
@@ -295,7 +310,8 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
   Future<void> _saveCommunityData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('global_community_data', jsonEncode(state.toJson()));
+      await prefs.setString(
+          'global_community_data', jsonEncode(state.toJson()));
     } catch (e) {
       // 커뮤니티 데이터 저장 실패
     }
@@ -330,15 +346,17 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
 
   /// 댓글 좋아요/취소
   void toggleCommentLike(String postId, String commentId) {
-    final postComments = Map<String, List<CommunityComment>>.from(state.postComments);
-    
+    final postComments =
+        Map<String, List<CommunityComment>>.from(state.postComments);
+
     if (postComments.containsKey(postId)) {
       final updatedComments = postComments[postId]!.map((comment) {
         if (comment.id == commentId) {
           final isLiking = !comment.isLikedByUser;
           final updatedComment = comment.copyWith(
             isLikedByUser: isLiking,
-            likesCount: isLiking ? comment.likesCount + 1 : comment.likesCount - 1,
+            likesCount:
+                isLiking ? comment.likesCount + 1 : comment.likesCount - 1,
           );
 
           // 도움되는 댓글 보상 처리
@@ -396,10 +414,10 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
 
     // 셰르피 반응
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: '새 게시글을 작성했어요! 🎉 커뮤니티가 더 활발해지네요!',
-      emotion: SherpiEmotion.cheering,
-    );
+          context: SherpiContext.encouragement,
+          customDialogue: '새 게시글을 작성했어요! 🎉 커뮤니티가 더 활발해지네요!',
+          emotion: SherpiEmotion.cheering,
+        );
   }
 
   /// 새 댓글 작성
@@ -422,7 +440,8 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
     );
 
     // 댓글 추가
-    final postComments = Map<String, List<CommunityComment>>.from(state.postComments);
+    final postComments =
+        Map<String, List<CommunityComment>>.from(state.postComments);
     if (postComments.containsKey(postId)) {
       postComments[postId] = [...postComments[postId]!, newComment];
     } else {
@@ -448,10 +467,10 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
 
     // 셰르피 반응
     ref.read(sherpiProvider.notifier).showInstantMessage(
-      context: SherpiContext.encouragement,
-      customDialogue: '따뜻한 댓글을 남겨주셨네요! 💬 소통이 활발해져요!',
-      emotion: SherpiEmotion.happy,
-    );
+          context: SherpiContext.encouragement,
+          customDialogue: '따뜻한 댓글을 남겨주셨네요! 💬 소통이 활발해져요!',
+          emotion: SherpiEmotion.happy,
+        );
   }
 
   // ==================== 활동 및 보상 처리 ====================
@@ -462,13 +481,14 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
     final todayActivity = state.todayActivity;
 
     // 오늘 활동에 추가
-    final updatedActivities = Set<CommunityActivityType>.from(todayActivity.activities);
+    final updatedActivities =
+        Set<CommunityActivityType>.from(todayActivity.activities);
     updatedActivities.add(activityType);
 
     // 일일 활동 보상 (하루에 한 번만)
     if (!todayActivity.hasReceivedDailyReward && updatedActivities.isNotEmpty) {
       ref.read(globalPointProvider.notifier).onDailyActivity();
-      
+
       state = state.copyWith(
         todayActivity: DailyCommunityActivity(
           date: today,
@@ -479,10 +499,10 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
 
       // 셰르피 알림
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.encouragement,
-        customDialogue: '오늘 첫 커뮤니티 활동! +30P 획득! 🎯',
-        emotion: SherpiEmotion.cheering,
-      );
+            context: SherpiContext.encouragement,
+            customDialogue: '오늘 첫 커뮤니티 활동! +30P 획득! 🎯',
+            emotion: SherpiEmotion.cheering,
+          );
     } else {
       state = state.copyWith(
         todayActivity: DailyCommunityActivity(
@@ -512,10 +532,10 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
 
       // 셰르피 축하 메시지
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.encouragement,
-        customDialogue: '🎉 인기 게시글 달성! +100P 획득!\n많은 분들이 좋아해 주셨어요!',
-        emotion: SherpiEmotion.cheering,
-      );
+            context: SherpiContext.encouragement,
+            customDialogue: '🎉 인기 게시글 달성! +100P 획득!\n많은 분들이 좋아해 주셨어요!',
+            emotion: SherpiEmotion.cheering,
+          );
     }
   }
 
@@ -526,7 +546,8 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
       ref.read(globalPointProvider.notifier).onHelpfulAnswer();
 
       // 댓글 보상 수령 상태 업데이트
-      final postComments = Map<String, List<CommunityComment>>.from(state.postComments);
+      final postComments =
+          Map<String, List<CommunityComment>>.from(state.postComments);
       if (postComments.containsKey(comment.postId)) {
         final updatedComments = postComments[comment.postId]!.map((c) {
           if (c.id == comment.id) {
@@ -541,10 +562,10 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
 
       // 셰르피 축하 메시지
       ref.read(sherpiProvider.notifier).showInstantMessage(
-        context: SherpiContext.encouragement,
-        customDialogue: '💡 도움되는 댓글! +50P 획득!\n소중한 정보를 나눠주셨네요!',
-        emotion: SherpiEmotion.cheering,
-      );
+            context: SherpiContext.encouragement,
+            customDialogue: '💡 도움되는 댓글! +50P 획득!\n소중한 정보를 나눠주셨네요!',
+            emotion: SherpiEmotion.cheering,
+          );
     }
   }
 
@@ -581,13 +602,14 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
   /// 통계 업데이트
   void updateStatistics() {
     final posts = state.posts;
-    final allComments = state.postComments.values.expand((comments) => comments).toList();
+    final allComments =
+        state.postComments.values.expand((comments) => comments).toList();
 
     final newStatistics = CommunityStatistics(
       totalPosts: posts.length,
       totalComments: allComments.length,
       totalLikes: posts.fold(0, (sum, post) => sum + post.likesCount) +
-                  allComments.fold(0, (sum, comment) => sum + comment.likesCount),
+          allComments.fold(0, (sum, comment) => sum + comment.likesCount),
       popularPosts: posts.where((post) => post.isPopular).length,
       helpfulComments: allComments.where((comment) => comment.isHelpful).length,
       activeDays: state.todayActivity.isActiveToday ? 1 : 0, // 임시로 설정
@@ -602,7 +624,7 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
   Future<void> refresh() async {
     // 통계 업데이트
     updateStatistics();
-    
+
     // 오늘 날짜가 바뀌었다면 일일 활동 리셋
     final today = DateTime.now();
     if (state.todayActivity.date.day != today.day) {
@@ -621,7 +643,8 @@ class GlobalCommunityNotifier extends StateNotifier<CommunityState> {
 // ==================== UI용 Provider들 ====================
 
 /// 카테고리별 게시글 Provider
-final communityPostsByCategoryProvider = Provider.family<List<CommunityPost>, String>((ref, category) {
+final communityPostsByCategoryProvider =
+    Provider.family<List<CommunityPost>, String>((ref, category) {
   final communityState = ref.watch(globalCommunityProvider);
   final notifier = ref.read(globalCommunityProvider.notifier);
   return notifier.getPostsByCategory(category);
@@ -635,7 +658,8 @@ final popularPostsProvider = Provider<List<CommunityPost>>((ref) {
 });
 
 /// 특정 게시글의 댓글 Provider
-final postCommentsProvider = Provider.family<List<CommunityComment>, String>((ref, postId) {
+final postCommentsProvider =
+    Provider.family<List<CommunityComment>, String>((ref, postId) {
   final communityState = ref.watch(globalCommunityProvider);
   final notifier = ref.read(globalCommunityProvider.notifier);
   return notifier.getCommentsByPostId(postId);

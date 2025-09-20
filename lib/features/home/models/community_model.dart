@@ -33,11 +33,11 @@ class CommunityActivity {
 
 /// 게시글 타입
 enum PostType {
-  general,     // 일반 게시글
-  question,    // 질문
-  tip,         // 팁 공유
-  record,      // 기록 공유
-  event,       // 이벤트
+  general, // 일반 게시글
+  question, // 질문
+  tip, // 팁 공유
+  record, // 기록 공유
+  event, // 이벤트
 }
 
 /// 커뮤니티 게시글 모델
@@ -82,26 +82,40 @@ class CommunityPost {
   /// 카테고리별 색상
   Color get categoryColor {
     switch (category) {
-      case '등산': return const Color(0xFF10B981);
-      case '독서': return const Color(0xFF6366F1);
-      case '운동': return const Color(0xFFEF4444);
-      case '스터디': return const Color(0xFFF59E0B);
-      case '취미': return const Color(0xFF8B5CF6);
-      case '일상': return const Color(0xFF06B6D4);
-      default: return const Color(0xFF6B7280);
+      case '등산':
+        return const Color(0xFF10B981);
+      case '독서':
+        return const Color(0xFF6366F1);
+      case '운동':
+        return const Color(0xFFEF4444);
+      case '스터디':
+        return const Color(0xFFF59E0B);
+      case '취미':
+        return const Color(0xFF8B5CF6);
+      case '일상':
+        return const Color(0xFF06B6D4);
+      default:
+        return const Color(0xFF6B7280);
     }
   }
 
   /// 카테고리별 이모지
   String get categoryEmoji {
     switch (category) {
-      case '등산': return '🏔️';
-      case '독서': return '📚';
-      case '운동': return '💪';
-      case '스터디': return '📖';
-      case '취미': return '🎨';
-      case '일상': return '☀️';
-      default: return '💬';
+      case '등산':
+        return '🏔️';
+      case '독서':
+        return '📚';
+      case '운동':
+        return '💪';
+      case '스터디':
+        return '📖';
+      case '취미':
+        return '🎨';
+      case '일상':
+        return '☀️';
+      default:
+        return '💬';
     }
   }
 
@@ -151,7 +165,8 @@ class CommunityPost {
       commentsCount: commentsCount ?? this.commentsCount,
       viewsCount: viewsCount ?? this.viewsCount,
       isLikedByUser: isLikedByUser ?? this.isLikedByUser,
-      hasReceivedPopularReward: hasReceivedPopularReward ?? this.hasReceivedPopularReward,
+      hasReceivedPopularReward:
+          hasReceivedPopularReward ?? this.hasReceivedPopularReward,
       imageUrls: imageUrls ?? this.imageUrls,
       type: type ?? this.type,
     );
@@ -267,7 +282,8 @@ class CommunityComment {
       createdAt: createdAt ?? this.createdAt,
       likesCount: likesCount ?? this.likesCount,
       isLikedByUser: isLikedByUser ?? this.isLikedByUser,
-      hasReceivedHelpfulReward: hasReceivedHelpfulReward ?? this.hasReceivedHelpfulReward,
+      hasReceivedHelpfulReward:
+          hasReceivedHelpfulReward ?? this.hasReceivedHelpfulReward,
       parentCommentId: parentCommentId ?? this.parentCommentId,
     );
   }
@@ -305,11 +321,11 @@ class CommunityComment {
 
 /// 커뮤니티 활동 타입
 enum CommunityActivityType {
-  postCreated,   // 게시글 작성
+  postCreated, // 게시글 작성
   commentCreated, // 댓글 작성
-  postLiked,     // 게시글 좋아요
-  commentLiked,  // 댓글 좋아요
-  postShared,    // 게시글 공유
+  postLiked, // 게시글 좋아요
+  commentLiked, // 댓글 좋아요
+  postShared, // 게시글 공유
 }
 
 /// 일일 커뮤니티 활동 기록
@@ -328,9 +344,9 @@ class DailyCommunityActivity {
   bool get isActiveToday {
     final today = DateTime.now();
     return date.year == today.year &&
-           date.month == today.month &&
-           date.day == today.day &&
-           activities.isNotEmpty;
+        date.month == today.month &&
+        date.day == today.day &&
+        activities.isNotEmpty;
   }
 
   DailyCommunityActivity copyWith({
@@ -341,7 +357,8 @@ class DailyCommunityActivity {
     return DailyCommunityActivity(
       date: date ?? this.date,
       activities: activities ?? this.activities,
-      hasReceivedDailyReward: hasReceivedDailyReward ?? this.hasReceivedDailyReward,
+      hasReceivedDailyReward:
+          hasReceivedDailyReward ?? this.hasReceivedDailyReward,
     );
   }
 

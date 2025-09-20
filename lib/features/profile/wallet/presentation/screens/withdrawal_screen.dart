@@ -112,7 +112,8 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               decoration: BoxDecoration(
                 color: AppColors.warning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
+                border:
+                    Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
@@ -234,18 +235,24 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            _buildCalculationRow('출금 포인트', '${_withdrawalPoints}P', AppColors.primary),
-            _buildCalculationRow('원화 환산', '${_withdrawalPoints}원', AppColors.textSecondary),
-            _buildCalculationRow('출금 수수료 (10%)', '-${_withdrawalFee}원', AppColors.error),
+            _buildCalculationRow(
+                '출금 포인트', '${_withdrawalPoints}P', AppColors.primary),
+            _buildCalculationRow(
+                '원화 환산', '${_withdrawalPoints}원', AppColors.textSecondary),
+            _buildCalculationRow(
+                '출금 수수료 (10%)', '-${_withdrawalFee}원', AppColors.error),
             const Divider(height: 24),
-            _buildCalculationRow('실제 받는 금액', '${_withdrawalAmount}원', AppColors.success, isTotal: true),
+            _buildCalculationRow(
+                '실제 받는 금액', '${_withdrawalAmount}원', AppColors.success,
+                isTotal: true),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildCalculationRow(String label, String value, Color color, {bool isTotal = false}) {
+  Widget _buildCalculationRow(String label, String value, Color color,
+      {bool isTotal = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -272,9 +279,11 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
     );
   }
 
-  Widget _buildWithdrawalButton(BuildContext context, WidgetRef ref, int totalPoints) {
-    final canWithdraw = _withdrawalPoints >= PointSystemConfig.MIN_WITHDRAWAL_POINTS &&
-        _withdrawalPoints <= totalPoints;
+  Widget _buildWithdrawalButton(
+      BuildContext context, WidgetRef ref, int totalPoints) {
+    final canWithdraw =
+        _withdrawalPoints >= PointSystemConfig.MIN_WITHDRAWAL_POINTS &&
+            _withdrawalPoints <= totalPoints;
 
     return SizedBox(
       width: double.infinity,

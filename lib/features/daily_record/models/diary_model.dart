@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 enum MoodType {
-  veryHappy,    // 😄 매우 기쁨
-  happy,        // 😊 기쁨
-  neutral,      // 😐 보통
-  sad,          // 😢 슬픔
-  angry,        // 😠 화남
-  tired,        // 😴 피곤
-  excited,      // 🤩 신남
-  anxious,      // 😰 불안
-  grateful,     // 🥰 감사
-  confused,     // 😵 혼란
+  veryHappy, // 😄 매우 기쁨
+  happy, // 😊 기쁨
+  neutral, // 😐 보통
+  sad, // 😢 슬픔
+  angry, // 😠 화남
+  tired, // 😴 피곤
+  excited, // 🤩 신남
+  anxious, // 😰 불안
+  grateful, // 🥰 감사
+  confused, // 😵 혼란
 }
 
 class DiaryRecord {
@@ -63,7 +63,7 @@ class DiaryRecord {
       title: json['title'] as String,
       content: json['content'] as String,
       mood: MoodType.values.firstWhere(
-            (e) => e.name == json['mood'],
+        (e) => e.name == json['mood'],
         orElse: () => MoodType.neutral,
       ),
       tags: List<String>.from(json['tags'] ?? []),
@@ -121,77 +121,77 @@ class MoodData {
   });
 
   static List<MoodData> get allMoods => [
-    MoodData(
-      type: MoodType.veryHappy,
-      emoji: '😄',
-      label: '매우 기쁨',
-      description: '정말 행복한 하루!',
-      color: Color(0xFFFFD700),
-    ),
-    MoodData(
-      type: MoodType.happy,
-      emoji: '😊',
-      label: '기쁨',
-      description: '기분 좋은 하루',
-      color: Color(0xFF10B981),
-    ),
-    MoodData(
-      type: MoodType.excited,
-      emoji: '🤩',
-      label: '신남',
-      description: '에너지 넘치는 하루!',
-      color: Color(0xFFED8936),
-    ),
-    MoodData(
-      type: MoodType.grateful,
-      emoji: '🥰',
-      label: '감사',
-      description: '감사한 마음이 드는 하루',
-      color: Color(0xFFEC4899),
-    ),
-    MoodData(
-      type: MoodType.neutral,
-      emoji: '😐',
-      label: '보통',
-      description: '평범한 하루',
-      color: Color(0xFF6B7280),
-    ),
-    MoodData(
-      type: MoodType.tired,
-      emoji: '😴',
-      label: '피곤',
-      description: '좀 피곤한 하루',
-      color: Color(0xFF8B5CF6),
-    ),
-    MoodData(
-      type: MoodType.confused,
-      emoji: '😵',
-      label: '혼란',
-      description: '복잡한 하루',
-      color: Color(0xFF06B6D4),
-    ),
-    MoodData(
-      type: MoodType.anxious,
-      emoji: '😰',
-      label: '불안',
-      description: '걱정이 많은 하루',
-      color: Color(0xFFF59E0B),
-    ),
-    MoodData(
-      type: MoodType.sad,
-      emoji: '😢',
-      label: '슬픔',
-      description: '조금 슬픈 하루',
-      color: Color(0xFF3B82F6),
-    ),
-    MoodData(
-      type: MoodType.angry,
-      emoji: '😠',
-      label: '화남',
-      description: '화가 나는 하루',
-      color: Color(0xFFEF4444),
-    ),
-  ];
+        MoodData(
+          type: MoodType.veryHappy,
+          emoji: '😄',
+          label: '매우 기쁨',
+          description: '정말 행복한 하루!',
+          color: Color(0xFFFFD700),
+        ),
+        MoodData(
+          type: MoodType.happy,
+          emoji: '😊',
+          label: '기쁨',
+          description: '기분 좋은 하루',
+          color: Color(0xFF10B981),
+        ),
+        MoodData(
+          type: MoodType.excited,
+          emoji: '🤩',
+          label: '신남',
+          description: '에너지 넘치는 하루!',
+          color: Color(0xFFED8936),
+        ),
+        MoodData(
+          type: MoodType.grateful,
+          emoji: '🥰',
+          label: '감사',
+          description: '감사한 마음이 드는 하루',
+          color: Color(0xFFEC4899),
+        ),
+        MoodData(
+          type: MoodType.neutral,
+          emoji: '😐',
+          label: '보통',
+          description: '평범한 하루',
+          color: Color(0xFF6B7280),
+        ),
+        MoodData(
+          type: MoodType.tired,
+          emoji: '😴',
+          label: '피곤',
+          description: '좀 피곤한 하루',
+          color: Color(0xFF8B5CF6),
+        ),
+        MoodData(
+          type: MoodType.confused,
+          emoji: '😵',
+          label: '혼란',
+          description: '복잡한 하루',
+          color: Color(0xFF06B6D4),
+        ),
+        MoodData(
+          type: MoodType.anxious,
+          emoji: '😰',
+          label: '불안',
+          description: '걱정이 많은 하루',
+          color: Color(0xFFF59E0B),
+        ),
+        MoodData(
+          type: MoodType.sad,
+          emoji: '😢',
+          label: '슬픔',
+          description: '조금 슬픈 하루',
+          color: Color(0xFF3B82F6),
+        ),
+        MoodData(
+          type: MoodType.angry,
+          emoji: '😠',
+          label: '화남',
+          description: '화가 나는 하루',
+          color: Color(0xFFEF4444),
+        ),
+      ];
 
   static MoodData getMoodData(MoodType type) {
     return allMoods.firstWhere((mood) => mood.type == type);

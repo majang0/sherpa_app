@@ -17,28 +17,29 @@ class ExerciseRecordScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ExerciseRecordScreen> createState() => _ExerciseRecordScreenState();
+  ConsumerState<ExerciseRecordScreen> createState() =>
+      _ExerciseRecordScreenState();
 }
 
 class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
-  
+
   bool _canSubmit = false;
   bool _isSubmitting = false;
-  final GlobalKey<UnifiedExerciseRecordFormState> _formKey = 
+  final GlobalKey<UnifiedExerciseRecordFormState> _formKey =
       GlobalKey<UnifiedExerciseRecordFormState>();
 
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
@@ -128,22 +129,22 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션
                   _buildHeader(),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 선택된 운동에 맞는 폼 표시
                   _buildExerciseForm(),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -157,8 +158,9 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
   Widget _buildHeader() {
     final weekdays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
     final weekday = weekdays[(widget.selectedDate.weekday - 1) % 7];
-    final dateStr = '${widget.selectedDate.year}년 ${widget.selectedDate.month}월 ${widget.selectedDate.day}일';
-    
+    final dateStr =
+        '${widget.selectedDate.year}년 ${widget.selectedDate.month}월 ${widget.selectedDate.day}일';
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
@@ -235,9 +237,9 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // 날짜 정보 - Borderless Design
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
@@ -298,17 +300,17 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
     setState(() {
       _isSubmitting = true;
     });
-    
+
     // GlobalKey를 통해 폼의 submit 메서드 호출
     await _formKey.currentState?.submitExerciseRecord();
-    
+
     if (mounted) {
       setState(() {
         _isSubmitting = false;
       });
     }
   }
-  
+
   Widget _buildExerciseForm() {
     // 모든 운동 타입에 대해 통합된 폼을 사용
     return UnifiedExerciseRecordForm(
@@ -406,7 +408,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
         return Icons.fitness_center;
     }
   }
-  
+
   String _getExerciseEmoji(String exerciseType) {
     switch (exerciseType) {
       case '헬스':

@@ -9,7 +9,7 @@ enum ChallengeCategory {
   lifestyle('라이프스타일', Color(0xFFEF4444));
 
   const ChallengeCategory(this.displayName, this.color);
-  
+
   final String displayName;
   final Color color;
 }
@@ -22,8 +22,9 @@ enum ChallengeDifficulty {
   expert(4, '전문가', '💎', Color(0xFF8B5CF6)),
   master(5, '마스터', '👑', Color(0xFF6366F1));
 
-  const ChallengeDifficulty(this.level, this.displayName, this.emoji, this.color);
-  
+  const ChallengeDifficulty(
+      this.level, this.displayName, this.emoji, this.color);
+
   final int level;
   final String displayName;
   final String emoji;
@@ -38,7 +39,7 @@ enum ChallengeScope {
   global('전체', '🌍');
 
   const ChallengeScope(this.displayName, this.emoji);
-  
+
   final String displayName;
   final String emoji;
 }
@@ -189,9 +190,9 @@ class AvailableChallenge {
 
   /// 참여 가능 여부
   bool get canJoin {
-    return !isJoined && 
-           currentParticipants < maxParticipants && 
-           DateTime.now().isBefore(startDate);
+    return !isJoined &&
+        currentParticipants < maxParticipants &&
+        DateTime.now().isBefore(startDate);
   }
 
   /// 진행 중인지 여부
@@ -296,21 +297,21 @@ class AvailableChallenge {
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'title': title,
-    'description': description,
-    'category': category,
-    'categoryType': categoryType.name,
-    'difficulty': difficulty,
-    'durationDays': durationDays,
-    'maxParticipants': maxParticipants,
-    'currentParticipants': currentParticipants,
-    'startDate': startDate.toIso8601String(),
-    'endDate': endDate.toIso8601String(),
-    'isJoined': isJoined,
-    'requirements': requirements,
-    'rewards': rewards,
-  };
+        'id': id,
+        'title': title,
+        'description': description,
+        'category': category,
+        'categoryType': categoryType.name,
+        'difficulty': difficulty,
+        'durationDays': durationDays,
+        'maxParticipants': maxParticipants,
+        'currentParticipants': currentParticipants,
+        'startDate': startDate.toIso8601String(),
+        'endDate': endDate.toIso8601String(),
+        'isJoined': isJoined,
+        'requirements': requirements,
+        'rewards': rewards,
+      };
 
   factory AvailableChallenge.fromJson(Map<String, dynamic> json) {
     return AvailableChallenge(
@@ -326,8 +327,10 @@ class AvailableChallenge {
       durationDays: json['durationDays'] ?? json['duration'] ?? 7,
       maxParticipants: json['maxParticipants'] ?? 100,
       currentParticipants: json['currentParticipants'] ?? 0,
-      startDate: DateTime.parse(json['startDate'] ?? DateTime.now().toIso8601String()),
-      endDate: DateTime.parse(json['endDate'] ?? DateTime.now().add(Duration(days: 7)).toIso8601String()),
+      startDate:
+          DateTime.parse(json['startDate'] ?? DateTime.now().toIso8601String()),
+      endDate: DateTime.parse(json['endDate'] ??
+          DateTime.now().add(Duration(days: 7)).toIso8601String()),
       isJoined: json['isJoined'] ?? false,
       requirements: List<String>.from(json['requirements'] ?? []),
       rewards: Map<String, dynamic>.from(json['rewards'] ?? {}),

@@ -15,16 +15,16 @@ class AIAnalysisLoadingWidget extends StatefulWidget {
   const AIAnalysisLoadingWidget({super.key});
 
   @override
-  State<AIAnalysisLoadingWidget> createState() => _AIAnalysisLoadingWidgetState();
+  State<AIAnalysisLoadingWidget> createState() =>
+      _AIAnalysisLoadingWidgetState();
 }
 
 class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
     with TickerProviderStateMixin {
-  
   late AnimationController _rotationController;
   late AnimationController _pulseController;
   late AnimationController _textController;
-  
+
   int _currentTextIndex = 0;
   final List<String> _loadingTexts = [
     '당신의 활동 패턴을 분석하고 있어요...',
@@ -33,35 +33,35 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
     '가장 적합한 모임을 찾고 있어요...',
     'AI가 맞춤 추천을 생성하는 중...',
   ];
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _rotationController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     )..repeat();
-    
+
     _pulseController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     _textController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
-    
+
     // 텍스트 순환
     _startTextCycle();
   }
-  
+
   void _startTextCycle() async {
     while (mounted) {
       await Future.delayed(const Duration(seconds: 2));
       if (!mounted) break;
-      
+
       await _textController.forward();
       setState(() {
         _currentTextIndex = (_currentTextIndex + 1) % _loadingTexts.length;
@@ -69,7 +69,7 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
       await _textController.reverse();
     }
   }
-  
+
   @override
   void dispose() {
     _rotationController.dispose();
@@ -77,7 +77,7 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
     _textController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -125,7 +125,7 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
                     );
                   },
                 ),
-                
+
                 // 회전하는 링
                 AnimatedBuilder(
                   animation: _rotationController,
@@ -139,7 +139,7 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
                     );
                   },
                 ),
-                
+
                 // 셰르피 이미지
                 SizedBox(
                   width: 60,
@@ -148,18 +148,20 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
                     SherpiEmotion.thinking.imagePath,
                     fit: BoxFit.contain,
                   ),
-                ).animate(
-                  onPlay: (controller) => controller.repeat(),
-                ).scale(
-                  begin: const Offset(1.0, 1.0),
-                  end: const Offset(1.1, 1.1),
-                  duration: const Duration(seconds: 2),
-                ),
+                )
+                    .animate(
+                      onPlay: (controller) => controller.repeat(),
+                    )
+                    .scale(
+                      begin: const Offset(1.0, 1.0),
+                      end: const Offset(1.1, 1.1),
+                      duration: const Duration(seconds: 2),
+                    ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // AI 라벨
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -191,15 +193,17 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
                   ),
                 ],
               ),
-            ).animate(
-              onPlay: (controller) => controller.repeat(),
-            ).shimmer(
-              duration: const Duration(seconds: 2),
-              color: Colors.white.withValues(alpha: 0.3),
-            ),
-            
+            )
+                .animate(
+                  onPlay: (controller) => controller.repeat(),
+                )
+                .shimmer(
+                  duration: const Duration(seconds: 2),
+                  color: Colors.white.withValues(alpha: 0.3),
+                ),
+
             const SizedBox(height: 16),
-            
+
             // 로딩 텍스트
             AnimatedBuilder(
               animation: _textController,
@@ -219,14 +223,14 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
                 );
               },
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // 프로그레스 바
             _buildProgressBar(),
-            
+
             const SizedBox(height: 12),
-            
+
             // 추가 정보
             Text(
               '잠시만 기다려주세요',
@@ -238,14 +242,14 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
           ],
         ),
       ).animate().fadeIn(duration: 300.ms).scale(
-        begin: const Offset(0.9, 0.9),
-        end: const Offset(1.0, 1.0),
-        duration: 300.ms,
-        curve: Curves.easeOutBack,
-      ),
+            begin: const Offset(0.9, 0.9),
+            end: const Offset(1.0, 1.0),
+            duration: 300.ms,
+            curve: Curves.easeOutBack,
+          ),
     );
   }
-  
+
   Widget _buildProgressBar() {
     return Container(
       height: 4,
@@ -275,14 +279,16 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
                       ),
                       borderRadius: BorderRadius.circular(2),
                     ),
-                  ).animate(
-                    onPlay: (controller) => controller.repeat(),
-                  ).slideX(
-                    begin: -0.3,
-                    end: 1.3,
-                    duration: const Duration(seconds: 2),
-                    curve: Curves.easeInOut,
-                  );
+                  )
+                      .animate(
+                        onPlay: (controller) => controller.repeat(),
+                      )
+                      .slideX(
+                        begin: -0.3,
+                        end: 1.3,
+                        duration: const Duration(seconds: 2),
+                        curve: Curves.easeInOut,
+                      );
                 },
               ),
             ],
@@ -299,21 +305,21 @@ class _AIRingPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
-    
+
     // 그라데이션 링
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
-    
+
     // 여러 개의 호 그리기
     const arcCount = 4;
     const arcLength = math.pi / 3;
     const gap = (2 * math.pi - arcCount * arcLength) / arcCount;
-    
+
     for (int i = 0; i < arcCount; i++) {
       final startAngle = i * (arcLength + gap);
-      
+
       // 그라데이션 색상
       paint.shader = SweepGradient(
         colors: [
@@ -325,7 +331,7 @@ class _AIRingPainter extends CustomPainter {
         startAngle: startAngle,
         endAngle: startAngle + arcLength,
       ).createShader(Rect.fromCircle(center: center, radius: radius));
-      
+
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),
         startAngle,
@@ -335,7 +341,7 @@ class _AIRingPainter extends CustomPainter {
       );
     }
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
@@ -343,12 +349,12 @@ class _AIRingPainter extends CustomPainter {
 /// 간단한 로딩 인디케이터 (인라인용)
 class SimpleAILoadingIndicator extends StatelessWidget {
   final String text;
-  
+
   const SimpleAILoadingIndicator({
     super.key,
     this.text = 'AI가 분석 중...',
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -383,11 +389,13 @@ class SimpleAILoadingIndicator extends StatelessWidget {
           ),
         ],
       ),
-    ).animate(
-      onPlay: (controller) => controller.repeat(),
-    ).shimmer(
-      duration: const Duration(seconds: 2),
-      color: ModernColors.primary.withValues(alpha: 0.1),
-    );
+    )
+        .animate(
+          onPlay: (controller) => controller.repeat(),
+        )
+        .shimmer(
+          duration: const Duration(seconds: 2),
+          color: ModernColors.primary.withValues(alpha: 0.1),
+        );
   }
 }

@@ -13,11 +13,12 @@ import 'meeting_edit_screen.dart';
 
 class MeetingLogDetailScreen extends ConsumerStatefulWidget {
   final MeetingLog meeting;
-  
+
   const MeetingLogDetailScreen({required this.meeting});
 
   @override
-  ConsumerState<MeetingLogDetailScreen> createState() => _MeetingLogDetailScreenState();
+  ConsumerState<MeetingLogDetailScreen> createState() =>
+      _MeetingLogDetailScreenState();
 }
 
 class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
@@ -30,12 +31,13 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
   late Animation<double> _scaleAnimation;
 
   // 🎯 중앙집중식 카테고리 시스템 사용 (레거시 호환성 유지)
-  Map<String, Map<String, dynamic>> get _categoryData => MeetingCategories.legacyFormat;
+  Map<String, Map<String, dynamic>> get _categoryData =>
+      MeetingCategories.legacyFormat;
 
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -48,17 +50,18 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
-    
+
     _fadeController.forward();
     Future.delayed(const Duration(milliseconds: 200), () {
       _slideController.forward();
@@ -78,8 +81,9 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    final categoryInfo = _categoryData[widget.meeting.category] ?? _categoryData['친목']!;
-    
+    final categoryInfo =
+        _categoryData[widget.meeting.category] ?? _categoryData['친목']!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       extendBodyBehindAppBar: true,
@@ -101,7 +105,8 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
         actions: [
@@ -144,54 +149,54 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션 (날짜, 모임정보)
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildHeader(categoryInfo),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 모임 정보 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildMeetingInfo(categoryInfo),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 만족도 및 기분 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildSatisfactionMood(categoryInfo),
                   ),
-                  
+
                   if (widget.meeting.note != null) ...[
                     const SizedBox(height: 20),
-                    
+
                     // 노트 섹션
                     ScaleTransition(
                       scale: _scaleAnimation,
                       child: _buildNote(categoryInfo),
                     ),
                   ],
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 액션 버튼들
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildActionButtons(categoryInfo),
                   ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -289,9 +294,9 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // 모임 이름
           Container(
             width: double.infinity,
@@ -363,9 +368,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -378,11 +381,13 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
               ),
               child: Column(
                 children: [
-                  _buildInfoRow('📅', '날짜', _formatFullDate(widget.meeting.date)),
+                  _buildInfoRow(
+                      '📅', '날짜', _formatFullDate(widget.meeting.date)),
                   const SizedBox(height: 12),
                   _buildInfoRow('📂', '분류', widget.meeting.category),
                   const SizedBox(height: 12),
-                  _buildInfoRow('🔗', '공유', widget.meeting.isShared ? '공개' : '비공개'),
+                  _buildInfoRow(
+                      '🔗', '공유', widget.meeting.isShared ? '공개' : '비공개'),
                 ],
               ),
             ),
@@ -436,9 +441,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Row(
               children: [
                 // 만족도
@@ -486,9 +489,9 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // 기분
                 Expanded(
                   child: Container(
@@ -573,9 +576,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(20),
@@ -679,9 +680,9 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
               ),
             ),
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           // 공유하기 버튼
           Container(
             height: 56,
@@ -727,13 +728,20 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
 
   String _getMoodLabel(String mood) {
     switch (mood) {
-      case 'very_happy': return '매우 좋았음';
-      case 'happy': return '좋았음';
-      case 'good': return '괜찮았음';
-      case 'normal': return '보통';
-      case 'tired': return '피곤했음';
-      case 'stressed': return '스트레스';
-      default: return '좋았음';
+      case 'very_happy':
+        return '매우 좋았음';
+      case 'happy':
+        return '좋았음';
+      case 'good':
+        return '괜찮았음';
+      case 'normal':
+        return '보통';
+      case 'tired':
+        return '피곤했음';
+      case 'stressed':
+        return '스트레스';
+      default:
+        return '좋았음';
     }
   }
 
@@ -749,7 +757,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
 
   void _shareMeeting() {
     HapticFeedbackManager.lightImpact();
-    
+
     final shareText = '''
 ${widget.meeting.meetingName}
 
@@ -764,7 +772,7 @@ ${widget.meeting.note ?? ''}
 ''';
 
     Clipboard.setData(ClipboardData(text: shareText));
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

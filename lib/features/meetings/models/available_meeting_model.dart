@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/meeting_categories.dart';
 
 /// 🏷️ 모임 카테고리 (🎯 중앙집중식 카테고리 시스템 연동)
-/// 
+///
 /// 중앙집중식 MeetingCategories와 완전 통합된 enum 시스템
 /// 모든 UI 데이터(색상, 아이콘, 그라데이션)는 중앙에서 가져옴
 enum MeetingCategory {
@@ -18,24 +18,24 @@ enum MeetingCategory {
 
   final String englishName;
   const MeetingCategory(this.englishName);
-  
+
   /// 🎨 중앙집중식 시스템에서 displayName 가져오기
   String get displayName => MeetingCategories.enumToDisplayName(englishName);
-  
+
   /// 🎭 중앙집중식 시스템에서 emoji 가져오기
   String get emoji => MeetingCategories.getEmoji(displayName);
-  
+
   /// 🌈 중앙집중식 시스템에서 color 가져오기
   Color get color => MeetingCategories.getColor(displayName);
-  
+
   /// 🎨 중앙집중식 시스템에서 gradient 가져오기
   List<Color> get gradient => MeetingCategories.getGradient(displayName);
 }
 
 /// 모임 유형 (포인트 시스템과 연동)
 enum MeetingType {
-  free('무료 모임', 1000),    // 참여 수수료 1000P
-  paid('유료 모임', 0);       // 5% 수수료
+  free('무료 모임', 1000), // 참여 수수료 1000P
+  paid('유료 모임', 0); // 5% 수수료
 
   const MeetingType(this.displayName, this.baseFee);
   final String displayName;
@@ -223,7 +223,8 @@ class AvailableMeeting {
   }
 
   /// 참여 가능 여부
-  bool get canJoin => currentParticipants < maxParticipants && dateTime.isAfter(DateTime.now());
+  bool get canJoin =>
+      currentParticipants < maxParticipants && dateTime.isAfter(DateTime.now());
 
   /// 진행 시간까지 남은 시간
   Duration get timeUntilStart => dateTime.difference(DateTime.now());
@@ -238,10 +239,14 @@ class AvailableMeeting {
 
   Color get statusColor {
     switch (status) {
-      case '완료': return const Color(0xFF6B7280);
-      case '임박': return const Color(0xFFF59E0B);
-      case '모집중': return const Color(0xFF10B981);
-      default: return const Color(0xFF6B7280);
+      case '완료':
+        return const Color(0xFF6B7280);
+      case '임박':
+        return const Color(0xFFF59E0B);
+      case '모집중':
+        return const Color(0xFF10B981);
+      default:
+        return const Color(0xFF6B7280);
     }
   }
 
@@ -255,19 +260,20 @@ class AvailableMeeting {
   bool get hasImages => imageFileNames.isNotEmpty;
 
   /// 첫 번째 이미지 파일명 (썸네일용)
-  String? get firstImageFileName => imageFileNames.isNotEmpty ? imageFileNames.first : null;
+  String? get firstImageFileName =>
+      imageFileNames.isNotEmpty ? imageFileNames.first : null;
 
   /// 날짜 포맷 (한국어 UI용)
   String get formattedDate {
     final now = DateTime.now();
     final weekdays = ['월', '화', '수', '목', '금', '토', '일'];
     final weekday = weekdays[dateTime.weekday - 1];
-    
+
     // 오늘/내일/모레 표시
     final daysDiff = DateTime(dateTime.year, dateTime.month, dateTime.day)
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;
-    
+
     String datePrefix;
     if (daysDiff == 0) {
       datePrefix = '오늘';
@@ -278,9 +284,10 @@ class AvailableMeeting {
     } else {
       datePrefix = '${dateTime.month}월 ${dateTime.day}일';
     }
-    
-    final timeStr = '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-    
+
+    final timeStr =
+        '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+
     return '$datePrefix($weekday) $timeStr';
   }
 

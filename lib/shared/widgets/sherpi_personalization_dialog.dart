@@ -9,39 +9,38 @@ import '../models/sherpi_relationship_model.dart';
 import '../../features/sherpi/relationship/providers/relationship_provider.dart';
 
 /// 🎨 셰르피 개인화 설정 다이얼로그
-/// 
+///
 /// 프리미엄 디자인의 캐릭터 선택 인터페이스.
 /// 최소한의 텍스트로 직관적인 성격 선택을 제공합니다.
 class SherpiPersonalizationDialog extends ConsumerStatefulWidget {
   const SherpiPersonalizationDialog({super.key});
 
   @override
-  ConsumerState<SherpiPersonalizationDialog> createState() => 
+  ConsumerState<SherpiPersonalizationDialog> createState() =>
       _SherpiPersonalizationDialogState();
 }
 
-class _SherpiPersonalizationDialogState 
-    extends ConsumerState<SherpiPersonalizationDialog> 
+class _SherpiPersonalizationDialogState
+    extends ConsumerState<SherpiPersonalizationDialog>
     with TickerProviderStateMixin {
-  
   // 애니메이션 컨트롤러
   late AnimationController _fadeController;
   late AnimationController _slideController;
   late AnimationController _scaleController;
   late AnimationController _glowController;
   late AnimationController _particleController;
-  
+
   // 임시 상태 관리 (저장 전까지 여기에 보관)
   late SherpiPersonalityType _tempPersonalityType;
-  
+
   // UI 상태
   bool _isLoading = false;
   bool _hasChanges = false;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // 애니메이션 초기화
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -63,23 +62,23 @@ class _SherpiPersonalizationDialogState
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
-    
+
     // 애니메이션 시작 (스태거드 효과)
     _slideController.forward();
-    
+
     // 페이드 애니메이션은 약간 지연해서 시작 (스태거드 효과)
     Future.delayed(const Duration(milliseconds: 200), () {
       if (mounted) {
         _fadeController.forward();
       }
     });
-    
+
     // 글로우 애니메이션 반복
     _startGlowAnimation();
-    
+
     // 초기값 설정은 build에서 처리 (ref 접근 필요)
   }
-  
+
   /// 글로우 애니메이션 시작 (주기적 반복)
   void _startGlowAnimation() {
     _glowController.addStatusListener((status) {
@@ -97,7 +96,7 @@ class _SherpiPersonalizationDialogState
         });
       }
     });
-    
+
     // 첫 번째 글로우 시작
     Future.delayed(const Duration(milliseconds: 800), () {
       if (mounted) {
@@ -105,7 +104,7 @@ class _SherpiPersonalizationDialogState
       }
     });
   }
-  
+
   @override
   void dispose() {
     _fadeController.dispose();
@@ -115,16 +114,17 @@ class _SherpiPersonalizationDialogState
     _particleController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final relationship = ref.watch(relationshipProvider);
-    
+
     // 초기값 설정 (한 번만)
     if (!_hasChanges) {
-      _tempPersonalityType = relationship.personalizationSettings.personalityType;
+      _tempPersonalityType =
+          relationship.personalizationSettings.personalityType;
     }
-    
+
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -200,8 +200,10 @@ class _SherpiPersonalizationDialogState
                               center: Alignment.topCenter,
                               radius: 1.2 + (_glowController.value * 0.3),
                               colors: [
-                                AppColors.primary.withOpacity(0.08 + (_glowController.value * 0.04)),
-                                Colors.purple.withOpacity(0.03 + (_glowController.value * 0.02)),
+                                AppColors.primary.withOpacity(
+                                    0.08 + (_glowController.value * 0.04)),
+                                Colors.purple.withOpacity(
+                                    0.03 + (_glowController.value * 0.02)),
                                 Colors.transparent,
                               ],
                             ),
@@ -210,30 +212,31 @@ class _SherpiPersonalizationDialogState
                       },
                     ),
                   ),
-                  
+
                   // 메인 컨텐츠
                   Column(
                     children: [
                       // 헤더
                       _buildHeader(),
-                      
+
                       // 컨텐츠 영역
                       Expanded(
                         child: _buildPersonalitySection(),
                       ),
-                      
+
                       // 하단 버튼
                       _buildBottomButtons(),
                     ],
                   ),
-                  
+
                   // 로딩 오버레이
                   if (_isLoading)
                     Container(
                       color: Colors.black.withOpacity(0.3),
                       child: const Center(
                         child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                         ),
                       ),
                     ),
@@ -245,15 +248,17 @@ class _SherpiPersonalizationDialogState
       ),
     );
   }
-  
+
   /// 헤더 빌드 - 미니멀하고 시각적인 디자인 (실시간 업데이트)
   Widget _buildHeader() {
     final relationship = ref.watch(relationshipProvider);
-    final currentPersonality = relationship.personalizationSettings.personalityType;
-    
+    final currentPersonality =
+        relationship.personalizationSettings.personalityType;
+
     // 실시간 업데이트: 선택된 성격이 있으면 그것을 표시, 없으면 현재 성격 표시
-    final displayPersonality = _hasChanges ? _tempPersonalityType : currentPersonality;
-    
+    final displayPersonality =
+        _hasChanges ? _tempPersonalityType : currentPersonality;
+
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
       child: Column(
@@ -283,9 +288,9 @@ class _SherpiPersonalizationDialogState
               ),
             ],
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // 셰르피 아바타 중앙 배치 - 무테두리 그림자 스타일
           Container(
             width: 88,
@@ -303,7 +308,8 @@ class _SherpiPersonalizationDialogState
               boxShadow: [
                 // 메인 그림자
                 BoxShadow(
-                  color: _getPersonalityColor(displayPersonality).withOpacity(0.15),
+                  color: _getPersonalityColor(displayPersonality)
+                      .withOpacity(0.15),
                   blurRadius: 24,
                   offset: const Offset(0, 8),
                   spreadRadius: -2,
@@ -317,7 +323,8 @@ class _SherpiPersonalizationDialogState
                 ),
                 // 외부 글로우
                 BoxShadow(
-                  color: _getPersonalityColor(displayPersonality).withOpacity(0.08),
+                  color: _getPersonalityColor(displayPersonality)
+                      .withOpacity(0.08),
                   blurRadius: 32,
                   offset: const Offset(0, 4),
                 ),
@@ -340,7 +347,8 @@ class _SherpiPersonalizationDialogState
                         height: 105,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: _getPersonalityColor(displayPersonality).withOpacity(0.1),
+                          color: _getPersonalityColor(displayPersonality)
+                              .withOpacity(0.1),
                         ),
                         child: Icon(
                           Icons.person,
@@ -354,9 +362,9 @@ class _SherpiPersonalizationDialogState
               ),
             ),
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // 성격별 타이틀 (실시간 업데이트)
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
@@ -371,9 +379,9 @@ class _SherpiPersonalizationDialogState
               ),
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // 성격 설명 (실시간 업데이트) - 무테두리 그림자 스타일
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
@@ -381,12 +389,14 @@ class _SherpiPersonalizationDialogState
               key: ValueKey('desc_$displayPersonality'),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
-                color: _getPersonalityColor(displayPersonality).withOpacity(0.04),
+                color:
+                    _getPersonalityColor(displayPersonality).withOpacity(0.04),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   // 내부 그림자 효과
                   BoxShadow(
-                    color: _getPersonalityColor(displayPersonality).withOpacity(0.12),
+                    color: _getPersonalityColor(displayPersonality)
+                        .withOpacity(0.12),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                     spreadRadius: -2,
@@ -406,7 +416,8 @@ class _SherpiPersonalizationDialogState
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: _getPersonalityColor(displayPersonality).withOpacity(0.8),
+                  color:
+                      _getPersonalityColor(displayPersonality).withOpacity(0.8),
                   letterSpacing: -0.3,
                   height: 1.4,
                 ),
@@ -417,8 +428,7 @@ class _SherpiPersonalizationDialogState
       ),
     );
   }
-  
-  
+
   /// 성격 유형 섹션 빌드 - 원형 그리드 디자인
   Widget _buildPersonalitySection() {
     return Expanded(
@@ -437,11 +447,11 @@ class _SherpiPersonalizationDialogState
       ),
     );
   }
-  
+
   /// 성격 선택 원형 그리드 빌드
   Widget _buildPersonalityGrid() {
     final personalities = SherpiPersonalityType.values;
-    
+
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 20,
@@ -450,22 +460,23 @@ class _SherpiPersonalizationDialogState
         final index = entry.key;
         final type = entry.value;
         final isSelected = _tempPersonalityType == type;
-        
+
         // 스태거드 엔트런스 애니메이션
         return AnimatedBuilder(
           animation: _fadeController,
           builder: (context, child) {
             final delay = index * 0.1; // 각 버튼마다 0.1초씩 지연
-            final staggeredValue = (_fadeController.value - delay).clamp(0.0, 1.0);
+            final staggeredValue =
+                (_fadeController.value - delay).clamp(0.0, 1.0);
             final scaleValue = Curves.elasticOut.transform(staggeredValue);
-            
+
             return Transform.scale(
               scale: scaleValue,
               child: Opacity(
                 opacity: staggeredValue,
                 child: _buildPersonalityCircle(
-                  type, 
-                  isSelected, 
+                  type,
+                  isSelected,
                   index,
                 ),
               ),
@@ -475,7 +486,7 @@ class _SherpiPersonalizationDialogState
       }).toList(),
     );
   }
-  
+
   /// 성격 원형 버튼 빌드 - 프리미엄 디자인
   Widget _buildPersonalityCircle(
     SherpiPersonalityType type,
@@ -485,7 +496,7 @@ class _SherpiPersonalizationDialogState
     final color = _getPersonalityColor(type);
     final imagePath = _getPersonalityImagePath(type);
     final gradient = _getPersonalityGradient(type);
-    
+
     return GestureDetector(
       onTapDown: (_) => _scaleController.forward(),
       onTapUp: (_) => _scaleController.reverse(),
@@ -496,7 +507,7 @@ class _SherpiPersonalizationDialogState
           _hasChanges = true;
         });
         HapticFeedback.mediumImpact();
-        
+
         // 선택 시 글로우 애니메이션
         if (isSelected) {
           _glowController.forward().then((_) {
@@ -520,7 +531,7 @@ class _SherpiPersonalizationDialogState
                 shape: BoxShape.circle,
                 gradient: isSelected ? gradient : null,
                 color: isSelected ? null : Colors.white,
-                boxShadow: isSelected 
+                boxShadow: isSelected
                     ? [
                         // 선택된 상태 - 강한 그림자와 글로우
                         BoxShadow(
@@ -530,7 +541,8 @@ class _SherpiPersonalizationDialogState
                           spreadRadius: -2,
                         ),
                         BoxShadow(
-                          color: color.withOpacity(0.15 + (_glowController.value * 0.1)),
+                          color: color.withOpacity(
+                              0.15 + (_glowController.value * 0.1)),
                           blurRadius: 32 + (_glowController.value * 16),
                           offset: const Offset(0, 4),
                         ),
@@ -593,7 +605,7 @@ class _SherpiPersonalizationDialogState
                       },
                     ),
                   ),
-                  
+
                   // 선택 시 체크마크 - 그림자 기반 스타일
                   if (isSelected)
                     Positioned(
@@ -633,8 +645,7 @@ class _SherpiPersonalizationDialogState
       ),
     );
   }
-  
-  
+
   /// 프리미엄 하단 버튼 빌드
   Widget _buildBottomButtons() {
     return Container(
@@ -689,14 +700,15 @@ class _SherpiPersonalizationDialogState
               ),
             ),
           ),
-          
+
           const SizedBox(width: 20),
-          
+
           // 저장 버튼 - 프리미엄 글로우 효과
           Expanded(
             flex: 3,
             child: AnimatedBuilder(
-              animation: Listenable.merge([_glowController, _particleController]),
+              animation:
+                  Listenable.merge([_glowController, _particleController]),
               builder: (context, child) {
                 return GestureDetector(
                   onTap: _hasChanges ? _handleSave : null,
@@ -724,18 +736,21 @@ class _SherpiPersonalizationDialogState
                       boxShadow: _hasChanges
                           ? [
                               BoxShadow(
-                                color: AppColors.primary.withOpacity(0.4 + (_glowController.value * 0.2)),
+                                color: AppColors.primary.withOpacity(
+                                    0.4 + (_glowController.value * 0.2)),
                                 blurRadius: 16 + (_glowController.value * 8),
                                 offset: const Offset(0, 6),
                               ),
                               BoxShadow(
-                                color: Colors.purple.withOpacity(0.2 + (_glowController.value * 0.1)),
+                                color: Colors.purple.withOpacity(
+                                    0.2 + (_glowController.value * 0.1)),
                                 blurRadius: 24 + (_glowController.value * 12),
                                 offset: const Offset(0, 8),
                               ),
                               if (_particleController.value > 0)
                                 BoxShadow(
-                                  color: Colors.amber.withOpacity(_particleController.value * 0.6),
+                                  color: Colors.amber.withOpacity(
+                                      _particleController.value * 0.6),
                                   blurRadius: 32,
                                   offset: const Offset(0, 0),
                                 ),
@@ -757,11 +772,13 @@ class _SherpiPersonalizationDialogState
                           style: GoogleFonts.notoSans(
                             fontSize: 17,
                             fontWeight: FontWeight.w700,
-                            color: _hasChanges ? Colors.white : Colors.grey.shade500,
+                            color: _hasChanges
+                                ? Colors.white
+                                : Colors.grey.shade500,
                             letterSpacing: -0.4,
                             height: 1.0,
                           ),
-                          child: _isLoading 
+                          child: _isLoading
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   mainAxisSize: MainAxisSize.min,
@@ -771,8 +788,11 @@ class _SherpiPersonalizationDialogState
                                       height: 16,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(
-                                          _hasChanges ? Colors.white : Colors.grey.shade400,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                          _hasChanges
+                                              ? Colors.white
+                                              : Colors.grey.shade400,
                                         ),
                                       ),
                                     ),
@@ -782,7 +802,7 @@ class _SherpiPersonalizationDialogState
                                 )
                               : const Text('저장하기'),
                         ),
-                        
+
                         // 파티클 효과
                         if (_particleController.value > 0)
                           Positioned.fill(
@@ -791,10 +811,13 @@ class _SherpiPersonalizationDialogState
                               child: Stack(
                                 children: List.generate(8, (index) {
                                   final angle = (index * 45) * (3.14159 / 180);
-                                  final distance = 30 * _particleController.value;
-                                  final x = 28 + (distance * (index.isEven ? 1 : -1));
-                                  final y = 28 + (distance * (index > 3 ? 1 : -1));
-                                  
+                                  final distance =
+                                      30 * _particleController.value;
+                                  final x =
+                                      28 + (distance * (index.isEven ? 1 : -1));
+                                  final y =
+                                      28 + (distance * (index > 3 ? 1 : -1));
+
                                   return Positioned(
                                     left: x,
                                     top: y,
@@ -835,7 +858,7 @@ class _SherpiPersonalizationDialogState
       ),
     );
   }
-  
+
   /// 닫기 처리
   void _handleClose() {
     if (_hasChanges) {
@@ -849,7 +872,7 @@ class _SherpiPersonalizationDialogState
       Navigator.of(context).pop();
     }
   }
-  
+
   /// 🚪 프리미엄 나가기 확인 다이얼로그
   Widget _buildExitConfirmationDialog(BuildContext context) {
     return Dialog(
@@ -913,9 +936,9 @@ class _SherpiPersonalizationDialogState
                 color: Colors.orange.shade600,
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // 제목
             Text(
               '변경사항이 있습니다',
@@ -927,9 +950,9 @@ class _SherpiPersonalizationDialogState
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // 설명
             Text(
               '저장하지 않은 설정이 사라집니다.\n정말로 나가시겠습니까?',
@@ -942,9 +965,9 @@ class _SherpiPersonalizationDialogState
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 28),
-            
+
             // 버튼들
             Row(
               children: [
@@ -984,9 +1007,9 @@ class _SherpiPersonalizationDialogState
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // 나가기 버튼 (위험한 액션)
                 Expanded(
                   child: GestureDetector(
@@ -1052,7 +1075,7 @@ class _SherpiPersonalizationDialogState
       ),
     );
   }
-  
+
   /// 성격별 메인 색상 반환
   Color _getPersonalityColor(SherpiPersonalityType type) {
     switch (type) {
@@ -1068,7 +1091,7 @@ class _SherpiPersonalizationDialogState
         return Colors.purple.shade600;
     }
   }
-  
+
   /// 성격별 셰르피 이미지 경로 반환
   String _getPersonalityImagePath(SherpiPersonalityType type) {
     switch (type) {
@@ -1084,7 +1107,7 @@ class _SherpiPersonalizationDialogState
         return SherpiEmotion.guiding.imagePath;
     }
   }
-  
+
   /// 성격별 그라데이션 반환
   Gradient _getPersonalityGradient(SherpiPersonalityType type) {
     switch (type) {
@@ -1140,7 +1163,7 @@ class _SherpiPersonalizationDialogState
         );
     }
   }
-  
+
   /// 성격별 제목 반환
   String _getPersonalityTitle(SherpiPersonalityType type) {
     switch (type) {
@@ -1156,7 +1179,7 @@ class _SherpiPersonalizationDialogState
         return '균형잡힌 셰르피';
     }
   }
-  
+
   /// 성격별 설명 반환
   String _getPersonalityDescription(SherpiPersonalityType type) {
     switch (type) {
@@ -1172,22 +1195,22 @@ class _SherpiPersonalizationDialogState
         return '상황에 맞는 적절한 반응과 소통';
     }
   }
-  
+
   /// 저장 처리
   Future<void> _handleSave() async {
     setState(() {
       _isLoading = true;
     });
-    
+
     // 진동 피드백
     HapticFeedback.mediumImpact();
-    
+
     // 파티클 애니메이션 시작
     _particleController.forward();
-    
+
     // 저장 애니메이션을 위한 지연
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     // 실제 저장 로직
     final relationship = ref.read(relationshipProvider);
     final updatedSettings = relationship.personalizationSettings.copyWith(
@@ -1196,19 +1219,21 @@ class _SherpiPersonalizationDialogState
     final updatedRelationship = relationship.copyWith(
       personalizationSettings: updatedSettings,
     );
-    
+
     // Provider 업데이트
-    ref.read(relationshipProvider.notifier).updateRelationship(updatedRelationship);
-    
+    ref
+        .read(relationshipProvider.notifier)
+        .updateRelationship(updatedRelationship);
+
     setState(() {
       _isLoading = false;
     });
-    
+
     // 성공 시 글로우 애니메이션
     _glowController.forward().then((_) {
       _glowController.reverse();
     });
-    
+
     // 성공 메시지
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1237,7 +1262,7 @@ class _SherpiPersonalizationDialogState
           margin: const EdgeInsets.all(16),
         ),
       );
-      
+
       // 다이얼로그 닫기
       Navigator.of(context).pop();
     }

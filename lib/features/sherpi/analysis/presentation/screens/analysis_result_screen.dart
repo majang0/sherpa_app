@@ -11,22 +11,22 @@ import '../../services/user_data_analyzer.dart';
 /// 분석 결과 화면
 class AnalysisResultScreen extends ConsumerStatefulWidget {
   final AnalysisResult analysisResult;
-  
+
   const AnalysisResultScreen({
     super.key,
     required this.analysisResult,
   });
 
   @override
-  ConsumerState<AnalysisResultScreen> createState() => _AnalysisResultScreenState();
+  ConsumerState<AnalysisResultScreen> createState() =>
+      _AnalysisResultScreenState();
 }
 
 class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
     with TickerProviderStateMixin {
-      
   late TabController _tabController;
   late AnimationController _animationController;
-  
+
   @override
   void initState() {
     super.initState();
@@ -37,14 +37,14 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
     );
     _animationController.forward();
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
     _animationController.dispose();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,13 +53,13 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         slivers: [
           // 커스텀 앱바
           _buildSliverAppBar(),
-          
+
           // 탭바
           SliverPersistentHeader(
             pinned: true,
             delegate: _TabBarDelegate(_tabController),
           ),
-          
+
           // 탭 컨텐츠
           SliverFillRemaining(
             child: TabBarView(
@@ -76,7 +76,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   /// 커스텀 슬라이버 앱바
   Widget _buildSliverAppBar() {
     return SliverAppBar(
@@ -116,7 +116,8 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                 bottom: 60,
                 left: 20,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
@@ -147,12 +148,12 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   /// 개요 탭
   Widget _buildOverviewTab() {
     final patterns = widget.analysisResult.activityPatterns;
     final performance = widget.analysisResult.performanceMetrics;
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -161,27 +162,27 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
           // 핵심 지표 카드들
           _buildMetricCards(patterns, performance),
           const SizedBox(height: 24),
-          
+
           // 활동 분포 차트
           _buildActivityDistributionCard(),
           const SizedBox(height: 20),
-          
+
           // 요일별 활동 차트
           _buildWeeklyActivityChart(),
           const SizedBox(height: 20),
-          
+
           // 기분 분포 차트
           _buildMoodDistributionCard(),
         ],
       ),
     );
   }
-  
+
   /// 패턴 탭
   Widget _buildPatternsTab() {
     final patterns = widget.analysisResult.activityPatterns;
     final mood = widget.analysisResult.moodAnalysis;
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -213,22 +214,22 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
             ],
           ),
           const SizedBox(height: 20),
-          
+
           // 연속 기록
           _buildStreakCard(patterns),
           const SizedBox(height: 20),
-          
+
           // 기분 패턴
           _buildMoodPatternCard(mood),
         ],
       ),
     );
   }
-  
+
   /// 인사이트 탭
   Widget _buildInsightsTab() {
     final insights = widget.analysisResult.insights;
-    
+
     return ListView.builder(
       padding: const EdgeInsets.all(20),
       itemCount: insights.length,
@@ -241,11 +242,11 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       },
     );
   }
-  
+
   /// 추천사항 탭
   Widget _buildRecommendationsTab() {
     final recommendations = widget.analysisResult.recommendations;
-    
+
     return ListView.builder(
       padding: const EdgeInsets.all(20),
       itemCount: recommendations.length,
@@ -258,9 +259,10 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       },
     );
   }
-  
+
   /// 핵심 지표 카드들
-  Widget _buildMetricCards(ActivityPatterns patterns, PerformanceMetrics performance) {
+  Widget _buildMetricCards(
+      ActivityPatterns patterns, PerformanceMetrics performance) {
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -296,7 +298,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ],
     );
   }
-  
+
   /// 지표 카드
   Widget _buildMetricCard({
     required String title,
@@ -354,11 +356,12 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     ).animate().scale(delay: 200.ms, duration: 400.ms);
   }
-  
+
   /// 활동 분포 카드
   Widget _buildActivityDistributionCard() {
-    final activityData = widget.analysisResult.activityPatterns.activityFrequency;
-    
+    final activityData =
+        widget.analysisResult.activityPatterns.activityFrequency;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -428,11 +431,12 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   /// 요일별 활동 차트
   Widget _buildWeeklyActivityChart() {
-    final weeklyData = widget.analysisResult.activityPatterns.weeklyDistribution;
-    
+    final weeklyData =
+        widget.analysisResult.activityPatterns.weeklyDistribution;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -495,15 +499,15 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   /// 기분 분포 카드
   Widget _buildMoodDistributionCard() {
     final moodData = widget.analysisResult.moodAnalysis.moodDistribution;
-    
+
     if (moodData.isEmpty) {
       return const SizedBox.shrink();
     }
-    
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -578,7 +582,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   /// 패턴 상세 카드
   Widget _buildPatternDetailCard({
     required String title,
@@ -621,9 +625,10 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   /// 패턴 아이템
-  Widget _buildPatternItem(String label, String value, IconData icon, Color color) {
+  Widget _buildPatternItem(
+      String label, String value, IconData icon, Color color) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -659,7 +664,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   /// 연속 기록 카드
   Widget _buildStreakCard(ActivityPatterns patterns) {
     return Container(
@@ -720,7 +725,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   /// 기분 패턴 카드
   Widget _buildMoodPatternCard(MoodAnalysis mood) {
     return Container(
@@ -805,7 +810,8 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
               runSpacing: 8,
               children: mood.activityMoodMap.entries.map((entry) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: _getMoodColor(entry.value).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(16),
@@ -838,7 +844,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   /// 인사이트 카드
   Widget _buildInsightCard(Insight insight) {
     return Container(
@@ -893,7 +899,8 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: _getInsightColor(insight.type).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -925,7 +932,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   /// 추천사항 카드
   Widget _buildRecommendationCard(Recommendation recommendation) {
     return Container(
@@ -961,7 +968,8 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                     gradient: LinearGradient(
                       colors: [
                         _getRecommendationColor(recommendation.type),
-                        _getRecommendationColor(recommendation.type).withOpacity(0.7),
+                        _getRecommendationColor(recommendation.type)
+                            .withOpacity(0.7),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -998,9 +1006,11 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                       ),
                       const SizedBox(height: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: _getRecommendationColor(recommendation.type).withOpacity(0.1),
+                          color: _getRecommendationColor(recommendation.type)
+                              .withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -1044,16 +1054,16 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       ),
     );
   }
-  
+
   // === 헬퍼 메서드들 ===
-  
+
   List<PieChartSectionData> _createPieChartSections(Map<String, int> data) {
     final total = data.values.fold(0, (sum, value) => sum + value);
-    
+
     return data.entries.map((entry) {
       final percentage = (entry.value / total) * 100;
       final color = _getActivityColor(entry.key);
-      
+
       return PieChartSectionData(
         color: color,
         value: entry.value.toDouble(),
@@ -1067,7 +1077,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       );
     }).toList();
   }
-  
+
   List<BarChartGroupData> _createBarGroups(Map<int, double> data) {
     return data.entries.map((entry) {
       return BarChartGroupData(
@@ -1083,83 +1093,124 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
       );
     }).toList();
   }
-  
+
   Color _getActivityColor(String activity) {
     switch (activity) {
-      case '운동': return Colors.blue;
-      case '독서': return Colors.green;
-      case '일기': return Colors.purple;
-      case '모임': return Colors.orange;
-      default: return Colors.grey;
+      case '운동':
+        return Colors.blue;
+      case '독서':
+        return Colors.green;
+      case '일기':
+        return Colors.purple;
+      case '모임':
+        return Colors.orange;
+      default:
+        return Colors.grey;
     }
   }
-  
+
   String _getMoodEmoji(String mood) {
     switch (mood) {
-      case 'very_happy': return '😄';
-      case 'happy': return '😊';
-      case 'good': return '🙂';
-      case 'normal': return '😐';
-      case 'tired': return '😪';
-      case 'stressed': return '😤';
-      default: return '😊';
+      case 'very_happy':
+        return '😄';
+      case 'happy':
+        return '😊';
+      case 'good':
+        return '🙂';
+      case 'normal':
+        return '😐';
+      case 'tired':
+        return '😪';
+      case 'stressed':
+        return '😤';
+      default:
+        return '😊';
     }
   }
-  
+
   String _getMoodLabel(String mood) {
     switch (mood) {
-      case 'very_happy': return '매우 행복';
-      case 'happy': return '행복';
-      case 'good': return '좋음';
-      case 'normal': return '보통';
-      case 'tired': return '피곤';
-      case 'stressed': return '스트레스';
-      default: return '보통';
+      case 'very_happy':
+        return '매우 행복';
+      case 'happy':
+        return '행복';
+      case 'good':
+        return '좋음';
+      case 'normal':
+        return '보통';
+      case 'tired':
+        return '피곤';
+      case 'stressed':
+        return '스트레스';
+      default:
+        return '보통';
     }
   }
-  
+
   Color _getMoodColor(String mood) {
     switch (mood) {
-      case 'very_happy': return Colors.green;
-      case 'happy': return Colors.lightGreen;
-      case 'good': return Colors.blue;
-      case 'normal': return Colors.grey;
-      case 'tired': return Colors.orange;
-      case 'stressed': return Colors.red;
-      default: return Colors.grey;
+      case 'very_happy':
+        return Colors.green;
+      case 'happy':
+        return Colors.lightGreen;
+      case 'good':
+        return Colors.blue;
+      case 'normal':
+        return Colors.grey;
+      case 'tired':
+        return Colors.orange;
+      case 'stressed':
+        return Colors.red;
+      default:
+        return Colors.grey;
     }
   }
-  
+
   Color _getInsightColor(InsightType type) {
     switch (type) {
-      case InsightType.strength: return Colors.green;
-      case InsightType.weakness: return Colors.orange;
-      case InsightType.opportunity: return Colors.blue;
-      case InsightType.trend: return Colors.purple;
-      case InsightType.achievement: return Colors.amber;
+      case InsightType.strength:
+        return Colors.green;
+      case InsightType.weakness:
+        return Colors.orange;
+      case InsightType.opportunity:
+        return Colors.blue;
+      case InsightType.trend:
+        return Colors.purple;
+      case InsightType.achievement:
+        return Colors.amber;
     }
   }
-  
+
   String _getInsightTypeLabel(InsightType type) {
     switch (type) {
-      case InsightType.strength: return '강점';
-      case InsightType.weakness: return '약점';
-      case InsightType.opportunity: return '기회';
-      case InsightType.trend: return '트렌드';
-      case InsightType.achievement: return '성취';
+      case InsightType.strength:
+        return '강점';
+      case InsightType.weakness:
+        return '약점';
+      case InsightType.opportunity:
+        return '기회';
+      case InsightType.trend:
+        return '트렌드';
+      case InsightType.achievement:
+        return '성취';
     }
   }
-  
+
   Color _getRecommendationColor(RecommendationType type) {
     switch (type) {
-      case RecommendationType.goal: return Colors.blue;
-      case RecommendationType.activity: return Colors.green;
-      case RecommendationType.improvement: return Colors.orange;
-      case RecommendationType.challenge: return Colors.red;
-      case RecommendationType.balance: return Colors.purple;
+      case RecommendationType.goal:
+        return Colors.blue;
+      case RecommendationType.activity:
+        return Colors.green;
+      case RecommendationType.improvement:
+        return Colors.orange;
+      case RecommendationType.challenge:
+        return Colors.red;
+      case RecommendationType.balance:
+        return Colors.purple;
     }
   }
-  
+
   void _handleRecommendationAction(Recommendation recommendation) {
     // 추천사항에 따른 액션 처리
     ScaffoldMessenger.of(context).showSnackBar(
@@ -1182,7 +1233,8 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   _TabBarDelegate(this.tabController);
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       color: Colors.white,
       child: TabBar(
@@ -1207,7 +1259,8 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => 48;
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => false;
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
 }
 
 /// 패턴 페인터

@@ -31,7 +31,7 @@ import '../../../../shared/models/global_user_model.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
-  
+
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
@@ -44,7 +44,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   late Animation<double> _scaleAnimation;
 
   bool _isLoading = true;
-  
+
   // 🎯 메시지 표시 여부 추적 (static으로 앱 실행 동안 유지)
   static bool _hasShownWelcomeMessage = false;
   static String? _lastGreetingDate; // 마지막 인사 날짜 추적
@@ -52,7 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void initState() {
     super.initState();
-    
+
     // 간단한 애니메이션 설정
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
@@ -77,25 +77,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     // 애니메이션 시작
     _fadeController.forward();
     _scaleController.forward();
-    
+
     // 퀘스트 데이터 초기화 및 동기화 (V2)
     // 퀘스트 Provider 초기화 트리거
     ref.read(questProviderV2);
-    
+
     // 짧은 디레이 후 퀘스트 동기화 실행
     await Future.delayed(const Duration(milliseconds: 300));
-    
+
     // V2에서는 자동 동기화되므로 수동 동기화 불필요
     // ref.read(questProviderV2.notifier).onGlobalActivityUpdate('sync', {});
-    
+
     // 퀘스트 데이터 강제 리프레시
     ref.read(questProviderV2.notifier).refresh();
-    
+
     // 로딩 완료
     if (mounted) {
       setState(() => _isLoading = false);
     }
-    
+
     // 환영 메시지 (테스트 카드와 충돌 방지를 위해 지연)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 500), () {
@@ -106,22 +106,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     });
   }
 
-
-
   void _showWelcomeSherpi() async {
     // SharedPreferences를 통해 첫 실행 여부 확인
     final prefs = await SharedPreferences.getInstance();
     final isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
-    final today = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD 형식
-    
+    final today =
+        DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD 형식
+
     SherpiContext context;
-    
+
     // 앱 첫 실행인 경우
     if (isFirstLaunch) {
       context = SherpiContext.welcome;
       await prefs.setBool('isFirstLaunch', false);
       _hasShownWelcomeMessage = true;
-    } 
+    }
     // 오늘 첫 접속인 경우 (날짜가 바뀐 경우)
     else if (_lastGreetingDate != today) {
       context = SherpiContext.dailyGreeting;
@@ -141,11 +140,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     // contextEmotionMap에 정의된 감정이 자동으로 적용됨
     // welcome → happy, dailyGreeting → defaults
     ref.read(sherpiProvider.notifier).showMessage(
-      context: context,
-      forceShow: false, // 중복 방지 활성화
-    );
+          context: context,
+          forceShow: false, // 중복 방지 활성화
+        );
   }
-
 
   @override
   void dispose() {
@@ -154,13 +152,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(globalUserProvider);
     final totalPoints = ref.watch(globalTotalPointsProvider);
-    
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: SherpaCleanAppBar(),
@@ -244,7 +240,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     const SizedBox(height: 20),
                     CompactQuestWidget(),
                     const SizedBox(height: 20),
-                    
+
                     // 소셜 영역 위젯들
                     const SherpiPersonalizedMeetingWidget(),
                     const SizedBox(height: 20),
@@ -257,7 +253,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 ),
               ),
             ),
-            
+
             // 하단 여백
             const SliverPadding(padding: EdgeInsets.only(bottom: 100)),
           ],
@@ -265,13 +261,4 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       ),
     );
   }
-
-
-
-
-
-
-
-
-
 }

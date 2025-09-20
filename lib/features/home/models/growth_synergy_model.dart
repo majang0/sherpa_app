@@ -33,18 +33,16 @@ enum QuestType {
   career
 }
 
-
 enum MeetingCategory {
   networking,
   study,
   exercise,
   social,
   career,
-  hobby,        // ✅ 추가
-  culture,      // ✅ 추가
-  volunteer     // ✅ 추가
+  hobby, // ✅ 추가
+  culture, // ✅ 추가
+  volunteer // ✅ 추가
 }
-
 
 // ============================================================================
 // BASIC MODELS - 기본 모델들
@@ -78,8 +76,12 @@ class GrowthMetric {
       ? (currentLevel - previousLevel) / (targetLevel - previousLevel)
       : 0.0;
 
-  double get weeklyGrowth => weeklyProgress.isNotEmpty ?
-  weeklyProgress.last - (weeklyProgress.length > 1 ? weeklyProgress[weeklyProgress.length - 2] : 0) : 0;
+  double get weeklyGrowth => weeklyProgress.isNotEmpty
+      ? weeklyProgress.last -
+          (weeklyProgress.length > 1
+              ? weeklyProgress[weeklyProgress.length - 2]
+              : 0)
+      : 0;
 
   GrowthMetric copyWith({
     String? id,
@@ -189,7 +191,8 @@ class FriendGrowthComparison {
     this.isOnline = false,
   });
 
-  int get totalScore => currentLevel * 10 + currentStreak * 5 + meetingParticipations * 3;
+  int get totalScore =>
+      currentLevel * 10 + currentStreak * 5 + meetingParticipations * 3;
 }
 
 /// 주간 성장 하이라이트 모델
@@ -315,9 +318,11 @@ class UniversityGuild {
     required this.guildSettings,
   });
 
-  double get activityRate => totalMembers > 0 ? (activeMembers / totalMembers * 100) : 0.0;
+  double get activityRate =>
+      totalMembers > 0 ? (activeMembers / totalMembers * 100) : 0.0;
   int get onlineMemberCount => onlineMembers.length;
-  bool get hasActiveCompetition => activeCompetitions.any((comp) => comp.isActive);
+  bool get hasActiveCompetition =>
+      activeCompetitions.any((comp) => comp.isActive);
 
   UniversityGuild copyWith({
     String? guildId,
@@ -424,7 +429,8 @@ class UniversityGuildMember {
     }
   }
 
-  int get totalScore => currentLevel * 10 + currentStreak * 5 + meetingParticipations * 3;
+  int get totalScore =>
+      currentLevel * 10 + currentStreak * 5 + meetingParticipations * 3;
 }
 
 // ============================================================================
@@ -487,8 +493,10 @@ class CampusBuilding {
     required this.buildingInfo,
   });
 
-  int get totalCapacity => locations.fold(0, (sum, location) => sum + location.capacity);
-  int get availableLocations => locations.where((location) => location.isAvailable).length;
+  int get totalCapacity =>
+      locations.fold(0, (sum, location) => sum + location.capacity);
+  int get availableLocations =>
+      locations.where((location) => location.isAvailable).length;
 }
 
 /// 캠퍼스 이벤트 모델
@@ -523,13 +531,14 @@ class CampusEvent {
 
   bool get isFull => currentParticipants >= maxParticipants;
   Duration get timeUntilStart => startTime.difference(DateTime.now());
-  bool get isOngoing => DateTime.now().isAfter(startTime) && DateTime.now().isBefore(endTime);
+  bool get isOngoing =>
+      DateTime.now().isAfter(startTime) && DateTime.now().isBefore(endTime);
 
   // 🎓 isToday getter 추가 (에러 해결)
   bool get isToday =>
       DateTime.now().day == startTime.day &&
-          DateTime.now().month == startTime.month &&
-          DateTime.now().year == startTime.year;
+      DateTime.now().month == startTime.month &&
+      DateTime.now().year == startTime.year;
 
   bool get isUpcoming => DateTime.now().isBefore(startTime);
   bool get hasEnded => DateTime.now().isAfter(endTime);
@@ -558,7 +567,8 @@ class AcademicSchedule {
   });
 
   Duration get timeUntilDate => date.difference(DateTime.now());
-  bool get isToday => DateTime.now().day == date.day &&
+  bool get isToday =>
+      DateTime.now().day == date.day &&
       DateTime.now().month == date.month &&
       DateTime.now().year == date.year;
   bool get isThisWeek => timeUntilDate.inDays <= 7 && timeUntilDate.inDays >= 0;
@@ -782,12 +792,13 @@ class GrowthSynergyState {
   });
 
   // 편의 getter들
-  GuildRanking? get myGuildRanking_obj =>
-      guildRankings.where((ranking) => ranking.guildId == myGuild?.guildId).firstOrNull;
+  GuildRanking? get myGuildRanking_obj => guildRankings
+      .where((ranking) => ranking.guildId == myGuild?.guildId)
+      .firstOrNull;
 
-  List<GuildCompetition> get myActiveCompetitions =>
-      activeCompetitions.where((comp) =>
-          comp.participatingGuilds.contains(myGuild?.guildId)).toList();
+  List<GuildCompetition> get myActiveCompetitions => activeCompetitions
+      .where((comp) => comp.participatingGuilds.contains(myGuild?.guildId))
+      .toList();
 
   List<CampusEvent> get todayEvents =>
       campusEvents.where((event) => event.isToday).toList();

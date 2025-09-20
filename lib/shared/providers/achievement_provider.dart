@@ -92,7 +92,8 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
         final updated = achievement.copyWith(currentProgress: newProgress);
 
         // 달성 조건 확인
-        if (!updated.isUnlocked && updated.currentProgress >= updated.requiredValue) {
+        if (!updated.isUnlocked &&
+            updated.currentProgress >= updated.requiredValue) {
           return updated.copyWith(
             isUnlocked: true,
             unlockedAt: DateTime.now(),
@@ -120,16 +121,19 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
   List<AchievementBadge> get unlockedAchievements =>
       state.where((achievement) => achievement.isUnlocked).toList();
 
-  List<AchievementBadge> get nearCompletionAchievements =>
-      state.where((achievement) => !achievement.isUnlocked && achievement.isNearCompletion).toList();
+  List<AchievementBadge> get nearCompletionAchievements => state
+      .where((achievement) =>
+          !achievement.isUnlocked && achievement.isNearCompletion)
+      .toList();
 
   List<GrowthFeedback> generateGrowthFeedback() {
     final feedbacks = <GrowthFeedback>[];
 
     // 최근 달성한 배지
     final recentAchievements = unlockedAchievements
-        .where((a) => a.unlockedAt != null &&
-        DateTime.now().difference(a.unlockedAt!).inDays <= 7)
+        .where((a) =>
+            a.unlockedAt != null &&
+            DateTime.now().difference(a.unlockedAt!).inDays <= 7)
         .toList();
 
     for (final achievement in recentAchievements) {
@@ -145,7 +149,8 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
     // 완료 임박 배지
     for (final achievement in nearCompletionAchievements) {
       feedbacks.add(GrowthFeedback(
-        message: '${achievement.emoji} "${achievement.title}" 달성까지 ${achievement.requiredValue - achievement.currentProgress}개 남았어요!',
+        message:
+            '${achievement.emoji} "${achievement.title}" 달성까지 ${achievement.requiredValue - achievement.currentProgress}개 남았어요!',
         type: 'encouragement',
         emoji: '💪',
         color: AppColors.warning,
@@ -157,8 +162,9 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
   }
 }
 
-final achievementProvider = StateNotifierProvider<AchievementNotifier, List<AchievementBadge>>(
-      (ref) => AchievementNotifier(),
+final achievementProvider =
+    StateNotifierProvider<AchievementNotifier, List<AchievementBadge>>(
+  (ref) => AchievementNotifier(),
 );
 
 final growthFeedbackProvider = Provider<List<GrowthFeedback>>((ref) {

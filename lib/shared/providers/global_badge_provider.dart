@@ -47,7 +47,8 @@ final globalBadgeEffectsProvider = Provider<Map<String, double>>((ref) {
   final Map<String, double> effects = {};
 
   for (final badge in equippedBadges) {
-    effects[badge.effectType] = (effects[badge.effectType] ?? 0) + badge.effectValue;
+    effects[badge.effectType] =
+        (effects[badge.effectType] ?? 0) + badge.effectValue;
   }
 
   return effects;

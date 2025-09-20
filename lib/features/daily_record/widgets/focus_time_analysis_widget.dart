@@ -15,10 +15,12 @@ import '../../../shared/utils/haptic_feedback_manager.dart';
 
 class FocusTimeAnalysisWidget extends ConsumerStatefulWidget {
   @override
-  ConsumerState<FocusTimeAnalysisWidget> createState() => _FocusTimeAnalysisWidgetState();
+  ConsumerState<FocusTimeAnalysisWidget> createState() =>
+      _FocusTimeAnalysisWidgetState();
 }
 
-class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidget>
+class _FocusTimeAnalysisWidgetState
+    extends ConsumerState<FocusTimeAnalysisWidget>
     with TickerProviderStateMixin {
   late AnimationController _chartAnimationController;
   late AnimationController _fadeController;
@@ -28,13 +30,12 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
   late Animation<double> _fadeAnimation;
   late Animation<double> _gaugeAnimation;
   late Animation<double> _pulseAnimation;
-  
-  
+
   // Simple focus colors
   static const Color _levelOneColor = Color(0xFF9E9E9E);
   static const Color _levelTwoColor = Color(0xFF2E5BFF);
   static const Color _levelThreeColor = Color(0xFFFFB000);
-  
+
   @override
   void initState() {
     super.initState();
@@ -43,17 +44,17 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     _gaugeAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     _pulseController = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
@@ -63,17 +64,17 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
       parent: _chartAnimationController,
       curve: Curves.easeOutCubic,
     );
-    
+
     _fadeAnimation = CurvedAnimation(
       parent: _fadeController,
       curve: Curves.easeOut,
     );
-    
+
     _gaugeAnimation = CurvedAnimation(
       parent: _gaugeAnimationController,
       curve: Curves.easeOutBack,
     );
-    
+
     _pulseAnimation = Tween<double>(
       begin: 1.0,
       end: 1.05,
@@ -159,7 +160,10 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [_levelTwoColor.withOpacity(0.1), _levelTwoColor.withOpacity(0.05)],
+                  colors: [
+                    _levelTwoColor.withOpacity(0.1),
+                    _levelTwoColor.withOpacity(0.05)
+                  ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -240,105 +244,106 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-          Container(
-            width: 180,
-            height: 180,
-            alignment: Alignment.center,
-            child: Stack(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.none,
-                  children: [
-                    // Background circle (failsafe rendering)
-                    Container(
-                      width: 160,
-                      height: 160,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.grey[300]!,
-                          width: 4,
-                        ),
+            Container(
+              width: 180,
+              height: 180,
+              alignment: Alignment.center,
+              child: Stack(
+                alignment: Alignment.center,
+                clipBehavior: Clip.none,
+                children: [
+                  // Background circle (failsafe rendering)
+                  Container(
+                    width: 160,
+                    height: 160,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.grey[300]!,
+                        width: 4,
                       ),
                     ),
-                    
-                    // Simple focus progress with absolute positioning
-                    Positioned.fill(
-                      child: AnimatedBuilder(
-                        animation: _gaugeAnimation,
-                        builder: (context, child) {
-                          return CustomPaint(
-                            painter: SimpleFocusProgressPainter(
-                              minutes: todayMinutes,
-                              animationValue: _gaugeAnimation.value,
-                              pulseValue: _pulseAnimation.value,
-                              strokeWidth: 16,
+                  ),
+
+                  // Simple focus progress with absolute positioning
+                  Positioned.fill(
+                    child: AnimatedBuilder(
+                      animation: _gaugeAnimation,
+                      builder: (context, child) {
+                        return CustomPaint(
+                          painter: SimpleFocusProgressPainter(
+                            minutes: todayMinutes,
+                            animationValue: _gaugeAnimation.value,
+                            pulseValue: _pulseAnimation.value,
+                            strokeWidth: 16,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  // Perfect center content with proper alignment
+                  Positioned.fill(
+                    child: Center(
+                      child: Container(
+                        width: 125, // 100에서 125로 확대 (테두리 안쪽 공간에 맞춤)
+                        height: 125, // 100에서 125로 확대 (테두리 안쪽 공간에 맞춤)
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: _getCurrentColor(todayMinutes)
+                                  .withOpacity(0.12),
+                              blurRadius: 20,
+                              offset: const Offset(0, 4),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    
-                    // Perfect center content with proper alignment
-                    Positioned.fill(
-                      child: Center(
-                        child: Container(
-                          width: 125,  // 100에서 125로 확대 (테두리 안쪽 공간에 맞춤)
-                          height: 125, // 100에서 125로 확대 (테두리 안쪽 공간에 맞춤)
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: _getCurrentColor(todayMinutes).withOpacity(0.12),
-                                blurRadius: 20,
-                                offset: const Offset(0, 4),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Current time display
+                            Text(
+                              _formatTimeSimple(todayMinutes),
+                              style: GoogleFonts.notoSans(
+                                fontSize: 24, // 글씨 크기는 그대로 유지
+                                fontWeight: FontWeight.w900,
+                                color: _getCurrentColor(todayMinutes),
+                                letterSpacing: -0.8,
+                                height: 0.9,
                               ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              // Current time display
-                              Text(
-                                _formatTimeSimple(todayMinutes),
-                                style: GoogleFonts.notoSans(
-                                  fontSize: 24,  // 글씨 크기는 그대로 유지
-                                  fontWeight: FontWeight.w900,
-                                  color: _getCurrentColor(todayMinutes),
-                                  letterSpacing: -0.8,
-                                  height: 0.9,
-                                ),
-                                textAlign: TextAlign.center,
+                              textAlign: TextAlign.center,
+                            ),
+
+                            const SizedBox(height: 4),
+
+                            // Simple status text
+                            Text(
+                              '오늘의 몰입',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey[600],
+                                letterSpacing: -0.2,
                               ),
-                              
-                              const SizedBox(height: 4),
-                              
-                              // Simple status text  
-                              Text(
-                                '오늘의 몰입',
-                                style: GoogleFonts.notoSans(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey[600],
-                                  letterSpacing: -0.2,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          _buildMotivationMessage(todayMinutes),
-        ],
+            const SizedBox(height: 20),
+            _buildMotivationMessage(todayMinutes),
+          ],
+        ),
       ),
-    ),
-  );
+    );
   }
 
   Widget _buildStatItem({
@@ -456,134 +461,135 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
           child: SizedBox(
             height: 150,
             child: AnimatedBuilder(
-            animation: _chartAnimation,
-            builder: (context, child) {
-              return BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  maxY: maxValue,
-                  minY: 0,
-                  barTouchData: BarTouchData(
-                    enabled: true,
-                    touchTooltipData: BarTouchTooltipData(
-                      tooltipBgColor: Colors.grey[900],
-                      tooltipRoundedRadius: 8,
-                      tooltipPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        final minutes = focusData[groupIndex];
-                        final isToday = groupIndex == focusData.length - 1;
-                        final daysAgo = 13 - groupIndex;
-                        final dateText = isToday ? '오늘' : '${daysAgo}일 전';
-                        final level = _getFocusLevel(minutes);
-                        
-                        return BarTooltipItem(
-                          '$dateText\n${_formatTime(minutes)}\n$level',
-                          GoogleFonts.notoSans(
-                            color: Colors.white,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            height: 1.4,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  titlesData: FlTitlesData(
-                    show: true,
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          final index = value.toInt();
-                          if (index % 2 != 0) return const SizedBox.shrink();
-                          
-                          final daysAgo = 13 - index;
-                          final text = daysAgo == 0 ? '오늘' : '${daysAgo}';
-                          
-                          return Text(
-                            text,
-                            style: GoogleFonts.notoSans(
+              animation: _chartAnimation,
+              builder: (context, child) {
+                return BarChart(
+                  BarChartData(
+                    alignment: BarChartAlignment.spaceAround,
+                    maxY: maxValue,
+                    minY: 0,
+                    barTouchData: BarTouchData(
+                      enabled: true,
+                      touchTooltipData: BarTouchTooltipData(
+                        tooltipBgColor: Colors.grey[900],
+                        tooltipRoundedRadius: 8,
+                        tooltipPadding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                          final minutes = focusData[groupIndex];
+                          final isToday = groupIndex == focusData.length - 1;
+                          final daysAgo = 13 - groupIndex;
+                          final dateText = isToday ? '오늘' : '${daysAgo}일 전';
+                          final level = _getFocusLevel(minutes);
+
+                          return BarTooltipItem(
+                            '$dateText\n${_formatTime(minutes)}\n$level',
+                            GoogleFonts.notoSans(
+                              color: Colors.white,
                               fontSize: 11,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w600,
+                              height: 1.4,
                             ),
                           );
                         },
-                        reservedSize: 24,
                       ),
                     ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    rightTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                  ),
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    horizontalInterval: 30,
-                    getDrawingHorizontalLine: (value) {
-                      if (value == 30) {
-                        return FlLine(
-                          color: _levelTwoColor.withOpacity(0.3),
-                          strokeWidth: 1.5,
-                          dashArray: [5, 3],
-                        );
-                      } else if (value == 120) {
-                        return FlLine(
-                          color: _levelThreeColor.withOpacity(0.3),
-                          strokeWidth: 1.5,
-                          dashArray: [5, 3],
-                        );
-                      }
-                      return FlLine(
-                        color: Colors.grey[200]!,
-                        strokeWidth: 0.5,
-                      );
-                    },
-                  ),
-                  borderData: FlBorderData(show: false),
-                  barGroups: focusData.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final value = entry.value;
-                    final isToday = index == focusData.length - 1;
-                    final animatedValue = value * _chartAnimation.value;
-                    final barColor = _getLevelColor(value);
-                    
-                    return BarChartGroupData(
-                      x: index,
-                      barRods: [
-                        BarChartRodData(
-                          toY: animatedValue.toDouble(),
-                          gradient: LinearGradient(
-                            colors: [
-                              barColor,
-                              barColor.withOpacity(0.7),
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          width: 16,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            topRight: Radius.circular(6),
-                          ),
-                          backDrawRodData: BackgroundBarChartRodData(
-                            show: true,
-                            toY: maxValue,
-                            color: Colors.grey[50],
-                          ),
+                    titlesData: FlTitlesData(
+                      show: true,
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          getTitlesWidget: (value, meta) {
+                            final index = value.toInt();
+                            if (index % 2 != 0) return const SizedBox.shrink();
+
+                            final daysAgo = 13 - index;
+                            final text = daysAgo == 0 ? '오늘' : '${daysAgo}';
+
+                            return Text(
+                              text,
+                              style: GoogleFonts.notoSans(
+                                fontSize: 11,
+                                color: Colors.grey[600],
+                                fontWeight: FontWeight.w500,
+                              ),
+                            );
+                          },
+                          reservedSize: 24,
                         ),
-                      ],
-                    );
-                  }).toList(),
-                ),
-              );
-            },
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      rightTitles: AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      topTitles: AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                    ),
+                    gridData: FlGridData(
+                      show: true,
+                      drawVerticalLine: false,
+                      horizontalInterval: 30,
+                      getDrawingHorizontalLine: (value) {
+                        if (value == 30) {
+                          return FlLine(
+                            color: _levelTwoColor.withOpacity(0.3),
+                            strokeWidth: 1.5,
+                            dashArray: [5, 3],
+                          );
+                        } else if (value == 120) {
+                          return FlLine(
+                            color: _levelThreeColor.withOpacity(0.3),
+                            strokeWidth: 1.5,
+                            dashArray: [5, 3],
+                          );
+                        }
+                        return FlLine(
+                          color: Colors.grey[200]!,
+                          strokeWidth: 0.5,
+                        );
+                      },
+                    ),
+                    borderData: FlBorderData(show: false),
+                    barGroups: focusData.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final value = entry.value;
+                      final isToday = index == focusData.length - 1;
+                      final animatedValue = value * _chartAnimation.value;
+                      final barColor = _getLevelColor(value);
+
+                      return BarChartGroupData(
+                        x: index,
+                        barRods: [
+                          BarChartRodData(
+                            toY: animatedValue.toDouble(),
+                            gradient: LinearGradient(
+                              colors: [
+                                barColor,
+                                barColor.withOpacity(0.7),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                            width: 16,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(6),
+                              topRight: Radius.circular(6),
+                            ),
+                            backDrawRodData: BackgroundBarChartRodData(
+                              show: true,
+                              toY: maxValue,
+                              color: Colors.grey[50],
+                            ),
+                          ),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
             ),
           ),
         ),
@@ -619,7 +625,7 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
     String mainMessage;
     String subMessage;
     Color subMessageColor;
-    
+
     if (minutes < 30) {
       // 30분 미만
       final remaining = 30 - minutes;
@@ -638,7 +644,7 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
       subMessage = '대단해요!';
       subMessageColor = _levelThreeColor; // 금색
     }
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -731,19 +737,33 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
 
   String _calculateDailyAverage() {
     final focusData = _generateFocusHistory();
-    final avgMinutes = focusData.fold<int>(0, (sum, minutes) => sum + minutes) / focusData.length;
+    final avgMinutes = focusData.fold<int>(0, (sum, minutes) => sum + minutes) /
+        focusData.length;
     return _formatTime(avgMinutes.round());
   }
 
   String _calculateTotalTime() {
     final focusData = _generateFocusHistory();
-    final totalMinutes = focusData.fold<int>(0, (sum, minutes) => sum + minutes);
+    final totalMinutes =
+        focusData.fold<int>(0, (sum, minutes) => sum + minutes);
     return _formatTime(totalMinutes);
   }
 
   // Fixed sample data that doesn't change on every rebuild
   static final List<int> _fixedFocusHistory = [
-    15, 30, 45, 25, 135, 35, 90, 20, 150, 40, 55, 30, 125
+    15,
+    30,
+    45,
+    25,
+    135,
+    35,
+    90,
+    20,
+    150,
+    40,
+    55,
+    30,
+    125
   ];
 
   List<int> _generateFocusHistory() {
@@ -765,7 +785,6 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
     return '${mins}분';
   }
 
-
   // 부드러운 전환을 위한 곡선 함수
   double _easeCurve(double t) {
     return t * t * (3.0 - 2.0 * t); // 스무스스텝 곡선
@@ -774,12 +793,12 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
   // ═══════════════════════════════════════════════════════════════
   // SIMPLE 30-MINUTE GOAL SYSTEM - Clean & User-Friendly
   // ═══════════════════════════════════════════════════════════════
-  
+
   // Color constants - Grey → Blue → Gold transition
   static const Color _greyColor = Color(0xFF9E9E9E);
-  static const Color _blueColor = Color(0xFF2E5BFF);  
+  static const Color _blueColor = Color(0xFF2E5BFF);
   static const Color _goldColor = Color(0xFFFFB000);
-  
+
   // Get current color based on smooth transition
   Color _getCurrentColor(int minutes) {
     if (minutes <= 30) {
@@ -788,13 +807,13 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
       final smoothProgress = _easeCurve(progress);
       return Color.lerp(_greyColor, _blueColor, smoothProgress)!;
     } else {
-      // 30-120분: Blue → Gold  
+      // 30-120분: Blue → Gold
       final overProgress = ((minutes - 30) / 90.0).clamp(0.0, 1.0);
       final smoothProgress = _easeCurve(overProgress);
       return Color.lerp(_blueColor, _goldColor, smoothProgress)!;
     }
   }
-  
+
   // Get simple time format for center display
   String _formatTimeSimple(int minutes) {
     final hours = minutes ~/ 60;
@@ -804,7 +823,7 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
     }
     return '${mins}분';
   }
-  
+
   // Get goal-based progress text (30분 = 100%)
   String _getGoalProgressText(int minutes) {
     if (minutes < 30) {
@@ -814,7 +833,7 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
       return '목표 달성!';
     }
   }
-  
+
   // Get status message for motivation
   String _getStatusMessage(int minutes) {
     if (minutes < 30) {
@@ -829,12 +848,11 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
     }
   }
 
-
   // Show statistics modal
   void _showStatisticsModal() {
     final user = ref.read(globalUserProvider);
     final todayMinutes = user.dailyRecords.todayFocusMinutes;
-    
+
     // Calculate current color for today's data using simple function
     final Color currentColor = _getCurrentColor(todayMinutes);
 
@@ -863,7 +881,7 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            
+
             // Header
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -873,7 +891,10 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [_levelTwoColor.withOpacity(0.1), _levelTwoColor.withOpacity(0.05)],
+                        colors: [
+                          _levelTwoColor.withOpacity(0.1),
+                          _levelTwoColor.withOpacity(0.05)
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -918,9 +939,9 @@ class _FocusTimeAnalysisWidgetState extends ConsumerState<FocusTimeAnalysisWidge
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Statistics content
             Flexible(
               child: SingleChildScrollView(
@@ -988,9 +1009,9 @@ class SimpleFocusProgressPainter extends CustomPainter {
   final double strokeWidth;
 
   // Simple color constants
-  static const Color _greyColor = Color(0xFF9E9E9E);   // Starting grey
-  static const Color _blueColor = Color(0xFF2E5BFF);   // 30-minute goal
-  static const Color _goldColor = Color(0xFFFFB000);   // Bonus achievement
+  static const Color _greyColor = Color(0xFF9E9E9E); // Starting grey
+  static const Color _blueColor = Color(0xFF2E5BFF); // 30-minute goal
+  static const Color _goldColor = Color(0xFFFFB000); // Bonus achievement
 
   SimpleFocusProgressPainter({
     required this.minutes,
@@ -1064,13 +1085,10 @@ class SimpleFocusProgressPainter extends CustomPainter {
     // Show bonus progress as outer ring
     final bonusProgress = ((animatedMinutes - 30) / 90.0).clamp(0.0, 1.0);
     final bonusAngle = 2 * math.pi * bonusProgress;
-    
+
     final bonusColor = Color.lerp(_blueColor, _goldColor, bonusProgress)!;
     final outerRadius = rect.width / 2 + strokeWidth * 0.7;
-    final outerRect = Rect.fromCircle(
-      center: rect.center, 
-      radius: outerRadius
-    );
+    final outerRect = Rect.fromCircle(center: rect.center, radius: outerRadius);
 
     final bonusPaint = Paint()
       ..color = bonusColor.withOpacity(0.7)
@@ -1083,7 +1101,8 @@ class SimpleFocusProgressPainter extends CustomPainter {
 
   void _drawGoalMarker(Canvas canvas, Offset center, double radius) {
     // 30-minute goal marker at the top
-    final goalAngle = -math.pi / 2 + (2 * math.pi * 1.0); // Full circle = 30min goal
+    final goalAngle =
+        -math.pi / 2 + (2 * math.pi * 1.0); // Full circle = 30min goal
     final markerPoint = Offset(
       center.dx + radius * math.cos(goalAngle),
       center.dy + radius * math.sin(goalAngle),

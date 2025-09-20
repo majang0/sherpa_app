@@ -7,7 +7,7 @@ class CalorieCalculator {
   static const double _defaultBodyWeightKg = 70.0;
 
   /// Calculate calories burned using MET formula: MET × Weight(kg) × Duration(hours)
-  /// 
+  ///
   /// [exerciseType] - Type of exercise in Korean
   /// [durationMinutes] - Duration in minutes
   /// [intensity] - Exercise intensity (low, medium, high, very_high)
@@ -22,10 +22,10 @@ class CalorieCalculator {
     final durationHours = durationMinutes / 60.0;
     final baseMET = _getBaseMETValue(exerciseType);
     final intensityMultiplier = _getIntensityMultiplier(intensity);
-    
+
     final totalMET = baseMET * intensityMultiplier;
     final calories = totalMET * weight * durationHours;
-    
+
     return calories.round();
   }
 
@@ -107,13 +107,13 @@ class CalorieCalculator {
   /// Convert difficulty level enum to intensity string for backward compatibility
   static String difficultyToIntensity(dynamic difficulty) {
     if (difficulty == null) return 'medium';
-    
+
     final difficultyStr = difficulty.toString();
     if (difficultyStr.contains('easy')) return 'low';
     if (difficultyStr.contains('moderate')) return 'medium';
     if (difficultyStr.contains('hard')) return 'high';
     if (difficultyStr.contains('veryHard')) return 'very_high';
-    
+
     return 'medium'; // Default
   }
 
@@ -150,7 +150,7 @@ class CalorieCalculator {
   /// Validate if calorie calculation seems reasonable
   static bool isCalorieCountRealistic(int calories, int durationMinutes) {
     final caloriesPerHour = (calories / durationMinutes) * 60;
-    
+
     // Sanity check: Most people burn 200-1000 calories per hour during exercise
     return caloriesPerHour >= 150 && caloriesPerHour <= 1200;
   }

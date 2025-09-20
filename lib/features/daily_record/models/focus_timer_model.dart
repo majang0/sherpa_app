@@ -1,7 +1,7 @@
 enum FocusTimerState {
-  idle,      // 대기 중
-  running,   // 실행 중
-  paused,    // 일시정지
+  idle, // 대기 중
+  running, // 실행 중
+  paused, // 일시정지
   completed, // 완료
   cancelled, // 취소됨
 }
@@ -53,7 +53,8 @@ class FocusTimerData {
   static int calculateXP(int completedMinutes) {
     if (completedMinutes < 10) return 0;
     if (completedMinutes < 30) return completedMinutes * 2; // 2XP per minute
-    if (completedMinutes < 60) return 60 + (completedMinutes - 30) * 3; // 3XP per minute after 30min
+    if (completedMinutes < 60)
+      return 60 + (completedMinutes - 30) * 3; // 3XP per minute after 30min
     return 150 + (completedMinutes - 60) * 5; // 5XP per minute after 1hour
   }
 
@@ -94,15 +95,12 @@ class FocusTimerData {
       totalMinutes: json['totalMinutes'] ?? 30,
       remainingSeconds: json['remainingSeconds'] ?? 1800,
       state: FocusTimerState.values.firstWhere(
-            (e) => e.name == json['state'],
+        (e) => e.name == json['state'],
         orElse: () => FocusTimerState.idle,
       ),
-      startTime: json['startTime'] != null
-          ? DateTime.parse(json['startTime'])
-          : null,
-      endTime: json['endTime'] != null
-          ? DateTime.parse(json['endTime'])
-          : null,
+      startTime:
+          json['startTime'] != null ? DateTime.parse(json['startTime']) : null,
+      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
       xpEarned: json['xpEarned'] ?? 0,
       sessionId: json['sessionId'] ?? '',
     );

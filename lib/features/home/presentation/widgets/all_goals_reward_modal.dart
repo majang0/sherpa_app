@@ -26,18 +26,18 @@ class AllGoalsRewardModal extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<AllGoalsRewardModal> createState() => _AllGoalsRewardModalState();
+  ConsumerState<AllGoalsRewardModal> createState() =>
+      _AllGoalsRewardModalState();
 }
 
 class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
     with TickerProviderStateMixin {
-  
   // 애니메이션 컨트롤러들
   late AnimationController _overlayController;
   late AnimationController _mainController;
   late AnimationController _particleController;
   late AnimationController _rewardController;
-  
+
   // 애니메이션들
   late Animation<double> _overlayAnimation;
   late Animation<double> _scaleAnimation;
@@ -72,21 +72,21 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _mainController,
         curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
       ),
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _mainController,
         curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
       ),
     );
-    
+
     _slideAnimation = Tween<double>(begin: 100.0, end: 0.0).animate(
       CurvedAnimation(
         parent: _mainController,
@@ -117,25 +117,25 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
     // 1단계: 배경 오버레이
     _overlayController.forward();
     await Future.delayed(const Duration(milliseconds: 200));
-    
+
     // 2단계: 파티클 효과 시작
     _particleController.repeat();
     await Future.delayed(const Duration(milliseconds: 100));
-    
+
     // 3단계: 메인 카드 등장
     _mainController.forward();
     await Future.delayed(const Duration(milliseconds: 600));
-    
+
     // 4단계: 보상 배지들 등장
     _rewardController.forward();
-    
+
     // 햅틱 피드백
     HapticFeedbackManager.heavyImpact();
   }
 
   void _generateGoldParticles() {
     _particles.clear();
-    
+
     // 🎨 브랜드 컬러 기반 파티클들
     final brandColors = [
       ModernColors.modernPrimary,
@@ -237,13 +237,16 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
           final progress = _particleAnimation.value;
           final screenWidth = MediaQuery.of(context).size.width;
           final screenHeight = MediaQuery.of(context).size.height;
-          
-          final x = screenWidth / 2 + particle.x * 250 * progress * particle.velocity;
-          final y = screenHeight / 2 + particle.y * 250 * progress * particle.velocity 
-                    + (progress * progress * 150); // 중력 효과
-          
+
+          final x =
+              screenWidth / 2 + particle.x * 250 * progress * particle.velocity;
+          final y = screenHeight / 2 +
+              particle.y * 250 * progress * particle.velocity +
+              (progress * progress * 150); // 중력 효과
+
           final opacity = math.max(0.0, 0.9 - progress);
-          final rotation = particle.angle + progress * particle.rotationSpeed * math.pi;
+          final rotation =
+              particle.angle + progress * particle.rotationSpeed * math.pi;
 
           return Positioned(
             left: x,
@@ -301,22 +304,22 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
         children: [
           // 🏆 메인 트로피 아이콘
           _buildMainTrophy(),
-          
+
           const SizedBox(height: 24),
-          
+
           // 🎉 축하 메시지
           _buildCongratulationMessage(),
-          
+
           const SizedBox(height: 32),
-          
+
           // 🎁 보상 섹션
           FadeTransition(
             opacity: _rewardFadeAnimation,
             child: _buildRewardSection(),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // 🎉 완료 안내 메시지
           FadeTransition(
             opacity: _rewardFadeAnimation,
@@ -385,9 +388,7 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
           ),
           textAlign: TextAlign.center,
         ),
-        
         const SizedBox(height: 12),
-        
         Text(
           '${widget.userName}님!\n오늘의 모든 목표를 달성했어요!',
           style: GoogleFonts.notoSans(
@@ -424,14 +425,14 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
               color: ModernColors.modernText,
             ),
           ),
-          
           const SizedBox(height: 20),
-          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildRewardBadge('200XP', Icons.auto_awesome, ModernColors.modernPrimary),
-              _buildRewardBadge('50P', Icons.monetization_on, ModernColors.modernPrimary),
+              _buildRewardBadge(
+                  '200XP', Icons.auto_awesome, ModernColors.modernPrimary),
+              _buildRewardBadge(
+                  '50P', Icons.monetization_on, ModernColors.modernPrimary),
               _buildFireRewardBadge('0.1 의지', '🔥'), // 불 이모지 사용
             ],
           ),

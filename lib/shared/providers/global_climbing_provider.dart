@@ -20,7 +20,8 @@ import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/constants/mountain_data.dart';
 
 /// 글로벌 등반 시스템 Provider
-final globalClimbingProvider = StateNotifierProvider<GlobalClimbingNotifier, ClimbingState>((ref) {
+final globalClimbingProvider =
+    StateNotifierProvider<GlobalClimbingNotifier, ClimbingState>((ref) {
   return GlobalClimbingNotifier(ref);
 });
 
@@ -39,7 +40,7 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
       if (climbingJson != null) {
         final climbingData = jsonDecode(climbingJson);
         state = ClimbingState.fromJson(climbingData);
-        
+
         // 기존 등반 세션 상태 체크 및 업데이트
         _updateClimbingSessionStatus();
       }
@@ -129,7 +130,8 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
     }
 
     final now = DateTime.now();
-    final actualDuration = now.difference(session.startTime).inMilliseconds / (1000 * 3600); // 시간
+    final actualDuration =
+        now.difference(session.startTime).inMilliseconds / (1000 * 3600); // 시간
 
     // 성공/실패 결정
     bool isSuccess;
@@ -166,7 +168,6 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
       mountainPower: session.mountainPower,
       successProbability: session.successProbability,
       rewards: rewards,
-
     );
 
     // 등반 기록 추가 및 통계 업데이트
@@ -179,7 +180,9 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
       statistics: updatedStatistics,
       currentSession: session.copyWith(
         isActive: false,
-        status: isSuccess ? ClimbingSessionStatus.completed : ClimbingSessionStatus.failed,
+        status: isSuccess
+            ? ClimbingSessionStatus.completed
+            : ClimbingSessionStatus.failed,
       ),
       lastUpdated: now,
     );
@@ -245,20 +248,20 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
     // 포인트 지급
     if (rewards.points > 0) {
       ref.read(globalPointProvider.notifier).addPoints(
-        rewards.points,
-        '등반 성공: $mountainName',
-      );
+            rewards.points,
+            '등반 성공: $mountainName',
+          );
     }
 
     // 능력치 증가
     if (rewards.statIncreases.isNotEmpty) {
       ref.read(globalUserProvider.notifier).increaseStats(
-        deltaStamina: rewards.statIncreases['stamina'] ?? 0,
-        deltaKnowledge: rewards.statIncreases['knowledge'] ?? 0,
-        deltaTechnique: rewards.statIncreases['technique'] ?? 0,
-        deltaSociality: rewards.statIncreases['sociality'] ?? 0,
-        deltaWillpower: rewards.statIncreases['willpower'] ?? 0,
-      );
+            deltaStamina: rewards.statIncreases['stamina'] ?? 0,
+            deltaKnowledge: rewards.statIncreases['knowledge'] ?? 0,
+            deltaTechnique: rewards.statIncreases['technique'] ?? 0,
+            deltaSociality: rewards.statIncreases['sociality'] ?? 0,
+            deltaWillpower: rewards.statIncreases['willpower'] ?? 0,
+          );
     }
 
     // 새 뱃지 획득
@@ -283,8 +286,9 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
     if (isSuccess) {
       // 성공 시 보상
       experience = gameSystem.calculateSuccessXp(difficulty, durationHours);
-      points = gameSystem.calculateSuccessPoints(difficulty, durationHours).toInt();
-      
+      points =
+          gameSystem.calculateSuccessPoints(difficulty, durationHours).toInt();
+
       // 난이도에 따른 능력치 증가
       if (difficulty >= 100) {
         statIncreases = {'stamina': 0.5, 'technique': 0.3, 'willpower': 0.2};
@@ -295,11 +299,13 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
       }
 
       // 특별한 산 등반 시 뱃지 획득 기회
-      if (difficulty == 200) { // 에베레스트
+      if (difficulty == 200) {
+        // 에베레스트
         newBadgeIds.add('legendary_everest_conqueror');
         specialReward = '전설의 에베레스트 정복자 뱃지 획득!';
       } else if (difficulty >= 100) {
-        if (math.Random().nextDouble() < 0.1) { // 10% 확률
+        if (math.Random().nextDouble() < 0.1) {
+          // 10% 확률
           newBadgeIds.add('epic_mountain_king');
         }
       }
@@ -340,7 +346,7 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
   List<Badge> _getEquippedBadges() {
     final user = ref.read(globalUserProvider);
     final gameSystem = ref.read(globalGameProvider);
-    
+
     return user.equippedBadgeIds
         .map((id) => gameSystem.allBadges.firstWhere(
               (badge) => badge.id == id,
@@ -349,13 +355,11 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
         .toList();
   }
 
-
-
   /// 등반 기록 조회
   List<ClimbingRecord> getClimbingHistory({int? limit}) {
     final sortedLogs = List<ClimbingRecord>.from(state.history)
       ..sort((a, b) => b.startTime.compareTo(a.startTime));
-    
+
     return limit != null ? sortedLogs.take(limit).toList() : sortedLogs;
   }
 
@@ -368,7 +372,7 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
   Future<void> refresh() async {
     // 현재 등반 세션 상태 업데이트
     _updateClimbingSessionStatus();
-    
+
     // 필요 시 추가 새로고침 로직
   }
 
@@ -382,22 +386,26 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
 
 /// 현재 등반 세션 Provider
 final currentClimbingSessionProvider = Provider<ClimbingSession?>((ref) {
-  return ref.watch(globalClimbingProvider.select((state) => state.currentSession));
+  return ref
+      .watch(globalClimbingProvider.select((state) => state.currentSession));
 });
 
 /// 등반 중 상태 Provider
 final isCurrentlyClimbingProvider = Provider<bool>((ref) {
-  return ref.watch(globalClimbingProvider.select((state) => state.isCurrentlyClimbing));
+  return ref.watch(
+      globalClimbingProvider.select((state) => state.isCurrentlyClimbing));
 });
 
 /// 등반 진행률 Provider
 final climbingProgressProvider = Provider<double>((ref) {
-  return ref.watch(globalClimbingProvider.select((state) => state.currentProgress));
+  return ref
+      .watch(globalClimbingProvider.select((state) => state.currentProgress));
 });
 
 /// 등반 남은 시간 Provider
 final climbingRemainingTimeProvider = Provider<Duration>((ref) {
-  return ref.watch(globalClimbingProvider.select((state) => state.currentRemainingTime));
+  return ref.watch(
+      globalClimbingProvider.select((state) => state.currentRemainingTime));
 });
 
 /// 등반 기록 Provider
@@ -412,7 +420,8 @@ final climbingStatisticsProvider = Provider<ClimbingStatistics>((ref) {
 
 /// 오늘의 등반 기록 Provider
 final todayClimbingRecordsProvider = Provider<List<ClimbingRecord>>((ref) {
-  return ref.watch(globalClimbingProvider.select((state) => state.todayRecords));
+  return ref
+      .watch(globalClimbingProvider.select((state) => state.todayRecords));
 });
 
 /// 사용자 등반력 Provider
@@ -425,20 +434,21 @@ final userClimbingPowerProvider = Provider<double>((ref) {
 final recommendedMountainsProvider = Provider<List<Mountain>>((ref) {
   final user = ref.watch(globalUserProvider);
   final userPower = ref.watch(userClimbingPowerProvider);
-  
+
   return MountainData.getRecommendedMountains(user.level, userPower);
 });
 
 /// 산 성공 확률 계산 Provider
-final mountainSuccessProbabilityProvider = Provider.family<double, Mountain>((ref, mountain) {
+final mountainSuccessProbabilityProvider =
+    Provider.family<double, Mountain>((ref, mountain) {
   final user = ref.watch(globalUserProvider);
   final gameSystem = ref.watch(globalGameProvider);
   final userPower = ref.watch(userClimbingPowerProvider);
-  
+
   // 장착 뱃지 가져오기
   final climbingNotifier = ref.read(globalClimbingProvider.notifier);
   final equippedBadges = climbingNotifier._getEquippedBadges();
-  
+
   return gameSystem.calculateSuccessProbability(
     userPower: userPower,
     mountainPower: mountain.requiredPower,
@@ -451,7 +461,7 @@ final mountainSuccessProbabilityProvider = Provider.family<double, Mountain>((re
 final availableMountainsProvider = Provider<List<Mountain>>((ref) {
   final userPower = ref.watch(userClimbingPowerProvider);
   final allMountains = MountainData.allMountains;
-  
+
   // 사용자 등반력의 0.5배 ~ 2배 범위의 산들만 표시
   return allMountains.where((mountain) {
     final powerRatio = userPower / mountain.requiredPower;
@@ -462,14 +472,14 @@ final availableMountainsProvider = Provider<List<Mountain>>((ref) {
 /// 등반 세션 남은 시간 텍스트 Provider
 final climbingTimeRemainingTextProvider = Provider<String>((ref) {
   final remainingTime = ref.watch(climbingRemainingTimeProvider);
-  
+
   if (remainingTime == Duration.zero) {
     return '등반 완료';
   }
-  
+
   final hours = remainingTime.inHours;
   final minutes = remainingTime.inMinutes % 60;
-  
+
   if (hours > 0) {
     return '${hours}시간 ${minutes}분 남음';
   } else {
@@ -480,18 +490,18 @@ final climbingTimeRemainingTextProvider = Provider<String>((ref) {
 /// 오늘의 등반 성취 Provider
 final todayClimbingAchievementProvider = Provider<Map<String, dynamic>>((ref) {
   final todayRecords = ref.watch(todayClimbingRecordsProvider);
-  
+
   final totalAttempts = todayRecords.length;
   final successCount = todayRecords.where((r) => r.isSuccess).length;
   final totalExperience = todayRecords.fold<double>(
-    0.0, 
+    0.0,
     (sum, r) => sum + r.rewards.experience,
   );
   final totalPoints = todayRecords.fold<int>(
-    0, 
+    0,
     (sum, r) => sum + r.rewards.points,
   );
-  
+
   return {
     'totalAttempts': totalAttempts,
     'successCount': successCount,

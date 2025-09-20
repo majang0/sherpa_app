@@ -23,12 +23,16 @@ class ComponentViewerScreen extends StatefulWidget {
 
 class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
   int selectedCategoryIndex = 0;
-  
+
   final List<Map<String, dynamic>> categories = [
     // ==================== 현재 사용 가능한 컴포넌트 ====================
     {'name': '알림 배지', 'icon': Icons.notifications, 'color': ModernColors.error},
     {'name': '토스트', 'icon': Icons.message, 'color': ModernColors.success},
-    {'name': '모임 필터', 'icon': Icons.filter_list, 'color': ModernColors.secondary},
+    {
+      'name': '모임 필터',
+      'icon': Icons.filter_list,
+      'color': ModernColors.secondary
+    },
     {'name': '모임 카드', 'icon': Icons.group, 'color': ModernColors.primary},
     {'name': '검색/카테고리', 'icon': Icons.search, 'color': ModernColors.info},
   ];
@@ -77,7 +81,7 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
               ],
             ),
           ),
-          
+
           // 카테고리 탭
           Container(
             height: 80,
@@ -88,7 +92,7 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
               itemBuilder: (context, index) {
                 final category = categories[index];
                 final isSelected = selectedCategoryIndex == index;
-                
+
                 return GestureDetector(
                   onTap: () {
                     HapticFeedback.lightImpact();
@@ -101,33 +105,33 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
                     margin: const EdgeInsets.only(right: 12, top: 8, bottom: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     decoration: BoxDecoration(
-                      gradient: isSelected 
-                        ? LinearGradient(
-                            colors: [
-                              category['color'],
-                              category['color'].withOpacity(0.7),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          )
-                        : null,
+                      gradient: isSelected
+                          ? LinearGradient(
+                              colors: [
+                                category['color'],
+                                category['color'].withOpacity(0.7),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            )
+                          : null,
                       color: isSelected ? null : ModernColors.surface,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: isSelected 
-                          ? category['color'] 
-                          : ModernColors.border,
+                        color: isSelected
+                            ? category['color']
+                            : ModernColors.border,
                         width: isSelected ? 2 : 1,
                       ),
                       boxShadow: isSelected
-                        ? [
-                            BoxShadow(
-                              color: category['color'].withOpacity(0.3),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ]
-                        : [],
+                          ? [
+                              BoxShadow(
+                                color: category['color'].withOpacity(0.3),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ]
+                          : [],
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -142,8 +146,11 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
                           category['name'],
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
-                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                            color: isSelected ? Colors.white : ModernColors.textPrimary,
+                            fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w500,
+                            color: isSelected
+                                ? Colors.white
+                                : ModernColors.textPrimary,
                           ),
                         ),
                       ],
@@ -153,7 +160,7 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
               },
             ),
           ),
-          
+
           // 컴포넌트 리스트
           Expanded(
             child: _buildComponentList(),
@@ -337,7 +344,6 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
             ],
           ),
         ),
-        
         _buildComponentSection(
           'SherpaQuickFilter2025',
           '빠른 필터링 시스템',
@@ -345,7 +351,8 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
             children: [
               SherpaQuickFilter2025.korean(
                 activeFilters: {'weekend', 'free'},
-                onFiltersChanged: (filters) => _showToast('필터 변경: ${filters.join(', ')}'),
+                onFiltersChanged: (filters) =>
+                    _showToast('필터 변경: ${filters.join(', ')}'),
                 onFilterToggle: (filter) => _showToast('필터 토글: $filter'),
                 category: 'all',
               ),
@@ -372,7 +379,8 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
                   ),
                 ],
                 activeFilters: {'beginner'},
-                onFiltersChanged: (filters) => _showToast('모던 필터: ${filters.join(', ')}'),
+                onFiltersChanged: (filters) =>
+                    _showToast('모던 필터: ${filters.join(', ')}'),
                 category: 'exercise',
               ),
             ],
@@ -425,7 +433,6 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
             ],
           ),
         ),
-        
         _buildComponentSection(
           'MeetingCardList2025',
           '모임 카드 리스트',
@@ -436,7 +443,6 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
             ),
           ),
         ),
-        
         _buildComponentSection(
           'ParticipantAvatars2025',
           '참가자 아바타 표시',
@@ -474,13 +480,13 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
             ],
           ),
         ),
-        
         _buildComponentSection(
           'CategorySelector2025',
           '카테고리 선택기',
           CategorySelector2025(
             selectedCategory: MeetingCategory.all,
-            onCategorySelected: (category) => _showToast('카테고리: ${category.name}'),
+            onCategorySelected: (category) =>
+                _showToast('카테고리: ${category.name}'),
             categories: MeetingCategory.values,
           ),
         ),

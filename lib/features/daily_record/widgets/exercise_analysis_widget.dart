@@ -81,7 +81,8 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
 
   Widget _buildWeeklyStats(List<dynamic> exerciseLogs) {
     // ✅ fold 메서드 타입 수정
-    final totalMinutes = exerciseLogs.fold<int>(0, (sum, log) => sum + (log.durationMinutes as int));
+    final totalMinutes = exerciseLogs.fold<int>(
+        0, (sum, log) => sum + (log.durationMinutes as int));
     final totalDays = exerciseLogs.length;
     final avgMinutes = totalDays > 0 ? (totalMinutes / totalDays) : 0.0;
 
@@ -161,7 +162,8 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
   Widget _buildWeeklyTimeChart(List<dynamic> exerciseLogs) {
     // 주간 목표 시간 (WHO 권장)
     final weeklyGoal = 150; // 주간 목표 150분 (WHO 권장)
-    final weeklyMinutes = exerciseLogs.fold<int>(0, (sum, log) => sum + (log.durationMinutes as int)); // ✅ 타입 수정
+    final weeklyMinutes = exerciseLogs.fold<int>(
+        0, (sum, log) => sum + (log.durationMinutes as int)); // ✅ 타입 수정
     final progress = (weeklyMinutes / weeklyGoal).clamp(0.0, 1.0);
     final isGoalAchieved = weeklyMinutes >= weeklyGoal;
 
@@ -173,19 +175,25 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
           end: Alignment.bottomRight,
           colors: isGoalAchieved
               ? [
-            ModernColors.success.withValues(alpha: 0.1), // ✅ withOpacity → withValues 수정
-            ModernColors.success.withValues(alpha: 0.05), // ✅ withOpacity → withValues 수정
-          ]
+                  ModernColors.success
+                      .withValues(alpha: 0.1), // ✅ withOpacity → withValues 수정
+                  ModernColors.success
+                      .withValues(alpha: 0.05), // ✅ withOpacity → withValues 수정
+                ]
               : [
-            ModernColors.exercise.withValues(alpha: 0.1), // ✅ withOpacity → withValues 수정
-            ModernColors.exercise.withValues(alpha: 0.05), // ✅ withOpacity → withValues 수정
-          ],
+                  ModernColors.exercise
+                      .withValues(alpha: 0.1), // ✅ withOpacity → withValues 수정
+                  ModernColors.exercise
+                      .withValues(alpha: 0.05), // ✅ withOpacity → withValues 수정
+                ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isGoalAchieved
-              ? ModernColors.success.withValues(alpha: 0.2) // ✅ withOpacity → withValues 수정
-              : ModernColors.exercise.withValues(alpha: 0.2), // ✅ withOpacity → withValues 수정
+              ? ModernColors.success
+                  .withValues(alpha: 0.2) // ✅ withOpacity → withValues 수정
+              : ModernColors.exercise
+                  .withValues(alpha: 0.2), // ✅ withOpacity → withValues 수정
           width: 1,
         ),
       ),
@@ -219,11 +227,15 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: isGoalAchieved ? ModernColors.success : ModernColors.warning,
+                  color: isGoalAchieved
+                      ? ModernColors.success
+                      : ModernColors.warning,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  isGoalAchieved ? '목표 달성!' : '${((progress * 100).toStringAsFixed(0))}%',
+                  isGoalAchieved
+                      ? '목표 달성!'
+                      : '${((progress * 100).toStringAsFixed(0))}%',
                   style: GoogleFonts.notoSans(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
@@ -248,7 +260,9 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
               widthFactor: progress,
               child: Container(
                 decoration: BoxDecoration(
-                  color: isGoalAchieved ? ModernColors.success : ModernColors.exercise,
+                  color: isGoalAchieved
+                      ? ModernColors.success
+                      : ModernColors.exercise,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -319,7 +333,8 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
         ...topTypes.asMap().entries.map((entry) {
           final index = entry.key;
           final typeEntry = entry.value;
-          final totalMinutes = typeMinutes.values.fold<int>(0, (sum, minutes) => sum + minutes); // ✅ 타입 수정
+          final totalMinutes = typeMinutes.values
+              .fold<int>(0, (sum, minutes) => sum + minutes); // ✅ 타입 수정
           final percentage = (typeEntry.value / totalMinutes * 100);
 
           final colors = [

@@ -1,5 +1,5 @@
 // 📈 성장 스토리 및 마일스톤 추적 서비스
-// 
+//
 // 사용자의 성장 여정을 추적하고 의미있는 마일스톤을 관리하는 서비스
 
 import 'dart:convert';
@@ -20,7 +20,7 @@ class GrowthStoryItem {
   final double significanceScore; // 0.0 ~ 1.0
   final List<String> tags;
   final String? associatedMemoryId;
-  
+
   const GrowthStoryItem({
     required this.id,
     required this.title,
@@ -33,7 +33,7 @@ class GrowthStoryItem {
     this.tags = const [],
     this.associatedMemoryId,
   });
-  
+
   /// JSON 직렬화
   Map<String, dynamic> toJson() {
     return {
@@ -49,7 +49,7 @@ class GrowthStoryItem {
       'associatedMemoryId': associatedMemoryId,
     };
   }
-  
+
   /// JSON 역직렬화
   factory GrowthStoryItem.fromJson(Map<String, dynamic> json) {
     return GrowthStoryItem(
@@ -79,7 +79,7 @@ class GrowthStats {
   final List<String> topCategories;
   final Map<String, int> monthlyGrowth;
   final List<GrowthStoryItem> recentHighlights;
-  
+
   const GrowthStats({
     required this.totalStoryItems,
     required this.achievementCount,
@@ -107,7 +107,7 @@ class MilestoneTracker {
   final String iconEmoji;
   final int rewardPoints;
   final String? specialMessage;
-  
+
   const MilestoneTracker({
     required this.id,
     required this.name,
@@ -121,7 +121,7 @@ class MilestoneTracker {
     this.rewardPoints = 100,
     this.specialMessage,
   });
-  
+
   /// JSON 직렬화
   Map<String, dynamic> toJson() {
     return {
@@ -138,7 +138,7 @@ class MilestoneTracker {
       'specialMessage': specialMessage,
     };
   }
-  
+
   /// JSON 역직렬화
   factory MilestoneTracker.fromJson(Map<String, dynamic> json) {
     return MilestoneTracker(
@@ -148,7 +148,7 @@ class MilestoneTracker {
       category: json['category'],
       criteria: json['criteria'] ?? {},
       isAchieved: json['isAchieved'] ?? false,
-      achievedAt: json['achievedAt'] != null 
+      achievedAt: json['achievedAt'] != null
           ? DateTime.parse(json['achievedAt'])
           : null,
       progress: json['progress']?.toDouble() ?? 0.0,
@@ -157,7 +157,7 @@ class MilestoneTracker {
       specialMessage: json['specialMessage'],
     );
   }
-  
+
   /// 달성 마킹
   MilestoneTracker markAsAchieved() {
     return MilestoneTracker(
@@ -174,7 +174,7 @@ class MilestoneTracker {
       specialMessage: specialMessage,
     );
   }
-  
+
   /// 진행률 업데이트
   MilestoneTracker updateProgress(double newProgress) {
     return MilestoneTracker(
@@ -199,31 +199,29 @@ class GrowthStoryService {
   static const String _prefsKeyMilestones = 'milestone_trackers';
   static const String _prefsKeyStats = 'growth_stats';
   static const int _maxStoryItems = 500;
-  
+
   /// 📚 성장 스토리 로드
   static Future<List<GrowthStoryItem>> loadGrowthStory() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final storyJson = prefs.getString(_prefsKeyStory);
-      
+
       if (storyJson == null) return [];
-      
+
       final storyList = json.decode(storyJson) as List;
-      return storyList
-          .map((data) => GrowthStoryItem.fromJson(data))
-          .toList()
+      return storyList.map((data) => GrowthStoryItem.fromJson(data)).toList()
         ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
     } catch (e) {
       print('성장 스토리 로드 오류: $e');
       return [];
     }
   }
-  
+
   /// ✍️ 성장 스토리 항목 추가
   static Future<void> addGrowthStoryItem(GrowthStoryItem item) async {
     try {
       final storyItems = await loadGrowthStory();
-      
+
       // 중복 확인
       final existingIndex = storyItems.indexWhere((s) => s.id == item.id);
       if (existingIndex != -1) {
@@ -231,44 +229,43 @@ class GrowthStoryService {
       } else {
         storyItems.insert(0, item);
       }
-      
+
       // 크기 관리
       if (storyItems.length > _maxStoryItems) {
         // 중요도가 낮고 오래된 항목부터 삭제
         storyItems.sort((a, b) {
-          final scoreA = a.significanceScore * 
+          final scoreA = a.significanceScore *
               (1.0 - (DateTime.now().difference(a.timestamp).inDays / 365.0));
-          final scoreB = b.significanceScore * 
+          final scoreB = b.significanceScore *
               (1.0 - (DateTime.now().difference(b.timestamp).inDays / 365.0));
           return scoreB.compareTo(scoreA);
         });
         storyItems.removeRange(_maxStoryItems, storyItems.length);
       }
-      
+
       // 저장
       final prefs = await SharedPreferences.getInstance();
       final storyJson = storyItems.map((s) => s.toJson()).toList();
       await prefs.setString(_prefsKeyStory, json.encode(storyJson));
-      
+
       // 관련 추억 생성
       await _createMemoryFromStoryItem(item);
-      
     } catch (e) {
       print('성장 스토리 항목 추가 오류: $e');
     }
   }
-  
+
   /// 🎯 마일스톤 추적기 로드
   static Future<List<MilestoneTracker>> loadMilestoneTrackers() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final milestonesJson = prefs.getString(_prefsKeyMilestones);
-      
+
       if (milestonesJson == null) {
         // 기본 마일스톤들 생성
         return _createDefaultMilestones();
       }
-      
+
       final milestonesList = json.decode(milestonesJson) as List;
       return milestonesList
           .map((data) => MilestoneTracker.fromJson(data))
@@ -278,9 +275,10 @@ class GrowthStoryService {
       return [];
     }
   }
-  
+
   /// 💾 마일스톤 추적기 저장
-  static Future<void> saveMilestoneTrackers(List<MilestoneTracker> trackers) async {
+  static Future<void> saveMilestoneTrackers(
+      List<MilestoneTracker> trackers) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final trackersJson = trackers.map((t) => t.toJson()).toList();
@@ -289,7 +287,7 @@ class GrowthStoryService {
       print('마일스톤 저장 오류: $e');
     }
   }
-  
+
   /// 🎯 마일스톤 진행률 업데이트
   static Future<void> updateMilestoneProgress({
     required String milestoneId,
@@ -298,32 +296,31 @@ class GrowthStoryService {
     try {
       final trackers = await loadMilestoneTrackers();
       final trackerIndex = trackers.indexWhere((t) => t.id == milestoneId);
-      
+
       if (trackerIndex == -1) return;
-      
+
       final tracker = trackers[trackerIndex];
       final newProgress = _calculateMilestoneProgress(tracker, progressData);
-      
+
       final updatedTracker = tracker.updateProgress(newProgress);
       trackers[trackerIndex] = updatedTracker;
-      
+
       await saveMilestoneTrackers(trackers);
-      
+
       // 마일스톤 달성 시 스토리 항목 추가
       if (updatedTracker.isAchieved && !tracker.isAchieved) {
         await _onMilestoneAchieved(updatedTracker);
       }
-      
     } catch (e) {
       print('마일스톤 진행률 업데이트 오류: $e');
     }
   }
-  
+
   /// 📊 성장 통계 계산
   static Future<GrowthStats> calculateGrowthStats() async {
     try {
       final storyItems = await loadGrowthStory();
-      
+
       if (storyItems.isEmpty) {
         return const GrowthStats(
           totalStoryItems: 0,
@@ -338,38 +335,38 @@ class GrowthStoryService {
           recentHighlights: [],
         );
       }
-      
+
       // 카테고리별 카운트
       final categoryCount = <String, int>{};
       double totalSignificance = 0.0;
-      
+
       for (final item in storyItems) {
         categoryCount[item.category] = (categoryCount[item.category] ?? 0) + 1;
         totalSignificance += item.significanceScore;
       }
-      
+
       // 월별 성장 데이터
       final monthlyGrowth = <String, int>{};
       for (final item in storyItems) {
-        final monthKey = '${item.timestamp.year}-${item.timestamp.month.toString().padLeft(2, '0')}';
+        final monthKey =
+            '${item.timestamp.year}-${item.timestamp.month.toString().padLeft(2, '0')}';
         monthlyGrowth[monthKey] = (monthlyGrowth[monthKey] ?? 0) + 1;
       }
-      
+
       // 최근 하이라이트 (높은 중요도)
       final recentHighlights = storyItems
           .where((item) => item.significanceScore >= 0.7)
           .take(5)
           .toList();
-      
+
       // 상위 카테고리
-      final topCategories = categoryCount.entries
-          .toList()
+      final topCategories = categoryCount.entries.toList()
         ..sort((a, b) => b.value.compareTo(a.value));
-      
+
       final totalGrowthPeriod = storyItems.isNotEmpty
           ? DateTime.now().difference(storyItems.last.timestamp)
           : Duration.zero;
-      
+
       return GrowthStats(
         totalStoryItems: storyItems.length,
         achievementCount: categoryCount['achievement'] ?? 0,
@@ -398,7 +395,7 @@ class GrowthStoryService {
       );
     }
   }
-  
+
   /// 🎯 활동별 성장 스토리 항목 생성
   static Future<void> createStoryFromActivity({
     required String activityType,
@@ -411,10 +408,10 @@ class GrowthStoryService {
         activityData: activityData,
         userName: userName,
       );
-      
+
       if (storyItem != null) {
         await addGrowthStoryItem(storyItem);
-        
+
         // 마일스톤 진행률 업데이트
         await updateMilestoneProgress(
           milestoneId: 'milestone_${activityType}',
@@ -425,7 +422,7 @@ class GrowthStoryService {
       print('활동 기반 스토리 생성 오류: $e');
     }
   }
-  
+
   /// 🏆 성취 기반 스토리 항목 생성
   static Future<void> createStoryFromAchievement({
     required String achievementType,
@@ -436,21 +433,27 @@ class GrowthStoryService {
       final storyItem = GrowthStoryItem(
         id: 'story_achievement_${DateTime.now().millisecondsSinceEpoch}',
         title: _getAchievementTitle(achievementType, achievementData),
-        description: _getAchievementDescription(achievementType, achievementData, userName),
+        description: _getAchievementDescription(
+            achievementType, achievementData, userName),
         timestamp: DateTime.now(),
         category: 'achievement',
         data: achievementData,
         iconEmoji: _getAchievementEmoji(achievementType),
-        significanceScore: _calculateAchievementSignificance(achievementType, achievementData),
-        tags: ['achievement', achievementType, ..._getAchievementTags(achievementType)],
+        significanceScore:
+            _calculateAchievementSignificance(achievementType, achievementData),
+        tags: [
+          'achievement',
+          achievementType,
+          ..._getAchievementTags(achievementType)
+        ],
       );
-      
+
       await addGrowthStoryItem(storyItem);
     } catch (e) {
       print('성취 기반 스토리 생성 오류: $e');
     }
   }
-  
+
   /// 📈 기본 마일스톤 생성
   static List<MilestoneTracker> _createDefaultMilestones() {
     return [
@@ -465,7 +468,7 @@ class GrowthStoryService {
         rewardPoints: 100,
         specialMessage: '첫 일주일을 함께해주셔서 감사해요! 🎉',
       ),
-      
+
       // 운동 마일스톤
       MilestoneTracker(
         id: 'milestone_exercise_champion',
@@ -477,7 +480,7 @@ class GrowthStoryService {
         rewardPoints: 300,
         specialMessage: '운동 챔피언이 되셨네요! 정말 대단해요! 💪',
       ),
-      
+
       // 독서 마일스톤
       MilestoneTracker(
         id: 'milestone_bookworm',
@@ -489,7 +492,7 @@ class GrowthStoryService {
         rewardPoints: 250,
         specialMessage: '독서를 사랑하는 마음이 정말 아름다워요! 📚',
       ),
-      
+
       // 일기 마일스톤
       MilestoneTracker(
         id: 'milestone_reflection_master',
@@ -501,7 +504,7 @@ class GrowthStoryService {
         rewardPoints: 200,
         specialMessage: '자기 성찰의 힘을 기르셨네요! ✨',
       ),
-      
+
       // 관계 발전 마일스톤
       MilestoneTracker(
         id: 'milestone_best_friend',
@@ -513,7 +516,7 @@ class GrowthStoryService {
         rewardPoints: 500,
         specialMessage: '우리는 이제 평생 친구예요! 💖',
       ),
-      
+
       // 학습 마일스톤
       MilestoneTracker(
         id: 'milestone_curious_mind',
@@ -527,7 +530,7 @@ class GrowthStoryService {
       ),
     ];
   }
-  
+
   /// 📊 마일스톤 진행률 계산
   static double _calculateMilestoneProgress(
     MilestoneTracker tracker,
@@ -542,19 +545,21 @@ class GrowthStoryService {
         }
         if (tracker.criteria.containsKey('relationship_stage')) {
           final targetStage = tracker.criteria['relationship_stage'] as String;
-          final currentStage = progressData['current_stage'] as String? ?? 'introduction';
+          final currentStage =
+              progressData['current_stage'] as String? ?? 'introduction';
           return targetStage == currentStage ? 1.0 : 0.0;
         }
         break;
-        
+
       case 'exercise':
         if (tracker.criteria.containsKey('total_hours')) {
           final targetHours = tracker.criteria['total_hours'] as int;
-          final currentHours = progressData['total_exercise_hours'] as double? ?? 0.0;
+          final currentHours =
+              progressData['total_exercise_hours'] as double? ?? 0.0;
           return (currentHours / targetHours).clamp(0.0, 1.0);
         }
         break;
-        
+
       case 'reading':
         if (tracker.criteria.containsKey('books_count')) {
           final targetBooks = tracker.criteria['books_count'] as int;
@@ -562,27 +567,29 @@ class GrowthStoryService {
           return (currentBooks / targetBooks).clamp(0.0, 1.0);
         }
         break;
-        
+
       case 'diary':
         if (tracker.criteria.containsKey('consecutive_days')) {
           final targetDays = tracker.criteria['consecutive_days'] as int;
-          final currentDays = progressData['consecutive_diary_days'] as int? ?? 0;
+          final currentDays =
+              progressData['consecutive_diary_days'] as int? ?? 0;
           return (currentDays / targetDays).clamp(0.0, 1.0);
         }
         break;
-        
+
       case 'learning':
         if (tracker.criteria.containsKey('conversation_topics')) {
           final targetTopics = tracker.criteria['conversation_topics'] as int;
-          final currentTopics = progressData['unique_topics_count'] as int? ?? 0;
+          final currentTopics =
+              progressData['unique_topics_count'] as int? ?? 0;
           return (currentTopics / targetTopics).clamp(0.0, 1.0);
         }
         break;
     }
-    
+
     return tracker.progress;
   }
-  
+
   /// 🎉 마일스톤 달성 시 처리
   static Future<void> _onMilestoneAchieved(MilestoneTracker milestone) async {
     // 성장 스토리에 마일스톤 달성 추가
@@ -597,19 +604,19 @@ class GrowthStoryService {
       significanceScore: 0.8,
       tags: ['milestone', milestone.category, 'achievement'],
     );
-    
+
     await addGrowthStoryItem(storyItem);
-    
+
     // 추억 생성
     await _createMemoryFromMilestone(milestone);
   }
-  
+
   /// 💭 스토리 항목에서 추억 생성
   static Future<void> _createMemoryFromStoryItem(GrowthStoryItem item) async {
     if (item.significanceScore < 0.6) return; // 중요하지 않은 항목은 추억으로 만들지 않음
-    
+
     SharedMemory? memory;
-    
+
     switch (item.category) {
       case 'achievement':
         memory = MemoryTemplate.createAchievementMemory(
@@ -619,7 +626,7 @@ class GrowthStoryService {
           tags: item.tags,
         );
         break;
-        
+
       case 'milestone':
         memory = MemoryTemplate.createCelebrationMemory(
           title: item.title,
@@ -628,7 +635,7 @@ class GrowthStoryService {
           tags: item.tags,
         );
         break;
-        
+
       case 'challenge':
         memory = MemoryTemplate.createChallengeMemory(
           title: item.title,
@@ -638,7 +645,7 @@ class GrowthStoryService {
           tags: item.tags,
         );
         break;
-        
+
       case 'learning':
         memory = SharedMemory(
           id: 'memory_learning_${DateTime.now().millisecondsSinceEpoch}',
@@ -652,18 +659,20 @@ class GrowthStoryService {
         );
         break;
     }
-    
+
     if (memory != null) {
       await MemoryManagementService.saveMemory(memory);
     }
   }
-  
+
   /// 🎯 마일스톤에서 추억 생성
-  static Future<void> _createMemoryFromMilestone(MilestoneTracker milestone) async {
+  static Future<void> _createMemoryFromMilestone(
+      MilestoneTracker milestone) async {
     final memory = SharedMemory(
       id: 'memory_milestone_${milestone.id}_${DateTime.now().millisecondsSinceEpoch}',
       title: '🏆 ${milestone.name} 달성!',
-      content: milestone.specialMessage ?? '${milestone.name} 마일스톤을 달성했어요! 정말 자랑스러워요. 🌟',
+      content: milestone.specialMessage ??
+          '${milestone.name} 마일스톤을 달성했어요! 정말 자랑스러워요. 🌟',
       category: MemoryCategory.milestone,
       importance: MemoryImportance.important,
       createdAt: DateTime.now(),
@@ -674,10 +683,10 @@ class GrowthStoryService {
         'intensity': 0.9,
       },
     );
-    
+
     await MemoryManagementService.saveMemory(memory);
   }
-  
+
   /// 🎯 활동에서 스토리 항목 생성
   static GrowthStoryItem? _generateStoryItemFromActivity({
     required String activityType,
@@ -688,13 +697,13 @@ class GrowthStoryService {
     if (!_isSignificantActivity(activityType, activityData)) {
       return null;
     }
-    
+
     final String title;
     final String description;
     final String iconEmoji;
     final double significance;
     final List<String> tags;
-    
+
     switch (activityType) {
       case 'exercise':
         final duration = activityData['duration'] as int? ?? 0;
@@ -705,7 +714,7 @@ class GrowthStoryService {
         significance = duration >= 60 ? 0.7 : 0.5;
         tags = ['exercise', 'health'];
         break;
-        
+
       case 'reading':
         final pages = activityData['pages'] as int? ?? 0;
         title = '독서 완료!';
@@ -714,11 +723,11 @@ class GrowthStoryService {
         significance = pages >= 50 ? 0.6 : 0.4;
         tags = ['reading', 'learning'];
         break;
-        
+
       default:
         return null;
     }
-    
+
     return GrowthStoryItem(
       id: 'story_activity_${activityType}_${DateTime.now().millisecondsSinceEpoch}',
       title: title,
@@ -731,9 +740,10 @@ class GrowthStoryService {
       tags: tags,
     );
   }
-  
+
   /// 🎯 중요한 활동인지 판단
-  static bool _isSignificantActivity(String activityType, Map<String, dynamic> data) {
+  static bool _isSignificantActivity(
+      String activityType, Map<String, dynamic> data) {
     switch (activityType) {
       case 'exercise':
         return (data['duration'] as int? ?? 0) >= 30;
@@ -745,7 +755,7 @@ class GrowthStoryService {
         return false;
     }
   }
-  
+
   /// 🏆 성취 제목 생성
   static String _getAchievementTitle(String type, Map<String, dynamic> data) {
     switch (type) {
@@ -759,9 +769,10 @@ class GrowthStoryService {
         return '새로운 성취!';
     }
   }
-  
+
   /// 📝 성취 설명 생성
-  static String _getAchievementDescription(String type, Map<String, dynamic> data, String? userName) {
+  static String _getAchievementDescription(
+      String type, Map<String, dynamic> data, String? userName) {
     final name = userName ?? '당신';
     switch (type) {
       case 'level_up':
@@ -774,7 +785,7 @@ class GrowthStoryService {
         return '${name}이 새로운 성취를 이뤘어요!';
     }
   }
-  
+
   /// 😊 성취 이모지 가져오기
   static String _getAchievementEmoji(String type) {
     switch (type) {
@@ -788,9 +799,10 @@ class GrowthStoryService {
         return '🏆';
     }
   }
-  
+
   /// 📊 성취 중요도 계산
-  static double _calculateAchievementSignificance(String type, Map<String, dynamic> data) {
+  static double _calculateAchievementSignificance(
+      String type, Map<String, dynamic> data) {
     switch (type) {
       case 'level_up':
         final level = data['level'] as int? ?? 1;
@@ -804,7 +816,7 @@ class GrowthStoryService {
         return 0.5;
     }
   }
-  
+
   /// 🏷️ 성취 태그 가져오기
   static List<String> _getAchievementTags(String type) {
     switch (type) {
@@ -818,7 +830,7 @@ class GrowthStoryService {
         return ['achievement'];
     }
   }
-  
+
   /// 🔄 모든 데이터 초기화
   static Future<void> clearAllData() async {
     final prefs = await SharedPreferences.getInstance();

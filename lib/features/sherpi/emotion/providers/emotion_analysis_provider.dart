@@ -35,7 +35,8 @@ class EmotionAnalysisState {
     return EmotionAnalysisState(
       currentAnalysis: currentAnalysis ?? this.currentAnalysis,
       recentAnalyses: recentAnalyses ?? this.recentAnalyses,
-      recentSherpiResponses: recentSherpiResponses ?? this.recentSherpiResponses,
+      recentSherpiResponses:
+          recentSherpiResponses ?? this.recentSherpiResponses,
       emotionalSyncScore: emotionalSyncScore ?? this.emotionalSyncScore,
       syncLevel: syncLevel ?? this.syncLevel,
       isAnalyzing: isAnalyzing ?? this.isAnalyzing,
@@ -47,7 +48,7 @@ class EmotionAnalysisState {
 class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
   final EmotionAnalysisService _analysisService = EmotionAnalysisService();
   final SharedPreferences _prefs;
-  
+
   static const String _recentAnalysesKey = 'recent_emotion_analyses';
   static const String _recentResponsesKey = 'recent_sherpi_responses';
   static const String _syncScoreKey = 'emotional_sync_score';
@@ -76,8 +77,9 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
       if (responsesJson != null) {
         final responsesList = jsonDecode(responsesJson) as List;
         recentResponses = responsesList
-            .map((name) => SherpiEmotion.values
-                .firstWhere((e) => e.name == name, orElse: () => SherpiEmotion.defaults))
+            .map((name) => SherpiEmotion.values.firstWhere(
+                (e) => e.name == name,
+                orElse: () => SherpiEmotion.defaults))
             .toList();
       }
 
@@ -90,7 +92,8 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
         recentSherpiResponses: recentResponses,
         emotionalSyncScore: syncScore,
         syncLevel: syncLevel,
-        currentAnalysis: recentAnalyses.isNotEmpty ? recentAnalyses.first : null,
+        currentAnalysis:
+            recentAnalyses.isNotEmpty ? recentAnalyses.first : null,
       );
     } catch (e) {
       print('🎭 감정 분석 데이터 로드 실패: $e');
@@ -102,14 +105,12 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
     try {
       // 최근 분석 결과 저장
       final analysesJson = jsonEncode(
-        state.recentAnalyses.map((analysis) => analysis.toJson()).toList()
-      );
+          state.recentAnalyses.map((analysis) => analysis.toJson()).toList());
       await _prefs.setString(_recentAnalysesKey, analysesJson);
 
       // 최근 Sherpi 응답 저장
       final responsesJson = jsonEncode(
-        state.recentSherpiResponses.map((emotion) => emotion.name).toList()
-      );
+          state.recentSherpiResponses.map((emotion) => emotion.name).toList());
       await _prefs.setString(_recentResponsesKey, responsesJson);
 
       // 감정 동기화 점수 저장
@@ -144,9 +145,8 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
       final analysis = _analysisService.analyzeUserEmotion(context);
 
       // 분석 결과를 히스토리에 추가
-      final updatedAnalyses = [analysis, ...state.recentAnalyses]
-          .take(_maxHistoryLength)
-          .toList();
+      final updatedAnalyses =
+          [analysis, ...state.recentAnalyses].take(_maxHistoryLength).toList();
 
       state = state.copyWith(
         currentAnalysis: analysis,
@@ -192,9 +192,8 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
       return SherpiEmotion.defaults;
     }
 
-    return _analysisService.recommendSherpiEmotion(
-      state.currentAnalysis!.primaryEmotion
-    );
+    return _analysisService
+        .recommendSherpiEmotion(state.currentAnalysis!.primaryEmotion);
   }
 
   /// 📊 감정 분석 컨텍스트 생성 (활동 완료 시 사용)
@@ -204,7 +203,7 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
     required Map<String, dynamic> userData,
   }) {
     final now = DateTime.now();
-    
+
     // 사용자 데이터에서 연속 일수 추출
     int consecutiveDays = 0;
     switch (activityType) {
@@ -222,7 +221,8 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
     // 최근 활동 목록 생성
     final recentActivities = state.recentAnalyses
         .take(5)
-        .map((analysis) => analysis.analysisContext['activityType'] as String? ?? '')
+        .map((analysis) =>
+            analysis.analysisContext['activityType'] as String? ?? '')
         .where((activity) => activity.isNotEmpty)
         .toList();
 
@@ -240,15 +240,14 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
   /// 🧹 오래된 데이터 정리
   void cleanOldData() {
     final cutoffDate = DateTime.now().subtract(const Duration(days: 30));
-    
+
     final filteredAnalyses = state.recentAnalyses
         .where((analysis) => analysis.analyzedAt.isAfter(cutoffDate))
         .toList();
 
     if (filteredAnalyses.length != state.recentAnalyses.length) {
-      final filteredResponses = state.recentSherpiResponses
-          .take(filteredAnalyses.length)
-          .toList();
+      final filteredResponses =
+          state.recentSherpiResponses.take(filteredAnalyses.length).toList();
 
       state = state.copyWith(
         recentAnalyses: filteredAnalyses,
@@ -273,28 +272,27 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
     // 감정 분포 계산
     final emotionCounts = <UserEmotionState, int>{};
     for (final analysis in state.recentAnalyses) {
-      emotionCounts[analysis.primaryEmotion] = 
+      emotionCounts[analysis.primaryEmotion] =
           (emotionCounts[analysis.primaryEmotion] ?? 0) + 1;
     }
 
-    final dominantEmotion = emotionCounts.entries
-        .reduce((a, b) => a.value > b.value ? a : b)
-        .key;
+    final dominantEmotion =
+        emotionCounts.entries.reduce((a, b) => a.value > b.value ? a : b).key;
 
     // 동기화 추세 계산
     String syncTrend = 'stable';
     if (state.recentAnalyses.length >= 5) {
       final recent5 = state.recentAnalyses.take(5).toList();
       final older5 = state.recentAnalyses.skip(5).take(5).toList();
-      
+
       if (recent5.isNotEmpty && older5.isNotEmpty) {
-        final recentAvgConfidence = recent5
-            .map((a) => a.confidence)
-            .reduce((a, b) => a + b) / recent5.length;
-        final olderAvgConfidence = older5
-            .map((a) => a.confidence)
-            .reduce((a, b) => a + b) / older5.length;
-        
+        final recentAvgConfidence =
+            recent5.map((a) => a.confidence).reduce((a, b) => a + b) /
+                recent5.length;
+        final olderAvgConfidence =
+            older5.map((a) => a.confidence).reduce((a, b) => a + b) /
+                older5.length;
+
         if (recentAvgConfidence > olderAvgConfidence + 0.1) {
           syncTrend = 'improving';
         } else if (recentAvgConfidence < olderAvgConfidence - 0.1) {
@@ -306,8 +304,8 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
     return {
       'total_analyses': state.recentAnalyses.length,
       'dominant_emotion': dominantEmotion.name,
-      'emotion_distribution': emotionCounts.map((key, value) => 
-          MapEntry(key.name, value)),
+      'emotion_distribution':
+          emotionCounts.map((key, value) => MapEntry(key.name, value)),
       'sync_trend': syncTrend,
       'current_sync_level': state.syncLevel.name,
       'sync_score': state.emotionalSyncScore,
@@ -316,7 +314,8 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
 }
 
 /// 🎭 감정 분석 프로바이더
-final emotionAnalysisProvider = StateNotifierProvider<EmotionAnalysisNotifier, EmotionAnalysisState>((ref) {
+final emotionAnalysisProvider =
+    StateNotifierProvider<EmotionAnalysisNotifier, EmotionAnalysisState>((ref) {
   throw UnimplementedError();
 });
 

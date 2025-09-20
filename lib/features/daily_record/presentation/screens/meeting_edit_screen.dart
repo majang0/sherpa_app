@@ -11,7 +11,7 @@ import '../../../../core/constants/meeting_categories.dart';
 
 class MeetingEditScreen extends ConsumerStatefulWidget {
   final MeetingLog meeting;
-  
+
   const MeetingEditScreen({super.key, required this.meeting});
 
   @override
@@ -44,12 +44,13 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
   ];
 
   // 🎯 중앙집중식 카테고리 시스템 사용 (레거시 호환성 유지)
-  Map<String, Map<String, dynamic>> get _categoryData => MeetingCategories.legacyFormat;
+  Map<String, Map<String, dynamic>> get _categoryData =>
+      MeetingCategories.legacyFormat;
 
   @override
   void initState() {
     super.initState();
-    
+
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -62,11 +63,12 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
       duration: const Duration(milliseconds: 1200),
       vsync: this,
     );
-    
+
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
       CurvedAnimation(parent: _slideController, curve: Curves.easeOutBack),
     );
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
@@ -99,8 +101,9 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
 
   @override
   Widget build(BuildContext context) {
-    final categoryInfo = _categoryData[widget.meeting.category] ?? _categoryData['친목']!;
-    
+    final categoryInfo =
+        _categoryData[widget.meeting.category] ?? _categoryData['친목']!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       extendBodyBehindAppBar: true,
@@ -110,11 +113,11 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha:0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha:0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -122,18 +125,19 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           ),
           child: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
         actions: [
           Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha:0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha:0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -165,68 +169,68 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 ),
               ),
             ),
-            
+
             // 메인 콘텐츠
             SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   const SizedBox(height: 120), // AppBar 공간
-                  
+
                   // 헤더 섹션
                   SlideTransition(
                     position: _slideAnimation,
                     child: _buildHeader(categoryInfo),
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 변경 불가능한 정보 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildReadOnlyInfo(categoryInfo),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 만족도 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildSatisfactionSection(categoryInfo),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 기분 선택 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildMoodSection(categoryInfo),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 한마디 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildNoteSection(categoryInfo),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 공유 설정 섹션
                   ScaleTransition(
                     scale: _scaleAnimation,
                     child: _buildShareSection(categoryInfo),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 저장 버튼
                   FadeTransition(
                     opacity: _fadeAnimation,
                     child: _buildSaveButton(categoryInfo),
                   ),
-                  
+
                   const SizedBox(height: 40),
                 ],
               ),
@@ -246,12 +250,12 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: categoryInfo['color'].withValues(alpha:0.2),
+            color: categoryInfo['color'].withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withValues(alpha:0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -271,7 +275,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: categoryInfo['color'].withValues(alpha:0.3),
+                      color: categoryInfo['color'].withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -325,7 +329,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha:0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -339,7 +343,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: ModernColors.textTertiary.withValues(alpha:0.1),
+                    color: ModernColors.textTertiary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
@@ -359,32 +363,31 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: ModernColors.textTertiary.withValues(alpha:0.1),
+                  color: ModernColors.textTertiary.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
               child: Column(
                 children: [
-                  _buildReadOnlyInfoRow('📅', '날짜', _formatDate(widget.meeting.date)),
+                  _buildReadOnlyInfoRow(
+                      '📅', '날짜', _formatDate(widget.meeting.date)),
                   const SizedBox(height: 12),
-                  _buildReadOnlyInfoRow(categoryInfo['emoji'], '분류', widget.meeting.category),
+                  _buildReadOnlyInfoRow(
+                      categoryInfo['emoji'], '분류', widget.meeting.category),
                   const SizedBox(height: 12),
-                  _buildReadOnlyInfoRow('📝', '모임명', widget.meeting.meetingName),
+                  _buildReadOnlyInfoRow(
+                      '📝', '모임명', widget.meeting.meetingName),
                 ],
               ),
             ),
-            
             const SizedBox(height: 12),
-            
             Text(
               '모임명과 분류는 수정할 수 없습니다',
               style: GoogleFonts.notoSans(
@@ -443,7 +446,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha:0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -457,7 +460,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFBBF24).withValues(alpha:0.1),
+                    color: const Color(0xFFFBBF24).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
@@ -486,16 +489,14 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFFFBBF24).withValues(alpha:0.1),
+                  color: const Color(0xFFFBBF24).withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -508,14 +509,16 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                       (index) {
                         final starValue = index + 1;
                         final isFullStar = _satisfaction >= starValue;
-                        final isHalfStar = _satisfaction >= starValue - 0.5 && _satisfaction < starValue;
-                        
+                        final isHalfStar = _satisfaction >= starValue - 0.5 &&
+                            _satisfaction < starValue;
+
                         return GestureDetector(
                           onTap: () {
                             setState(() {
                               if (_satisfaction == starValue) {
                                 // 이미 선택된 별을 클릭하면 0.5 감소
-                                _satisfaction = (starValue - 0.5).clamp(0.5, 5.0);
+                                _satisfaction =
+                                    (starValue - 0.5).clamp(0.5, 5.0);
                               } else {
                                 // 새로운 별을 클릭하면 해당 값으로 설정
                                 _satisfaction = starValue.toDouble();
@@ -557,15 +560,15 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                       },
                     ),
                   ),
-                  
                   const SizedBox(height: 16),
-                  
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
                       activeTrackColor: const Color(0xFFFBBF24),
-                      inactiveTrackColor: const Color(0xFFFBBF24).withValues(alpha:0.2),
+                      inactiveTrackColor:
+                          const Color(0xFFFBBF24).withValues(alpha: 0.2),
                       thumbColor: const Color(0xFFFBBF24),
-                      overlayColor: const Color(0xFFFBBF24).withValues(alpha:0.2),
+                      overlayColor:
+                          const Color(0xFFFBBF24).withValues(alpha: 0.2),
                       trackHeight: 6,
                       thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12),
                     ),
@@ -601,7 +604,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha:0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -615,7 +618,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: categoryInfo['color'].withValues(alpha:0.1),
+                    color: categoryInfo['color'].withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -635,16 +638,14 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: categoryInfo['color'].withValues(alpha:0.1),
+                  color: categoryInfo['color'].withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -661,27 +662,35 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                       HapticFeedbackManager.lightImpact();
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 16),
                       decoration: BoxDecoration(
-                        color: isSelected ? categoryInfo['color'] : Colors.white,
+                        color:
+                            isSelected ? categoryInfo['color'] : Colors.white,
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: isSelected ? categoryInfo['color'] : ModernColors.textTertiary.withValues(alpha:0.2),
+                          color: isSelected
+                              ? categoryInfo['color']
+                              : ModernColors.textTertiary
+                                  .withValues(alpha: 0.2),
                           width: 1.5,
                         ),
-                        boxShadow: isSelected ? [
-                          BoxShadow(
-                            color: categoryInfo['color'].withValues(alpha:0.3),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ] : [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha:0.03),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
+                        boxShadow: isSelected
+                            ? [
+                                BoxShadow(
+                                  color: categoryInfo['color']
+                                      .withValues(alpha: 0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ]
+                            : [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.03),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -696,7 +705,9 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: isSelected ? Colors.white : ModernColors.textPrimary,
+                              color: isSelected
+                                  ? Colors.white
+                                  : ModernColors.textPrimary,
                             ),
                           ),
                         ],
@@ -722,7 +733,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha:0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -736,7 +747,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: categoryInfo['color'].withValues(alpha:0.1),
+                    color: categoryInfo['color'].withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -756,16 +767,14 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: categoryInfo['color'].withValues(alpha:0.1),
+                  color: categoryInfo['color'].withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -807,7 +816,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha:0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -821,7 +830,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: categoryInfo['color'].withValues(alpha:0.1),
+                    color: categoryInfo['color'].withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -841,16 +850,14 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 20),
-            
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: categoryInfo['color'].withValues(alpha:0.1),
+                  color: categoryInfo['color'].withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -914,7 +921,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: categoryInfo['color'].withValues(alpha:0.4),
+              color: categoryInfo['color'].withValues(alpha: 0.4),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -966,7 +973,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
 
   void _saveMeeting() async {
     if (_isSubmitting) return;
-    
+
     setState(() {
       _isSubmitting = true;
     });
@@ -993,18 +1000,18 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
         }
         return log;
       }).toList();
-      
+
       final updatedRecords = user.dailyRecords.copyWith(
         meetingLogs: updatedMeetingLogs,
       );
-      
+
       final updatedUser = user.copyWith(dailyRecords: updatedRecords);
       ref.read(globalUserProvider.notifier).state = updatedUser;
 
       if (mounted) {
         Navigator.pop(context);
         Navigator.pop(context); // 상세보기 화면도 닫기
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -1013,7 +1020,8 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
             ),
             backgroundColor: const Color(0xFF8B5CF6),
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             margin: const EdgeInsets.all(16),
           ),
         );
@@ -1028,7 +1036,8 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
             ),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             margin: const EdgeInsets.all(16),
           ),
         );

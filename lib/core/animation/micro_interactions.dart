@@ -8,9 +8,8 @@ import '../theme/modern_colors.dart';
 /// 2025 마이크로 인터랙션 애니메이션 시스템
 /// 사용자와의 감정적 연결을 위한 정교한 애니메이션 패턴
 class MicroInteractions {
-  
   // ==================== 애니메이션 지속시간 상수 ====================
-  
+
   static const Duration ultraFast = Duration(milliseconds: 100);
   static const Duration fast = Duration(milliseconds: 150);
   static const Duration normal = Duration(milliseconds: 200);
@@ -19,7 +18,7 @@ class MicroInteractions {
   static const Duration verySlow = Duration(milliseconds: 600);
 
   // ==================== 이징 커브 ====================
-  
+
   static const Curve easeOutQuart = Cubic(0.25, 1, 0.5, 1);
   static const Curve easeInOutCubic = Cubic(0.65, 0, 0.35, 1);
   static const Curve bounceOut = Cubic(0.68, -0.55, 0.265, 1.55);
@@ -185,9 +184,7 @@ class MicroInteractions {
     Duration duration = const Duration(milliseconds: 600),
     bool autoPlay = true,
   }) {
-    return child
-        .animate(autoPlay: autoPlay)
-        .shakeX(
+    return child.animate(autoPlay: autoPlay).shakeX(
           duration: duration,
           amount: intensity,
           curve: Curves.elasticIn,
@@ -201,9 +198,7 @@ class MicroInteractions {
     Axis direction = Axis.horizontal,
     bool autoPlay = false,
   }) {
-    return child
-        .animate(autoPlay: autoPlay)
-        .flip(
+    return child.animate(autoPlay: autoPlay).flip(
           duration: duration,
           direction: direction,
           curve: easeInOutCubic,
@@ -266,7 +261,7 @@ class MicroInteractions {
     return children.asMap().entries.map((entry) {
       final index = entry.key;
       final child = entry.value;
-      
+
       return slideInFade(
         child: child,
         direction: direction,
@@ -336,7 +331,8 @@ class MicroInteractions {
 // ==================== 열거형 정의 ====================
 
 enum SlideDirection { top, bottom, left, right }
-enum HapticFeedbackType { 
+
+enum HapticFeedbackType {
   light,
   medium,
   heavy,
@@ -565,7 +561,7 @@ class _SuccessCheckmarkWidgetState extends State<SuccessCheckmarkWidget>
       parent: _controller,
       curve: MicroInteractions.bounceOut,
     ));
-    
+
     _controller.forward();
   }
 
@@ -628,7 +624,7 @@ class _ErrorXMarkWidgetState extends State<ErrorXMarkWidget>
       parent: _controller,
       curve: MicroInteractions.easeOutQuart,
     ));
-    
+
     _controller.forward();
   }
 
@@ -721,7 +717,8 @@ class _ButtonPressWidgetState extends State<ButtonPressWidget>
               boxShadow: _isPressed
                   ? [
                       BoxShadow(
-                        color: widget.glowColor.withOpacity(0.3 * _glowAnimation.value),
+                        color: widget.glowColor
+                            .withOpacity(0.3 * _glowAnimation.value),
                         blurRadius: 20 * _glowAnimation.value,
                         spreadRadius: 2 * _glowAnimation.value,
                       ),
@@ -841,11 +838,13 @@ class CheckmarkPainter extends CustomPainter {
     final path = Path();
     final center = Offset(size.width / 2, size.height / 2);
     final checkSize = size.width * 0.6;
-    
+
     // 체크마크 경로 정의
     final start = Offset(center.dx - checkSize * 0.3, center.dy);
-    final middle = Offset(center.dx - checkSize * 0.1, center.dy + checkSize * 0.2);
-    final end = Offset(center.dx + checkSize * 0.3, center.dy - checkSize * 0.2);
+    final middle =
+        Offset(center.dx - checkSize * 0.1, center.dy + checkSize * 0.2);
+    final end =
+        Offset(center.dx + checkSize * 0.3, center.dy - checkSize * 0.2);
 
     if (progress <= 0.5) {
       // 첫 번째 라인 (왼쪽에서 중간까지)
@@ -859,7 +858,7 @@ class CheckmarkPainter extends CustomPainter {
       // 첫 번째 라인 완성 후 두 번째 라인
       path.moveTo(start.dx, start.dy);
       path.lineTo(middle.dx, middle.dy);
-      
+
       final t = (progress - 0.5) * 2;
       path.lineTo(
         middle.dx + (end.dx - middle.dx) * t,
@@ -893,13 +892,13 @@ class XMarkPainter extends CustomPainter {
 
     final center = Offset(size.width / 2, size.height / 2);
     final xSize = size.width * 0.6;
-    
+
     if (progress <= 0.5) {
       // 첫 번째 라인 (왼쪽 위에서 오른쪽 아래)
       final t = progress * 2;
       final start = Offset(center.dx - xSize * 0.3, center.dy - xSize * 0.3);
       final end = Offset(center.dx + xSize * 0.3, center.dy + xSize * 0.3);
-      
+
       canvas.drawLine(
         start,
         Offset(
@@ -915,11 +914,11 @@ class XMarkPainter extends CustomPainter {
         Offset(center.dx + xSize * 0.3, center.dy + xSize * 0.3),
         paint,
       );
-      
+
       final t = (progress - 0.5) * 2;
       final start = Offset(center.dx + xSize * 0.3, center.dy - xSize * 0.3);
       final end = Offset(center.dx - xSize * 0.3, center.dy + xSize * 0.3);
-      
+
       canvas.drawLine(
         start,
         Offset(
@@ -959,12 +958,12 @@ class ParticleBurstPainter extends CustomPainter {
       final angle = (i / particleCount) * 2 * 3.14159;
       final distance = maxRadius * progress;
       final opacity = (1 - progress).clamp(0.0, 1.0);
-      
+
       final particleX = center.dx + distance * 0.7 * progress * progress;
       final particleY = center.dy + distance * 0.7 * progress * progress;
-      
+
       paint.color = particleColor.withOpacity(opacity);
-      
+
       canvas.drawCircle(
         Offset(
           center.dx + distance * progress * progress,

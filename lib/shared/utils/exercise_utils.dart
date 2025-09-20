@@ -118,7 +118,8 @@ class ExerciseModelConverter {
       date: detailed.date,
       exerciseType: detailed.exerciseType,
       durationMinutes: detailed.durationMinutes,
-      intensity: 'medium', // Default since DetailedExerciseRecord uses DifficultyLevel
+      intensity:
+          'medium', // Default since DetailedExerciseRecord uses DifficultyLevel
       note: detailed.note,
       imageUrl: detailed.imageUrl,
       isShared: detailed.isShared,

@@ -20,17 +20,18 @@ class QuickGoalInputWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<QuickGoalInputWidget> createState() => _QuickGoalInputWidgetState();
+  ConsumerState<QuickGoalInputWidget> createState() =>
+      _QuickGoalInputWidgetState();
 }
 
 class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
-  
+
   String _selectedCategory = 'health';
   int _duration = 7; // 기본 7일
   bool _showAIHint = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -40,24 +41,26 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
       _checkAndShowAIHint();
     });
   }
-  
+
   void _checkAndShowAIHint() {
     // 사용자 데이터 기반 AI 힌트 표시 여부 결정
     final user = ref.read(globalUserProvider);
-    
+
     // 최근 활동 패턴 분석
-    if (user.dailyRecords.exerciseLogs.isEmpty && _selectedCategory == 'health') {
+    if (user.dailyRecords.exerciseLogs.isEmpty &&
+        _selectedCategory == 'health') {
       setState(() => _showAIHint = true);
-    } else if (user.dailyRecords.readingLogs.isEmpty && _selectedCategory == 'study') {
+    } else if (user.dailyRecords.readingLogs.isEmpty &&
+        _selectedCategory == 'study') {
       setState(() => _showAIHint = true);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final userData = ref.watch(globalUserProvider);
     final aiHint = _getAIHint(userData);
-    
+
     return Container(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -87,7 +90,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
               ),
             ),
             const SizedBox(height: 20),
-            
+
             // 타이틀
             Row(
               children: [
@@ -101,9 +104,9 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                 ),
               ],
             ).animate().fadeIn().slideX(begin: -0.1, end: 0),
-            
+
             const SizedBox(height: 20),
-            
+
             // 입력 필드
             TextField(
               controller: _controller,
@@ -138,7 +141,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
               },
               onSubmitted: (_) => _createGoal(),
             ).animate().fadeIn(delay: 100.ms).slideY(begin: 0.1, end: 0),
-            
+
             // AI 힌트 (작고 비침투적)
             if (_showAIHint && aiHint != null) ...[
               const SizedBox(height: 12),
@@ -187,9 +190,9 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                 ),
               ).animate().fadeIn(delay: 200.ms).slideY(begin: -0.1, end: 0),
             ],
-            
+
             const SizedBox(height: 20),
-            
+
             // 카테고리 선택
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,21 +210,25 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      _buildCategoryChip('건강', 'health', Icons.favorite, Colors.red),
+                      _buildCategoryChip(
+                          '건강', 'health', Icons.favorite, Colors.red),
                       const SizedBox(width: 8),
-                      _buildCategoryChip('학습', 'study', Icons.book, Colors.blue),
+                      _buildCategoryChip(
+                          '학습', 'study', Icons.book, Colors.blue),
                       const SizedBox(width: 8),
-                      _buildCategoryChip('습관', 'habit', Icons.repeat, Colors.green),
+                      _buildCategoryChip(
+                          '습관', 'habit', Icons.repeat, Colors.green),
                       const SizedBox(width: 8),
-                      _buildCategoryChip('소셜', 'social', Icons.people, Colors.orange),
+                      _buildCategoryChip(
+                          '소셜', 'social', Icons.people, Colors.orange),
                     ],
                   ),
                 ),
               ],
             ).animate().fadeIn(delay: 300.ms),
-            
+
             const SizedBox(height: 16),
-            
+
             // 기간 선택
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,9 +260,9 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                 ),
               ],
             ).animate().fadeIn(delay: 400.ms),
-            
+
             const SizedBox(height: 24),
-            
+
             // 생성 버튼
             SizedBox(
               width: double.infinity,
@@ -284,10 +291,11 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
       ),
     );
   }
-  
-  Widget _buildCategoryChip(String label, String value, IconData icon, Color color) {
+
+  Widget _buildCategoryChip(
+      String label, String value, IconData icon, Color color) {
     final isSelected = _selectedCategory == value;
-    
+
     return GestureDetector(
       onTap: () {
         HapticFeedbackManager.lightImpact();
@@ -328,10 +336,10 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
       ),
     );
   }
-  
+
   Widget _buildDurationChip(String label, int days) {
     final isSelected = _duration == days;
-    
+
     return GestureDetector(
       onTap: () {
         HapticFeedbackManager.lightImpact();
@@ -341,10 +349,14 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary.withOpacity(0.15) : Colors.grey[100],
+          color: isSelected
+              ? AppColors.primary.withOpacity(0.15)
+              : Colors.grey[100],
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: isSelected ? AppColors.primary.withOpacity(0.3) : Colors.transparent,
+            color: isSelected
+                ? AppColors.primary.withOpacity(0.3)
+                : Colors.transparent,
             width: 1.5,
           ),
         ),
@@ -359,7 +371,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
       ),
     );
   }
-  
+
   String? _getAIHint(GlobalUser user) {
     // 카테고리별 스마트 힌트
     switch (_selectedCategory) {
@@ -370,7 +382,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
           return "꾸준히 운동 중이시네요! '운동 강도 높이기' 도전!";
         }
         break;
-        
+
       case 'study':
         if (user.dailyRecords.readingLogs.isEmpty) {
           return "독서 습관을 만들어보세요. '매일 10페이지 읽기' 추천!";
@@ -378,14 +390,14 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
           return "독서가 익숙해지셨네요! '월 2권 완독' 도전!";
         }
         break;
-        
+
       case 'habit':
         if (user.dailyRecords.diaryLogs.isEmpty) {
           return "일기 쓰기로 하루를 정리해보세요.";
         } else {
           return "새로운 습관에 도전해보세요!";
         }
-        
+
       case 'social':
         if (user.dailyRecords.meetingLogs.isEmpty) {
           return "모임에 참여해 새로운 사람들을 만나보세요!";
@@ -393,31 +405,31 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
           return "정기 모임을 만들어보는 건 어떨까요?";
         }
     }
-    
+
     // 연속 기록 기반 힌트
     final streak = user.dailyRecords.consecutiveDays;
     if (streak > 7) {
       return "연속 ${streak}일째! 더 높은 목표에 도전해보세요!";
     }
-    
+
     return null;
   }
-  
+
   void _createGoal() {
     if (_controller.text.isEmpty) return;
-    
+
     HapticFeedbackManager.mediumImpact();
-    
+
     final goalData = {
       'title': _controller.text.trim(),
       'description': '',
       'category': _selectedCategory,
       'duration': _duration,
     };
-    
+
     widget.onGoalCreated(goalData);
   }
-  
+
   @override
   void dispose() {
     _controller.dispose();

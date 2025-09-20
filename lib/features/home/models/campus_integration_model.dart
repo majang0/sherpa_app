@@ -173,10 +173,14 @@ class CampusBuilding {
     required this.lastUpdated,
   });
 
-  int get totalCapacity => locations.fold(0, (sum, location) => sum + location.capacity);
-  int get availableLocations => locations.where((location) => location.isAvailable).length;
+  int get totalCapacity =>
+      locations.fold(0, (sum, location) => sum + location.capacity);
+  int get availableLocations =>
+      locations.where((location) => location.isAvailable).length;
   int get totalLocations => locations.length;
-  double get occupancyRate => totalLocations > 0 ? (totalLocations - availableLocations) / totalLocations : 0.0;
+  double get occupancyRate => totalLocations > 0
+      ? (totalLocations - availableLocations) / totalLocations
+      : 0.0;
 
   String get buildingTypeDisplayName {
     switch (buildingType) {
@@ -332,7 +336,8 @@ class GuildRanking {
     return '순위 유지';
   }
 
-  double get activityRate => totalMembers > 0 ? (activeMembers / totalMembers) * 100 : 0.0;
+  double get activityRate =>
+      totalMembers > 0 ? (activeMembers / totalMembers) * 100 : 0.0;
 
   String get rankTier {
     if (currentRank <= 3) return 'S';
@@ -397,7 +402,8 @@ class GuildRanking {
       activeMembers: json['activeMembers'] as int,
       recentAchievements: List<String>.from(json['recentAchievements'] as List),
       lastUpdated: DateTime.parse(json['lastUpdated'] as String),
-      additionalStats: Map<String, dynamic>.from(json['additionalStats'] as Map),
+      additionalStats:
+          Map<String, dynamic>.from(json['additionalStats'] as Map),
     );
   }
 
@@ -581,7 +587,8 @@ class GuildCompetition {
       description: json['description'] as String,
       startDate: DateTime.parse(json['startDate'] as String),
       endDate: DateTime.parse(json['endDate'] as String),
-      participatingGuilds: List<String>.from(json['participatingGuilds'] as List),
+      participatingGuilds:
+          List<String>.from(json['participatingGuilds'] as List),
       guildScores: Map<String, double>.from(json['guildScores'] as Map),
       competitionType: json['competitionType'] as String,
       rewards: Map<String, dynamic>.from(json['rewards'] as Map),
@@ -617,7 +624,8 @@ class CampusEvent {
   final DateTime startTime;
   final DateTime endTime;
   final CampusLocation location;
-  final String eventType; // 'academic', 'social', 'competition', 'official', 'cultural'
+  final String
+      eventType; // 'academic', 'social', 'competition', 'official', 'cultural'
   final List<String> organizers;
   final int maxParticipants;
   final int currentParticipants;
@@ -650,15 +658,17 @@ class CampusEvent {
   bool get isFull => currentParticipants >= maxParticipants;
   Duration get timeUntilStart => startTime.difference(DateTime.now());
   Duration get duration => endTime.difference(startTime);
-  bool get isOngoing => DateTime.now().isAfter(startTime) && DateTime.now().isBefore(endTime);
+  bool get isOngoing =>
+      DateTime.now().isAfter(startTime) && DateTime.now().isBefore(endTime);
   bool get hasEnded => DateTime.now().isAfter(endTime);
   bool get isUpcoming => DateTime.now().isBefore(startTime);
   bool get isToday =>
       DateTime.now().day == startTime.day &&
-          DateTime.now().month == startTime.month &&
-          DateTime.now().year == startTime.year;
+      DateTime.now().month == startTime.month &&
+      DateTime.now().year == startTime.year;
 
-  double get occupancyRate => maxParticipants > 0 ? (currentParticipants / maxParticipants) * 100 : 0.0;
+  double get occupancyRate =>
+      maxParticipants > 0 ? (currentParticipants / maxParticipants) * 100 : 0.0;
   int get availableSpots => maxParticipants - currentParticipants;
 
   String get eventTypeDisplayName {
@@ -778,7 +788,8 @@ class CampusEvent {
       description: json['description'] as String,
       startTime: DateTime.parse(json['startTime'] as String),
       endTime: DateTime.parse(json['endTime'] as String),
-      location: CampusLocation.fromJson(json['location'] as Map<String, dynamic>),
+      location:
+          CampusLocation.fromJson(json['location'] as Map<String, dynamic>),
       eventType: json['eventType'] as String,
       organizers: List<String>.from(json['organizers'] as List),
       maxParticipants: json['maxParticipants'] as int,
@@ -821,7 +832,8 @@ class AcademicSchedule {
   final String description;
   final DateTime date;
   final DateTime? endDate; // 기간이 있는 일정의 경우
-  final String scheduleType; // 'exam', 'registration', 'vacation', 'event', 'deadline'
+  final String
+      scheduleType; // 'exam', 'registration', 'vacation', 'event', 'deadline'
   final String department;
   final bool isImportant;
   final Map<String, dynamic> additionalInfo;
@@ -845,13 +857,18 @@ class AcademicSchedule {
   });
 
   Duration get timeUntilDate => date.difference(DateTime.now());
-  bool get isToday => DateTime.now().day == date.day &&
+  bool get isToday =>
+      DateTime.now().day == date.day &&
       DateTime.now().month == date.month &&
       DateTime.now().year == date.year;
   bool get isThisWeek => timeUntilDate.inDays <= 7 && timeUntilDate.inDays >= 0;
-  bool get isThisMonth => timeUntilDate.inDays <= 30 && timeUntilDate.inDays >= 0;
+  bool get isThisMonth =>
+      timeUntilDate.inDays <= 30 && timeUntilDate.inDays >= 0;
   bool get isPast => DateTime.now().isAfter(date);
-  bool get isOngoing => endDate != null && DateTime.now().isAfter(date) && DateTime.now().isBefore(endDate!);
+  bool get isOngoing =>
+      endDate != null &&
+      DateTime.now().isAfter(date) &&
+      DateTime.now().isBefore(endDate!);
 
   Duration? get duration => endDate?.difference(date);
 
@@ -947,7 +964,9 @@ class AcademicSchedule {
   }
 
   bool isRelevantForGrade(String grade) {
-    return affectedGrades.isEmpty || affectedGrades.contains(grade) || affectedGrades.contains('전체');
+    return affectedGrades.isEmpty ||
+        affectedGrades.contains(grade) ||
+        affectedGrades.contains('전체');
   }
 
   AcademicSchedule copyWith({
@@ -986,7 +1005,9 @@ class AcademicSchedule {
       title: json['title'] as String,
       description: json['description'] as String,
       date: DateTime.parse(json['date'] as String),
-      endDate: json['endDate'] != null ? DateTime.parse(json['endDate'] as String) : null,
+      endDate: json['endDate'] != null
+          ? DateTime.parse(json['endDate'] as String)
+          : null,
       scheduleType: json['scheduleType'] as String,
       department: json['department'] as String,
       isImportant: json['isImportant'] as bool,
@@ -1043,19 +1064,29 @@ class CampusIntegrationState {
     required this.lastUpdated,
   });
 
-  List<CampusEvent> get todayEvents => campusEvents.where((event) => event.isToday).toList();
-  List<CampusEvent> get upcomingEvents => campusEvents.where((event) => event.isUpcoming).toList();
-  List<CampusEvent> get ongoingEvents => campusEvents.where((event) => event.isOngoing).toList();
+  List<CampusEvent> get todayEvents =>
+      campusEvents.where((event) => event.isToday).toList();
+  List<CampusEvent> get upcomingEvents =>
+      campusEvents.where((event) => event.isUpcoming).toList();
+  List<CampusEvent> get ongoingEvents =>
+      campusEvents.where((event) => event.isOngoing).toList();
 
-  List<AcademicSchedule> get todaySchedules => academicSchedules.where((schedule) => schedule.isToday).toList();
-  List<AcademicSchedule> get thisWeekSchedules => academicSchedules.where((schedule) => schedule.isThisWeek).toList();
-  List<AcademicSchedule> get importantSchedules => academicSchedules.where((schedule) => schedule.isImportant).toList();
+  List<AcademicSchedule> get todaySchedules =>
+      academicSchedules.where((schedule) => schedule.isToday).toList();
+  List<AcademicSchedule> get thisWeekSchedules =>
+      academicSchedules.where((schedule) => schedule.isThisWeek).toList();
+  List<AcademicSchedule> get importantSchedules =>
+      academicSchedules.where((schedule) => schedule.isImportant).toList();
 
-  List<GuildCompetition> get activeCompetitions => guildCompetitions.where((comp) => comp.isActive).toList();
-  List<GuildCompetition> get upcomingCompetitions => guildCompetitions.where((comp) => comp.isUpcoming).toList();
+  List<GuildCompetition> get activeCompetitions =>
+      guildCompetitions.where((comp) => comp.isActive).toList();
+  List<GuildCompetition> get upcomingCompetitions =>
+      guildCompetitions.where((comp) => comp.isUpcoming).toList();
 
-  int get totalAvailableLocations => campusBuildings.fold(0, (sum, building) => sum + building.availableLocations);
-  int get totalLocations => campusBuildings.fold(0, (sum, building) => sum + building.totalLocations);
+  int get totalAvailableLocations => campusBuildings.fold(
+      0, (sum, building) => sum + building.availableLocations);
+  int get totalLocations =>
+      campusBuildings.fold(0, (sum, building) => sum + building.totalLocations);
 
   CampusIntegrationState copyWith({
     List<CampusBuilding>? campusBuildings,

@@ -53,7 +53,8 @@ class MyInfoScreen extends ConsumerWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        if (user.profileImageUrl != null && user.profileImageUrl!.isNotEmpty) {
+                        if (user.profileImageUrl != null &&
+                            user.profileImageUrl!.isNotEmpty) {
                           _showImageViewer(context, user.profileImageUrl!);
                         }
                       },
@@ -86,9 +87,12 @@ class MyInfoScreen extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildUserStat('레벨', '${user.level}', AppColors.primary),
-                        _buildUserStat('XP', '${user.experience.toInt()}', AppColors.warning),
-                        _buildUserStat('뱃지', '${user.ownedBadgeIds.length}', AppColors.success),
+                        _buildUserStat(
+                            '레벨', '${user.level}', AppColors.primary),
+                        _buildUserStat('XP', '${user.experience.toInt()}',
+                            AppColors.warning),
+                        _buildUserStat('뱃지', '${user.ownedBadgeIds.length}',
+                            AppColors.success),
                       ],
                     ),
                   ],
@@ -106,7 +110,7 @@ class MyInfoScreen extends ConsumerWidget {
                     Icons.edit,
                     '프로필 편집',
                     '닉네임, 프로필 사진 변경',
-                        () {
+                    () {
                       // 프로필 편집 화면으로 이동
                       _showEditProfileDialog(context, ref, user);
                     },
@@ -116,7 +120,7 @@ class MyInfoScreen extends ConsumerWidget {
                     Icons.notifications,
                     '알림 설정',
                     '푸시 알림, 이메일 알림 설정',
-                        () {
+                    () {
                       // 알림 설정 화면으로 이동
                     },
                   ),
@@ -125,7 +129,7 @@ class MyInfoScreen extends ConsumerWidget {
                     Icons.security,
                     '개인정보 보호',
                     '계정 보안, 개인정보 설정',
-                        () {
+                    () {
                       // 개인정보 설정 화면으로 이동
                     },
                   ),
@@ -134,7 +138,7 @@ class MyInfoScreen extends ConsumerWidget {
                     Icons.help,
                     '도움말',
                     '자주 묻는 질문, 고객 지원',
-                        () {
+                    () {
                       // 도움말 화면으로 이동
                     },
                   ),
@@ -143,7 +147,7 @@ class MyInfoScreen extends ConsumerWidget {
                     Icons.info,
                     '앱 정보',
                     '버전 정보, 이용약관',
-                        () {
+                    () {
                       // 앱 정보 화면으로 이동
                     },
                   ),
@@ -155,7 +159,7 @@ class MyInfoScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   // ✅ 이미지 뷰어 다이얼로그 표시
   void _showImageViewer(BuildContext context, String imageUrl) {
     showDialog(
@@ -189,12 +193,12 @@ class MyInfoScreen extends ConsumerWidget {
   }
 
   Widget _buildMenuItem(
-      BuildContext context,
-      IconData icon,
-      String title,
-      String subtitle,
-      VoidCallback onTap,
-      ) {
+    BuildContext context,
+    IconData icon,
+    String title,
+    String subtitle,
+    VoidCallback onTap,
+  ) {
     return ListTile(
       leading: Container(
         width: 40,
@@ -230,7 +234,8 @@ class MyInfoScreen extends ConsumerWidget {
   }
 
   // ✅ 프로필 편집 다이얼로그 (Modern 디자인 & 완전한 기능 구현)
-  void _showEditProfileDialog(BuildContext context, WidgetRef ref, GlobalUser user) {
+  void _showEditProfileDialog(
+      BuildContext context, WidgetRef ref, GlobalUser user) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -242,9 +247,9 @@ class MyInfoScreen extends ConsumerWidget {
 // 프로필 편집 다이얼로그 위젯 (StatefulWidget)
 class _ProfileEditDialog extends ConsumerStatefulWidget {
   final GlobalUser user;
-  
+
   const _ProfileEditDialog({required this.user});
-  
+
   @override
   ConsumerState<_ProfileEditDialog> createState() => _ProfileEditDialogState();
 }
@@ -255,26 +260,27 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
   final ImagePicker _picker = ImagePicker();
   bool _isLoading = false;
   bool _isImageDeleted = false; // 이미지 삭제 플래그
-  
+
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.user.name);
   }
-  
+
   @override
   void dispose() {
     _nameController.dispose();
     super.dispose();
   }
-  
+
   // 프로필 이미지가 있는지 확인하는 헬퍼 메서드
   bool get _hasProfileImage {
     if (_selectedImage != null) return true;
     if (_isImageDeleted) return false;
-    return widget.user.profileImageUrl != null && widget.user.profileImageUrl!.isNotEmpty;
+    return widget.user.profileImageUrl != null &&
+        widget.user.profileImageUrl!.isNotEmpty;
   }
-  
+
   // 이미지 선택 메소드
   Future<void> _pickImage(ImageSource source) async {
     try {
@@ -284,7 +290,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
         maxHeight: 512,
         imageQuality: 85,
       );
-      
+
       if (image != null) {
         setState(() {
           _selectedImage = File(image.path);
@@ -302,7 +308,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       }
     }
   }
-  
+
   // 이미지 선택 옵션 표시
   void _showImagePickerOptions() {
     showModalBottomSheet(
@@ -380,7 +386,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       ),
     );
   }
-  
+
   Widget _buildImageOption({
     required IconData icon,
     required String label,
@@ -415,7 +421,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       ),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -471,7 +477,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                 ],
               ),
             ),
-            
+
             // 컨텐츠
             Padding(
               padding: const EdgeInsets.all(24),
@@ -486,20 +492,23 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                           // 이미지가 있을 때만 뷰어 표시
                           if (_selectedImage != null) {
                             _showImageViewerForFile(context, _selectedImage!);
-                          } else if (!_isImageDeleted && 
-                                   widget.user.profileImageUrl != null && 
-                                   widget.user.profileImageUrl!.isNotEmpty) {
-                            _showImageViewerForUrl(context, widget.user.profileImageUrl!);
+                          } else if (!_isImageDeleted &&
+                              widget.user.profileImageUrl != null &&
+                              widget.user.profileImageUrl!.isNotEmpty) {
+                            _showImageViewerForUrl(
+                                context, widget.user.profileImageUrl!);
                           }
                         },
                         child: CircleAvatar(
                           radius: 60,
                           backgroundColor: ModernColors.primary,
                           backgroundImage: _getEditProfileImageProvider(),
-                          child: _getEditProfileImageProvider() == null ? _buildProfileAvatar() : null,
+                          child: _getEditProfileImageProvider() == null
+                              ? _buildProfileAvatar()
+                              : null,
                         ),
                       ),
-                      
+
                       // 레벨 배지 - CircleAvatar 방식
                       Positioned(
                         bottom: -2,
@@ -526,7 +535,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                           ),
                         ),
                       ),
-                      
+
                       // 카메라 버튼 (편집 버튼)
                       Positioned(
                         top: 2,
@@ -548,7 +557,8 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: ModernColors.accent.withValues(alpha: 0.4),
+                                  color: ModernColors.accent
+                                      .withValues(alpha: 0.4),
                                   blurRadius: 4,
                                   offset: const Offset(0, 1),
                                 ),
@@ -564,9 +574,9 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 닉네임 입력 필드 - 깨끗한 디자인 (테두리 없음)
                   Container(
                     decoration: BoxDecoration(
@@ -616,7 +626,10 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                         ),
                       ),
                       maxLength: 12,
-                      buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
+                      buildCounter: (context,
+                          {required currentLength,
+                          required isFocused,
+                          maxLength}) {
                         return Padding(
                           padding: const EdgeInsets.only(right: 12, top: 4),
                           child: Text(
@@ -632,9 +645,9 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                       },
                     ),
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // 정보 텍스트 - 부드러운 배경 (테두리 없음)
                   Container(
                     padding: const EdgeInsets.all(14),
@@ -677,15 +690,16 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(height: 32),
-                  
+
                   // 액션 버튼
                   Row(
                     children: [
                       Expanded(
                         child: TextButton(
-                          onPressed: _isLoading ? null : () => Navigator.pop(context),
+                          onPressed:
+                              _isLoading ? null : () => Navigator.pop(context),
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
@@ -749,23 +763,24 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       ),
     );
   }
-  
+
   // 프로필 편집 다이얼로그용 ImageProvider 반환
   ImageProvider? _getEditProfileImageProvider() {
     // 1. 새로 선택한 이미지가 있으면 표시
     if (_selectedImage != null) {
       return FileImage(_selectedImage!);
     }
-    
+
     // 2. 이미지가 삭제된 경우 null 반환
     if (_isImageDeleted) {
       return null;
     }
-    
+
     // 3. 기존 프로필 이미지가 있으면 표시
-    if (widget.user.profileImageUrl != null && widget.user.profileImageUrl!.isNotEmpty) {
+    if (widget.user.profileImageUrl != null &&
+        widget.user.profileImageUrl!.isNotEmpty) {
       // 로컬 파일 경로인지 확인
-      if (widget.user.profileImageUrl!.startsWith('/') || 
+      if (widget.user.profileImageUrl!.startsWith('/') ||
           widget.user.profileImageUrl!.contains(':\\') ||
           !widget.user.profileImageUrl!.startsWith('http')) {
         // 로컬 파일 이미지
@@ -778,10 +793,10 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
         return NetworkImage(widget.user.profileImageUrl!);
       }
     }
-    
+
     return null;
   }
-  
+
   // 프로필 편집 다이얼로그용 이미지 빌드 (구버전 - 제거 예정)
   Widget _buildEditProfileImage() {
     // 1. 새로 선택한 이미지가 있으면 표시
@@ -793,16 +808,17 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
         height: 120,
       );
     }
-    
+
     // 2. 이미지가 삭제된 경우 기본 아바타 표시
     if (_isImageDeleted) {
       return _buildProfileAvatar();
     }
-    
+
     // 3. 기존 프로필 이미지가 있으면 표시
-    if (widget.user.profileImageUrl != null && widget.user.profileImageUrl!.isNotEmpty) {
+    if (widget.user.profileImageUrl != null &&
+        widget.user.profileImageUrl!.isNotEmpty) {
       // 로컬 파일 경로인지 확인
-      if (widget.user.profileImageUrl!.startsWith('/') || 
+      if (widget.user.profileImageUrl!.startsWith('/') ||
           widget.user.profileImageUrl!.contains(':\\') ||
           !widget.user.profileImageUrl!.startsWith('http')) {
         // 로컬 파일 이미지
@@ -827,11 +843,11 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
         );
       }
     }
-    
+
     // 3. 이미지가 없으면 기본 아바타
     return _buildProfileAvatar();
   }
-  
+
   Widget _buildProfileAvatar() {
     // CircleAvatar의 child로 사용할 기본 텍스트
     return Text(
@@ -843,10 +859,10 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       ),
     );
   }
-  
+
   Future<void> _saveProfile() async {
     final newName = _nameController.text.trim();
-    
+
     if (newName.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -856,20 +872,20 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       );
       return;
     }
-    
+
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       // 현재 사용자 데이터 가져오기 (비교용)
       final currentUser = ref.read(globalUserProvider);
       final oldName = currentUser.name;
       final oldProfileUrl = currentUser.profileImageUrl;
-      
+
       // 닉네임 업데이트
       ref.read(globalUserProvider.notifier).updateUserName(newName);
-      
+
       // 프로필 이미지 업데이트
       String? finalImageUrl = oldProfileUrl;
       if (_isImageDeleted) {
@@ -882,23 +898,28 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
         // 실제 구현에서는 이미지를 서버에 업로드하고 URL을 받아와야 함
         // 현재는 로컬 파일 경로를 저장 (임시)
         print('새 프로필 이미지 설정: ${_selectedImage!.path}');
-        ref.read(globalUserProvider.notifier).updateProfileImage(_selectedImage!.path);
+        ref
+            .read(globalUserProvider.notifier)
+            .updateProfileImage(_selectedImage!.path);
         finalImageUrl = _selectedImage!.path;
       }
-      
+
       // 알림 트리거
       final notifier = ref.read(notificationProvider.notifier);
-      
+
       // 프로필 사진 변경 알림
       if (oldProfileUrl != finalImageUrl) {
-        if (finalImageUrl == null && oldProfileUrl != null && oldProfileUrl.isNotEmpty) {
+        if (finalImageUrl == null &&
+            oldProfileUrl != null &&
+            oldProfileUrl.isNotEmpty) {
           // 사진 삭제
           notifier.notifyProfileUpdate(
             ProfileUpdateType.photo,
             oldValue: '이전 프로필 사진',
             newValue: '기본 프로필',
           );
-        } else if (finalImageUrl != null && (oldProfileUrl == null || oldProfileUrl.isEmpty)) {
+        } else if (finalImageUrl != null &&
+            (oldProfileUrl == null || oldProfileUrl.isEmpty)) {
           // 사진 추가
           notifier.notifyProfileUpdate(
             ProfileUpdateType.photo,
@@ -914,7 +935,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
           );
         }
       }
-      
+
       // 닉네임 변경 알림
       if (oldName != newName) {
         notifier.notifyProfileUpdate(
@@ -923,7 +944,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
           newValue: newName,
         );
       }
-      
+
       // 성공 메시지
       if (mounted) {
         Navigator.pop(context);
@@ -961,7 +982,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       }
     }
   }
-  
+
   // ✅ 파일 이미지 뷰어 표시
   void _showImageViewerForFile(BuildContext context, File imageFile) {
     showDialog(
@@ -983,7 +1004,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                 height: double.infinity,
               ),
             ),
-            
+
             // 이미지 뷰어
             InteractiveViewer(
               panEnabled: true,
@@ -992,10 +1013,11 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
               child: Image.file(
                 imageFile,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) => _buildViewerErrorWidget(),
+                errorBuilder: (context, error, stackTrace) =>
+                    _buildViewerErrorWidget(),
               ),
             ),
-            
+
             // 닫기 버튼
             Positioned(
               top: MediaQuery.of(context).padding.top + 20,
@@ -1021,7 +1043,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       ),
     );
   }
-  
+
   // ✅ URL 이미지 뷰어 표시
   void _showImageViewerForUrl(BuildContext context, String imageUrl) {
     showDialog(
@@ -1031,7 +1053,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       builder: (context) => _ImageViewerDialog(imageUrl: imageUrl),
     );
   }
-  
+
   Widget _buildViewerErrorWidget() {
     return Container(
       padding: const EdgeInsets.all(40),
@@ -1061,9 +1083,9 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
 // ✅ 이미지 뷰어 다이얼로그 위젯
 class _ImageViewerDialog extends StatelessWidget {
   final String imageUrl;
-  
+
   const _ImageViewerDialog({required this.imageUrl});
-  
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -1081,7 +1103,7 @@ class _ImageViewerDialog extends StatelessWidget {
               height: double.infinity,
             ),
           ),
-          
+
           // 이미지 뷰어
           InteractiveViewer(
             panEnabled: true, // 패닝 활성화
@@ -1089,7 +1111,7 @@ class _ImageViewerDialog extends StatelessWidget {
             maxScale: 4.0, // 최대 스케일
             child: _buildImage(),
           ),
-          
+
           // 닫기 버튼
           Positioned(
             top: MediaQuery.of(context).padding.top + 20,
@@ -1114,10 +1136,10 @@ class _ImageViewerDialog extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildImage() {
     // 로컬 파일 경로인지 확인
-    if (imageUrl.startsWith('/') || 
+    if (imageUrl.startsWith('/') ||
         imageUrl.contains(':\\') ||
         imageUrl.startsWith('C:\\') ||
         !imageUrl.startsWith('http')) {
@@ -1152,7 +1174,7 @@ class _ImageViewerDialog extends StatelessWidget {
       );
     }
   }
-  
+
   Widget _buildErrorWidget() {
     return Container(
       padding: const EdgeInsets.all(40),

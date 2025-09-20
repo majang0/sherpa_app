@@ -6,7 +6,7 @@ import '../../core/constants/meeting_categories.dart';
 class GlobalUser {
   final String id;
   final String name;
-  final String? profileImageUrl;  // 프로필 이미지 URL 추가
+  final String? profileImageUrl; // 프로필 이미지 URL 추가
   final int level;
   final double experience;
   final GlobalStats stats;
@@ -60,7 +60,8 @@ class GlobalUser {
       equippedBadgeIds: equippedBadgeIds ?? this.equippedBadgeIds,
       ownedBadgeIds: ownedBadgeIds ?? this.ownedBadgeIds,
       dailyRecords: dailyRecords ?? this.dailyRecords,
-      currentClimbingSession: currentClimbingSession ?? this.currentClimbingSession,
+      currentClimbingSession:
+          currentClimbingSession ?? this.currentClimbingSession,
       planningData: planningData ?? this.planningData,
     );
   }
@@ -194,20 +195,20 @@ class DailyRecordData {
 
   /// 초기 상태 생성
   static DailyRecordData get initial => DailyRecordData(
-    todaySteps: 0,
-    todayFocusMinutes: 0,
-    meetingLogs: [],
-    readingLogs: [],
-    exerciseLogs: [],
-    diaryLogs: [],
-    movieLogs: [],
-    dailyGoals: DailyGoal.createDefaultGoals(),
-    climbingLogs: [],
-    challengeRecords: [], // ✅ 빈 참린지 기록 초기화
-    consecutiveDays: 0,
-    lastActiveDate: DateTime.now(),
-    allGoalsRewardClaimedDates: [], // ✅ 빈 보상 날짜 리스트 초기화
-  );
+        todaySteps: 0,
+        todayFocusMinutes: 0,
+        meetingLogs: [],
+        readingLogs: [],
+        exerciseLogs: [],
+        diaryLogs: [],
+        movieLogs: [],
+        dailyGoals: DailyGoal.createDefaultGoals(),
+        climbingLogs: [],
+        challengeRecords: [], // ✅ 빈 참린지 기록 초기화
+        consecutiveDays: 0,
+        lastActiveDate: DateTime.now(),
+        allGoalsRewardClaimedDates: [], // ✅ 빈 보상 날짜 리스트 초기화
+      );
 
   /// 오늘의 목표 완료률 계산
   double get todayCompletionRate {
@@ -270,7 +271,9 @@ class DailyRecordData {
   /// 오늘의 등반 기록
   List<ClimbingRecord> get todayClimbingLogs {
     final today = DateTime.now();
-    return climbingLogs.where((log) => _isSameDay(log.startTime, today)).toList();
+    return climbingLogs
+        .where((log) => _isSameDay(log.startTime, today))
+        .toList();
   }
 
   bool _isSameDay(DateTime date1, DateTime date2) {
@@ -306,12 +309,15 @@ class DailyRecordData {
       movieLogs: movieLogs ?? this.movieLogs,
       dailyGoals: dailyGoals ?? this.dailyGoals,
       climbingLogs: climbingLogs ?? this.climbingLogs,
-      challengeRecords: challengeRecords ?? this.challengeRecords, // ✅ 참린지 기록 추가
+      challengeRecords:
+          challengeRecords ?? this.challengeRecords, // ✅ 참린지 기록 추가
       consecutiveDays: consecutiveDays ?? this.consecutiveDays,
       lastActiveDate: lastActiveDate ?? this.lastActiveDate,
       isAllGoalsCompleted: isAllGoalsCompleted ?? this.isAllGoalsCompleted,
-      isAllGoalsRewardClaimed: isAllGoalsRewardClaimed ?? this.isAllGoalsRewardClaimed,
-      allGoalsRewardClaimedDates: allGoalsRewardClaimedDates ?? this.allGoalsRewardClaimedDates, // ✅ 전체 클리어 보상 받은 날짜들 추가
+      isAllGoalsRewardClaimed:
+          isAllGoalsRewardClaimed ?? this.isAllGoalsRewardClaimed,
+      allGoalsRewardClaimedDates: allGoalsRewardClaimedDates ??
+          this.allGoalsRewardClaimedDates, // ✅ 전체 클리어 보상 받은 날짜들 추가
     );
   }
 
@@ -326,12 +332,16 @@ class DailyRecordData {
       'movieLogs': movieLogs.map((log) => log.toJson()).toList(),
       'dailyGoals': dailyGoals.map((goal) => goal.toJson()).toList(),
       'climbingLogs': climbingLogs.map((log) => log.toJson()).toList(),
-      'challengeRecords': challengeRecords.map((record) => record.toJson()).toList(), // ✅ 참린지 기록 추가
+      'challengeRecords': challengeRecords
+          .map((record) => record.toJson())
+          .toList(), // ✅ 참린지 기록 추가
       'consecutiveDays': consecutiveDays,
       'lastActiveDate': lastActiveDate.toIso8601String(),
       'isAllGoalsCompleted': isAllGoalsCompleted,
       'isAllGoalsRewardClaimed': isAllGoalsRewardClaimed,
-      'allGoalsRewardClaimedDates': allGoalsRewardClaimedDates.map((date) => date.toIso8601String()).toList(), // ✅ 전체 클리어 보상 받은 날짜들 추가
+      'allGoalsRewardClaimedDates': allGoalsRewardClaimedDates
+          .map((date) => date.toIso8601String())
+          .toList(), // ✅ 전체 클리어 보상 받은 날짜들 추가
     };
   }
 
@@ -340,36 +350,48 @@ class DailyRecordData {
       todaySteps: json['todaySteps'] ?? 0,
       todayFocusMinutes: json['todayFocusMinutes'] ?? 0,
       meetingLogs: (json['meetingLogs'] as List?)
-          ?.map((item) => MeetingLog.fromJson(item))
-          .toList() ?? [],
+              ?.map((item) => MeetingLog.fromJson(item))
+              .toList() ??
+          [],
       readingLogs: (json['readingLogs'] as List?)
-          ?.map((item) => ReadingLog.fromJson(item))
-          .toList() ?? [],
+              ?.map((item) => ReadingLog.fromJson(item))
+              .toList() ??
+          [],
       exerciseLogs: (json['exerciseLogs'] as List?)
-          ?.map((item) => ExerciseLog.fromJson(item))
-          .toList() ?? [],
+              ?.map((item) => ExerciseLog.fromJson(item))
+              .toList() ??
+          [],
       diaryLogs: (json['diaryLogs'] as List?)
-          ?.map((item) => DiaryLog.fromJson(item))
-          .toList() ?? [],
+              ?.map((item) => DiaryLog.fromJson(item))
+              .toList() ??
+          [],
       movieLogs: (json['movieLogs'] as List?)
-          ?.map((item) => MovieLog.fromJson(item))
-          .toList() ?? [],
+              ?.map((item) => MovieLog.fromJson(item))
+              .toList() ??
+          [],
       dailyGoals: (json['dailyGoals'] as List?)
-          ?.map((item) => DailyGoal.fromJson(item))
-          .toList() ?? DailyGoal.createDefaultGoals(),
+              ?.map((item) => DailyGoal.fromJson(item))
+              .toList() ??
+          DailyGoal.createDefaultGoals(),
       climbingLogs: (json['climbingLogs'] as List?)
-          ?.map((item) => ClimbingRecord.fromJson(item))
-          .toList() ?? [],
+              ?.map((item) => ClimbingRecord.fromJson(item))
+              .toList() ??
+          [],
       challengeRecords: (json['challengeRecords'] as List?) // ✅ 참린지 기록 추가
-          ?.map((item) => ChallengeRecord.fromJson(item))
-          .toList() ?? [],
+              ?.map((item) => ChallengeRecord.fromJson(item))
+              .toList() ??
+          [],
       consecutiveDays: json['consecutiveDays'] ?? 0,
-      lastActiveDate: DateTime.tryParse(json['lastActiveDate'] ?? '') ?? DateTime.now(),
+      lastActiveDate:
+          DateTime.tryParse(json['lastActiveDate'] ?? '') ?? DateTime.now(),
       isAllGoalsCompleted: json['isAllGoalsCompleted'] ?? false,
       isAllGoalsRewardClaimed: json['isAllGoalsRewardClaimed'] ?? false,
-      allGoalsRewardClaimedDates: (json['allGoalsRewardClaimedDates'] as List?) // ✅ 전체 클리어 보상 받은 날짜들 추가
-          ?.map((dateString) => DateTime.tryParse(dateString) ?? DateTime.now())
-          .toList() ?? [],
+      allGoalsRewardClaimedDates:
+          (json['allGoalsRewardClaimedDates'] as List?) // ✅ 전체 클리어 보상 받은 날짜들 추가
+                  ?.map((dateString) =>
+                      DateTime.tryParse(dateString) ?? DateTime.now())
+                  .toList() ??
+              [],
     );
   }
 }
@@ -418,16 +440,26 @@ class MeetingLog {
 
   String get moodIcon {
     switch (mood) {
-      case 'excited': return '🥰';      // 설레요
-      case 'happy': return '😄';        // 기뻐요
-      case 'good': return '😊';         // 좋아요
-      case 'normal': return '😐';       // 보통이에요
-      case 'thoughtful': return '🤔';   // 생각이 많아요
-      case 'tired': return '😴';        // 피곤해요
-      case 'sad': return '😢';          // 슬퍼요
-      case 'angry': return '😠';        // 화나요
-      case 'stressed': return '😰';     // 스트레스(레거시 호환)
-      default: return '😊';
+      case 'excited':
+        return '🥰'; // 설레요
+      case 'happy':
+        return '😄'; // 기뻐요
+      case 'good':
+        return '😊'; // 좋아요
+      case 'normal':
+        return '😐'; // 보통이에요
+      case 'thoughtful':
+        return '🤔'; // 생각이 많아요
+      case 'tired':
+        return '😴'; // 피곤해요
+      case 'sad':
+        return '😢'; // 슬퍼요
+      case 'angry':
+        return '😠'; // 화나요
+      case 'stressed':
+        return '😰'; // 스트레스(레거시 호환)
+      default:
+        return '😊';
     }
   }
 
@@ -493,66 +525,108 @@ class ReadingLog {
   /// 분야별 색상
   Color get categoryColor {
     switch (category) {
-      case '소설': return const Color(0xFF6366F1);
-      case '자기계발': return const Color(0xFF10B981);
-      case '경영': return const Color(0xFFF59E0B);
-      case '비즈니스': return const Color(0xFFF59E0B); // 경영과 동일하게 처리
-      case '역사': return const Color(0xFFEF4444);
-      case '과학': return const Color(0xFF8B5CF6);
-      case '예술': return const Color(0xFFEC4899);
-      case '철학': return const Color(0xFF3B82F6);
-      case '종교': return const Color(0xFF059669);
-      case '요리': return const Color(0xFFF97316);
-      case '여행': return const Color(0xFF06B6D4);
-      case 'IT': return const Color(0xFF3B82F6);
-      case '에세이': return const Color(0xFFF59E0B);
-      default: return const Color(0xFF6B7280);
+      case '소설':
+        return const Color(0xFF6366F1);
+      case '자기계발':
+        return const Color(0xFF10B981);
+      case '경영':
+        return const Color(0xFFF59E0B);
+      case '비즈니스':
+        return const Color(0xFFF59E0B); // 경영과 동일하게 처리
+      case '역사':
+        return const Color(0xFFEF4444);
+      case '과학':
+        return const Color(0xFF8B5CF6);
+      case '예술':
+        return const Color(0xFFEC4899);
+      case '철학':
+        return const Color(0xFF3B82F6);
+      case '종교':
+        return const Color(0xFF059669);
+      case '요리':
+        return const Color(0xFFF97316);
+      case '여행':
+        return const Color(0xFF06B6D4);
+      case 'IT':
+        return const Color(0xFF3B82F6);
+      case '에세이':
+        return const Color(0xFFF59E0B);
+      default:
+        return const Color(0xFF6B7280);
     }
   }
 
   /// 분야별 이모지
   String get categoryEmoji {
     switch (category) {
-      case '소설': return '📚';
-      case '자기계발': return '💡';
-      case '경영': return '💼';
-      case '비즈니스': return '💼'; // 경영과 동일하게 처리
-      case '역사': return '📜';
-      case '과학': return '🔬';
-      case '예술': return '🎨';
-      case '철학': return '🤔';
-      case '종교': return '🙏';
-      case '요리': return '👨‍🍳';
-      case '여행': return '✈️';
-      case 'IT': return '💻';
-      case '에세이': return '✍️';
-      default: return '📖';
+      case '소설':
+        return '📚';
+      case '자기계발':
+        return '💡';
+      case '경영':
+        return '💼';
+      case '비즈니스':
+        return '💼'; // 경영과 동일하게 처리
+      case '역사':
+        return '📜';
+      case '과학':
+        return '🔬';
+      case '예술':
+        return '🎨';
+      case '철학':
+        return '🤔';
+      case '종교':
+        return '🙏';
+      case '요리':
+        return '👨‍🍳';
+      case '여행':
+        return '✈️';
+      case 'IT':
+        return '💻';
+      case '에세이':
+        return '✍️';
+      default:
+        return '📖';
     }
   }
 
   /// 기분별 이모지
   String get moodEmoji {
     switch (mood) {
-      case 'happy': return '😊';
-      case 'excited': return '🤗';
-      case 'thoughtful': return '🤔';
-      case 'moved': return '🥺';
-      case 'surprised': return '😮';
-      case 'calm': return '😌';
-      default: return '😊';
+      case 'happy':
+        return '😊';
+      case 'excited':
+        return '🤗';
+      case 'thoughtful':
+        return '🤔';
+      case 'moved':
+        return '🥺';
+      case 'surprised':
+        return '😮';
+      case 'calm':
+        return '😌';
+      default:
+        return '😊';
     }
   }
 
   /// 기분별 텍스트
   String get moodText {
     switch (mood) {
-      case 'happy': return '기뻤어요';
-      case 'excited': return '설렜어요';
-      case 'thoughtful': return '생각이 많아졌어요';
-      case 'moved': return '감동적이었어요';
-      case 'surprised': return '놀라웠어요';
-      case 'calm': return '편안했어요';
-      default: return '기뻤어요';
+      case 'happy':
+        return '기뻤어요';
+      case 'excited':
+        return '설렜어요';
+      case 'thoughtful':
+        return '생각이 많아졌어요';
+      case 'moved':
+        return '감동적이었어요';
+      case 'surprised':
+        return '놀라웠어요';
+      case 'calm':
+        return '편안했어요';
+      default:
+        return '기뻤어요';
     }
   }
 
@@ -594,7 +668,7 @@ class ExerciseLog {
   final String exerciseType;
   final int durationMinutes;
   final String intensity;
-  final int? calories;  // 칼로리 필드 추가
+  final int? calories; // 칼로리 필드 추가
   final String? note;
   final String? imageUrl;
   final bool isShared;
@@ -670,30 +744,48 @@ class DiaryLog {
   /// 기분 이모지 가져오기 (diary_write_edit_screen.dart 키 시스템 기준)
   String get moodEmoji {
     switch (mood) {
-      case 'excited': return '🥰';    // 설레요
-      case 'happy': return '😄';      // 기뻐요
-      case 'good': return '😊';       // 좋아요
-      case 'normal': return '😐';     // 보통이에요
-      case 'thoughtful': return '🤔'; // 생각이 많아요
-      case 'tired': return '😴';      // 피곤해요
-      case 'sad': return '😢';        // 슬퍼요
-      case 'angry': return '😠';      // 화나요
-      default: return '😊';
+      case 'excited':
+        return '🥰'; // 설레요
+      case 'happy':
+        return '😄'; // 기뻐요
+      case 'good':
+        return '😊'; // 좋아요
+      case 'normal':
+        return '😐'; // 보통이에요
+      case 'thoughtful':
+        return '🤔'; // 생각이 많아요
+      case 'tired':
+        return '😴'; // 피곤해요
+      case 'sad':
+        return '😢'; // 슬퍼요
+      case 'angry':
+        return '😠'; // 화나요
+      default:
+        return '😊';
     }
   }
 
   /// 기분 텍스트 가져오기 (diary_write_edit_screen.dart 키 시스템 기준)
   String get moodText {
     switch (mood) {
-      case 'excited': return '설레요';
-      case 'happy': return '기뻐요';
-      case 'good': return '좋아요';
-      case 'normal': return '보통이에요';
-      case 'thoughtful': return '생각이 많아요';
-      case 'tired': return '피곤해요';
-      case 'sad': return '슬퍼요';
-      case 'angry': return '화나요';
-      default: return '보통이에요';
+      case 'excited':
+        return '설레요';
+      case 'happy':
+        return '기뻐요';
+      case 'good':
+        return '좋아요';
+      case 'normal':
+        return '보통이에요';
+      case 'thoughtful':
+        return '생각이 많아요';
+      case 'tired':
+        return '피곤해요';
+      case 'sad':
+        return '슬퍼요';
+      case 'angry':
+        return '화나요';
+      default:
+        return '보통이에요';
     }
   }
 
@@ -784,17 +876,28 @@ class MovieLog {
   /// 장르별 이모지
   String get genreEmoji {
     switch (genre.toLowerCase()) {
-      case '액션': return '🎬';
-      case '코미디': return '😂';
-      case '로맨스': return '💕';
-      case '스릴러': return '😱';
-      case 'sf': return '🚀';
-      case '드라마': return '🎭';
-      case '판타지': return '🧙‍♂️';
-      case '애니메이션': return '🎨';
-      case '다큐멘터리': return '📽️';
-      case '공포': return '👻';
-      default: return '🎬';
+      case '액션':
+        return '🎬';
+      case '코미디':
+        return '😂';
+      case '로맨스':
+        return '💕';
+      case '스릴러':
+        return '😱';
+      case 'sf':
+        return '🚀';
+      case '드라마':
+        return '🎭';
+      case '판타지':
+        return '🧙‍♂️';
+      case '애니메이션':
+        return '🎨';
+      case '다큐멘터리':
+        return '📽️';
+      case '공포':
+        return '👻';
+      default:
+        return '🎬';
     }
   }
 
@@ -1005,7 +1108,8 @@ class ClimbingSession {
 
   /// 등반 예상 완료 시간
   DateTime get expectedEndTime {
-    return startTime.add(Duration(milliseconds: (durationHours * 3600 * 1000).round()));
+    return startTime
+        .add(Duration(milliseconds: (durationHours * 3600 * 1000).round()));
   }
 
   /// 등반 진행률 (0.0 ~ 1.0)
@@ -1092,7 +1196,7 @@ class ClimbingSession {
       successProbability: (json['successProbability'] ?? 0).toDouble(),
       isActive: json['isActive'] ?? false,
       status: ClimbingSessionStatus.values.firstWhere(
-            (e) => e.name == json['status'],
+        (e) => e.name == json['status'],
         orElse: () => ClimbingSessionStatus.pending,
       ),
       userPower: (json['userPower'] ?? 0).toDouble(),
@@ -1104,11 +1208,11 @@ class ClimbingSession {
 
 /// 등반 세션 상태
 enum ClimbingSessionStatus {
-  pending,    // 대기 중
-  active,     // 등반 중
-  completed,  // 성공 완료
-  failed,     // 실패
-  cancelled,  // 취소됨
+  pending, // 대기 중
+  active, // 등반 중
+  completed, // 성공 완료
+  failed, // 실패
+  cancelled, // 취소됨
 }
 
 /// 등반 완료 기록
@@ -1250,7 +1354,9 @@ class ClimbingRewards {
     if (experience > 0) parts.add('경험치 +${experience.toInt()}');
     if (points > 0) parts.add('포인트 +$points');
     if (statIncreases.isNotEmpty) {
-      final statTexts = statIncreases.entries.map((e) => '${_getStatName(e.key)} +${e.value.toStringAsFixed(1)}').toList();
+      final statTexts = statIncreases.entries
+          .map((e) => '${_getStatName(e.key)} +${e.value.toStringAsFixed(1)}')
+          .toList();
       parts.addAll(statTexts);
     }
     if (newBadgeIds.isNotEmpty) parts.add('새 뱃지 ${newBadgeIds.length}개');
@@ -1261,12 +1367,18 @@ class ClimbingRewards {
 
   String _getStatName(String statKey) {
     switch (statKey) {
-      case 'stamina': return '체력';
-      case 'knowledge': return '지식';
-      case 'technique': return '기술';
-      case 'sociality': return '사교성';
-      case 'willpower': return '의지';
-      default: return statKey;
+      case 'stamina':
+        return '체력';
+      case 'knowledge':
+        return '지식';
+      case 'technique':
+        return '기술';
+      case 'sociality':
+        return '사교성';
+      case 'willpower':
+        return '의지';
+      default:
+        return statKey;
     }
   }
 
@@ -1333,14 +1445,17 @@ class ClimbingStatistics {
     final successfulAttempts = records.where((r) => r.isSuccess).length;
     final successRate = successfulAttempts / totalAttempts;
 
-    final totalExperience = records.fold<double>(0, (sum, r) => sum + r.rewards.experience);
-    final totalPoints = records.fold<int>(0, (sum, r) => sum + r.rewards.points);
+    final totalExperience =
+        records.fold<double>(0, (sum, r) => sum + r.rewards.experience);
+    final totalPoints =
+        records.fold<int>(0, (sum, r) => sum + r.rewards.points);
 
     // 지역별 진행도
     final regionProgress = <String, int>{};
     for (final record in records) {
       if (record.isSuccess) {
-        regionProgress[record.region] = (regionProgress[record.region] ?? 0) + 1;
+        regionProgress[record.region] =
+            (regionProgress[record.region] ?? 0) + 1;
       }
     }
 
@@ -1349,7 +1464,8 @@ class ClimbingStatistics {
       ..sort((a, b) => b.startTime.compareTo(a.startTime));
 
     final lastRecord = sortedRecords.first;
-    final bestRecord = records.where((r) => r.isSuccess)
+    final bestRecord = records
+        .where((r) => r.isSuccess)
         .fold<ClimbingRecord?>(null, (best, current) {
       if (best == null) return current;
       return current.difficulty > best.difficulty ? current : best;
@@ -1428,12 +1544,18 @@ class ChallengeRecord {
   /// 카테고리에 따른 색상
   Color get categoryColor {
     switch (category) {
-      case 'fitness': return const Color(0xFFEF4444); // 빨강
-      case 'study': return const Color(0xFF3B82F6); // 파랑
-      case 'habit': return const Color(0xFF10B981); // 초록
-      case 'mindfulness': return const Color(0xFF8B5CF6); // 보라
-      case 'creativity': return const Color(0xFFF59E0B); // 노랑
-      default: return const Color(0xFF6B7280); // 회색
+      case 'fitness':
+        return const Color(0xFFEF4444); // 빨강
+      case 'study':
+        return const Color(0xFF3B82F6); // 파랑
+      case 'habit':
+        return const Color(0xFF10B981); // 초록
+      case 'mindfulness':
+        return const Color(0xFF8B5CF6); // 보라
+      case 'creativity':
+        return const Color(0xFFF59E0B); // 노랑
+      default:
+        return const Color(0xFF6B7280); // 회색
     }
   }
 
@@ -1471,7 +1593,8 @@ class ChallengeRecord {
       category: json['category'] ?? '',
       duration: json['duration'] ?? 0,
       startDate: DateTime.tryParse(json['startDate'] ?? '') ?? DateTime.now(),
-      endDate: json['endDate'] != null ? DateTime.tryParse(json['endDate']) : null,
+      endDate:
+          json['endDate'] != null ? DateTime.tryParse(json['endDate']) : null,
       isCompleted: json['isCompleted'] ?? false,
       progressDays: json['progressDays'] ?? 0,
       completionRate: (json['completionRate'] ?? 0).toDouble(),
@@ -1513,7 +1636,9 @@ class ChallengeRewards {
     if (experience > 0) parts.add('경험치 +${experience.toInt()}');
     if (points > 0) parts.add('포인트 +$points');
     if (statIncreases.isNotEmpty) {
-      final statTexts = statIncreases.entries.map((e) => '${_getStatName(e.key)} +${e.value.toStringAsFixed(1)}').toList();
+      final statTexts = statIncreases.entries
+          .map((e) => '${_getStatName(e.key)} +${e.value.toStringAsFixed(1)}')
+          .toList();
       parts.addAll(statTexts);
     }
     if (newBadgeIds.isNotEmpty) parts.add('새 배지 ${newBadgeIds.length}개');
@@ -1524,12 +1649,18 @@ class ChallengeRewards {
 
   String _getStatName(String statKey) {
     switch (statKey) {
-      case 'stamina': return '체력';
-      case 'knowledge': return '지식';
-      case 'technique': return '기술';
-      case 'sociality': return '사교성';
-      case 'willpower': return '의지';
-      default: return statKey;
+      case 'stamina':
+        return '체력';
+      case 'knowledge':
+        return '지식';
+      case 'technique':
+        return '기술';
+      case 'sociality':
+        return '사교성';
+      case 'willpower':
+        return '의지';
+      default:
+        return statKey;
     }
   }
 
@@ -1613,11 +1744,13 @@ class UserPlanningData {
   factory UserPlanningData.fromJson(Map<String, dynamic> json) {
     return UserPlanningData(
       goals: (json['goals'] as List<dynamic>?)
-          ?.map((g) => UserGoal.fromJson(g))
-          .toList() ?? [],
+              ?.map((g) => UserGoal.fromJson(g))
+              .toList() ??
+          [],
       completedGoals: (json['completedGoals'] as List<dynamic>?)
-          ?.map((g) => UserGoal.fromJson(g))
-          .toList() ?? [],
+              ?.map((g) => UserGoal.fromJson(g))
+              .toList() ??
+          [],
       lastPlanningDate: json['lastPlanningDate'] != null
           ? DateTime.parse(json['lastPlanningDate'])
           : null,
@@ -1757,7 +1890,7 @@ class TodayActivityRecord {
   final MovieLog? movieLog;
   final int stepCount;
   final int focusMinutes;
-  
+
   const TodayActivityRecord({
     this.exerciseLog,
     this.readingLog,
@@ -1767,11 +1900,11 @@ class TodayActivityRecord {
     this.stepCount = 0,
     this.focusMinutes = 0,
   });
-  
+
   /// 칼로리 계산 (운동 기록이 있을 때)
   int get caloriesBurned {
     if (exerciseLog == null) return 0;
-    
+
     final caloriesPerMinute = switch (exerciseLog!.intensity) {
       '낮음' => 3,
       '중간' => 5,
@@ -1780,10 +1913,10 @@ class TodayActivityRecord {
     };
     return exerciseLog!.durationMinutes * caloriesPerMinute;
   }
-  
+
   /// 독서 페이지 수 (호환성을 위한 별칭)
   int get pagesRead => readingLog?.pages ?? 0;
-  
+
   /// 독서 전체 페이지 수 (가정값)
   int get totalPages => 300; // 기본값
 }
@@ -1793,14 +1926,14 @@ extension GlobalUserExtensions on GlobalUser {
   /// 오늘의 활동 기록 가져오기
   TodayActivityRecord? get todayRecord {
     final today = DateTime.now();
-    
+
     // 오늘 날짜와 같은 기록들 찾기
     ExerciseLog? todayExercise;
     ReadingLog? todayReading;
     DiaryLog? todayDiary;
     MeetingLog? todayMeeting;
     MovieLog? todayMovie;
-    
+
     // 운동 기록 찾기
     for (final log in dailyRecords.exerciseLogs) {
       if (_isSameDay(log.date, today)) {
@@ -1808,7 +1941,7 @@ extension GlobalUserExtensions on GlobalUser {
         break;
       }
     }
-    
+
     // 독서 기록 찾기
     for (final log in dailyRecords.readingLogs) {
       if (_isSameDay(log.date, today)) {
@@ -1816,7 +1949,7 @@ extension GlobalUserExtensions on GlobalUser {
         break;
       }
     }
-    
+
     // 일기 기록 찾기
     for (final log in dailyRecords.diaryLogs) {
       if (_isSameDay(log.date, today)) {
@@ -1824,7 +1957,7 @@ extension GlobalUserExtensions on GlobalUser {
         break;
       }
     }
-    
+
     // 모임 기록 찾기
     for (final log in dailyRecords.meetingLogs) {
       if (_isSameDay(log.date, today)) {
@@ -1832,7 +1965,7 @@ extension GlobalUserExtensions on GlobalUser {
         break;
       }
     }
-    
+
     // 영화 기록 찾기
     for (final log in dailyRecords.movieLogs) {
       if (_isSameDay(log.date, today)) {
@@ -1840,10 +1973,13 @@ extension GlobalUserExtensions on GlobalUser {
         break;
       }
     }
-    
+
     // 하나라도 있으면 TodayActivityRecord 반환
-    if (todayExercise != null || todayReading != null || todayDiary != null || 
-        todayMeeting != null || todayMovie != null) {
+    if (todayExercise != null ||
+        todayReading != null ||
+        todayDiary != null ||
+        todayMeeting != null ||
+        todayMovie != null) {
       return TodayActivityRecord(
         exerciseLog: todayExercise,
         readingLog: todayReading,
@@ -1854,14 +1990,14 @@ extension GlobalUserExtensions on GlobalUser {
         focusMinutes: dailyRecords.todayFocusMinutes,
       );
     }
-    
+
     return null;
   }
-  
+
   /// 날짜 비교 헬퍼 메서드
   bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
-           date1.month == date2.month &&
-           date1.day == date2.day;
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 }

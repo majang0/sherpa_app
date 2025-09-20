@@ -13,77 +13,77 @@ class ExerciseAnalysisPage extends StatefulWidget {
   final Map<String, dynamic>? todayData;
   final Map<String, dynamic>? previousData;
   final String userName;
-  
+
   const ExerciseAnalysisPage({
     super.key,
     this.todayData,
     this.previousData,
     required this.userName,
   });
-  
+
   @override
   State<ExerciseAnalysisPage> createState() => _ExerciseAnalysisPageState();
 }
 
-class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage> 
+class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     with TickerProviderStateMixin {
   // 토글 상태 (true: 시간/강도, false: 칼로리)
   bool _showTimeIntensity = true;
-  
+
   // AI 분석 데이터
-  final ActivityAnalysisService _analysisService = ActivityAnalysisService.instance;
+  final ActivityAnalysisService _analysisService =
+      ActivityAnalysisService.instance;
   ComprehensiveExerciseAnalysis? _analysisData;
   bool _isLoading = true;
-  
+
   // 애니메이션 컨트롤러
   late AnimationController _badgeAnimationController;
   late AnimationController _pulseController;
   late AnimationController _cardAnimationController;
   late AnimationController _pageAnimationController;
   late AnimationController _floatingAnimationController;
-  
+
   // 애니메이션들
   late Animation<double> _fadeInAnimation;
   late Animation<double> _floatingAnimation;
-  
-  
+
   // ModernColors.exercise를 사용 (이제 주황색으로 변경됨)
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     _badgeAnimationController = AnimationController(
       duration: const Duration(milliseconds: 500),
       vsync: this,
     );
-    
+
     _pulseController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     _cardAnimationController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    
+
     _pageAnimationController = AnimationController(
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
-    
+
     _floatingAnimationController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     // 애니메이션 곡선 설정
     _fadeInAnimation = CurvedAnimation(
       parent: _pageAnimationController,
       curve: Curves.easeInOut,
     );
-    
+
     _floatingAnimation = Tween<double>(
       begin: -10,
       end: 10,
@@ -91,25 +91,26 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       parent: _floatingAnimationController,
       curve: Curves.easeInOut,
     ));
-    
+
     // 페이지 애니메이션 시작
     _pageAnimationController.forward();
-    
+
     // AI 분석 데이터 로드
     _loadAnalysisData();
   }
-  
+
   /// AI 분석 데이터 로드
   Future<void> _loadAnalysisData() async {
     if (widget.todayData == null) {
       setState(() => _isLoading = false);
       return;
     }
-    
+
     try {
       // 먼저 캐시 확인 (즉시 반환됨)
-      final cachedAnalysis = await _analysisService.getComprehensiveExerciseFromCache();
-      
+      final cachedAnalysis =
+          await _analysisService.getComprehensiveExerciseFromCache();
+
       if (cachedAnalysis != null) {
         // 캐시가 있으면 즉시 표시 (로딩 없음)
         if (mounted) {
@@ -121,7 +122,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         print('💾 캐시에서 종합 운동 분석 즉시 로드 완료');
         return;
       }
-      
+
       // 캐시가 없는 경우에만 생성 (보통 발생하지 않음 - 운동 완료 시 이미 생성됨)
       print('⚠️ 캐시 없음 - 운동 분석 새로 생성 중...');
       final analysis = await _analysisService.analyzeExerciseComprehensive(
@@ -129,7 +130,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         previousExercise: widget.previousData,
         userName: widget.userName,
       );
-      
+
       if (mounted) {
         setState(() {
           _analysisData = analysis;
@@ -143,7 +144,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       }
     }
   }
-  
+
   @override
   void dispose() {
     _badgeAnimationController.dispose();
@@ -153,11 +154,11 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     _floatingAnimationController.dispose();
     super.dispose();
   }
-  
+
   // 운동 타입에 따른 이모지 반환 - ExerciseSelectionScreen과 동일한 시스템
   String _getExerciseEmoji(String? type) {
     if (type == null) return '💪';
-    
+
     // 실제 운동 선택 화면과 동일한 이모지 매핑
     switch (type) {
       case '헬스':
@@ -190,12 +191,12 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         return '💪';
     } // 기본값
   }
-  
+
   // 강도에 따른 색상 반환 (주황색 테마)
   Color _getIntensityColor(String? intensity) {
     switch (intensity) {
       case '낮음':
-        return ModernColors.warning;  // 경고 색상
+        return ModernColors.warning; // 경고 색상
       case '중간':
         return ModernColors.exercise;
       case '높음':
@@ -206,7 +207,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         return ModernColors.exercise;
     }
   }
-  
+
   // 강도 레벨 반환 (1-4)
   int _getIntensityLevel(String? intensity) {
     switch (intensity) {
@@ -222,7 +223,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         return 2;
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (widget.todayData == null) {
@@ -231,7 +232,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         body: _buildNoDataState(),
       );
     }
-    
+
     return Scaffold(
       backgroundColor: ModernColors.background,
       body: CustomScrollView(
@@ -241,7 +242,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           SliverToBoxAdapter(
             child: _buildHeader(),
           ),
-          
+
           // 컨텐츠
           SliverToBoxAdapter(
             child: Padding(
@@ -251,27 +252,27 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 children: [
                   // 1-2. 시각적 배지 섹션
                   _buildBadgeSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // 3. 비교 분석 섹션 (리디자인)
                   _buildModernComparisonSection(),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 4. 오늘 운동의 장점 (리디자인)
                   _buildModernBenefitsSection(),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 5. 셰르피의 추천 (리디자인)
                   _buildModernRecommendationSection(),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // 6. 응원의 말 (리디자인)
                   _buildModernEncouragementSection(),
-                  
+
                   const SizedBox(height: 100),
                 ],
               ),
@@ -281,7 +282,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       ),
     );
   }
-  
+
   /// 헤더
   Widget _buildHeader() {
     return Container(
@@ -306,7 +307,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               ),
             ),
           ),
-          
+
           // 콘텐츠
           SafeArea(
             child: Padding(
@@ -315,7 +316,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Spacer(),
-                  
+
                   // 타이틀
                   FadeTransition(
                     opacity: _fadeInAnimation,
@@ -335,9 +336,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                             );
                           },
                         ),
-                        
+
                         const SizedBox(width: 16),
-                        
+
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -372,7 +373,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       ),
     ).animate().fadeIn(duration: const Duration(milliseconds: 800));
   }
-  
+
   /// 시각적 배지 섹션
   Widget _buildBadgeSection() {
     return Column(
@@ -387,7 +388,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           ),
           const SizedBox(height: 16),
         ],
-        
+
         // 오늘의 운동 배지
         _buildExerciseBadge(
           title: '오늘의 운동',
@@ -398,7 +399,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       ],
     );
   }
-  
+
   /// 개별 운동 배지 (주황색 테마 적용)
   Widget _buildExerciseBadge({
     required String title,
@@ -411,16 +412,16 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     final calories = data['calories'] as int? ?? 0;
     final intensity = data['intensity'] as String?;
     final date = data['date'] as DateTime?;
-    
+
     return GestureDetector(
       onTap: () {
         // 햅틱 피드백
         HapticFeedback.lightImpact();
-        
+
         setState(() {
           _showTimeIntensity = !_showTimeIntensity;
         });
-        
+
         // 애니메이션 재생
         _badgeAnimationController.forward(from: 0);
       },
@@ -428,17 +429,17 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         animation: _badgeAnimationController,
         builder: (context, child) {
           final scale = 1.0 + (_badgeAnimationController.value * 0.05);
-          
+
           return Transform.scale(
             scale: scale,
             child: Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: isToday 
+                color: isToday
                     ? ModernColors.exercise
                     : ModernColors.surfaceElevated,
                 borderRadius: BorderRadius.circular(20),
-                border: isToday 
+                border: isToday
                     ? null
                     : Border.all(
                         color: ModernColors.border,
@@ -446,7 +447,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                       ),
                 boxShadow: [
                   BoxShadow(
-                    color: isToday 
+                    color: isToday
                         ? ModernColors.exercise.withOpacity(0.3)
                         : ModernColors.border.withOpacity(0.3),
                     blurRadius: 15,
@@ -465,7 +466,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: isToday ? Colors.white : ModernColors.textPrimary,
+                          color:
+                              isToday ? Colors.white : ModernColors.textPrimary,
                         ),
                       ),
                       if (date != null)
@@ -474,16 +476,16 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: isToday 
+                            color: isToday
                                 ? Colors.white.withOpacity(0.8)
                                 : ModernColors.textSecondary,
                           ),
                         ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // 메인 컨텐츠
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
@@ -500,9 +502,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                             isToday: isToday,
                           ),
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // 탭 인디케이터
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -510,7 +512,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                       Icon(
                         Icons.touch_app_rounded,
                         size: 16,
-                        color: isToday 
+                        color: isToday
                             ? Colors.white.withOpacity(0.6)
                             : ModernColors.textTertiary,
                       ),
@@ -520,7 +522,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                         style: GoogleFonts.notoSans(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: isToday 
+                          color: isToday
                               ? Colors.white.withOpacity(0.6)
                               : ModernColors.textTertiary,
                         ),
@@ -533,20 +535,21 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           );
         },
       ),
-    ).animate()
-      .slideY(
-        begin: 0.2,
-        end: 0,
-        duration: 600.ms,
-        delay: delay.ms,
-        curve: Curves.easeOutBack,
-      )
-      .fadeIn(
-        duration: 600.ms,
-        delay: delay.ms,
-      );
+    )
+        .animate()
+        .slideY(
+          begin: 0.2,
+          end: 0,
+          duration: 600.ms,
+          delay: delay.ms,
+          curve: Curves.easeOutBack,
+        )
+        .fadeIn(
+          duration: 600.ms,
+          delay: delay.ms,
+        );
   }
-  
+
   /// 시간/강도 뷰
   Widget _buildTimeIntensityView({
     required String? exerciseType,
@@ -576,16 +579,14 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             ),
           ],
         ),
-        
+
         // 구분선
         Container(
           width: 1,
           height: 50,
-          color: isToday 
-              ? Colors.white.withOpacity(0.3)
-              : ModernColors.border,
+          color: isToday ? Colors.white.withOpacity(0.3) : ModernColors.border,
         ),
-        
+
         // 시간
         Column(
           children: [
@@ -608,7 +609,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: isToday 
+                      color: isToday
                           ? Colors.white.withOpacity(0.8)
                           : ModernColors.textSecondary,
                     ),
@@ -622,23 +623,21 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               style: GoogleFonts.notoSans(
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
-                color: isToday 
+                color: isToday
                     ? Colors.white.withOpacity(0.8)
                     : ModernColors.textSecondary,
               ),
             ),
           ],
         ),
-        
+
         // 구분선
         Container(
           width: 1,
           height: 50,
-          color: isToday 
-              ? Colors.white.withOpacity(0.3)
-              : ModernColors.border,
+          color: isToday ? Colors.white.withOpacity(0.3) : ModernColors.border,
         ),
-        
+
         // 강도
         Column(
           children: [
@@ -657,7 +656,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       ],
     );
   }
-  
+
   /// 칼로리 뷰
   Widget _buildCaloriesView({
     required String? exerciseType,
@@ -670,11 +669,11 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         // 운동 타입
         Text(
           _getExerciseEmoji(exerciseType),
-          style: const TextStyle(fontSize: 35),  // 50 -> 35로 줄임
+          style: const TextStyle(fontSize: 35), // 50 -> 35로 줄임
         ),
-        
-        const SizedBox(height: 8),  // 12 -> 8로 줄임
-        
+
+        const SizedBox(height: 8), // 12 -> 8로 줄임
+
         // 칼로리
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -683,20 +682,21 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             Text(
               '$calories',
               style: GoogleFonts.notoSans(
-                fontSize: 24,  // 28 -> 24로 더 줄임
+                fontSize: 24, // 28 -> 24로 더 줄임
                 fontWeight: FontWeight.w700,
                 color: isToday ? Colors.white : ModernColors.textPrimary,
                 height: 1,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 3, left: 3),  // bottom: 4 -> 3으로 조정
+              padding: const EdgeInsets.only(
+                  bottom: 3, left: 3), // bottom: 4 -> 3으로 조정
               child: Text(
                 'kcal',
                 style: GoogleFonts.notoSans(
-                  fontSize: 12,  // 14 -> 12로 더 줄임
+                  fontSize: 12, // 14 -> 12로 더 줄임
                   fontWeight: FontWeight.w500,
-                  color: isToday 
+                  color: isToday
                       ? Colors.white.withOpacity(0.8)
                       : ModernColors.textSecondary,
                 ),
@@ -704,15 +704,15 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             ),
           ],
         ),
-        
-        const SizedBox(height: 2),  // 4 -> 2로 줄임
-        
+
+        const SizedBox(height: 2), // 4 -> 2로 줄임
+
         Text(
           '소모 칼로리',
           style: GoogleFonts.notoSans(
-            fontSize: 11,  // 12 -> 11로 줄임
+            fontSize: 11, // 12 -> 11로 줄임
             fontWeight: FontWeight.w500,
-            color: isToday 
+            color: isToday
                 ? Colors.white.withOpacity(0.8)
                 : ModernColors.textSecondary,
           ),
@@ -720,11 +720,11 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       ],
     );
   }
-  
+
   /// 강도 인디케이터
   Widget _buildIntensityIndicator(String? intensity, bool isToday) {
     final level = _getIntensityLevel(intensity);
-    
+
     return Row(
       children: List.generate(4, (index) {
         final isActive = index < level;
@@ -733,9 +733,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           height: isActive ? 20 + (index * 4) : 16,
           margin: const EdgeInsets.symmetric(horizontal: 2),
           decoration: BoxDecoration(
-            color: isActive 
+            color: isActive
                 ? (isToday ? Colors.white : _getIntensityColor(intensity))
-                : (isToday 
+                : (isToday
                     ? Colors.white.withOpacity(0.3)
                     : ModernColors.border),
             borderRadius: BorderRadius.circular(4),
@@ -744,16 +744,16 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       }),
     );
   }
-  
+
   /// 비교 분석 섹션 (말풍선 스타일)
   Widget _buildModernComparisonSection() {
-    final content = _isLoading 
+    final content = _isLoading
         ? '"잠시만요... 데이터를 보고 있어요..."'
         : (_analysisData?.comparison ?? _getDefaultComparisonMessage());
-    
+
     // 텍스트를 bullet points로 분리
     final points = _splitIntoPoints(content);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -814,13 +814,12 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 ),
               ),
               // 비교 데이터가 있으면 차트 표시
-              if (widget.previousData != null && !_isLoading)
-                _buildMiniChart(),
+              if (widget.previousData != null && !_isLoading) _buildMiniChart(),
             ],
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // 컨텐츠 섹션
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -828,72 +827,73 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           ),
         ],
       ),
-    ).animate()
-      .slideY(begin: 0.1, end: 0, duration: 600.ms, delay: 400.ms)
-      .fadeIn(duration: 600.ms, delay: 400.ms);
+    )
+        .animate()
+        .slideY(begin: 0.1, end: 0, duration: 600.ms, delay: 400.ms)
+        .fadeIn(duration: 600.ms, delay: 400.ms);
   }
-  
+
   /// 효과 섹션 (구체적 수치와 시각화) - Modern Clean Design
   Widget _buildModernBenefitsSection() {
     if (_isLoading) {
       return _buildLoadingBenefitsSection();
     }
-    
+
     // 실제 운동 데이터 기반 효과 계산
     final todayData = widget.todayData!;
     final duration = todayData['duration'] as int? ?? 0;
     final intensity = todayData['intensity'] as String? ?? '중간';
     final exerciseType = todayData['type'] as String? ?? '운동';
     final exerciseTime = todayData['date'] ?? DateTime.now();
-    
+
     // 칼로리 계산 (실제 칼로리가 없으면 MET 기반 계산)
-    final calories = todayData['calories'] as int? ?? 
+    final calories = todayData['calories'] as int? ??
         ExerciseCalculator.calculateCalories(
           exerciseType: ExerciseTypeMapper.toKorean(exerciseType),
           durationMinutes: duration,
           intensity: intensity,
         );
-    
+
     // 의학적 근거 기반 데이터 계산
     final heartRateData = ExerciseCalculator.calculateHeartRateEffect(
       durationMinutes: duration,
       intensity: intensity,
     );
-    
+
     final bloodPressureData = ExerciseCalculator.getBloodPressureEffect(
       durationMinutes: duration,
       intensity: intensity,
     );
-    
+
     final endorphinData = ExerciseCalculator.getEndorphinEffect(
       durationMinutes: duration,
       intensity: intensity,
     );
-    
+
     final brainData = ExerciseCalculator.getBrainEffect(
       durationMinutes: duration,
       exerciseType: ExerciseTypeMapper.toKorean(exerciseType),
       intensity: intensity,
     );
-    
+
     final metabolicData = ExerciseCalculator.getMetabolicEffect(
       calories: calories,
       intensity: intensity,
       durationMinutes: duration,
     );
-    
+
     final muscleData = ExerciseCalculator.getMuscleGrowthEffect(
       exerciseType: ExerciseTypeMapper.toKorean(exerciseType),
       durationMinutes: duration,
       intensity: intensity,
     );
-    
+
     final sleepData = ExerciseCalculator.getSleepEffect(
       durationMinutes: duration,
       intensity: intensity,
       exerciseTime: exerciseTime,
     );
-    
+
     return Container(
       decoration: BoxDecoration(
         color: ModernColors.surface,
@@ -956,9 +956,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // 메인 임팩트 수치 - White Background with Orange Accent
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -996,9 +996,10 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     ],
                   ),
                 ),
-                
+
                 // AI 개인화 메시지 - Clean Modern Design
-                if (_analysisData?.benefits != null && _analysisData!.benefits!.isNotEmpty)
+                if (_analysisData?.benefits != null &&
+                    _analysisData!.benefits!.isNotEmpty)
                   Container(
                     margin: const EdgeInsets.only(top: 10),
                     padding: const EdgeInsets.all(12),
@@ -1046,24 +1047,24 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                         ),
                       ],
                     ),
-                  ).animate()
-                    .fadeIn(duration: 600.ms, delay: 400.ms)
-                    .slideY(begin: 0.05, end: 0, duration: 600.ms, delay: 400.ms),
+                  ).animate().fadeIn(duration: 600.ms, delay: 400.ms).slideY(
+                      begin: 0.05, end: 0, duration: 600.ms, delay: 400.ms),
               ],
             ),
           ),
-          
+
           // 구체적 효과 카드들 - Clean White Design
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: Column(
               children: [
                 const SizedBox(height: 2),
-                
+
                 _buildSpecificEffectCard(
                   icon: '🫀',
                   title: '심혈관 건강',
-                  mainEffect: '혈압 ${bloodPressureData['systolic']}/${bloodPressureData['diastolic']}mmHg 감소',
+                  mainEffect:
+                      '혈압 ${bloodPressureData['systolic']}/${bloodPressureData['diastolic']}mmHg 감소',
                   details: [
                     '${bloodPressureData['duration']} 동안 효과 지속',
                     '${bloodPressureData['longTermBenefit']}',
@@ -1072,9 +1073,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   progress: _getIntensityLevel(intensity) / 4,
                   index: 0,
                 ),
-                
+
                 const SizedBox(height: 10), // Optimal card spacing
-                
+
                 _buildSpecificEffectCard(
                   icon: '😴',
                   title: '수면 개선',
@@ -1084,16 +1085,21 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     '깊은 수면 ${sleepData['deepSleep']}',
                     '${sleepData['recommendation']}'
                   ],
-                  progress: math.min(double.parse(sleepData['qualityImprovement'].replaceAll('%', '')) / 40.0, 1.0),
+                  progress: math.min(
+                      double.parse(sleepData['qualityImprovement']
+                              .replaceAll('%', '')) /
+                          40.0,
+                      1.0),
                   index: 1,
                 ),
-                
+
                 const SizedBox(height: 10), // Optimal card spacing
-                
+
                 _buildSpecificEffectCard(
                   icon: '💪',
                   title: '근육 & 대사',
-                  mainEffect: '운동후 Afterburn ${metabolicData['epocCalories']}kcal 추가 소모',
+                  mainEffect:
+                      '운동후 Afterburn ${metabolicData['epocCalories']}kcal 추가 소모',
                   details: [
                     '${muscleData['growthRate']}',
                     '단백질 합성 +${muscleData['proteinSynthesis']}',
@@ -1102,29 +1108,31 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   progress: math.min(calories / 500, 1.0),
                   index: 2,
                 ),
-                
+
                 const SizedBox(height: 12), // Compact section spacing
-                
+
                 // "Did you know?" 섹션 - Optimized Compact Design
-                _buildSimpleDidYouKnowSection(duration, calories, intensity, endorphinData),
+                _buildSimpleDidYouKnowSection(
+                    duration, calories, intensity, endorphinData),
               ],
             ),
           ),
         ],
       ),
-    ).animate()
-      .slideY(begin: 0.1, end: 0, duration: 600.ms, delay: 600.ms)
-      .fadeIn(duration: 600.ms, delay: 600.ms);
+    )
+        .animate()
+        .slideY(begin: 0.1, end: 0, duration: 600.ms, delay: 600.ms)
+        .fadeIn(duration: 600.ms, delay: 600.ms);
   }
-  
+
   /// 추천 섹션 (말풍선 스타일)
   Widget _buildModernRecommendationSection() {
-    final content = _isLoading 
+    final content = _isLoading
         ? '"추천을 준비 중이에요..."'
         : (_analysisData?.recommendation ?? '"다음에는 이렇게 해보면 어떨까요?"');
-    
+
     final points = _splitIntoPoints(content);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -1148,7 +1156,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
               color: ModernColors.exercise,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Row(
               children: [
@@ -1193,7 +1202,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               ],
             ),
           ),
-          
+
           // 추천 카드들 - 깔끔한 디자인
           Padding(
             padding: const EdgeInsets.all(16),
@@ -1207,17 +1216,18 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           ),
         ],
       ),
-    ).animate()
-      .slideY(begin: 0.1, end: 0, duration: 600.ms, delay: 800.ms)
-      .fadeIn(duration: 600.ms, delay: 800.ms);
+    )
+        .animate()
+        .slideY(begin: 0.1, end: 0, duration: 600.ms, delay: 800.ms)
+        .fadeIn(duration: 600.ms, delay: 800.ms);
   }
-  
+
   /// 셰르피가 응원해요! 🎉
   Widget _buildModernEncouragementSection() {
-    final encouragement = _isLoading 
+    final encouragement = _isLoading
         ? '응원 메시지를 준비하고 있어요...'
         : (_analysisData?.encouragement ?? '오늘도 정말 수고하셨어요! 💪');
-    
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -1268,9 +1278,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               );
             },
           ),
-          
+
           const SizedBox(height: 18),
-          
+
           // 셰르피 대화 시작
           Text(
             '"와~ 오늘도 정말 대단해요!"',
@@ -1280,9 +1290,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               color: ModernColors.exercise,
             ),
           ),
-          
+
           const SizedBox(height: 14),
-          
+
           // 셑르피의 말풍선 메시지
           Stack(
             children: [
@@ -1298,7 +1308,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   ),
                 ),
                 child: Text(
-                  encouragement.replaceAll('"', ''),  // 따옴표 제거
+                  encouragement.replaceAll('"', ''), // 따옴표 제거
                   style: GoogleFonts.notoSans(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -1325,9 +1335,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // 동기부여 배지
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -1341,11 +1351,12 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           ),
         ],
       ),
-    ).animate()
-      .slideY(begin: 0.1, end: 0, duration: 800.ms, delay: 1000.ms)
-      .fadeIn(duration: 800.ms, delay: 1000.ms);
+    )
+        .animate()
+        .slideY(begin: 0.1, end: 0, duration: 800.ms, delay: 1000.ms)
+        .fadeIn(duration: 800.ms, delay: 1000.ms);
   }
-  
+
   // ============ 헬퍼 메서드들 ============
   // 사용하지 않는 의학적 계산 메서드들 제거됨
 
@@ -1473,7 +1484,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
-                  child: Text(icon, style: const TextStyle(fontSize: 14)), // Reduced from 16 to 14
+                  child: Text(icon,
+                      style: const TextStyle(
+                          fontSize: 14)), // Reduced from 16 to 14
                 ),
               ),
               const SizedBox(width: 8), // Reduced from 12 to 8
@@ -1505,9 +1518,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               ),
             ],
           ),
-          
+
           const SizedBox(height: 10), // Reduced from 12 to 10
-          
+
           // 프로그레스 바 - Compact Orange
           Container(
             height: 4, // Reduced from 6 to 4
@@ -1528,22 +1541,26 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           ),
         ],
       ),
-    ).animate()
-      .slideX(begin: -0.1, end: 0, duration: 400.ms, delay: (200 * index).ms)
-      .fadeIn(duration: 400.ms, delay: (200 * index).ms);
+    )
+        .animate()
+        .slideX(begin: -0.1, end: 0, duration: 400.ms, delay: (200 * index).ms)
+        .fadeIn(duration: 400.ms, delay: (200 * index).ms);
   }
 
   /// 간단한 "알고 계셨나요?" 섹션 - Optimized Compact Design
-  Widget _buildSimpleDidYouKnowSection(int duration, int calories, String intensity, Map<String, dynamic> endorphinData) {
+  Widget _buildSimpleDidYouKnowSection(int duration, int calories,
+      String intensity, Map<String, dynamic> endorphinData) {
     // MET 기반 실제 계산
     final stairs = (duration * 20).toInt(); // 분당 20층 (실제 MET 계산)
     final apples = (calories / 95).toStringAsFixed(1); // 중간 사과 1개 = 95kcal
-    final heartBeats = (duration * 140 - duration * 70).toInt(); // 운동시 평균 140bpm - 안정시 70bpm
-    
+    final heartBeats =
+        (duration * 140 - duration * 70).toInt(); // 운동시 평균 140bpm - 안정시 70bpm
+
     return Container(
       padding: const EdgeInsets.all(10), // Reduced padding for compact design
       decoration: BoxDecoration(
-        color: ModernColors.exercise.withOpacity(0.02), // Very subtle background
+        color:
+            ModernColors.exercise.withOpacity(0.02), // Very subtle background
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: ModernColors.exercise.withOpacity(0.08),
@@ -1558,7 +1575,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             padding: const EdgeInsets.only(bottom: 6),
             child: Row(
               children: [
-                Text('💡', style: const TextStyle(fontSize: 12)), // Smaller icon
+                Text('💡',
+                    style: const TextStyle(fontSize: 12)), // Smaller icon
                 const SizedBox(width: 6),
                 Text(
                   '재미있는 사실',
@@ -1572,7 +1590,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               ],
             ),
           ),
-          
+
           // Compact facts with better spacing
           _buildCompactFact('🏃', '${duration}분 = 계단 ${stairs}층'),
           const SizedBox(height: 6), // Tighter spacing
@@ -1581,9 +1599,10 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           _buildCompactFact('💓', '심장박동 = ${heartBeats}회 증가'),
         ],
       ),
-    ).animate()
-      .slideY(begin: 0.05, end: 0, duration: 400.ms, delay: 600.ms)
-      .fadeIn(duration: 400.ms, delay: 600.ms);
+    )
+        .animate()
+        .slideY(begin: 0.05, end: 0, duration: 400.ms, delay: 600.ms)
+        .fadeIn(duration: 400.ms, delay: 600.ms);
   }
 
   /// Compact fact item helper
@@ -1598,7 +1617,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             style: GoogleFonts.notoSans(
               fontSize: 12, // Reduced from 14 to 12 for secondary info
               fontWeight: FontWeight.w500, // Reduced from w600 to w500
-              color: ModernColors.textSecondary, // Changed to secondary text color
+              color:
+                  ModernColors.textSecondary, // Changed to secondary text color
               height: 1.3,
             ),
           ),
@@ -1606,14 +1626,14 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       ],
     );
   }
-  
+
   /// 미니 차트 위젯
   Widget _buildMiniChart() {
     final todayCalories = widget.todayData!['calories'] as int? ?? 0;
     final prevCalories = widget.previousData!['calories'] as int? ?? 0;
     final diff = todayCalories - prevCalories;
     final isIncrease = diff >= 0;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
@@ -1624,7 +1644,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         children: [
           Icon(
             isIncrease ? Icons.trending_up : Icons.trending_down,
-            color: isIncrease ? ModernColors.exercise : ModernColors.textSecondary,
+            color:
+                isIncrease ? ModernColors.exercise : ModernColors.textSecondary,
             size: 18,
           ),
           const SizedBox(width: 4),
@@ -1633,14 +1654,16 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: isIncrease ? ModernColors.exercise : ModernColors.textSecondary,
+              color: isIncrease
+                  ? ModernColors.exercise
+                  : ModernColors.textSecondary,
             ),
           ),
         ],
       ),
     );
   }
-  
+
   /// Bullet point 위젯
   Widget _buildBulletPoint(String text) {
     return Padding(
@@ -1672,7 +1695,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       ),
     );
   }
-  
+
   /// 효과 카드 위젯
   Widget _buildEffectCard(String text, int index) {
     final icons = [
@@ -1681,7 +1704,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       Icons.trending_up_rounded,
       Icons.psychology_rounded,
     ];
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
@@ -1725,18 +1748,19 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           ),
         ],
       ),
-    ).animate()
-      .slideX(begin: -0.1, end: 0, duration: 400.ms, delay: (100 * index).ms)
-      .fadeIn(duration: 400.ms, delay: (100 * index).ms);
+    )
+        .animate()
+        .slideX(begin: -0.1, end: 0, duration: 400.ms, delay: (100 * index).ms)
+        .fadeIn(duration: 400.ms, delay: (100 * index).ms);
   }
-  
+
   /// 추천 카드 위젯
   Widget _buildRecommendationCard(String text, int index) {
     return Container(
       margin: EdgeInsets.only(bottom: index < 2 ? 12 : 0), // 마지막 카드는 margin 없음
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: ModernColors.surfaceElevated,  // 연한 회색 배경
+        color: ModernColors.surfaceElevated, // 연한 회색 배경
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -1766,21 +1790,22 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             child: Text(
               text,
               style: GoogleFonts.notoSans(
-                fontSize: 14,  // 가독성 향상
+                fontSize: 14, // 가독성 향상
                 fontWeight: FontWeight.w500,
-                color: ModernColors.textPrimary,  // 더 진한 색상으로 가독성 향상
+                color: ModernColors.textPrimary, // 더 진한 색상으로 가독성 향상
                 height: 1.4,
-                letterSpacing: -0.2,  // 약간 타이트한 자간
+                letterSpacing: -0.2, // 약간 타이트한 자간
               ),
             ),
           ),
         ],
       ),
-    ).animate()
-      .slideX(begin: 0.05, end: 0, duration: 300.ms, delay: (80 * index).ms)
-      .fadeIn(duration: 300.ms, delay: (80 * index).ms);
+    )
+        .animate()
+        .slideX(begin: 0.05, end: 0, duration: 300.ms, delay: (80 * index).ms)
+        .fadeIn(duration: 300.ms, delay: (80 * index).ms);
   }
-  
+
   /// 동기부여 배지 위젯
   Widget _buildMotivationBadge(String emoji, String label) {
     return Container(
@@ -1812,33 +1837,33 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       ),
     );
   }
-  
+
   /// 텍스트를 포인트로 분리하는 헬퍼 메서드
   List<String> _splitIntoPoints(String text) {
     // 셰르피 대화체 따옴표 제거
     final cleanText = text.replaceAll('"', '');
-    
+
     // 문장 단위로 분리 (. ! ? 기준)
     final sentences = cleanText.split(RegExp(r'[.!?]\s*'));
-    
+
     // 빈 문자열 제거하고 3-4개씩 그룹화
     final filtered = sentences.where((s) => s.trim().isNotEmpty).toList();
-    
+
     if (filtered.length <= 2) {
       // 짧은 텍스트는 그대로 반환
       return [cleanText];
     }
-    
+
     // 긴 텍스트는 2-3개 포인트로 분리
     final points = <String>[];
     for (int i = 0; i < filtered.length; i += 2) {
       final end = (i + 2 > filtered.length) ? filtered.length : i + 2;
       points.add(filtered.sublist(i, end).join('. '));
     }
-    
+
     return points.take(3).toList(); // 최대 3개 포인트
   }
-  
+
   /// 기본 비교 메시지 (셰르피 대화체)
   String _getDefaultComparisonMessage() {
     if (widget.previousData == null) {
@@ -1846,7 +1871,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     }
     return '"잠시만요... 데이터를 비교하고 있어요..."';
   }
-  
+
   /// 데이터 없음 상태
   Widget _buildNoDataState() {
     return Center(
@@ -1858,17 +1883,19 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             SherpiEmotion.thinking.imagePath,
             width: 120,
             height: 120,
-          ).animate(
-            onPlay: (controller) => controller.repeat(),
-          ).scale(
-            duration: const Duration(seconds: 2),
-            curve: Curves.easeInOut,
-            begin: const Offset(0.95, 0.95),
-            end: const Offset(1.05, 1.05),
-          ),
-          
+          )
+              .animate(
+                onPlay: (controller) => controller.repeat(),
+              )
+              .scale(
+                duration: const Duration(seconds: 2),
+                curve: Curves.easeInOut,
+                begin: const Offset(0.95, 0.95),
+                end: const Offset(1.05, 1.05),
+              ),
+
           const SizedBox(height: 24),
-          
+
           Text(
             '아직 운동 기록이 없어요',
             style: GoogleFonts.notoSans(
@@ -1877,9 +1904,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
               color: ModernColors.textPrimary,
             ),
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           Text(
             '운동을 하고 기록을 남겨보세요.\n셰르피가 함께 운동 여정을 분석해드릴게요!',
             textAlign: TextAlign.center,
@@ -1899,33 +1926,33 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
 class _BubbleTailPainter extends CustomPainter {
   final Color color;
   final Color borderColor;
-  
+
   _BubbleTailPainter({
     required this.color,
     required this.borderColor,
   });
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.fill;
-      
+
     final borderPaint = Paint()
       ..color = borderColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
-    
+
     final path = Path()
       ..moveTo(size.width / 2 - 8, size.height)
       ..lineTo(size.width / 2, 0)
       ..lineTo(size.width / 2 + 8, size.height)
       ..close();
-    
+
     canvas.drawPath(path, paint);
     canvas.drawPath(path, borderPaint);
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
@@ -1933,33 +1960,35 @@ class _BubbleTailPainter extends CustomPainter {
 /// 운동 패턴 페인터 (배경 장식)
 class ExercisePatternPainter extends CustomPainter {
   final Color color;
-  
+
   ExercisePatternPainter({required this.color});
-  
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
-    
+
     // 운동 관련 패턴 그리기 (덤벨 모양)
     const dumbbellWidth = 35.0;
     const dumbbellHeight = 15.0;
     const spacing = 20.0;
-    
+
     for (double x = 0; x < size.width; x += dumbbellWidth + spacing) {
       for (double y = 0; y < size.height; y += dumbbellHeight + spacing) {
         final centerX = x + (y.toInt() % 2 == 0 ? 0 : dumbbellWidth / 2);
         final centerY = y + dumbbellHeight / 2;
-        
+
         // 덤벨 그리기
-        _drawDumbbell(canvas, paint, centerX, centerY, dumbbellWidth, dumbbellHeight);
+        _drawDumbbell(
+            canvas, paint, centerX, centerY, dumbbellWidth, dumbbellHeight);
       }
     }
   }
-  
-  void _drawDumbbell(Canvas canvas, Paint paint, double centerX, double centerY, double width, double height) {
+
+  void _drawDumbbell(Canvas canvas, Paint paint, double centerX, double centerY,
+      double width, double height) {
     // 덤벨 바 (중앙 막대)
     final barRect = Rect.fromCenter(
       center: Offset(centerX, centerY),
@@ -1970,7 +1999,7 @@ class ExercisePatternPainter extends CustomPainter {
       RRect.fromRectAndRadius(barRect, const Radius.circular(2)),
       paint,
     );
-    
+
     // 왼쪽 웨이트
     final leftWeight = Rect.fromCenter(
       center: Offset(centerX - width * 0.25, centerY),
@@ -1981,7 +2010,7 @@ class ExercisePatternPainter extends CustomPainter {
       RRect.fromRectAndRadius(leftWeight, const Radius.circular(3)),
       paint,
     );
-    
+
     // 오른쪽 웨이트
     final rightWeight = Rect.fromCenter(
       center: Offset(centerX + width * 0.25, centerY),
@@ -1993,7 +2022,7 @@ class ExercisePatternPainter extends CustomPainter {
       paint,
     );
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

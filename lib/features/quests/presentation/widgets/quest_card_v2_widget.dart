@@ -26,14 +26,13 @@ class QuestCardV2Widget extends ConsumerStatefulWidget {
 }
 
 class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
-  
   bool _isProcessing = false;
 
   @override
   Widget build(BuildContext context) {
     final quest = widget.quest;
     final isCompleted = quest.status == QuestStatus.claimed;
-    
+
     return Opacity(
       opacity: isCompleted ? 0.7 : 1.0,
       child: Container(
@@ -44,22 +43,24 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
             color: _getBorderColor(quest),
             width: 2,
           ),
-          boxShadow: quest.canClaim ? [
-            BoxShadow(
-              color: ModernColors.warning.withOpacity(0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ] : [],
+          boxShadow: quest.canClaim
+              ? [
+                  BoxShadow(
+                    color: ModernColors.warning.withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ]
+              : [],
         ),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
-            color: quest.canClaim 
-              ? ModernColors.warning.withOpacity(0.05)
-              : quest.canComplete 
-                ? ModernColors.success.withOpacity(0.05)
-                : ModernColors.surface,
+            color: quest.canClaim
+                ? ModernColors.warning.withOpacity(0.05)
+                : quest.canComplete
+                    ? ModernColors.success.withOpacity(0.05)
+                    : ModernColors.surface,
           ),
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -89,9 +90,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(width: 12),
-                    
+
                     // 퀘스트 정보
                     Expanded(
                       child: Column(
@@ -121,11 +122,15 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                                         Icons.star,
                                         size: 12,
                                         color: quest.rarityColor,
-                                      ).animate(
-                                        onPlay: (controller) => controller.repeat(),
-                                      ).rotate(
-                                        duration: const Duration(seconds: 2),
-                                      ),
+                                      )
+                                          .animate(
+                                            onPlay: (controller) =>
+                                                controller.repeat(),
+                                          )
+                                          .rotate(
+                                            duration:
+                                                const Duration(seconds: 2),
+                                          ),
                                     if (quest.type == QuestTypeV2.premium)
                                       const SizedBox(width: 4),
                                     Text(
@@ -139,9 +144,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                                   ],
                                 ),
                               ),
-                              
+
                               const SizedBox(width: 8),
-                              
+
                               // 퀘스트 유형 표시
                               Container(
                                 padding: const EdgeInsets.symmetric(
@@ -163,9 +168,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                               ),
                             ],
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // 퀘스트 제목
                           Text(
                             quest.title,
@@ -175,9 +180,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                               color: ModernColors.textPrimary,
                             ),
                           ),
-                          
+
                           const SizedBox(height: 4),
-                          
+
                           // 퀘스트 설명
                           Text(
                             quest.description,
@@ -187,14 +192,14 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                               height: 1.3,
                             ),
                           ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // 추적 조건 표시 (사용자 친화적)
                           _buildTrackingInfo(quest),
-                          
+
                           const SizedBox(height: 4),
-                          
+
                           // 상태 설명
                           _buildStatusDescription(quest),
                         ],
@@ -202,9 +207,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // 보상 정보
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -225,7 +230,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                           value: '+${quest.rewards.experience.toInt()} XP',
                           color: ModernColors.secondary,
                         ),
-                        
+
                         // 포인트 (있는 경우만)
                         if (quest.rewards.points > 0) ...[
                           Container(
@@ -239,7 +244,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                             color: ModernColors.warning,
                           ),
                         ],
-                        
+
                         // 능력치 (확률이 있는 경우만)
                         if (quest.rewards.statChance > 0) ...[
                           Container(
@@ -249,7 +254,8 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                           ),
                           _buildStatRewardItem(
                             category: quest.category,
-                            value: '${(quest.rewards.statChance * 100).toInt()}%',
+                            value:
+                                '${(quest.rewards.statChance * 100).toInt()}%',
                             color: ModernColors.success,
                           ),
                         ],
@@ -257,9 +263,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // 액션 버튼 또는 진행률
                 if (quest.canClaim)
                   _buildClaimButton()
@@ -277,13 +283,16 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
 
   /// 추적 조건 정보 표시 (사용자 친화적)
   Widget _buildTrackingInfo(QuestInstance quest) {
-    final trackingText = QuestConditionFormatter.formatTrackingCondition(quest.trackingCondition);
+    final trackingText = QuestConditionFormatter.formatTrackingCondition(
+        quest.trackingCondition);
     IconData trackingIcon;
-    
+
     // 등반 퀘스트 특별 처리
-    final isClimbingQuest = quest.trackingCondition.type == QuestTrackingType.globalData &&
-        quest.trackingCondition.parameters['path'] == 'ClimbingRecord.isSuccess';
-    
+    final isClimbingQuest =
+        quest.trackingCondition.type == QuestTrackingType.globalData &&
+            quest.trackingCondition.parameters['path'] ==
+                'ClimbingRecord.isSuccess';
+
     switch (quest.trackingCondition.type) {
       case QuestTrackingType.appLaunch:
         trackingIcon = Icons.login;
@@ -306,7 +315,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
       default:
         trackingIcon = Icons.help_outline;
     }
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
@@ -346,10 +355,10 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
   Widget _buildStatusDescription(QuestInstance quest) {
     final description = QuestConditionFormatter.getStatusDescription(quest);
     if (description.isEmpty) return const SizedBox.shrink();
-    
+
     Color statusColor;
     IconData statusIcon;
-    
+
     switch (quest.status) {
       case QuestStatus.notStarted:
         statusColor = ModernColors.textSecondary;
@@ -376,7 +385,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
         statusColor = ModernColors.textSecondary;
         statusIcon = Icons.help_outline;
     }
-    
+
     return Row(
       children: [
         Icon(
@@ -552,12 +561,13 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
   Widget _buildProgressBar() {
     final progress = widget.quest.progressRatio;
     final isCompleted = progress >= 1.0;
-    
+
     // Check if this is a multiple conditions quest that needs split progress bars
-    if (widget.quest.trackingCondition.type == QuestTrackingType.multipleConditions) {
+    if (widget.quest.trackingCondition.type ==
+        QuestTrackingType.multipleConditions) {
       return _buildMultipleConditionsProgress();
     }
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -569,7 +579,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: isCompleted ? ModernColors.success : ModernColors.textSecondary,
+                color: isCompleted
+                    ? ModernColors.success
+                    : ModernColors.textSecondary,
               ),
             ),
             Text(
@@ -577,7 +589,8 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: isCompleted ? ModernColors.success : ModernColors.secondary,
+                color:
+                    isCompleted ? ModernColors.success : ModernColors.secondary,
               ),
             ),
           ],
@@ -600,12 +613,13 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
 
   /// 복수 조건 퀘스트용 분할 진행률 표시
   Widget _buildMultipleConditionsProgress() {
-    final conditionsRaw = widget.quest.trackingCondition.parameters['conditions'] as List<dynamic>;
+    final conditionsRaw = widget
+        .quest.trackingCondition.parameters['conditions'] as List<dynamic>;
     final conditions = conditionsRaw.cast<String>();
     final conditionCount = conditions.length;
     final completedConditions = widget.quest.currentProgress;
     final allCompleted = completedConditions >= conditionCount;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -618,7 +632,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: allCompleted ? ModernColors.success : ModernColors.textSecondary,
+                color: allCompleted
+                    ? ModernColors.success
+                    : ModernColors.textSecondary,
               ),
             ),
             Text(
@@ -626,19 +642,22 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: allCompleted ? ModernColors.success : ModernColors.secondary,
+                color: allCompleted
+                    ? ModernColors.success
+                    : ModernColors.secondary,
               ),
             ),
           ],
         ),
         const SizedBox(height: 12),
-        
+
         // 개별 조건들의 진행률
         ...conditions.asMap().entries.map((entry) {
           final index = entry.key;
           final condition = entry.value;
           return Padding(
-            padding: EdgeInsets.only(bottom: index < conditions.length - 1 ? 12.0 : 0.0),
+            padding: EdgeInsets.only(
+                bottom: index < conditions.length - 1 ? 12.0 : 0.0),
             child: _buildSingleConditionProgress(condition, index),
           );
         }).toList(),
@@ -650,18 +669,19 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
   Widget _buildSingleConditionProgress(String condition, int index) {
     final parts = condition.split(':');
     if (parts.length != 2) return const SizedBox.shrink();
-    
+
     final dataKey = parts[0];
     final targetValue = int.tryParse(parts[1]) ?? 0;
-    
+
     // Get current value from quest tracking data
     final currentValue = widget.quest.trackingData[dataKey] as int? ?? 0;
-    final progress = targetValue > 0 ? (currentValue / targetValue).clamp(0.0, 1.0) : 0.0;
+    final progress =
+        targetValue > 0 ? (currentValue / targetValue).clamp(0.0, 1.0) : 0.0;
     final isCompleted = currentValue >= targetValue;
-    
+
     String conditionName;
     String progressText;
-    
+
     switch (dataKey) {
       case 'weekly_readingPages':
         conditionName = '독서 페이지';
@@ -683,7 +703,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
         conditionName = dataKey;
         progressText = '${currentValue}/${targetValue}';
     }
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -695,7 +715,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
               style: GoogleFonts.notoSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: isCompleted ? ModernColors.success : ModernColors.textSecondary,
+                color: isCompleted
+                    ? ModernColors.success
+                    : ModernColors.textSecondary,
               ),
             ),
             Text(
@@ -703,7 +725,8 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
               style: GoogleFonts.notoSans(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
-                color: isCompleted ? ModernColors.success : ModernColors.secondary,
+                color:
+                    isCompleted ? ModernColors.success : ModernColors.secondary,
               ),
             ),
           ],
@@ -759,15 +782,17 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
 
   Future<void> _handleClaimReward() async {
     if (_isProcessing) return;
-    
+
     setState(() => _isProcessing = true);
     HapticFeedbackManager.heavyImpact();
-    
+
     try {
-      await ref.read(questProviderV2.notifier).claimReward(widget.quest.instanceId);
-      
+      await ref
+          .read(questProviderV2.notifier)
+          .claimReward(widget.quest.instanceId);
+
       // 개별 퀘스트 완료 알림은 제거 (전체 완료 시에만 알림)
-      
+
       // 업데이트된 퀘스트 데이터를 가져와서 전달
       final questsAsync = ref.read(questProviderV2);
       questsAsync.whenData((quests) {
