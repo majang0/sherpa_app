@@ -5,6 +5,7 @@ import 'package:sherpa_app/core/config/api_config.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/features/sherpi/domain/models/sherpi_response.dart';
 import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 
 /// 🧠 OpenAI 셰르피 매니저 (OpenAI GPT-5 버전)
 ///
@@ -40,12 +41,12 @@ class OpenAISherpiManager implements SherpiMessageManager {
     try {
       if (ApiConfig.isOpenAIApiKeyValid) {
         _openaiSource = OpenAIDialogueSource();
-        print('✅ OpenAI GPT-5 시스템 초기화 성공');
+        aiLogger.i('OpenAI GPT-5 시스템 초기화 성공');
       } else {
-        print('⚠️ OpenAI API 키가 설정되지 않음 - 정적 메시지만 사용');
+        aiLogger.w('OpenAI API 키가 설정되지 않음 - 정적 메시지만 사용');
       }
     } catch (e) {
-      print('❌ OpenAI 초기화 실패: $e');
+      aiLogger.e('OpenAI 초기화 실패', error: e);
       _openaiSource = null;
     }
   }
@@ -90,7 +91,7 @@ class OpenAISherpiManager implements SherpiMessageManager {
       userContext: resolvedUserContext,
     );
     if (cachedMessage != null) {
-      print('💾 캐시에서 메시지 반환');
+      aiLogger.d('캐시에서 메시지 반환');
       return SherpiResponse(
         message: cachedMessage,
         source: MessageSource.aiCached,
@@ -102,7 +103,7 @@ class OpenAISherpiManager implements SherpiMessageManager {
     // 2. AI 사용 여부 결정
     if (_shouldUseAI(context, userContext, gameContext)) {
       try {
-        print('🤖 OpenAI GPT-5 메시지 생성 시작');
+        aiLogger.d('OpenAI GPT-5 메시지 생성 시작');
         final stopwatch = Stopwatch()..start();
 
         final aiMessage = await _openaiSource!.getDialogue(
@@ -122,7 +123,7 @@ class OpenAISherpiManager implements SherpiMessageManager {
           finalMessage = _removeEmojis(finalMessage);
         }
 
-        print('✅ OpenAI 메시지 생성 완료 (${stopwatch.elapsedMilliseconds}ms)');
+        aiLogger.i('OpenAI 메시지 생성 완료 (${stopwatch.elapsedMilliseconds}ms)');
 
         await _cache.storeMessage(
           userId: userId,
@@ -138,7 +139,7 @@ class OpenAISherpiManager implements SherpiMessageManager {
           generationDuration: stopwatch.elapsed,
         );
       } catch (e) {
-        print('❌ OpenAI 메시지 생성 실패, 정적 메시지로 전환: $e');
+        aiLogger.e('OpenAI 메시지 생성 실패, 정적 메시지로 전환', error: e);
       }
     }
 
@@ -160,7 +161,7 @@ class OpenAISherpiManager implements SherpiMessageManager {
 
     // 수동으로 AI 사용이 활성화된 경우에만 사용
     if (_useAIManually) {
-      print('🎯 수동 AI 사용 활성화됨 - OpenAI GPT-5 사용');
+      aiLogger.d('수동 AI 사용 활성화됨 - OpenAI GPT-5 사용');
       // 한 번 사용 후 자동으로 비활성화
       _useAIManually = false;
       return true;
@@ -176,9 +177,9 @@ class OpenAISherpiManager implements SherpiMessageManager {
   void enableAIForNextMessage() {
     if (_openaiSource != null) {
       _useAIManually = true;
-      print('✅ 다음 메시지에 AI 사용이 활성화되었습니다.');
+      aiLogger.i('다음 메시지에 AI 사용이 활성화되었습니다.');
     } else {
-      print('❌ OpenAI가 초기화되지 않아 AI를 사용할 수 없습니다.');
+      aiLogger.e('OpenAI가 초기화되지 않아 AI를 사용할 수 없습니다.');
     }
   }
 
@@ -421,6 +422,6 @@ class OpenAISherpiManager implements SherpiMessageManager {
     if (_openaiSource is OpenAIDialogueSource) {
       (_openaiSource as OpenAIDialogueSource).dispose();
     }
-    print('🔄 Smart Sherpi Manager 정리 완료');
+    aiLogger.d('Smart Sherpi Manager 정리 완료');
   }
 }

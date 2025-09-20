@@ -5,6 +5,7 @@ import 'package:sherpa_app/core/config/api_config.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/services/activity_prompt_templates.dart';
 import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 
 /// 🧠 OpenAI GPT-5 대화 소스
 ///
@@ -24,9 +25,9 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
         baseUrl: 'https://api.openai.com/v1',
       );
 
-      print('🤖 OpenAI GPT-5 클라이언트 초기화 성공');
+      aiLogger.i('OpenAI GPT-5 클라이언트 초기화 성공');
     } catch (e) {
-      print('❌ OpenAI 클라이언트 초기화 실패: $e');
+      aiLogger.e('OpenAI 클라이언트 초기화 실패', error: e);
       rethrow;
     }
   }
@@ -40,7 +41,7 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
     try {
       // API 키 유효성 검사
       if (!ApiConfig.isOpenAIApiKeyValid) {
-        print('⚠️ OpenAI API 키가 유효하지 않음, 정적 메시지 사용');
+        aiLogger.w('OpenAI API 키가 유효하지 않음, 정적 메시지 사용');
         return await _fallbackSource.getDialogue(
             context, userContext, gameContext);
       }
@@ -75,28 +76,28 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
 
         if (responseText != null && responseText.isNotEmpty) {
           final processedResponse = _processResponse(responseText);
-          print('✅ OpenAI GPT-5 응답 생성 성공');
+          aiLogger.i('OpenAI GPT-5 응답 생성 성공');
           return processedResponse;
         } else {
-          print('⚠️ OpenAI 응답이 비어있음, 정적 메시지 사용');
+          aiLogger.w('OpenAI 응답이 비어있음, 정적 메시지 사용');
           return await _fallbackSource.getDialogue(
               context, userContext, gameContext);
         }
       } catch (apiError) {
-        print('❌ OpenAI API 호출 실패: $apiError');
+        aiLogger.e('OpenAI API 호출 실패', error: apiError);
 
         // API 오류 상세 정보 출력
         if (apiError is HttpException) {
-          print('  - HTTP 오류: ${apiError.message}');
+          aiLogger.e('HTTP 오류: ${apiError.message}');
         } else if (apiError.toString().contains('statusCode')) {
-          print('  - API 오류: $apiError');
+          aiLogger.e('API 오류: $apiError');
         }
 
         return await _fallbackSource.getDialogue(
             context, userContext, gameContext);
       }
     } catch (e) {
-      print('❌ OpenAI 대화 생성 중 오류: $e');
+      aiLogger.e('OpenAI 대화 생성 중 오류', error: e);
       return await _fallbackSource.getDialogue(
           context, userContext, gameContext);
     }
@@ -247,6 +248,6 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
   /// 리소스 정리
   void dispose() {
     // OpenAI 클라이언트는 특별한 정리가 필요 없음
-    print('🔄 OpenAI 클라이언트 정리 완료');
+    aiLogger.d('OpenAI 클라이언트 정리 완료');
   }
 }
