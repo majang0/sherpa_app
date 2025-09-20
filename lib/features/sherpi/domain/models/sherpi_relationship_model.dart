@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
 
 /// 🤝 셰르피와의 관계 모델
-/// 
+///
 /// 사용자와 셰르피 간의 친밀도, 상호작용 기록, 성장 과정을 추적합니다.
 @immutable
 class SherpiRelationship {
-  final int intimacyLevel;              // 친밀도 레벨 (1-10)
-  final int totalInteractions;          // 총 상호작용 횟수
-  final int consecutiveDays;            // 연속 대화 일수
-  final DateTime firstMeetingDate;      // 첫 만남 날짜
-  final DateTime lastInteractionDate;   // 마지막 상호작용 날짜
+  final int intimacyLevel; // 친밀도 레벨 (1-10)
+  final int totalInteractions; // 총 상호작용 횟수
+  final int consecutiveDays; // 연속 대화 일수
+  final DateTime firstMeetingDate; // 첫 만남 날짜
+  final DateTime lastInteractionDate; // 마지막 상호작용 날짜
   final Map<String, int> interactionTypes; // 상호작용 유형별 횟수
   final List<SpecialMoment> specialMoments; // 특별한 순간들
   final PersonalityInsights personalityInsights; // 성격 인사이트
   final PersonalizationSettings personalizationSettings; // 개인화 설정 (Phase 2)
-  final double emotionalSync;           // 감정 동기화 수준 (0.0-1.0)
+  final double emotionalSync; // 감정 동기화 수준 (0.0-1.0)
 
   const SherpiRelationship({
     this.intimacyLevel = 1,
@@ -30,15 +30,18 @@ class SherpiRelationship {
   });
 
   /// 친밀도 레벨 계산 (경험치 기반)
-  static int calculateIntimacyLevel(int totalInteractions, int consecutiveDays) {
+  static int calculateIntimacyLevel(
+      int totalInteractions, int consecutiveDays) {
     // 기본 점수: 상호작용 횟수
     double score = totalInteractions * 0.1;
-    
+
     // 연속 일수 보너스
-    if (consecutiveDays >= 30) score += 3.0;
-    else if (consecutiveDays >= 14) score += 2.0;
+    if (consecutiveDays >= 30)
+      score += 3.0;
+    else if (consecutiveDays >= 14)
+      score += 2.0;
     else if (consecutiveDays >= 7) score += 1.0;
-    
+
     // 레벨 계산 (최대 10)
     return (score / 10).clamp(1, 10).toInt();
   }
@@ -46,17 +49,28 @@ class SherpiRelationship {
   /// 친밀도 레벨별 호칭
   String get relationshipTitle {
     switch (intimacyLevel) {
-      case 1: return "새로운 친구";
-      case 2: return "등산 동료";
-      case 3: return "믿음직한 파트너";
-      case 4: return "든든한 동반자";
-      case 5: return "특별한 친구";
-      case 6: return "소중한 동료";
-      case 7: return "베스트 파트너";
-      case 8: return "영혼의 동반자";
-      case 9: return "평생 친구";
-      case 10: return "운명의 셰르파";
-      default: return "친구";
+      case 1:
+        return "새로운 친구";
+      case 2:
+        return "등산 동료";
+      case 3:
+        return "믿음직한 파트너";
+      case 4:
+        return "든든한 동반자";
+      case 5:
+        return "특별한 친구";
+      case 6:
+        return "소중한 동료";
+      case 7:
+        return "베스트 파트너";
+      case 8:
+        return "영혼의 동반자";
+      case 9:
+        return "평생 친구";
+      case 10:
+        return "운명의 셰르파";
+      default:
+        return "친구";
     }
   }
 
@@ -98,7 +112,8 @@ class SherpiRelationship {
       interactionTypes: interactionTypes ?? this.interactionTypes,
       specialMoments: specialMoments ?? this.specialMoments,
       personalityInsights: personalityInsights ?? this.personalityInsights,
-      personalizationSettings: personalizationSettings ?? this.personalizationSettings,
+      personalizationSettings:
+          personalizationSettings ?? this.personalizationSettings,
       emotionalSync: emotionalSync ?? this.emotionalSync,
     );
   }
@@ -123,14 +138,18 @@ class SherpiRelationship {
       intimacyLevel: json['intimacyLevel'] ?? 1,
       totalInteractions: json['totalInteractions'] ?? 0,
       consecutiveDays: json['consecutiveDays'] ?? 0,
-      firstMeetingDate: DateTime.parse(json['firstMeetingDate'] ?? DateTime.now().toIso8601String()),
-      lastInteractionDate: DateTime.parse(json['lastInteractionDate'] ?? DateTime.now().toIso8601String()),
+      firstMeetingDate: DateTime.parse(
+          json['firstMeetingDate'] ?? DateTime.now().toIso8601String()),
+      lastInteractionDate: DateTime.parse(
+          json['lastInteractionDate'] ?? DateTime.now().toIso8601String()),
       interactionTypes: Map<String, int>.from(json['interactionTypes'] ?? {}),
       specialMoments: (json['specialMoments'] as List? ?? [])
           .map((m) => SpecialMoment.fromJson(m))
           .toList(),
-      personalityInsights: PersonalityInsights.fromJson(json['personalityInsights'] ?? {}),
-      personalizationSettings: PersonalizationSettings.fromJson(json['personalizationSettings'] ?? {}),
+      personalityInsights:
+          PersonalityInsights.fromJson(json['personalityInsights'] ?? {}),
+      personalizationSettings: PersonalizationSettings.fromJson(
+          json['personalizationSettings'] ?? {}),
       emotionalSync: (json['emotionalSync'] ?? 0.0).toDouble(),
     );
   }
@@ -140,12 +159,12 @@ class SherpiRelationship {
 /// 사용자가 직접 설정하는 셰르피 성격과 상호작용 방식
 @immutable
 class PersonalizationSettings {
-  final SherpiPersonalityType personalityType;  // 성격 유형
-  final String nickname;                        // 사용자가 정한 셰르피 호칭
-  final String userPreferredName;              // 셰르피가 사용자를 부르는 이름
-  final MessageFrequency messageFrequency;     // 메시지 빈도 설정
-  final bool useEmojisInMessages;              // 메시지에 이모지 사용 여부
-  final bool enablePersonalizedTone;           // 개인화된 톤 사용 여부
+  final SherpiPersonalityType personalityType; // 성격 유형
+  final String nickname; // 사용자가 정한 셰르피 호칭
+  final String userPreferredName; // 셰르피가 사용자를 부르는 이름
+  final MessageFrequency messageFrequency; // 메시지 빈도 설정
+  final bool useEmojisInMessages; // 메시지에 이모지 사용 여부
+  final bool enablePersonalizedTone; // 개인화된 톤 사용 여부
 
   const PersonalizationSettings({
     this.personalityType = SherpiPersonalityType.balanced,
@@ -174,10 +193,10 @@ class PersonalizationSettings {
 
   /// 사용자 닉네임 (userPreferredName의 별칭)
   String get userNickname => userPreferredName;
-  
+
   /// 셰르피 닉네임 (nickname의 별칭)
   String get sherpiNickname => nickname;
-  
+
   /// 메시지 빈도별 AI 사용률 조정 계수
   double get messageFrequencyMultiplier {
     switch (messageFrequency) {
@@ -208,7 +227,8 @@ class PersonalizationSettings {
       userPreferredName: userPreferredName ?? this.userPreferredName,
       messageFrequency: messageFrequency ?? this.messageFrequency,
       useEmojisInMessages: useEmojisInMessages ?? this.useEmojisInMessages,
-      enablePersonalizedTone: enablePersonalizedTone ?? this.enablePersonalizedTone,
+      enablePersonalizedTone:
+          enablePersonalizedTone ?? this.enablePersonalizedTone,
     );
   }
 
@@ -245,24 +265,24 @@ class PersonalizationSettings {
 enum SherpiPersonalityType {
   /// ⚡ 활발하고 에너지 넘치는 성격
   energetic('활발형', '에너지 넘치고 열정적인 셰르피! 항상 응원하고 함께 기뻐해요!'),
-  
+
   /// 🧘 차분하고 안정감 있는 성격
   calm('차분형', '차분하고 신중한 셰르피. 깊이 있는 조언과 안정감을 드려요.'),
-  
+
   /// 😄 유머러스하고 재치있는 성격
   humorous('유머형', '재치 넘치는 셰르피! 적절한 농담으로 분위기를 밝게 만들어요.'),
-  
+
   /// 🎯 진지하고 체계적인 성격
   serious('진지형', '체계적이고 목표 지향적인 셰르피. 구체적이고 실용적인 도움을 드려요.'),
-  
+
   /// ⚖️ 균형잡힌 성격 (기본값)
   balanced('균형형', '상황에 맞게 적절한 반응을 보이는 셰르피. 모든 상황에 잘 어울려요.');
 
   const SherpiPersonalityType(this.displayName, this.description);
-  
+
   final String displayName;
   final String description;
-  
+
   /// 한국어 이름 (displayName의 별칭)
   String get koreanName => displayName;
 }
@@ -271,21 +291,21 @@ enum SherpiPersonalityType {
 enum MessageFrequency {
   /// 🔕 최소한의 메시지만 (중요한 순간만)
   minimal('최소', '꼭 필요한 순간에만'),
-  
+
   /// 🔔 적은 빈도 (주요 성취 시)
   low('적음', '주요 성취 순간에'),
-  
+
   /// 🔔 일반 빈도 (기본값)
   normal('보통', '적당한 빈도로'),
-  
+
   /// 🔔 많은 빈도 (자주 격려)
   high('많음', '자주 격려하며'),
-  
+
   /// 🔔 최대 빈도 (모든 순간)
   maximum('최대', '모든 순간을 함께');
 
   const MessageFrequency(this.displayName, this.description);
-  
+
   final String displayName;
   final String description;
 }
@@ -295,7 +315,7 @@ enum MessageFrequency {
 class SpecialMoment {
   final String id;
   final DateTime timestamp;
-  final String type;           // first_climb, level_milestone, streak_achievement 등
+  final String type; // first_climb, level_milestone, streak_achievement 등
   final String title;
   final String description;
   final Map<String, dynamic> metadata;
@@ -335,11 +355,11 @@ class SpecialMoment {
 /// 🧠 성격 인사이트
 @immutable
 class PersonalityInsights {
-  final double motivationStyle;    // 0: 외적 동기 ~ 1: 내적 동기
-  final double activityPreference;  // 0: 정적 활동 ~ 1: 동적 활동
-  final double socialTendency;      // 0: 개인 중심 ~ 1: 사회적
-  final double goalOrientation;     // 0: 과정 중심 ~ 1: 결과 중심
-  final double stressResponse;      // 0: 회피형 ~ 1: 대응형
+  final double motivationStyle; // 0: 외적 동기 ~ 1: 내적 동기
+  final double activityPreference; // 0: 정적 활동 ~ 1: 동적 활동
+  final double socialTendency; // 0: 개인 중심 ~ 1: 사회적
+  final double goalOrientation; // 0: 과정 중심 ~ 1: 결과 중심
+  final double stressResponse; // 0: 회피형 ~ 1: 대응형
 
   const PersonalityInsights({
     this.motivationStyle = 0.5,
@@ -357,10 +377,8 @@ class PersonalityInsights {
       '사교형': socialTendency * 0.8 + motivationStyle * 0.2,
       '성장형': motivationStyle * 0.5 + stressResponse * 0.5,
     };
-    
-    return scores.entries
-        .reduce((a, b) => a.value > b.value ? a : b)
-        .key;
+
+    return scores.entries.reduce((a, b) => a.value > b.value ? a : b).key;
   }
 
   PersonalityInsights updateFromInteraction({

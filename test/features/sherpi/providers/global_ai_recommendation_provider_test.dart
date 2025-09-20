@@ -152,8 +152,7 @@ void main() {
       return [recommendation];
     };
 
-    final notifier =
-        container.read(globalAIRecommendationProvider.notifier);
+    final notifier = container.read(globalAIRecommendationProvider.notifier);
     await notifier.generateRecommendations(
       user: testUser,
       availableMeetings: availableMeetings,
@@ -169,8 +168,7 @@ void main() {
   });
 
   test('generateRecommendations returns error when meetings empty', () async {
-    final notifier =
-        container.read(globalAIRecommendationProvider.notifier);
+    final notifier = container.read(globalAIRecommendationProvider.notifier);
 
     await notifier.generateRecommendations(
       user: testUser,
@@ -203,8 +201,7 @@ void main() {
       ];
     };
 
-    final notifier =
-        container.read(globalAIRecommendationProvider.notifier);
+    final notifier = container.read(globalAIRecommendationProvider.notifier);
 
     await notifier.generateRecommendations(
       user: testUser,

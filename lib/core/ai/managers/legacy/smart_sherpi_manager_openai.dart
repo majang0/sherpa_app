@@ -1,8 +1,8 @@
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
-import 'package:sherpa_app/core/ai/openai_dialogue_source.dart';
+import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
 import 'package:sherpa_app/core/config/api_config.dart';
-import 'package:sherpa_app/core/ai/ai_message_cache.dart';
+import 'package:sherpa_app/core/ai/cache/ai_message_cache.dart';
 
 /// 🧠 스마트 셰르피 매니저 (OpenAI GPT-5 버전)
 ///

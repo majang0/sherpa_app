@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../shared/providers/global_sherpi_provider.dart';
-// import '../../core/ai/smart_sherpi_manager.dart'; // AI 시스템 비활성화
-// import '../../core/ai/ai_message_cache.dart'; // AI 캐시 시스템 비활성화
+// import 'package:sherpa_app/core/ai/managers/legacy/smart_sherpi_manager.dart'; // AI 시스템 비활성화
+// import 'package:sherpa_app/core/ai/cache/ai_message_cache.dart'; // AI 캐시 시스템 비활성화
 import '../../core/constants/sherpi_dialogues.dart';
 import 'phase1_performance_benchmark.dart';
 

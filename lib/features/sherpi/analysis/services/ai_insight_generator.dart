@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import '../../../../core/ai/enhanced_gemini_dialogue_source.dart';
+import 'package:sherpa_app/core/ai/sources/enhanced_gemini_dialogue_source.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../shared/models/global_user_model.dart';
 import 'user_data_analyzer.dart';

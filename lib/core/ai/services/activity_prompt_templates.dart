@@ -2,11 +2,10 @@ import '../../constants/meeting_categories.dart';
 import '../../../shared/models/sherpi_relationship_model.dart';
 
 /// 🎯 Phase 2: 활동별 전문 프롬프트 템플릿 시스템
-/// 
+///
 /// 각 활동 유형에 최적화된 AI 프롬프트 템플릿을 제공하여
 /// 더 적절하고 개인화된 응답을 생성합니다.
 class ActivityPromptTemplates {
-  
   /// 🏃 운동 활동 전문 프롬프트 생성
   static String generateExercisePrompt({
     required Map<String, dynamic> activityData,
@@ -18,7 +17,7 @@ class ActivityPromptTemplates {
     final stats = activityData['todayStats'] as Map<String, dynamic>;
     final achievements = activityData['achievements'] as Map<String, dynamic>;
     final motivation = activityData['motivation'] as Map<String, dynamic>;
-    
+
     final userName = gameContext['userPreferredName'] ?? '친구';
     final exerciseType = session['type'];
     final duration = session['duration'];
@@ -26,7 +25,7 @@ class ActivityPromptTemplates {
     final isPersonalBest = achievements['isPersonalBest'] ?? false;
     final currentStreak = achievements['currentStreak'] ?? 0;
     final trend = motivation['recentTrend'] ?? 'stable';
-    
+
     return '''
 당신은 '셰르피'입니다. ${userName}님의 운동 동반자이자 동기부여 코치입니다.
 
@@ -69,7 +68,7 @@ ${userName}님의 운동 완료에 대해 ${_getPersonalityTone(personality)}로
     final stats = activityData['todayStats'] as Map<String, dynamic>;
     final habits = activityData['readingHabits'] as Map<String, dynamic>;
     final achievements = activityData['achievements'] as Map<String, dynamic>;
-    
+
     final userName = gameContext['userPreferredName'] ?? '친구';
     final bookTitle = session['bookTitle'];
     final pages = session['pages'];
@@ -77,7 +76,7 @@ ${userName}님의 운동 완료에 대해 ${_getPersonalityTone(personality)}로
     final totalPagesToday = stats['totalPages'] ?? 0;
     final currentStreak = achievements['currentStreak'] ?? 0;
     final readingLevel = achievements['readingLevel'] ?? 1;
-    
+
     return '''
 당신은 '셰르피'입니다. ${userName}님의 독서 동반자이자 지식 탐험 가이드입니다.
 
@@ -121,14 +120,14 @@ ${userName}님의 독서 완료에 대해 ${_getPersonalityTone(personality)}로
     final moodStats = activityData['moodStats'] as Map<String, dynamic>;
     final habits = activityData['writingHabits'] as Map<String, dynamic>;
     final growth = activityData['growthMetrics'] as Map<String, dynamic>;
-    
+
     final userName = gameContext['userPreferredName'] ?? '친구';
     final mood = entry['mood'];
     final keywords = entry['keywords'] as List<String>;
     final currentStreak = habits['currentStreak'] ?? 0;
     final emotionalAwareness = growth['emotionalAwareness'] ?? 0.5;
     final weeklyTrend = moodStats['weeklyMoodTrend'] ?? 'stable';
-    
+
     return '''
 당신은 '셰르피'입니다. ${userName}님의 감정 동반자이자 마음의 친구입니다.
 
@@ -169,14 +168,14 @@ ${_getMoodBasedGuideline(mood)}
     final quest = activityData['currentQuest'] as Map<String, dynamic>;
     final progress = activityData['progressStats'] as Map<String, dynamic>;
     final rewards = activityData['rewards'] as Map<String, dynamic>;
-    
+
     final userName = gameContext['userPreferredName'] ?? '친구';
     final questName = quest['name'];
     final difficulty = quest['difficulty'];
     final rewardPoints = quest['rewardPoints'];
     final todayCompleted = progress['todayCompleted'] ?? 1;
     final completionRate = progress['completionRate'] ?? 0.5;
-    
+
     return '''
 당신은 '셰르피'입니다. ${userName}님의 퀘스트 가이드이자 모험 동반자입니다.
 
@@ -219,13 +218,13 @@ RPG 게임의 가이드처럼 모험적이고 흥미진진하게 응답하되, 5
     final climb = activityData['currentClimb'] as Map<String, dynamic>;
     final stats = activityData['climbingStats'] as Map<String, dynamic>;
     final challenges = activityData['challenges'] as Map<String, dynamic>;
-    
+
     final userName = gameContext['userPreferredName'] ?? '친구';
     final mountainName = climb['mountain'];
     final progress = climb['progress'];
     final altitude = stats['currentAltitude'] ?? 0;
     final successRate = stats['successRate'] ?? 0.5;
-    
+
     return '''
 당신은 '셰르피'입니다. ${userName}님의 등반 가이드이자 산악 동반자입니다.
 
@@ -267,13 +266,13 @@ ${userName}님의 등반 ${isSuccess ? '성공' : '도전'}에 대해 ${_getPers
     final meeting = activityData['currentMeeting'] as Map<String, dynamic>;
     final social = activityData['socialStats'] as Map<String, dynamic>;
     final networking = activityData['networking'] as Map<String, dynamic>;
-    
+
     final userName = gameContext['userPreferredName'] ?? '친구';
     final meetingTitle = meeting['title'];
     final meetingType = meeting['type'];
     final participants = meeting['participants'];
     final socialScore = social['socialScore'] ?? 0.5;
-    
+
     return '''
 당신은 '셰르피'입니다. ${userName}님의 소셜 활동 동반자이자 네트워킹 가이드입니다.
 
@@ -310,30 +309,45 @@ ${userName}님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로
 
   static String _translateTrend(String trend) {
     switch (trend) {
-      case 'improving': return '상승세 📈';
-      case 'stable': return '안정적 ➡️';
-      case 'declining': return '하락세 📉';
-      default: return '변동 중 〰️';
+      case 'improving':
+        return '상승세 📈';
+      case 'stable':
+        return '안정적 ➡️';
+      case 'declining':
+        return '하락세 📉';
+      default:
+        return '변동 중 〰️';
     }
   }
 
   static String _translateMoodTrend(String trend) {
     switch (trend) {
-      case 'positive': return '긍정적 🌈';
-      case 'stable': return '안정적 ⚖️';
-      case 'negative': return '부정적 🌧️';
-      case 'mixed': return '다양함 🎭';
-      default: return '변화 중 🔄';
+      case 'positive':
+        return '긍정적 🌈';
+      case 'stable':
+        return '안정적 ⚖️';
+      case 'negative':
+        return '부정적 🌧️';
+      case 'mixed':
+        return '다양함 🎭';
+      default:
+        return '변화 중 🔄';
     }
   }
 
   static String _translateDifficulty(String difficulty) {
     switch (difficulty.toLowerCase()) {
-      case 'easy': return '쉬움 ⭐';
-      case 'normal': case 'medium': return '보통 ⭐⭐';
-      case 'hard': return '어려움 ⭐⭐⭐';
-      case 'extreme': return '극한 ⭐⭐⭐⭐';
-      default: return difficulty;
+      case 'easy':
+        return '쉬움 ⭐';
+      case 'normal':
+      case 'medium':
+        return '보통 ⭐⭐';
+      case 'hard':
+        return '어려움 ⭐⭐⭐';
+      case 'extreme':
+        return '극한 ⭐⭐⭐⭐';
+      default:
+        return difficulty;
     }
   }
 
@@ -346,31 +360,43 @@ ${userName}님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로
     }
     return type; // fallback
   }
-  
+
   /// 영어 카테고리를 한국어로 매핑
   static String _englishToKoreanCategory(String englishType) {
     switch (englishType) {
-      case 'study': return '스터디';
-      case 'exercise': return '운동';
-      case 'hobby': return '취미';
-      case 'networking': return '네트워킹';
-      case 'social': return '친목';
-      case 'reading': return '독서';
-      case 'work': return '업무';
-      case 'religion': return '종교';
-      case 'volunteer': return '봉사';
-      case 'culture': return '문화';
-      case 'outdoor': return '아웃도어';
-      default: return englishType;
+      case 'study':
+        return '스터디';
+      case 'exercise':
+        return '운동';
+      case 'hobby':
+        return '취미';
+      case 'networking':
+        return '네트워킹';
+      case 'social':
+        return '친목';
+      case 'reading':
+        return '독서';
+      case 'work':
+        return '업무';
+      case 'religion':
+        return '종교';
+      case 'volunteer':
+        return '봉사';
+      case 'culture':
+        return '문화';
+      case 'outdoor':
+        return '아웃도어';
+      default:
+        return englishType;
     }
   }
 
   static String _getMotivationPoints(Map<String, dynamic> activityData) {
     final achievements = activityData['achievements'] as Map<String, dynamic>?;
     final motivation = activityData['motivation'] as Map<String, dynamic>?;
-    
+
     List<String> points = [];
-    
+
     if (achievements?['isPersonalBest'] == true) {
       points.add('- 🏆 개인 최고 기록 달성!');
     }
@@ -383,16 +409,16 @@ ${userName}님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로
     if ((motivation?['goalProgress'] ?? 0) > 0.8) {
       points.add('- 🎯 목표 달성이 눈앞에!');
     }
-    
+
     return points.isEmpty ? '- 꾸준히 운동하고 있어요!' : points.join('\n');
   }
 
   static String _getReadingInsights(Map<String, dynamic> activityData) {
     final habits = activityData['readingHabits'] as Map<String, dynamic>?;
     final insights = activityData['insights'] as Map<String, dynamic>?;
-    
+
     List<String> points = [];
-    
+
     if ((habits?['weeklyPages'] ?? 0) > 100) {
       points.add('- 📖 주간 100페이지 이상 독서!');
     }
@@ -402,13 +428,13 @@ ${userName}님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로
     if ((insights?['completionRate'] ?? 0) > 0.8) {
       points.add('- ✅ 높은 완독률 유지!');
     }
-    
+
     return points.isEmpty ? '- 📚 독서 습관을 만들어가고 있어요!' : points.join('\n');
   }
 
   static String _getDiaryGrowthInsights(Map<String, dynamic> growth) {
     List<String> insights = [];
-    
+
     if ((growth['emotionalAwareness'] ?? 0) > 0.7) {
       insights.add('- 🎭 높은 감정 인식 능력');
     }
@@ -418,16 +444,16 @@ ${userName}님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로
     if ((growth['reflectionDepth'] ?? 0) > 0.7) {
       insights.add('- 🌊 깊이 있는 성찰');
     }
-    
+
     return insights.isEmpty ? '- 🌱 감정 기록을 통해 성장 중!' : insights.join('\n');
   }
 
   static String _getQuestMasteryInsights(Map<String, dynamic> activityData) {
     final analysis = activityData['questTypeAnalysis'] as Map<String, dynamic>?;
     final progress = activityData['progressStats'] as Map<String, dynamic>?;
-    
+
     List<String> insights = [];
-    
+
     if ((progress?['completionRate'] ?? 0) > 0.8) {
       insights.add('- 🏆 80% 이상의 완료율!');
     }
@@ -437,16 +463,17 @@ ${userName}님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로
     if (analysis?['favoriteType'] != null) {
       insights.add('- 🎯 ${analysis!['favoriteType']} 퀘스트 마스터!');
     }
-    
+
     return insights.isEmpty ? '- ⚔️ 퀘스트 도전자!' : insights.join('\n');
   }
 
-  static String _getClimbingInsights(Map<String, dynamic> activityData, bool isSuccess) {
+  static String _getClimbingInsights(
+      Map<String, dynamic> activityData, bool isSuccess) {
     final stats = activityData['climbingStats'] as Map<String, dynamic>?;
     final challenges = activityData['challenges'] as Map<String, dynamic>?;
-    
+
     List<String> insights = [];
-    
+
     if (isSuccess) {
       insights.add('- 🏔️ 정상 정복 성공!');
     }
@@ -456,7 +483,7 @@ ${userName}님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로
     if ((stats?['totalMountainsClimbed'] ?? 0) > 5) {
       insights.add('- 🗻 5개 이상의 산 정복!');
     }
-    
+
     return insights.isEmpty ? '- 🧗 도전을 계속하세요!' : insights.join('\n');
   }
 
@@ -505,7 +532,8 @@ ${userName}님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로
       return '기쁜 감정을 함께 축하하고 긍정적 에너지를 증폭시켜주세요.';
     } else if (lowerMood.contains('sad') || lowerMood.contains('tired')) {
       return '힘든 감정을 공감하고 따뜻한 위로를 전해주세요.';
-    } else if (lowerMood.contains('angry') || lowerMood.contains('frustrated')) {
+    } else if (lowerMood.contains('angry') ||
+        lowerMood.contains('frustrated')) {
       return '답답한 감정을 이해하고 차분하게 격려해주세요.';
     } else {
       return '감정을 인정하고 함께 있다는 느낌을 전해주세요.';

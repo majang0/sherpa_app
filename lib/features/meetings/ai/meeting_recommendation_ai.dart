@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../core/ai/openai_dialogue_source.dart';
+import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../models/available_meeting_model.dart';

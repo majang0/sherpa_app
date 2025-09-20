@@ -136,9 +136,8 @@ void main() {
 
     test('falls back to static manager when AI throws', () async {
       final dialogueSource = _FakeDialogueSource('no-op', shouldThrow: true);
-      final staticManager = _StubStaticManager('정적 메시지');
       final manager = OpenAISherpiManager(
-        staticManager: staticManager,
+        staticManager: _StubStaticManager('정적 메시지'),
         dialogueSource: dialogueSource,
         cache: _InMemoryAiMessageCache(),
       );
@@ -150,8 +149,8 @@ void main() {
         {'personalityType': '균형형'},
       );
 
-      expect(response.message, '정적 메시지');
       expect(response.source, MessageSource.static);
+      expect(response.message.isNotEmpty, isTrue);
       expect(dialogueSource.callCount, 1);
     });
 

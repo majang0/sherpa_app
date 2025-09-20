@@ -18,7 +18,7 @@ import 'global_game_provider.dart';
 import 'global_badge_provider.dart'; // 뱃지 Provider 추가
 import '../../features/quests/providers/quest_provider_v2.dart'; // 퀘스트 Provider 추가
 import 'notification_provider.dart'; // 알림 Provider 추가
-import '../../core/ai/activity_analysis_service.dart'; // 활동 분석 서비스 추가
+import 'package:sherpa_app/core/ai/services/activity_analysis_service.dart'; // 활동 분석 서비스 추가
 
 /// 글로벌 사용자 데이터 관리 Provider (완전 독립형)
 final globalUserProvider =

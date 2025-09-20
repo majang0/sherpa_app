@@ -6,7 +6,7 @@ import '../../../../core/theme/modern_colors.dart';
 import '../../../providers/global_user_provider.dart';
 import '../../../models/global_user_model.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
-import '../../../../core/ai/activity_analysis_service.dart';
+import 'package:sherpa_app/core/ai/services/activity_analysis_service.dart';
 
 /// 📝 일기 분석 페이지 - 감정의 여정
 ///

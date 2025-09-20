@@ -9,7 +9,8 @@ import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
 /// StaticDialogueSource를 통해 sherpi_dialogues.dart의 풍부한 메시지를 사용합니다.
 class StaticSherpiManager implements SherpiMessageManager {
   // 개인화 설정
-  PersonalizationSettings _personalizationSettings = const PersonalizationSettings();
+  PersonalizationSettings _personalizationSettings =
+      const PersonalizationSettings();
 
   // StaticDialogueSource 인스턴스 - 풍부한 메시지를 제공
   final StaticDialogueSource _dialogueSource = StaticDialogueSource();
@@ -36,9 +37,11 @@ class StaticSherpiManager implements SherpiMessageManager {
     final safeGameContext = Map<String, dynamic>.from(gameContext ?? {});
 
     // 개인화 설정을 gameContext에 추가
-    safeGameContext['userPreferredName'] = _personalizationSettings.userPreferredName;
+    safeGameContext['userPreferredName'] =
+        _personalizationSettings.userPreferredName;
     safeGameContext['userName'] = _personalizationSettings.userPreferredName;
-    safeGameContext['personalityType'] = _personalizationSettings.personalityType.displayName;
+    safeGameContext['personalityType'] =
+        _personalizationSettings.personalityType.displayName;
 
     // StaticDialogueSource를 사용하여 풍부한 메시지 가져오기
     String message = await _dialogueSource.getDialogue(
@@ -61,7 +64,8 @@ class StaticSherpiManager implements SherpiMessageManager {
   }
 
   @override
-  PersonalizationSettings get personalizationSettings => _personalizationSettings;
+  PersonalizationSettings get personalizationSettings =>
+      _personalizationSettings;
 
   @override
   bool get supportsRealtimeAI => false;
@@ -95,6 +99,12 @@ class StaticSherpiManager implements SherpiMessageManager {
 
   /// 이모지 제거 유틸리티 함수
   String _removeEmojis(String text) {
-    return text.replaceAll(RegExp(r'[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]', unicode: true), '').trim();
+    return text
+        .replaceAll(
+            RegExp(
+                r'[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]',
+                unicode: true),
+            '')
+        .trim();
   }
 }

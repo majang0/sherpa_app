@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/constants/sherpi_emotions.dart';
-// import '../../core/ai/smart_sherpi_manager_openai.dart'; // OpenAI GPT-5 시스템 (DISABLED)
-import '../../core/ai/real_data_connector.dart';
+// import 'package:sherpa_app/core/ai/managers/legacy/smart_sherpi_manager_openai.dart'; // OpenAI GPT-5 시스템 (DISABLED)
+import 'package:sherpa_app/core/ai/services/real_data_connector.dart';
 import '../../features/sherpi/relationship/providers/relationship_provider.dart';
 import '../../features/sherpi/emotion/providers/emotion_analysis_provider.dart';
 import '../../features/sherpi/domain/models/sherpi_response.dart';

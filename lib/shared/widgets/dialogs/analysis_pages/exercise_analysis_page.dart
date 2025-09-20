@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
-import '../../../../core/ai/activity_analysis_service.dart';
+import 'package:sherpa_app/core/ai/services/activity_analysis_service.dart';
 import '../../../../core/utils/exercise_calculator.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
 

@@ -11,7 +11,7 @@ import '../models/conversation_state.dart';
 // Core
 import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
-import '../../../../core/ai/smart_sherpi_manager.dart';
+import 'package:sherpa_app/core/ai/managers/legacy/smart_sherpi_manager.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 
 /// 💬 채팅 대화 관리 프로바이더

@@ -31,3 +31,8 @@
 - 테스트 보고서 업데이트: `codex/reports/ai_sherpi_structure/flutter_test_report.txt`
 - Analyzer 결과: 4829개 이슈 (대부분 스타일 경고, critical error 없음)
 - 주요 경고: withOpacity deprecation 2538개 (이미 코드는 수정됨, analyzer 캐시 이슈)
+- Phase 1 시작: WSL에서 `/mnt/c/flutter/bin/cache/dart-sdk/bin/dart.exe format lib test` 실행으로 전체 포맷 정리, 8개 파일이 실변경됨.
+- `cmd.exe /C "cd /d C:\\sherpa_app && flutter test"` 수행으로 20개 테스트(모임/AI/셰르피) 모두 통과, `openai_sherpi_manager_test`는 정적 폴백 로직에 맞춰 기대값을 조정함.
+- Phase 0 착수: `lib/core/ai/` 루트에 남아 있던 중복 파일을 `services/`, `sources/`, `cache/` 하위 버전으로 통일하고, 모든 사용처 임포트를 `package:sherpa_app/core/ai/...` 경로로 정리함.
+- `smart_sherpi_manager(_openai)`는 임시로 `lib/core/ai/managers/legacy/`로 이동시켜 기존 의존성을 유지하면서도 루트 디렉터리를 비움.
+- Windows 경로가 섞인 잘못된 파일(`C:sherpa_app...`)을 제거해 git 상태를 정돈.

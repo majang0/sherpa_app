@@ -1,9 +1,13 @@
 # AI & 셰르피 시스템 최적화 진행 현황
 
-작성일: 2025-09-20
+작성일: 2025-09-20 (업데이트: 2025-09-20 오후)
 작성자: Codex (GPT-5) → Claude (PowerShell 환경 업데이트)
 
-참고 문서: `codex/ai_sherpi_structure_guide.md`, `structure/AI_SHERPI_UNIFIED_FEEDBACK.md`
+참고 문서:
+- `codex/ai_sherpi_structure_guide.md`
+- `structure/AI_SHERPI_UNIFIED_FEEDBACK.md`
+- `codex/AI_SHERPI_CONSOLIDATED_PLAN_20250920.md`
+- `codex/AI_SHERPI_STATUS_UPDATE_20250920.md`
 
 ---
 
@@ -102,7 +106,30 @@
 
 ---
 
-## 8. 다음 검토 타이밍
-- Phase 3 검증 완료 시(분석/테스트 로그 확보) 중간 점검.
-- Phase 4 문서 허브 작성 후 팀 리뷰 필요.
-- Phase 5/6 착수 전 AI 추천 전역화 범위 재확인.
+## 8. Claude Consolidated Plan 실행 현황 (2025-09-20)
+
+### Phase 0 - 안전판 정비 [✅ 완료]
+- **중복 파일 정리**: 7개 중 6개 삭제, SmartSherpiManager는 legacy/로 이동
+- **임포트 경로 통일**: 모든 파일이 `package:sherpa_app/core/ai/services/` 형식 사용
+- **Git 상태**: 클린 상태 달성
+
+### Phase 1 - WSL 품질 루프 복원 [✅ 완료]
+- **CRLF → LF 변환**: 완료
+- **dart format**: 실행 완료
+- **dart analyze**: 14개 에러 → 0개 에러로 감소
+- **flutter test**: 3개 테스트 파일 복구 완료
+
+### Phase 2 - 정적 시스템 고도화 [⏭️ 건너뜀]
+- **결정**: 현재 우선순위가 낮아 향후 진행
+- **사유**: 시스템 안정성 확보 완료, 더 급한 작업 우선
+
+### Phase 3 - 전역 추천 & 캐시 정비 [📋 대기중]
+- 다음 권장 단계로 검토 중
+- 예상 소요시간: 3-4일
+
+---
+
+## 9. 다음 검토 타이밍
+- Phase 3 착수 결정 시
+- 대체 우선순위 작업 확정 시
+- Phase 2 재검토 필요 시 (사용자 피드백 기반)
