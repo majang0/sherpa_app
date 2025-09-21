@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../constants/record_colors.dart';
-import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../core/constants/meeting_categories.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';

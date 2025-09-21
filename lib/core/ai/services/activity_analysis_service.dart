@@ -429,7 +429,9 @@ ${previousExercise != null ? '''
           encouragement: data['encouragement'] ?? '',
         );
       }
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 캐시 작업 실패 허용
+    }
     return null;
   }
 
@@ -459,7 +461,9 @@ ${previousExercise != null ? '''
       // 종합 운동 분석 캐시 삭제
       final comprehensiveKey = 'comprehensive_exercise_$dateKey';
       await prefs.remove(comprehensiveKey);
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 캐시 작업 실패 허용
+    }
   }
 
   /// 기본 종합 운동 분석 (API 실패시)
@@ -557,7 +561,9 @@ ${previousExercise != null ? '''
       // 종합 운동 분석 캐시만 삭제
       final comprehensiveKey = 'comprehensive_exercise_$dateKey';
       await prefs.remove(comprehensiveKey);
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 캐시 작업 실패 허용
+    }
   }
 
   // areAllAnalysesComplete 메서드 제거됨 - 개별 활동 분석을 사용하지 않음

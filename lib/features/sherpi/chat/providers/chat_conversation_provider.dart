@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:convert';
 
 // Models
@@ -12,6 +14,7 @@ import '../models/conversation_state.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/managers/openai_sherpi_manager.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 
 /// 💬 채팅 대화 관리 프로바이더
@@ -171,7 +174,7 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
           .read(sherpiProvider.notifier)
           .changeEmotion(sherpiMessage.emotion ?? SherpiEmotion.happy);
     } catch (e) {
-      print('❌ 셰르피 응답 생성 실패: $e');
+      LoggerService.instance.d('❌ 셰르피 응답 생성 실패: $e');
       _addErrorMessage();
     }
   }
@@ -344,7 +347,7 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
         await prefs.setStringList('sherpi_conversation_sessions', sessionList);
       }
     } catch (e) {
-      print('❌ 대화 저장 실패: $e');
+      LoggerService.instance.d('❌ 대화 저장 실패: $e');
     }
   }
 
@@ -361,7 +364,7 @@ class ChatConversationNotifier extends StateNotifier<ConversationState> {
         state = ConversationState.fromJson(conversationData);
       }
     } catch (e) {
-      print('❌ 대화 불러오기 실패: $e');
+      LoggerService.instance.d('❌ 대화 불러오기 실패: $e');
     }
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:convert';
 
 import '../../../../shared/models/sherpi_relationship_model.dart';
@@ -25,7 +27,7 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
         final Map<String, dynamic> json = jsonDecode(savedData);
         return SherpiRelationship.fromJson(json);
       } catch (e) {
-        print('❌ 관계 데이터 로드 실패: $e');
+        LoggerService.instance.d('❌ 관계 데이터 로드 실패: $e');
       }
     }
 
@@ -42,7 +44,7 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
       final String jsonData = jsonEncode(relationship.toJson());
       await _prefs.setString(_storageKey, jsonData);
     } catch (e) {
-      print('❌ 관계 데이터 저장 실패: $e');
+      LoggerService.instance.d('❌ 관계 데이터 저장 실패: $e');
     }
   }
 
@@ -202,7 +204,7 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
   /// 🎨 Phase 2: 관계 정보 직접 업데이트 (개인화 설정 등)
   void updateRelationship(SherpiRelationship newRelationship) {
     state = newRelationship;
-    print(
+    LoggerService.instance.d(
         '🎨 관계 정보 직접 업데이트 완료: ${newRelationship.personalizationSettings.personalityType.displayName}');
   }
 

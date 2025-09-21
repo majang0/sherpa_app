@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:convert';
 
 import '../models/emotion_analysis_model.dart';
@@ -96,7 +98,7 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
             recentAnalyses.isNotEmpty ? recentAnalyses.first : null,
       );
     } catch (e) {
-      print('🎭 감정 분석 데이터 로드 실패: $e');
+      LoggerService.instance.d('🎭 감정 분석 데이터 로드 실패: $e');
     }
   }
 
@@ -116,7 +118,7 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
       // 감정 동기화 점수 저장
       await _prefs.setDouble(_syncScoreKey, state.emotionalSyncScore);
     } catch (e) {
-      print('🎭 감정 분석 데이터 저장 실패: $e');
+      LoggerService.instance.d('🎭 감정 분석 데이터 저장 실패: $e');
     }
   }
 
@@ -157,7 +159,7 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
       await _saveData();
       return analysis;
     } catch (e) {
-      print('🎭 감정 분석 실패: $e');
+      LoggerService.instance.d('🎭 감정 분석 실패: $e');
       state = state.copyWith(isAnalyzing: false);
       rethrow;
     }

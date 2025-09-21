@@ -1,5 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter/foundation.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 
 /// API 설정 관리 클래스
 ///
@@ -158,10 +158,10 @@ class ApiConfig {
 
   /// 🧪 API 키 상태를 디버그용으로 출력합니다.
   static void debugApiKeyStatus() {
-    print('📊 AI API 키 상태:');
-    print('  - Gemini: ${isApiKeyValid ? '✅ 설정됨' : '❌ 미설정'}');
-    print('  - OpenAI: ${isOpenAIApiKeyValid ? '✅ 설정됨' : '❌ 미설정'}');
-    print('  - 현재 사용: ${currentAIProvider.name}');
+    LoggerService.instance.d('📊 AI API 키 상태:');
+    LoggerService.instance.d('  - Gemini: ${isApiKeyValid ? '✅ 설정됨' : '❌ 미설정'}');
+    LoggerService.instance.d('  - OpenAI: ${isOpenAIApiKeyValid ? '✅ 설정됨' : '❌ 미설정'}');
+    LoggerService.instance.d('  - 현재 사용: ${currentAIProvider.name}');
   }
 }
 

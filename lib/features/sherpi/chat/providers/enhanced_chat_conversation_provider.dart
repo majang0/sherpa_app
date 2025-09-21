@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 
 // Models
 import '../models/chat_message.dart';
@@ -12,6 +14,7 @@ import '../models/conversation_state.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/managers/openai_sherpi_manager.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 
 // Emotion Recognition Integration
@@ -233,7 +236,7 @@ class EnhancedChatConversationNotifier
           .read(sherpiProvider.notifier)
           .changeEmotion(sherpiMessage.emotion ?? SherpiEmotion.happy);
     } catch (e) {
-      print('❌ 셰르피 응답 생성 실패: $e');
+      LoggerService.instance.d('❌ 셰르피 응답 생성 실패: $e');
       _addErrorMessage();
     }
   }
@@ -384,7 +387,7 @@ class EnhancedChatConversationNotifier
     String? comment,
   }) async {
     // 피드백 수집 (현재는 로그만 기록)
-    print('피드백 수집: $messageId - 평점: $rating, 코멘트: $comment');
+    LoggerService.instance.d('피드백 수집: $messageId - 평점: $rating, 코멘트: $comment');
   }
 
   /// 📊 개인화 통계 조회
@@ -413,7 +416,7 @@ class EnhancedChatConversationNotifier
         await prefs.setStringList('sherpi_conversation_sessions', sessionList);
       }
     } catch (e) {
-      print('❌ 대화 저장 실패: $e');
+      LoggerService.instance.d('❌ 대화 저장 실패: $e');
     }
   }
 
@@ -430,7 +433,7 @@ class EnhancedChatConversationNotifier
         state = ConversationState.fromJson(conversationData);
       }
     } catch (e) {
-      print('❌ 대화 불러오기 실패: $e');
+      LoggerService.instance.d('❌ 대화 불러오기 실패: $e');
     }
   }
 
@@ -474,7 +477,7 @@ class EnhancedChatConversationNotifier
         }
       }
     } catch (e) {
-      print('감정 분석 실패: $e');
+      LoggerService.instance.d('감정 분석 실패: $e');
     }
   }
 

@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../core/theme/modern_colors.dart';
 import 'package:sherpa_app/core/ai/services/activity_analysis_service.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../models/point_system_model.dart';
 import '../../../providers/global_point_provider.dart';
@@ -362,7 +368,7 @@ class _ComprehensiveAnalysisPageState
         );
       }
     } catch (e) {
-      print('종합 분석 로드 에러: $e');
+      LoggerService.instance.d('종합 분석 로드 에러: $e');
       setState(() {
         _isLoading = false;
       });
@@ -394,7 +400,7 @@ class _ComprehensiveAnalysisPageState
         forceRegenerate: forceRefresh, // 강제 새로고침 옵션
       );
     } catch (e) {
-      print('종합 분석 수행 중 에러: $e');
+      LoggerService.instance.d('종합 분석 수행 중 에러: $e');
       // 에러 발생 시 기본 데이터 사용
       _analysisData = ComprehensiveDayAnalysis(
         dayTheme: '성실한 하루 ✨',

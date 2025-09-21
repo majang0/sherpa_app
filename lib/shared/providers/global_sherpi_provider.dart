@@ -252,7 +252,9 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
 
       // 친밀도 레벨 업데이트
       _updateIntimacyLevel();
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 중요하지 않은 작업
+    }
   }
 
   @override
@@ -685,7 +687,9 @@ void initializeSherpi() {
     try {
       final emotionNotifier = _ref.read(emotionAnalysisProvider.notifier);
       emotionNotifier.recordSherpiResponse(emotion);
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 중요하지 않은 작업
+    }
   }
 
   /// 💕 관계 시스템에 감정 동기화 점수 업데이트
@@ -700,7 +704,9 @@ void initializeSherpi() {
       if (syncScore > 0) {
         relationshipNotifier.updateEmotionalSync(syncScore);
       }
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 중요하지 않은 작업
+    }
   }
 
   /// 📝 메시지 히스토리에 추가
@@ -762,7 +768,9 @@ void initializeSherpi() {
         emotion: SherpiEmotion.cheering,
         forceShow: true,
       );
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 중요하지 않은 작업
+    }
   }
 
   /// 🚨 중복 메시지 감지 (3초 이내 같은 컨텍스트/메시지는 중복으로 간주)

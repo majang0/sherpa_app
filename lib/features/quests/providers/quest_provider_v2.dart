@@ -438,7 +438,9 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
           userNotifier.increaseStats(deltaWillpower: increase);
           break;
       }
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 중요하지 않은 작업
+    }
   }
 
   /// 전체 완료 보너스 확인

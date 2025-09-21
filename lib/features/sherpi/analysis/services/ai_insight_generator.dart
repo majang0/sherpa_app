@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/models/point_system_model.dart';
@@ -23,9 +26,9 @@ class AiInsightGenerator {
   AiInsightGenerator({Ref? ref}) : _ref = ref {
     try {
       _openAISource = OpenAIDialogueSource();
-      print('✅ OpenAI GPT-5 인사이트 생성기 초기화 완료');
+      LoggerService.instance.i('✅ OpenAI GPT-5 인사이트 생성기 초기화 완료');
     } catch (e) {
-      print('❌ OpenAI 인사이트 생성기 초기화 실패: $e');
+      LoggerService.instance.d('❌ OpenAI 인사이트 생성기 초기화 실패: $e');
       rethrow;
     }
   }
@@ -47,13 +50,13 @@ class AiInsightGenerator {
         'AI 분석 사용료',
       );
       if (result) {
-        print('✅ 분석 포인트 차감 성공: ${ANALYSIS_COST}P');
+        LoggerService.instance.i('✅ 분석 포인트 차감 성공: ${ANALYSIS_COST}P');
       } else {
-        print('❌ 분석 포인트 차감 실패: 포인트 부족');
+        LoggerService.instance.d('❌ 분석 포인트 차감 실패: 포인트 부족');
       }
       return result;
     } catch (e) {
-      print('❌ 포인트 차감 중 오류: $e');
+      LoggerService.instance.d('❌ 포인트 차감 중 오류: $e');
       return false;
     }
   }
@@ -65,7 +68,7 @@ class AiInsightGenerator {
           .read(globalPointProvider.notifier)
           .refundPoints(ANALYSIS_COST, reason);
     } catch (e) {
-      print('⚠️ 포인트 환불 중 오류: $e');
+      LoggerService.instance.w('⚠️ 포인트 환불 중 오류: $e');
     }
   }
 

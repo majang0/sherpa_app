@@ -3,6 +3,7 @@
 // 사용자의 성장 여정과 마일스톤을 추적하는 상태 관리 Provider
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../services/growth_story_service.dart';
 
 /// 📊 성장 스토리 상태
@@ -276,7 +277,7 @@ class GrowthStoryNotifier extends StateNotifier<GrowthStoryState> {
       state = state.copyWith(stats: stats);
     } catch (e) {
       // 통계 업데이트 실패는 치명적이지 않으므로 조용히 처리
-      print('통계 업데이트 오류: $e');
+      LoggerService.instance.d('통계 업데이트 오류: $e');
     }
   }
 

@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // 🔄 글로벌 시스템 import
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/providers/global_badge_provider.dart';
-import '../../../shared/providers/global_game_provider.dart';
 import '../../../shared/models/global_badge_model.dart';
 
 // 🔄 기존 코드 호환성을 위한 Provider 별칭

@@ -1,9 +1,13 @@
 // lib/features/daily_record/presentation/screens/focus_timer_record_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter/services.dart'; // SystemChrome 추가
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import '../../../../core/theme/modern_colors.dart';
@@ -13,7 +17,6 @@ import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart'; // 셰르피 Provider 추가
 import '../../../../shared/providers/global_point_provider.dart'; // 포인트 Provider 추가
-import '../../../../shared/models/point_system_model.dart'; // 포인트 시스템 모델 추가
 
 // 🎯 집중 유형 enum
 enum FocusType {
@@ -1457,7 +1460,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
         // 일시정지/재개 버튼
         ElevatedButton(
           onPressed: () {
-            print('⏯️ 일시정지 버튼 클릭!');
+            LoggerService.instance.d('⏯️ 일시정지 버튼 클릭!');
             HapticFeedback.lightImpact();
             _togglePause();
           },
@@ -1481,7 +1484,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
         // 정지 버튼
         ElevatedButton(
           onPressed: () {
-            print('⏹️ 정지 버튼 클릭!');
+            LoggerService.instance.d('⏹️ 정지 버튼 클릭!');
             HapticFeedback.mediumImpact();
             _showStopConfirmDialog();
           },
@@ -1706,7 +1709,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           color: Colors.transparent,
           child: InkWell(
             onTap: () {
-              print('⏯️ 일시정지 버튼 클릭됨! 현재 상태: $_isPaused');
+              LoggerService.instance.d('⏯️ 일시정지 버튼 클릭됨! 현재 상태: $_isPaused');
               HapticFeedback.lightImpact();
               _togglePause();
             },
@@ -1758,7 +1761,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           color: Colors.transparent,
           child: InkWell(
             onTap: () {
-              print('🛑 정지 버튼 클릭됨!');
+              LoggerService.instance.d('🛑 정지 버튼 클릭됨!');
               HapticFeedback.mediumImpact();
               _showStopConfirmDialog();
             },
@@ -1799,7 +1802,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
 
   // 정지 확인 다이얼로그
   Future<void> _showStopConfirmDialog() async {
-    print('📋 정지 확인 다이얼로그 표시');
+    LoggerService.instance.d('📋 정지 확인 다이얼로그 표시');
 
     final result = await showDialog<bool>(
       context: context,
@@ -1853,7 +1856,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
           actions: [
             TextButton(
               onPressed: () {
-                print('❌ 정지 취소됨');
+                LoggerService.instance.d('❌ 정지 취소됨');
                 Navigator.of(context).pop(false);
               },
               child: Text(
@@ -1866,7 +1869,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
             ),
             TextButton(
               onPressed: () {
-                print('✅ 정지 확인됨');
+                LoggerService.instance.i('✅ 정지 확인됨');
                 Navigator.of(context).pop(true);
               },
               child: Text(
@@ -2011,7 +2014,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
   }
 
   void _togglePause() {
-    print('🎮 일시정지 토글: 현재 상태 = $_isPaused');
+    LoggerService.instance.d('🎮 일시정지 토글: 현재 상태 = $_isPaused');
 
     setState(() {
       _isPaused = !_isPaused;
@@ -2020,18 +2023,18 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
     if (_isPaused) {
       _pulseController.stop();
       _rippleController.stop();
-      print('⏸️ 일시정지됨');
+      LoggerService.instance.d('⏸️ 일시정지됨');
     } else {
       _pulseController.repeat(reverse: true);
       _rippleController.repeat();
-      print('▶️ 재시작됨');
+      LoggerService.instance.d('▶️ 재시작됨');
     }
 
     HapticFeedbackManager.mediumImpact();
   }
 
   void _stopTimer() {
-    print('🛑 타이머 정지 시작');
+    LoggerService.instance.d('🛑 타이머 정지 시작');
 
     _timer?.cancel();
     _pulseController.stop();
@@ -2050,7 +2053,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
     _exitImmersiveMode();
 
     HapticFeedbackManager.mediumImpact();
-    print('✅ 타이머 정지 완료');
+    LoggerService.instance.i('✅ 타이머 정지 완료');
   }
 
   void _completeTimer() async {
@@ -2170,7 +2173,7 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
       color: Colors.transparent,
       child: InkWell(
         onTap: () async {
-          print('🚪 포기 버튼 클릭됨');
+          LoggerService.instance.d('🚪 포기 버튼 클릭됨');
           HapticFeedback.mediumImpact();
           final shouldGiveUp = await _showExitConfirmDialog();
           if (shouldGiveUp) {

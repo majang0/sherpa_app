@@ -1,8 +1,11 @@
 // lib/features/home/presentation/widgets/personalized_growth_dashboard_widget.dart
 
 import 'package:flutter/material.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 
 // Core
 import '../../../../core/theme/modern_colors.dart';
@@ -827,7 +830,7 @@ class _PersonalizedGrowthDashboardWidgetState
     if (canClaimReward) {
       return GestureDetector(
         onTap: () {
-          print('🎁 황금빛 보상 버튼 클릭됨 - 모든 목표 완료');
+          LoggerService.instance.d('🎁 황금빛 보상 버튼 클릭됨 - 모든 목표 완료');
           HapticFeedbackManager.lightImpact();
 
           // 🎊 먼저 보상 처리를 실행

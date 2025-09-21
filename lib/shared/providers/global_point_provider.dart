@@ -159,7 +159,9 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
       //   final pointData = jsonDecode(pointJson);
       //   state = PointData.fromJson(pointData);
       // }
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 중요하지 않은 작업
+    }
   }
 
   /// SharedPreferences에 포인트 데이터 저장
@@ -167,7 +169,9 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('global_point_data', jsonEncode(state.toJson()));
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 중요하지 않은 작업
+    }
   }
 
   /// 포인트 추가 (등반 성공, 퀘스트 완료 등)

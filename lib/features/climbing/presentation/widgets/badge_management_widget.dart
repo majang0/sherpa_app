@@ -7,7 +7,6 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/widgets/sherpa_card.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_game_provider.dart';
 import '../../../../shared/models/global_badge_model.dart'; // ✅ GlobalBadge 사용
 import '../../../../shared/providers/global_badge_provider.dart';
 

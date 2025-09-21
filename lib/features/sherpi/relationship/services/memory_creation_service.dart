@@ -31,7 +31,7 @@ class MemoryCreationService {
 
       return null;
     } catch (e) {
-      print('성취 추억 생성 오류: $e');
+      LoggerService.instance.d('성취 추억 생성 오류: $e');
       return null;
     }
   }
@@ -58,7 +58,7 @@ class MemoryCreationService {
 
       return null;
     } catch (e) {
-      print('기념 추억 생성 오류: $e');
+      LoggerService.instance.d('기념 추억 생성 오류: $e');
       return null;
     }
   }
@@ -85,7 +85,7 @@ class MemoryCreationService {
 
       return null;
     } catch (e) {
-      print('도전 추억 생성 오류: $e');
+      LoggerService.instance.d('도전 추억 생성 오류: $e');
       return null;
     }
   }
@@ -117,7 +117,7 @@ class MemoryCreationService {
 
       return null;
     } catch (e) {
-      print('감정 추억 생성 오류: $e');
+      LoggerService.instance.d('감정 추억 생성 오류: $e');
       return null;
     }
   }
@@ -144,7 +144,7 @@ class MemoryCreationService {
 
       return null;
     } catch (e) {
-      print('학습 추억 생성 오류: $e');
+      LoggerService.instance.d('학습 추억 생성 오류: $e');
       return null;
     }
   }
@@ -171,7 +171,7 @@ class MemoryCreationService {
 
       return null;
     } catch (e) {
-      print('마일스톤 추억 생성 오류: $e');
+      LoggerService.instance.d('마일스톤 추억 생성 오류: $e');
       return null;
     }
   }
@@ -203,7 +203,7 @@ class MemoryCreationService {
 
       return null;
     } catch (e) {
-      print('일상 추억 생성 오류: $e');
+      LoggerService.instance.d('일상 추억 생성 오류: $e');
       return null;
     }
   }

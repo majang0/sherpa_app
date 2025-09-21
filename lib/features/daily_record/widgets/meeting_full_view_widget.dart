@@ -1,11 +1,13 @@
 // lib/features/daily_record/widgets/meeting_full_view_widget.dart
 
 import 'package:flutter/material.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../constants/record_colors.dart';
 import '../presentation/screens/meeting_log_detail_screen.dart';
-import '../presentation/screens/meeting_edit_screen.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../core/constants/meeting_categories.dart';
@@ -78,11 +80,11 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
     final user = ref.watch(globalUserProvider);
     final meetingLogs = user.dailyRecords.meetingLogs;
 
-    print('📊 MeetingFullView: 모임 데이터 확인 - 총 ${meetingLogs.length}개');
+    LoggerService.instance.d('📊 MeetingFullView: 모임 데이터 확인 - 총 ${meetingLogs.length}개');
     if (meetingLogs.isNotEmpty) {
       final dates =
           meetingLogs.map((m) => '${m.date.month}/${m.date.day}').join(', ');
-      print('  모임 날짜: $dates');
+      LoggerService.instance.d('  모임 날짜: $dates');
     }
 
     // 선택된 월의 모임 로그 필터링
@@ -91,7 +93,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
           log.date.month == _selectedMonth.month;
     }).toList();
 
-    print(
+    LoggerService.instance.d(
         '📅 ${_selectedMonth.year}년 ${_selectedMonth.month}월 모임: ${monthlyLogs.length}개');
 
     return Scaffold(

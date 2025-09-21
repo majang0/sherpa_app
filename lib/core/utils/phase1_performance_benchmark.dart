@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:sherpa_app/core/ai/managers/legacy/smart_sherpi_manager.dart'; // AI 시스템 비활성화
 // import 'package:sherpa_app/core/ai/cache/ai_message_cache.dart'; // AI 캐시 시스템 비활성화
-import '../../core/constants/sherpi_dialogues.dart';
 
 /// 🚀 Phase 1 단순화 성능 벤치마크
 ///

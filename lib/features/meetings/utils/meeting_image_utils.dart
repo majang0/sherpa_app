@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 
 /// 📷 모임 이미지 저장/로딩 유틸리티 클래스
 ///
@@ -52,7 +53,7 @@ class MeetingImageUtils {
       final tempFile = tempFiles[i];
 
       if (!await tempFile.exists()) {
-        print('⚠️ Warning: Temporary file does not exist: ${tempFile.path}');
+        LoggerService.instance.d('⚠️ Warning: Temporary file does not exist: ${tempFile.path}');
         continue;
       }
 
@@ -68,9 +69,9 @@ class MeetingImageUtils {
         await tempFile.copy(targetFile.path);
         savedFileNames.add(fileName);
 
-        print('✅ Image saved: $fileName (${await tempFile.length()} bytes)');
+        LoggerService.instance.d('✅ Image saved: $fileName (${await tempFile.length()} bytes)');
       } catch (e) {
-        print('❌ Error saving image ${tempFile.path}: $e');
+        LoggerService.instance.d('❌ Error saving image ${tempFile.path}: $e');
       }
     }
 
@@ -90,11 +91,11 @@ class MeetingImageUtils {
       if (await imageFile.exists()) {
         return imageFile;
       } else {
-        print('⚠️ Warning: Image file not found: $fileName');
+        LoggerService.instance.d('⚠️ Warning: Image file not found: $fileName');
         return null;
       }
     } catch (e) {
-      print('❌ Error loading image file $fileName: $e');
+      LoggerService.instance.d('❌ Error loading image file $fileName: $e');
       return null;
     }
   }
@@ -118,7 +119,7 @@ class MeetingImageUtils {
           final imageData = await imageFile.readAsBytes();
           imageDataList.add(imageData);
         } catch (e) {
-          print('❌ Error reading image data from $fileName: $e');
+          LoggerService.instance.d('❌ Error reading image data from $fileName: $e');
         }
       }
     }
@@ -143,9 +144,9 @@ class MeetingImageUtils {
         try {
           await imageFile.delete();
           deletedCount++;
-          print('🗑️ Deleted image: $fileName');
+          LoggerService.instance.d('🗑️ Deleted image: $fileName');
         } catch (e) {
-          print('❌ Error deleting image $fileName: $e');
+          LoggerService.instance.d('❌ Error deleting image $fileName: $e');
         }
       }
     }
@@ -171,7 +172,7 @@ class MeetingImageUtils {
         try {
           totalSize += await file.length();
         } catch (e) {
-          print('Warning: Could not get size of ${file.path}');
+          LoggerService.instance.d('Warning: Could not get size of ${file.path}');
         }
       }
 
@@ -181,7 +182,7 @@ class MeetingImageUtils {
         'totalSizeMB': (totalSize / (1024 * 1024)).toStringAsFixed(2),
       };
     } catch (e) {
-      print('❌ Error getting storage stats: $e');
+      LoggerService.instance.d('❌ Error getting storage stats: $e');
       return {'count': 0, 'totalSize': 0, 'totalSizeMB': '0.00'};
     }
   }
@@ -207,16 +208,16 @@ class MeetingImageUtils {
           if (fileStat.modified.isBefore(cutoffDate)) {
             await file.delete();
             deletedCount++;
-            print('🧹 Cleaned up old image: ${path.basename(file.path)}');
+            LoggerService.instance.d('🧹 Cleaned up old image: ${path.basename(file.path)}');
           }
         } catch (e) {
-          print('Warning: Could not check/delete ${file.path}: $e');
+          LoggerService.instance.d('Warning: Could not check/delete ${file.path}: $e');
         }
       }
 
       return deletedCount;
     } catch (e) {
-      print('❌ Error during cleanup: $e');
+      LoggerService.instance.d('❌ Error during cleanup: $e');
       return 0;
     }
   }
@@ -262,7 +263,7 @@ class MeetingImageUtils {
 
       return matchingFiles;
     } catch (e) {
-      print('❌ Error finding images for meeting $meetingId: $e');
+      LoggerService.instance.d('❌ Error finding images for meeting $meetingId: $e');
       return [];
     }
   }

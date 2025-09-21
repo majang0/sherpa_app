@@ -1,26 +1,25 @@
 // lib/features/home/presentation/widgets/animated_rpg_level_card.dart
 
 import 'package:flutter/material.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:math' as math;
 
 // Core
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
-import '../../../../core/constants/game_constants.dart';
 
 // Shared Providers
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
 import '../../../../shared/providers/global_game_provider.dart';
-import '../../../../shared/providers/global_sherpi_provider.dart';
-import '../../../../shared/providers/global_point_provider.dart';
 import '../../../../shared/providers/global_badge_provider.dart';
 
 // Shared Widgets
-import '../../../../shared/widgets/sherpa_card.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 
 class AnimatedRPGLevelCard extends ConsumerStatefulWidget {
@@ -625,18 +624,18 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
     double totalSuccessBonus = willpowerBonus + badgeSuccessBonus;
 
     // 디버그 출력 (개발 중에만 사용)
-    print('=== 등반 능력 계산 디버그 ===');
-    print('사용자 스탯 - 사교성: ${user.stats.sociality}, 의지: ${user.stats.willpower}');
-    print('장착된 뱃지 수: ${equippedBadges.length}');
+    LoggerService.instance.d('=== 등반 능력 계산 디버그 ===');
+    LoggerService.instance.d('사용자 스탯 - 사교성: ${user.stats.sociality}, 의지: ${user.stats.willpower}');
+    LoggerService.instance.d('장착된 뱃지 수: ${equippedBadges.length}');
     for (final badge in equippedBadges) {
-      print('- ${badge.name}: ${badge.effectType} = ${badge.effectValue}%');
+      LoggerService.instance.d('- ${badge.name}: ${badge.effectType} = ${badge.effectValue}%');
     }
-    print('계산 결과:');
-    print('- 등반력 보너스: $powerBonus%');
-    print('- 시간 단축 (사교성): $socialityTimeReduction%');
-    print('- 시간 단축 (뱃지): $badgeTimeReduction%');
-    print('- 성공률 (의지): $willpowerBonus%');
-    print('- 성공률 (뱃지): $badgeSuccessBonus%');
+    LoggerService.instance.d('계산 결과:');
+    LoggerService.instance.d('- 등반력 보너스: $powerBonus%');
+    LoggerService.instance.d('- 시간 단축 (사교성): $socialityTimeReduction%');
+    LoggerService.instance.d('- 시간 단축 (뱃지): $badgeTimeReduction%');
+    LoggerService.instance.d('- 성공률 (의지): $willpowerBonus%');
+    LoggerService.instance.d('- 성공률 (뱃지): $badgeSuccessBonus%');
 
     return Container(
       padding: const EdgeInsets.all(20),

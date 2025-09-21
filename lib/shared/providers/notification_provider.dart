@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:convert';
 import '../models/notification_model.dart';
 
@@ -48,7 +50,7 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
         _createInitialNotifications();
       }
     } catch (e) {
-      print('알림 로드 실패: $e');
+      LoggerService.instance.d('알림 로드 실패: $e');
       state = [];
     }
   }
@@ -61,7 +63,7 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
           jsonEncode(state.map((n) => n.toJson()).toList());
       await prefs.setString('notifications', notificationsJson);
     } catch (e) {
-      print('알림 저장 실패: $e');
+      LoggerService.instance.d('알림 저장 실패: $e');
     }
   }
 

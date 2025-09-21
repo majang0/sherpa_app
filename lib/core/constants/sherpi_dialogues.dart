@@ -1,5 +1,6 @@
 // 셰르피 대화 시스템 - 백엔드 연동 및 AI 준비 구조
 import 'dart:math';
+import '../../core/utils/logger_service.dart';
 
 // 새로운 감정 시스템 사용 (sherpi_emotions.dart에서 가져옴)
 import '../../core/constants/sherpi_emotions.dart';
@@ -642,16 +643,16 @@ String getCategorySpecificMeetingMessage({
   final koreanCategory = categoryMap[category.toLowerCase()] ?? category;
 
   // 디버그: 카테고리 확인
-  print(
+  LoggerService.instance.d(
       '[DEBUG] Meeting Category - Original: "$category", Korean: "$koreanCategory"');
-  print('[DEBUG] User: "$userName", Title: "$meetingTitle"');
+  LoggerService.instance.d('User: "$userName", Title: "$meetingTitle"');
 
   // 해당 카테고리의 메시지 리스트 가져오기
   final messages = meetingCategoryMessages[koreanCategory];
 
   if (messages == null || messages.isEmpty) {
     // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
-    print('[DEBUG] No messages found for category: "$koreanCategory"');
+    LoggerService.instance.d('No messages found for category: "$koreanCategory"');
     return '$userName님, "$meetingTitle" 모임을 개설하셨어요! 🎉 함께 성장할 동료들이 곧 모일 거예요!';
   }
 
@@ -663,7 +664,7 @@ String getCategorySpecificMeetingMessage({
   message = message.replaceAll('{userName}', userName);
   message = message.replaceAll('{meetingTitle}', meetingTitle);
 
-  print('[DEBUG] Selected message: "$message"');
+  LoggerService.instance.d('Selected message: "$message"');
 
   return message;
 }
@@ -689,16 +690,16 @@ String getCategorySpecificMeetingJoinedMessage({
   final koreanCategory = categoryMap[category.toLowerCase()] ?? category;
 
   // 디버그: 카테고리 확인
-  print(
+  LoggerService.instance.d(
       '[DEBUG] Meeting Joined Category - Original: "$category", Korean: "$koreanCategory"');
-  print('[DEBUG] User: "$userName", Title: "$meetingTitle"');
+  LoggerService.instance.d('User: "$userName", Title: "$meetingTitle"');
 
   // 해당 카테고리의 메시지 리스트 가져오기
   final messages = meetingJoinedCategoryMessages[koreanCategory];
 
   if (messages == null || messages.isEmpty) {
     // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
-    print('[DEBUG] No joined messages found for category: "$koreanCategory"');
+    LoggerService.instance.d('No joined messages found for category: "$koreanCategory"');
     return '$userName님, "$meetingTitle" 모임에 참가하셨어요! 🎉 함께 성장하는 즐거움을 느껴보세요!';
   }
 
@@ -710,7 +711,7 @@ String getCategorySpecificMeetingJoinedMessage({
   message = message.replaceAll('{userName}', userName);
   message = message.replaceAll('{meetingTitle}', meetingTitle);
 
-  print('[DEBUG] Selected joined message: "$message"');
+  LoggerService.instance.d('Selected joined message: "$message"');
 
   return message;
 }
@@ -780,14 +781,14 @@ String getDiaryCompletionMessage({
   required String userName,
 }) {
   // 디버그: 감정 확인
-  print('[DEBUG] Diary Completion - Mood: "$mood", User: "$userName"');
+  LoggerService.instance.d('Diary Completion - Mood: "$mood", User: "$userName"');
 
   // 해당 감정의 메시지 리스트 가져오기
   final messages = diaryMoodMessages[mood];
 
   if (messages == null || messages.isEmpty) {
     // 감정을 찾을 수 없는 경우 기본 메시지 반환
-    print('[DEBUG] No diary messages found for mood: "$mood", using default');
+    LoggerService.instance.d('No diary messages found for mood: "$mood", using default');
     return '$userName님, 오늘의 이야기를 일기에 담으셨네요! 📝 일기 내용은 비밀로 할게요. 내일은 더 좋은 하루가 되길!';
   }
 
@@ -798,7 +799,7 @@ String getDiaryCompletionMessage({
   // 플레이스홀더 치환
   selectedMessage = selectedMessage.replaceAll('{userName}', userName);
 
-  print('[DEBUG] Selected diary message: "$selectedMessage"');
+  LoggerService.instance.d('Selected diary message: "$selectedMessage"');
   return selectedMessage;
 }
 
@@ -810,16 +811,16 @@ String getReadingCompletionMessage({
   required int pages,
 }) {
   // 디버그: 독서 정보 확인
-  print(
+  LoggerService.instance.d(
       '[DEBUG] Reading Completion - Category: "$category", Book: "$bookTitle", Pages: $pages');
-  print('[DEBUG] User: "$userName"');
+  LoggerService.instance.d('User: "$userName"');
 
   // 해당 카테고리의 메시지 리스트 가져오기
   final messages = readingCategoryMessages[category];
 
   if (messages == null || messages.isEmpty) {
     // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
-    print(
+    LoggerService.instance.d(
         '[DEBUG] No reading messages found for category: "$category", using default');
     return '$userName님, "$bookTitle" $pages페이지 독서 완료! 📚 오늘도 책과 함께한 시간이 의미있었길 바라요!';
   }
@@ -834,7 +835,7 @@ String getReadingCompletionMessage({
       .replaceAll('{bookTitle}', bookTitle)
       .replaceAll('{pages}', pages.toString());
 
-  print('[DEBUG] Selected reading message: "$selectedMessage"');
+  LoggerService.instance.d('Selected reading message: "$selectedMessage"');
   return selectedMessage;
 }
 
@@ -867,11 +868,11 @@ class StaticDialogueSource implements SherpiDialogueSource {
       // 감정 정보가 있으면 감정별 메시지 생성
       final mood = userContext['mood'] as String?;
       if (mood != null && mood.isNotEmpty) {
-        print('[DEBUG StaticDialogueSource] Diary completion detected');
-        print('[DEBUG StaticDialogueSource] userContext: $userContext');
-        print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
+        LoggerService.instance.d('StaticDialogueSource: Diary completion detected');
+        LoggerService.instance.d('StaticDialogueSource: userContext: $userContext');
+        LoggerService.instance.d('StaticDialogueSource: gameContext: $gameContext');
 
-        print(
+        LoggerService.instance.d(
             '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", mood: "$mood"');
 
         // 감정별 메시지 생성
@@ -887,15 +888,15 @@ class StaticDialogueSource implements SherpiDialogueSource {
       // 독서 활동인지 확인 (additionalData에서 bookTitle이 있으면 독서)
       final bookTitle = userContext['bookTitle'] as String?;
       if (bookTitle != null) {
-        print('[DEBUG StaticDialogueSource] Reading completion detected');
-        print('[DEBUG StaticDialogueSource] userContext: $userContext');
-        print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
+        LoggerService.instance.d('StaticDialogueSource: Reading completion detected');
+        LoggerService.instance.d('StaticDialogueSource: userContext: $userContext');
+        LoggerService.instance.d('StaticDialogueSource: gameContext: $gameContext');
 
         // 독서 정보 가져오기
         final pages = userContext['pages'] as int? ?? 0;
         final category = userContext['category'] as String? ?? '기타';
 
-        print(
+        LoggerService.instance.d(
             '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", bookTitle: "$bookTitle", pages: $pages, category: "$category"');
 
         // 카테고리별 메시지 생성
@@ -910,9 +911,9 @@ class StaticDialogueSource implements SherpiDialogueSource {
 
     // 운동 완료 시 메시지 처리
     if (context == SherpiContext.exerciseComplete && userContext != null) {
-      print('[DEBUG StaticDialogueSource] Exercise completion detected');
-      print('[DEBUG StaticDialogueSource] userContext: $userContext');
-      print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
+      LoggerService.instance.d('StaticDialogueSource: Exercise completion detected');
+      LoggerService.instance.d('StaticDialogueSource: userContext: $userContext');
+      LoggerService.instance.d('StaticDialogueSource: gameContext: $gameContext');
 
       // 운동 정보 가져오기
       final exerciseType = userContext['exerciseType'] as String? ?? '운동';
@@ -920,7 +921,7 @@ class StaticDialogueSource implements SherpiDialogueSource {
       final difficulty = userContext['difficulty'] as String? ?? 'moderate';
       final calories = userContext['calories'] as int? ?? 0;
 
-      print(
+      LoggerService.instance.d(
           '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", exerciseType: "$exerciseType", duration: $duration, difficulty: "$difficulty", calories: $calories');
 
       // 난이도를 한국어로 변환 (DifficultyLevel.name 형식과 intensity 형식 모두 지원)
@@ -968,22 +969,22 @@ class StaticDialogueSource implements SherpiDialogueSource {
           .replaceAll('{calories}', calories.toString())
           .replaceAll('{exerciseType}', exerciseType);
 
-      print(
+      LoggerService.instance.d(
           '[DEBUG StaticDialogueSource] Selected exercise message: "$selectedMessage"');
       return selectedMessage;
     }
 
     // 모임 개설 시 카테고리별 메시지 처리
     if (context == SherpiContext.meetingCreated && userContext != null) {
-      print('[DEBUG StaticDialogueSource] meetingCreated context detected');
-      print('[DEBUG StaticDialogueSource] userContext: $userContext');
-      print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
+      LoggerService.instance.d('StaticDialogueSource: meetingCreated context detected');
+      LoggerService.instance.d('StaticDialogueSource: userContext: $userContext');
+      LoggerService.instance.d('StaticDialogueSource: gameContext: $gameContext');
 
       // 모임 정보 가져오기
       final meetingTitle = userContext['meetingTitle'] ?? '새로운 모임';
       final category = userContext['category'] ?? '';
 
-      print(
+      LoggerService.instance.d(
           '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", title: "$meetingTitle", category: "$category"');
 
       // 카테고리별 메시지 생성
@@ -996,9 +997,9 @@ class StaticDialogueSource implements SherpiDialogueSource {
 
     // 모임 참가 시 카테고리별 메시지 처리
     if (context == SherpiContext.meetingJoined && userContext != null) {
-      print('[DEBUG StaticDialogueSource] meetingJoined context detected');
-      print('[DEBUG StaticDialogueSource] userContext: $userContext');
-      print('[DEBUG StaticDialogueSource] gameContext: $gameContext');
+      LoggerService.instance.d('StaticDialogueSource: meetingJoined context detected');
+      LoggerService.instance.d('StaticDialogueSource: userContext: $userContext');
+      LoggerService.instance.d('StaticDialogueSource: gameContext: $gameContext');
 
       // 모임 정보 가져오기
       final meetingTitle = userContext['meeting_title'] ??
@@ -1006,7 +1007,7 @@ class StaticDialogueSource implements SherpiDialogueSource {
           '새로운 모임';
       final category = userContext['category'] ?? '';
 
-      print(
+      LoggerService.instance.d(
           '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", title: "$meetingTitle", category: "$category"');
 
       // 카테고리별 메시지 생성

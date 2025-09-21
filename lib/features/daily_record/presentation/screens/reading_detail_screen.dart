@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../constants/record_colors.dart';
 import '../../../../shared/models/global_user_model.dart';
-import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import 'reading_record_screen.dart';
 

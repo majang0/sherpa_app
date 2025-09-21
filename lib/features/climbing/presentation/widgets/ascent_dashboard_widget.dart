@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:math' as math;
 import 'dart:async';
-import '../../../../shared/widgets/sherpa_card.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
-import '../../../../shared/providers/global_point_provider.dart';
-import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../shared/providers/global_game_provider.dart';
 import '../../../../shared/providers/global_badge_provider.dart';
 import '../../../../shared/models/global_badge_model.dart';
@@ -254,14 +254,14 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         final lastRecord = records.last;
 
         // 디버그 로그 추가
-        print('🎯 등반 완료 - 산: ${lastRecord.mountainName}');
-        print('✅ 성공 여부: ${lastRecord.isSuccess}');
-        print(
+        LoggerService.instance.d('🎯 등반 완료 - 산: ${lastRecord.mountainName}');
+        LoggerService.instance.i('✅ 성공 여부: ${lastRecord.isSuccess}');
+        LoggerService.instance.d(
             '🎁 보상 - XP: ${lastRecord.rewards.experience}, Points: ${lastRecord.rewards.points}');
 
         // 보상이 없는 경우 경고
         if (!lastRecord.rewards.hasRewards) {
-          print('⚠️ 경고: 보상이 계산되지 않았습니다!');
+          LoggerService.instance.w('⚠️ 경고: 보상이 계산되지 않았습니다!');
         }
 
         _showCompletionAnimation(lastRecord.isSuccess);
@@ -1658,9 +1658,9 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         : mountain.durationHours; // 실제 시간
 
     if (_debugMode) {
-      print('🏔️ 등반 시작 - ${mountain.name}');
-      print('📊 난이도: ${mountain.difficultyLevel}');
-      print(
+      LoggerService.instance.d('🏔️ 등반 시작 - ${mountain.name}');
+      LoggerService.instance.d('📊 난이도: ${mountain.difficultyLevel}');
+      LoggerService.instance.d(
           '⏱️ 원래 시간: ${mountain.durationHours}h → 테스트: ${(adjustedDuration * 3600).toInt()}초');
     }
 

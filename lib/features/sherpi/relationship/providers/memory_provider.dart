@@ -3,6 +3,7 @@
 // 사용자와 셰르피 간의 추억을 관리하는 상태 관리 Provider
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../models/shared_memory_model.dart';
 import '../services/memory_management_service.dart';
 
@@ -420,7 +421,7 @@ class MemoryNotifier extends StateNotifier<MemoryState> {
       state = state.copyWith(statistics: statistics);
     } catch (e) {
       // 통계 업데이트 실패는 치명적이지 않으므로 조용히 처리
-      print('통계 업데이트 오류: $e');
+      LoggerService.instance.d('통계 업데이트 오류: $e');
     }
   }
 

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter/services.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:io';
 
 // ✅ 글로벌 데이터 시스템 Import
@@ -890,14 +895,14 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       String? finalImageUrl = oldProfileUrl;
       if (_isImageDeleted) {
         // 이미지 삭제 요청 (null을 전달하면 빈 문자열로 저장됨)
-        print('프로필 이미지 삭제 요청');
+        LoggerService.instance.d('프로필 이미지 삭제 요청');
         ref.read(globalUserProvider.notifier).updateProfileImage(null);
         finalImageUrl = null;
       } else if (_selectedImage != null) {
         // 새 이미지 선택된 경우
         // 실제 구현에서는 이미지를 서버에 업로드하고 URL을 받아와야 함
         // 현재는 로컬 파일 경로를 저장 (임시)
-        print('새 프로필 이미지 설정: ${_selectedImage!.path}');
+        LoggerService.instance.d('새 프로필 이미지 설정: ${_selectedImage!.path}');
         ref
             .read(globalUserProvider.notifier)
             .updateProfileImage(_selectedImage!.path);

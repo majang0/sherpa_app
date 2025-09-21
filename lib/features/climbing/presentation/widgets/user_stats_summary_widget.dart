@@ -1,13 +1,16 @@
 // lib/features/my_growth/presentation/widgets/user_stats_summary_widget.dart
 
 import 'package:flutter/material.dart' hide Badge;
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:math' as math;
 import 'dart:ui';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../shared/widgets/sherpa_card.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_game_provider.dart';
@@ -389,7 +392,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
               onTap: () {
-                print('🎯 능력치 터치됨: ${stat['name']}'); // 디버그 로그
+                LoggerService.instance.d('🎯 능력치 터치됨: ${stat['name']}'); // 디버그 로그
                 HapticFeedbackManager.lightImpact();
                 _showRPGStatDetails(
                   context,

@@ -231,7 +231,9 @@ class MyApp extends ConsumerWidget {
 
       // 9. 감정 분석 시스템 초기화
       ref.read(emotionAnalysisProvider);
-    } catch (e) {}
+    } catch (e) {
+      // 에러 무시 - 중요하지 않은 작업
+    }
   }
 }
 
