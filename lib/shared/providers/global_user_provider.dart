@@ -247,7 +247,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       level: 12,
       experience: currentXp,
       // ✅ 능력치 0-10 범위로 복원
-      stats: GlobalStats(
+      stats: const GlobalStats(
         stamina: 8.5, // 체력 8.5
         knowledge: 6.2, // 지식 6.2
         technique: 4.3, // 기술 4.3
@@ -651,7 +651,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     if (isSuccess) {
       ref.read(sherpiProvider.notifier).showInstantMessage(
             context: SherpiContext.climbingSuccess,
-            customDialogue: '등반 성공!\n' + rewards.summaryText,
+            customDialogue: '등반 성공!\n${rewards.summaryText}',
             emotion: SherpiEmotion.cheering,
           );
     } else {
@@ -665,7 +665,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       // 보상 요약이 있을 때만 추가
       final summaryText = rewards.summaryText;
       final messageToShow = summaryText.isNotEmpty
-          ? randomMessage + '\n' + summaryText
+          ? '$randomMessage\n$summaryText'
           : randomMessage;
 
       ref.read(sherpiProvider.notifier).showInstantMessage(
@@ -885,6 +885,21 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     _saveUserData();
   }
 
+  /// 모임 기록 업데이트
+  void updateMeetingLog(MeetingLog updatedLog) {
+    final currentLogs = state.dailyRecords.meetingLogs;
+    final updatedLogs = currentLogs
+        .map((log) => log.id == updatedLog.id ? updatedLog : log)
+        .toList();
+
+    final updatedRecords = state.dailyRecords.copyWith(
+      meetingLogs: updatedLogs,
+    );
+
+    state = state.copyWith(dailyRecords: updatedRecords);
+    _saveUserData();
+  }
+
   /// 독서 기록 추가
   void addReadingLog(ReadingLog readingLog) {
     final updatedRecords = state.dailyRecords.copyWith(
@@ -1036,7 +1051,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       detailed.DetailedExerciseRecord record) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final key = 'detailed_exercise_records';
+      const key = 'detailed_exercise_records';
 
       // 기존 기록들 불러오기
       final existingRecordsJson = prefs.getStringList(key) ?? [];
@@ -1073,7 +1088,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final key = 'detailed_exercise_records';
+      const key = 'detailed_exercise_records';
 
       final recordsJson = prefs.getStringList(key) ?? [];
       final records = <detailed.DetailedExerciseRecord>[];
@@ -1199,6 +1214,34 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     _saveUserData();
   }
 
+  /// 영화 기록 업데이트
+  void updateMovieLog(MovieLog updatedLog) {
+    final currentLogs = state.dailyRecords.movieLogs;
+    final updatedLogs = currentLogs
+        .map((log) => log.id == updatedLog.id ? updatedLog : log)
+        .toList();
+
+    final updatedRecords = state.dailyRecords.copyWith(
+      movieLogs: updatedLogs,
+    );
+
+    state = state.copyWith(dailyRecords: updatedRecords);
+    _saveUserData();
+  }
+
+  /// 영화 기록 삭제
+  void deleteMovieLog(String movieId) {
+    final currentLogs = state.dailyRecords.movieLogs;
+    final updatedLogs = currentLogs.where((log) => log.id != movieId).toList();
+
+    final updatedRecords = state.dailyRecords.copyWith(
+      movieLogs: updatedLogs,
+    );
+
+    state = state.copyWith(dailyRecords: updatedRecords);
+    _saveUserData();
+  }
+
   /// 일일 목표 완료 (실제 데이터 기반 자동 완료)
   void completeDailyGoal(String goalId) {
     // ✅ 실제 데이터 기반으로 완료 조건 검사
@@ -1282,12 +1325,12 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       case 'steps':
         final currentSteps = state.dailyRecords.todaySteps;
         final remaining = 6000 - currentSteps;
-        message = '아직 ${remaining}걸음이 더 필요해요! 현재: ${currentSteps}걸음 👟';
+        message = '아직 $remaining걸음이 더 필요해요! 현재: $currentSteps걸음 👟';
         break;
       case 'focus':
         final currentMinutes = state.dailyRecords.todayFocusMinutes;
         final remaining = 30 - currentMinutes;
-        message = '아직 ${remaining}분 더 집중해주세요! 현재: ${currentMinutes}분 ⏰';
+        message = '아직 $remaining분 더 집중해주세요! 현재: $currentMinutes분 ⏰';
         break;
       case 'diary':
         message = '오늘의 일기를 먼저 작성해주세요! 📝';
@@ -1379,15 +1422,21 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         log.date.year == today.year &&
         log.date.month == today.month &&
         log.date.day == today.day &&
-        log.pages >= 1)) actuallyCompletedCount++;
+        log.pages >= 1)) {
+      actuallyCompletedCount++;
+    }
     if (records.diaryLogs.any((log) =>
         log.date.year == today.year &&
         log.date.month == today.month &&
-        log.date.day == today.day)) actuallyCompletedCount++;
+        log.date.day == today.day)) {
+      actuallyCompletedCount++;
+    }
     if (records.exerciseLogs.any((log) =>
         log.date.year == today.year &&
         log.date.month == today.month &&
-        log.date.day == today.day)) actuallyCompletedCount++;
+        log.date.day == today.day)) {
+      actuallyCompletedCount++;
+    }
 
     // 모든 목표(5개)가 완료되지 않았다면 리턴
     if (actuallyCompletedCount < 5) {
@@ -1615,7 +1664,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       xp: xp,
       points: points,
       statIncreases: statIncreases,
-      message: '챌린지 완료! 🏆 ${duration}일간의 노력이 결실을 맺었어요!',
+      message: '챌린지 완료! 🏆 $duration일간의 노력이 결실을 맺었어요!',
       additionalData: {'challengeId': challengeId, 'duration': duration},
     );
   }
@@ -1968,7 +2017,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         // 레벨업이나 특별 상황: 커스텀 메시지 표시
         ref.read(sherpiProvider.notifier).showInstantMessage(
               context: context,
-              customDialogue: customMessage!,
+              customDialogue: customMessage,
               emotion: emotion,
               duration: const Duration(seconds: 5),
             );

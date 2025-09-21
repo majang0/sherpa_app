@@ -13,7 +13,7 @@ import '../../models/quest_instance_model.dart';
 /// 기존 280px → 130px로 축소하여 퀘스트 카드들이 첫 화면에 보이도록 최적화
 /// 셰르피 중심의 수평 배치 디자인으로 공간 효율성 극대화
 class CompactQuestHeader extends ConsumerWidget {
-  const CompactQuestHeader({Key? key}) : super(key: key);
+  const CompactQuestHeader({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,7 +82,7 @@ class CompactQuestHeader extends ConsumerWidget {
   /// 🎪 상단 바: 셰르피와 퀘스트 완성도가 있는 메인 영역
   Widget _buildTopBar(BuildContext context, String userName, int totalPoints,
       double overallProgress) {
-    return Container(
+    return SizedBox(
       height: 64,
       child: Row(
         children: [
@@ -142,7 +142,7 @@ class CompactQuestHeader extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  '안녕하세요, ${userName}님!',
+                  '안녕하세요, $userName님!',
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -164,7 +164,7 @@ class CompactQuestHeader extends ConsumerWidget {
           ),
 
           // 🎯 퀘스트 완성도 서클
-          Container(
+          SizedBox(
             width: 48,
             height: 48,
             child: Stack(
@@ -207,7 +207,7 @@ class CompactQuestHeader extends ConsumerWidget {
     int claimedCount,
     double overallProgress,
   ) {
-    return Container(
+    return SizedBox(
       height: 42,
       child: Row(
         children: [
@@ -266,7 +266,7 @@ class CompactQuestHeader extends ConsumerWidget {
                     child: LinearProgressIndicator(
                       value: overallProgress,
                       backgroundColor: Colors.transparent,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   ),
                 ),
@@ -339,9 +339,9 @@ class CompactQuestHeader extends ConsumerWidget {
           ],
         ),
       ),
-      child: SafeArea(
+      child: const SafeArea(
         bottom: false,
-        child: const Center(
+        child: Center(
           child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             strokeWidth: 2,

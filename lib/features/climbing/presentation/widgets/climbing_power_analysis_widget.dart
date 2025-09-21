@@ -16,6 +16,8 @@ import '../../../../shared/providers/global_badge_provider.dart';
 import '../../../../shared/models/global_badge_model.dart';
 
 class ClimbingPowerAnalysisWidget extends ConsumerStatefulWidget {
+  const ClimbingPowerAnalysisWidget({super.key});
+
   @override
   ConsumerState<ClimbingPowerAnalysisWidget> createState() =>
       _ClimbingPowerAnalysisWidgetState();
@@ -113,7 +115,7 @@ class _ClimbingPowerAnalysisWidgetState
               minHeight: sizes.minHeight,
               maxHeight: sizes.maxHeight,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -185,9 +187,9 @@ class _ClimbingPowerAnalysisWidgetState
           children: [
             _buildAuroraWave(
               colors: [
-                Color(0x55FFDAB9).withOpacity(0.4 +
+                const Color(0x55FFDAB9).withValues(alpha: 0.4 +
                     0.2 * math.sin(_auroraController.value * math.pi * 2)),
-                Color(0x55FFE4B5).withOpacity(0.3 +
+                const Color(0x55FFE4B5).withValues(alpha: 0.3 +
                     0.1 * math.sin(_auroraController.value * math.pi * 2)),
                 Colors.transparent,
               ],
@@ -196,11 +198,11 @@ class _ClimbingPowerAnalysisWidgetState
             ),
             _buildAuroraWave(
               colors: [
-                Color(0x55FFB6C1).withOpacity(0.3 +
+                const Color(0x55FFB6C1).withValues(alpha: 0.3 +
                     0.15 *
                         math.sin(
                             (_auroraController.value + 0.3) * math.pi * 2)),
-                Color(0x55FFC0CB).withOpacity(0.2 +
+                const Color(0x55FFC0CB).withValues(alpha: 0.2 +
                     0.1 *
                         math.sin(
                             (_auroraController.value + 0.3) * math.pi * 2)),
@@ -211,11 +213,11 @@ class _ClimbingPowerAnalysisWidgetState
             ),
             _buildAuroraWave(
               colors: [
-                Color(0x55FFA07A).withOpacity(0.35 +
+                const Color(0x55FFA07A).withValues(alpha: 0.35 +
                     0.15 *
                         math.sin(
                             (_auroraController.value + 0.6) * math.pi * 2)),
-                Color(0x55FFCCCB).withOpacity(0.25 +
+                const Color(0x55FFCCCB).withValues(alpha: 0.25 +
                     0.1 *
                         math.sin(
                             (_auroraController.value + 0.6) * math.pi * 2)),
@@ -308,15 +310,15 @@ class _ClimbingPowerAnalysisWidgetState
         child: Container(
           padding: EdgeInsets.all(sizes.padding),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withValues(alpha: 0.6),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Color(0xFFFFD700).withOpacity(0.2),
+                color: const Color(0xFFFFD700).withValues(alpha: 0.2),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
@@ -331,12 +333,12 @@ class _ClimbingPowerAnalysisWidgetState
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      Color(0xFFFFD700).withOpacity(0.4),
-                      AppColors.primary.withOpacity(0.3),
+                      const Color(0xFFFFD700).withValues(alpha: 0.4),
+                      AppColors.primary.withValues(alpha: 0.3),
                     ],
                   ),
                   border: Border.all(
-                    color: Color(0xFFFFD700).withOpacity(0.5),
+                    color: const Color(0xFFFFD700).withValues(alpha: 0.5),
                     width: 1,
                   ),
                 ),
@@ -361,7 +363,7 @@ class _ClimbingPowerAnalysisWidgetState
                         color: AppColors.primaryDark,
                         shadows: [
                           Shadow(
-                            color: Color(0xFFFFD700).withOpacity(0.3),
+                            color: const Color(0xFFFFD700).withValues(alpha: 0.3),
                             blurRadius: 2,
                           ),
                         ],
@@ -389,7 +391,7 @@ class _ClimbingPowerAnalysisWidgetState
                       horizontal: sizes.itemSpacing * 1.5,
                       vertical: sizes.itemSpacing),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [
                         AppColors.primary,
                         AppColors.primaryDark,
@@ -398,7 +400,7 @@ class _ClimbingPowerAnalysisWidgetState
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.3),
+                        color: AppColors.primary.withValues(alpha: 0.3),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -435,7 +437,7 @@ class _ClimbingPowerAnalysisWidgetState
           child: AnimatedBuilder(
             animation: _crystalController,
             builder: (context, child) {
-              return Container(
+              return SizedBox(
                 width: size,
                 height: size,
                 child: Stack(
@@ -448,10 +450,10 @@ class _ClimbingPowerAnalysisWidgetState
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            Color(0xFFFFD700)
-                                .withOpacity(0.3 * _crystalController.value),
-                            Color(0xFFFFA500)
-                                .withOpacity(0.2 * _crystalController.value),
+                            const Color(0xFFFFD700)
+                                .withValues(alpha: 0.3 * _crystalController.value),
+                            const Color(0xFFFFA500)
+                                .withValues(alpha: 0.2 * _crystalController.value),
                             Colors.transparent,
                           ],
                         ),
@@ -463,7 +465,7 @@ class _ClimbingPowerAnalysisWidgetState
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: Color(0xFFFFD700).withOpacity(0.4),
+                          color: const Color(0xFFFFD700).withValues(alpha: 0.4),
                           width: 2,
                         ),
                       ),
@@ -473,14 +475,14 @@ class _ClimbingPowerAnalysisWidgetState
                       height: size * 0.5,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         border: Border.all(
-                          color: Color(0xFFFFD700).withOpacity(0.6),
+                          color: const Color(0xFFFFD700).withValues(alpha: 0.6),
                           width: 2,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Color(0xFFFFD700).withOpacity(0.4),
+                            color: const Color(0xFFFFD700).withValues(alpha: 0.4),
                             blurRadius: 15,
                             spreadRadius: 3,
                           ),
@@ -510,7 +512,7 @@ class _ClimbingPowerAnalysisWidgetState
                                   color: AppColors.primaryDark,
                                   shadows: [
                                     Shadow(
-                                      color: Color(0xFFFFD700).withOpacity(0.6),
+                                      color: const Color(0xFFFFD700).withValues(alpha: 0.6),
                                       blurRadius: 6,
                                     ),
                                   ],
@@ -555,21 +557,21 @@ class _ClimbingPowerAnalysisWidgetState
         'title': '기본력',
         'value': basePower,
         'icon': Icons.flash_on_rounded,
-        'color': Color(0xFF2196F3),
+        'color': const Color(0xFF2196F3),
         'isPercentage': false,
       },
       {
         'title': '능력치',
         'value': statsBonus,
         'icon': Icons.health_and_safety_rounded,
-        'color': Color(0xFF4CAF50),
+        'color': const Color(0xFF4CAF50),
         'isPercentage': true,
       },
       {
         'title': '뱃지',
         'value': badgeBonus,
         'icon': Icons.shield_rounded,
-        'color': Color(0xFFFF9800),
+        'color': const Color(0xFFFF9800),
         'isPercentage': true,
       },
     ];
@@ -581,10 +583,10 @@ class _ClimbingPowerAnalysisWidgetState
               horizontal: sizes.itemSpacing * 1.5,
               vertical: sizes.itemSpacing * 0.75),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: Color(0xFFFFD700).withOpacity(0.4),
+              color: const Color(0xFFFFD700).withValues(alpha: 0.4),
               width: 1,
             ),
           ),
@@ -649,15 +651,15 @@ class _ClimbingPowerAnalysisWidgetState
       child: Container(
         padding: EdgeInsets.all(sizes.itemSpacing * 1.5),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.95),
+          color: Colors.white.withValues(alpha: 0.95),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: (card['color'] as Color).withOpacity(0.5),
+            color: (card['color'] as Color).withValues(alpha: 0.5),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: (card['color'] as Color).withOpacity(0.2),
+              color: (card['color'] as Color).withValues(alpha: 0.2),
               blurRadius: 6,
               offset: const Offset(0, 3),
             ),
@@ -671,7 +673,7 @@ class _ClimbingPowerAnalysisWidgetState
               width: sizes.iconSize * 1.3,
               height: sizes.iconSize * 1.3,
               decoration: BoxDecoration(
-                color: (card['color'] as Color).withOpacity(0.15),
+                color: (card['color'] as Color).withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -758,10 +760,10 @@ class _ClimbingPowerAnalysisWidgetState
               horizontal: sizes.itemSpacing * 1.5,
               vertical: sizes.itemSpacing * 0.75),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: Color(0xFFFFD700).withOpacity(0.4),
+              color: const Color(0xFFFFD700).withValues(alpha: 0.4),
               width: 1,
             ),
           ),
@@ -833,15 +835,15 @@ class _ClimbingPowerAnalysisWidgetState
     return Container(
       padding: EdgeInsets.all(sizes.itemSpacing),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.9),
+        color: Colors.white.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.3),
+          color: AppColors.primary.withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             blurRadius: 3,
             offset: const Offset(0, 2),
           ),
@@ -949,12 +951,12 @@ class _ClimbingPowerAnalysisWidgetState
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                   colors: [
-                    iconColor.withOpacity(0.3),
-                    iconColor.withOpacity(0.1),
+                    iconColor.withValues(alpha: 0.3),
+                    iconColor.withValues(alpha: 0.1),
                   ],
                 ),
                 shape: BoxShape.circle,
-                border: Border.all(color: iconColor.withOpacity(0.5)),
+                border: Border.all(color: iconColor.withValues(alpha: 0.5)),
               ),
               child: Icon(
                 card['icon'] as IconData,
@@ -962,7 +964,7 @@ class _ClimbingPowerAnalysisWidgetState
                 size: 20,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 title,
@@ -976,18 +978,18 @@ class _ClimbingPowerAnalysisWidgetState
           ],
         ),
         content: Container(
-          constraints: BoxConstraints(maxWidth: 300),
+          constraints: const BoxConstraints(maxWidth: 300),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
+                  color: iconColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: iconColor.withOpacity(0.3)),
+                  border: Border.all(color: iconColor.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1012,7 +1014,7 @@ class _ClimbingPowerAnalysisWidgetState
                   ],
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 explanation,
                 style: GoogleFonts.notoSans(
@@ -1021,18 +1023,18 @@ class _ClimbingPowerAnalysisWidgetState
                   color: AppColors.textPrimary,
                 ),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.05),
+                  color: AppColors.primary.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
                 ),
                 child: Text(
                   formula,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primary,
@@ -1054,7 +1056,7 @@ class _ClimbingPowerAnalysisWidgetState
                   borderRadius: BorderRadius.circular(12)),
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 '이해했어요!',
                 style: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
@@ -1112,7 +1114,7 @@ class _ClimbingPowerAnalysisWidgetState
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        backgroundColor: Color(0xFFE0F6FF),
+        backgroundColor: const Color(0xFFE0F6FF),
         title: Row(
           children: [
             Container(
@@ -1121,26 +1123,26 @@ class _ClimbingPowerAnalysisWidgetState
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                   colors: [
-                    Color(0xFFFFD700).withOpacity(0.8),
-                    AppColors.primary.withOpacity(0.4),
+                    const Color(0xFFFFD700).withValues(alpha: 0.8),
+                    AppColors.primary.withValues(alpha: 0.4),
                   ],
                 ),
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.white.withOpacity(0.7)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.7)),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(0xFFFFD700).withOpacity(0.3),
+                    color: const Color(0xFFFFD700).withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                 ],
               ),
-              child: Center(
+              child: const Center(
                 child: Icon(Icons.history_edu_rounded,
                     color: AppColors.primaryDark, size: 20),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               '전설의 여정',
               style: GoogleFonts.notoSans(
@@ -1153,7 +1155,7 @@ class _ClimbingPowerAnalysisWidgetState
         ),
         content: Container(
           width: double.maxFinite,
-          constraints: BoxConstraints(maxHeight: 400),
+          constraints: const BoxConstraints(maxHeight: 400),
           child: ListView.builder(
             shrinkWrap: true,
             itemCount: history.length,
@@ -1165,15 +1167,15 @@ class _ClimbingPowerAnalysisWidgetState
               )['name'] as String;
 
               return Container(
-                margin: EdgeInsets.only(bottom: 8),
-                padding: EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: (session['success'] == true)
-                        ? AppColors.success.withOpacity(0.5)
-                        : AppColors.error.withOpacity(0.5),
+                        ? AppColors.success.withValues(alpha: 0.5)
+                        : AppColors.error.withValues(alpha: 0.5),
                     width: 1,
                   ),
                 ),
@@ -1198,7 +1200,7 @@ class _ClimbingPowerAnalysisWidgetState
                         ),
                       ),
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1211,7 +1213,7 @@ class _ClimbingPowerAnalysisWidgetState
                               color: AppColors.primaryDark,
                             ),
                           ),
-                          SizedBox(height: 2),
+                          const SizedBox(height: 2),
                           Row(
                             children: [
                               Text(
@@ -1224,7 +1226,7 @@ class _ClimbingPowerAnalysisWidgetState
                                       : AppColors.error,
                                 ),
                               ),
-                              SizedBox(width: 6),
+                              const SizedBox(width: 6),
                               Text(
                                 '+${((session['experience'] as num?)?.toStringAsFixed(0)) ?? '0'} XP',
                                 style: GoogleFonts.notoSans(
@@ -1233,7 +1235,7 @@ class _ClimbingPowerAnalysisWidgetState
                                   color: AppColors.warning,
                                 ),
                               ),
-                              SizedBox(width: 6),
+                              const SizedBox(width: 6),
                               Text(
                                 '+${((session['points'] as num?)?.toStringAsFixed(0)) ?? '0'} P',
                                 style: GoogleFonts.notoSans(
@@ -1263,7 +1265,7 @@ class _ClimbingPowerAnalysisWidgetState
                   borderRadius: BorderRadius.circular(12)),
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 '확인',
                 style: GoogleFonts.notoSans(fontWeight: FontWeight.w600),
@@ -1368,18 +1370,18 @@ class GoldenSparklePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color(0xFFFFD700).withOpacity(0.6 + 0.4 * animationValue)
+      ..color = const Color(0xFFFFD700).withValues(alpha: 0.6 + 0.4 * animationValue)
       ..style = PaintingStyle.fill;
 
     final sparkles = [
-      Offset(size.width * 0.15, size.height * 0.2),
-      Offset(size.width * 0.8, size.height * 0.15),
-      Offset(size.width * 0.3, size.height * 0.4),
-      Offset(size.width * 0.7, size.height * 0.35),
-      Offset(size.width * 0.2, size.height * 0.6),
-      Offset(size.width * 0.85, size.height * 0.55),
-      Offset(size.width * 0.1, size.height * 0.8),
-      Offset(size.width * 0.6, size.height * 0.75),
+      const Offset(0, 0),
+      const Offset(0, 0),
+      const Offset(0, 0),
+      const Offset(0, 0),
+      const Offset(0, 0),
+      const Offset(0, 0),
+      const Offset(0, 0),
+      const Offset(0, 0),
     ];
 
     for (final sparkle in sparkles) {

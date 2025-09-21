@@ -175,7 +175,7 @@ class GameConstants {
   /// 공식: 지수 감쇠 곡선 + 초반 페널티 + 중급 가속 보너스
   static double calculateSuccessXp(int difficulty, double durationHours,
       {int playerLevel = 1}) {
-    final k = 0.12; // 감쇠 상수 (곡선의 가파름 조절)
+    const k = 0.12; // 감쇠 상수 (곡선의 가파름 조절)
 
     // 🎯 마스터 배수 조정: 65.0 → 32.5 (정확히 절반으로 하향)
     final maxReward = durationHours * 32.5;
@@ -203,7 +203,7 @@ class GameConstants {
   /// ✅ 포인트 계산 공식은 그대로 유지 (int 반환으로 변경)
   static double calculateSuccessPoints(int difficulty, double durationHours,
       {int playerLevel = 1}) {
-    final k = 0.09;
+    const k = 0.09;
     final maxReward = durationHours * 30.0;
 
     final difficultyFactor = 1.0 - math.exp(-k * difficulty);
@@ -235,7 +235,7 @@ class GameConstants {
 
   static double calculateDisplayXp(int difficulty, double durationHours,
       {int playerLevel = 1}) {
-    final k = 0.12;
+    const k = 0.12;
     final maxReward = durationHours * 32.5;
 
     final difficultyFactor = 1.0 - math.exp(-k * difficulty);
@@ -258,7 +258,7 @@ class GameConstants {
   /// ✅ UI 표시용 중간값 포인트 계산 (랜덤 요소 완전 제거, int 반환)
   static int calculateDisplayPoints(int difficulty, double durationHours,
       {int playerLevel = 1}) {
-    final k = 0.09;
+    const k = 0.09;
     final maxReward = durationHours * 30.0;
 
     final difficultyFactor = 1.0 - math.exp(-k * difficulty);

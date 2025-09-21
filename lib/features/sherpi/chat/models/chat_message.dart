@@ -128,7 +128,6 @@ extension MessageTypeExtension on MessageType {
       case MessageType.system:
         return 'ℹ️';
       case MessageType.text:
-      default:
         return '💬';
     }
   }
@@ -151,7 +150,6 @@ extension MessageTypeExtension on MessageType {
       case MessageType.system:
         return '시스템 알림';
       case MessageType.text:
-      default:
         return '일반 대화';
     }
   }

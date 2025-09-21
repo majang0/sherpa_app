@@ -10,14 +10,14 @@ class RotatingIconWidget extends StatefulWidget {
   final Duration rotationDuration;
 
   const RotatingIconWidget({
-    Key? key,
+    super.key,
     required this.icon,
     required this.color,
     this.size = 24,
     this.onTap,
     this.autoRotate = false,
     this.rotationDuration = const Duration(milliseconds: 500),
-  }) : super(key: key);
+  });
 
   @override
   State<RotatingIconWidget> createState() => _RotatingIconWidgetState();

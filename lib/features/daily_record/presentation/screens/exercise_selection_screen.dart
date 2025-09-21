@@ -169,12 +169,12 @@ class _ExerciseSelectionScreenState
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: RecordColors.textLight.withValues(alpha: 0.1),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -186,12 +186,12 @@ class _ExerciseSelectionScreenState
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: const Color(0xFFF97316).withOpacity(0.1),
+              color: const Color(0xFFF97316).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.fitness_center,
-              color: const Color(0xFFF97316),
+              color: Color(0xFFF97316),
               size: 24,
             ),
           ),
@@ -232,12 +232,12 @@ class _ExerciseSelectionScreenState
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withOpacity(0.1),
+          color: RecordColors.textLight.withValues(alpha: 0.1),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -288,7 +288,7 @@ class _ExerciseSelectionScreenState
                 ? null
                 : Border(
                     bottom: BorderSide(
-                      color: RecordColors.textLight.withOpacity(0.1),
+                      color: RecordColors.textLight.withValues(alpha: 0.1),
                       width: 1,
                     ),
                   ),
@@ -300,7 +300,7 @@ class _ExerciseSelectionScreenState
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF97316).withOpacity(0.1),
+                  color: const Color(0xFFF97316).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
@@ -338,7 +338,7 @@ class _ExerciseSelectionScreenState
               const SizedBox(width: 12),
 
               // 화살표 아이콘
-              Icon(
+              const Icon(
                 Icons.chevron_right,
                 color: RecordColors.textLight,
                 size: 20,

@@ -6,11 +6,12 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/modern_colors.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../shared/providers/global_user_provider.dart';
-import '../../../shared/providers/notification_provider.dart';
 import 'enhanced_daily_quest_widget.dart';
 import '../../home/presentation/widgets/all_goals_reward_modal.dart';
 
 class SimpleTodayGrowthWidget extends ConsumerStatefulWidget {
+  const SimpleTodayGrowthWidget({super.key});
+
   @override
   ConsumerState<SimpleTodayGrowthWidget> createState() =>
       _SimpleTodayGrowthWidgetState();
@@ -82,14 +83,17 @@ class _SimpleTodayGrowthWidgetState
     if (records.todaySteps >= 6000) actuallyCompletedCount++;
     if (records.todayFocusMinutes >= 30) actuallyCompletedCount++;
     if (records.readingLogs
-        .any((log) => _isSameDay(log.date, today) && log.pages >= 1))
+        .any((log) => _isSameDay(log.date, today) && log.pages >= 1)) {
       actuallyCompletedCount++;
-    if (records.diaryLogs.any((log) => _isSameDay(log.date, today)))
+    }
+    if (records.diaryLogs.any((log) => _isSameDay(log.date, today))) {
       actuallyCompletedCount++;
-    if (records.exerciseLogs.any((log) => _isSameDay(log.date, today)))
+    }
+    if (records.exerciseLogs.any((log) => _isSameDay(log.date, today))) {
       actuallyCompletedCount++;
+    }
 
-    final totalGoals = 5;
+    const totalGoals = 5;
     final completionRate = actuallyCompletedCount / totalGoals;
     final completedCount = actuallyCompletedCount;
     final isAllCompleted = actuallyCompletedCount == totalGoals;
@@ -171,7 +175,7 @@ class _SimpleTodayGrowthWidgetState
           child: _buildMetricItem(
             icon: '👟',
             label: '걸음수',
-            value: '${_formatStepCount(todayRecord.stepCount)}',
+            value: _formatStepCount(todayRecord.stepCount),
             target: '6,000',
             isAchieved: stepsGoalCompleted,
           ),
@@ -295,7 +299,7 @@ class _SimpleTodayGrowthWidgetState
                             ? LinearGradient(
                                 colors: [
                                   ModernColors.success,
-                                  ModernColors.success.withOpacity(0.8)
+                                  ModernColors.success.withValues(alpha: 0.8)
                                 ],
                               )
                             : ModernColors.primaryGradient,
@@ -319,22 +323,22 @@ class _SimpleTodayGrowthWidgetState
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      ModernColors.success.withOpacity(0.1),
-                      ModernColors.success.withOpacity(0.05),
+                      ModernColors.success.withValues(alpha: 0.1),
+                      ModernColors.success.withValues(alpha: 0.05),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: ModernColors.success.withOpacity(0.2),
+                    color: ModernColors.success.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.emoji_events,
                       color: ModernColors.success,
                       size: 16,
@@ -381,15 +385,15 @@ class _SimpleTodayGrowthWidgetState
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                ModernColors.primary.withOpacity(0.1),
-                ModernColors.primary.withOpacity(0.05),
+                ModernColors.primary.withValues(alpha: 0.1),
+                ModernColors.primary.withValues(alpha: 0.05),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: ModernColors.primary.withOpacity(0.2),
+              color: ModernColors.primary.withValues(alpha: 0.2),
               width: 1,
             ),
           ),
@@ -398,7 +402,7 @@ class _SimpleTodayGrowthWidgetState
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.emoji_events,
                     color: ModernColors.primary,
                     size: 16,
@@ -473,7 +477,7 @@ class _SimpleTodayGrowthWidgetState
   // 보상 받기 버튼 (NEW 배지 포함)
   Widget _buildClaimRewardButton(
       BuildContext context, WidgetRef ref, dynamic user) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
@@ -549,7 +553,7 @@ class _SimpleTodayGrowthWidgetState
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -573,17 +577,17 @@ class _SimpleTodayGrowthWidgetState
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
-        color: ModernColors.success.withOpacity(0.1),
+        color: ModernColors.success.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: ModernColors.success.withOpacity(0.3),
+          color: ModernColors.success.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.check_circle,
             color: ModernColors.success,
             size: 18,
@@ -624,7 +628,7 @@ class _SimpleTodayGrowthWidgetState
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.8,
       ),
-      child: EnhancedDailyQuestWidget(),
+      child: const EnhancedDailyQuestWidget(),
     );
   }
 

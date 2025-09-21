@@ -53,8 +53,9 @@ class FocusTimerData {
   static int calculateXP(int completedMinutes) {
     if (completedMinutes < 10) return 0;
     if (completedMinutes < 30) return completedMinutes * 2; // 2XP per minute
-    if (completedMinutes < 60)
+    if (completedMinutes < 60) {
       return 60 + (completedMinutes - 30) * 3; // 3XP per minute after 30min
+    }
     return 150 + (completedMinutes - 60) * 5; // 5XP per minute after 1hour
   }
 

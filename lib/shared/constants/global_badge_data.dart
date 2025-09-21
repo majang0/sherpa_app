@@ -5,7 +5,7 @@ import '../models/global_badge_model.dart';
 class GlobalBadgeData {
   static final Map<String, GlobalBadge> allBadges = {
     // 일반 등급 뱃지 (Common)
-    'common_luck': GlobalBadge(
+    'common_luck': const GlobalBadge(
       id: 'common_luck',
       name: '초심자의 행운',
       description: '등반 성공률 +3% 증가',
@@ -15,7 +15,7 @@ class GlobalBadgeData {
       iconEmoji: '🍀',
       iconCodePoint: 0xe7e9,
     ),
-    'common_stamina': GlobalBadge(
+    'common_stamina': const GlobalBadge(
       id: 'common_stamina',
       name: '꾸준함의 증표',
       description: '획득 경험치 +10% 증가',
@@ -25,7 +25,7 @@ class GlobalBadgeData {
       iconEmoji: '💪',
       iconCodePoint: 0xe7e9,
     ),
-    'common_explorer': GlobalBadge(
+    'common_explorer': const GlobalBadge(
       id: 'common_explorer',
       name: '탐험가의 발걸음',
       description: '기본 등반력 +5% 증가',
@@ -37,7 +37,7 @@ class GlobalBadgeData {
     ),
 
     // 희귀 등급 뱃지 (Rare)
-    'rare_knowledge': GlobalBadge(
+    'rare_knowledge': const GlobalBadge(
       id: 'rare_knowledge',
       name: '지식의 탐구자',
       description: '등반 성공 시 15% 확률로 숨겨진 보상 발견',
@@ -47,7 +47,7 @@ class GlobalBadgeData {
       iconEmoji: '📚',
       iconCodePoint: 0xe7e9,
     ),
-    'rare_mountain': GlobalBadge(
+    'rare_mountain': const GlobalBadge(
       id: 'rare_mountain',
       name: '고산 전문가',
       description: 'Lv.50 이상 산에서 등반력 +15% 증가',
@@ -57,7 +57,7 @@ class GlobalBadgeData {
       iconEmoji: '⛰️',
       iconCodePoint: 0xe7e9,
     ),
-    'rare_clover': GlobalBadge(
+    'rare_clover': const GlobalBadge(
       id: 'rare_clover',
       name: '행운의 클로버',
       description: '등반 성공 시 20% 확률로 포인트 2배 획득',
@@ -69,7 +69,7 @@ class GlobalBadgeData {
     ),
 
     // 영웅 등급 뱃지 (Epic)
-    'epic_golden': GlobalBadge(
+    'epic_golden': const GlobalBadge(
       id: 'epic_golden',
       name: '황금 피켈',
       description: '획득 포인트 +15% 증가',
@@ -79,7 +79,7 @@ class GlobalBadgeData {
       iconEmoji: '⛏️',
       iconCodePoint: 0xe7e9,
     ),
-    'epic_will': GlobalBadge(
+    'epic_will': const GlobalBadge(
       id: 'epic_will',
       name: '굳건한 의지',
       description: '등반 성공률 +8% 증가',
@@ -89,7 +89,7 @@ class GlobalBadgeData {
       iconEmoji: '🛡️',
       iconCodePoint: 0xe7e9,
     ),
-    'epic_time': GlobalBadge(
+    'epic_time': const GlobalBadge(
       id: 'epic_time',
       name: '시간 마술사',
       description: '등반 시간 20% 단축',
@@ -101,7 +101,7 @@ class GlobalBadgeData {
     ),
 
     // 전설 등급 뱃지 (Legendary)
-    'legendary_ancestor': GlobalBadge(
+    'legendary_ancestor': const GlobalBadge(
       id: 'legendary_ancestor',
       name: '선조의 가호',
       description: '1일 1회 등반 즉시 완료 + 보상 2배',
@@ -113,7 +113,7 @@ class GlobalBadgeData {
     ),
 
     // 레벨업 기념 뱃지
-    'level_10_adept': GlobalBadge(
+    'level_10_adept': const GlobalBadge(
       id: 'level_10_adept',
       name: '숙련된 등반가',
       description: '레벨 10 달성 기념 뱃지',
@@ -123,7 +123,7 @@ class GlobalBadgeData {
       iconEmoji: '🥉',
       iconCodePoint: 0xe7e9,
     ),
-    'level_20_expert': GlobalBadge(
+    'level_20_expert': const GlobalBadge(
       id: 'level_20_expert',
       name: '전문 산악인',
       description: '레벨 20 달성 기념 뱃지',
@@ -133,7 +133,7 @@ class GlobalBadgeData {
       iconEmoji: '🥈',
       iconCodePoint: 0xe7e9,
     ),
-    'level_30_sherpa': GlobalBadge(
+    'level_30_sherpa': const GlobalBadge(
       id: 'level_30_sherpa',
       name: '셰르파',
       description: '레벨 30 달성 기념 뱃지',

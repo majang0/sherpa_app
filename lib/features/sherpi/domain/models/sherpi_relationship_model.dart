@@ -36,9 +36,9 @@ class SherpiRelationship {
     double score = totalInteractions * 0.1;
 
     // 연속 일수 보너스
-    if (consecutiveDays >= 30)
+    if (consecutiveDays >= 30) {
       score += 3.0;
-    else if (consecutiveDays >= 14)
+    } else if (consecutiveDays >= 14)
       score += 2.0;
     else if (consecutiveDays >= 7) score += 1.0;
 

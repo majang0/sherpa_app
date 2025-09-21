@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
-import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 class UniversityGuildWidget extends ConsumerStatefulWidget {
+  const UniversityGuildWidget({super.key});
+
   @override
   ConsumerState<UniversityGuildWidget> createState() =>
       _UniversityGuildWidgetState();
@@ -124,7 +124,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                   borderRadius: BorderRadius.circular(24),
                   // 세련된 테두리
                   border: Border.all(
-                    color: const Color(0xFFFF7F50).withOpacity(0.3),
+                    color: const Color(0xFFFF7F50).withValues(alpha: 0.3),
                     width: 1.5,
                   ),
                   // 고급스러운 그림자
@@ -132,13 +132,13 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                     // 코랄색 글로우
                     BoxShadow(
                       color: const Color(0xFFFF7F50)
-                          .withOpacity(0.15 * _glowAnimation.value),
+                          .withValues(alpha: 0.15 * _glowAnimation.value),
                       blurRadius: 30,
                       spreadRadius: 2,
                     ),
                     // 깊이감 있는 그림자
                     BoxShadow(
-                      color: const Color(0xFF483D8B).withOpacity(0.5),
+                      color: const Color(0xFF483D8B).withValues(alpha: 0.5),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -192,9 +192,9 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                   end: Alignment.bottomCenter,
                   colors: [
                     const Color(0xFFFF7F50)
-                        .withOpacity(0.15 * _sunriseAnimation.value),
+                        .withValues(alpha: 0.15 * _sunriseAnimation.value),
                     const Color(0xFF483D8B),
-                    const Color(0xFF483D8B).withOpacity(0.9),
+                    const Color(0xFF483D8B).withValues(alpha: 0.9),
                   ],
                   stops: const [0.0, 0.5, 1.0],
                 ),
@@ -213,9 +213,9 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
               gradient: RadialGradient(
                 colors: [
                   const Color(0xFFFF7F50)
-                      .withOpacity(0.2 * _glowAnimation.value),
+                      .withValues(alpha: 0.2 * _glowAnimation.value),
                   const Color(0xFFFFB347)
-                      .withOpacity(0.1 * _glowAnimation.value),
+                      .withValues(alpha: 0.1 * _glowAnimation.value),
                   Colors.transparent,
                 ],
               ),
@@ -244,19 +244,19 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
           width: 64,
           height: 64,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color(0xFFFF7F50),
-                const Color(0xFFFFB347),
+                Color(0xFFFF7F50),
+                Color(0xFFFFB347),
               ],
             ),
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
                 color: const Color(0xFFFF7F50)
-                    .withOpacity(0.5 * _glowAnimation.value),
+                    .withValues(alpha: 0.5 * _glowAnimation.value),
                 blurRadius: 25,
                 spreadRadius: 5,
               ),
@@ -273,14 +273,14 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                   gradient: RadialGradient(
                     colors: [
                       const Color(0xFF483D8B),
-                      const Color(0xFF483D8B).withOpacity(0.8),
-                      const Color(0xFFFF7F50).withOpacity(0.2),
+                      const Color(0xFF483D8B).withValues(alpha: 0.8),
+                      const Color(0xFFFF7F50).withValues(alpha: 0.2),
                     ],
                     stops: const [0.3, 0.7, 1.0],
                   ),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: const Color(0xFFE6E6FA).withOpacity(0.5),
+                    color: const Color(0xFFE6E6FA).withValues(alpha: 0.5),
                     width: 1,
                   ),
                 ),
@@ -292,7 +292,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                 color: const Color(0xFFFF7F50),
                 shadows: [
                   Shadow(
-                    color: const Color(0xFFFF7F50).withOpacity(0.8),
+                    color: const Color(0xFFFF7F50).withValues(alpha: 0.8),
                     blurRadius: 15,
                   ),
                 ],
@@ -314,13 +314,13 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          const Color(0xFFFF7F50).withOpacity(0.2),
-                          const Color(0xFFFFB347).withOpacity(0.2),
+                          const Color(0xFFFF7F50).withValues(alpha: 0.2),
+                          const Color(0xFFFFB347).withValues(alpha: 0.2),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: const Color(0xFFFF7F50).withOpacity(0.5),
+                        color: const Color(0xFFFF7F50).withValues(alpha: 0.5),
                         width: 1,
                       ),
                     ),
@@ -337,9 +337,9 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                   const SizedBox(width: 10),
                   Flexible(
                     child: ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
+                      shaderCallback: (bounds) => const LinearGradient(
                         colors: [
-                          const Color(0xFFE6E6FA),
+                          Color(0xFFE6E6FA),
                           Colors.white,
                         ],
                       ).createShader(bounds),
@@ -361,7 +361,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                   Icon(
                     Icons.people_alt,
                     size: 16,
-                    color: const Color(0xFFE6E6FA).withOpacity(0.7),
+                    color: const Color(0xFFE6E6FA).withValues(alpha: 0.7),
                   ),
                   const SizedBox(width: 4),
                   Text(
@@ -369,7 +369,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
-                      color: const Color(0xFFE6E6FA).withOpacity(0.8),
+                      color: const Color(0xFFE6E6FA).withValues(alpha: 0.8),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -380,13 +380,13 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          const Color(0xFFFFB347).withOpacity(0.2),
-                          const Color(0xFFFF7F50).withOpacity(0.2),
+                          const Color(0xFFFFB347).withValues(alpha: 0.2),
+                          const Color(0xFFFF7F50).withValues(alpha: 0.2),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: const Color(0xFFFFB347).withOpacity(0.5),
+                        color: const Color(0xFFFFB347).withValues(alpha: 0.5),
                         width: 1,
                       ),
                     ),
@@ -396,12 +396,12 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                         Container(
                           width: 6,
                           height: 6,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFB347),
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFFFB347),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFFFB347),
+                                color: Color(0xFFFFB347),
                                 blurRadius: 8,
                                 spreadRadius: 2,
                               ),
@@ -482,19 +482,19 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
           end: Alignment.bottomRight,
           colors: isMain
               ? [
-                  const Color(0xFFFF7F50).withOpacity(0.15),
-                  const Color(0xFFFFB347).withOpacity(0.1),
+                  const Color(0xFFFF7F50).withValues(alpha: 0.15),
+                  const Color(0xFFFFB347).withValues(alpha: 0.1),
                 ]
               : [
-                  const Color(0xFF6B5B95).withOpacity(0.3),
-                  const Color(0xFF6B5B95).withOpacity(0.2),
+                  const Color(0xFF6B5B95).withValues(alpha: 0.3),
+                  const Color(0xFF6B5B95).withValues(alpha: 0.2),
                 ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isMain
-              ? const Color(0xFFFF7F50).withOpacity(0.3)
-              : const Color(0xFFE6E6FA).withOpacity(0.2),
+              ? const Color(0xFFFF7F50).withValues(alpha: 0.3)
+              : const Color(0xFFE6E6FA).withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -507,7 +507,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
             shadows: isMain
                 ? [
                     Shadow(
-                      color: const Color(0xFFFF7F50).withOpacity(0.5),
+                      color: const Color(0xFFFF7F50).withValues(alpha: 0.5),
                       blurRadius: 10,
                     ),
                   ]
@@ -536,8 +536,8 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: isMain
-                      ? const Color(0xFFFF7F50).withOpacity(0.8)
-                      : const Color(0xFFE6E6FA).withOpacity(0.7),
+                      ? const Color(0xFFFF7F50).withValues(alpha: 0.8)
+                      : const Color(0xFFE6E6FA).withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -548,7 +548,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
             style: GoogleFonts.notoSans(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: const Color(0xFFE6E6FA).withOpacity(0.7),
+              color: const Color(0xFFE6E6FA).withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -565,13 +565,13 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF6B5B95).withOpacity(0.4),
-            const Color(0xFF6B5B95).withOpacity(0.2),
+            const Color(0xFF6B5B95).withValues(alpha: 0.4),
+            const Color(0xFF6B5B95).withValues(alpha: 0.2),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFFE6E6FA).withOpacity(0.2),
+          color: const Color(0xFFE6E6FA).withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -586,17 +586,17 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      const Color(0xFFFF7F50).withOpacity(0.2),
-                      const Color(0xFFFFB347).withOpacity(0.2),
+                      const Color(0xFFFF7F50).withValues(alpha: 0.2),
+                      const Color(0xFFFFB347).withValues(alpha: 0.2),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Center(
+                child: const Center(
                   child: Icon(
                     Icons.flag,
                     size: 20,
-                    color: const Color(0xFFFF7F50),
+                    color: Color(0xFFFF7F50),
                   ),
                 ),
               ),
@@ -610,7 +610,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: const Color(0xFFE6E6FA).withOpacity(0.8),
+                        color: const Color(0xFFE6E6FA).withValues(alpha: 0.8),
                       ),
                     ),
                     Text(
@@ -628,16 +628,16 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
-                      const Color(0xFFFF7F50),
-                      const Color(0xFFFFB347),
+                      Color(0xFFFF7F50),
+                      Color(0xFFFFB347),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFFF7F50).withOpacity(0.3),
+                      color: const Color(0xFFFF7F50).withValues(alpha: 0.3),
                       blurRadius: 10,
                       spreadRadius: 1,
                     ),
@@ -661,10 +661,10 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
               Container(
                 height: 10,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF483D8B).withOpacity(0.5),
+                  color: const Color(0xFF483D8B).withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(5),
                   border: Border.all(
-                    color: const Color(0xFFE6E6FA).withOpacity(0.2),
+                    color: const Color(0xFFE6E6FA).withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
@@ -674,17 +674,17 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                 child: Container(
                   height: 10,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [
-                        const Color(0xFFFF7F50),
-                        const Color(0xFFFFB347),
-                        const Color(0xFFFF7F50),
+                        Color(0xFFFF7F50),
+                        Color(0xFFFFB347),
+                        Color(0xFFFF7F50),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(5),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFFF7F50).withOpacity(0.4),
+                        color: const Color(0xFFFF7F50).withValues(alpha: 0.4),
                         blurRadius: 10,
                         spreadRadius: 1,
                       ),
@@ -711,7 +711,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                 style: GoogleFonts.notoSans(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFFE6E6FA).withOpacity(0.7),
+                  color: const Color(0xFFE6E6FA).withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -755,10 +755,10 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
       children: [
         Row(
           children: [
-            Icon(
+            const Icon(
               Icons.emoji_events,
               size: 20,
-              color: const Color(0xFFFF7F50),
+              color: Color(0xFFFF7F50),
             ),
             const SizedBox(width: 8),
             Text(
@@ -775,13 +775,13 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    const Color(0xFFFF69B4).withOpacity(0.3),
-                    const Color(0xFFFF1493).withOpacity(0.3),
+                    const Color(0xFFFF69B4).withValues(alpha: 0.3),
+                    const Color(0xFFFF1493).withValues(alpha: 0.3),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(
-                  color: const Color(0xFFFF69B4).withOpacity(0.5),
+                  color: const Color(0xFFFF69B4).withValues(alpha: 0.5),
                   width: 1,
                 ),
               ),
@@ -798,7 +798,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
           ],
         ),
         const SizedBox(height: 16),
-        ...members.map((member) => _buildMemberRow(member)).toList(),
+        ...members.map((member) => _buildMemberRow(member)),
       ],
     );
   }
@@ -817,19 +817,19 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
           end: Alignment.bottomRight,
           colors: isFirst
               ? [
-                  const Color(0xFFFF7F50).withOpacity(0.1),
-                  const Color(0xFFFFB347).withOpacity(0.05),
+                  const Color(0xFFFF7F50).withValues(alpha: 0.1),
+                  const Color(0xFFFFB347).withValues(alpha: 0.05),
                 ]
               : [
-                  const Color(0xFF6B5B95).withOpacity(0.2),
-                  const Color(0xFF6B5B95).withOpacity(0.1),
+                  const Color(0xFF6B5B95).withValues(alpha: 0.2),
+                  const Color(0xFF6B5B95).withValues(alpha: 0.1),
                 ],
         ),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: isFirst
-              ? const Color(0xFFFF7F50).withOpacity(0.3)
-              : const Color(0xFFE6E6FA).withOpacity(0.2),
+              ? const Color(0xFFFF7F50).withValues(alpha: 0.3)
+              : const Color(0xFFE6E6FA).withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -847,7 +847,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
               boxShadow: isFirst
                   ? [
                       BoxShadow(
-                        color: const Color(0xFFFF7F50).withOpacity(0.3),
+                        color: const Color(0xFFFF7F50).withValues(alpha: 0.3),
                         blurRadius: 10,
                         spreadRadius: 1,
                       ),
@@ -892,10 +892,10 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE6E6FA).withOpacity(0.1),
+                        color: const Color(0xFFE6E6FA).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
-                          color: const Color(0xFFE6E6FA).withOpacity(0.3),
+                          color: const Color(0xFFE6E6FA).withValues(alpha: 0.3),
                           width: 1,
                         ),
                       ),
@@ -916,7 +916,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: const Color(0xFFE6E6FA).withOpacity(0.7),
+                    color: const Color(0xFFE6E6FA).withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -952,7 +952,7 @@ class _UniversityGuildWidgetState extends ConsumerState<UniversityGuildWidget>
                 style: GoogleFonts.notoSans(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFFE6E6FA).withOpacity(0.7),
+                  color: const Color(0xFFE6E6FA).withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -1013,11 +1013,11 @@ class MistPainter extends CustomPainter {
     path.close();
 
     paint.shader = ui.Gradient.linear(
-      Offset(0, size.height * 0.7),
+      const Offset(0, 0),
       Offset(size.width, size.height),
       [
-        const Color(0xFFE6E6FA).withOpacity(0.1 * glowValue),
-        const Color(0xFFE6E6FA).withOpacity(0.05 * glowValue),
+        const Color(0xFFE6E6FA).withValues(alpha: 0.1 * glowValue),
+        const Color(0xFFE6E6FA).withValues(alpha: 0.05 * glowValue),
         Colors.transparent,
       ],
       [0.0, 0.5, 1.0],

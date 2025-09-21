@@ -129,17 +129,17 @@ class UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -153,10 +153,10 @@ class UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.timer_outlined,
                   color: ModernColors.exercise,
                   size: 20,
@@ -211,9 +211,9 @@ class UnifiedExerciseRecordFormState
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: ModernColors.exercise,
-              inactiveTrackColor: ModernColors.exercise.withOpacity(0.1),
+              inactiveTrackColor: ModernColors.exercise.withValues(alpha: 0.1),
               thumbColor: ModernColors.exercise,
-              overlayColor: ModernColors.exercise.withOpacity(0.2),
+              overlayColor: ModernColors.exercise.withValues(alpha: 0.2),
               trackHeight: 8.0,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 14.0),
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 24.0),
@@ -256,17 +256,17 @@ class UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -280,10 +280,10 @@ class UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.fitness_center,
                   color: ModernColors.exercise,
                   size: 20,
@@ -330,13 +330,13 @@ class UnifiedExerciseRecordFormState
                         border: Border.all(
                           color: isSelected
                               ? ModernColors.exercise
-                              : ModernColors.exercise.withOpacity(0.1),
+                              : ModernColors.exercise.withValues(alpha: 0.1),
                           width: isSelected ? 2 : 1,
                         ),
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: ModernColors.exercise.withOpacity(0.3),
+                                  color: ModernColors.exercise.withValues(alpha: 0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
@@ -384,17 +384,17 @@ class UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -409,10 +409,10 @@ class UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.book,
                   color: ModernColors.exercise,
                   size: 20,
@@ -431,7 +431,7 @@ class UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -456,13 +456,13 @@ class UnifiedExerciseRecordFormState
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  ModernColors.exercise.withOpacity(0.05),
-                  ModernColors.exercise.withOpacity(0.02),
+                  ModernColors.exercise.withValues(alpha: 0.05),
+                  ModernColors.exercise.withValues(alpha: 0.02),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: ModernColors.exercise.withOpacity(0.1),
+                color: ModernColors.exercise.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -473,12 +473,12 @@ class UnifiedExerciseRecordFormState
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: ModernColors.exercise.withOpacity(0.1),
+                        color: ModernColors.exercise.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Text(
+                      child: const Text(
                         '💪',
-                        style: const TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -517,9 +517,9 @@ class UnifiedExerciseRecordFormState
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     activeTrackColor: ModernColors.exercise,
-                    inactiveTrackColor: ModernColors.exercise.withOpacity(0.2),
+                    inactiveTrackColor: ModernColors.exercise.withValues(alpha: 0.2),
                     thumbColor: ModernColors.exercise,
-                    overlayColor: ModernColors.exercise.withOpacity(0.2),
+                    overlayColor: ModernColors.exercise.withValues(alpha: 0.2),
                     trackHeight: 6.0,
                     thumbShape:
                         const RoundSliderThumbShape(enabledThumbRadius: 12.0),
@@ -587,7 +587,7 @@ class UnifiedExerciseRecordFormState
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: ModernColors.exercise,
                   width: 2,
                 ),
@@ -612,17 +612,17 @@ class UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -636,10 +636,10 @@ class UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.camera_alt_outlined,
                   color: ModernColors.exercise,
                   size: 20,
@@ -658,7 +658,7 @@ class UnifiedExerciseRecordFormState
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -679,10 +679,10 @@ class UnifiedExerciseRecordFormState
               child: Container(
                 height: 120,
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.05),
+                  color: ModernColors.exercise.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: ModernColors.exercise.withOpacity(0.2),
+                    color: ModernColors.exercise.withValues(alpha: 0.2),
                     width: 2,
                     style: BorderStyle.solid,
                   ),
@@ -693,7 +693,7 @@ class UnifiedExerciseRecordFormState
                     children: [
                       Icon(
                         Icons.add_photo_alternate_outlined,
-                        color: ModernColors.exercise.withOpacity(0.6),
+                        color: ModernColors.exercise.withValues(alpha: 0.6),
                         size: 40,
                       ),
                       const SizedBox(height: 8),
@@ -702,7 +702,7 @@ class UnifiedExerciseRecordFormState
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: ModernColors.exercise.withOpacity(0.8),
+                          color: ModernColors.exercise.withValues(alpha: 0.8),
                         ),
                       ),
                     ],
@@ -734,7 +734,7 @@ class UnifiedExerciseRecordFormState
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
+                        color: Colors.black.withValues(alpha: 0.6),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -761,17 +761,17 @@ class UnifiedExerciseRecordFormState
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -782,10 +782,10 @@ class UnifiedExerciseRecordFormState
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: ModernColors.exercise.withOpacity(0.1),
+              color: ModernColors.exercise.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.group_outlined,
               color: ModernColors.exercise,
               size: 20,
@@ -859,7 +859,7 @@ class UnifiedExerciseRecordFormState
       shape: RoundedRectangleBorder(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         side: BorderSide(
-          color: ModernColors.exercise.withOpacity(0.1),
+          color: ModernColors.exercise.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -870,7 +870,7 @@ class UnifiedExerciseRecordFormState
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.camera_alt,
                   color: ModernColors.exercise,
                 ),
@@ -898,7 +898,7 @@ class UnifiedExerciseRecordFormState
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.photo_library,
                   color: ModernColors.exercise,
                 ),
@@ -1081,7 +1081,7 @@ class UnifiedExerciseRecordFormState
                 fontSize: 10,
                 fontWeight: FontWeight.w500,
                 color: isSelected
-                    ? Colors.white.withOpacity(0.9)
+                    ? Colors.white.withValues(alpha: 0.9)
                     : ModernColors.textSecondary,
               ),
             ),
@@ -1097,12 +1097,12 @@ class UnifiedExerciseRecordFormState
       final hours = minutes ~/ 60;
       final remainingMinutes = minutes % 60;
       if (remainingMinutes == 0) {
-        return '${hours}시간';
+        return '$hours시간';
       } else {
-        return '${hours}시간 ${remainingMinutes}분';
+        return '$hours시간 $remainingMinutes분';
       }
     } else {
-      return '${minutes}분';
+      return '$minutes분';
     }
   }
 

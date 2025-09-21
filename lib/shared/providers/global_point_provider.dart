@@ -410,7 +410,7 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
     final bonus = getStreakBonus(consecutiveDays);
     if (bonus > 0) {
       earnPoints(
-          bonus, PointSource.streakBonus, '${consecutiveDays}일 연속 기록 보너스');
+          bonus, PointSource.streakBonus, '$consecutiveDays일 연속 기록 보너스');
     }
   }
 
@@ -459,7 +459,7 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
 
   /// 레벨업
   void onLevelUp(int newLevel) {
-    earnPoints(100, PointSource.levelUp, '레벨 ${newLevel} 달성');
+    earnPoints(100, PointSource.levelUp, '레벨 $newLevel 달성');
   }
 
   // ==================== 포인트 사용 메서드들 ====================
@@ -517,13 +517,13 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
   /// 친구에게 포인트 선물
   bool giftPointsToFriend(int amount, String friendName) {
     return spendPointsDetailed(
-        amount, PointSpendType.pointGift, '${friendName}님에게 포인트 선물');
+        amount, PointSpendType.pointGift, '$friendName님에게 포인트 선물');
   }
 
   /// 신규 유저 지원 팩
   bool buyNewUserSupportPack(String friendName) {
     return spendPointsDetailed(
-        1000, PointSpendType.newUserSupport, '${friendName}님에게 신규 유저 지원 팩 선물');
+        1000, PointSpendType.newUserSupport, '$friendName님에게 신규 유저 지원 팩 선물');
   }
 
   // ==================== 메시지 시스템 ====================

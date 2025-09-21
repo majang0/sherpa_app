@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Core
 import '../../../../../core/constants/app_colors.dart';
-import '../../../../../core/animation/micro_interactions.dart';
 
 // Shared
 import '../../../../../shared/providers/global_user_provider.dart';
@@ -14,9 +12,7 @@ import '../../../../../shared/providers/global_point_provider.dart';
 import '../../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../../shared/models/global_user_model.dart';
 import '../../../../../shared/models/point_system_model.dart';
-import '../../../../../core/constants/sherpi_emotions.dart';
 import '../../../../../core/constants/sherpi_dialogues.dart';
-import '../../../../../shared/widgets/sherpa_button.dart';
 import '../../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../../shared/utils/haptic_feedback_manager.dart';
 
@@ -38,7 +34,7 @@ class SimplePlannerScreen extends ConsumerStatefulWidget {
 class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  bool _showQuickInput = false;
+  final bool _showQuickInput = false;
 
   // 체크포인트 완료 상태를 관리하는 Map
   final Map<String, bool> _checkpointCompletions = {};
@@ -84,12 +80,12 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.trending_up,
                   size: 16,
                   color: AppColors.primary,
@@ -97,7 +93,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                 const SizedBox(width: 4),
                 Text(
                   '${(overallProgress * 100).toInt()}%',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primary,
@@ -129,7 +125,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                     top: 20,
                     right: 20,
                     child: Material(
-                      color: Colors.white.withOpacity(0.9),
+                      color: Colors.white.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(12),
                       child: InkWell(
                         onTap: _showGoalsList,
@@ -142,7 +138,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.list_alt,
                                 size: 18,
                                 color: AppColors.primary,
@@ -178,9 +174,9 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
-                      offset: const Offset(0, -5),
+                      offset: const Offset(0, 0)
                     ),
                   ],
                 ),
@@ -361,7 +357,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.8),
+          color: Colors.red.withValues(alpha: 0.8),
           borderRadius: BorderRadius.circular(16),
         ),
         alignment: Alignment.centerRight,
@@ -376,16 +372,16 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
         return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('목표 삭제'),
+            title: const Text('목표 삭제'),
             content: Text('${goal.title} 목표를 삭제하시겠어요?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: Text('취소'),
+                child: const Text('취소'),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: Text(
+                child: const Text(
                   '삭제',
                   style: TextStyle(color: Colors.red),
                 ),
@@ -421,7 +417,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: Colors.black.withValues(alpha: 0.03),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -434,7 +430,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: _getCategoryColor(goal.category).withOpacity(0.1),
+                color: _getCategoryColor(goal.category).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(

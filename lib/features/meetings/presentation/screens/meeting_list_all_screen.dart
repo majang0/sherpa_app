@@ -9,7 +9,6 @@ import '../../../../shared/utils/meeting_image_manager.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_2025.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_list_2025.dart';
 import '../../../../shared/widgets/components/molecules/search_bar_2025.dart';
-import '../../../../shared/widgets/components/molecules/category_selector_2025.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/providers/global_meeting_provider.dart';
 
@@ -40,7 +39,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
   String _searchQuery = '';
   bool _isGridView = false;
   String _sortBy = 'recent'; // recent, popular, deadline
-  List<String> _bookmarkedIds = [];
+  final List<String> _bookmarkedIds = [];
 
   // 필터 상태
   bool _showFilterPanel = false;
@@ -243,8 +242,8 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
               border: Border(
                 bottom: BorderSide(
                   color: isDark
-                      ? Colors.white.withOpacity(0.1)
-                      : Colors.black.withOpacity(0.1),
+                      ? Colors.white.withValues(alpha: 0.1)
+                      : Colors.black.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -284,13 +283,13 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: isDark
-                    ? ModernColors.surface.withOpacity(0.1)
+                    ? ModernColors.surface.withValues(alpha: 0.1)
                     : ModernColors.surface,
                 border: Border(
                   bottom: BorderSide(
                     color: isDark
-                        ? Colors.white.withOpacity(0.1)
-                        : Colors.black.withOpacity(0.1),
+                        ? Colors.white.withValues(alpha: 0.1)
+                        : Colors.black.withValues(alpha: 0.1),
                     width: 1,
                   ),
                 ),
@@ -450,7 +449,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
           _sortBy = value;
         });
       },
-      selectedColor: ModernColors.primary.withOpacity(0.1),
+      selectedColor: ModernColors.primary.withValues(alpha: 0.1),
       checkmarkColor: ModernColors.primary,
       labelStyle: GoogleFonts.notoSans(
         fontSize: 12,
@@ -464,7 +463,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       label: Text(label),
       selected: value,
       onSelected: onChanged,
-      selectedColor: ModernColors.primary.withOpacity(0.1),
+      selectedColor: ModernColors.primary.withValues(alpha: 0.1),
       checkmarkColor: ModernColors.primary,
       labelStyle: GoogleFonts.notoSans(
         fontSize: 12,
@@ -518,7 +517,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: ModernColors.primary.withOpacity(0.2),
+                    color: ModernColors.primary.withValues(alpha: 0.2),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -529,7 +528,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             if (isSelected) ...[
-              Icon(
+              const Icon(
                 Icons.check_circle,
                 size: 14,
                 color: Colors.white,
@@ -613,7 +612,7 @@ class _MeetingListAllScreenState extends ConsumerState<MeetingListAllScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.search_off,
             size: 64,
             color: ModernColors.textTertiary,

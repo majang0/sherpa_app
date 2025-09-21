@@ -64,11 +64,11 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -85,11 +85,11 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
             Container(
               margin: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -124,7 +124,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
                   end: Alignment.bottomCenter,
                   colors: [
                     ModernColors.exercise,
-                    ModernColors.exercise.withOpacity(0.7),
+                    ModernColors.exercise.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -169,12 +169,12 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.2),
+            color: ModernColors.exercise.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -191,13 +191,13 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
                   gradient: LinearGradient(
                     colors: [
                       ModernColors.exercise,
-                      ModernColors.exercise.withOpacity(0.8),
+                      ModernColors.exercise.withValues(alpha: 0.8),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: ModernColors.exercise.withOpacity(0.3),
+                      color: ModernColors.exercise.withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -246,8 +246,8 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  ModernColors.exercise.withOpacity(0.05),
-                  ModernColors.exercise.withOpacity(0.08),
+                  ModernColors.exercise.withValues(alpha: 0.05),
+                  ModernColors.exercise.withValues(alpha: 0.08),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -255,7 +255,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.exercise.withOpacity(0.08),
+                  color: ModernColors.exercise.withValues(alpha: 0.08),
                   blurRadius: 12,
                   offset: const Offset(0, 3),
                 ),
@@ -264,7 +264,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
+                const Icon(
                   Icons.calendar_today,
                   color: ModernColors.exercise,
                   size: 18,
@@ -284,7 +284,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: ModernColors.exercise.withOpacity(0.8),
+                    color: ModernColors.exercise.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -334,7 +334,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -342,7 +342,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
       ),
       child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.construction,
             size: 64,
             color: ModernColors.textSecondary,

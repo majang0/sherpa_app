@@ -1,11 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:convert';
 
 import '../../../../shared/models/sherpi_relationship_model.dart';
-import '../../../../core/constants/sherpi_dialogues.dart';
 
 /// 🤝 셰르피 관계 상태 관리
 class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {

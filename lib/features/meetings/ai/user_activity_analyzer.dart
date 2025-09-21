@@ -1,5 +1,6 @@
 /// 사용자 활동 패턴 분석기
 /// 운동, 독서, 모임, 영화 등의 활동 데이터를 분석하여 패턴을 추출
+library;
 
 import 'dart:math';
 import '../../../../shared/models/global_user_model.dart';
@@ -22,7 +23,7 @@ class UserActivityAnalyzer {
   /// 사용자 활동 패턴 분석
   UserActivityPattern analyzeUserActivity(GlobalUser user) {
     final now = DateTime.now();
-    final analysisStart = now.subtract(Duration(days: _analysisWindowDays));
+    final analysisStart = now.subtract(const Duration(days: _analysisWindowDays));
 
     // 각 활동 타입별 패턴 분석
     final exercisePattern = _analyzeExercisePattern(user, analysisStart);
@@ -122,7 +123,7 @@ class UserActivityAnalyzer {
         _inferExerciseLocations(mainTypes.take(3).map((e) => e.key).toList());
 
     // 주간 횟수 계산
-    final weeks = _analysisWindowDays / 7;
+    const weeks = _analysisWindowDays / 7;
     final frequency = (recentExercises.length / weeks).round();
 
     return ExercisePattern(
@@ -190,7 +191,7 @@ class UserActivityAnalyzer {
     final recentBooks = recentReadings.take(5).map((r) => r.bookTitle).toList();
 
     // 주간 독서량
-    final weeks = _analysisWindowDays / 7;
+    const weeks = _analysisWindowDays / 7;
     final booksPerWeek = recentReadings.length / weeks;
 
     return ReadingPattern(
@@ -261,7 +262,7 @@ class UserActivityAnalyzer {
     }();
 
     // 주간 평균
-    final weeks = _analysisWindowDays / 7;
+    const weeks = _analysisWindowDays / 7;
     final averagePerWeek = recentMeetings.length / weeks;
 
     return MeetingPattern(
@@ -304,7 +305,7 @@ class UserActivityAnalyzer {
     // 평균 평점
     final ratings = recentMovies
         .where((m) => m.rating != null)
-        .map((m) => m.rating!.toDouble())
+        .map((m) => m.rating.toDouble())
         .toList();
 
     final averageRating = ratings.isEmpty
@@ -319,7 +320,7 @@ class UserActivityAnalyzer {
     final preferredTimes = ['저녁', '밤'];
 
     // 주간 평균
-    final weeks = _analysisWindowDays / 7;
+    const weeks = _analysisWindowDays / 7;
     final moviesPerWeek = recentMovies.length / weeks;
 
     return MoviePattern(

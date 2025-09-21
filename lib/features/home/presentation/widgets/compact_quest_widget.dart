@@ -210,7 +210,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
             },
             child: Container(
               padding: const EdgeInsets.all(8),
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
                 color: ModernColors.modernPrimary,
@@ -247,12 +247,12 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: ModernColors.border.withOpacity(0.5),
+          color: ModernColors.border.withValues(alpha: 0.5),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.modernPrimary.withOpacity(0.05),
+            color: ModernColors.modernPrimary.withValues(alpha: 0.05),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -265,7 +265,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: quest.difficultyColor.withOpacity(0.1),
+              color: quest.difficultyColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -346,10 +346,10 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: ModernColors.success.withOpacity(0.1),
+                color: ModernColors.success.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.check_circle_outline,
                 size: 32,
                 color: ModernColors.success,
@@ -382,7 +382,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
   Widget _buildLoadingState() {
     return Container(
       padding: const EdgeInsets.all(32),
-      child: Center(
+      child: const Center(
         child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(ModernColors.modernPrimary),
           strokeWidth: 2,
@@ -396,7 +396,7 @@ class _CompactQuestWidgetState extends ConsumerState<CompactQuestWidget>
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             size: 32,
             color: ModernColors.error,

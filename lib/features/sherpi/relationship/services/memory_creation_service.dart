@@ -5,7 +5,7 @@
 import '../models/shared_memory_model.dart';
 import '../services/memory_management_service.dart';
 import '../../emotion/models/emotion_state_model.dart';
-import '../../../daily_record/models/record_models.dart';
+import '../../../../core/utils/logger_service.dart';
 
 /// 🎯 자동 추억 생성 서비스
 class MemoryCreationService {
@@ -225,7 +225,7 @@ class MemoryCreationService {
         final duration = achievementData['duration'] as int? ?? 0;
         final type = achievementData['type'] as String? ?? '운동';
         title = '운동 목표 달성!';
-        content = '오늘 ${type}을(를) ${duration}분간 완료했어요! 건강한 하루를 보냈네요. 💪';
+        content = '오늘 $type을(를) $duration분간 완료했어요! 건강한 하루를 보냈네요. 💪';
         tags = ['exercise', 'health', 'achievement'];
         importance = duration >= 60
             ? MemoryImportance.meaningful
@@ -236,7 +236,7 @@ class MemoryCreationService {
         final pages = achievementData['pages'] as int? ?? 0;
         final bookTitle = achievementData['bookTitle'] as String? ?? '책';
         title = '독서 완료!';
-        content = '${bookTitle}을(를) ${pages}페이지 읽었어요! 지식이 한층 더 쌓였네요. 📚';
+        content = '$bookTitle을(를) $pages페이지 읽었어요! 지식이 한층 더 쌓였네요. 📚';
         tags = ['reading', 'learning', 'achievement'];
         importance =
             pages >= 50 ? MemoryImportance.meaningful : MemoryImportance.normal;
@@ -252,7 +252,7 @@ class MemoryCreationService {
       case 'quest':
         final questName = achievementData['questName'] as String? ?? '퀘스트';
         title = '퀘스트 완료!';
-        content = '${questName}을(를) 성공적으로 완료했어요! 한 걸음씩 성장하고 있어요. 🌟';
+        content = '$questName을(를) 성공적으로 완료했어요! 한 걸음씩 성장하고 있어요. 🌟';
         tags = ['quest', 'achievement', 'growth'];
         importance = MemoryImportance.important;
         break;
@@ -299,21 +299,21 @@ class MemoryCreationService {
       case 'level_up':
         final level = celebrationData['level'] as int? ?? 1;
         title = '레벨 업 달성!';
-        content = '축하해요! 레벨 ${level}에 도달했어요! 꾸준한 노력의 결과네요. 🎉';
+        content = '축하해요! 레벨 $level에 도달했어요! 꾸준한 노력의 결과네요. 🎉';
         tags = ['level_up', 'celebration', 'progress'];
         break;
 
       case 'streak':
         final days = celebrationData['days'] as int? ?? 1;
         title = '연속 달성 기록!';
-        content = '와! ${days}일 연속으로 목표를 달성했어요! 정말 대단해요. 🔥';
+        content = '와! $days일 연속으로 목표를 달성했어요! 정말 대단해요. 🔥';
         tags = ['streak', 'consistency', 'celebration'];
         break;
 
       case 'milestone':
         final milestoneName = celebrationData['milestone'] as String? ?? '목표';
         title = '마일스톤 달성!';
-        content = '${milestoneName} 마일스톤을 달성했어요! 이 순간이 정말 소중해요. ✨';
+        content = '$milestoneName 마일스톤을 달성했어요! 이 순간이 정말 소중해요. ✨';
         tags = ['milestone', 'celebration', 'special'];
         break;
 
@@ -360,7 +360,7 @@ class MemoryCreationService {
         final exerciseType = challengeData['type'] as String? ?? '운동';
         title = '힘든 운동 극복!';
         content =
-            '오늘 ${exerciseType}이 정말 힘들었지만 끝까지 해냈어요! 포기하지 않는 마음이 정말 대단해요. 💪';
+            '오늘 $exerciseType이 정말 힘들었지만 끝까지 해냈어요! 포기하지 않는 마음이 정말 대단해요. 💪';
         tags = ['challenge', 'exercise', 'perseverance'];
         break;
 
@@ -488,14 +488,14 @@ class MemoryCreationService {
       case 'new_skill':
         final skill = learningData['skill'] as String? ?? '새로운 기술';
         title = '새로운 것을 배웠어요!';
-        content = '오늘 ${skill}에 대해 배웠어요! 새로운 지식을 얻는 것은 언제나 즐거워요. 🧠';
+        content = '오늘 $skill에 대해 배웠어요! 새로운 지식을 얻는 것은 언제나 즐거워요. 🧠';
         tags = ['learning', 'skill', 'growth'];
         break;
 
       case 'insight':
         final insight = learningData['insight'] as String? ?? '깨달음';
         title = '새로운 깨달음!';
-        content = '오늘 ${insight}에 대한 새로운 깨달음을 얻었어요! 생각이 한층 더 깊어졌네요. 💡';
+        content = '오늘 $insight에 대한 새로운 깨달음을 얻었어요! 생각이 한층 더 깊어졌네요. 💡';
         tags = ['learning', 'insight', 'wisdom'];
         break;
 
@@ -553,7 +553,7 @@ class MemoryCreationService {
       case 'relationship_stage':
         final stage = milestoneData['stage'] as String? ?? '새로운 단계';
         title = '관계 발전!';
-        content = '우리 관계가 ${stage} 단계로 발전했어요! 더 가까워진 것 같아서 기뻐요. 💖';
+        content = '우리 관계가 $stage 단계로 발전했어요! 더 가까워진 것 같아서 기뻐요. 💖';
         tags = ['milestone', 'relationship', 'growth'];
         break;
 
@@ -605,7 +605,7 @@ class MemoryCreationService {
       case 'first_time':
         final activity = activityData['activity'] as String? ?? '새로운 활동';
         title = '처음 해보는 일!';
-        content = '오늘 처음으로 ${activity}을(를) 해봤어요! 새로운 경험이 언제나 즐거워요. 🆕';
+        content = '오늘 처음으로 $activity을(를) 해봤어요! 새로운 경험이 언제나 즐거워요. 🆕';
         tags = ['daily', 'first_time', 'experience'];
         break;
 

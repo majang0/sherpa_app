@@ -545,7 +545,7 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
                   color: ModernColors.diaryLight,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.timeline,
                   color: ModernColors.diary,
                   size: 18,
@@ -596,7 +596,7 @@ class _DiaryAnalysisPageState extends ConsumerState<DiaryAnalysisPage>
                         color: ModernColors.diaryLight.withValues(alpha: 0.5),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_forward_rounded,
                         color: ModernColors.diary,
                         size: 20,
@@ -892,7 +892,7 @@ class DiaryPatternPainter extends CustomPainter {
       ..color = ModernColors.diaryAccent.withValues(alpha: 0.3)
       ..strokeWidth = 2;
     canvas.drawLine(
-      Offset(marginLeft, 0),
+      const Offset(marginLeft, 0),
       Offset(marginLeft, size.height),
       paint,
     );

@@ -72,7 +72,7 @@ class BehaviorEmotionAnalyzer {
 
     // 최근 일주일 내 패턴만 사용
     final cutoffDate =
-        DateTime.now().subtract(Duration(days: _analysisWindowDays));
+        DateTime.now().subtract(const Duration(days: _analysisWindowDays));
     final relevantPatterns =
         recentPatterns.where((p) => p.timestamp.isAfter(cutoffDate)).toList();
 
@@ -261,9 +261,9 @@ class BehaviorEmotionAnalyzer {
 
     final maxCount =
         [morningCount, afternoonCount, eveningCount, nightCount].fold(0, max);
-    if (maxCount == morningCount)
+    if (maxCount == morningCount) {
       preferredTimeSlot = 'morning';
-    else if (maxCount == afternoonCount)
+    } else if (maxCount == afternoonCount)
       preferredTimeSlot = 'afternoon';
     else if (maxCount == eveningCount)
       preferredTimeSlot = 'evening';

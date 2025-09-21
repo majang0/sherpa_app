@@ -13,7 +13,7 @@ import 'movie_edit_screen.dart';
 class MovieDetailScreen extends ConsumerStatefulWidget {
   final MovieLog movie;
 
-  const MovieDetailScreen({required this.movie});
+  const MovieDetailScreen({super.key, required this.movie});
 
   @override
   ConsumerState<MovieDetailScreen> createState() => _MovieDetailScreenState();
@@ -84,11 +84,11 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -104,11 +104,11 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
           Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -116,9 +116,9 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
             ),
             child: IconButton(
               onPressed: _editMovie,
-              icon: Icon(
+              icon: const Icon(
                 Icons.edit_outlined,
-                color: const Color(0xFFEF4444),
+                color: Color(0xFFEF4444),
                 size: 20,
               ),
             ),
@@ -126,11 +126,11 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
           Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -154,13 +154,13 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
             // 배경 그라데이션
             Container(
               height: 280,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFFEF4444),
-                    const Color(0xFFDC2626),
+                    Color(0xFFEF4444),
+                    Color(0xFFDC2626),
                   ],
                 ),
               ),
@@ -232,12 +232,12 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFEF4444).withOpacity(0.2),
+            color: const Color(0xFFEF4444).withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -251,16 +251,16 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
-                      const Color(0xFFEF4444),
-                      const Color(0xFFDC2626),
+                      Color(0xFFEF4444),
+                      Color(0xFFDC2626),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFEF4444).withOpacity(0.3),
+                      color: const Color(0xFFEF4444).withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -299,10 +299,10 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEF4444).withOpacity(0.1),
+                  color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFFEF4444).withOpacity(0.2),
+                    color: const Color(0xFFEF4444).withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
@@ -312,16 +312,16 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                       mainAxisSize: MainAxisSize.min,
                       children: List.generate(
                         widget.movie.rating.round(),
-                        (index) => Icon(
+                        (index) => const Icon(
                           Icons.star,
                           size: 16,
-                          color: const Color(0xFFFBBF24),
+                          color: Color(0xFFFBBF24),
                         ),
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${widget.movie.rating.toStringAsFixed(1)}',
+                      widget.movie.rating.toStringAsFixed(1),
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
@@ -341,10 +341,10 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
-              color: const Color(0xFFEF4444).withOpacity(0.1),
+              color: const Color(0xFFEF4444).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFFEF4444).withOpacity(0.2),
+                color: const Color(0xFFEF4444).withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -373,7 +373,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -387,12 +387,12 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEF4444).withOpacity(0.1),
+                    color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.info_outline,
-                    color: const Color(0xFFEF4444),
+                    color: Color(0xFFEF4444),
                     size: 18,
                   ),
                 ),
@@ -414,7 +414,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFFEF4444).withOpacity(0.1),
+                  color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -448,7 +448,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -462,12 +462,12 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFBBF24).withOpacity(0.1),
+                    color: const Color(0xFFFBBF24).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.star,
-                    color: const Color(0xFFFBBF24),
+                    color: Color(0xFFFBBF24),
                     size: 18,
                   ),
                 ),
@@ -493,15 +493,15 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                       color: const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: const Color(0xFFFBBF24).withOpacity(0.2),
+                        color: const Color(0xFFFBBF24).withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           '⭐',
-                          style: const TextStyle(fontSize: 24),
+                          style: TextStyle(fontSize: 24),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -541,15 +541,15 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                       color: const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: const Color(0xFFEF4444).withOpacity(0.2),
+                        color: const Color(0xFFEF4444).withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           '⏰',
-                          style: const TextStyle(fontSize: 24),
+                          style: TextStyle(fontSize: 24),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -591,7 +591,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -605,12 +605,12 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFEF4444).withOpacity(0.1),
+                    color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.note_outlined,
-                    color: const Color(0xFFEF4444),
+                    color: Color(0xFFEF4444),
                     size: 18,
                   ),
                 ),
@@ -633,7 +633,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFFEF4444).withOpacity(0.1),
+                  color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -701,7 +701,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFEF4444).withOpacity(0.4),
+                        color: const Color(0xFFEF4444).withValues(alpha: 0.4),
                         blurRadius: 15,
                         offset: const Offset(0, 8),
                       ),
@@ -721,7 +721,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.edit, size: 20),
+                        const Icon(Icons.edit, size: 20),
                         const SizedBox(width: 8),
                         Text(
                           '수정하기',
@@ -746,12 +746,12 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: const Color(0xFFEF4444).withOpacity(0.3),
+                    color: const Color(0xFFEF4444).withValues(alpha: 0.3),
                     width: 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -759,9 +759,9 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 ),
                 child: IconButton(
                   onPressed: _shareMovie,
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.share_outlined,
-                    color: const Color(0xFFEF4444),
+                    color: Color(0xFFEF4444),
                     size: 24,
                   ),
                 ),
@@ -779,7 +779,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.red.withOpacity(0.2),
+                  color: Colors.red.withValues(alpha: 0.2),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -799,7 +799,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.delete, size: 20),
+                  const Icon(Icons.delete, size: 20),
                   const SizedBox(width: 8),
                   Text(
                     '기록 삭제하기',
@@ -994,19 +994,8 @@ ${widget.movie.review ?? ''}
                 Navigator.pop(context); // 다이얼로그 닫기
 
                 try {
-                  // 영화 기록 삭제
-                  final user = ref.read(globalUserProvider);
-                  final updatedMovieLogs = user.dailyRecords.movieLogs
-                      .where((log) => log.id != widget.movie.id)
-                      .toList();
-
-                  final updatedRecords = user.dailyRecords.copyWith(
-                    movieLogs: updatedMovieLogs,
-                  );
-
-                  final updatedUser =
-                      user.copyWith(dailyRecords: updatedRecords);
-                  ref.read(globalUserProvider.notifier).state = updatedUser;
+                  // 영화 기록 삭제 (새로 추가한 deleteMovieLog 메서드 사용)
+                  ref.read(globalUserProvider.notifier).deleteMovieLog(widget.movie.id);
 
                   if (mounted) {
                     Navigator.pop(context); // 상세 화면 닫기

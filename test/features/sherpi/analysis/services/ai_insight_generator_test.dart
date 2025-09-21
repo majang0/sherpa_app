@@ -20,7 +20,7 @@ GlobalUser _createMockUser({
     level: level,
     experience: experience,
     profileImageUrl: 'test_image.png',
-    stats: GlobalStats(
+    stats: const GlobalStats(
       stamina: 50.0,
       knowledge: 60.0,
       technique: 45.0,
@@ -53,7 +53,7 @@ GlobalUser _createMockUser({
 
 AnalysisResult _createMockAnalysisResult() {
   return AnalysisResult(
-    activityPatterns: ActivityPatterns(
+    activityPatterns: const ActivityPatterns(
       activityFrequency: {'운동': 5, '독서': 3, '일기': 7},
       weeklyDistribution: {
         1: 0.15,
@@ -84,7 +84,7 @@ AnalysisResult _createMockAnalysisResult() {
         ),
       ],
     ),
-    performanceMetrics: PerformanceMetrics(
+    performanceMetrics: const PerformanceMetrics(
       goalCompletionRate: 0.85,
       statGrowthRate: {
         'strength': 0.1,
@@ -99,14 +99,14 @@ AnalysisResult _createMockAnalysisResult() {
       categoryPerformance: {'운동': 0.8, '독서': 0.6, '일기': 0.9},
     ),
     insights: [
-      Insight(
+      const Insight(
         title: '꾸준한 일기 작성',
         description: '매일 빠짐없이 일기를 작성하고 있습니다',
         type: InsightType.strength,
         importance: 0.9,
         icon: Icons.edit,
       ),
-      Insight(
+      const Insight(
         title: '운동 빈도 증가 필요',
         description: '주 3회 이상 운동을 권장합니다',
         type: InsightType.opportunity,
@@ -115,7 +115,7 @@ AnalysisResult _createMockAnalysisResult() {
       ),
     ],
     recommendations: [
-      Recommendation(
+      const Recommendation(
         title: '아침 운동 루틴',
         description: '하루를 활기차게 시작해보세요',
         actionText: '운동 시작하기',

@@ -5,7 +5,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:convert';
 
 import '../models/emotion_state_model.dart';
@@ -88,7 +87,7 @@ class EmotionStateNotifier extends StateNotifier<EmotionStateManagement> {
       : super(
           EmotionStateManagement(
             emotionHistory: EmotionHistory(
-              snapshots: [],
+              snapshots: const [],
               startTime: DateTime.now().subtract(const Duration(days: 30)),
               endTime: DateTime.now(),
             ),
@@ -414,7 +413,7 @@ class EmotionStateNotifier extends StateNotifier<EmotionStateManagement> {
   Future<void> resetEmotionState() async {
     state = EmotionStateManagement(
       emotionHistory: EmotionHistory(
-        snapshots: [],
+        snapshots: const [],
         startTime: DateTime.now().subtract(const Duration(days: 30)),
         endTime: DateTime.now(),
       ),

@@ -187,7 +187,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: _mainAnimationController,
-      curve: Interval(0.0, 0.6, curve: Curves.elasticOut),
+      curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
     ));
 
     _fadeAnimation = Tween<double>(
@@ -195,7 +195,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: _mainAnimationController,
-      curve: Interval(0.2, 0.8, curve: Curves.easeOut),
+      curve: const Interval(0.2, 0.8, curve: Curves.easeOut),
     ));
 
     _slideAnimation = Tween<Offset>(
@@ -203,7 +203,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _mainAnimationController,
-      curve: Interval(0.4, 1.0, curve: Curves.easeOut),
+      curve: const Interval(0.4, 1.0, curve: Curves.easeOut),
     ));
 
     // 애니메이션 시작
@@ -265,7 +265,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
 
     return Scaffold(
       backgroundColor: ModernColors.background,
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '참여 완료',
       ),
       body: Stack(
@@ -389,7 +389,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             const SizedBox(height: 12),
 
             Text(
-              '${widget.meeting.title}',
+              widget.meeting.title,
               style: GoogleFonts.notoSans(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -639,7 +639,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.trending_up_rounded,
                 color: ModernColors.success,
                 size: 16,
@@ -760,7 +760,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.event_note_rounded,
                 color: ModernColors.primary,
                 size: 20,
@@ -816,7 +816,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.notifications_active_rounded,
                   color: ModernColors.primary,
                   size: 16,
@@ -925,7 +925,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             onTap: () {
               // TODO: 캘린더 앱 연동
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text('캘린더 추가 기능 (구현 예정)'),
                   backgroundColor: ModernColors.primary,
                 ),
@@ -943,7 +943,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
             onTap: () {
               // TODO: 공유 기능
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text('공유 기능 (구현 예정)'),
                   backgroundColor: ModernColors.accent,
                 ),
@@ -1012,7 +1012,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
                 ],
               ),
             ),
-            Icon(
+            const Icon(
               Icons.arrow_forward_ios_rounded,
               color: ModernColors.textSecondary,
               size: 16,
@@ -1033,7 +1033,7 @@ class _MeetingSuccessScreenState extends ConsumerState<MeetingSuccessScreen>
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            offset: const Offset(0, 0),
           ),
         ],
       ),

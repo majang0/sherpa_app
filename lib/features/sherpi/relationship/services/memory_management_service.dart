@@ -290,7 +290,7 @@ class MemoryManagementService {
             id: 'trigger_keyword_$tag',
             triggerType: 'keyword',
             triggerData: {'keyword': tag},
-            associatedMemoryIds: [],
+            associatedMemoryIds: const [],
             triggerStrength: 0.5,
           ),
         );
@@ -328,7 +328,7 @@ class MemoryManagementService {
             id: 'trigger_emotion_$emotionType',
             triggerType: 'emotion',
             triggerData: {'emotion': emotionType},
-            associatedMemoryIds: [],
+            associatedMemoryIds: const [],
             triggerStrength: 0.7,
           ),
         );

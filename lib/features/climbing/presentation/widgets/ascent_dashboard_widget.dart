@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
-import 'dart:math' as math;
 import 'dart:async';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
@@ -21,6 +18,8 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/models/mountain.dart';
 
 class AscentDashboardWidget extends ConsumerStatefulWidget {
+  const AscentDashboardWidget({super.key});
+
   @override
   ConsumerState<AscentDashboardWidget> createState() =>
       _AscentDashboardWidgetState();
@@ -137,7 +136,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     ));
 
     _rewardSlide = Tween<Offset>(
-      begin: const Offset(0, -0.5),
+      begin: const Offset(0, 0),
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _rewardAnimationController,
@@ -239,8 +238,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     if (session == null) return;
 
     // 완료 전 세션 정보 저장
-    final mountainId = session.mountainId;
-    final difficulty = session.metadata?['difficulty'] ?? 1;
+    // final mountainId = session.mountainId; // Not used currently
+    // final difficulty = session.metadata?['difficulty'] ?? 1; // Not used currently
 
     // completeClimbing 호출
     ref.read(globalUserProvider.notifier).completeClimbing();
@@ -397,15 +396,15 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withOpacity(0.1),
-            AppColors.primaryLight.withOpacity(0.05),
+            AppColors.primary.withValues(alpha: 0.1),
+            AppColors.primaryLight.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.2),
+          color: AppColors.primary.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -420,13 +419,13 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColors.primary.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
               ],
             ),
-            child: Center(
+            child: const Center(
               child: Text('🏕️', style: TextStyle(fontSize: 32)),
             ),
           ),
@@ -469,7 +468,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
             children: [
               Row(
                 children: [
-                  Icon(Icons.flash_on, color: AppColors.primary, size: 20),
+                  const Icon(Icons.flash_on, color: AppColors.primary, size: 20),
                   const SizedBox(width: 4),
                   Text(
                     '${userPower.toInt()}',
@@ -502,13 +501,13 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     final badges = ref.watch(globalEquippedBadgesProvider);
 
     return Column(
-      key: ValueKey('expedition'),
+      key: const ValueKey('expedition'),
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 섹션 타이틀
         Row(
           children: [
-            Icon(Icons.map, color: AppColors.primary, size: 24),
+            const Icon(Icons.map, color: AppColors.primary, size: 24),
             const SizedBox(width: 8),
             Text(
               '등반 계획', // 🔧 수정: 원정 -> 등반
@@ -600,13 +599,13 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: difficultyColor.withOpacity(isSelected ? 0.4 : 0.2),
+                  color: difficultyColor.withValues(alpha: isSelected ? 0.4 : 0.2),
                   blurRadius: isSelected ? 20 : 12,
                   offset: Offset(0, isSelected ? 8 : 4),
                 ),
               ],
               border: Border.all(
-                color: difficultyColor.withOpacity(0.3),
+                color: difficultyColor.withValues(alpha: 0.3),
                 width: 2,
               ),
             ),
@@ -619,8 +618,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        difficultyColor.withOpacity(0.3),
-                        difficultyColor.withOpacity(0.1),
+                        difficultyColor.withValues(alpha: 0.3),
+                        difficultyColor.withValues(alpha: 0.1),
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -630,7 +629,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                   ),
                   child: Stack(
                     children: [
-                      Center(
+                      const Center(
                         child: Text(
                           '🏔️',
                           style: TextStyle(fontSize: 36), // 🔧 수정: 40에서 36으로 축소
@@ -643,7 +642,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.6),
+                            color: Colors.black.withValues(alpha: 0.6),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -704,7 +703,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                           children: [
                             Row(
                               children: [
-                                Icon(Icons.timer,
+                                const Icon(Icons.timer,
                                     size: 12, color: AppColors.textSecondary),
                                 const SizedBox(width: 4),
                                 Text(
@@ -749,7 +748,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 6),
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.05),
+                            color: AppColors.primary.withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -823,7 +822,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     } else {
       final h = hours.floor();
       final m = ((hours - h) * 60).round();
-      return '${h}시간 ${m}분';
+      return '$h시간 $m분';
     }
   }
 
@@ -832,7 +831,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(emoji, style: TextStyle(fontSize: 14)),
+        Text(emoji, style: const TextStyle(fontSize: 14)),
         const SizedBox(width: 4),
         Text(
           '$value',
@@ -852,7 +851,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
@@ -872,13 +871,13 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     if (mountain == null) return const SizedBox();
 
     return Container(
-      key: ValueKey('climbing'),
+      key: const ValueKey('climbing'),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withOpacity(0.9),
-            AppColors.primaryDark.withOpacity(0.9),
+            AppColors.primary.withValues(alpha: 0.9),
+            AppColors.primaryDark.withValues(alpha: 0.9),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -886,7 +885,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: AppColors.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -901,7 +900,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -909,7 +908,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                     Container(
                       width: 8,
                       height: 8,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.greenAccent,
                         shape: BoxShape.circle,
                       ),
@@ -929,9 +928,9 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               const Spacer(),
               IconButton(
                 onPressed: _cancelClimbing,
-                icon: Icon(Icons.close, color: Colors.white),
+                icon: const Icon(Icons.close, color: Colors.white),
                 style: IconButton.styleFrom(
-                  backgroundColor: Colors.white.withOpacity(0.2),
+                  backgroundColor: Colors.white.withValues(alpha: 0.2),
                 ),
               ),
             ],
@@ -941,7 +940,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           // 산 정보
           Row(
             children: [
-              Text(
+              const Text(
                 '🏔️',
                 style: TextStyle(fontSize: 48),
               ),
@@ -998,9 +997,9 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
             children: [
               // 산 실루엣
               CustomPaint(
-                size: Size(double.infinity, 120),
+                size: const Size(double.infinity, 120),
                 painter: MountainSilhouettePainter(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                 ),
               ),
               // 등반 경로
@@ -1008,7 +1007,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                 child: CustomPaint(
                   painter: ClimbingPathPainter(
                     progress: _currentProgress,
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withValues(alpha: 0.4),
                   ),
                 ),
               ),
@@ -1023,13 +1022,13 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
                     ],
                   ),
-                  child: Text('🧗', style: TextStyle(fontSize: 24)),
+                  child: const Text('🧗', style: TextStyle(fontSize: 24)),
                 ),
               ),
             ],
@@ -1041,7 +1040,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         Container(
           height: 8,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(4),
           ),
           child: ClipRRect(
@@ -1049,7 +1048,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
             child: LinearProgressIndicator(
               value: _currentProgress,
               backgroundColor: Colors.transparent,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
               minHeight: 8,
             ),
           ),
@@ -1102,7 +1101,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -1115,7 +1114,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                       SherpiEmotion.thinking.imagePath,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        return Center(
+                        return const Center(
                           child: Text('🎯', style: TextStyle(fontSize: 28)),
                         );
                       },
@@ -1129,7 +1128,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -1159,7 +1158,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         _buildStatItem(
           icon: Icons.timer,
           label: '남은 시간',
-          value: '${minutes}:${seconds.toString().padLeft(2, '0')}',
+          value: '$minutes:${seconds.toString().padLeft(2, '0')}',
           color: Colors.white,
         ),
         Container(width: 1, height: 40, color: Colors.white24),
@@ -1177,10 +1176,10 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
+        color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.1),
+          color: AppColors.primary.withValues(alpha: 0.1),
         ),
       ),
       child: Row(
@@ -1189,10 +1188,10 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.loop,
               color: AppColors.primary,
               size: 24,
@@ -1245,7 +1244,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
       children: [
         Row(
           children: [
-            Icon(Icons.history, color: AppColors.primary, size: 20),
+            const Icon(Icons.history, color: AppColors.primary, size: 20),
             const SizedBox(width: 8),
             Text(
               '최근 등반 기록', // 🔧 수정: 원정 -> 등반
@@ -1258,7 +1257,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           ],
         ),
         const SizedBox(height: 12),
-        ...recentRecords.map((record) => _buildRecordItem(record)).toList(),
+        ...recentRecords.map((record) => _buildRecordItem(record)),
       ],
     );
   }
@@ -1274,7 +1273,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: statusColor.withOpacity(0.3),
+          color: statusColor.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -1283,7 +1282,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.1),
+              color: statusColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
@@ -1350,14 +1349,14 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                     boxShadow: [
                       BoxShadow(
                         color: (isSuccess ? AppColors.success : AppColors.error)
-                            .withOpacity(0.3),
+                            .withValues(alpha: 0.3),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
                     ],
                     border: Border.all(
                       color: (isSuccess ? AppColors.success : AppColors.error)
-                          .withOpacity(0.3),
+                          .withValues(alpha: 0.3),
                       width: 2,
                     ),
                   ),
@@ -1369,7 +1368,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                         children: [
                           Text(
                             isSuccess ? '🎉 ' : '💪 ',
-                            style: TextStyle(fontSize: 24),
+                            style: const TextStyle(fontSize: 24),
                           ),
                           Text(
                             isSuccess ? '등반 성공!' : '등반 실패', // 🔧 수정: 원정 -> 등반
@@ -1412,7 +1411,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
   Widget _buildInlineReward(String emoji, String value) {
     return Row(
       children: [
-        Text(emoji, style: TextStyle(fontSize: 20)),
+        Text(emoji, style: const TextStyle(fontSize: 20)),
         const SizedBox(width: 6),
         Text(
           value,
@@ -1431,9 +1430,9 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,
@@ -1476,7 +1475,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -1515,7 +1514,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
       children: [
         Row(
           children: [
-            Text('✨', style: TextStyle(fontSize: 13)),
+            const Text('✨', style: TextStyle(fontSize: 13)),
             const SizedBox(width: 4),
             Text(
               '$xp',
@@ -1530,7 +1529,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         const SizedBox(width: 16),
         Row(
           children: [
-            Text('💰', style: TextStyle(fontSize: 13)),
+            const Text('💰', style: TextStyle(fontSize: 13)),
             const SizedBox(width: 4),
             Text(
               '$points',
@@ -1579,7 +1578,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
@@ -1599,7 +1598,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(emoji, style: TextStyle(fontSize: 24)),
+          Text(emoji, style: const TextStyle(fontSize: 24)),
           const SizedBox(width: 12),
           Text(
             label,
@@ -1744,7 +1743,7 @@ class ClimbingPathPainter extends CustomPainter {
     path.moveTo(startX, startY);
 
     // 지그재그 경로 생성
-    final steps = 5;
+    const steps = 5;
     for (int i = 1; i <= steps; i++) {
       final t = (i / steps) * progress;
       final x = startX + (endX - startX) * t;

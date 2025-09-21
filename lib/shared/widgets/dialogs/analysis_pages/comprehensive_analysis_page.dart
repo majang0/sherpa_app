@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../core/theme/modern_colors.dart';
 import 'package:sherpa_app/core/ai/services/activity_analysis_service.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../models/point_system_model.dart';
 import '../../../providers/global_point_provider.dart';
@@ -156,7 +151,7 @@ class _ComprehensiveAnalysisPageState
             ),
             title: Row(
               children: [
-                Icon(Icons.warning_amber_rounded, color: ModernColors.warning),
+                const Icon(Icons.warning_amber_rounded, color: ModernColors.warning),
                 const SizedBox(width: 8),
                 Text(
                   '포인트 부족',
@@ -173,7 +168,7 @@ class _ComprehensiveAnalysisPageState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'AI 분석을 위해서는 ${analysisPointCost}포인트가 필요합니다.',
+                  'AI 분석을 위해서는 $analysisPointCost포인트가 필요합니다.',
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     color: ModernColors.textPrimary,
@@ -183,7 +178,7 @@ class _ComprehensiveAnalysisPageState
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: ModernColors.background.withOpacity(0.5),
+                    color: ModernColors.background.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
@@ -452,8 +447,8 @@ class _ComprehensiveAnalysisPageState
               shape: BoxShape.circle,
               gradient: LinearGradient(
                 colors: [
-                  ModernColors.primary.withOpacity(0.1),
-                  ModernColors.primary.withOpacity(0.05),
+                  ModernColors.primary.withValues(alpha: 0.1),
+                  ModernColors.primary.withValues(alpha: 0.05),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -484,13 +479,13 @@ class _ComprehensiveAnalysisPageState
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               color: hasEnoughPoints
-                  ? ModernColors.success.withOpacity(0.1)
-                  : ModernColors.warning.withOpacity(0.1),
+                  ? ModernColors.success.withValues(alpha: 0.1)
+                  : ModernColors.warning.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: hasEnoughPoints
-                    ? ModernColors.success.withOpacity(0.3)
-                    : ModernColors.warning.withOpacity(0.3),
+                    ? ModernColors.success.withValues(alpha: 0.3)
+                    : ModernColors.warning.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),
@@ -575,8 +570,8 @@ class _ComprehensiveAnalysisPageState
                     ? ModernColors.primaryGradient
                     : LinearGradient(
                         colors: [
-                          ModernColors.textSecondary.withOpacity(0.3),
-                          ModernColors.textSecondary.withOpacity(0.2),
+                          ModernColors.textSecondary.withValues(alpha: 0.3),
+                          ModernColors.textSecondary.withValues(alpha: 0.2),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -585,7 +580,7 @@ class _ComprehensiveAnalysisPageState
                 boxShadow: hasEnoughPoints
                     ? [
                         BoxShadow(
-                          color: ModernColors.primary.withOpacity(0.3),
+                          color: ModernColors.primary.withValues(alpha: 0.3),
                           blurRadius: 12,
                           offset: const Offset(0, 6),
                         ),
@@ -654,7 +649,7 @@ class _ComprehensiveAnalysisPageState
                 child: Container(
                   width: 100,
                   height: 100,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: ModernColors.primaryGradient,
                   ),
@@ -699,7 +694,7 @@ class _ComprehensiveAnalysisPageState
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 500),
                 width: 200 * _loadingProgress,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: ModernColors.primaryGradient,
                 ),
               ),
@@ -800,8 +795,8 @@ class _ComprehensiveAnalysisPageState
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  ModernColors.primary.withOpacity(0.05),
-                  ModernColors.primary.withOpacity(0.02),
+                  ModernColors.primary.withValues(alpha: 0.05),
+                  ModernColors.primary.withValues(alpha: 0.02),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -858,7 +853,7 @@ class _ComprehensiveAnalysisPageState
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -880,7 +875,7 @@ class _ComprehensiveAnalysisPageState
                 return RadarChart(
                   RadarChartData(
                     radarShape: RadarShape.polygon,
-                    radarBorderData: BorderSide(
+                    radarBorderData: const BorderSide(
                       color: ModernColors.borderLight,
                       width: 1,
                     ),
@@ -895,17 +890,17 @@ class _ComprehensiveAnalysisPageState
                     getTitle: (index, angle) {
                       switch (index) {
                         case 0:
-                          return RadarChartTitle(
+                          return const RadarChartTitle(
                             text: '신체 💪',
                             angle: 0,
                           );
                         case 1:
-                          return RadarChartTitle(
+                          return const RadarChartTitle(
                             text: '정신 🧠',
                             angle: 0,
                           );
                         case 2:
-                          return RadarChartTitle(
+                          return const RadarChartTitle(
                             text: '감정 💝',
                             angle: 0,
                           );
@@ -919,16 +914,16 @@ class _ComprehensiveAnalysisPageState
                       color: Colors.transparent,
                     ),
                     tickBorderData: BorderSide(
-                      color: ModernColors.borderLight.withOpacity(0.3),
+                      color: ModernColors.borderLight.withValues(alpha: 0.3),
                       width: 0.5,
                     ),
                     gridBorderData: BorderSide(
-                      color: ModernColors.borderLight.withOpacity(0.5),
+                      color: ModernColors.borderLight.withValues(alpha: 0.5),
                       width: 0.5,
                     ),
                     dataSets: [
                       RadarDataSet(
-                        fillColor: ModernColors.primary.withOpacity(0.2),
+                        fillColor: ModernColors.primary.withValues(alpha: 0.2),
                         borderColor: ModernColors.primary,
                         borderWidth: 2,
                         entryRadius: 4,
@@ -1076,15 +1071,15 @@ class _ComprehensiveAnalysisPageState
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            ModernColors.success.withOpacity(0.1),
-            ModernColors.success.withOpacity(0.05),
+            ModernColors.success.withValues(alpha: 0.1),
+            ModernColors.success.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: ModernColors.success.withOpacity(0.3),
+          color: ModernColors.success.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -1093,7 +1088,7 @@ class _ComprehensiveAnalysisPageState
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.trending_up_rounded,
                 color: ModernColors.success,
                 size: 20,
@@ -1183,15 +1178,15 @@ class _ComprehensiveAnalysisPageState
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            ModernColors.primary.withOpacity(0.05),
-            ModernColors.secondary.withOpacity(0.05),
+            ModernColors.primary.withValues(alpha: 0.05),
+            ModernColors.secondary.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: ModernColors.primary.withOpacity(0.2),
+          color: ModernColors.primary.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -1229,6 +1224,6 @@ class _ComprehensiveAnalysisPageState
         .slideY(begin: 0.2, end: 0)
         .then()
         .shimmer(
-            duration: 2000.ms, color: ModernColors.primary.withOpacity(0.1));
+            duration: 2000.ms, color: ModernColors.primary.withValues(alpha: 0.1));
   }
 }

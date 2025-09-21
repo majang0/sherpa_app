@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
-import '../../../../shared/providers/global_sherpi_provider.dart';
-import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../models/available_meeting_model.dart';
 import '../../../../shared/providers/global_meeting_provider.dart';
 
@@ -132,7 +130,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ModernColors.background,
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '모험 후기',
       ),
       body: AnimatedBuilder(
@@ -517,7 +515,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: ModernColors.primary, width: 2),
+                borderSide: const BorderSide(color: ModernColors.primary, width: 2),
               ),
               filled: true,
               fillColor: Colors.grey.shade50,
@@ -563,7 +561,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
                   color: ModernColors.success.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.card_giftcard_rounded,
                   color: ModernColors.success,
                   size: 20,
@@ -655,7 +653,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            offset: const Offset(0, 0),
           ),
         ],
       ),
@@ -731,7 +729,7 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
         );
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('후기 작성 완료! 추가 보상을 받았어요! 🎉'),
             backgroundColor: ModernColors.success,
           ),

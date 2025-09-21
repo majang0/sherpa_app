@@ -606,7 +606,9 @@ class EmotionAdaptiveResponseSystem {
     } else if (currentHour >= 6 && currentHour <= 10) {
       // 아침
       if (template.style == ResponseStyle.motivational ||
-          template.style == ResponseStyle.encouraging) score += 0.1;
+          template.style == ResponseStyle.encouraging) {
+        score += 0.1;
+      }
     }
 
     // 최근 활동 기반 적합성
@@ -615,17 +617,23 @@ class EmotionAdaptiveResponseSystem {
       switch (recentActivity) {
         case 'exercise':
           if (template.style == ResponseStyle.celebratory ||
-              template.style == ResponseStyle.motivational) score += 0.15;
+              template.style == ResponseStyle.motivational) {
+            score += 0.15;
+          }
           break;
         case 'reading':
         case 'study':
           if (template.style == ResponseStyle.thoughtful ||
-              template.style == ResponseStyle.supportive) score += 0.1;
+              template.style == ResponseStyle.supportive) {
+            score += 0.1;
+          }
           break;
         case 'meditation':
         case 'diary':
           if (template.style == ResponseStyle.calming ||
-              template.style == ResponseStyle.empathetic) score += 0.1;
+              template.style == ResponseStyle.empathetic) {
+            score += 0.1;
+          }
           break;
       }
     }

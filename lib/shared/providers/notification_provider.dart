@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:convert';
 import '../models/notification_model.dart';
 
@@ -31,7 +30,7 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
   // 유틸리티 메서드: 보상 텍스트 생성
   String _generateRewardText({int? xp, int? points}) {
     final rewards = <String>[];
-    if (xp != null && xp > 0) rewards.add('${xp} XP');
+    if (xp != null && xp > 0) rewards.add('$xp XP');
     if (points != null && points > 0) rewards.add('${points}P');
     return rewards.isNotEmpty ? rewards.join(' + ') : '';
   }

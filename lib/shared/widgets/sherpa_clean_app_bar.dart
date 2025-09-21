@@ -26,14 +26,14 @@ class SherpaCleanAppBar extends ConsumerStatefulWidget
   final Color? foregroundColor;
 
   const SherpaCleanAppBar({
-    Key? key,
+    super.key,
     this.title,
     this.showBackButton = false,
     this.onProfileTap,
     this.actions,
     this.backgroundColor,
     this.foregroundColor,
-  }) : super(key: key);
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -108,7 +108,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MyInfoScreen(),
+                  builder: (context) => const MyInfoScreen(),
                 ),
               );
             }
@@ -215,7 +215,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.star,
                         color: Colors.white,
                         size: 12,
@@ -312,7 +312,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EnhancedPointShopScreen(),
+                  builder: (context) => const EnhancedPointShopScreen(),
                 ),
               );
             },
@@ -339,7 +339,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.monetization_on,
                     color: Colors.white,
                     size: 12,
@@ -418,7 +418,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
               // 헤더
               Container(
                 padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: ModernColors.background,
                   border: Border(
                     bottom: BorderSide(
@@ -426,7 +426,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                       width: 1,
                     ),
                   ),
-                  borderRadius: const BorderRadius.only(
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(16),
                     topRight: Radius.circular(16),
                   ),
@@ -435,7 +435,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                   children: [
                     Container(
                       padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: ModernColors.primary,
                         shape: BoxShape.circle,
                       ),
@@ -471,7 +471,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.close_rounded,
                         color: ModernColors.textTertiary,
                         size: 20,
@@ -489,11 +489,11 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                     children: [
                       Container(
                         padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: ModernColors.gray100,
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.notifications_none_rounded,
                           size: 40,
                           color: ModernColors.textTertiary,
@@ -554,7 +554,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
               // 전체보기 버튼
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   border: Border(
                     top: BorderSide(
                       color: ModernColors.borderLight,

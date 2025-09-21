@@ -6,10 +6,9 @@ import 'dart:ui';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_point_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
-import '../../../../core/constants/app_colors.dart';
 
 class RepresentativeDashboard extends ConsumerWidget {
-  const RepresentativeDashboard({Key? key}) : super(key: key);
+  const RepresentativeDashboard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,9 +27,9 @@ class RepresentativeDashboard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF1E3A8A).withValues(alpha: 0.08),
+            color: const Color(0xFF1E3A8A).withValues(alpha: 0.08),
             blurRadius: 16,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -59,11 +58,11 @@ class RepresentativeDashboard extends ConsumerWidget {
                       style: GoogleFonts.notoSans(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1E3A8A),
+                        color: const Color(0xFF1E3A8A),
                       ),
                     ),
-                    Spacer(),
-                    Icon(
+                    const Spacer(),
+                    const Icon(
                       Icons.trending_up,
                       color: Color(0xFF10B981),
                       size: 20,
@@ -82,7 +81,7 @@ class RepresentativeDashboard extends ConsumerWidget {
                         '${user.dailyRecords.todaySteps}',
                         '오늘',
                         Icons.directions_walk,
-                        Color(0xFF10B981),
+                        const Color(0xFF10B981),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -92,7 +91,7 @@ class RepresentativeDashboard extends ConsumerWidget {
                         '$climbingCount회',
                         '전체',
                         Icons.terrain,
-                        Color(0xFF8B5CF6),
+                        const Color(0xFF8B5CF6),
                       ),
                     ),
                   ],
@@ -108,7 +107,7 @@ class RepresentativeDashboard extends ConsumerWidget {
                         '$totalMeetings회',
                         '전체',
                         Icons.people,
-                        Color(0xFFF59E0B),
+                        const Color(0xFFF59E0B),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -118,7 +117,7 @@ class RepresentativeDashboard extends ConsumerWidget {
                         '${pointData.totalPoints}P',
                         '보유중',
                         Icons.paid,
-                        Color(0xFFEF4444),
+                        const Color(0xFFEF4444),
                       ),
                     ),
                   ],
@@ -135,7 +134,7 @@ class RepresentativeDashboard extends ConsumerWidget {
                         '${user.dailyRecords.consecutiveDays}일',
                         '현재',
                         Icons.calendar_today,
-                        Color(0xFF06B6D4),
+                        const Color(0xFF06B6D4),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -145,7 +144,7 @@ class RepresentativeDashboard extends ConsumerWidget {
                         '${(user.dailyRecords.climbingSuccessRate * 100).toInt()}%',
                         '성공률',
                         Icons.trending_up,
-                        Color(0xFF84CC16),
+                        const Color(0xFF84CC16),
                       ),
                     ),
                   ],
@@ -157,12 +156,12 @@ class RepresentativeDashboard extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Color(0xFF3B82F6).withValues(alpha: 0.1),
+                    color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.insights,
                         color: Color(0xFF3B82F6),
                         size: 20,
@@ -174,7 +173,7 @@ class RepresentativeDashboard extends ConsumerWidget {
                           style: GoogleFonts.notoSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF3B82F6),
+                            color: const Color(0xFF3B82F6),
                           ),
                         ),
                       ),
@@ -242,7 +241,7 @@ class RepresentativeDashboard extends ConsumerWidget {
                   title,
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: Color(0xFF64748B),
+                    color: const Color(0xFF64748B),
                   ),
                 ),
               ),
@@ -262,7 +261,7 @@ class RepresentativeDashboard extends ConsumerWidget {
             period,
             style: GoogleFonts.notoSans(
               fontSize: 10,
-              color: Color(0xFF94A3B8),
+              color: const Color(0xFF94A3B8),
             ),
           ),
         ],

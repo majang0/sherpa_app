@@ -78,7 +78,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
     required String name,
     String? imageUrl,
   }) {
-    final isDark = false; // Theme.of(context).brightness == Brightness.dark;
+    const isDark = false; // Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       width: size,
@@ -92,7 +92,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -141,7 +141,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -161,7 +161,7 @@ class ParticipantAvatars2025 extends StatelessWidget {
   }
 
   Widget _buildParticipantText() {
-    final isDark = false; // Theme.of(context).brightness == Brightness.dark;
+    const isDark = false; // Theme.of(context).brightness == Brightness.dark;
     final isNearFull = currentParticipants / maxParticipants > 0.8;
 
     return Text(

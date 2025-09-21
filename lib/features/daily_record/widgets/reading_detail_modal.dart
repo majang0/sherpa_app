@@ -1,11 +1,7 @@
 // lib/features/daily_record/widgets/reading_detail_modal.dart
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
-import '../presentation/screens/reading_record_screen.dart';
 import '../presentation/screens/reading_detail_screen.dart';
-import '../utils/reading_utils.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 
@@ -14,10 +10,10 @@ class ReadingDetailModal extends StatelessWidget {
   final DateTime? selectedDate;
 
   const ReadingDetailModal({
-    Key? key,
+    super.key,
     required this.readingLog,
     this.selectedDate,
-  }) : super(key: key);
+  });
 
   static void show(
     BuildContext context,

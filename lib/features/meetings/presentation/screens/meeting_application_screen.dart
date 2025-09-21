@@ -5,8 +5,7 @@ import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_point_provider.dart';
-import '../../../../shared/providers/global_sherpi_provider.dart';
-import '../../../../core/constants/sherpi_dialogues.dart';
+
 import '../../models/available_meeting_model.dart';
 import '../../../../shared/providers/global_meeting_provider.dart';
 
@@ -48,21 +47,21 @@ class _MeetingApplicationScreenState
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: _animationController,
-      curve: Interval(0.0, 0.6, curve: Curves.easeOut),
+      curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
     ));
     _slideAnimation = Tween<double>(
       begin: 50.0,
       end: 0.0,
     ).animate(CurvedAnimation(
       parent: _animationController,
-      curve: Interval(0.2, 0.8, curve: Curves.easeOut),
+      curve: const Interval(0.2, 0.8, curve: Curves.easeOut),
     ));
     _scaleAnimation = Tween<double>(
       begin: 0.9,
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: _animationController,
-      curve: Interval(0.4, 1.0, curve: Curves.elasticOut),
+      curve: const Interval(0.4, 1.0, curve: Curves.elasticOut),
     ));
 
     _animationController.forward();
@@ -94,7 +93,7 @@ class _MeetingApplicationScreenState
 
     return Scaffold(
       backgroundColor: ModernColors.background,
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '모험 참여 신청',
       ),
       body: AnimatedBuilder(
@@ -460,7 +459,7 @@ class _MeetingApplicationScreenState
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.error_outline_rounded,
                     color: ModernColors.warning,
                     size: 16,
@@ -513,7 +512,7 @@ class _MeetingApplicationScreenState
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.emoji_events_rounded,
                 color: ModernColors.primary,
                 size: 20,
@@ -710,7 +709,7 @@ class _MeetingApplicationScreenState
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            offset: const Offset(0, 0),
           ),
         ],
       ),
@@ -786,7 +785,7 @@ class _MeetingApplicationScreenState
         // 실패 시 에러 메시지
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('모임 참여에 실패했습니다. 다시 시도해주세요.'),
               backgroundColor: ModernColors.warning,
             ),

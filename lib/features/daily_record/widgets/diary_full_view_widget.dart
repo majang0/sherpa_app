@@ -12,6 +12,8 @@ import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../shared/models/global_user_model.dart';
 
 class DiaryFullViewWidget extends ConsumerStatefulWidget {
+  const DiaryFullViewWidget({super.key});
+
   @override
   ConsumerState<DiaryFullViewWidget> createState() =>
       _DiaryFullViewWidgetState();
@@ -100,7 +102,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [ModernColors.diary, ModernColors.diaryAccent],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -174,7 +176,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -192,7 +194,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
               });
               HapticFeedbackManager.lightImpact();
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.chevron_left,
               color: ModernColors.todayPastel,
               size: 24,
@@ -232,7 +234,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
               });
               HapticFeedbackManager.lightImpact();
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.chevron_right,
               color: ModernColors.todayPastel,
               size: 24,
@@ -257,7 +259,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 12,
             offset: const Offset(0, 2),
           ),
@@ -371,7 +373,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                     fontWeight: FontWeight.w600,
                     color: isCurrentMonth
                         ? textColor
-                        : ModernColors.textTertiary.withOpacity(0.3),
+                        : ModernColors.textTertiary.withValues(alpha: 0.3),
                   ),
                 ),
               ),
@@ -399,11 +401,11 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
                   child: Container(
                     width: 18,
                     height: 18,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: ModernColors.gray100,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.add,
                       size: 11,
                       color: ModernColors.textTertiary,
@@ -469,7 +471,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: ModernColors.diary.withOpacity(0.15),
+              color: ModernColors.diary.withValues(alpha: 0.15),
               blurRadius: 10,
               offset: const Offset(0, 3),
             ),
@@ -480,7 +482,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
             HapticFeedbackManager.mediumImpact();
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => DiaryWriteEditScreen(),
+                builder: (context) => const DiaryWriteEditScreen(),
               ),
             );
           },
@@ -496,7 +498,7 @@ class _DiaryFullViewWidgetState extends ConsumerState<DiaryFullViewWidget>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.edit_outlined, size: 22),
+              const Icon(Icons.edit_outlined, size: 22),
               const SizedBox(width: 12),
               Text(
                 '새 일기 작성하기',

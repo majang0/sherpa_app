@@ -175,7 +175,7 @@ class _ExerciseDashboardScreenState
                     gradient: LinearGradient(
                       colors: [
                         RecordColors.success,
-                        RecordColors.success.withOpacity(0.8)
+                        RecordColors.success.withValues(alpha: 0.8)
                       ],
                     ),
                     borderRadius: BorderRadius.circular(20),
@@ -190,7 +190,7 @@ class _ExerciseDashboardScreenState
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${currentStreak}일 연속',
+                        '$currentStreak일 연속',
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
@@ -210,7 +210,7 @@ class _ExerciseDashboardScreenState
               Expanded(
                 child: _buildEnhancedStatCard(
                   '이번 주 운동',
-                  '${weeklyMinutes}분',
+                  '$weeklyMinutes분',
                   '목표: 300분',
                   Icons.timer_outlined,
                   RecordColors.primary,
@@ -221,7 +221,7 @@ class _ExerciseDashboardScreenState
               Expanded(
                 child: _buildEnhancedStatCard(
                   '이번 달 운동',
-                  '${monthlyCount}회',
+                  '$monthlyCount회',
                   '목표: 12회',
                   Icons.fitness_center,
                   RecordColors.secondary,
@@ -238,7 +238,7 @@ class _ExerciseDashboardScreenState
               Expanded(
                 child: _buildEnhancedStatCard(
                   '개인 최고기록',
-                  '${longestSession}분',
+                  '$longestSession분',
                   '최장 운동시간',
                   Icons.emoji_events,
                   RecordColors.warning,
@@ -278,7 +278,7 @@ class _ExerciseDashboardScreenState
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -293,7 +293,7 @@ class _ExerciseDashboardScreenState
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -309,7 +309,7 @@ class _ExerciseDashboardScreenState
                   decoration: BoxDecoration(
                     color: progressValue >= 1.0
                         ? RecordColors.success
-                        : color.withOpacity(0.1),
+                        : color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -400,7 +400,7 @@ class _ExerciseDashboardScreenState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -414,10 +414,10 @@ class _ExerciseDashboardScreenState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.info.withOpacity(0.1),
+                  color: RecordColors.info.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.pie_chart_outline,
                   color: RecordColors.info,
                   size: 20,
@@ -505,7 +505,7 @@ class _ExerciseDashboardScreenState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -513,7 +513,7 @@ class _ExerciseDashboardScreenState
       ),
       child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.bar_chart,
             size: 64,
             color: RecordColors.textSecondary,
@@ -575,7 +575,7 @@ class _ExerciseDashboardScreenState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -589,10 +589,10 @@ class _ExerciseDashboardScreenState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.info.withOpacity(0.1),
+                  color: RecordColors.info.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.lightbulb_outline,
                   color: RecordColors.info,
                   size: 20,
@@ -629,10 +629,10 @@ class _ExerciseDashboardScreenState
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.05),
+        color: color.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: color.withOpacity(0.2),
+          color: color.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -641,7 +641,7 @@ class _ExerciseDashboardScreenState
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -689,7 +689,7 @@ class _ExerciseDashboardScreenState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -703,10 +703,10 @@ class _ExerciseDashboardScreenState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: RecordColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.flash_on,
                   color: RecordColors.primary,
                   size: 20,
@@ -774,7 +774,7 @@ class _ExerciseDashboardScreenState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -836,7 +836,7 @@ class _ExerciseDashboardScreenState
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -862,8 +862,8 @@ class _ExerciseDashboardScreenState
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      exerciseColor.withOpacity(0.2),
-                      exerciseColor.withOpacity(0.1),
+                      exerciseColor.withValues(alpha: 0.2),
+                      exerciseColor.withValues(alpha: 0.1),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(12),
@@ -895,7 +895,7 @@ class _ExerciseDashboardScreenState
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: exerciseColor.withOpacity(0.1),
+                            color: exerciseColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -912,7 +912,7 @@ class _ExerciseDashboardScreenState
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.timer_outlined,
                           size: 14,
                           color: RecordColors.textSecondary,
@@ -974,7 +974,7 @@ class _ExerciseDashboardScreenState
                           arguments: exercise,
                         );
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.edit_outlined,
                         size: 18,
                         color: RecordColors.textSecondary,
@@ -988,7 +988,7 @@ class _ExerciseDashboardScreenState
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Icon(
+                  const Icon(
                     Icons.chevron_right,
                     color: RecordColors.textSecondary,
                     size: 20,
@@ -1011,7 +1011,7 @@ class _ExerciseDashboardScreenState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -1019,7 +1019,7 @@ class _ExerciseDashboardScreenState
       ),
       child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.history,
             size: 64,
             color: RecordColors.textSecondary,
@@ -1162,14 +1162,14 @@ class _ExerciseDashboardScreenState
       insights.add({
         'icon': Icons.emoji_events,
         'title': '일주일 챔피언',
-        'description': '이번 주 ${recentExercises}회 운동! 정말 대단해요! 🏆',
+        'description': '이번 주 $recentExercises회 운동! 정말 대단해요! 🏆',
         'color': RecordColors.warning,
       });
     } else if (recentExercises >= 3) {
       insights.add({
         'icon': Icons.thumb_up,
         'title': '좋은 페이스',
-        'description': '이번 주 ${recentExercises}회 운동 중이에요. 계속 화이팅!',
+        'description': '이번 주 $recentExercises회 운동 중이에요. 계속 화이팅!',
         'color': RecordColors.info,
       });
     }
@@ -1300,7 +1300,7 @@ class _ExerciseDashboardScreenState
     } else if (difference == 1) {
       return '어제';
     } else if (difference < 7) {
-      return '${difference}일 전';
+      return '$difference일 전';
     } else {
       final weekdays = ['일', '월', '화', '수', '목', '금', '토'];
       final weekday = weekdays[date.weekday % 7];

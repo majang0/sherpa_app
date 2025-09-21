@@ -8,7 +8,6 @@ import 'features/meetings/presentation/screens/meeting_tab_screen.dart'; // 모�
 import 'features/profile/presentation/screens/profile_screen.dart';
 import 'features/quests/presentation/screens/quest_screen_redesigned.dart';
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
-import 'features/meetings/presentation/screens/challenge_index_screen.dart';
 
 // Providers
 import 'features/quests/providers/quest_provider_v2.dart';
@@ -20,6 +19,8 @@ import 'shared/widgets/global_sherpi_widget.dart';
 import 'shared/widgets/sherpi_message_card.dart';
 
 class MainNavigationScreen extends ConsumerStatefulWidget {
+  const MainNavigationScreen({super.key});
+
   @override
   ConsumerState<MainNavigationScreen> createState() =>
       _MainNavigationScreenState();
@@ -72,17 +73,17 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
   Widget _getScreen(int index) {
     switch (index) {
       case 0: // 홈
-        return HomeScreen();
+        return const HomeScreen();
       case 1: // 레벨업 (분석 탭만)
-        return ClimbingScreen();
+        return const ClimbingScreen();
       case 2: // 퀘스트 (퀘스트/기록 탭)
         return QuestTabScreen(initialTabIndex: _pendingSubTabIndex);
       case 3: // 모임 (모임/챌린지 탭)
         return MeetingTabScreen(initialTabIndex: _pendingSubTabIndex);
       case 4: // 프로필
-        return ProfileScreen();
+        return const ProfileScreen();
       default:
-        return HomeScreen();
+        return const HomeScreen();
     }
   }
 
@@ -180,7 +181,7 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
 class QuestTabScreen extends StatefulWidget {
   final int? initialTabIndex;
 
-  const QuestTabScreen({Key? key, this.initialTabIndex}) : super(key: key);
+  const QuestTabScreen({super.key, this.initialTabIndex});
 
   @override
   _QuestTabScreenState createState() => _QuestTabScreenState();
@@ -233,7 +234,7 @@ class _QuestTabScreenState extends State<QuestTabScreen>
                 unselectedLabelColor: Colors.grey,
                 indicatorColor: const Color(0xFF4A90E2),
                 indicatorWeight: 3,
-                tabs: [
+                tabs: const [
                   Tab(text: '퀘스트'),
                   Tab(text: '기록'),
                 ],
@@ -244,8 +245,8 @@ class _QuestTabScreenState extends State<QuestTabScreen>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          const QuestScreenRedesigned(), // 🎮 셰르피 중심 게이미피케이션 퀘스트 화면
+        children: const [
+          QuestScreenRedesigned(), // 🎮 셰르피 중심 게이미피케이션 퀘스트 화면
           EnhancedDailyRecordScreen(), // 기록 화면
         ],
       ),

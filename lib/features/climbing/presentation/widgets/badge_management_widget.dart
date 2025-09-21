@@ -11,6 +11,8 @@ import '../../../../shared/models/global_badge_model.dart'; // ✅ GlobalBadge �
 import '../../../../shared/providers/global_badge_provider.dart';
 
 class BadgeManagementWidget extends ConsumerStatefulWidget {
+  const BadgeManagementWidget({super.key});
+
   @override
   ConsumerState<BadgeManagementWidget> createState() =>
       _BadgeManagementWidgetState();
@@ -61,20 +63,20 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.primary.withOpacity(0.1)),
+            border: Border.all(color: AppColors.primary.withValues(alpha: 0.1)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildHeader(equippedBadges.length, maxBadgeSlots, screenWidth),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildTotalEffectsSummary(equippedBadges, screenWidth),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildEquippedSlots(equippedBadges, maxBadgeSlots, screenWidth),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildFilterButtons(screenWidth),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 '보유 뱃지 (${filteredBadges.length})',
                 style: GoogleFonts.notoSans(
@@ -83,7 +85,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                   color: AppColors.textPrimary,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Expanded(
                 child: _buildBadgeList(
                     filteredBadges, equippedBadges, maxBadgeSlots, screenWidth),
@@ -101,13 +103,13 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
         Container(
           width: 36,
           height: 36,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: AppColors.primary,
             shape: BoxShape.circle,
           ),
-          child: Center(child: Text('🏅', style: TextStyle(fontSize: 18))),
+          child: const Center(child: Text('🏅', style: TextStyle(fontSize: 18))),
         ),
-        SizedBox(width: 12),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,11 +133,11 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
             color: equippedCount == maxSlots
                 ? AppColors.success
-                : AppColors.primary.withOpacity(0.1),
+                : AppColors.primary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -163,11 +165,11 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
     }
 
     return Container(
-      padding: EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.05),
+        color: AppColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,7 +184,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                   color: AppColors.primary,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               if (effectsByType.isEmpty)
                 Text(
                   '효과 없음',
@@ -194,10 +196,10 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
             ],
           ),
           if (effectsByType.isNotEmpty) ...[
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ...effectsByType.entries.map((entry) {
               return Padding(
-                padding: EdgeInsets.only(bottom: 4),
+                padding: const EdgeInsets.only(bottom: 4),
                 child: Row(
                   children: [
                     Text(
@@ -208,7 +210,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                         color: AppColors.textPrimary,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
                       '+${entry.value.toStringAsFixed(1)}%',
                       style: GoogleFonts.notoSans(
@@ -220,7 +222,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                   ],
                 ),
               );
-            }).toList(),
+            }),
           ],
         ],
       ),
@@ -261,11 +263,11 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
   Widget _buildEquippedSlots(
       List<GlobalBadge> equippedBadges, int maxSlots, double screenWidth) {
     return Container(
-      padding: EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.background,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,7 +280,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
               color: AppColors.textPrimary,
             ),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(maxSlots, (index) {
@@ -324,7 +326,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
             Center(
               child: Text(
                 badge.iconEmoji,
-                style: TextStyle(fontSize: 24),
+                style: const TextStyle(fontSize: 24),
               ),
             ),
             Positioned(
@@ -365,7 +367,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
           final tier = filter['tier'] as GlobalBadgeTier?;
 
           return Container(
-            margin: EdgeInsets.only(right: 6),
+            margin: const EdgeInsets.only(right: 6),
             child: GestureDetector(
               onTap: () {
                 setState(() {
@@ -374,12 +376,12 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                 HapticFeedbackManager.lightImpact();
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.primary : Colors.white,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: AppColors.primary.withOpacity(0.3),
+                    color: AppColors.primary.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Text(
@@ -417,21 +419,21 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
   Widget _buildBadgeListItem(
       GlobalBadge badge, bool isEquipped, bool canEquip, double screenWidth) {
     return Container(
-      margin: EdgeInsets.only(bottom: 6),
+      margin: const EdgeInsets.only(bottom: 6),
       child: GestureDetector(
         onTap: () {
           HapticFeedbackManager.lightImpact();
           _showBadgeDetails(badge);
         },
         child: Container(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
               color: isEquipped
                   ? badge.tier.color
-                  : AppColors.primary.withOpacity(0.2),
+                  : AppColors.primary.withValues(alpha: 0.2),
               width: isEquipped ? 2 : 1,
             ),
           ),
@@ -442,18 +444,18 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: badge.tier.color.withOpacity(0.1),
+                  color: badge.tier.color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: badge.tier.color, width: 1),
                 ),
                 child: Center(
                   child: Text(
                     badge.iconEmoji,
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   ),
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
 
               // 뱃지 정보
               Expanded(
@@ -488,7 +490,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                   shape: BoxShape.circle,
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
 
               // 장착/해제 버튼
               SizedBox(
@@ -507,7 +509,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                           .equipBadge(badge.id);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text('뱃지 슬롯이 가득 찼습니다!'),
                           backgroundColor: AppColors.error,
                           duration: Duration(seconds: 1),
@@ -550,12 +552,12 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
         color: AppColors.background,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.textLight.withOpacity(0.5),
+          color: AppColors.textLight.withValues(alpha: 0.5),
           width: 2,
           style: BorderStyle.solid,
         ),
       ),
-      child: Center(
+      child: const Center(
         child: Icon(
           Icons.add,
           color: AppColors.textLight,
@@ -577,15 +579,15 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: badge.tier.color.withOpacity(0.1),
+                color: badge.tier.color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: badge.tier.color, width: 2),
               ),
               child: Center(
-                child: Text(badge.iconEmoji, style: TextStyle(fontSize: 20)),
+                child: Text(badge.iconEmoji, style: const TextStyle(fontSize: 20)),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -595,9 +597,9 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                     style: GoogleFonts.notoSans(fontWeight: FontWeight.w700),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: badge.tier.color.withOpacity(0.1),
+                      color: badge.tier.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: badge.tier.color),
                     ),
@@ -616,9 +618,9 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
           ],
         ),
         content: Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.primaryLight.withOpacity(0.1),
+            color: AppColors.primaryLight.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -629,17 +631,17 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                 badge.description,
                 style: GoogleFonts.notoSans(fontSize: 14, height: 1.5),
               ),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Container(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   children: [
-                    Text('✨', style: TextStyle(fontSize: 16)),
-                    SizedBox(width: 8),
+                    const Text('✨', style: TextStyle(fontSize: 16)),
+                    const SizedBox(width: 8),
                     Text(
                       '효과: ${_getEffectTypeName(badge.effectType)} +${badge.effectValue}%',
                       style: GoogleFonts.notoSans(
@@ -663,7 +665,7 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                   borderRadius: BorderRadius.circular(12)),
             ),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 '확인',
                 style: GoogleFonts.notoSans(fontWeight: FontWeight.w600),

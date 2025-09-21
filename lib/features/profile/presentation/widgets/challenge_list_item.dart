@@ -11,13 +11,13 @@ class ChallengeListItem extends ConsumerWidget {
   final Color color;
 
   const ChallengeListItem({
-    Key? key,
+    super.key,
     required this.title,
     required this.category,
     required this.daysLeft,
     required this.progress,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +29,7 @@ class ChallengeListItem extends ConsumerWidget {
           BoxShadow(
             color: color.withValues(alpha: 0.1),
             blurRadius: 8,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -79,7 +79,7 @@ class ChallengeListItem extends ConsumerWidget {
                             style: GoogleFonts.notoSans(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF1E3A8A),
+                              color: const Color(0xFF1E3A8A),
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -88,7 +88,7 @@ class ChallengeListItem extends ConsumerWidget {
                             category,
                             style: GoogleFonts.notoSans(
                               fontSize: 12,
-                              color: Color(0xFF64748B),
+                              color: const Color(0xFF64748B),
                             ),
                           ),
                         ],
@@ -104,7 +104,7 @@ class ChallengeListItem extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        '${daysLeft}일 남음',
+                        '$daysLeft일 남음',
                         style: GoogleFonts.notoSans(
                           fontSize: 10,
                           fontWeight: FontWeight.w600,
@@ -128,7 +128,7 @@ class ChallengeListItem extends ConsumerWidget {
                           '진행률',
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
-                            color: Color(0xFF64748B),
+                            color: const Color(0xFF64748B),
                           ),
                         ),
                         Text(
@@ -145,7 +145,7 @@ class ChallengeListItem extends ConsumerWidget {
                     Container(
                       height: 6,
                       decoration: BoxDecoration(
-                        color: Color(0xFFE2E8F0),
+                        color: const Color(0xFFE2E8F0),
                         borderRadius: BorderRadius.circular(3),
                       ),
                       child: FractionallySizedBox(
@@ -188,11 +188,11 @@ class ChallengeListItem extends ConsumerWidget {
 
   Color _getDaysLeftColor() {
     if (daysLeft <= 3) {
-      return Color(0xFFEF4444); // Red
+      return const Color(0xFFEF4444); // Red
     } else if (daysLeft <= 7) {
-      return Color(0xFFF59E0B); // Orange
+      return const Color(0xFFF59E0B); // Orange
     } else {
-      return Color(0xFF10B981); // Green
+      return const Color(0xFF10B981); // Green
     }
   }
 }

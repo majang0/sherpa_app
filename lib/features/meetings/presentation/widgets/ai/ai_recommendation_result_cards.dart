@@ -1,5 +1,6 @@
 /// AI 추천 결과 카드 위젯
 /// AI가 추천한 모임들을 카드 형태로 표시
+library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,9 +54,9 @@ class _AIRecommendationResultCardsState
 
     return Container(
       height: screenHeight * 0.85,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: ModernColors.background,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
         children: [
@@ -166,7 +167,7 @@ class _AIRecommendationResultCardsState
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.auto_awesome,
                   size: 16,
                   color: ModernColors.primary,
@@ -478,7 +479,7 @@ class _AIRecommendationResultCardsState
         // 위치 & 시간
         Row(
           children: [
-            Icon(
+            const Icon(
               Icons.location_on_outlined,
               size: 14,
               color: ModernColors.textSecondary,
@@ -492,7 +493,7 @@ class _AIRecommendationResultCardsState
               ),
             ),
             const SizedBox(width: 12),
-            Icon(
+            const Icon(
               Icons.access_time,
               size: 14,
               color: ModernColors.textSecondary,
@@ -572,7 +573,7 @@ class _AIRecommendationResultCardsState
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.auto_awesome,
                 size: 14,
                 color: ModernColors.primary,
@@ -620,7 +621,7 @@ class _AIRecommendationResultCardsState
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 Icons.check_circle_outline,
                 size: 14,
                 color: ModernColors.success,

@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:convert';
 
 import '../models/emotion_analysis_model.dart';

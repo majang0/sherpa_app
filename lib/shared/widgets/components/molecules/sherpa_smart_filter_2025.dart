@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/theme/glass_neu_style_system.dart';
@@ -34,7 +33,7 @@ class SherpaSmartFilter2025 extends StatefulWidget {
   final Color? customColor;
 
   const SherpaSmartFilter2025({
-    Key? key,
+    super.key,
     this.searchQuery,
     this.onSearchChanged,
     this.showOnlineOnly = false,
@@ -55,7 +54,7 @@ class SherpaSmartFilter2025 extends StatefulWidget {
     this.enableHapticFeedback = true,
     this.category,
     this.customColor,
-  }) : super(key: key);
+  });
 
   // ==================== 팩토리 생성자들 ====================
 
@@ -254,7 +253,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
 
     Widget filter = Container(
       padding: widget.padding ??
-          EdgeInsets.symmetric(
+          const EdgeInsets.symmetric(
             horizontal: AppSizes.paddingL,
             vertical: AppSizes.paddingM,
           ),
@@ -414,7 +413,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
         padding: EdgeInsets.all(config.actionButtonPadding),
         margin: EdgeInsets.only(right: config.searchPadding * 0.5),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           shape: BoxShape.circle,
         ),
         child: Icon(
@@ -508,7 +507,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
             top: 4,
             child: Container(
               padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: ModernColors.error,
                 shape: BoxShape.circle,
               ),
@@ -572,7 +571,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
                       vertical: config.spacing * 0.5,
                     ),
                     decoration: BoxDecoration(
-                      color: ModernColors.primary.withOpacity(0.15),
+                      color: ModernColors.primary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(AppSizes.radiusS),
                     ),
                     child: Text(
@@ -592,7 +591,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
                     child: Container(
                       padding: EdgeInsets.all(config.spacing * 0.5),
                       decoration: BoxDecoration(
-                        color: ModernColors.error.withOpacity(0.15),
+                        color: ModernColors.error.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -613,7 +612,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
   SmartFilterConfiguration _getFilterConfiguration() {
     switch (widget.style) {
       case SherpaSmartFilterStyle.horizontal:
-        return SmartFilterConfiguration(
+        return const SmartFilterConfiguration(
           searchBarHeight: 48,
           filterButtonHeight: 48,
           searchPadding: 16,
@@ -630,7 +629,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
           borderRadius: AppSizes.radiusXL,
         );
       case SherpaSmartFilterStyle.modern:
-        return SmartFilterConfiguration(
+        return const SmartFilterConfiguration(
           searchBarHeight: 52,
           filterButtonHeight: 52,
           searchPadding: 18,
@@ -647,7 +646,7 @@ class _SherpaSmartFilter2025State extends State<SherpaSmartFilter2025>
           borderRadius: AppSizes.radiusXL,
         );
       case SherpaSmartFilterStyle.compact:
-        return SmartFilterConfiguration(
+        return const SmartFilterConfiguration(
           searchBarHeight: 44,
           filterButtonHeight: 44,
           searchPadding: 14,

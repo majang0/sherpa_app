@@ -300,8 +300,8 @@ class MicroInteractions {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        splashColor: rippleColor ?? ModernColors.primary.withOpacity(0.1),
-        highlightColor: rippleColor ?? ModernColors.primary.withOpacity(0.05),
+        splashColor: rippleColor ?? ModernColors.primary.withValues(alpha: 0.1),
+        highlightColor: rippleColor ?? ModernColors.primary.withValues(alpha: 0.05),
         borderRadius: borderRadius ?? BorderRadius.circular(12),
         child: child,
       ),
@@ -369,14 +369,14 @@ class TapResponseWidget extends StatefulWidget {
   final HapticFeedbackType hapticType;
 
   const TapResponseWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.onTap,
     this.scaleDownTo = 0.95,
     this.duration = MicroInteractions.fast,
     this.enableHaptic = true,
     this.hapticType = HapticFeedbackType.light,
-  }) : super(key: key);
+  });
 
   @override
   State<TapResponseWidget> createState() => _TapResponseWidgetState();
@@ -447,13 +447,13 @@ class HoverEffectWidget extends StatefulWidget {
   final Curve curve;
 
   const HoverEffectWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.scaleUpTo = 1.02,
     this.elevationIncrease = 4,
     this.duration = MicroInteractions.normal,
     this.curve = MicroInteractions.easeOutQuart,
-  }) : super(key: key);
+  });
 
   @override
   State<HoverEffectWidget> createState() => _HoverEffectWidgetState();
@@ -503,9 +503,9 @@ class _HoverEffectWidgetState extends State<HoverEffectWidget>
                 boxShadow: _isHovered
                     ? [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
+                          color: Colors.black.withValues(alpha: 0.08),
                           blurRadius: 8 + widget.elevationIncrease,
-                          offset: Offset(0, 4 + widget.elevationIncrease / 2),
+                          offset: const Offset(0, 4),
                         ),
                       ]
                     : null,
@@ -532,11 +532,11 @@ class SuccessCheckmarkWidget extends StatefulWidget {
   final Duration duration;
 
   const SuccessCheckmarkWidget({
-    Key? key,
+    super.key,
     this.size = 24,
     this.color = Colors.green,
     this.duration = MicroInteractions.medium,
-  }) : super(key: key);
+  });
 
   @override
   State<SuccessCheckmarkWidget> createState() => _SuccessCheckmarkWidgetState();
@@ -595,11 +595,11 @@ class ErrorXMarkWidget extends StatefulWidget {
   final Duration duration;
 
   const ErrorXMarkWidget({
-    Key? key,
+    super.key,
     this.size = 24,
     this.color = Colors.red,
     this.duration = MicroInteractions.medium,
-  }) : super(key: key);
+  });
 
   @override
   State<ErrorXMarkWidget> createState() => _ErrorXMarkWidgetState();
@@ -659,12 +659,12 @@ class ButtonPressWidget extends StatefulWidget {
   final bool isPressed;
 
   const ButtonPressWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.onPressed,
     required this.glowColor,
     this.isPressed = false,
-  }) : super(key: key);
+  });
 
   @override
   State<ButtonPressWidget> createState() => _ButtonPressWidgetState();
@@ -718,7 +718,7 @@ class _ButtonPressWidgetState extends State<ButtonPressWidget>
                   ? [
                       BoxShadow(
                         color: widget.glowColor
-                            .withOpacity(0.3 * _glowAnimation.value),
+                            .withValues(alpha: 0.3 * _glowAnimation.value),
                         blurRadius: 20 * _glowAnimation.value,
                         spreadRadius: 2 * _glowAnimation.value,
                       ),
@@ -750,12 +750,12 @@ class ParticleBurstWidget extends StatefulWidget {
   final int particleCount;
 
   const ParticleBurstWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.onTrigger,
     this.particleColor = Colors.blue,
     this.particleCount = 12,
-  }) : super(key: key);
+  });
 
   @override
   State<ParticleBurstWidget> createState() => _ParticleBurstWidgetState();
@@ -842,9 +842,9 @@ class CheckmarkPainter extends CustomPainter {
     // 체크마크 경로 정의
     final start = Offset(center.dx - checkSize * 0.3, center.dy);
     final middle =
-        Offset(center.dx - checkSize * 0.1, center.dy + checkSize * 0.2);
+        Offset(center.dx - checkSize * 0.1, center.dy + checkSize * 0.3);
     final end =
-        Offset(center.dx + checkSize * 0.3, center.dy - checkSize * 0.2);
+        Offset(center.dx + checkSize * 0.3, center.dy - checkSize * 0.3);
 
     if (progress <= 0.5) {
       // 첫 번째 라인 (왼쪽에서 중간까지)
@@ -896,8 +896,8 @@ class XMarkPainter extends CustomPainter {
     if (progress <= 0.5) {
       // 첫 번째 라인 (왼쪽 위에서 오른쪽 아래)
       final t = progress * 2;
-      final start = Offset(center.dx - xSize * 0.3, center.dy - xSize * 0.3);
-      final end = Offset(center.dx + xSize * 0.3, center.dy + xSize * 0.3);
+      final start = Offset(center.dx - xSize / 2, center.dy - xSize / 2);
+      final end = Offset(center.dx + xSize / 2, center.dy + xSize / 2);
 
       canvas.drawLine(
         start,
@@ -910,14 +910,14 @@ class XMarkPainter extends CustomPainter {
     } else {
       // 첫 번째 라인 완성 후 두 번째 라인
       canvas.drawLine(
-        Offset(center.dx - xSize * 0.3, center.dy - xSize * 0.3),
-        Offset(center.dx + xSize * 0.3, center.dy + xSize * 0.3),
+        Offset(center.dx - xSize / 2, center.dy - xSize / 2),
+        Offset(center.dx + xSize / 2, center.dy + xSize / 2),
         paint,
       );
 
       final t = (progress - 0.5) * 2;
-      final start = Offset(center.dx + xSize * 0.3, center.dy - xSize * 0.3);
-      final end = Offset(center.dx - xSize * 0.3, center.dy + xSize * 0.3);
+      final start = Offset(center.dx + xSize / 2, center.dy - xSize / 2);
+      final end = Offset(center.dx - xSize / 2, center.dy + xSize / 2);
 
       canvas.drawLine(
         start,
@@ -959,15 +959,15 @@ class ParticleBurstPainter extends CustomPainter {
       final distance = maxRadius * progress;
       final opacity = (1 - progress).clamp(0.0, 1.0);
 
-      final particleX = center.dx + distance * 0.7 * progress * progress;
-      final particleY = center.dy + distance * 0.7 * progress * progress;
+      final particleX = center.dx + distance * (angle / 3.14159) * progress;
+      final particleY = center.dy + distance * (angle / 3.14159) * progress;
 
-      paint.color = particleColor.withOpacity(opacity);
+      paint.color = particleColor.withValues(alpha: opacity);
 
       canvas.drawCircle(
         Offset(
-          center.dx + distance * progress * progress,
-          center.dy + distance * progress * progress,
+          particleX,
+          particleY,
         ),
         3 * (1 - progress),
         paint,

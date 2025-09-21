@@ -24,7 +24,6 @@ import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../shared/providers/global_meeting_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
-import '../../../../core/constants/sherpi_emotions.dart';
 import '../../models/available_meeting_model.dart';
 import '../../utils/meeting_image_utils.dart';
 import '../../../../shared/utils/meeting_image_manager.dart';
@@ -516,7 +515,7 @@ class _NewMeetingDiscoveryScreenState
             ),
 
             // 하단 여백
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: SizedBox(height: 100),
             ),
           ],
@@ -556,7 +555,7 @@ class _NewMeetingDiscoveryScreenState
                         end: Alignment.bottomCenter,
                         colors: [
                           ModernColors.primary,
-                          ModernColors.primary.withOpacity(0.6),
+                          ModernColors.primary.withValues(alpha: 0.6),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(2),
@@ -623,13 +622,13 @@ class _NewMeetingDiscoveryScreenState
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: ModernColors.primary.withOpacity(0.3),
+                      color: ModernColors.primary.withValues(alpha: 0.3),
                       offset: const Offset(0, 4),
                       blurRadius: 8,
                       spreadRadius: -2,
                     ),
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       offset: const Offset(0, 2),
                       blurRadius: 4,
                       spreadRadius: -1,
@@ -652,10 +651,10 @@ class _NewMeetingDiscoveryScreenState
                     Container(
                       padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_forward_rounded,
                         size: 12,
                         color: Colors.white,
@@ -685,7 +684,7 @@ class _NewMeetingDiscoveryScreenState
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Icon(
+            const Icon(
               Icons.search_off,
               size: 48,
               color: ModernColors.textTertiary,
@@ -735,7 +734,7 @@ class _NewMeetingDiscoveryScreenState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ModernColors.primary.withOpacity(0.1),
+                    color: ModernColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -857,10 +856,10 @@ class _NewMeetingDiscoveryScreenState
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: ModernColors.primary.withOpacity(0.3),
+                    color: ModernColors.primary.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -894,7 +893,7 @@ class _NewMeetingDiscoveryScreenState
                           }
                         }
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.close,
                         size: 14,
                         color: ModernColors.primary,
@@ -942,7 +941,7 @@ class _NewMeetingDiscoveryScreenState
               ? LinearGradient(
                   colors: [
                     ModernColors.primary,
-                    ModernColors.primary.withOpacity(0.8),
+                    ModernColors.primary.withValues(alpha: 0.8),
                   ],
                 )
               : null,
@@ -955,7 +954,7 @@ class _NewMeetingDiscoveryScreenState
           boxShadow: isActive
               ? [
                   BoxShadow(
-                    color: ModernColors.primary.withOpacity(0.3),
+                    color: ModernColors.primary.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -1093,7 +1092,7 @@ class _NewMeetingDiscoveryScreenState
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withOpacity(0.7),
+                    Colors.black.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -1121,7 +1120,7 @@ class _NewMeetingDiscoveryScreenState
                     meeting.location,
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1187,7 +1186,7 @@ class _NewMeetingDiscoveryScreenState
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    Colors.black.withOpacity(0.7),
+                    Colors.black.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -1215,7 +1214,7 @@ class _NewMeetingDiscoveryScreenState
                     meeting.location,
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -1367,7 +1366,7 @@ class _NewMeetingDiscoveryScreenState
                     margin: const EdgeInsets.only(right: 12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? category.color.withOpacity(0.1)
+                          ? category.color.withValues(alpha: 0.1)
                           : ModernColors.surface,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
@@ -1427,7 +1426,7 @@ class _NewMeetingDiscoveryScreenState
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 10,
                               offset: const Offset(0, 2),
                             ),
@@ -1446,14 +1445,14 @@ class _NewMeetingDiscoveryScreenState
                               fontSize: 14,
                               color: ModernColors.textSecondary,
                             ),
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.search_rounded,
                               color: ModernColors.textSecondary,
                               size: 20,
                             ),
                             suffixIcon: _searchQuery.isNotEmpty
                                 ? IconButton(
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.clear_rounded,
                                       color: ModernColors.textSecondary,
                                       size: 20,
@@ -1502,7 +1501,7 @@ class _NewMeetingDiscoveryScreenState
                               color: (_showOnlineOnly
                                       ? ModernColors.primary
                                       : Colors.black)
-                                  .withOpacity(0.05),
+                                  .withValues(alpha: 0.05),
                               blurRadius: 10,
                               offset: const Offset(0, 2),
                             ),
@@ -1561,7 +1560,7 @@ class _NewMeetingDiscoveryScreenState
                                   color: (_showFilters || _activeFilterCount > 0
                                           ? ModernColors.primary
                                           : Colors.black)
-                                      .withOpacity(0.05),
+                                      .withValues(alpha: 0.05),
                                   blurRadius: 10,
                                   offset: const Offset(0, 2),
                                 ),
@@ -1585,7 +1584,7 @@ class _NewMeetingDiscoveryScreenState
                             top: 4,
                             child: Container(
                               padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: ModernColors.error,
                                 shape: BoxShape.circle,
                               ),
@@ -1673,7 +1672,7 @@ class _NewMeetingDiscoveryScreenState
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
           color: isActive
-              ? ModernColors.primary.withOpacity(0.1)
+              ? ModernColors.primary.withValues(alpha: 0.1)
               : ModernColors.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
@@ -1716,7 +1715,7 @@ class _NewMeetingDiscoveryScreenState
           // 쉽게 찾기 타이틀
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.flash_on_rounded,
                 size: 16,
                 color: ModernColors.primary,
@@ -1789,7 +1788,7 @@ class _NewMeetingDiscoveryScreenState
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
                       color: isActive
-                          ? (filter['color'] as Color).withOpacity(0.1)
+                          ? (filter['color'] as Color).withValues(alpha: 0.1)
                           : Colors.white,
                       borderRadius: BorderRadius.circular(18),
                       border: Border.all(
@@ -1800,7 +1799,7 @@ class _NewMeetingDiscoveryScreenState
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                           blurRadius: 4,
                           offset: const Offset(0, 1),
                         ),
@@ -1953,7 +1952,7 @@ class _NewMeetingDiscoveryScreenState
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color:
-              isActive ? ModernColors.primary.withOpacity(0.1) : Colors.white,
+              isActive ? ModernColors.primary.withValues(alpha: 0.1) : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isActive ? ModernColors.primary : ModernColors.borderLight,
@@ -2099,7 +2098,7 @@ class _NewMeetingDiscoveryScreenState
                   },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    side: BorderSide(color: ModernColors.border),
+                    side: const BorderSide(color: ModernColors.border),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -2181,7 +2180,7 @@ class _NewMeetingDiscoveryScreenState
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? ModernColors.primary.withOpacity(0.1)
+                      ? ModernColors.primary.withValues(alpha: 0.1)
                       : Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
@@ -2232,7 +2231,7 @@ class _NewMeetingDiscoveryScreenState
               builder: (context, child) {
                 return Theme(
                   data: Theme.of(context).copyWith(
-                    colorScheme: ColorScheme.light(
+                    colorScheme: const ColorScheme.light(
                       primary: ModernColors.primary,
                     ),
                   ),
@@ -2251,7 +2250,7 @@ class _NewMeetingDiscoveryScreenState
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
               color: _selectedDateRange != null
-                  ? ModernColors.primary.withOpacity(0.1)
+                  ? ModernColors.primary.withValues(alpha: 0.1)
                   : Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
@@ -2292,7 +2291,7 @@ class _NewMeetingDiscoveryScreenState
                         _updateFilteredMeetings();
                       });
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.clear,
                       size: 16,
                       color: ModernColors.primary,
@@ -2383,7 +2382,7 @@ class _NewMeetingDiscoveryScreenState
       padding: const EdgeInsets.all(40),
       child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.search_off,
             size: 64,
             color: ModernColors.textTertiary,
@@ -2410,7 +2409,7 @@ class _NewMeetingDiscoveryScreenState
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withOpacity(0.25),
+            color: ModernColors.primary.withValues(alpha: 0.25),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -2526,8 +2525,8 @@ class _NewMeetingDiscoveryScreenState
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            categoryColor.withOpacity(0.8),
-            categoryColor.withOpacity(0.6),
+            categoryColor.withValues(alpha: 0.8),
+            categoryColor.withValues(alpha: 0.6),
           ],
         ),
       ),
@@ -2732,7 +2731,7 @@ class _NewMeetingDiscoveryScreenState
 /// 📝 모임 생성 다이얼로그 - 간소화된 4단계 프로세스
 /// 문토 스타일의 직관적이고 빠른 모임 생성 경험
 class _MeetingCreationSheet extends ConsumerStatefulWidget {
-  const _MeetingCreationSheet({super.key});
+  const _MeetingCreationSheet();
 
   @override
   ConsumerState<_MeetingCreationSheet> createState() =>
@@ -2965,7 +2964,7 @@ class _MeetingCreationSheetState extends ConsumerState<_MeetingCreationSheet>
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            offset: const Offset(0, 0),
           ),
         ],
       ),
@@ -3184,7 +3183,6 @@ class _QuickCategorySelector extends StatelessWidget {
   final Function(MeetingCategory) onCategorySelected;
 
   const _QuickCategorySelector({
-    super.key,
     required this.selectedCategory,
     required this.onCategorySelected,
   });
@@ -3241,13 +3239,13 @@ class _QuickCategorySelector extends StatelessWidget {
                       boxShadow: [
                         if (isSelected)
                           BoxShadow(
-                            color: category.color.withOpacity(0.3),
+                            color: category.color.withValues(alpha: 0.3),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           )
                         else
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
+                            color: Colors.black.withValues(alpha: 0.05),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -3288,10 +3286,10 @@ class _QuickCategorySelector extends StatelessWidget {
                             margin: const EdgeInsets.only(top: 8),
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.white.withValues(alpha: 0.2),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.check_rounded,
                               color: Colors.white,
                               size: 16,
@@ -3319,12 +3317,12 @@ class _QuickCategorySelector extends StatelessWidget {
             margin: const EdgeInsets.only(top: 16),
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: ModernColors.primary.withOpacity(0.05),
+              color: ModernColors.primary.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.lightbulb_outline_rounded,
                   size: 16,
                   color: ModernColors.primary,
@@ -3355,7 +3353,6 @@ class _QuickDetailsForm extends ConsumerStatefulWidget {
   final VoidCallback onComplete;
 
   const _QuickDetailsForm({
-    super.key,
     required this.data,
     required this.onComplete,
   });
@@ -3557,7 +3554,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: ModernColors.primary,
                 width: 2,
               ),
@@ -3689,7 +3686,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: ModernColors.primary,
                   width: 2,
                 ),
@@ -3734,7 +3731,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
                 vertical: 6,
               ),
               decoration: BoxDecoration(
-                color: ModernColors.primary.withOpacity(0.1),
+                color: ModernColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
@@ -3754,9 +3751,9 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
             activeTrackColor: ModernColors.primary,
-            inactiveTrackColor: ModernColors.primary.withOpacity(0.2),
+            inactiveTrackColor: ModernColors.primary.withValues(alpha: 0.2),
             thumbColor: ModernColors.primary,
-            overlayColor: ModernColors.primary.withOpacity(0.1),
+            overlayColor: ModernColors.primary.withValues(alpha: 0.1),
             trackHeight: 4,
             thumbShape: const RoundSliderThumbShape(
               enabledThumbRadius: 8,
@@ -3794,7 +3791,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
                 vertical: 6,
               ),
               decoration: BoxDecoration(
-                color: ModernColors.primary.withOpacity(0.1),
+                color: ModernColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
@@ -3814,9 +3811,9 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
             activeTrackColor: ModernColors.primary,
-            inactiveTrackColor: ModernColors.primary.withOpacity(0.2),
+            inactiveTrackColor: ModernColors.primary.withValues(alpha: 0.2),
             thumbColor: ModernColors.primary,
-            overlayColor: ModernColors.primary.withOpacity(0.1),
+            overlayColor: ModernColors.primary.withValues(alpha: 0.1),
             trackHeight: 4,
             thumbShape: const RoundSliderThumbShape(
               enabledThumbRadius: 8,
@@ -3853,7 +3850,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  '최소 ${_minParticipants}명이 모이면 모임이 확정되고, 최대 ${_maxParticipants}명까지 참여할 수 있어요',
+                  '최소 $_minParticipants명이 모이면 모임이 확정되고, 최대 $_maxParticipants명까지 참여할 수 있어요',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     color: Colors.blue.shade700,
@@ -3926,7 +3923,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -3949,9 +3946,9 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: ModernColors.primary,
-              inactiveTrackColor: ModernColors.primary.withOpacity(0.2),
+              inactiveTrackColor: ModernColors.primary.withValues(alpha: 0.2),
               thumbColor: ModernColors.primary,
-              overlayColor: ModernColors.primary.withOpacity(0.1),
+              overlayColor: ModernColors.primary.withValues(alpha: 0.1),
               trackHeight: 6,
               thumbShape: const RoundSliderThumbShape(
                 enabledThumbRadius: 10,
@@ -3974,12 +3971,12 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: ModernColors.warning.withOpacity(0.1),
+              color: ModernColors.warning.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.info_outline_rounded,
                   size: 16,
                   color: ModernColors.warning,
@@ -4061,7 +4058,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected
-                ? ModernColors.primary.withOpacity(0.1)
+                ? ModernColors.primary.withValues(alpha: 0.1)
                 : Colors.grey.shade50,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
@@ -4114,7 +4111,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected
-                ? ModernColors.primary.withOpacity(0.1)
+                ? ModernColors.primary.withValues(alpha: 0.1)
                 : Colors.grey.shade50,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
@@ -4212,7 +4209,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       color: ModernColors.primary,
                       width: 2,
                     ),
@@ -4264,8 +4261,8 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
                           color: ModernColors.primary,
                         ),
                       ),
-                      backgroundColor: ModernColors.primary.withOpacity(0.1),
-                      deleteIcon: Icon(
+                      backgroundColor: ModernColors.primary.withValues(alpha: 0.1),
+                      deleteIcon: const Icon(
                         Icons.close_rounded,
                         size: 16,
                         color: ModernColors.primary,
@@ -4274,7 +4271,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                         side: BorderSide(
-                          color: ModernColors.primary.withOpacity(0.2),
+                          color: ModernColors.primary.withValues(alpha: 0.2),
                         ),
                       ),
                     ))
@@ -4338,7 +4335,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       color: ModernColors.primary,
                       width: 2,
                     ),
@@ -4581,7 +4578,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
     return InkWell(
       onTap: () => _pickImage(notifier),
       borderRadius: BorderRadius.circular(12),
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         height: 120,
         child: Column(
@@ -4711,7 +4708,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
               width: 24,
               height: 24,
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.6),
+                color: Colors.black.withValues(alpha: 0.6),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -4814,7 +4811,6 @@ class _QuickDateTimePicker extends StatefulWidget {
   final Function(DateTime) onDateTimeSelected;
 
   const _QuickDateTimePicker({
-    super.key,
     required this.selectedDateTime,
     required this.onDateTimeSelected,
   });
@@ -4825,7 +4821,7 @@ class _QuickDateTimePicker extends StatefulWidget {
 
 class _QuickDateTimePickerState extends State<_QuickDateTimePicker> {
   DateTime selectedDate = DateTime.now().add(const Duration(days: 1));
-  TimeOfDay selectedTime = TimeOfDay(hour: 14, minute: 0);
+  TimeOfDay selectedTime = const TimeOfDay(hour: 14, minute: 0);
 
   // 빠른 선택 옵션
   final List<Map<String, dynamic>> quickOptions = [
@@ -4985,10 +4981,10 @@ class _QuickDateTimePickerState extends State<_QuickDateTimePicker> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: ModernColors.primary.withOpacity(0.1),
+                          color: ModernColors.primary.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.schedule_rounded,
                           color: ModernColors.primary,
                           size: 20,
@@ -5005,7 +5001,7 @@ class _QuickDateTimePickerState extends State<_QuickDateTimePicker> {
                           ),
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.arrow_forward_ios_rounded,
                         color: ModernColors.textSecondary,
                         size: 16,
@@ -5027,7 +5023,7 @@ class _QuickDateTimePickerState extends State<_QuickDateTimePicker> {
                 delay: Duration(milliseconds: 100 * index),
                 duration: 200.ms,
               );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -5061,7 +5057,7 @@ class _QuickDateTimePickerState extends State<_QuickDateTimePicker> {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.calendar_today_rounded,
                     color: ModernColors.primary,
                     size: 20,
@@ -5076,7 +5072,7 @@ class _QuickDateTimePickerState extends State<_QuickDateTimePicker> {
                     ),
                   ),
                   const Spacer(),
-                  Icon(
+                  const Icon(
                     Icons.arrow_drop_down_rounded,
                     color: ModernColors.textSecondary,
                   ),
@@ -5137,7 +5133,7 @@ class _QuickDateTimePickerState extends State<_QuickDateTimePicker> {
             if (isCustom) {
               _showTimePicker();
             } else {
-              setState(() => selectedTime = time!);
+              setState(() => selectedTime = time);
               _updateDateTime();
             }
           },
@@ -5192,13 +5188,13 @@ class _QuickDateTimePickerState extends State<_QuickDateTimePicker> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            ModernColors.primary.withOpacity(0.1),
-            ModernColors.secondary.withOpacity(0.1),
+            ModernColors.primary.withValues(alpha: 0.1),
+            ModernColors.secondary.withValues(alpha: 0.1),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: ModernColors.primary.withOpacity(0.2),
+          color: ModernColors.primary.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -5208,11 +5204,11 @@ class _QuickDateTimePickerState extends State<_QuickDateTimePicker> {
               Container(
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: ModernColors.primary,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.event_available_rounded,
                   color: Colors.white,
                   size: 24,
@@ -5353,7 +5349,7 @@ class _QuickDateTimePickerState extends State<_QuickDateTimePicker> {
     final hourStr = hour == 0 ? 12 : hour;
     final minuteStr = time.minute.toString().padLeft(2, '0');
 
-    return '$period ${hourStr}:${minuteStr}';
+    return '$period $hourStr:$minuteStr';
   }
 
   /// 🔄 날짜/시간 업데이트
@@ -5378,7 +5374,6 @@ class _QuickFinalReview extends StatelessWidget {
   final VoidCallback onComplete;
 
   const _QuickFinalReview({
-    super.key,
     required this.data,
     required this.onComplete,
   });
@@ -5434,13 +5429,13 @@ class _QuickFinalReview extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            ModernColors.primary.withOpacity(0.1),
-            ModernColors.secondary.withOpacity(0.1),
+            ModernColors.primary.withValues(alpha: 0.1),
+            ModernColors.secondary.withValues(alpha: 0.1),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: ModernColors.primary.withOpacity(0.2),
+          color: ModernColors.primary.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -5454,7 +5449,7 @@ class _QuickFinalReview extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.primary.withOpacity(0.2),
+                  color: ModernColors.primary.withValues(alpha: 0.2),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -5508,7 +5503,7 @@ class _QuickFinalReview extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(alpha: 0.08),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -5527,7 +5522,7 @@ class _QuickFinalReview extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  data.selectedCategory!.color.withOpacity(0.8),
+                  data.selectedCategory!.color.withValues(alpha: 0.8),
                   data.selectedCategory!.color,
                 ],
               ),
@@ -5605,7 +5600,7 @@ class _QuickFinalReview extends StatelessWidget {
                 Row(
                   children: [
                     // 날짜
-                    Icon(
+                    const Icon(
                       Icons.calendar_today_outlined,
                       size: 16,
                       color: ModernColors.textSecondary,
@@ -5622,7 +5617,7 @@ class _QuickFinalReview extends StatelessWidget {
                     const SizedBox(width: 16),
 
                     // 참가비
-                    Icon(
+                    const Icon(
                       Icons.payments_outlined,
                       size: 16,
                       color: ModernColors.textSecondary,
@@ -5658,7 +5653,7 @@ class _QuickFinalReview extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -5671,7 +5666,7 @@ class _QuickFinalReview extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.checklist_rounded,
                   color: ModernColors.primary,
                   size: 24,
@@ -5747,7 +5742,7 @@ class _QuickFinalReview extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -5787,7 +5782,7 @@ class _QuickFinalReview extends StatelessWidget {
 
   /// ✅ 완료 버튼
   Widget _buildCompleteButton() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: onComplete,
@@ -5802,7 +5797,7 @@ class _QuickFinalReview extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.rocket_launch_rounded,
               color: Colors.white,
               size: 24,
@@ -5848,6 +5843,6 @@ class _QuickFinalReview extends StatelessWidget {
     final hourStr = hour == 0 ? 12 : hour;
     final minuteStr = dateTime.minute.toString().padLeft(2, '0');
 
-    return '$dateStr ($weekday) $period ${hourStr}:${minuteStr}';
+    return '$dateStr ($weekday) $period $hourStr:$minuteStr';
   }
 }

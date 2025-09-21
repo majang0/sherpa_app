@@ -13,7 +13,7 @@ import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 
 class EnhancedReadingCalendarWidget extends ConsumerStatefulWidget {
-  const EnhancedReadingCalendarWidget({Key? key}) : super(key: key);
+  const EnhancedReadingCalendarWidget({super.key});
 
   @override
   ConsumerState<EnhancedReadingCalendarWidget> createState() =>
@@ -91,7 +91,7 @@ class _EnhancedReadingCalendarWidgetState
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: ModernColors.textTertiary.withOpacity(0.08),
+                color: ModernColors.textTertiary.withValues(alpha: 0.08),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -106,10 +106,10 @@ class _EnhancedReadingCalendarWidgetState
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: ModernColors.reading.withOpacity(0.1),
+                      color: ModernColors.reading.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.menu_book,
                       color: ModernColors.reading,
                       size: 24,
@@ -156,13 +156,13 @@ class _EnhancedReadingCalendarWidgetState
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: ModernColors.reading.withOpacity(0.2),
+                            color: ModernColors.reading.withValues(alpha: 0.2),
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.add,
                         color: Colors.white,
                         size: 20,
@@ -239,7 +239,7 @@ class _EnhancedReadingCalendarWidgetState
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.textTertiary.withOpacity(0.08),
+            color: ModernColors.textTertiary.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -257,12 +257,12 @@ class _EnhancedReadingCalendarWidgetState
           Container(
             width: 1,
             height: 40,
-            color: ModernColors.textTertiary.withOpacity(0.3),
+            color: ModernColors.textTertiary.withValues(alpha: 0.3),
           ),
           Expanded(
             child: _buildStatItem(
               '📄',
-              '${totalPages}페이지',
+              '$totalPages페이지',
               '오늘 읽은 양',
             ),
           ),
@@ -311,7 +311,7 @@ class _EnhancedReadingCalendarWidgetState
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.textTertiary.withOpacity(0.08),
+            color: ModernColors.textTertiary.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -350,7 +350,7 @@ class _EnhancedReadingCalendarWidgetState
     final weekdayName = ['월', '화', '수', '목', '금', '토', '일'][day.weekday - 1];
 
     // 최대 높이를 위한 비율 계산 (최대 100페이지 기준)
-    final maxHeight = 40.0;
+    const maxHeight = 40.0;
     final barHeight = (totalPages / 100.0 * maxHeight).clamp(2.0, maxHeight);
 
     return Column(
@@ -365,7 +365,7 @@ class _EnhancedReadingCalendarWidgetState
             decoration: BoxDecoration(
               color: isToday
                   ? ModernColors.reading
-                  : ModernColors.reading.withOpacity(0.6),
+                  : ModernColors.reading.withValues(alpha: 0.6),
               borderRadius: BorderRadius.circular(8),
             ),
           ),
@@ -414,7 +414,7 @@ class _EnhancedReadingCalendarWidgetState
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: ModernColors.textTertiary.withOpacity(0.06),
+              color: ModernColors.textTertiary.withValues(alpha: 0.06),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -427,7 +427,7 @@ class _EnhancedReadingCalendarWidgetState
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: reading.categoryColor.withOpacity(0.12),
+                color: reading.categoryColor.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
@@ -491,10 +491,10 @@ class _EnhancedReadingCalendarWidgetState
                       const Spacer(),
                       ...List.generate(
                         reading.rating?.round() ?? 0,
-                        (index) => Icon(
+                        (index) => const Icon(
                           Icons.star,
                           size: 10,
-                          color: const Color(0xFFFBBF24),
+                          color: Color(0xFFFBBF24),
                         ),
                       ),
                     ],
@@ -517,7 +517,7 @@ class _EnhancedReadingCalendarWidgetState
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.textTertiary.withOpacity(0.08),
+            color: ModernColors.textTertiary.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -525,9 +525,9 @@ class _EnhancedReadingCalendarWidgetState
       ),
       child: Column(
         children: [
-          Text(
+          const Text(
             '📚',
-            style: const TextStyle(fontSize: 32),
+            style: TextStyle(fontSize: 32),
           ),
           const SizedBox(height: 8),
           Text(
@@ -577,7 +577,7 @@ class _EnhancedReadingCalendarWidgetState
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ReadingFullViewWidget(),
+              builder: (context) => const ReadingFullViewWidget(),
             ),
           );
         },
@@ -594,7 +594,7 @@ class _EnhancedReadingCalendarWidgetState
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.calendar_view_month,
               color: ModernColors.reading,
               size: 18,
@@ -615,7 +615,7 @@ class _EnhancedReadingCalendarWidgetState
   }
 
   Widget _buildWriteButton() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
@@ -623,7 +623,7 @@ class _EnhancedReadingCalendarWidgetState
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ReadingRecordScreen(),
+              builder: (context) => const ReadingRecordScreen(),
             ),
           );
         },
@@ -640,7 +640,7 @@ class _EnhancedReadingCalendarWidgetState
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.menu_book, size: 20),
+            const Icon(Icons.menu_book, size: 20),
             const SizedBox(width: 8),
             Text(
               '독서 기록 작성하기',

@@ -234,7 +234,7 @@ class SampleDataGenerator {
       {'name': '요가 클래스', 'category': '운동'},
     ];
 
-    final moods = MoodConstants.standardMoods;
+    const moods = MoodConstants.standardMoods;
 
     final selectedMeeting = meetingData[_random.nextInt(meetingData.length)];
 
@@ -283,7 +283,7 @@ class SampleDataGenerator {
     final book = books[_random.nextInt(books.length)];
     final pages = 1 + _random.nextInt(50); // 1~50페이지
 
-    final moods = MoodConstants.standardMoods;
+    const moods = MoodConstants.standardMoods;
 
     return ReadingLog(
       id: 'reading_${date.millisecondsSinceEpoch}',
@@ -415,7 +415,7 @@ class SampleDataGenerator {
       '새로운 시작'
     ];
 
-    final moods = MoodConstants.standardMoods;
+    const moods = MoodConstants.standardMoods;
 
     return DiaryLog(
       id: 'diary_${date.millisecondsSinceEpoch}',

@@ -11,7 +11,7 @@ import '../presentation/screens/diary_write_edit_screen.dart';
 import '../../home/presentation/widgets/all_goals_reward_modal.dart';
 
 class EnhancedDailyQuestWidget extends ConsumerStatefulWidget {
-  const EnhancedDailyQuestWidget({Key? key}) : super(key: key);
+  const EnhancedDailyQuestWidget({super.key});
 
   @override
   ConsumerState<EnhancedDailyQuestWidget> createState() =>
@@ -104,14 +104,14 @@ class _EnhancedDailyQuestWidgetState
           borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           boxShadow: [
             BoxShadow(
-              color: ModernColors.shadowBase.withOpacity(0.12),
+              color: ModernColors.shadowBase.withValues(alpha: 0.12),
               blurRadius: 24,
-              offset: const Offset(0, -4),
+              offset: const Offset(0, 0),
             ),
             BoxShadow(
-              color: ModernColors.shadowBase.withOpacity(0.04),
+              color: ModernColors.shadowBase.withValues(alpha: 0.04),
               blurRadius: 48,
-              offset: const Offset(0, -8),
+              offset: const Offset(0, 0),
             ),
           ],
         ),
@@ -149,20 +149,20 @@ class _EnhancedDailyQuestWidgetState
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 8, 12, 14),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
             Colors.white,
-            const Color(0xFFF0F7FF), // 아주 연한 블루
+            Color(0xFFF0F7FF), // 아주 연한 블루
           ],
         ),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF3B82F6).withOpacity(0.08),
+            color: const Color(0xFF3B82F6).withValues(alpha: 0.08),
             blurRadius: 20,
-            offset: const Offset(0, -2),
+            offset: const Offset(0, 0),
           ),
         ],
       ),
@@ -176,8 +176,8 @@ class _EnhancedDailyQuestWidgetState
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color(0xFF3B82F6).withOpacity(0.3),
-                  const Color(0xFF60A5FA).withOpacity(0.3),
+                  const Color(0xFF3B82F6).withValues(alpha: 0.3),
+                  const Color(0xFF60A5FA).withValues(alpha: 0.3),
                 ],
               ),
               borderRadius: BorderRadius.circular(2),
@@ -198,7 +198,7 @@ class _EnhancedDailyQuestWidgetState
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF3B82F6).withOpacity(0.25),
+                          color: const Color(0xFF3B82F6).withValues(alpha: 0.25),
                           blurRadius: 16,
                           offset: const Offset(0, 6),
                         ),
@@ -230,8 +230,8 @@ class _EnhancedDailyQuestWidgetState
                         begin: Alignment.topLeft,
                         end: Alignment.center,
                         colors: [
-                          Colors.white.withOpacity(0.3),
-                          Colors.white.withOpacity(0.1),
+                          Colors.white.withValues(alpha: 0.3),
+                          Colors.white.withValues(alpha: 0.1),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(16),
@@ -251,13 +251,13 @@ class _EnhancedDailyQuestWidgetState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       '오늘의 목표',
                       style: TextStyle(
                         fontFamily: 'Pretendard',
                         fontSize: 18,
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFF1E293B),
+                        color: Color(0xFF1E293B),
                         letterSpacing: -0.8,
                         height: 1.2,
                       ),
@@ -265,11 +265,11 @@ class _EnhancedDailyQuestWidgetState
                     const SizedBox(height: 2),
                     Text(
                       '${goals.length}개 중 $completedCount개 완료',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Pretendard',
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: const Color(0xFF3B82F6),
+                        color: Color(0xFF3B82F6),
                         letterSpacing: -0.3,
                       ),
                     ),
@@ -287,7 +287,7 @@ class _EnhancedDailyQuestWidgetState
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF3B82F6).withOpacity(0.1),
+                        color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -350,21 +350,21 @@ class _EnhancedDailyQuestWidgetState
                 // 메인 컬러 그림자로 구분
                 BoxShadow(
                   color: isAchieved
-                      ? const Color(0xFF10B981).withOpacity(0.15)
-                      : const Color(0xFF3B82F6).withOpacity(0.12),
+                      ? const Color(0xFF10B981).withValues(alpha: 0.15)
+                      : const Color(0xFF3B82F6).withValues(alpha: 0.12),
                   blurRadius: isAchieved ? 24 : 20,
                   offset: const Offset(0, 8),
                   spreadRadius: isAchieved ? 2 : 1,
                 ),
                 // 서브틀한 깊이감
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
                 // 내부 하이라이트 효과
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                   blurRadius: 1,
                   offset: const Offset(0, 1),
                   spreadRadius: -1,
@@ -396,7 +396,7 @@ class _EnhancedDailyQuestWidgetState
                       height: isAchieved ? 36 : 32,
                       decoration: BoxDecoration(
                         color: isAchieved
-                            ? ModernColors.success.withOpacity(0.1)
+                            ? ModernColors.success.withValues(alpha: 0.1)
                             : Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: isAchieved
@@ -404,7 +404,7 @@ class _EnhancedDailyQuestWidgetState
                             : [
                                 BoxShadow(
                                   color:
-                                      ModernColors.shadowBase.withOpacity(0.04),
+                                      ModernColors.shadowBase.withValues(alpha: 0.04),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -467,7 +467,7 @@ class _EnhancedDailyQuestWidgetState
                       color: ModernColors.gray100,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: ModernColors.textTertiary,
                       size: 14,
@@ -505,7 +505,7 @@ class _EnhancedDailyQuestWidgetState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.shadowBase.withOpacity(0.08),
+            color: ModernColors.shadowBase.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
@@ -523,7 +523,7 @@ class _EnhancedDailyQuestWidgetState
                 child: CircularProgressIndicator(
                   value: progress,
                   strokeWidth: 4,
-                  backgroundColor: ModernColors.gray200.withOpacity(0.3),
+                  backgroundColor: ModernColors.gray200.withValues(alpha: 0.3),
                   valueColor: AlwaysStoppedAnimation<Color>(
                     allCompleted ? ModernColors.success : ModernColors.primary,
                   ),
@@ -546,7 +546,7 @@ class _EnhancedDailyQuestWidgetState
                   ),
                   Text(
                     '$completedCount/$totalCount',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Pretendard',
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
@@ -581,7 +581,7 @@ class _EnhancedDailyQuestWidgetState
                   allCompleted
                       ? '훌륭해요! 오늘의 모든 목표를 완료했어요.'
                       : '조금만 더 힘내요! ${totalCount - completedCount}개의 목표가 남았어요.',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Pretendard',
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -618,12 +618,12 @@ class _EnhancedDailyQuestWidgetState
           end: Alignment.bottomRight,
           colors: allCompleted
               ? [
-                  ModernColors.success.withOpacity(0.08),
-                  ModernColors.success.withOpacity(0.04),
+                  ModernColors.success.withValues(alpha: 0.08),
+                  ModernColors.success.withValues(alpha: 0.04),
                 ]
               : [
-                  ModernColors.gray100.withOpacity(0.5),
-                  ModernColors.gray50.withOpacity(0.3),
+                  ModernColors.gray100.withValues(alpha: 0.5),
+                  ModernColors.gray50.withValues(alpha: 0.3),
                 ],
         ),
         borderRadius: BorderRadius.circular(20),
@@ -631,21 +631,21 @@ class _EnhancedDailyQuestWidgetState
           // 메인 상태별 그림자
           BoxShadow(
             color: allCompleted
-                ? const Color(0xFF10B981).withOpacity(0.15)
-                : const Color(0xFF64748B).withOpacity(0.08),
+                ? const Color(0xFF10B981).withValues(alpha: 0.15)
+                : const Color(0xFF64748B).withValues(alpha: 0.08),
             blurRadius: allCompleted ? 20 : 12,
             offset: const Offset(0, 6),
             spreadRadius: allCompleted ? 1 : 0,
           ),
           // 서브틀한 깊이감
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
           // 내부 하이라이트
           BoxShadow(
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             blurRadius: 1,
             offset: const Offset(0, 1),
             spreadRadius: -1,
@@ -662,8 +662,8 @@ class _EnhancedDailyQuestWidgetState
                 height: 30,
                 decoration: BoxDecoration(
                   color: allCompleted
-                      ? ModernColors.success.withOpacity(0.1)
-                      : ModernColors.gray200.withOpacity(0.3),
+                      ? ModernColors.success.withValues(alpha: 0.1)
+                      : ModernColors.gray200.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -691,13 +691,13 @@ class _EnhancedDailyQuestWidgetState
                     ),
                   ),
                   if (!allCompleted)
-                    Text(
+                    const Text(
                       '모든 목표 완료 시 획득',
                       style: TextStyle(
                         fontFamily: 'Pretendard',
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: const Color(0xFF3B82F6),
+                        color: Color(0xFF3B82F6),
                         letterSpacing: -0.3,
                       ),
                     ),
@@ -710,7 +710,7 @@ class _EnhancedDailyQuestWidgetState
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: isRewardClaimed
-                        ? ModernColors.success.withOpacity(0.2)
+                        ? ModernColors.success.withValues(alpha: 0.2)
                         : ModernColors.success,
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -730,10 +730,10 @@ class _EnhancedDailyQuestWidgetState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: ModernColors.gray200.withOpacity(0.3),
+                    color: ModernColors.gray200.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.lock_outline_rounded,
                     size: 16,
                     color: ModernColors.textTertiary,
@@ -750,8 +750,8 @@ class _EnhancedDailyQuestWidgetState
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: allCompleted
-                    ? Colors.white.withOpacity(0.5)
-                    : ModernColors.gray100.withOpacity(0.3),
+                    ? Colors.white.withValues(alpha: 0.5)
+                    : ModernColors.gray100.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -768,7 +768,7 @@ class _EnhancedDailyQuestWidgetState
                     height: 24,
                     color: allCompleted
                         ? ModernColors.gray200
-                        : ModernColors.gray200.withOpacity(0.3),
+                        : ModernColors.gray200.withValues(alpha: 0.3),
                   ),
                   _buildRewardItem(
                     Icons.toll_rounded,
@@ -781,7 +781,7 @@ class _EnhancedDailyQuestWidgetState
                     height: 24,
                     color: allCompleted
                         ? ModernColors.gray200
-                        : ModernColors.gray200.withOpacity(0.3),
+                        : ModernColors.gray200.withValues(alpha: 0.3),
                   ),
                   _buildRewardItem(
                     Icons.local_fire_department_rounded,
@@ -808,11 +808,11 @@ class _EnhancedDailyQuestWidgetState
                   ),
                   elevation: 0,
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.redeem_rounded, size: 14),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     Text(
                       '보상 받기',
                       style: TextStyle(
@@ -1008,7 +1008,7 @@ class _EnhancedDailyQuestWidgetState
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DiaryWriteEditScreen(),
+            builder: (context) => const DiaryWriteEditScreen(),
           ),
         );
         break;
@@ -1050,8 +1050,8 @@ class _EnhancedDailyQuestWidgetState
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      color.withOpacity(0.1),
-                      color.withOpacity(0.05),
+                      color.withValues(alpha: 0.1),
+                      color.withValues(alpha: 0.05),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
@@ -1061,7 +1061,7 @@ class _EnhancedDailyQuestWidgetState
               const SizedBox(height: 20),
               Text(
                 title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Pretendard',
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -1073,7 +1073,7 @@ class _EnhancedDailyQuestWidgetState
               const SizedBox(height: 12),
               Text(
                 message,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Pretendard',
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -1089,14 +1089,14 @@ class _EnhancedDailyQuestWidgetState
                 child: TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: TextButton.styleFrom(
-                    backgroundColor: color.withOpacity(0.1),
+                    backgroundColor: color.withValues(alpha: 0.1),
                     foregroundColor: color,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     '확인',
                     style: TextStyle(
                       fontFamily: 'Pretendard',

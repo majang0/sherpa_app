@@ -22,12 +22,12 @@ class NotificationItemWidget extends StatelessWidget {
   }
 
   const NotificationItemWidget({
-    Key? key,
+    super.key,
     required this.notification,
     this.onTap,
     this.onDismiss,
     this.showDetail = false,
-  }) : super(key: key);
+  });
 
   // 헬퍼 메서드: 컨테이너 스타일링
   double get _itemMargin => showDetail ? 12 : 8;
@@ -54,7 +54,7 @@ class NotificationItemWidget extends StatelessWidget {
           color: ModernColors.error.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
         ),
-        child: Icon(
+        child: const Icon(
           Icons.delete_outline_rounded,
           color: ModernColors.error,
           size: 24,

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math' as math;
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 
 class FriendsActivityFeedWidget extends ConsumerStatefulWidget {
+  const FriendsActivityFeedWidget({super.key});
+
   @override
   ConsumerState<FriendsActivityFeedWidget> createState() =>
       _FriendsActivityFeedWidgetState();
@@ -30,7 +30,7 @@ class _FriendsActivityFeedWidgetState
       friendAvatar: '👨‍💻',
       activityType: ActivityType.meetingJoined,
       content: 'Flutter 스터디 모임에 참여했어요!',
-      timestamp: DateTime.now().subtract(Duration(minutes: 30)),
+      timestamp: DateTime.now().subtract(const Duration(minutes: 30)),
       likes: 5,
       isLiked: false,
       meetingTitle: 'Flutter 스터디',
@@ -43,7 +43,7 @@ class _FriendsActivityFeedWidgetState
       friendAvatar: '👩‍🎨',
       activityType: ActivityType.levelUp,
       content: 'Level 15에 도달했어요! 🎉',
-      timestamp: DateTime.now().subtract(Duration(hours: 1)),
+      timestamp: DateTime.now().subtract(const Duration(hours: 1)),
       likes: 12,
       isLiked: true,
       category: '성장',
@@ -56,7 +56,7 @@ class _FriendsActivityFeedWidgetState
       friendAvatar: '👨‍🏫',
       activityType: ActivityType.questCompleted,
       content: '새벽 러닝 퀘스트를 완료했어요! 💪',
-      timestamp: DateTime.now().subtract(Duration(hours: 2)),
+      timestamp: DateTime.now().subtract(const Duration(hours: 2)),
       likes: 8,
       isLiked: false,
       category: '운동',
@@ -68,7 +68,7 @@ class _FriendsActivityFeedWidgetState
       friendAvatar: '👩‍💼',
       activityType: ActivityType.meetingCreated,
       content: '독서 토론 모임을 만들었어요! 함께해요 📚',
-      timestamp: DateTime.now().subtract(Duration(hours: 3)),
+      timestamp: DateTime.now().subtract(const Duration(hours: 3)),
       likes: 15,
       isLiked: true,
       meetingTitle: '독서 토론 모임',
@@ -101,12 +101,12 @@ class _FriendsActivityFeedWidgetState
     _feedController.forward();
 
     // 새 활동 알림 시뮬레이션
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         setState(() {
           _showNewActivityIndicator = true;
         });
-        Future.delayed(Duration(seconds: 5), () {
+        Future.delayed(const Duration(seconds: 5), () {
           if (mounted) {
             setState(() {
               _showNewActivityIndicator = false;
@@ -130,7 +130,7 @@ class _FriendsActivityFeedWidgetState
       animation: _feedAnimation,
       builder: (context, child) {
         return Transform.translate(
-          offset: Offset(0, 20 * (1 - _feedAnimation.value)),
+          offset: const Offset(0, 0),
           child: Opacity(
             opacity: _feedAnimation.value,
             child: Container(
@@ -139,12 +139,12 @@ class _FriendsActivityFeedWidgetState
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: ModernColors.primary.withOpacity(0.08),
+                    color: ModernColors.primary.withValues(alpha: 0.08),
                     blurRadius: 24,
                     offset: const Offset(0, 8),
                   ),
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),
@@ -178,15 +178,15 @@ class _FriendsActivityFeedWidgetState
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  ModernColors.primary.withOpacity(0.1),
-                  ModernColors.primary.withOpacity(0.05),
+                  ModernColors.primary.withValues(alpha: 0.1),
+                  ModernColors.primary.withValues(alpha: 0.05),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Center(
+            child: const Center(
               child: Text(
                 '👥',
                 style: TextStyle(fontSize: 22),
@@ -216,7 +216,7 @@ class _FriendsActivityFeedWidgetState
                       Container(
                         width: 8,
                         height: 8,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: ModernColors.error,
                           shape: BoxShape.circle,
                         ),
@@ -253,7 +253,7 @@ class _FriendsActivityFeedWidgetState
                     color: ModernColors.surface,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.notifications_none_rounded,
                     color: ModernColors.textSecondary,
                     size: 20,
@@ -275,7 +275,7 @@ class _FriendsActivityFeedWidgetState
                     color: ModernColors.surface,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.refresh_rounded,
                     color: ModernColors.textSecondary,
                     size: 20,
@@ -304,8 +304,8 @@ class _FriendsActivityFeedWidgetState
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  ModernColors.primary.withOpacity(0.08),
-                  ModernColors.primary.withOpacity(0.04),
+                  ModernColors.primary.withValues(alpha: 0.08),
+                  ModernColors.primary.withValues(alpha: 0.04),
                 ],
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
@@ -317,7 +317,7 @@ class _FriendsActivityFeedWidgetState
                 Container(
                   width: 6,
                   height: 6,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: ModernColors.primary,
                     shape: BoxShape.circle,
                   ),
@@ -337,14 +337,14 @@ class _FriendsActivityFeedWidgetState
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: ModernColors.primary.withOpacity(0.8),
+                    color: ModernColors.primary.withValues(alpha: 0.8),
                   ),
                 ),
                 const SizedBox(width: 4),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
                   size: 12,
-                  color: ModernColors.primary.withOpacity(0.8),
+                  color: ModernColors.primary.withValues(alpha: 0.8),
                 ),
               ],
             ),
@@ -366,7 +366,7 @@ class _FriendsActivityFeedWidgetState
             curve: Curves.easeOutQuart,
             builder: (context, animationValue, child) {
               return Transform.translate(
-                offset: Offset(0, 20 * (1 - animationValue)),
+                offset: const Offset(0, 0),
                 child: Opacity(
                   opacity: animationValue,
                   child: _buildModernActivityItem(
@@ -395,12 +395,12 @@ class _FriendsActivityFeedWidgetState
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
                 BoxShadow(
-                  color: ModernColors.primary.withOpacity(0.04),
+                  color: ModernColors.primary.withValues(alpha: 0.04),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -423,9 +423,9 @@ class _FriendsActivityFeedWidgetState
                             gradient: LinearGradient(
                               colors: [
                                 _getActivityColor(activity.activityType)
-                                    .withOpacity(0.2),
+                                    .withValues(alpha: 0.2),
                                 _getActivityColor(activity.activityType)
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: 0.1),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -435,7 +435,7 @@ class _FriendsActivityFeedWidgetState
                           child: Center(
                             child: Text(
                               activity.friendAvatar,
-                              style: TextStyle(fontSize: 20),
+                              style: const TextStyle(fontSize: 20),
                             ),
                           ),
                         ),
@@ -455,7 +455,7 @@ class _FriendsActivityFeedWidgetState
                                   width: 2,
                                 ),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.check,
                                 size: 8,
                                 color: Colors.white,
@@ -489,7 +489,7 @@ class _FriendsActivityFeedWidgetState
                                 decoration: BoxDecoration(
                                   color:
                                       _getActivityColor(activity.activityType)
-                                          .withOpacity(0.1),
+                                          .withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
@@ -511,8 +511,8 @@ class _FriendsActivityFeedWidgetState
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        ModernColors.warning.withOpacity(0.2),
-                                        ModernColors.warning.withOpacity(0.1),
+                                        ModernColors.warning.withValues(alpha: 0.2),
+                                        ModernColors.warning.withValues(alpha: 0.1),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(6),
@@ -520,7 +520,7 @@ class _FriendsActivityFeedWidgetState
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.local_fire_department_rounded,
                                         size: 10,
                                         color: ModernColors.warning,
@@ -558,7 +558,7 @@ class _FriendsActivityFeedWidgetState
                       onTap: () => _showMoreOptions(activity),
                       child: Container(
                         padding: const EdgeInsets.all(4),
-                        child: Icon(
+                        child: const Icon(
                           Icons.more_horiz,
                           color: ModernColors.textTertiary,
                           size: 18,
@@ -596,10 +596,10 @@ class _FriendsActivityFeedWidgetState
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: ModernColors.primary.withOpacity(0.1),
+                            color: ModernColors.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.groups_rounded,
                             color: ModernColors.primary,
                             size: 18,
@@ -622,7 +622,7 @@ class _FriendsActivityFeedWidgetState
                                 const SizedBox(height: 2),
                                 Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.people_outline,
                                       size: 12,
                                       color: ModernColors.textSecondary,
@@ -645,7 +645,7 @@ class _FriendsActivityFeedWidgetState
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: ModernColors.primary.withOpacity(0.1),
+                            color: ModernColors.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -676,7 +676,7 @@ class _FriendsActivityFeedWidgetState
                             horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(
                           color: activity.isLiked
-                              ? ModernColors.error.withOpacity(0.1)
+                              ? ModernColors.error.withValues(alpha: 0.1)
                               : ModernColors.surface,
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -733,7 +733,7 @@ class _FriendsActivityFeedWidgetState
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.chat_bubble_outline_rounded,
                               color: ModernColors.textSecondary,
                               size: 16,
@@ -756,7 +756,7 @@ class _FriendsActivityFeedWidgetState
                               Container(
                                 width: 5,
                                 height: 5,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: ModernColors.error,
                                   shape: BoxShape.circle,
                                 ),
@@ -778,7 +778,7 @@ class _FriendsActivityFeedWidgetState
                           color: ModernColors.surface,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.share_outlined,
                           color: ModernColors.textSecondary,
                           size: 16,
@@ -799,7 +799,7 @@ class _FriendsActivityFeedWidgetState
                             gradient: LinearGradient(
                               colors: [
                                 ModernColors.primary,
-                                ModernColors.primary.withOpacity(0.9),
+                                ModernColors.primary.withValues(alpha: 0.9),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -807,7 +807,7 @@ class _FriendsActivityFeedWidgetState
                             borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(
-                                color: ModernColors.primary.withOpacity(0.3),
+                                color: ModernColors.primary.withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -825,7 +825,7 @@ class _FriendsActivityFeedWidgetState
                                 ),
                               ),
                               const SizedBox(width: 4),
-                              Icon(
+                              const Icon(
                                 Icons.arrow_forward_rounded,
                                 size: 12,
                                 color: Colors.white,
@@ -871,7 +871,7 @@ class _FriendsActivityFeedWidgetState
                 ),
               ),
               const SizedBox(width: 6),
-              Icon(
+              const Icon(
                 Icons.arrow_forward_ios_rounded,
                 color: ModernColors.textSecondary,
                 size: 14,
@@ -967,10 +967,10 @@ class _FriendsActivityFeedWidgetState
               width: 28,
               height: 28,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
-              child: Center(
+              child: const Center(
                 child: Icon(Icons.chat_bubble_outline,
                     color: Colors.white, size: 16),
               ),
@@ -990,10 +990,10 @@ class _FriendsActivityFeedWidgetState
     HapticFeedbackManager.lightImpact();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
+        content: const Row(
           children: [
             Icon(Icons.share_outlined, color: Colors.white, size: 18),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text('친구의 활동을 공유합니다'),
           ],
         ),
@@ -1013,28 +1013,28 @@ class _FriendsActivityFeedWidgetState
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading:
-                  Icon(Icons.person_add_outlined, color: ModernColors.primary),
+                  const Icon(Icons.person_add_outlined, color: ModernColors.primary),
               title: Text('${activity.friendName}님 팔로우'),
               onTap: () => Navigator.pop(context),
             ),
             ListTile(
-              leading: Icon(Icons.notifications_outlined,
+              leading: const Icon(Icons.notifications_outlined,
                   color: ModernColors.primary),
-              title: Text('활동 알림 받기'),
+              title: const Text('활동 알림 받기'),
               onTap: () => Navigator.pop(context),
             ),
             ListTile(
-              leading: Icon(Icons.block_outlined, color: ModernColors.error),
-              title: Text('숨기기'),
+              leading: const Icon(Icons.block_outlined, color: ModernColors.error),
+              title: const Text('숨기기'),
               onTap: () => Navigator.pop(context),
             ),
           ],
@@ -1047,10 +1047,10 @@ class _FriendsActivityFeedWidgetState
     HapticFeedbackManager.lightImpact();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
+        content: const Row(
           children: [
             Icon(Icons.notifications_active, color: Colors.white, size: 18),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text('알림 설정이 변경되었습니다'),
           ],
         ),
@@ -1074,13 +1074,13 @@ class _FriendsActivityFeedWidgetState
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.white.withOpacity(0.3),
-                    Colors.white.withOpacity(0.1)
+                    Colors.white.withValues(alpha: 0.3),
+                    Colors.white.withValues(alpha: 0.1)
                   ],
                 ),
                 shape: BoxShape.circle,
               ),
-              child: Center(
+              child: const Center(
                 child: Icon(Icons.group_add, color: Colors.white, size: 16),
               ),
             ),
@@ -1111,7 +1111,7 @@ class _FriendsActivityFeedWidgetState
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Row(
+        content: const Row(
           children: [
             SizedBox(
               width: 16,
@@ -1121,7 +1121,7 @@ class _FriendsActivityFeedWidgetState
                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
               ),
             ),
-            const SizedBox(width: 10),
+            SizedBox(width: 10),
             Text('최신 활동을 불러오는 중...'),
           ],
         ),
@@ -1133,14 +1133,14 @@ class _FriendsActivityFeedWidgetState
     );
 
     // 실제 데이터 새로고침 시뮬레이션
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Row(
+            content: const Row(
               children: [
                 Icon(Icons.check_circle_outline, color: Colors.white, size: 18),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text('친구들의 최신 활동을 불러왔습니다!'),
               ],
             ),
@@ -1160,7 +1160,7 @@ class _FriendsActivityFeedWidgetState
     HapticFeedbackManager.mediumImpact();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('친구들의 모든 활동 페이지로 이동합니다'),
+        content: const Text('친구들의 모든 활동 페이지로 이동합니다'),
         backgroundColor: ModernColors.primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

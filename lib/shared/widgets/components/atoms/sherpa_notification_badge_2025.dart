@@ -34,7 +34,7 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
   final Gradient? gradient;
 
   const SherpaNotificationBadge2025({
-    Key? key,
+    super.key,
     this.text,
     this.count,
     this.child,
@@ -57,7 +57,7 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
     this.maxWidth,
     this.showShadow = false,
     this.gradient,
-  }) : super(key: key);
+  });
 
   // ==================== 팩토리 생성자들 ====================
 
@@ -71,12 +71,12 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
   }) {
     return SherpaNotificationBadge2025(
       key: key,
-      child: child,
       showBadge: showBadge,
       position: position,
       variant: SherpaNotificationBadgeVariant2025.dot,
       type: SherpaNotificationBadgeType.notification,
       backgroundColor: ModernColors.error,
+      child: child,
     );
   }
 
@@ -92,7 +92,6 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
   }) {
     return SherpaNotificationBadge2025(
       key: key,
-      child: child,
       count: count > maxCount ? maxCount : count,
       text: count > maxCount ? '$maxCount+' : count.toString(),
       showBadge: count > 0,
@@ -100,6 +99,7 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
       category: category,
       variant: SherpaNotificationBadgeVariant2025.count,
       type: SherpaNotificationBadgeType.notification,
+      child: child,
     );
   }
 
@@ -172,13 +172,13 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
   }) {
     return SherpaNotificationBadge2025(
       key: key,
-      child: child,
       text: 'NEW',
       position: position,
       variant: SherpaNotificationBadgeVariant2025.pill,
       type: SherpaNotificationBadgeType.special,
       size: SherpaNotificationBadgeSize2025.small,
       backgroundColor: ModernColors.success,
+      child: child,
     );
   }
 
@@ -192,7 +192,6 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
   }) {
     return SherpaNotificationBadge2025(
       key: key,
-      child: child,
       showBadge: true,
       position: position,
       variant: SherpaNotificationBadgeVariant2025.dot,
@@ -200,6 +199,7 @@ class SherpaNotificationBadge2025 extends StatefulWidget {
       backgroundColor:
           isOnline ? ModernColors.success : ModernColors.textPlaceholder,
       size: SherpaNotificationBadgeSize2025.small,
+      child: child,
     );
   }
 
@@ -625,7 +625,7 @@ class _SherpaNotificationBadge2025State
       decoration = decoration.copyWith(
         boxShadow: [
           BoxShadow(
-            color: config.backgroundColor.withOpacity(0.3),
+            color: config.backgroundColor.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),

@@ -3,11 +3,8 @@
 import 'package:flutter/material.dart' hide Badge;
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:math' as math;
 import 'dart:ui';
 import '../../../../core/constants/app_colors.dart';
@@ -16,6 +13,8 @@ import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_game_provider.dart';
 
 class UserStatsSummaryWidget extends ConsumerStatefulWidget {
+  const UserStatsSummaryWidget({super.key});
+
   @override
   ConsumerState<UserStatsSummaryWidget> createState() =>
       _UserStatsSummaryWidgetState();
@@ -79,7 +78,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.08),
+                  color: AppColors.primary.withValues(alpha: 0.08),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -89,7 +88,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -117,7 +116,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                               gradient: LinearGradient(
                                 colors: [
                                   Colors.transparent,
-                                  AppColors.primary.withOpacity(0.2),
+                                  AppColors.primary.withValues(alpha: 0.2),
                                 ],
                               ),
                             ),
@@ -127,7 +126,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Icon(
                             Icons.star,
-                            color: AppColors.primary.withOpacity(0.3),
+                            color: AppColors.primary.withValues(alpha: 0.3),
                             size: 16,
                           ),
                         ),
@@ -137,7 +136,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  AppColors.primary.withOpacity(0.2),
+                                  AppColors.primary.withValues(alpha: 0.2),
                                   Colors.transparent,
                                 ],
                               ),
@@ -170,7 +169,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.primary
-                              .withOpacity(0.05 * _glowController.value),
+                              .withValues(alpha: 0.05 * _glowController.value),
                           blurRadius: 30,
                           spreadRadius: 5,
                         ),
@@ -226,17 +225,17 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.primary.withOpacity(0.1),
-                  AppColors.primary.withOpacity(0.05),
+                  AppColors.primary.withValues(alpha: 0.1),
+                  AppColors.primary.withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppColors.primary.withOpacity(0.2),
+                color: AppColors.primary.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.insights_rounded,
               color: AppColors.primary,
               size: 20,
@@ -268,10 +267,10 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
       height: 200,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.background.withOpacity(0.5),
+        color: AppColors.background.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.1),
+          color: AppColors.primary.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -291,15 +290,13 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                     if (touchedDataSetIndex == 2) {
                       final touchedRadarEntry =
                           touchResponse.touchedSpot!.touchedRadarEntry;
-                      if (touchedRadarEntry != null) {
-                        final index =
-                            touchResponse.touchedSpot!.touchedRadarEntryIndex;
-                        if (index >= 0 && index < labels.length) {
-                          HapticFeedbackManager.lightImpact();
-                          _showStatQuickInfo(labels[index], values[index]);
-                        }
+                      final index =
+                          touchResponse.touchedSpot!.touchedRadarEntryIndex;
+                      if (index >= 0 && index < labels.length) {
+                        HapticFeedbackManager.lightImpact();
+                        _showStatQuickInfo(labels[index], values[index]);
                       }
-                    }
+                                        }
                   }
                 },
               ),
@@ -316,7 +313,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                 // 중간 가이드 (최대값의 50%)
                 RadarDataSet(
                   fillColor: Colors.transparent,
-                  borderColor: AppColors.divider.withOpacity(0.5),
+                  borderColor: AppColors.divider.withValues(alpha: 0.5),
                   borderWidth: 0.5,
                   entryRadius: 0,
                   dataEntries: List.generate(
@@ -324,7 +321,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                 ),
                 // 실제 데이터
                 RadarDataSet(
-                  fillColor: AppColors.primary.withOpacity(0.15),
+                  fillColor: AppColors.primary.withValues(alpha: 0.15),
                   borderColor: AppColors.primary,
                   borderWidth: 2,
                   entryRadius: 4,
@@ -337,7 +334,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
               radarBackgroundColor: Colors.transparent,
               borderData: FlBorderData(show: false),
               radarBorderData: BorderSide(
-                  color: AppColors.divider.withOpacity(0.5), width: 1),
+                  color: AppColors.divider.withValues(alpha: 0.5), width: 1),
               titlePositionPercentageOffset: 0.15,
               titleTextStyle: GoogleFonts.notoSans(
                 color: AppColors.textPrimary,
@@ -351,10 +348,10 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                 );
               },
               tickCount: 5,
-              ticksTextStyle: TextStyle(fontSize: 0),
-              tickBorderData: BorderSide(color: Colors.transparent),
+              ticksTextStyle: const TextStyle(fontSize: 0),
+              tickBorderData: const BorderSide(color: Colors.transparent),
               gridBorderData: BorderSide(
-                color: AppColors.divider.withOpacity(0.3),
+                color: AppColors.divider.withValues(alpha: 0.3),
                 width: 0.5,
               ),
               radarShape: RadarShape.polygon,
@@ -416,7 +413,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                       Container(
                         height: 60,
                         decoration: BoxDecoration(
-                          color: AppColors.background.withOpacity(0.5),
+                          color: AppColors.background.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: AppColors.divider,
@@ -439,8 +436,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    gradeColor.withOpacity(0.2),
-                                    gradeColor.withOpacity(0.1),
+                                    gradeColor.withValues(alpha: 0.2),
+                                    gradeColor.withValues(alpha: 0.1),
                                   ],
                                 ),
                               ),
@@ -455,8 +452,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    gradeColor.withOpacity(0.05),
-                                    gradeColor.withOpacity(0.02),
+                                    gradeColor.withValues(alpha: 0.05),
+                                    gradeColor.withValues(alpha: 0.02),
                                   ],
                                 ),
                                 border: Border(
@@ -482,10 +479,10 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                               width: 32,
                               height: 32,
                               decoration: BoxDecoration(
-                                color: gradeColor.withOpacity(0.1),
+                                color: gradeColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: gradeColor.withOpacity(0.3),
+                                  color: gradeColor.withValues(alpha: 0.3),
                                   width: 1,
                                 ),
                               ),
@@ -622,18 +619,18 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: gradeColor.withOpacity(0.3),
+                color: gradeColor.withValues(alpha: 0.3),
                 width: 2,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: gradeColor.withOpacity(0.2),
+                  color: gradeColor.withValues(alpha: 0.2),
                   blurRadius: 25,
                   offset: const Offset(0, 15),
                   spreadRadius: 2,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -652,8 +649,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            gradeColor.withOpacity(0.1),
-                            gradeColor.withOpacity(0.05),
+                            gradeColor.withValues(alpha: 0.1),
+                            gradeColor.withValues(alpha: 0.05),
                           ],
                         ),
                         borderRadius: const BorderRadius.only(
@@ -662,7 +659,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                         ),
                         border: Border(
                           bottom: BorderSide(
-                            color: gradeColor.withOpacity(0.2),
+                            color: gradeColor.withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
@@ -676,18 +673,18 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  gradeColor.withOpacity(0.2),
-                                  gradeColor.withOpacity(0.1),
+                                  gradeColor.withValues(alpha: 0.2),
+                                  gradeColor.withValues(alpha: 0.1),
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: gradeColor.withOpacity(0.4),
+                                color: gradeColor.withValues(alpha: 0.4),
                                 width: 2,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: gradeColor.withOpacity(0.3),
+                                  color: gradeColor.withValues(alpha: 0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),
@@ -725,10 +722,10 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 12, vertical: 6),
                                       decoration: BoxDecoration(
-                                        color: gradeColor.withOpacity(0.15),
+                                        color: gradeColor.withValues(alpha: 0.15),
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
-                                          color: gradeColor.withOpacity(0.3),
+                                          color: gradeColor.withValues(alpha: 0.3),
                                           width: 1,
                                         ),
                                       ),
@@ -750,7 +747,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                               fontSize: 10,
                                               fontWeight: FontWeight.w600,
                                               color:
-                                                  gradeColor.withOpacity(0.8),
+                                                  gradeColor.withValues(alpha: 0.8),
                                               letterSpacing: 1,
                                             ),
                                           ),
@@ -761,10 +758,10 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 4),
                                       decoration: BoxDecoration(
-                                        color: gradeColor.withOpacity(0.1),
+                                        color: gradeColor.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(6),
                                         border: Border.all(
-                                          color: gradeColor.withOpacity(0.3),
+                                          color: gradeColor.withValues(alpha: 0.3),
                                           width: 1,
                                         ),
                                       ),
@@ -821,12 +818,12 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                         child: Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [gradeColor, gradeColor.withOpacity(0.8)],
+                              colors: [gradeColor, gradeColor.withValues(alpha: 0.8)],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: gradeColor.withOpacity(0.4),
+                                color: gradeColor.withValues(alpha: 0.4),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -867,17 +864,17 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.close,
                         color: AppColors.textSecondary,
                         size: 18,
@@ -903,13 +900,13 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            color.withOpacity(0.08),
-            color.withOpacity(0.03),
+            color.withValues(alpha: 0.08),
+            color.withValues(alpha: 0.03),
           ],
         ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: color.withOpacity(0.2),
+          color: color.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -922,7 +919,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Icon(icon, size: 14, color: color),

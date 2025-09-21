@@ -12,6 +12,8 @@ import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../shared/models/global_user_model.dart';
 
 class MovieFullViewWidget extends ConsumerStatefulWidget {
+  const MovieFullViewWidget({super.key});
+
   @override
   ConsumerState<MovieFullViewWidget> createState() =>
       _MovieFullViewWidgetState();
@@ -93,11 +95,11 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -126,13 +128,13 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
             // 배경 그라데이션
             Container(
               height: 280,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFFEF4444),
-                    const Color(0xFFDC2626),
+                    Color(0xFFEF4444),
+                    Color(0xFFDC2626),
                   ],
                 ),
               ),
@@ -187,7 +189,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -199,10 +201,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: const Color(0xFFEF4444).withOpacity(0.1),
+              color: const Color(0xFFEF4444).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: const Color(0xFFEF4444).withOpacity(0.2),
+                color: const Color(0xFFEF4444).withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -214,9 +216,9 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                 });
                 HapticFeedbackManager.lightImpact();
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.chevron_left_rounded,
-                color: const Color(0xFFEF4444),
+                color: Color(0xFFEF4444),
                 size: 20,
               ),
             ),
@@ -250,10 +252,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: const Color(0xFFEF4444).withOpacity(0.1),
+              color: const Color(0xFFEF4444).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: const Color(0xFFEF4444).withOpacity(0.2),
+                color: const Color(0xFFEF4444).withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -265,9 +267,9 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                 });
                 HapticFeedbackManager.lightImpact();
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.chevron_right_rounded,
-                color: const Color(0xFFEF4444),
+                color: Color(0xFFEF4444),
                 size: 20,
               ),
             ),
@@ -299,7 +301,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -381,7 +383,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
           margin: const EdgeInsets.all(2),
           decoration: BoxDecoration(
             color: isToday
-                ? const Color(0xFFEF4444).withOpacity(0.1)
+                ? const Color(0xFFEF4444).withValues(alpha: 0.1)
                 : hasMovies
                     ? Colors.white
                     : Colors.transparent,
@@ -390,7 +392,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
               color: isToday
                   ? const Color(0xFFEF4444)
                   : hasMovies
-                      ? const Color(0xFFEF4444).withOpacity(0.2)
+                      ? const Color(0xFFEF4444).withValues(alpha: 0.2)
                       : Colors.transparent,
               width: isToday ? 2 : 1,
             ),
@@ -468,7 +470,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -547,7 +549,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -577,15 +579,15 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
-                            const Color(0xFFEF4444),
-                            const Color(0xFFDC2626)
+                            Color(0xFFEF4444),
+                            Color(0xFFDC2626)
                           ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.calendar_month,
                         color: Colors.white,
                         size: 20,
@@ -632,7 +634,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MovieAddScreen(),
+                        builder: (context) => const MovieAddScreen(),
                       ),
                     );
                   },
@@ -648,7 +650,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add, size: 20),
+                      const Icon(Icons.add, size: 20),
                       const SizedBox(width: 8),
                       Text(
                         '영화 기록 작성하기',
@@ -674,7 +676,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -704,10 +706,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
-                            const Color(0xFFEF4444),
-                            const Color(0xFFDC2626)
+                            Color(0xFFEF4444),
+                            Color(0xFFDC2626)
                           ],
                         ),
                         borderRadius: BorderRadius.circular(16),
@@ -758,7 +760,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MovieAddScreen(),
+                        builder: (context) => const MovieAddScreen(),
                       ),
                     );
                   },
@@ -774,7 +776,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add, size: 20),
+                      const Icon(Icons.add, size: 20),
                       const SizedBox(width: 8),
                       Text(
                         '새 영화 기록 작성하기',
@@ -800,7 +802,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -830,15 +832,15 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
-                            const Color(0xFFEF4444),
-                            const Color(0xFFDC2626)
+                            Color(0xFFEF4444),
+                            Color(0xFFDC2626)
                           ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.movie,
                         color: Colors.white,
                         size: 20,
@@ -885,7 +887,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MovieAddScreen(),
+                        builder: (context) => const MovieAddScreen(),
                       ),
                     );
                   },
@@ -901,7 +903,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add, size: 20),
+                      const Icon(Icons.add, size: 20),
                       const SizedBox(width: 8),
                       Text(
                         '새 영화 기록 작성하기',
@@ -975,13 +977,13 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFFEF4444).withOpacity(0.05),
-                  const Color(0xFFDC2626).withOpacity(0.03),
+                  const Color(0xFFEF4444).withValues(alpha: 0.05),
+                  const Color(0xFFDC2626).withValues(alpha: 0.03),
                 ],
               ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: const Color(0xFFEF4444).withOpacity(0.1),
+                color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -1023,12 +1025,12 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: RecordColors.textLight.withOpacity(0.1),
+                color: RecordColors.textLight.withValues(alpha: 0.1),
                 width: 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.02),
+                  color: Colors.black.withValues(alpha: 0.02),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -1042,12 +1044,12 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFEF4444).withOpacity(0.1),
+                        color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.lightbulb_outline,
-                        color: const Color(0xFFEF4444),
+                        color: Color(0xFFEF4444),
                         size: 16,
                       ),
                     ),
@@ -1072,8 +1074,8 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                             width: 4,
                             height: 4,
                             margin: const EdgeInsets.only(top: 8, right: 12),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFEF4444),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFEF4444),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -1107,10 +1109,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
           margin: const EdgeInsets.symmetric(horizontal: 24),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFFEF4444).withOpacity(0.05),
+            color: const Color(0xFFEF4444).withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFFEF4444).withOpacity(0.1),
+              color: const Color(0xFFEF4444).withValues(alpha: 0.1),
               width: 1,
             ),
           ),
@@ -1123,7 +1125,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: _getGenreColor(movie.genre).withOpacity(0.15),
+                      color: _getGenreColor(movie.genre).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
@@ -1177,10 +1179,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     mainAxisSize: MainAxisSize.min,
                     children: List.generate(
                       movie.rating.round(),
-                      (index) => Icon(
+                      (index) => const Icon(
                         Icons.star,
                         size: 16,
-                        color: const Color(0xFFFBBF24),
+                        color: Color(0xFFFBBF24),
                       ),
                     ),
                   ),
@@ -1202,7 +1204,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
               ],
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.access_time,
                     size: 14,
                     color: RecordColors.textSecondary,
@@ -1218,7 +1220,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   ),
                   const Spacer(),
                   if (movie.isShared)
-                    Icon(
+                    const Icon(
                       Icons.share,
                       size: 14,
                       color: RecordColors.primary,
@@ -1246,7 +1248,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   style: OutlinedButton.styleFrom(
                     foregroundColor: const Color(0xFFEF4444),
                     side:
-                        BorderSide(color: const Color(0xFFEF4444), width: 1.5),
+                        const BorderSide(color: Color(0xFFEF4444), width: 1.5),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -1255,7 +1257,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.visibility, size: 18),
+                      const Icon(Icons.visibility, size: 18),
                       const SizedBox(width: 8),
                       Text(
                         '자세히 보기',
@@ -1292,7 +1294,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.edit, size: 18),
+                      const Icon(Icons.edit, size: 18),
                       const SizedBox(width: 8),
                       Text(
                         '수정하기',
@@ -1340,10 +1342,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEF4444).withOpacity(0.05),
+                  color: const Color(0xFFEF4444).withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFFEF4444).withOpacity(0.1),
+                    color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                     width: 1,
                   ),
                 ),
@@ -1372,7 +1374,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: _getGenreColor(movie.genre).withOpacity(0.1),
+                        color: _getGenreColor(movie.genre).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
@@ -1422,10 +1424,10 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                                 mainAxisSize: MainAxisSize.min,
                                 children: List.generate(
                                   movie.rating.round(),
-                                  (index) => Icon(
+                                  (index) => const Icon(
                                     Icons.star,
                                     size: 12,
-                                    color: const Color(0xFFFBBF24),
+                                    color: Color(0xFFFBBF24),
                                   ),
                                 ),
                               ),
@@ -1434,7 +1436,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                         ],
                       ),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.chevron_right,
                       color: RecordColors.textLight,
                       size: 20,

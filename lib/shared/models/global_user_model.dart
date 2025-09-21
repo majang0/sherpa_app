@@ -911,9 +911,9 @@ class MovieLog {
     final hours = watchTimeMinutes ~/ 60;
     final minutes = watchTimeMinutes % 60;
     if (hours > 0) {
-      return '${hours}시간 ${minutes}분';
+      return '$hours시간 $minutes분';
     } else {
-      return '${minutes}분';
+      return '$minutes분';
     }
   }
 
@@ -995,35 +995,35 @@ class DailyGoal {
   /// 기본 일일 목표 생성
   static List<DailyGoal> createDefaultGoals() {
     return [
-      DailyGoal(
+      const DailyGoal(
         id: 'steps',
         title: '6000걸음 걷기',
         description: '오늘 6000걸음을 완주하세요',
         icon: '👟',
         isCompleted: false,
       ),
-      DailyGoal(
+      const DailyGoal(
         id: 'diary',
         title: '일기 작성',
         description: '오늘의 하루를 기록해보세요',
         icon: '📝',
         isCompleted: false,
       ),
-      DailyGoal(
+      const DailyGoal(
         id: 'exercise',
         title: '운동 기록 작성',
         description: '운동 활동을 기록하세요',
         icon: '💪',
         isCompleted: false,
       ),
-      DailyGoal(
+      const DailyGoal(
         id: 'focus',
         title: '30분 몰입',
         description: '집중 시간을 30분 유지하세요',
         icon: '⏰',
         isCompleted: false,
       ),
-      DailyGoal(
+      const DailyGoal(
         id: 'reading',
         title: '한페이지 이상 독서',
         description: '책을 읽고 기록하세요',
@@ -1275,7 +1275,7 @@ class ClimbingRecord {
     final minutes = ((durationHours - hours) * 60).round();
 
     if (hours > 0) {
-      return '${hours}시간 ${minutes}분';
+      return '$hours시간 $minutes분';
     } else {
       return '${(durationHours * 60).round()}분';
     }
@@ -1538,7 +1538,7 @@ class ChallengeRecord {
   /// 참린지 상태 메시지
   String get statusMessage {
     if (isCompleted) return '참린지 완주!';
-    return '진행 중... ${progressDays}/${duration}일';
+    return '진행 중... $progressDays/$duration일';
   }
 
   /// 카테고리에 따른 색상
@@ -1564,7 +1564,7 @@ class ChallengeRecord {
     if (duration >= 30) {
       return '${(duration / 30).round()}개월';
     } else {
-      return '${duration}일';
+      return '$duration일';
     }
   }
 

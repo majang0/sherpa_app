@@ -10,7 +10,6 @@ import '../../models/conversation_state.dart';
 
 // Providers
 import '../../providers/enhanced_chat_conversation_provider.dart';
-import '../../../../../shared/providers/global_sherpi_provider.dart';
 // Personalization imports removed
 
 // Widgets
@@ -181,14 +180,14 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
             margin: const EdgeInsets.only(right: 8),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
             ),
             child: ClipOval(
               child: Image.asset(
                 conversationState.currentEmotion.imagePath,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Icon(
+                  return const Icon(
                     Icons.face,
                     color: Colors.white,
                     size: 20,
@@ -377,8 +376,8 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
       default:
         return [
           AppColors.primary,
-          AppColors.primary.withOpacity(0.8),
-          AppColors.primary.withOpacity(0.6),
+          AppColors.primary.withValues(alpha: 0.8),
+          AppColors.primary.withValues(alpha: 0.6),
         ];
     }
   }
@@ -388,13 +387,13 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: Colors.white.withOpacity(0.1),
+      color: Colors.white.withValues(alpha: 0.1),
       child: Text(
         context.description,
         textAlign: TextAlign.center,
         style: GoogleFonts.notoSans(
           fontSize: 13,
-          color: Colors.white.withOpacity(0.9),
+          color: Colors.white.withValues(alpha: 0.9),
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -411,14 +410,14 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
             Icon(
               Icons.chat_bubble_outline,
               size: 64,
-              color: Colors.white.withOpacity(0.3),
+              color: Colors.white.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
               '대화를 시작해보세요!',
               style: GoogleFonts.notoSans(
                 fontSize: 16,
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -527,10 +526,10 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.1),
+          color: Colors.white.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
@@ -540,14 +539,14 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
             Icon(
               icon,
               size: 14,
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
             ),
             const SizedBox(width: 4),
             Text(
               label,
               style: GoogleFonts.notoSans(
                 fontSize: 11,
-                color: Colors.white.withOpacity(0.8),
+                color: Colors.white.withValues(alpha: 0.8),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -567,7 +566,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
       await ref
           .read(enhancedChatConversationProvider.notifier)
           .addMessageFeedback(
-            messageId: message.id ?? 'unknown',
+            messageId: message.id,
             rating: rating,
             comment: comment,
             // feedbackType 제거됨
@@ -576,7 +575,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
       // 성공 메시지 표시 (선택적)
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('피드백 감사합니다! 💚'),
+          content: const Text('피드백 감사합니다! 💚'),
           duration: const Duration(seconds: 2),
           backgroundColor: Colors.green.shade600,
         ),
@@ -674,7 +673,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  '총 ${messageCount}개 메시지 • ${duration}분간 대화',
+                  '총 $messageCount개 메시지 • $duration분간 대화',
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     color: Colors.grey.shade600,

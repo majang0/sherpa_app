@@ -13,11 +13,11 @@ class LevelBadgeWidget extends ConsumerWidget {
   final VoidCallback? onTap;
 
   const LevelBadgeWidget({
-    Key? key,
+    super.key,
     required this.user,
     this.isCompact = false,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -88,7 +88,7 @@ class LevelBadgeWidget extends ConsumerWidget {
 
             // 뱃지들 (보유 뱃지 개수 표시)
             if (user.ownedBadgeIds.isNotEmpty && !isCompact) ...[
-              SizedBox(width: 6),
+              const SizedBox(width: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(

@@ -11,6 +11,8 @@ import '../../../shared/utils/haptic_feedback_manager.dart';
 import 'exercise_full_view_widget.dart';
 
 class ExerciseSummaryWidget extends ConsumerStatefulWidget {
+  const ExerciseSummaryWidget({super.key});
+
   @override
   ConsumerState<ExerciseSummaryWidget> createState() =>
       _ExerciseSummaryWidgetState();
@@ -109,7 +111,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFF97316).withOpacity(0.08),
+                color: const Color(0xFFF97316).withValues(alpha: 0.08),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -124,12 +126,12 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF97316).withOpacity(0.1),
+                      color: const Color(0xFFF97316).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.fitness_center,
-                      color: const Color(0xFFF97316),
+                      color: Color(0xFFF97316),
                       size: 24,
                     ),
                   ),
@@ -170,23 +172,23 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                           child: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
+                              gradient: const LinearGradient(
                                 colors: [
-                                  const Color(0xFF059669),
-                                  const Color(0xFF047857)
+                                  Color(0xFF059669),
+                                  Color(0xFF047857)
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
                                   color:
-                                      const Color(0xFF059669).withOpacity(0.3),
+                                      const Color(0xFF059669).withValues(alpha: 0.3),
                                   blurRadius: 6,
                                   offset: const Offset(0, 2),
                                 ),
                               ],
                             ),
-                            child: Icon(
+                            child: const Icon(
                               Icons.dashboard_rounded,
                               color: Colors.white,
                               size: 20,
@@ -208,22 +210,22 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                         child: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                               colors: [
-                                const Color(0xFFF97316),
-                                const Color(0xFFEA580C)
+                                Color(0xFFF97316),
+                                Color(0xFFEA580C)
                               ],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFF97316).withOpacity(0.3),
+                                color: const Color(0xFFF97316).withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
                             ],
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.add,
                             color: Colors.white,
                             size: 20,
@@ -292,13 +294,13 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFFF97316).withOpacity(0.15),
-            const Color(0xFFEA580C).withOpacity(0.05),
+            const Color(0xFFF97316).withValues(alpha: 0.15),
+            const Color(0xFFEA580C).withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFFF97316).withOpacity(0.3),
+          color: const Color(0xFFF97316).withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -309,13 +311,13 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [const Color(0xFFFBBF24), const Color(0xFFF59E0B)],
+              gradient: const LinearGradient(
+                colors: [Color(0xFFFBBF24), Color(0xFFF59E0B)],
               ),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFFBBF24).withOpacity(0.3),
+                  color: const Color(0xFFFBBF24).withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -324,9 +326,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   '🏆',
-                  style: const TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 24),
                 ),
                 Text(
                   'TOP',
@@ -379,7 +381,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                   children: [
                     _buildTopExerciseStat('${topExercise.value}분', '총 시간'),
                     const SizedBox(width: 16),
-                    _buildTopExerciseStat('${topExerciseCount}회', '횟수'),
+                    _buildTopExerciseStat('$topExerciseCount회', '횟수'),
                   ],
                 ),
               ],
@@ -470,12 +472,12 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
         height: 60,
         decoration: BoxDecoration(
           color:
-              isToday ? const Color(0xFFF97316).withOpacity(0.1) : Colors.white,
+              isToday ? const Color(0xFFF97316).withValues(alpha: 0.1) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isToday
                 ? const Color(0xFFF97316)
-                : ModernColors.textTertiary.withOpacity(0.2),
+                : ModernColors.textTertiary.withValues(alpha: 0.2),
             width: isToday ? 2 : 1,
           ),
         ),
@@ -526,7 +528,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: ModernColors.textTertiary.withOpacity(0.3),
+                  color: ModernColors.textTertiary.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -547,14 +549,14 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ExerciseFullViewWidget(),
+              builder: (context) => const ExerciseFullViewWidget(),
             ),
           );
         },
         style: OutlinedButton.styleFrom(
           foregroundColor: const Color(0xFFF97316),
           side: BorderSide(
-            color: const Color(0xFFF97316).withOpacity(0.3),
+            color: const Color(0xFFF97316).withValues(alpha: 0.3),
             width: 1.5,
           ),
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -566,9 +568,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.calendar_view_month,
-              color: const Color(0xFFF97316),
+              color: Color(0xFFF97316),
               size: 18,
             ),
             const SizedBox(width: 8),
@@ -678,10 +680,10 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: const Color(0xFFF97316).withOpacity(0.1),
+              color: const Color(0xFFF97316).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: const Color(0xFFF97316).withOpacity(0.3),
+                color: const Color(0xFFF97316).withValues(alpha: 0.3),
                 width: 1,
               ),
             ),
@@ -709,7 +711,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${count}회 • ${totalMinutes}분',
+                  '$count회 • $totalMinutes분',
                   style: GoogleFonts.notoSans(
                     fontSize: 10,
                     fontWeight: FontWeight.w500,
@@ -725,7 +727,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             width: 60,
             height: 8,
             decoration: BoxDecoration(
-              color: ModernColors.textTertiary.withOpacity(0.2),
+              color: ModernColors.textTertiary.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(4),
             ),
             child: FractionallySizedBox(
@@ -733,8 +735,8 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               widthFactor: (totalMinutes / 120).clamp(0.1, 1.0), // 최대 120분 기준
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [const Color(0xFFF97316), const Color(0xFFEA580C)],
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFFF97316), Color(0xFFEA580C)],
                   ),
                   borderRadius: BorderRadius.circular(4),
                 ),
@@ -802,9 +804,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       ),
       child: Column(
         children: [
-          Text(
+          const Text(
             '💪',
-            style: const TextStyle(fontSize: 32),
+            style: TextStyle(fontSize: 32),
           ),
           const SizedBox(height: 8),
           Text(
@@ -836,7 +838,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -866,15 +868,15 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
-                            const Color(0xFFF97316),
-                            const Color(0xFFEA580C)
+                            Color(0xFFF97316),
+                            Color(0xFFEA580C)
                           ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.calendar_month,
                         color: Colors.white,
                         size: 20,
@@ -937,10 +939,10 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
           margin: const EdgeInsets.symmetric(horizontal: 24),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFFF97316).withOpacity(0.05),
+            color: const Color(0xFFF97316).withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFFF97316).withOpacity(0.1),
+              color: const Color(0xFFF97316).withValues(alpha: 0.1),
               width: 1,
             ),
           ),
@@ -953,7 +955,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF97316).withOpacity(0.1),
+                      color: const Color(0xFFF97316).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
@@ -1036,8 +1038,8 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: const Color(0xFFF97316),
-                        side: BorderSide(
-                            color: const Color(0xFFF97316), width: 1.5),
+                        side: const BorderSide(
+                            color: Color(0xFFF97316), width: 1.5),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -1046,7 +1048,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.visibility, size: 18),
+                          const Icon(Icons.visibility, size: 18),
                           const SizedBox(width: 8),
                           Text(
                             '상세 보기',
@@ -1086,7 +1088,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.edit, size: 18),
+                          const Icon(Icons.edit, size: 18),
                           const SizedBox(width: 8),
                           Text(
                             '수정하기',
@@ -1119,7 +1121,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                   style: OutlinedButton.styleFrom(
                     foregroundColor: const Color(0xFFF97316),
                     side: BorderSide(
-                      color: const Color(0xFFF97316).withOpacity(0.3),
+                      color: const Color(0xFFF97316).withValues(alpha: 0.3),
                       width: 1.5,
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 14),
@@ -1130,7 +1132,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add_circle_outline, size: 18),
+                      const Icon(Icons.add_circle_outline, size: 18),
                       const SizedBox(width: 8),
                       Text(
                         '운동 기록 추가하기',
@@ -1155,7 +1157,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
     return Column(
       children: [
         Container(
-          constraints: BoxConstraints(maxHeight: 300),
+          constraints: const BoxConstraints(maxHeight: 300),
           child: ListView.builder(
             shrinkWrap: true,
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -1179,7 +1181,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF97316).withOpacity(0.1),
+                        color: const Color(0xFFF97316).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
@@ -1215,7 +1217,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       ),
                     ),
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.arrow_forward_ios,
                         size: 16,
                         color: ModernColors.textTertiary,
@@ -1263,7 +1265,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.add_circle_outline, size: 18),
+                  const Icon(Icons.add_circle_outline, size: 18),
                   const SizedBox(width: 8),
                   Text(
                     '운동 기록 추가하기',
@@ -1339,13 +1341,13 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  const Color(0xFFF97316).withOpacity(0.05),
-                  const Color(0xFFEA580C).withOpacity(0.03),
+                  const Color(0xFFF97316).withValues(alpha: 0.05),
+                  const Color(0xFFEA580C).withValues(alpha: 0.03),
                 ],
               ),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: const Color(0xFFF97316).withOpacity(0.1),
+                color: const Color(0xFFF97316).withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -1393,7 +1395,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: ModernColors.textTertiary.withOpacity(0.2),
+                        color: ModernColors.textTertiary.withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
@@ -1421,7 +1423,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       ],
                     ),
                   ))
-              .toList(),
+              ,
 
           const SizedBox(height: 24),
 
@@ -1449,7 +1451,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.fitness_center, size: 20),
+                  const Icon(Icons.fitness_center, size: 20),
                   const SizedBox(width: 8),
                   Text(
                     '운동 기록 작성하기',
@@ -1489,7 +1491,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             borderRadius: BorderRadius.circular(16),
           ),
           elevation: 0,
-          shadowColor: const Color(0xFFF97316).withOpacity(0.3),
+          shadowColor: const Color(0xFFF97316).withValues(alpha: 0.3),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -1497,10 +1499,10 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.add,
                 color: Colors.white,
                 size: 20,
@@ -1556,7 +1558,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -1570,12 +1572,12 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF3B82F6).withOpacity(0.1),
+                  color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.bar_chart,
-                  color: const Color(0xFF3B82F6),
+                  color: Color(0xFF3B82F6),
                   size: 20,
                 ),
               ),
@@ -1620,7 +1622,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
           const SizedBox(height: 20),
 
           // 막대 차트
-          Container(
+          SizedBox(
             height: 160,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -1632,7 +1634,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                 return Expanded(
                   child: Tooltip(
                     message: dayMinutes > 0
-                        ? '${day.month}월 ${day.day}일: ${dayMinutes}분 운동'
+                        ? '${day.month}월 ${day.day}일: $dayMinutes분 운동'
                         : '',
                     preferBelow: false,
                     verticalOffset: 20,
@@ -1678,7 +1680,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                                 color: dayMinutes > 0
                                     ? _getBarColor(dayMinutes)
                                     : ModernColors.textTertiary
-                                        .withOpacity(0.2),
+                                        .withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(2),
                               ),
                             ),
@@ -1752,13 +1754,13 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF8B5CF6).withOpacity(0.1),
-            const Color(0xFF7C3AED).withOpacity(0.05),
+            const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+            const Color(0xFF7C3AED).withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: const Color(0xFF8B5CF6).withOpacity(0.2),
+          color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -1771,12 +1773,12 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.calendar_view_month,
-                  color: const Color(0xFF8B5CF6),
+                  color: Color(0xFF8B5CF6),
                   size: 24,
                 ),
               ),
@@ -1817,7 +1819,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: const Color(0xFF8B5CF6).withOpacity(0.2),
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -1838,16 +1840,16 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                         width: 44,
                         height: 44,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(0xFF8B5CF6).withOpacity(0.3),
+                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                             width: 1,
                           ),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.chevron_left,
-                          color: const Color(0xFF8B5CF6),
+                          color: Color(0xFF8B5CF6),
                           size: 24,
                         ),
                       ),
@@ -1859,7 +1861,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -1898,16 +1900,16 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                         width: 44,
                         height: 44,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                          color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(0xFF8B5CF6).withOpacity(0.3),
+                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                             width: 1,
                           ),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.chevron_right,
-                          color: const Color(0xFF8B5CF6),
+                          color: Color(0xFF8B5CF6),
                           size: 24,
                         ),
                       ),
@@ -1929,19 +1931,19 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                      color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: const Color(0xFF8B5CF6).withOpacity(0.3),
+                        color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.today,
-                          color: const Color(0xFF8B5CF6),
+                          color: Color(0xFF8B5CF6),
                           size: 16,
                         ),
                         const SizedBox(width: 6),
@@ -1972,7 +1974,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF8B5CF6).withOpacity(0.05),
+              color: const Color(0xFF8B5CF6).withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -1996,12 +1998,12 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       Colors.black54,
                     ),
                     _buildColorLegendItem(
-                      const Color(0xFF8B5CF6).withOpacity(0.3),
+                      const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                       '적음',
                       Colors.white,
                     ),
                     _buildColorLegendItem(
-                      const Color(0xFF8B5CF6).withOpacity(0.6),
+                      const Color(0xFF8B5CF6).withValues(alpha: 0.6),
                       '보통',
                       Colors.white,
                     ),
@@ -2113,9 +2115,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
     if (exerciseCount == 0) {
       return ModernColors.borderLight;
     } else if (exerciseCount == 1) {
-      return const Color(0xFF8B5CF6).withOpacity(0.3);
+      return const Color(0xFF8B5CF6).withValues(alpha: 0.3);
     } else if (exerciseCount == 2) {
-      return const Color(0xFF8B5CF6).withOpacity(0.6);
+      return const Color(0xFF8B5CF6).withValues(alpha: 0.6);
     } else {
       return const Color(0xFF8B5CF6);
     }
@@ -2230,7 +2232,7 @@ class DonutChartPainter extends CustomPainter {
       text: TextSpan(
         children: [
           TextSpan(
-            text: '${minutes}',
+            text: '$minutes',
             style: GoogleFonts.notoSans(
               fontSize: 24,
               fontWeight: FontWeight.w800,

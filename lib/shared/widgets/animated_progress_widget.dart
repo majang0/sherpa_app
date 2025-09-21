@@ -13,7 +13,7 @@ class AnimatedProgressWidget extends StatefulWidget {
   final bool enableParticles;
 
   const AnimatedProgressWidget({
-    Key? key,
+    super.key,
     required this.progress,
     required this.total,
     required this.label,
@@ -21,7 +21,7 @@ class AnimatedProgressWidget extends StatefulWidget {
     required this.backgroundColor,
     this.showPercentage = true,
     this.enableParticles = true,
-  }) : super(key: key);
+  });
 
   @override
   State<AnimatedProgressWidget> createState() => _AnimatedProgressWidgetState();
@@ -84,7 +84,7 @@ class _AnimatedProgressWidgetState extends State<AnimatedProgressWidget>
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
               ),
             ),
             if (widget.showPercentage)
@@ -115,7 +115,7 @@ class _AnimatedProgressWidgetState extends State<AnimatedProgressWidget>
               gradientColor: LinearGradient(
                 colors: [
                   widget.progressColor,
-                  widget.progressColor.withOpacity(0.7),
+                  widget.progressColor.withValues(alpha: 0.7),
                 ],
               ),
             ),
@@ -139,7 +139,7 @@ class _AnimatedProgressWidgetState extends State<AnimatedProgressWidget>
                         boxShadow: [
                           BoxShadow(
                             color: widget.progressColor
-                                .withOpacity(_sparkleAnimation.value),
+                                .withValues(alpha: _sparkleAnimation.value),
                             blurRadius: 8,
                             spreadRadius: 2,
                           ),

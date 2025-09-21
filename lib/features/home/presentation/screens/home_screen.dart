@@ -159,7 +159,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: SherpaCleanAppBar(),
+      appBar: const SherpaCleanAppBar(),
       body: _isLoading
           ? _buildLoadingState()
           : AnimatedBuilder(
@@ -192,12 +192,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               return Icon(
                 Icons.terrain_outlined,
                 size: 64,
-                color: AppColors.primary.withOpacity(0.3),
+                color: AppColors.primary.withValues(alpha: 0.3),
               );
             },
           ),
           const SizedBox(height: 20),
-          CircularProgressIndicator(
+          const CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
             strokeWidth: 3,
           ),
@@ -229,25 +229,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             SliverToBoxAdapter(
               child: Container(
                 padding: const EdgeInsets.all(20),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // 개인 성장 영역 위젯들
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
                     PersonalizedGrowthDashboardWidget(),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
                     GrowthInsightsWidget(),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
                     CompactQuestWidget(),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
 
                     // 소셜 영역 위젯들
-                    const SherpiPersonalizedMeetingWidget(),
-                    const SizedBox(height: 20),
-                    const EnhancedMeetingRecommendationWidget(),
-                    const SizedBox(height: 20),
+                    SherpiPersonalizedMeetingWidget(),
+                    SizedBox(height: 20),
+                    EnhancedMeetingRecommendationWidget(),
+                    SizedBox(height: 20),
                     FriendsActivityFeedWidget(),
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20),
                     UniversityGuildWidget(),
                   ],
                 ),
@@ -255,7 +255,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
 
             // 하단 여백
-            const SliverPadding(padding: EdgeInsets.only(bottom: 100)),
+            const SliverPadding(
+              padding: EdgeInsets.only(bottom: 20),
+            ),
           ],
         ),
       ),

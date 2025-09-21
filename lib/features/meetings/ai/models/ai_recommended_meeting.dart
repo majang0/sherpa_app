@@ -1,5 +1,6 @@
 /// AI 추천 모임 모델
 /// AI가 추천한 모임과 추천 이유, 매칭 점수 등을 포함하는 데이터 모델
+library;
 
 import '../../models/available_meeting_model.dart';
 

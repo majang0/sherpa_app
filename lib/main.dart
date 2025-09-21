@@ -7,7 +7,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 // Core
 import 'main_navigation_screen.dart';
 import 'core/constants/app_colors.dart';
-import 'core/config/api_config.dart';
 
 // Providers
 import 'shared/providers/global_sherpi_provider.dart';
@@ -75,12 +74,14 @@ void main() async {
         emotionAnalysisProvider
             .overrideWith((ref) => EmotionAnalysisNotifier(sharedPreferences)),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
 
 class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // ✅ 앱 시작 시 모든 글로벌 Provider 초기화
@@ -124,7 +125,7 @@ class MyApp extends ConsumerWidget {
       },
       // ✅ 라우팅 설정 추가
       routes: {
-        '/': (context) => MainNavigationScreen(),
+        '/': (context) => const MainNavigationScreen(),
         '/meeting_detail': (context) {
           final args = ModalRoute.of(context)?.settings.arguments;
           return _buildMeetingRoute(
@@ -158,10 +159,10 @@ class MyApp extends ConsumerWidget {
             builder: (meeting) => MeetingReviewScreen(meeting: meeting),
           );
         },
-        '/meeting_list_all': (context) => MeetingListAllScreen(),
+        '/meeting_list_all': (context) => const MeetingListAllScreen(),
         // ✅ 일일 기록 화면들 추가
-        '/daily_record': (context) => EnhancedDailyRecordScreen(), // 메인 기록 화면
-        '/diary_record': (context) => DiaryWriteEditScreen(),
+        '/daily_record': (context) => const EnhancedDailyRecordScreen(), // 메인 기록 화면
+        '/diary_record': (context) => const DiaryWriteEditScreen(),
         '/exercise_record': (context) {
           final args = ModalRoute.of(context)?.settings.arguments
               as Map<String, dynamic>?;
@@ -176,7 +177,7 @@ class MyApp extends ConsumerWidget {
             selectedDate: args ?? DateTime.now(),
           );
         },
-        '/exercise_dashboard': (context) => ExerciseDashboardScreen(),
+        '/exercise_dashboard': (context) => const ExerciseDashboardScreen(),
         '/exercise_detail': (context) {
           final exercise =
               ModalRoute.of(context)!.settings.arguments as ExerciseLog;
@@ -187,13 +188,13 @@ class MyApp extends ConsumerWidget {
               ModalRoute.of(context)!.settings.arguments as ExerciseLog;
           return ExerciseEditScreen(exercise: exercise);
         },
-        '/reading_record': (context) => ReadingRecordScreen(),
+        '/reading_record': (context) => const ReadingRecordScreen(),
         '/focus_timer': (context) =>
-            EnhancedDailyRecordScreen(), // 집중 타이머는 기록 화면에서 접근
-        '/focus_timer_record': (context) => FocusTimerRecordScreen(),
-        '/diary_analysis': (context) => DiaryAnalysisPage(),
-        '/component_viewer': (context) => ComponentViewerScreen(),
-        '/sherpi_message_history': (context) => SherpiMessageHistoryScreen(),
+            const EnhancedDailyRecordScreen(), // 집중 타이머는 기록 화면에서 접근
+        '/focus_timer_record': (context) => const FocusTimerRecordScreen(),
+        '/diary_analysis': (context) => const DiaryAnalysisPage(),
+        '/component_viewer': (context) => const ComponentViewerScreen(),
+        '/sherpi_message_history': (context) => const SherpiMessageHistoryScreen(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,

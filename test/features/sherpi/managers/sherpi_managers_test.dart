@@ -3,7 +3,6 @@ import 'package:sherpa_app/core/ai/managers/static_sherpi_manager.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/features/sherpi/domain/models/sherpi_response.dart';
 import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
-import 'package:sherpa_app/shared/providers/global_sherpi_provider.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

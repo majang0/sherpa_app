@@ -18,6 +18,8 @@ import '../../../../shared/utils/haptic_feedback_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EnhancedDailyRecordScreen extends ConsumerStatefulWidget {
+  const EnhancedDailyRecordScreen({super.key});
+
   @override
   ConsumerState<EnhancedDailyRecordScreen> createState() =>
       _EnhancedDailyRecordScreenState();
@@ -91,40 +93,40 @@ class _EnhancedDailyRecordScreenState
             controller: _scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 1. 오늘의 성장 브리핑
                 SimpleTodayGrowthWidget(),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
 
                 // 2. 걸음수 분석
                 StepAnalysisWidget(),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
 
                 // 3. 몰입시간 분석
                 FocusTimeAnalysisWidget(),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
 
                 // 4. 일기 캘린더
                 EnhancedDiaryCalendarWidget(),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
 
                 // 5. 운동 기록 요약
                 ExerciseSummaryWidget(),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
 
                 // 6. 독서 기록 (다중 등록 지원)
                 EnhancedReadingCalendarWidget(),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
 
                 // 7. 영화 기록
                 MovieCalendarWidget(),
-                const SizedBox(height: 32),
+                SizedBox(height: 32),
 
                 // 8. 모임 기록 (다중 등록 지원)
                 EnhancedMeetingCalendarWidget(),
-                const SizedBox(height: 100), // 하단 여백 (FAB 공간)
+                SizedBox(height: 100), // 하단 여백 (FAB 공간)
               ],
             ),
           ),
@@ -148,13 +150,13 @@ class _EnhancedDailyRecordScreenState
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.primary.withOpacity(0.4),
+                  color: ModernColors.primary.withValues(alpha: 0.4),
                   blurRadius: 15,
                   offset: const Offset(0, 6),
                   spreadRadius: 0,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -210,7 +212,7 @@ class _EnhancedDailyRecordScreenState
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.8,
       ),
-      child: EnhancedDailyQuestWidget(),
+      child: const EnhancedDailyQuestWidget(),
     );
   }
 }

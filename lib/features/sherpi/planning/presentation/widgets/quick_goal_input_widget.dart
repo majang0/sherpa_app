@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -120,7 +119,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                   borderRadius: BorderRadius.circular(15),
                   borderSide: BorderSide.none,
                 ),
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.flag_outlined,
                   color: AppColors.primary,
                 ),
@@ -150,13 +149,13 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.primary.withOpacity(0.05),
-                      AppColors.primary.withOpacity(0.02),
+                      AppColors.primary.withValues(alpha: 0.05),
+                      AppColors.primary.withValues(alpha: 0.02),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Row(
@@ -164,7 +163,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                     Icon(
                       Icons.lightbulb_outline,
                       size: 14,
-                      color: AppColors.primary.withOpacity(0.7),
+                      color: AppColors.primary.withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -172,7 +171,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                         aiHint,
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
-                          color: AppColors.primary.withOpacity(0.8),
+                          color: AppColors.primary.withValues(alpha: 0.8),
                         ),
                       ),
                     ),
@@ -308,10 +307,10 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? color.withOpacity(0.15) : Colors.grey[100],
+          color: isSelected ? color.withValues(alpha: 0.15) : Colors.grey[100],
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? color.withOpacity(0.3) : Colors.transparent,
+            color: isSelected ? color.withValues(alpha: 0.3) : Colors.transparent,
             width: 1.5,
           ),
         ),
@@ -350,12 +349,12 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withOpacity(0.15)
+              ? AppColors.primary.withValues(alpha: 0.15)
               : Colors.grey[100],
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected
-                ? AppColors.primary.withOpacity(0.3)
+                ? AppColors.primary.withValues(alpha: 0.3)
                 : Colors.transparent,
             width: 1.5,
           ),
@@ -409,7 +408,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
     // 연속 기록 기반 힌트
     final streak = user.dailyRecords.consecutiveDays;
     if (streak > 7) {
-      return "연속 ${streak}일째! 더 높은 목표에 도전해보세요!";
+      return "연속 $streak일째! 더 높은 목표에 도전해보세요!";
     }
 
     return null;

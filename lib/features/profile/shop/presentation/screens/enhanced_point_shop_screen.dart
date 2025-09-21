@@ -11,6 +11,8 @@ import '../../../../../shared/models/global_user_model.dart';
 import '../../../../../core/constants/sherpi_dialogues.dart';
 
 class EnhancedPointShopScreen extends ConsumerWidget {
+  const EnhancedPointShopScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pointData = ref.watch(globalPointProvider);
@@ -339,13 +341,13 @@ class EnhancedPointShopScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('친구에게 포인트 선물'),
+        title: const Text('친구에게 포인트 선물'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: friendController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: '친구 이름',
                 border: OutlineInputBorder(),
               ),
@@ -354,7 +356,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
             TextField(
               controller: amountController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: '선물할 포인트',
                 border: OutlineInputBorder(),
                 suffixText: 'P',
@@ -365,7 +367,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('취소'),
+            child: const Text('취소'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -382,7 +384,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                        content: Text('${friendName}님에게 ${amount}P를 선물했습니다!')),
+                        content: Text('$friendName님에게 ${amount}P를 선물했습니다!')),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -391,7 +393,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                 }
               }
             },
-            child: Text('선물하기'),
+            child: const Text('선물하기'),
           ),
         ],
       ),
@@ -404,21 +406,21 @@ class EnhancedPointShopScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('신규 유저 지원 팩'),
+        title: const Text('신규 유저 지원 팩'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('포함 내용:'),
-            Text('• 한 달간 프리미엄 퀘스트팩'),
-            Text('• 무료 모임 참여 수수료 제외 (3회)'),
-            Text('• 무료 챌린지 참여 수수료 제외 (3회)'),
-            Text('• 퀘스트 완료 티켓 1개'),
-            Text('• 연속 기록 보호권 1개'),
+            const Text('포함 내용:'),
+            const Text('• 한 달간 프리미엄 퀘스트팩'),
+            const Text('• 무료 모임 참여 수수료 제외 (3회)'),
+            const Text('• 무료 챌린지 참여 수수료 제외 (3회)'),
+            const Text('• 퀘스트 완료 티켓 1개'),
+            const Text('• 연속 기록 보호권 1개'),
             const SizedBox(height: 16),
             TextField(
               controller: friendController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: '친구 이름',
                 border: OutlineInputBorder(),
               ),
@@ -428,7 +430,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('취소'),
+            child: const Text('취소'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -444,7 +446,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                        content: Text('${friendName}님에게 신규 유저 지원 팩을 선물했습니다!')),
+                        content: Text('$friendName님에게 신규 유저 지원 팩을 선물했습니다!')),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -453,7 +455,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                 }
               }
             },
-            child: Text('1000P로 선물하기'),
+            child: const Text('1000P로 선물하기'),
           ),
         ],
       ),

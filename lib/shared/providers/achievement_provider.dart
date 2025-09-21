@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/achievement_model.dart';
 import '../../core/constants/app_colors.dart';
@@ -19,7 +18,7 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
         isUnlocked: true,
         currentProgress: 1,
         rarity: 'common',
-        unlockedAt: DateTime.now().subtract(Duration(days: 30)),
+        unlockedAt: DateTime.now().subtract(const Duration(days: 30)),
       ),
       AchievementBadge(
         id: 'xp_1000',
@@ -32,7 +31,7 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
         isUnlocked: true,
         currentProgress: 1000,
         rarity: 'rare',
-        unlockedAt: DateTime.now().subtract(Duration(days: 15)),
+        unlockedAt: DateTime.now().subtract(const Duration(days: 15)),
       ),
       AchievementBadge(
         id: 'streak_7',
@@ -45,9 +44,9 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
         isUnlocked: true,
         currentProgress: 7,
         rarity: 'epic',
-        unlockedAt: DateTime.now().subtract(Duration(days: 5)),
+        unlockedAt: DateTime.now().subtract(const Duration(days: 5)),
       ),
-      AchievementBadge(
+      const AchievementBadge(
         id: 'community_10',
         title: '커뮤니티 활동가',
         description: '10회 모임 참여',
@@ -59,7 +58,7 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
         currentProgress: 7,
         rarity: 'rare',
       ),
-      AchievementBadge(
+      const AchievementBadge(
         id: 'level_10',
         title: '성장의 달인',
         description: '레벨 10 달성',
@@ -71,7 +70,7 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
         currentProgress: 8,
         rarity: 'epic',
       ),
-      AchievementBadge(
+      const AchievementBadge(
         id: 'quest_50',
         title: '퀘스트 마스터',
         description: '50개 퀘스트 완료',

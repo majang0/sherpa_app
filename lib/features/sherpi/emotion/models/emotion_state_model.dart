@@ -399,7 +399,7 @@ class EmotionHistory {
   /// 감정 통계 계산
   EmotionStats calculateStats() {
     if (snapshots.isEmpty) {
-      return EmotionStats(
+      return const EmotionStats(
         averageValence: 0.0,
         averageIntensity: 0.0,
         averageConfidence: 0.0,
@@ -418,8 +418,8 @@ class EmotionHistory {
         averageIntensity: 0.0,
         averageConfidence: 0.0,
         dominantEmotion: EmotionType.confused,
-        categoryDistribution: {},
-        typeDistribution: {},
+        categoryDistribution: const {},
+        typeDistribution: const {},
         totalSnapshots: snapshots.length,
         timeSpan: duration,
       );

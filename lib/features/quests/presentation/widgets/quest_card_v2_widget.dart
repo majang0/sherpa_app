@@ -16,10 +16,10 @@ class QuestCardV2Widget extends ConsumerStatefulWidget {
   final Function(QuestInstance) onQuestCompleted;
 
   const QuestCardV2Widget({
-    Key? key,
+    super.key,
     required this.quest,
     required this.onQuestCompleted,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<QuestCardV2Widget> createState() => _QuestCardV2WidgetState();
@@ -46,7 +46,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
           boxShadow: quest.canClaim
               ? [
                   BoxShadow(
-                    color: ModernColors.warning.withOpacity(0.3),
+                    color: ModernColors.warning.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -57,9 +57,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             color: quest.canClaim
-                ? ModernColors.warning.withOpacity(0.05)
+                ? ModernColors.warning.withValues(alpha: 0.05)
                 : quest.canComplete
-                    ? ModernColors.success.withOpacity(0.05)
+                    ? ModernColors.success.withValues(alpha: 0.05)
                     : ModernColors.surface,
           ),
           child: Padding(
@@ -76,9 +76,9 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: _getCategoryColor(quest).withOpacity(0.1),
+                        color: _getCategoryColor(quest).withValues(alpha: 0.1),
                         border: Border.all(
-                          color: _getCategoryColor(quest).withOpacity(0.3),
+                          color: _getCategoryColor(quest).withValues(alpha: 0.3),
                           width: 2,
                         ),
                         shape: BoxShape.circle,
@@ -107,10 +107,10 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: quest.rarityColor.withOpacity(0.1),
+                                  color: quest.rarityColor.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(100),
                                   border: Border.all(
-                                    color: quest.rarityColor.withOpacity(0.3),
+                                    color: quest.rarityColor.withValues(alpha: 0.3),
                                     width: 1,
                                   ),
                                 ),
@@ -154,7 +154,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: quest.type.color.withOpacity(0.1),
+                                  color: quest.type.color.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(100),
                                 ),
                                 child: Text(
@@ -312,17 +312,21 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
       case QuestTrackingType.multipleConditions:
         trackingIcon = Icons.checklist;
         break;
-      default:
-        trackingIcon = Icons.help_outline;
+      case QuestTrackingType.userAction:
+        trackingIcon = Icons.touch_app;
+        break;
+      case QuestTrackingType.dailyCompletion:
+        trackingIcon = Icons.today;
+        break;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: ModernColors.secondary.withOpacity(0.1),
+        color: ModernColors.secondary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: ModernColors.secondary.withOpacity(0.3),
+          color: ModernColors.secondary.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -381,9 +385,6 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
         statusColor = ModernColors.success;
         statusIcon = Icons.check_circle;
         break;
-      default:
-        statusColor = ModernColors.textSecondary;
-        statusIcon = Icons.help_outline;
     }
 
     return Row(
@@ -428,8 +429,6 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
         return ModernColors.success;
       case QuestCategoryV2.willpower:
         return ModernColors.primary;
-      default:
-        return ModernColors.secondary;
     }
   }
 
@@ -660,7 +659,7 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                 bottom: index < conditions.length - 1 ? 12.0 : 0.0),
             child: _buildSingleConditionProgress(condition, index),
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -685,23 +684,23 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
     switch (dataKey) {
       case 'weekly_readingPages':
         conditionName = '독서 페이지';
-        progressText = '${currentValue}/${targetValue}페이지';
+        progressText = '$currentValue/$targetValue페이지';
         break;
       case 'weekly_movieLogs':
         conditionName = '영화 감상';
-        progressText = '${currentValue}/${targetValue}편';
+        progressText = '$currentValue/$targetValue편';
         break;
       case 'readingPages':
         conditionName = '독서 페이지';
-        progressText = '${currentValue}/${targetValue}페이지';
+        progressText = '$currentValue/$targetValue페이지';
         break;
       case 'movieLogs':
         conditionName = '영화 감상';
-        progressText = '${currentValue}/${targetValue}편';
+        progressText = '$currentValue/$targetValue편';
         break;
       default:
         conditionName = dataKey;
-        progressText = '${currentValue}/${targetValue}';
+        progressText = '$currentValue/$targetValue';
     }
 
     return Column(
@@ -751,17 +750,17 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: ModernColors.success.withOpacity(0.1),
+        color: ModernColors.success.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: ModernColors.success.withOpacity(0.3),
+          color: ModernColors.success.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.check_circle,
             color: ModernColors.success,
             size: 20,
@@ -802,7 +801,6 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
         );
         widget.onQuestCompleted(updatedQuest);
       });
-    } catch (e) {
     } finally {
       setState(() => _isProcessing = false);
     }

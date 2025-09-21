@@ -132,8 +132,8 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  ModernColors.reward.withOpacity(0.1),
-                  ModernColors.modernAccent.withOpacity(0.1),
+                  ModernColors.reward.withValues(alpha: 0.1),
+                  ModernColors.modernAccent.withValues(alpha: 0.1),
                 ],
               ),
             ),
@@ -188,13 +188,13 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: currentPoints >= 2000
-                        ? ModernColors.modernSuccess.withOpacity(0.1)
-                        : ModernColors.modernError.withOpacity(0.1),
+                        ? ModernColors.modernSuccess.withValues(alpha: 0.1)
+                        : ModernColors.modernError.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: currentPoints >= 2000
-                          ? ModernColors.modernSuccess.withOpacity(0.3)
-                          : ModernColors.modernError.withOpacity(0.3),
+                          ? ModernColors.modernSuccess.withValues(alpha: 0.3)
+                          : ModernColors.modernError.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -353,7 +353,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              ModernColors.modernPrimary.withOpacity(0.05),
+              ModernColors.modernPrimary.withValues(alpha: 0.05),
               ModernColors.background,
             ],
           ),
@@ -385,7 +385,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                   confettiController: _confettiController,
                   blastDirectionality: BlastDirectionality.explosive,
                   shouldLoop: false,
-                  colors: [
+                  colors: const [
                     ModernColors.reward,
                     ModernColors.modernPrimary,
                     ModernColors.modernSuccess,
@@ -397,7 +397,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                   createParticlePath: (size) {
                     final path = Path();
                     path.addOval(Rect.fromCircle(
-                      center: Offset(size.width / 2, size.height / 2),
+                      center: const Offset(0, 0),
                       radius: size.width / 2,
                     ));
                     return path;
@@ -441,7 +441,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
         height: 200,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: primaryColor.withOpacity(0.05),
+          color: primaryColor.withValues(alpha: 0.05),
         ),
       ),
     );
@@ -595,7 +595,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                           end: Alignment.bottomRight,
                           colors: [
                             categoryColor,
-                            categoryColor.withOpacity(0.8)
+                            categoryColor.withValues(alpha: 0.8)
                           ],
                         )
                       : null,
@@ -617,8 +617,8 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                               end: Alignment.centerRight,
                               stops: [0, progress, progress, 1],
                               colors: [
-                                categoryColor.withOpacity(0.1),
-                                categoryColor.withOpacity(0.1),
+                                categoryColor.withValues(alpha: 0.1),
+                                categoryColor.withValues(alpha: 0.1),
                                 Colors.transparent,
                                 Colors.transparent,
                               ],
@@ -741,20 +741,20 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
           borderRadius: BorderRadius.circular(12),
           color: ModernColors.surface,
           border: Border.all(
-            color: rewardColor.withOpacity(0.15),
+            color: rewardColor.withValues(alpha: 0.15),
             width: 1,
           ),
           boxShadow: [
             // Outer glow for card
             BoxShadow(
-              color: rewardColor.withOpacity(0.1),
+              color: rewardColor.withValues(alpha: 0.1),
               blurRadius: 12,
               offset: const Offset(0, 2),
               spreadRadius: 0,
             ),
             // Subtle elevation
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 8,
               offset: const Offset(0, 4),
               spreadRadius: 0,
@@ -768,8 +768,8 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                rewardColor.withOpacity(0.03),
-                rewardColor.withOpacity(0.08),
+                rewardColor.withValues(alpha: 0.03),
+                rewardColor.withValues(alpha: 0.08),
               ],
             ),
           ),
@@ -786,7 +786,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                       height: 56,
                       decoration: BoxDecoration(
                         gradient: canClaim
-                            ? LinearGradient(
+                            ? const LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
@@ -797,8 +797,8 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                             : !showCompleted
                                 ? LinearGradient(
                                     colors: [
-                                      primaryColor.withOpacity(0.2),
-                                      primaryColor.withOpacity(0.1)
+                                      primaryColor.withValues(alpha: 0.2),
+                                      primaryColor.withValues(alpha: 0.1)
                                     ],
                                   )
                                 : null,
@@ -898,7 +898,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                               value: progress,
                               strokeWidth: 5,
                               backgroundColor:
-                                  ModernColors.inactive.withOpacity(0.3),
+                                  ModernColors.inactive.withValues(alpha: 0.3),
                               valueColor:
                                   AlwaysStoppedAnimation<Color>(rewardColor),
                             ),
@@ -939,7 +939,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.trending_up,
                               size: 20,
                               color: ModernColors.modernPrimary,
@@ -978,7 +978,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.monetization_on,
                               size: 20,
                               color: ModernColors.reward,
@@ -1032,7 +1032,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                               fontWeight: FontWeight.w800,
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -1040,7 +1040,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                                 Icons.card_giftcard_rounded,
                                 size: 20,
                               ),
-                              const SizedBox(width: 8),
+                              SizedBox(width: 8),
                               Text('보상 상자 열기!'),
                             ],
                           ),
@@ -1050,17 +1050,17 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 color: ModernColors.modernSuccess
-                                    .withOpacity(0.08),
+                                    .withValues(alpha: 0.08),
                                 border: Border.all(
                                   color: ModernColors.modernSuccess
-                                      .withOpacity(0.6),
+                                      .withValues(alpha: 0.6),
                                   width: 1.5,
                                 ),
                                 boxShadow: [
                                   // Inner glow effect for completed state
                                   BoxShadow(
                                     color: ModernColors.modernSuccess
-                                        .withOpacity(0.15),
+                                        .withValues(alpha: 0.15),
                                     blurRadius: 8,
                                     offset: const Offset(0, 0),
                                     spreadRadius: -2,
@@ -1068,7 +1068,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                                   // Premium outer shadow
                                   BoxShadow(
                                     color: ModernColors.modernSuccess
-                                        .withOpacity(0.2),
+                                        .withValues(alpha: 0.2),
                                     blurRadius: 16,
                                     offset: const Offset(0, 4),
                                     spreadRadius: 0,
@@ -1080,7 +1080,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.check_circle_rounded,
                                       color: ModernColors.modernSuccess,
                                       size: 20,
@@ -1101,7 +1101,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                           : Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
-                                color: ModernColors.inactive.withOpacity(0.1),
+                                color: ModernColors.inactive.withValues(alpha: 0.1),
                                 border: Border.all(
                                   color: ModernColors.inactive,
                                   width: 2,
@@ -1112,7 +1112,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.lock_rounded,
                                       color: ModernColors.inactive,
                                       size: 18,
@@ -1262,10 +1262,12 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
       if (!a.isInProgress && b.isInProgress) return 1;
 
       // 4. 완료된 퀘스트는 맨 아래로
-      if (a.status == QuestStatus.claimed && b.status != QuestStatus.claimed)
+      if (a.status == QuestStatus.claimed && b.status != QuestStatus.claimed) {
         return 1;
-      if (a.status != QuestStatus.claimed && b.status == QuestStatus.claimed)
+      }
+      if (a.status != QuestStatus.claimed && b.status == QuestStatus.claimed) {
         return -1;
+      }
 
       // 5. 퀘스트 ID 기준 정렬 (템플릿 순서 유지)
       return a.id.compareTo(b.id);
@@ -1292,7 +1294,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                 Container(
                   width: 80,
                   height: 80,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: ModernColors.primaryGradient,
                     shape: BoxShape.circle,
                   ),
@@ -1349,7 +1351,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
           boxShadow:
               ModernColors.softShadow(primaryColor: ModernColors.modernError),
           border: Border.all(
-            color: ModernColors.modernError.withOpacity(0.2),
+            color: ModernColors.modernError.withValues(alpha: 0.2),
             width: 2,
           ),
         ),
@@ -1359,10 +1361,10 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: ModernColors.modernError.withOpacity(0.1),
+                color: ModernColors.modernError.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.error_outline_rounded,
                 size: 48,
                 color: ModernColors.modernError,
@@ -1452,7 +1454,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
           borderRadius: BorderRadius.circular(24),
           boxShadow: ModernColors.softShadow(primaryColor: categoryColor),
           border: Border.all(
-            color: categoryColor.withOpacity(0.2),
+            color: categoryColor.withValues(alpha: 0.2),
             width: 2,
           ),
         ),

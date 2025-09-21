@@ -24,8 +24,8 @@ class MountainPathWidget extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xFF87CEEB).withOpacity(0.3), // 하늘색
-            const Color(0xFF90EE90).withOpacity(0.2), // 연한 초록
+            const Color(0xFF87CEEB).withValues(alpha: 0.3), // 하늘색
+            const Color(0xFF90EE90).withValues(alpha: 0.2), // 연한 초록
           ],
         ),
         borderRadius: BorderRadius.circular(20),
@@ -39,7 +39,7 @@ class MountainPathWidget extends StatelessWidget {
             child: Icon(
               Icons.cloud,
               size: 40,
-              color: Colors.white.withOpacity(0.6),
+              color: Colors.white.withValues(alpha: 0.6),
             )
                 .animate(onPlay: (controller) => controller.repeat())
                 .moveX(
@@ -118,7 +118,7 @@ class MountainPathWidget extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.3),
+              color: AppColors.primary.withValues(alpha: 0.3),
               blurRadius: 12,
               spreadRadius: 2,
             ),
@@ -175,10 +175,10 @@ class MountainPathWidget extends StatelessWidget {
               height: 50,
               decoration: BoxDecoration(
                 color: isCompleted
-                    ? Colors.green.withOpacity(0.2)
+                    ? Colors.green.withValues(alpha: 0.2)
                     : (isActive
-                        ? _getCategoryColor(goal.category).withOpacity(0.2)
-                        : Colors.grey.withOpacity(0.2)),
+                        ? _getCategoryColor(goal.category).withValues(alpha: 0.2)
+                        : Colors.grey.withValues(alpha: 0.2)),
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -204,7 +204,7 @@ class MountainPathWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -346,7 +346,7 @@ class MountainPathPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // 배경 산 실루엣 그리기
     final backgroundPaint = Paint()
-      ..color = AppColors.primary.withOpacity(0.03)
+      ..color = AppColors.primary.withValues(alpha: 0.03)
       ..style = PaintingStyle.fill;
 
     final backgroundPath = Path();
@@ -365,13 +365,13 @@ class MountainPathPainter extends CustomPainter {
     if (goals.isEmpty) return;
 
     final pathPaint = Paint()
-      ..color = AppColors.primary.withOpacity(0.5)
+      ..color = AppColors.primary.withValues(alpha: 0.5)
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
     final dottedPaint = Paint()
-      ..color = AppColors.primary.withOpacity(0.2)
+      ..color = AppColors.primary.withValues(alpha: 0.2)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -438,7 +438,7 @@ class MountainPathPainter extends CustomPainter {
       ..color = AppColors.primary
       ..style = PaintingStyle.fill;
 
-    canvas.drawCircle(Offset(30, size.height - 40), 8, baseCampPaint);
+    canvas.drawCircle(const Offset(0, 8), 8, baseCampPaint);
 
     // 베이스 캠프 텍스트
     final textPainter = TextPainter(
@@ -453,12 +453,12 @@ class MountainPathPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     textPainter.layout();
-    textPainter.paint(canvas, Offset(15, size.height - 25));
+    textPainter.paint(canvas, const Offset(0, 0));
   }
 
   void _drawDashedPath(Canvas canvas, Path path, Paint paint) {
-    final dashWidth = 5.0;
-    final dashSpace = 5.0;
+    const dashWidth = 5.0;
+    const dashSpace = 5.0;
     double distance = 0.0;
 
     for (final metric in path.computeMetrics()) {

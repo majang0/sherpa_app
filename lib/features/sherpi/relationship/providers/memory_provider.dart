@@ -75,8 +75,9 @@ class MemoryState {
       // 중요도 필터
       if (currentFilter.importanceLevels != null &&
           currentFilter.importanceLevels!.isNotEmpty) {
-        if (!currentFilter.importanceLevels!.contains(memory.importance))
+        if (!currentFilter.importanceLevels!.contains(memory.importance)) {
           return false;
+        }
       }
 
       // 날짜 범위 필터

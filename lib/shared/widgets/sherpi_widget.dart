@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math' as math;
-import 'dart:ui' as ui;
 import '../providers/global_sherpi_provider.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/theme/modern_colors.dart';
@@ -17,14 +15,14 @@ class SherpiWidget extends ConsumerStatefulWidget {
   final bool enableInteraction;
 
   const SherpiWidget({
-    Key? key,
+    super.key,
     this.width = 120,
     this.height = 120,
     this.margin,
     this.showDialogue = true,
     this.animationDuration = const Duration(milliseconds: 400),
     this.enableInteraction = true,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<SherpiWidget> createState() => _SherpiWidgetState();
@@ -526,10 +524,10 @@ class GlobalSherpiOverlay extends ConsumerWidget {
   final EdgeInsets margin;
 
   const GlobalSherpiOverlay({
-    Key? key,
+    super.key,
     this.alignment = Alignment.bottomRight,
     this.margin = const EdgeInsets.all(20),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -551,12 +549,12 @@ class GlobalSherpiOverlay extends ConsumerWidget {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
                         Colors.white,
-                        const Color(0xFFF8FAFC),
+                        Color(0xFFF8FAFC),
                       ],
                     ),
                     shape: BoxShape.circle,
@@ -595,7 +593,7 @@ class GlobalSherpiOverlay extends ConsumerWidget {
                         ),
                         // ✅ 셰르피 이미지 (중앙 정렬)
                         Center(
-                          child: Container(
+                          child: SizedBox(
                             width: 100, // ✅ 이미지 크기는 그대로
                             height: 100, // ✅ 이미지 크기는 그대로
                             child: ClipOval(

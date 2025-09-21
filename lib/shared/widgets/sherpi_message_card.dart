@@ -237,17 +237,17 @@ class _SherpiMessageCardState extends ConsumerState<SherpiMessageCard>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: _getThemeColor(theme).withOpacity(0.4), // 더 진한 그림자
+            color: _getThemeColor(theme).withValues(alpha: 0.4), // 더 진한 그림자
             blurRadius: 16, // 더 큰 블러 (12→16)
             offset: const Offset(0, 6), // 더 깊은 그림자 (4→6)
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.15), // 더 진한 검은색 그림자
+            color: Colors.black.withValues(alpha: 0.15), // 더 진한 검은색 그림자
             blurRadius: 12, // 더 큰 블러 (8→12)
             offset: const Offset(0, 4), // 더 깊은 그림자 (2→4)
           ),
           BoxShadow(
-            color: _getThemeColor(theme).withOpacity(0.2),
+            color: _getThemeColor(theme).withValues(alpha: 0.2),
             blurRadius: 24, // 추가 외곽 그림자로 입체감 증가
             offset: const Offset(0, 8),
           ),

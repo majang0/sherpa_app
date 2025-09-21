@@ -48,7 +48,7 @@ enum ChallengeScope {
 extension StringExtensions on String {
   /// 색상 가져오기
   Color get color {
-    switch (this.toLowerCase()) {
+    switch (toLowerCase()) {
       case 'fitness':
       case '건강':
         return const Color(0xFF10B981);
@@ -71,7 +71,7 @@ extension StringExtensions on String {
 
   /// 이모지 가져오기
   String get emoji {
-    switch (this.toLowerCase()) {
+    switch (toLowerCase()) {
       case 'fitness':
       case '건강':
         return '💪';
@@ -94,7 +94,7 @@ extension StringExtensions on String {
 
   /// 표시 이름 가져오기
   String get displayName {
-    switch (this.toLowerCase()) {
+    switch (toLowerCase()) {
       case 'fitness':
         return '건강';
       case 'study':
@@ -216,7 +216,7 @@ class AvailableChallenge {
   String get universityName => '셰르파 대학'; // 임시값
 
   /// 포맷된 기간
-  String get formattedDuration => '${durationDays}일';
+  String get formattedDuration => '$durationDays일';
 
   /// 포맷된 날짜 범위
   String get formattedDateRange {
@@ -256,7 +256,7 @@ class AvailableChallenge {
   }
 
   /// 기간 텍스트
-  String get durationText => '${durationDays}일간';
+  String get durationText => '$durationDays일간';
 
   AvailableChallenge copyWith({
     String? id,
@@ -330,7 +330,7 @@ class AvailableChallenge {
       startDate:
           DateTime.parse(json['startDate'] ?? DateTime.now().toIso8601String()),
       endDate: DateTime.parse(json['endDate'] ??
-          DateTime.now().add(Duration(days: 7)).toIso8601String()),
+          DateTime.now().add(const Duration(days: 7)).toIso8601String()),
       isJoined: json['isJoined'] ?? false,
       requirements: List<String>.from(json['requirements'] ?? []),
       rewards: Map<String, dynamic>.from(json['rewards'] ?? {}),

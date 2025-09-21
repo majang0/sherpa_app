@@ -33,7 +33,7 @@ class SherpaQuickFilter2025 extends StatefulWidget {
   final ScrollPhysics? scrollPhysics;
 
   const SherpaQuickFilter2025({
-    Key? key,
+    super.key,
     required this.items,
     this.activeFilters = const {},
     this.onFiltersChanged,
@@ -53,7 +53,7 @@ class SherpaQuickFilter2025 extends StatefulWidget {
     this.customColor,
     this.showItemCount = false,
     this.scrollPhysics,
-  }) : super(key: key);
+  });
 
   // ==================== 팩토리 생성자들 ====================
 
@@ -127,49 +127,49 @@ class SherpaQuickFilter2025 extends StatefulWidget {
   /// 한국형 기본 필터 아이템들
   static List<SherpaQuickFilterItem2025> _getKoreanQuickFilters() {
     return [
-      SherpaQuickFilterItem2025(
+      const SherpaQuickFilterItem2025(
         key: 'weekend',
         label: '이번 주말',
         icon: Icons.weekend_rounded,
         color: Colors.orange,
         description: '이번 주 토요일, 일요일 모임',
       ),
-      SherpaQuickFilterItem2025(
+      const SherpaQuickFilterItem2025(
         key: 'free',
         label: '무료',
         icon: Icons.money_off_rounded,
         color: ModernColors.success,
         description: '참가비가 없는 모임',
       ),
-      SherpaQuickFilterItem2025(
+      const SherpaQuickFilterItem2025(
         key: 'beginner',
         label: '초보환영',
         icon: Icons.waving_hand_rounded,
         color: Colors.blue,
         description: '처음 참여해도 부담없는 모임',
       ),
-      SherpaQuickFilterItem2025(
+      const SherpaQuickFilterItem2025(
         key: 'online',
         label: '온라인',
         icon: Icons.videocam_rounded,
         color: Colors.purple,
         description: '온라인으로 진행되는 모임',
       ),
-      SherpaQuickFilterItem2025(
+      const SherpaQuickFilterItem2025(
         key: 'small',
         label: '소수정예',
         icon: Icons.group_rounded,
         color: Colors.pink,
         description: '5명 이하의 작은 모임',
       ),
-      SherpaQuickFilterItem2025(
+      const SherpaQuickFilterItem2025(
         key: 'casual',
         label: '부담없는',
         icon: Icons.sentiment_satisfied_rounded,
         color: Colors.cyan,
         description: '편안한 분위기의 모임',
       ),
-      SherpaQuickFilterItem2025(
+      const SherpaQuickFilterItem2025(
         key: 'nearby',
         label: '내 주변',
         icon: Icons.near_me_rounded,
@@ -273,7 +273,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
 
     Widget quickFilter = Container(
       padding: widget.padding ??
-          EdgeInsets.symmetric(
+          const EdgeInsets.symmetric(
             horizontal: AppSizes.paddingL,
             vertical: AppSizes.paddingM,
           ),
@@ -333,7 +333,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
               vertical: config.spacing * 0.5,
             ),
             decoration: BoxDecoration(
-              color: ModernColors.primary.withOpacity(0.15),
+              color: ModernColors.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(AppSizes.radiusS),
             ),
             child: Text(
@@ -355,7 +355,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
             child: Container(
               padding: EdgeInsets.all(config.spacing * 0.5),
               decoration: BoxDecoration(
-                color: ModernColors.error.withOpacity(0.15),
+                color: ModernColors.error.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -528,8 +528,8 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
                 ),
                 decoration: BoxDecoration(
                   color: isActive
-                      ? ModernColors.textOnPrimary.withOpacity(0.2)
-                      : itemColor.withOpacity(0.15),
+                      ? ModernColors.textOnPrimary.withValues(alpha: 0.2)
+                      : itemColor.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(AppSizes.radiusS),
                 ),
                 child: Text(
@@ -555,7 +555,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
   QuickFilterConfiguration _getFilterConfiguration() {
     switch (widget.layout) {
       case SherpaQuickFilterLayout.horizontal:
-        return QuickFilterConfiguration(
+        return const QuickFilterConfiguration(
           itemHeight: 36,
           itemPadding: 12,
           spacing: 8,
@@ -567,7 +567,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
           countTextSize: 10,
         );
       case SherpaQuickFilterLayout.wrap:
-        return QuickFilterConfiguration(
+        return const QuickFilterConfiguration(
           itemHeight: 40,
           itemPadding: 14,
           spacing: 10,
@@ -579,7 +579,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
           countTextSize: 11,
         );
       case SherpaQuickFilterLayout.grid:
-        return QuickFilterConfiguration(
+        return const QuickFilterConfiguration(
           itemHeight: 32,
           itemPadding: 10,
           spacing: 8,
@@ -591,7 +591,7 @@ class _SherpaQuickFilter2025State extends State<SherpaQuickFilter2025>
           countTextSize: 9,
         );
       case SherpaQuickFilterLayout.vertical:
-        return QuickFilterConfiguration(
+        return const QuickFilterConfiguration(
           itemHeight: 44,
           itemPadding: 16,
           spacing: 12,

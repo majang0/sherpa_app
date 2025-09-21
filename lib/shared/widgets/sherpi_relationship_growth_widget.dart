@@ -58,15 +58,15 @@ class _SherpiRelationshipGrowthWidgetState
             end: Alignment.bottomRight,
             colors: [
               _getRelationshipColor(relationship.intimacyLevel)
-                  .withOpacity(0.1),
+                  .withValues(alpha: 0.1),
               _getRelationshipColor(relationship.intimacyLevel)
-                  .withOpacity(0.05),
+                  .withValues(alpha: 0.05),
             ],
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: _getRelationshipColor(relationship.intimacyLevel)
-                .withOpacity(0.3),
+                .withValues(alpha: 0.3),
             width: 2,
           ),
         ),
@@ -122,7 +122,7 @@ class _SherpiRelationshipGrowthWidgetState
                     boxShadow: [
                       BoxShadow(
                         color: _getRelationshipColor(relationship.intimacyLevel)
-                            .withOpacity(0.4),
+                            .withValues(alpha: 0.4),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -192,7 +192,7 @@ class _SherpiRelationshipGrowthWidgetState
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.08),
+            color: Colors.grey.withValues(alpha: 0.08),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -210,10 +210,10 @@ class _SherpiRelationshipGrowthWidgetState
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: levelColor.withOpacity(0.1),
+                  color: levelColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: levelColor.withOpacity(0.3),
+                    color: levelColor.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
@@ -235,13 +235,13 @@ class _SherpiRelationshipGrowthWidgetState
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        levelColor.withOpacity(0.15),
-                        levelColor.withOpacity(0.08),
+                        levelColor.withValues(alpha: 0.15),
+                        levelColor.withValues(alpha: 0.08),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: levelColor.withOpacity(0.4),
+                      color: levelColor.withValues(alpha: 0.4),
                       width: 1.5,
                     ),
                   ),
@@ -272,26 +272,26 @@ class _SherpiRelationshipGrowthWidgetState
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.amber.withOpacity(0.15),
-                        Colors.orange.withOpacity(0.08),
+                        Colors.amber.withValues(alpha: 0.15),
+                        Colors.orange.withValues(alpha: 0.08),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: Colors.amber.withOpacity(0.4),
+                      color: Colors.amber.withValues(alpha: 0.4),
                       width: 1.5,
                     ),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.emoji_events,
                         size: 16,
                         color: Colors.amber,
                       ),
-                      const SizedBox(width: 6),
-                      const Text(
+                      SizedBox(width: 6),
+                      Text(
                         '최고 레벨!',
                         style: TextStyle(
                           fontSize: 16,
@@ -336,13 +336,13 @@ class _SherpiRelationshipGrowthWidgetState
                     gradient: LinearGradient(
                       colors: [
                         levelColor,
-                        levelColor.withOpacity(0.8),
+                        levelColor.withValues(alpha: 0.8),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(4),
                     boxShadow: [
                       BoxShadow(
-                        color: levelColor.withOpacity(0.3),
+                        color: levelColor.withValues(alpha: 0.3),
                         blurRadius: 4,
                         offset: const Offset(0, 1),
                       ),
@@ -441,7 +441,7 @@ class _SherpiRelationshipGrowthWidgetState
                       .animate(onPlay: (controller) => controller.repeat())
                       .shimmer(
                           duration: 2000.ms,
-                          color: Colors.white.withOpacity(0.3)),
+                          color: Colors.white.withValues(alpha: 0.3)),
                 ],
               ),
             ],
@@ -495,7 +495,7 @@ class _SherpiRelationshipGrowthWidgetState
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -580,7 +580,7 @@ class _SherpiRelationshipGrowthWidgetState
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -601,8 +601,8 @@ class _SherpiRelationshipGrowthWidgetState
           Expanded(
             child: LineChart(
               LineChartData(
-                gridData: FlGridData(show: false),
-                titlesData: FlTitlesData(show: false),
+                gridData: const FlGridData(show: false),
+                titlesData: const FlTitlesData(show: false),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
                   LineChartBarData(
@@ -626,7 +626,7 @@ class _SherpiRelationshipGrowthWidgetState
                     belowBarData: BarAreaData(
                       show: true,
                       color: _getRelationshipColor(relationship.intimacyLevel)
-                          .withOpacity(0.1),
+                          .withValues(alpha: 0.1),
                     ),
                   ),
                 ],
@@ -681,7 +681,7 @@ class _EmotionalSyncGaugePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height);
+    final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
 
     // 배경 아크

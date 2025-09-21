@@ -504,7 +504,6 @@ $userName님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로 �
       case SherpiPersonalityType.serious:
         return '진지하고 체계적인 피드백을 제공하세요';
       case SherpiPersonalityType.balanced:
-      default:
         return '균형잡힌 톤으로 친근하게 대화하세요';
     }
   }
@@ -520,7 +519,6 @@ $userName님의 모임 참여에 대해 ${_getPersonalityTone(personality)}로 �
       case SherpiPersonalityType.serious:
         return '진지하고 전문적인 톤';
       case SherpiPersonalityType.balanced:
-      default:
         return '친근하고 균형잡힌 톤';
     }
   }

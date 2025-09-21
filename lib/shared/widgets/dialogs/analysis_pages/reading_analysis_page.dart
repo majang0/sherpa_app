@@ -478,10 +478,10 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
               blurRadius: 16,
               offset: const Offset(0, 6),
             ),
-            BoxShadow(
+            const BoxShadow(
               color: Colors.white,
               blurRadius: 8,
-              offset: const Offset(0, -2),
+              offset: Offset(0, 0)
             ),
           ],
         ),
@@ -1216,8 +1216,8 @@ class BookPatternPainter extends CustomPainter {
 
         // 책등 라인
         canvas.drawLine(
-          Offset(rect.left + 5, rect.top),
-          Offset(rect.left + 5, rect.bottom),
+          const Offset(0, 0),
+          const Offset(0, 0),
           paint,
         );
       }

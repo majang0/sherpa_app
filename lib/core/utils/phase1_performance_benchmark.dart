@@ -173,7 +173,7 @@ class Phase1PerformanceBenchmark {
         if (response.isFastResponse) fastResponses++;
         totalTests++;
         
-        await Future.delayed(const Duration(milliseconds: 50));
+        await Future.delayed(Duration(milliseconds: 50));
       }
     }
     

@@ -1,6 +1,7 @@
 /// 🎭 셰르피 감정 상태 시스템
 ///
 /// 10개의 감정 이미지를 활용한 상황별 감정 표현 시스템
+library;
 
 import 'dart:math' as math;
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';

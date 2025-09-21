@@ -29,7 +29,7 @@ class _EnhancedTodayAnalysisDialogState
     with TickerProviderStateMixin {
   final ActivityAnalysisService _analysisService =
       ActivityAnalysisService.instance;
-  bool _isLoading = false; // 종합 분석 대기 없이 바로 열림
+  final bool _isLoading = false; // 종합 분석 대기 없이 바로 열림
   bool _hasAllActivities = false;
   String _missingActivities = '';
 
@@ -340,7 +340,7 @@ class _EnhancedTodayAnalysisDialogState
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -375,8 +375,8 @@ class _EnhancedTodayAnalysisDialogState
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            ModernColors.primary.withOpacity(0.05),
-            ModernColors.primary.withOpacity(0.02),
+            ModernColors.primary.withValues(alpha: 0.05),
+            ModernColors.primary.withValues(alpha: 0.02),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -582,7 +582,7 @@ class _EnhancedTodayAnalysisDialogState
             decoration: BoxDecoration(
               color: isActive
                   ? ModernColors.primary
-                  : ModernColors.textTertiary.withOpacity(0.3),
+                  : ModernColors.textTertiary.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(4),
             ),
           );
@@ -604,7 +604,7 @@ class _EnhancedTodayAnalysisDialogState
               Container(
                 width: 80,
                 height: 80,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: ModernColors.primaryGradient,
                 ),
@@ -671,8 +671,8 @@ class _EnhancedTodayAnalysisDialogState
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
                   colors: [
-                    ModernColors.warning.withOpacity(0.2),
-                    ModernColors.warning.withOpacity(0.1),
+                    ModernColors.warning.withValues(alpha: 0.2),
+                    ModernColors.warning.withValues(alpha: 0.1),
                   ],
                 ),
               ),
@@ -723,17 +723,17 @@ class _EnhancedTodayAnalysisDialogState
                 vertical: 12,
               ),
               decoration: BoxDecoration(
-                color: ModernColors.warning.withOpacity(0.1),
+                color: ModernColors.warning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: ModernColors.warning.withOpacity(0.3),
+                  color: ModernColors.warning.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.assignment_late_rounded,
                     color: ModernColors.warning,
                     size: 20,

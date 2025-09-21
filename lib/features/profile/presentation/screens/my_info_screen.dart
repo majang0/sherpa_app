@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter/services.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:io';
 
 // ✅ 글로벌 데이터 시스템 Import
@@ -22,6 +18,8 @@ import '../../../../shared/widgets/sherpa_card.dart';
 import '../widgets/profile_avatar_widget.dart';
 
 class MyInfoScreen extends ConsumerWidget {
+  const MyInfoScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // ✅ 글로벌 데이터 시스템에서 사용자 데이터 가져오기
@@ -43,7 +41,7 @@ class MyInfoScreen extends ConsumerWidget {
         ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
         ),
       ),
       body: SingleChildScrollView(
@@ -229,7 +227,7 @@ class MyInfoScreen extends ConsumerWidget {
           color: AppColors.textSecondary,
         ),
       ),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.arrow_forward_ios,
         size: 16,
         color: AppColors.textLight,
@@ -320,9 +318,9 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: ModernColors.surface,
-          borderRadius: const BorderRadius.only(
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
@@ -450,7 +448,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
             // 헤더
             Container(
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
                     ModernColors.primary,
@@ -459,7 +457,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(24),
                   topRight: Radius.circular(24),
                 ),
@@ -521,8 +519,8 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                         child: Container(
                           width: 42,
                           height: 42,
-                          padding: EdgeInsets.all(3), // 흰색 테두리를 위한 패딩
-                          decoration: BoxDecoration(
+                          padding: const EdgeInsets.all(3), // 흰색 테두리를 위한 패딩
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white, // 테두리 색상
                           ),
@@ -614,7 +612,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                         ),
                         prefixIcon: Container(
                           margin: const EdgeInsets.only(left: 4),
-                          child: Icon(
+                          child: const Icon(
                             Icons.person_outline,
                             color: ModernColors.primary,
                             size: 22,
@@ -675,7 +673,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                             color: ModernColors.primary.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.info_outline,
                             size: 14,
                             color: ModernColors.primary,
@@ -709,7 +707,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
-                              side: BorderSide(
+                              side: const BorderSide(
                                 color: ModernColors.gray300,
                                 width: 1,
                               ),
@@ -739,7 +737,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
                             elevation: 0,
                           ),
                           child: _isLoading
-                              ? SizedBox(
+                              ? const SizedBox(
                                   width: 20,
                                   height: 20,
                                   child: CircularProgressIndicator(
@@ -870,7 +868,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
 
     if (newName.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('닉네임을 입력해주세요.'),
           backgroundColor: ModernColors.error,
         ),
@@ -955,10 +953,10 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Row(
+            content: const Row(
               children: [
                 Icon(Icons.check_circle, color: Colors.white, size: 20),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text('프로필이 성공적으로 업데이트되었습니다!'),
               ],
             ),
@@ -1066,7 +1064,7 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             size: 64,
             color: Colors.white54,
@@ -1187,7 +1185,7 @@ class _ImageViewerDialog extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             size: 64,
             color: Colors.white54,

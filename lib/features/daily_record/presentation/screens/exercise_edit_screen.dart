@@ -99,11 +99,11 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -120,11 +120,11 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
             Container(
               margin: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -159,7 +159,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                   end: Alignment.bottomCenter,
                   colors: [
                     ModernColors.exercise,
-                    ModernColors.exercise.withOpacity(0.7),
+                    ModernColors.exercise.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -203,7 +203,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -217,7 +217,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               color: ModernColors.exerciseLight,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: ModernColors.exercise.withOpacity(0.2),
+                color: ModernColors.exercise.withValues(alpha: 0.2),
                 width: 2,
               ),
             ),
@@ -286,7 +286,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
   }
 
   Widget _buildQuickSummaryCard() {
-    final exerciseColor = ModernColors.exercise;
+    const exerciseColor = ModernColors.exercise;
     final calories = (_calculateCalories()).round();
 
     return Container(
@@ -295,10 +295,10 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: exerciseColor.withOpacity(0.2)),
+        border: Border.all(color: exerciseColor.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -309,10 +309,10 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: exerciseColor.withOpacity(0.1),
+              color: exerciseColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.fitness_center,
               color: exerciseColor,
               size: 24,
@@ -347,7 +347,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: exerciseColor.withOpacity(0.1),
+                        color: exerciseColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -368,7 +368,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: ExerciseUtils.getDifficultyColor(_selectedDifficulty)
-                  .withOpacity(0.1),
+                  .withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
@@ -393,17 +393,17 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -417,10 +417,10 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.timer_outlined,
                   color: ModernColors.exercise,
                   size: 20,
@@ -447,7 +447,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   decoration: BoxDecoration(
-                    color: ModernColors.exercise.withOpacity(0.1),
+                    color: ModernColors.exercise.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
@@ -477,9 +477,9 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               activeTrackColor: ModernColors.exercise,
-              inactiveTrackColor: ModernColors.exercise.withOpacity(0.1),
+              inactiveTrackColor: ModernColors.exercise.withValues(alpha: 0.1),
               thumbColor: ModernColors.exercise,
-              overlayColor: ModernColors.exercise.withOpacity(0.2),
+              overlayColor: ModernColors.exercise.withValues(alpha: 0.2),
               trackHeight: 8.0,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 16.0),
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 28.0),
@@ -547,7 +547,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                 fontSize: 10,
                 fontWeight: FontWeight.w500,
                 color: isSelected
-                    ? Colors.white.withOpacity(0.9)
+                    ? Colors.white.withValues(alpha: 0.9)
                     : ModernColors.textSecondary,
               ),
             ),
@@ -565,17 +565,17 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -589,10 +589,10 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.fitness_center,
                   color: ModernColors.exercise,
                   size: 20,
@@ -699,17 +699,17 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -723,10 +723,10 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.book,
                   color: ModernColors.exercise,
                   size: 20,
@@ -745,7 +745,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -769,13 +769,13 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  ModernColors.exercise.withOpacity(0.05),
-                  ModernColors.exercise.withOpacity(0.02),
+                  ModernColors.exercise.withValues(alpha: 0.05),
+                  ModernColors.exercise.withValues(alpha: 0.02),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: ModernColors.exercise.withOpacity(0.1),
+                color: ModernColors.exercise.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -786,12 +786,12 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: ModernColors.exercise.withOpacity(0.1),
+                        color: ModernColors.exercise.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Text(
+                      child: const Text(
                         '💪',
-                        style: const TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -826,9 +826,9 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     activeTrackColor: ModernColors.exercise,
-                    inactiveTrackColor: ModernColors.exercise.withOpacity(0.2),
+                    inactiveTrackColor: ModernColors.exercise.withValues(alpha: 0.2),
                     thumbColor: ModernColors.exercise,
-                    overlayColor: ModernColors.exercise.withOpacity(0.2),
+                    overlayColor: ModernColors.exercise.withValues(alpha: 0.2),
                     trackHeight: 6.0,
                     thumbShape:
                         const RoundSliderThumbShape(enabledThumbRadius: 12.0),
@@ -892,7 +892,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: ModernColors.exercise,
                   width: 2,
                 ),
@@ -918,7 +918,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -932,10 +932,10 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.edit_note,
                   color: ModernColors.exercise,
                   size: 20,
@@ -954,7 +954,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -994,7 +994,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: ModernColors.exercise,
                   width: 2,
                 ),
@@ -1015,17 +1015,17 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -1039,10 +1039,10 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.camera_alt,
                   color: ModernColors.exercise,
                   size: 20,
@@ -1061,7 +1061,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -1086,7 +1086,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                   color: Colors.grey.shade50,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: ModernColors.exercise.withOpacity(0.2),
+                    color: ModernColors.exercise.withValues(alpha: 0.2),
                     width: 2,
                     style: BorderStyle.solid,
                   ),
@@ -1097,7 +1097,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                     Icon(
                       Icons.add_a_photo_outlined,
                       size: 40,
-                      color: ModernColors.exercise.withOpacity(0.6),
+                      color: ModernColors.exercise.withValues(alpha: 0.6),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -1105,7 +1105,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: ModernColors.exercise.withOpacity(0.8),
+                        color: ModernColors.exercise.withValues(alpha: 0.8),
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -1145,7 +1145,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
+                        color: Colors.black.withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Icon(
@@ -1172,17 +1172,17 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -1193,10 +1193,10 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: ModernColors.meeting.withOpacity(0.1),
+              color: ModernColors.meeting.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.group_outlined,
               color: ModernColors.meeting,
               size: 20,
@@ -1466,12 +1466,12 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
       final hours = minutes ~/ 60;
       final remainingMinutes = minutes % 60;
       if (remainingMinutes == 0) {
-        return '${hours}시간';
+        return '$hours시간';
       } else {
-        return '${hours}시간 ${remainingMinutes}분';
+        return '$hours시간 $remainingMinutes분';
       }
     } else {
-      return '${minutes}분';
+      return '$minutes분';
     }
   }
 
@@ -1509,7 +1509,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
       shape: RoundedRectangleBorder(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         side: BorderSide(
-          color: ModernColors.exercise.withOpacity(0.1),
+          color: ModernColors.exercise.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -1520,7 +1520,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.camera_alt,
                   color: ModernColors.exercise,
                 ),
@@ -1552,7 +1552,7 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                 height: 1,
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.photo_library,
                   color: ModernColors.exercise,
                 ),

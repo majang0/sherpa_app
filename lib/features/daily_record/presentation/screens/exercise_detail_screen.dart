@@ -159,13 +159,13 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           end: Alignment.bottomRight,
           colors: [
             exerciseColor,
-            exerciseColor.withOpacity(0.8),
+            exerciseColor.withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: exerciseColor.withOpacity(0.3),
+            color: exerciseColor.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -178,10 +178,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     width: 2,
                   ),
                 ),
@@ -209,7 +209,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                       ),
                     ),
                   ],
@@ -221,10 +221,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -233,7 +233,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               children: [
                 Icon(
                   Icons.info_outline,
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                   size: 18,
                 ),
                 const SizedBox(width: 8),
@@ -242,7 +242,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
               ],
@@ -261,17 +261,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: RecordColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: RecordColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -285,10 +285,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: RecordColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.analytics_outlined,
                   color: RecordColors.primary,
                   size: 20,
@@ -346,7 +346,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.calculate_outlined,
                   color: RecordColors.primary,
                   size: 18,
@@ -375,7 +375,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
@@ -416,17 +416,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: RecordColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: RecordColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -440,7 +440,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: exerciseColor.withOpacity(0.1),
+                  color: exerciseColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -470,8 +470,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  exerciseColor.withOpacity(0.1),
-                  exerciseColor.withOpacity(0.05),
+                  exerciseColor.withValues(alpha: 0.1),
+                  exerciseColor.withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
@@ -483,7 +483,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: exerciseColor.withOpacity(0.2),
+                        color: exerciseColor.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -525,14 +525,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.local_fire_department,
-                              color: const Color(0xFFEF4444),
+                              color: Color(0xFFEF4444),
                               size: 24,
                             ),
                             const SizedBox(height: 8),
@@ -561,7 +561,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -601,12 +601,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.schedule,
                         color: RecordColors.primary,
                         size: 20,
@@ -667,7 +667,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
   Widget _buildAchievementCard() {
     // Note: Since ExerciseLog doesn't have achievement score yet, we'll show a placeholder
     // In production, this would come from the actual exercise data
-    final achievementScore = 7.0; // Default score for display
+    const achievementScore = 7.0; // Default score for display
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -676,17 +676,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: RecordColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: RecordColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -700,10 +700,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: RecordColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.emoji_events_outlined,
                   color: RecordColors.primary,
                   size: 20,
@@ -730,13 +730,13 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  RecordColors.primary.withOpacity(0.05),
-                  RecordColors.primary.withOpacity(0.02),
+                  RecordColors.primary.withValues(alpha: 0.05),
+                  RecordColors.primary.withValues(alpha: 0.02),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: RecordColors.primary.withOpacity(0.1),
+                color: RecordColors.primary.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -748,12 +748,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: RecordColors.primary.withOpacity(0.1),
+                        color: RecordColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(
+                      child: const Text(
                         '💪',
-                        style: const TextStyle(fontSize: 28),
+                        style: TextStyle(fontSize: 28),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -785,7 +785,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 Container(
                   height: 8,
                   decoration: BoxDecoration(
-                    color: RecordColors.primary.withOpacity(0.1),
+                    color: RecordColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: FractionallySizedBox(
@@ -815,17 +815,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: RecordColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: RecordColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -839,10 +839,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: RecordColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.photo_camera,
                   color: RecordColors.primary,
                   size: 20,
@@ -924,7 +924,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     decoration: BoxDecoration(
                       color: Colors.grey.shade50,
                       border: Border.all(
-                        color: RecordColors.primary.withOpacity(0.2),
+                        color: RecordColors.primary.withValues(alpha: 0.2),
                         width: 2,
                         style: BorderStyle.solid,
                       ),
@@ -936,7 +936,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                         Icon(
                           Icons.add_a_photo_outlined,
                           size: 48,
-                          color: RecordColors.primary.withOpacity(0.6),
+                          color: RecordColors.primary.withValues(alpha: 0.6),
                         ),
                         const SizedBox(height: 12),
                         Text(
@@ -973,17 +973,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: RecordColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: RecordColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -995,7 +995,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: _currentExercise.isShared
-                  ? RecordColors.primary.withOpacity(0.1)
+                  ? RecordColors.primary.withValues(alpha: 0.1)
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1038,7 +1038,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: _currentExercise.isShared
-                  ? RecordColors.primary.withOpacity(0.1)
+                  ? RecordColors.primary.withValues(alpha: 0.1)
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1066,17 +1066,17 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withOpacity(0.08),
+          color: RecordColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withOpacity(0.1),
+            color: RecordColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -1090,10 +1090,10 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withOpacity(0.1),
+                  color: RecordColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.book,
                   color: RecordColors.primary,
                   size: 20,
@@ -1187,7 +1187,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           ),
           title: Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.warning_amber_rounded,
                 color: RecordColors.warning,
                 size: 24,

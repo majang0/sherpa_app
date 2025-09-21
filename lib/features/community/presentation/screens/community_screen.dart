@@ -8,6 +8,8 @@ import '../../../../shared/providers/global_point_provider.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 
 class CommunityScreen extends ConsumerWidget {
+  const CommunityScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final totalPoints = ref.watch(globalTotalPointsProvider);
@@ -15,7 +17,7 @@ class CommunityScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: SherpaCleanAppBar(),
+      appBar: const SherpaCleanAppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         child: Column(
@@ -68,9 +70,9 @@ class CommunityScreen extends ConsumerWidget {
                   color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(
+                child: const Text(
                   '🚀',
-                  style: const TextStyle(fontSize: 36),
+                  style: TextStyle(fontSize: 36),
                 ),
               ),
               const SizedBox(width: 20),
@@ -136,7 +138,7 @@ class CommunityScreen extends ConsumerWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.person,
                       size: 18,
                       color: Colors.white,
@@ -164,7 +166,7 @@ class CommunityScreen extends ConsumerWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.stars,
                       size: 18,
                       color: Colors.white,
@@ -381,7 +383,7 @@ class CommunityScreen extends ConsumerWidget {
                       color: AppColors.primary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.timeline,
                       color: AppColors.primary,
                       size: 24,
@@ -481,7 +483,7 @@ class CommunityScreen extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.notifications_active,
                       color: AppColors.success,
                       size: 18,
@@ -521,7 +523,7 @@ class CommunityScreen extends ConsumerWidget {
               borderRadius: BorderRadius.circular(14),
             ),
             child: isCompleted
-                ? Icon(
+                ? const Icon(
                     Icons.check,
                     color: Colors.white,
                     size: 18,

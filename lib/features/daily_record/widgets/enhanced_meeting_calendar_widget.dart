@@ -13,6 +13,8 @@ import '../presentation/screens/meeting_log_detail_screen.dart';
 import '../presentation/screens/meeting_edit_screen.dart';
 
 class EnhancedMeetingCalendarWidget extends ConsumerStatefulWidget {
+  const EnhancedMeetingCalendarWidget({super.key});
+
   @override
   ConsumerState<EnhancedMeetingCalendarWidget> createState() =>
       _EnhancedMeetingCalendarWidgetState();
@@ -88,12 +90,12 @@ class _EnhancedMeetingCalendarWidgetState
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: ModernColors.textTertiary.withOpacity(0.1),
+              color: ModernColors.textTertiary.withValues(alpha: 0.1),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF8B5CF6).withOpacity(0.08),
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.08),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -108,12 +110,12 @@ class _EnhancedMeetingCalendarWidgetState
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                      color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.people,
-                      color: const Color(0xFF8B5CF6),
+                      color: Color(0xFF8B5CF6),
                       size: 24,
                     ),
                   ),
@@ -150,22 +152,22 @@ class _EnhancedMeetingCalendarWidgetState
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
-                            const Color(0xFF8B5CF6),
-                            const Color(0xFF7C3AED)
+                            Color(0xFF8B5CF6),
+                            Color(0xFF7C3AED)
                           ],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF8B5CF6).withOpacity(0.3),
+                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.add,
                         color: Colors.white,
                         size: 20,
@@ -248,13 +250,13 @@ class _EnhancedMeetingCalendarWidgetState
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF8B5CF6).withOpacity(0.1),
-            const Color(0xFF7C3AED).withOpacity(0.05),
+            const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+            const Color(0xFF7C3AED).withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF8B5CF6).withOpacity(0.2),
+          color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -270,7 +272,7 @@ class _EnhancedMeetingCalendarWidgetState
           Container(
             width: 1,
             height: 40,
-            color: ModernColors.textTertiary.withOpacity(0.3),
+            color: ModernColors.textTertiary.withValues(alpha: 0.3),
           ),
           Expanded(
             child: _buildStatItem(
@@ -351,13 +353,13 @@ class _EnhancedMeetingCalendarWidgetState
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF8B5CF6).withOpacity(0.1),
-            const Color(0xFF7C3AED).withOpacity(0.05),
+            const Color(0xFF8B5CF6).withValues(alpha: 0.1),
+            const Color(0xFF7C3AED).withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF8B5CF6).withOpacity(0.2),
+          color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -385,13 +387,13 @@ class _EnhancedMeetingCalendarWidgetState
               Container(
                 width: 1,
                 height: 40,
-                color: ModernColors.textTertiary.withOpacity(0.3),
+                color: ModernColors.textTertiary.withValues(alpha: 0.3),
               ),
               Expanded(
                 child: _buildStatItem(
                   '⭐',
                   avgSatisfaction > 0
-                      ? '${avgSatisfaction.toStringAsFixed(1)}'
+                      ? avgSatisfaction.toStringAsFixed(1)
                       : '-',
                   '평균 만족도',
                 ),
@@ -399,7 +401,7 @@ class _EnhancedMeetingCalendarWidgetState
               Container(
                 width: 1,
                 height: 40,
-                color: ModernColors.textTertiary.withOpacity(0.3),
+                color: ModernColors.textTertiary.withValues(alpha: 0.3),
               ),
               Expanded(
                 child: _buildStatItem(
@@ -457,7 +459,7 @@ class _EnhancedMeetingCalendarWidgetState
         color: ModernColors.background,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: ModernColors.textTertiary.withOpacity(0.1),
+          color: ModernColors.textTertiary.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -479,7 +481,7 @@ class _EnhancedMeetingCalendarWidgetState
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: topCategory.value['color'].withOpacity(0.1),
+                  color: topCategory.value['color'].withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
@@ -533,7 +535,7 @@ class _EnhancedMeetingCalendarWidgetState
         color: ModernColors.background,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: ModernColors.textTertiary.withOpacity(0.1),
+          color: ModernColors.textTertiary.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -556,7 +558,7 @@ class _EnhancedMeetingCalendarWidgetState
                 builder: (context) {
                   final weekStart =
                       now.subtract(Duration(days: now.weekday - 1));
-                  final weekEnd = weekStart.add(Duration(days: 6));
+                  final weekEnd = weekStart.add(const Duration(days: 6));
                   final weekMeetings = meetingLogs.where((log) {
                     // 이번 주 월요일 0시부터 일요일 23시59분까지만 포함
                     final logDate =
@@ -573,15 +575,15 @@ class _EnhancedMeetingCalendarWidgetState
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: ModernColors.textTertiary.withOpacity(0.1),
+                      color: ModernColors.textTertiary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: ModernColors.textTertiary.withOpacity(0.3),
+                        color: ModernColors.textTertiary.withValues(alpha: 0.3),
                         width: 1,
                       ),
                     ),
                     child: Text(
-                      '${weekMeetings}개',
+                      '$weekMeetings개',
                       style: GoogleFonts.notoSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
@@ -624,12 +626,12 @@ class _EnhancedMeetingCalendarWidgetState
         height: 60,
         decoration: BoxDecoration(
           color:
-              isToday ? const Color(0xFF8B5CF6).withOpacity(0.1) : Colors.white,
+              isToday ? const Color(0xFF8B5CF6).withValues(alpha: 0.1) : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isToday
                 ? const Color(0xFF8B5CF6)
-                : ModernColors.textTertiary.withOpacity(0.2),
+                : ModernColors.textTertiary.withValues(alpha: 0.2),
             width: isToday ? 2 : 1,
           ),
         ),
@@ -680,7 +682,7 @@ class _EnhancedMeetingCalendarWidgetState
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: ModernColors.textTertiary.withOpacity(0.3),
+                  color: ModernColors.textTertiary.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -708,7 +710,7 @@ class _EnhancedMeetingCalendarWidgetState
           color: ModernColors.background,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: ModernColors.textTertiary.withOpacity(0.1),
+            color: ModernColors.textTertiary.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
@@ -720,11 +722,11 @@ class _EnhancedMeetingCalendarWidgetState
               height: 32,
               decoration: BoxDecoration(
                 color: MeetingCategories.getColor(meeting.category)
-                    .withOpacity(0.1),
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: MeetingCategories.getColor(meeting.category)
-                      .withOpacity(0.3),
+                      .withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -785,10 +787,10 @@ class _EnhancedMeetingCalendarWidgetState
                       const Spacer(),
                       ...List.generate(
                         meeting.satisfaction.round(),
-                        (index) => Icon(
+                        (index) => const Icon(
                           Icons.star,
                           size: 10,
-                          color: const Color(0xFFFBBF24),
+                          color: Color(0xFFFBBF24),
                         ),
                       ),
                     ],
@@ -811,13 +813,13 @@ class _EnhancedMeetingCalendarWidgetState
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF8B5CF6).withOpacity(0.05),
-            const Color(0xFF7C3AED).withOpacity(0.03),
+            const Color(0xFF8B5CF6).withValues(alpha: 0.05),
+            const Color(0xFF7C3AED).withValues(alpha: 0.03),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFF8B5CF6).withOpacity(0.1),
+          color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -826,13 +828,13 @@ class _EnhancedMeetingCalendarWidgetState
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: const Color(0xFF8B5CF6).withOpacity(0.1),
+              color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(
+            child: const Icon(
               Icons.groups_outlined,
               size: 48,
-              color: const Color(0xFF8B5CF6),
+              color: Color(0xFF8B5CF6),
             ),
           ),
           const SizedBox(height: 20),
@@ -861,7 +863,7 @@ class _EnhancedMeetingCalendarWidgetState
               HapticFeedbackManager.mediumImpact();
               Navigator.pushNamed(context, '/', arguments: 3);
             },
-            icon: Icon(Icons.explore, size: 18),
+            icon: const Icon(Icons.explore, size: 18),
             label: Text(
               '모임 둘러보기',
               style: GoogleFonts.notoSans(
@@ -901,7 +903,7 @@ class _EnhancedMeetingCalendarWidgetState
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom + 24,
         ),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -925,13 +927,13 @@ class _EnhancedMeetingCalendarWidgetState
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.groups,
                 size: 48,
-                color: const Color(0xFF8B5CF6),
+                color: Color(0xFF8B5CF6),
               ),
             ),
 
@@ -978,8 +980,8 @@ class _EnhancedMeetingCalendarWidgetState
                       },
                       style: OutlinedButton.styleFrom(
                         foregroundColor: const Color(0xFF8B5CF6),
-                        side: BorderSide(
-                          color: const Color(0xFF8B5CF6),
+                        side: const BorderSide(
+                          color: Color(0xFF8B5CF6),
                           width: 1.5,
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -1017,7 +1019,7 @@ class _EnhancedMeetingCalendarWidgetState
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.arrow_forward, size: 16),
+                          const Icon(Icons.arrow_forward, size: 16),
                           const SizedBox(width: 6),
                           Text(
                             '모임 탭으로',
@@ -1044,16 +1046,16 @@ class _EnhancedMeetingCalendarWidgetState
                 color: ModernColors.background,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: ModernColors.textTertiary.withOpacity(0.1),
+                  color: ModernColors.textTertiary.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.lightbulb_outline,
                     size: 20,
-                    color: const Color(0xFF8B5CF6),
+                    color: Color(0xFF8B5CF6),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -1088,14 +1090,14 @@ class _EnhancedMeetingCalendarWidgetState
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MeetingFullViewWidget(),
+              builder: (context) => const MeetingFullViewWidget(),
             ),
           );
         },
         style: OutlinedButton.styleFrom(
           foregroundColor: const Color(0xFF8B5CF6),
           side: BorderSide(
-            color: const Color(0xFF8B5CF6).withOpacity(0.3),
+            color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
             width: 1.5,
           ),
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -1107,9 +1109,9 @@ class _EnhancedMeetingCalendarWidgetState
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.calendar_view_month,
-              color: const Color(0xFF8B5CF6),
+              color: Color(0xFF8B5CF6),
               size: 18,
             ),
             const SizedBox(width: 8),
@@ -1134,7 +1136,7 @@ class _EnhancedMeetingCalendarWidgetState
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -1164,15 +1166,15 @@ class _EnhancedMeetingCalendarWidgetState
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
-                            const Color(0xFF8B5CF6),
-                            const Color(0xFF7C3AED)
+                            Color(0xFF8B5CF6),
+                            Color(0xFF7C3AED)
                           ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.calendar_month,
                         color: Colors.white,
                         size: 20,
@@ -1231,10 +1233,10 @@ class _EnhancedMeetingCalendarWidgetState
           margin: const EdgeInsets.symmetric(horizontal: 24),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: const Color(0xFF8B5CF6).withOpacity(0.05),
+            color: const Color(0xFF8B5CF6).withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: const Color(0xFF8B5CF6).withOpacity(0.1),
+              color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
               width: 1,
             ),
           ),
@@ -1248,7 +1250,7 @@ class _EnhancedMeetingCalendarWidgetState
                     height: 40,
                     decoration: BoxDecoration(
                       color: MeetingCategories.getColor(meeting.category)
-                          .withOpacity(0.1),
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
@@ -1286,10 +1288,10 @@ class _EnhancedMeetingCalendarWidgetState
                             Row(
                               children: List.generate(
                                 meeting.satisfaction.round(),
-                                (index) => Icon(
+                                (index) => const Icon(
                                   Icons.star,
                                   size: 14,
-                                  color: const Color(0xFFFBBF24),
+                                  color: Color(0xFFFBBF24),
                                 ),
                               ),
                             ),
@@ -1342,7 +1344,7 @@ class _EnhancedMeetingCalendarWidgetState
                   style: OutlinedButton.styleFrom(
                     foregroundColor: const Color(0xFF8B5CF6),
                     side:
-                        BorderSide(color: const Color(0xFF8B5CF6), width: 1.5),
+                        const BorderSide(color: Color(0xFF8B5CF6), width: 1.5),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -1351,7 +1353,7 @@ class _EnhancedMeetingCalendarWidgetState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.visibility, size: 18),
+                      const Icon(Icons.visibility, size: 18),
                       const SizedBox(width: 8),
                       Text(
                         '자세히 보기',
@@ -1392,7 +1394,7 @@ class _EnhancedMeetingCalendarWidgetState
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.edit, size: 18),
+                      const Icon(Icons.edit, size: 18),
                       const SizedBox(width: 8),
                       Text(
                         '수정하기',
@@ -1442,10 +1444,10 @@ class _EnhancedMeetingCalendarWidgetState
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF8B5CF6).withOpacity(0.05),
+                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                     width: 1,
                   ),
                 ),
@@ -1457,7 +1459,7 @@ class _EnhancedMeetingCalendarWidgetState
                       height: 36,
                       decoration: BoxDecoration(
                         color: MeetingCategories.getColor(meeting.category)
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
@@ -1503,10 +1505,10 @@ class _EnhancedMeetingCalendarWidgetState
                               const Spacer(),
                               ...List.generate(
                                 meeting.satisfaction.round(),
-                                (index) => Icon(
+                                (index) => const Icon(
                                   Icons.star,
                                   size: 12,
-                                  color: const Color(0xFFFBBF24),
+                                  color: Color(0xFFFBBF24),
                                 ),
                               ),
                             ],
@@ -1516,7 +1518,7 @@ class _EnhancedMeetingCalendarWidgetState
                     ),
 
                     // 화살표
-                    Icon(
+                    const Icon(
                       Icons.chevron_right,
                       color: ModernColors.textTertiary,
                       size: 20,

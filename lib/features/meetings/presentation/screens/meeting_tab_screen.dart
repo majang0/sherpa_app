@@ -117,7 +117,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
       backgroundColor: ModernColors.background,
 
       // 🎯 SherpaCleanAppBar 사용
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '모임',
         backgroundColor: ModernColors.surface,
       ),
@@ -140,7 +140,7 @@ class _MeetingTabScreenState extends ConsumerState<MeetingTabScreen>
               child: TabBarView(
                 controller: _tabController,
                 physics: const BouncingScrollPhysics(),
-                children: [
+                children: const [
                   NewMeetingDiscoveryScreen(),
                   ChallengeIndexScreen(),
                 ],

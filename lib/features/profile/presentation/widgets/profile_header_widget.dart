@@ -17,11 +17,11 @@ class ProfileHeaderWidget extends ConsumerWidget {
   final VoidCallback? onSettingsTap;
 
   const ProfileHeaderWidget({
-    Key? key,
+    super.key,
     this.isCompact = false,
     this.onProfileTap,
     this.onSettingsTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,7 +69,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
           ),
           IconButton(
             onPressed: onSettingsTap,
-            icon: Icon(
+            icon: const Icon(
               Icons.settings,
               color: AppColors.textSecondary,
               size: 20,
@@ -124,7 +124,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
                           ),
                           IconButton(
                             onPressed: onSettingsTap,
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.settings,
                               color: AppColors.textSecondary,
                             ),
@@ -263,9 +263,9 @@ class ProfileHeaderWidget extends ConsumerWidget {
                         color: AppColors.primary.withValues(alpha: 0.2),
                       ),
                     ),
-                    child: Text(
+                    child: const Text(
                       '🏆', // 추후 실제 뱃지 이모지로 대체 가능
-                      style: const TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16),
                     ),
                   ),
                 )

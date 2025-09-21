@@ -3,9 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 
 // Core
 import '../../../../core/theme/modern_colors.dart';
@@ -66,7 +64,7 @@ class _PersonalizedGrowthDashboardWidgetState
   late Animation<double> _fadeAnimation;
 
   // 🎉 축하 화면 표시 상태
-  bool _showCelebrationView = false;
+  final bool _showCelebrationView = false;
 
   @override
   void initState() {
@@ -145,9 +143,9 @@ class _PersonalizedGrowthDashboardWidgetState
             // 🌟 부드러운 그림자로 카드 느낌 강화
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
-                offset: const Offset(0, -2),
+                offset: const Offset(0, 0),
                 spreadRadius: 0,
               ),
             ],
@@ -165,24 +163,24 @@ class _PersonalizedGrowthDashboardWidgetState
                   shape: BoxShape.circle,
                   border: Border.all(
                     // 🌟 브랜드 컬러 테두리로 포인트 강조
-                    color: ModernColors.modernPrimary.withOpacity(0.2),
+                    color: ModernColors.modernPrimary.withValues(alpha: 0.2),
                     width: 3,
                   ),
                   boxShadow: [
                     // 🎭 다층 그림자로 깊이감과 생동감
                     BoxShadow(
-                      color: ModernColors.modernPrimary.withOpacity(0.12),
+                      color: ModernColors.modernPrimary.withValues(alpha: 0.12),
                       blurRadius: 20,
                       offset: const Offset(0, 6),
                       spreadRadius: 0,
                     ),
                     BoxShadow(
-                      color: ModernColors.modernPrimary.withOpacity(0.06),
+                      color: ModernColors.modernPrimary.withValues(alpha: 0.06),
                       blurRadius: 10,
                       offset: const Offset(0, 3),
                     ),
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
+                      color: Colors.black.withValues(alpha: 0.03),
                       blurRadius: 6,
                       offset: const Offset(0, 1),
                     ),
@@ -222,7 +220,7 @@ class _PersonalizedGrowthDashboardWidgetState
                         letterSpacing: -0.3,
                         shadows: [
                           Shadow(
-                            color: ModernColors.modernPrimary.withOpacity(0.15),
+                            color: ModernColors.modernPrimary.withValues(alpha: 0.15),
                             offset: const Offset(0, 2),
                             blurRadius: 4,
                           ),
@@ -248,7 +246,7 @@ class _PersonalizedGrowthDashboardWidgetState
                         letterSpacing: -0.1,
                         shadows: [
                           Shadow(
-                            color: ModernColors.modernPrimary.withOpacity(0.1),
+                            color: ModernColors.modernPrimary.withValues(alpha: 0.1),
                             offset: const Offset(0, 1),
                             blurRadius: 2,
                           ),
@@ -320,23 +318,23 @@ class _PersonalizedGrowthDashboardWidgetState
       decoration: BoxDecoration(
         // 🎨 조건부 그라데이션 - 보상받기 가능 시 황금빛 테마
         gradient: canClaimReward
-            ? LinearGradient(
+            ? const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
                   ModernColors.rewardGradient1, // 황금 그라데이션 시작 (#FFD700)
                   ModernColors.rewardGradient2, // 황금 그라데이션 끝 (#FFA500)
                 ],
-                stops: const [0.0, 1.0],
+                stops: [0.0, 1.0],
               )
-            : LinearGradient(
+            : const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
                   ModernColors.modernPrimary, // 메인 브랜드 색상
                   ModernColors.primaryLight, // 조화로운 밝은 톤
                 ],
-                stops: const [0.0, 1.0],
+                stops: [0.0, 1.0],
               ),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
@@ -372,7 +370,7 @@ class _PersonalizedGrowthDashboardWidgetState
                     shadows: [
                       // 🌟 텍스트 가독성을 위한 부드러운 그림자
                       Shadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         offset: const Offset(0, 1),
                         blurRadius: 2,
                       ),
@@ -455,20 +453,20 @@ class _PersonalizedGrowthDashboardWidgetState
                 ? [
                     // 황금 글로우 효과 - 완성 시
                     BoxShadow(
-                      color: ModernColors.streakGold.withOpacity(0.3),
+                      color: ModernColors.streakGold.withValues(alpha: 0.3),
                       blurRadius: 24,
                       offset: const Offset(0, 8),
                       spreadRadius: 2,
                     ),
                     BoxShadow(
-                      color: ModernColors.streakGold.withOpacity(0.5),
+                      color: ModernColors.streakGold.withValues(alpha: 0.5),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                       spreadRadius: 0,
                     ),
                     // 그라데이션 조화 그림자
                     BoxShadow(
-                      color: ModernColors.primaryLight.withOpacity(0.2),
+                      color: ModernColors.primaryLight.withValues(alpha: 0.2),
                       blurRadius: 16,
                       offset: const Offset(0, 6),
                       spreadRadius: 1,
@@ -477,19 +475,19 @@ class _PersonalizedGrowthDashboardWidgetState
                 : [
                     // 🎨 그라데이션과 조화로운 프리미엄 그림자 시스템
                     BoxShadow(
-                      color: ModernColors.modernPrimary.withOpacity(0.25),
+                      color: ModernColors.modernPrimary.withValues(alpha: 0.25),
                       blurRadius: 24,
                       offset: const Offset(0, 8),
                       spreadRadius: 1,
                     ),
                     BoxShadow(
-                      color: ModernColors.primaryLight.withOpacity(0.15),
+                      color: ModernColors.primaryLight.withValues(alpha: 0.15),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                       spreadRadius: 0,
                     ),
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
+                      color: Colors.black.withValues(alpha: 0.08),
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                       spreadRadius: 0,
@@ -513,7 +511,7 @@ class _PersonalizedGrowthDashboardWidgetState
                     shadows: isAllCompleted
                         ? [
                             Shadow(
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withValues(alpha: 0.3),
                               offset: const Offset(0, 2),
                               blurRadius: 4,
                             ),
@@ -529,12 +527,12 @@ class _PersonalizedGrowthDashboardWidgetState
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: isAllCompleted
-                        ? Colors.white.withOpacity(0.9)
+                        ? Colors.white.withValues(alpha: 0.9)
                         : ModernColors.modernTextSecondary,
                     shadows: isAllCompleted
                         ? [
                             Shadow(
-                              color: Colors.black.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.2),
                               offset: const Offset(0, 1),
                               blurRadius: 2,
                             ),
@@ -553,14 +551,14 @@ class _PersonalizedGrowthDashboardWidgetState
         Text(
           isAllCompleted
               ? '🎉 모든 목표 완성!'
-              : '오늘의 목표 ${totalCount}개 중 ${completedCount}개 완료!',
+              : '오늘의 목표 $totalCount개 중 $completedCount개 완료!',
           style: GoogleFonts.notoSans(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             shadows: [
               Shadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 offset: const Offset(0, 1),
                 blurRadius: 2,
               ),
@@ -590,27 +588,27 @@ class _PersonalizedGrowthDashboardWidgetState
         decoration: BoxDecoration(
           // 🎨 조건부 배경색 - 보상받기 가능 시 황금빛 틴트
           color: canClaimReward
-              ? Colors.white.withOpacity(0.98) // 보상받기 상태에서 더 선명한 배경
-              : Colors.white.withOpacity(0.95),
+              ? Colors.white.withValues(alpha: 0.98) // 보상받기 상태에서 더 선명한 배경
+              : Colors.white.withValues(alpha: 0.95),
           shape: BoxShape.circle,
           // 🌟 조건부 그림자 시스템 - 황금빛 테마와 조화
           boxShadow: canClaimReward
               ? [
                   // 황금빛 테마 그림자
                   BoxShadow(
-                    color: ModernColors.rewardGradient1.withOpacity(0.25),
+                    color: ModernColors.rewardGradient1.withValues(alpha: 0.25),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                     spreadRadius: 2,
                   ),
                   BoxShadow(
-                    color: ModernColors.rewardGradient2.withOpacity(0.15),
+                    color: ModernColors.rewardGradient2.withValues(alpha: 0.15),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                     spreadRadius: 0,
                   ),
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: 0.08),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                     spreadRadius: 0,
@@ -619,19 +617,19 @@ class _PersonalizedGrowthDashboardWidgetState
               : [
                   // 일반 테마 그림자
                   BoxShadow(
-                    color: ModernColors.primaryLight.withOpacity(0.2),
+                    color: ModernColors.primaryLight.withValues(alpha: 0.2),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                     spreadRadius: 1,
                   ),
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.12),
+                    color: Colors.black.withValues(alpha: 0.12),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                     spreadRadius: 0,
                   ),
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.06),
+                    color: Colors.black.withValues(alpha: 0.06),
                     blurRadius: 3,
                     offset: const Offset(0, 1),
                     spreadRadius: 0,
@@ -640,9 +638,9 @@ class _PersonalizedGrowthDashboardWidgetState
           // 🌈 조건부 테두리 - compact_quest_widget 스타일
           border: Border.all(
             color: canClaimReward
-                ? ModernColors.rewardGradient1.withOpacity(0.3) // 황금빛 테두리
+                ? ModernColors.rewardGradient1.withValues(alpha: 0.3) // 황금빛 테두리
                 : ModernColors.modernPrimary
-                    .withOpacity(0.2), // compact_quest_widget과 동일
+                    .withValues(alpha: 0.2), // compact_quest_widget과 동일
             width: 2.0,
           ),
         ),
@@ -722,13 +720,13 @@ class _PersonalizedGrowthDashboardWidgetState
             ? [
                 // 황금빛 보상 버튼 - 임팩트 있는 프리미엄 그림자
                 BoxShadow(
-                  color: ModernColors.streakGold.withOpacity(0.2),
+                  color: ModernColors.streakGold.withValues(alpha: 0.2),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                   spreadRadius: 1,
                 ),
                 BoxShadow(
-                  color: ModernColors.primaryLight.withOpacity(0.12),
+                  color: ModernColors.primaryLight.withValues(alpha: 0.12),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                   spreadRadius: 0,
@@ -737,19 +735,19 @@ class _PersonalizedGrowthDashboardWidgetState
             : [
                 // 일반 카드 - 그라데이션과 조화로운 은은한 그림자
                 BoxShadow(
-                  color: ModernColors.modernPrimary.withOpacity(0.18),
+                  color: ModernColors.modernPrimary.withValues(alpha: 0.18),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                   spreadRadius: 0,
                 ),
                 BoxShadow(
-                  color: ModernColors.primaryLight.withOpacity(0.1),
+                  color: ModernColors.primaryLight.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                   spreadRadius: 0,
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 2,
                   offset: const Offset(0, 1),
                   spreadRadius: 0,
@@ -765,20 +763,20 @@ class _PersonalizedGrowthDashboardWidgetState
             width: canClaimReward ? 24 : 20,
             height: canClaimReward ? 24 : 20,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               shape: BoxShape.circle,
               boxShadow: canClaimReward
                   ? [
                       // 보상 버튼 상태일 때 더 강한 그림자
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
+                        color: Colors.black.withValues(alpha: 0.15),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
                     ]
                   : [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
+                        color: Colors.black.withValues(alpha: 0.08),
                         blurRadius: 2,
                         offset: const Offset(0, 1),
                       ),
@@ -804,7 +802,7 @@ class _PersonalizedGrowthDashboardWidgetState
               letterSpacing: -0.1,
               shadows: [
                 Shadow(
-                  color: Colors.black.withOpacity(0.2),
+                  color: Colors.black.withValues(alpha: 0.2),
                   offset: const Offset(0, 1),
                   blurRadius: 2,
                 ),
@@ -816,7 +814,7 @@ class _PersonalizedGrowthDashboardWidgetState
           if (canClaimReward) ...[
             const SizedBox(width: 8),
             // 보상 버튼 상태에서는 화살표 아이콘 표시
-            Icon(
+            const Icon(
               Icons.arrow_forward_ios,
               color: Colors.white,
               size: 14,
@@ -848,13 +846,13 @@ class _PersonalizedGrowthDashboardWidgetState
               // 🌟 그라데이션과 조화로운 프리미엄 외부 글로우 효과
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.streakGold.withOpacity(0.15),
+                  color: ModernColors.streakGold.withValues(alpha: 0.15),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                   spreadRadius: 2,
                 ),
                 BoxShadow(
-                  color: ModernColors.primaryLight.withOpacity(0.1),
+                  color: ModernColors.primaryLight.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                   spreadRadius: 1,
@@ -916,16 +914,16 @@ class _PersonalizedGrowthDashboardWidgetState
                 ? (isCompleted
                     ? ModernColors.streakGold // 전체 클리어 시 완료된 버튼은 황금색
                     : ModernColors.rewardGradient2
-                        .withOpacity(0.8)) // 전체 클리어 시 미완료 버튼도 황금 틴트
+                        .withValues(alpha: 0.8)) // 전체 클리어 시 미완료 버튼도 황금 틴트
                 : (isCompleted ? ModernColors.modernPrimary : Colors.white),
             borderRadius: BorderRadius.circular(14),
             border: !isCompleted
                 ? Border.all(
                     color: shouldDisable
                         ? ModernColors.streakGold
-                            .withOpacity(0.15) // 전체 클리어 시 황금색 테두리
+                            .withValues(alpha: 0.15) // 전체 클리어 시 황금색 테두리
                         : ModernColors.modernPrimary
-                            .withOpacity(0.15), // 기본 프라이머리 테두리
+                            .withValues(alpha: 0.15), // 기본 프라이머리 테두리
                     width: 0.8, // 동일한 테두리 두께 유지
                   )
                 : null,
@@ -936,8 +934,8 @@ class _PersonalizedGrowthDashboardWidgetState
                     BoxShadow(
                       color: shouldDisable
                           ? ModernColors.streakGold
-                              .withOpacity(0.2) // 전체 클리어 시 황금 그림자
-                          : ModernColors.modernPrimary.withOpacity(0.2),
+                              .withValues(alpha: 0.2) // 전체 클리어 시 황금 그림자
+                          : ModernColors.modernPrimary.withValues(alpha: 0.2),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                       spreadRadius: 0,
@@ -945,14 +943,14 @@ class _PersonalizedGrowthDashboardWidgetState
                     BoxShadow(
                       color: shouldDisable
                           ? ModernColors.rewardGradient1
-                              .withOpacity(0.12) // 전체 클리어 시 황금 그림자
-                          : ModernColors.primaryLight.withOpacity(0.12),
+                              .withValues(alpha: 0.12) // 전체 클리어 시 황금 그림자
+                          : ModernColors.primaryLight.withValues(alpha: 0.12),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                       spreadRadius: 0,
                     ),
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
+                      color: Colors.black.withValues(alpha: 0.06),
                       blurRadius: 2,
                       offset: const Offset(0, 1),
                       spreadRadius: 0,
@@ -963,8 +961,8 @@ class _PersonalizedGrowthDashboardWidgetState
                     BoxShadow(
                       color: shouldDisable
                           ? ModernColors.streakGold
-                              .withOpacity(0.06) // 전체 클리어 시 황금 그림자
-                          : ModernColors.modernPrimary.withOpacity(0.06),
+                              .withValues(alpha: 0.06) // 전체 클리어 시 황금 그림자
+                          : ModernColors.modernPrimary.withValues(alpha: 0.06),
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                       spreadRadius: 0,
@@ -972,8 +970,8 @@ class _PersonalizedGrowthDashboardWidgetState
                     BoxShadow(
                       color: shouldDisable
                           ? ModernColors.rewardGradient1
-                              .withOpacity(0.04) // 전체 클리어 시 황금 그림자
-                          : ModernColors.primaryLight.withOpacity(0.04),
+                              .withValues(alpha: 0.04) // 전체 클리어 시 황금 그림자
+                          : ModernColors.primaryLight.withValues(alpha: 0.04),
                       blurRadius: 3,
                       offset: const Offset(0, 1),
                       spreadRadius: 0,
@@ -993,14 +991,14 @@ class _PersonalizedGrowthDashboardWidgetState
                   decoration: BoxDecoration(
                     // 🎨 완료: 흰색 배경 / 미완료: 통일된 프라이머리 색상 배경
                     color: isCompleted
-                        ? Colors.white.withOpacity(0.9)
-                        : ModernColors.modernPrimary.withOpacity(0.12),
+                        ? Colors.white.withValues(alpha: 0.9)
+                        : ModernColors.modernPrimary.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                     // 🎨 완료 상태에만 그림자 적용
                     boxShadow: isCompleted
                         ? [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 3,
                               offset: const Offset(0, 1),
                             ),
@@ -1025,9 +1023,9 @@ class _PersonalizedGrowthDashboardWidgetState
                                 Shadow(
                                   color: shouldDisable
                                       ? ModernColors.streakGold
-                                          .withOpacity(0.15)
+                                          .withValues(alpha: 0.15)
                                       : ModernColors.modernPrimary
-                                          .withOpacity(0.15),
+                                          .withValues(alpha: 0.15),
                                   offset: const Offset(0, 0.5),
                                   blurRadius: 1,
                                 ),
@@ -1059,7 +1057,7 @@ class _PersonalizedGrowthDashboardWidgetState
                       shadows: isCompleted
                           ? [
                               Shadow(
-                                color: Colors.black.withOpacity(0.2),
+                                color: Colors.black.withValues(alpha: 0.2),
                                 offset: const Offset(0, 0.5),
                                 blurRadius: 1,
                               ),
@@ -1067,9 +1065,9 @@ class _PersonalizedGrowthDashboardWidgetState
                           : [
                               Shadow(
                                 color: shouldDisable
-                                    ? ModernColors.streakGold.withOpacity(0.1)
+                                    ? ModernColors.streakGold.withValues(alpha: 0.1)
                                     : ModernColors.modernPrimary
-                                        .withOpacity(0.1),
+                                        .withValues(alpha: 0.1),
                                 offset: const Offset(0, 0.5),
                                 blurRadius: 1,
                               ),
@@ -1227,19 +1225,19 @@ class _PersonalizedGrowthDashboardWidgetState
         // 🎨 그라데이션 헤더와 조화로운 프리미엄 그림자 시스템
         boxShadow: [
           BoxShadow(
-            color: ModernColors.modernPrimary.withOpacity(0.1),
+            color: ModernColors.modernPrimary.withValues(alpha: 0.1),
             blurRadius: 12,
             offset: const Offset(0, 4),
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: ModernColors.primaryLight.withOpacity(0.06),
+            color: ModernColors.primaryLight.withValues(alpha: 0.06),
             blurRadius: 6,
             offset: const Offset(0, 2),
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 3,
             offset: const Offset(0, 1),
             spreadRadius: 0,
@@ -1255,10 +1253,10 @@ class _PersonalizedGrowthDashboardWidgetState
               Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: ModernColors.modernPrimary.withOpacity(0.1),
+                  color: ModernColors.modernPrimary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.emoji_events_outlined,
                   size: 18,
                   color: ModernColors.modernPrimary,
@@ -1274,7 +1272,7 @@ class _PersonalizedGrowthDashboardWidgetState
                   // 🎨 텍스트 그림자로 강조
                   shadows: [
                     Shadow(
-                      color: ModernColors.modernText.withOpacity(0.1),
+                      color: ModernColors.modernText.withValues(alpha: 0.1),
                       offset: const Offset(0, 0.5),
                       blurRadius: 1,
                     ),
@@ -1323,7 +1321,7 @@ class _PersonalizedGrowthDashboardWidgetState
                       ? LinearGradient(
                           colors: [
                             ModernColors.modernPrimary,
-                            ModernColors.modernPrimary.withOpacity(0.9),
+                            ModernColors.modernPrimary.withValues(alpha: 0.9),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -1334,7 +1332,7 @@ class _PersonalizedGrowthDashboardWidgetState
                   boxShadow: isCompleted
                       ? [
                           BoxShadow(
-                            color: ModernColors.modernPrimary.withOpacity(0.15),
+                            color: ModernColors.modernPrimary.withValues(alpha: 0.15),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -1343,7 +1341,7 @@ class _PersonalizedGrowthDashboardWidgetState
                 ),
                 child: Center(
                   child: isCompleted
-                      ? Icon(
+                      ? const Icon(
                           Icons.check,
                           size: 18,
                           color: Colors.white,

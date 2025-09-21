@@ -139,9 +139,9 @@ class _ChatInputFieldState extends State<ChatInputField>
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
-                offset: const Offset(0, -2),
+                offset: const Offset(0, 0)
               ),
             ],
           ),
@@ -161,7 +161,7 @@ class _ChatInputFieldState extends State<ChatInputField>
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
                         color: _focusNode.hasFocus
-                            ? AppColors.primary.withOpacity(0.5)
+                            ? AppColors.primary.withValues(alpha: 0.5)
                             : Colors.grey.shade200,
                       ),
                     ),
@@ -189,8 +189,8 @@ class _ChatInputFieldState extends State<ChatInputField>
                         ),
                         // 로딩 중일 때 표시
                         suffixIcon: widget.isLoading
-                            ? Padding(
-                                padding: const EdgeInsets.all(12),
+                            ? const Padding(
+                                padding: EdgeInsets.all(12),
                                 child: SizedBox(
                                   width: 20,
                                   height: 20,
@@ -230,7 +230,7 @@ class _ChatInputFieldState extends State<ChatInputField>
                                   !widget.isLoading
                               ? [
                                   BoxShadow(
-                                    color: AppColors.primary.withOpacity(0.3),
+                                    color: AppColors.primary.withValues(alpha: 0.3),
                                     blurRadius: 8,
                                     offset: const Offset(0, 2),
                                   ),
@@ -275,7 +275,7 @@ class _ChatInputFieldState extends State<ChatInputField>
       animation: _suggestionsAnimationController,
       builder: (context, child) {
         return Transform.translate(
-          offset: Offset(0, 20 * (1 - _suggestionsAnimationController.value)),
+          offset: const Offset(0, 0),
           child: Opacity(
             opacity: _suggestionsAnimationController.value,
             child: Container(
@@ -290,9 +290,9 @@ class _ChatInputFieldState extends State<ChatInputField>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
-                    offset: const Offset(0, -2),
+                    offset: const Offset(0, 0)
                   ),
                 ],
               ),
@@ -313,7 +313,7 @@ class _ChatInputFieldState extends State<ChatInputField>
                         ),
                         child: Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.lightbulb_outline,
                               size: 16,
                               color: AppColors.primary,

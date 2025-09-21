@@ -10,11 +10,11 @@ class PointDisplayWidget extends ConsumerWidget {
   final VoidCallback? onTap;
 
   const PointDisplayWidget({
-    Key? key,
+    super.key,
     this.showDetails = false,
     this.isCompact = false, // ✅ 기본값 false
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,7 +68,7 @@ class PointDisplayWidget extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(isCompact ? 6 : 8),
                 ),
                 child: Text(
-                  '+${todayEarned}',
+                  '+$todayEarned',
                   style: GoogleFonts.notoSans(
                     fontSize: isCompact ? 8 : 9,
                     fontWeight: FontWeight.w600,

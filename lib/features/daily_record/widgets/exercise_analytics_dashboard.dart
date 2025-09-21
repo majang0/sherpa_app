@@ -133,7 +133,7 @@ class _ExerciseAnalyticsDashboardState
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -147,10 +147,10 @@ class _ExerciseAnalyticsDashboardState
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withOpacity(0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.analytics_outlined,
                   color: ModernColors.primary,
                   size: 18,
@@ -349,7 +349,7 @@ class _ExerciseAnalyticsDashboardState
                 child: _buildMetricCard(
                   '평균 강도',
                   _getIntensityLabel(stats['avgIntensity'] ?? 'medium'),
-                  '최근 ${_selectedPeriod}',
+                  '최근 $_selectedPeriod',
                   Icons.trending_up,
                   ModernColors.warning,
                 ),
@@ -380,7 +380,7 @@ class _ExerciseAnalyticsDashboardState
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -394,7 +394,7 @@ class _ExerciseAnalyticsDashboardState
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -451,7 +451,7 @@ class _ExerciseAnalyticsDashboardState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -465,10 +465,10 @@ class _ExerciseAnalyticsDashboardState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.info.withOpacity(0.1),
+                  color: ModernColors.info.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.show_chart,
                   color: ModernColors.info,
                   size: 20,
@@ -540,9 +540,9 @@ class _ExerciseAnalyticsDashboardState
                     ),
                   ),
                   topTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   rightTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
@@ -553,7 +553,7 @@ class _ExerciseAnalyticsDashboardState
                     barWidth: 3,
                     belowBarData: BarAreaData(
                       show: true,
-                      color: ModernColors.primary.withOpacity(0.1),
+                      color: ModernColors.primary.withValues(alpha: 0.1),
                     ),
                     dotData: FlDotData(
                       show: true,
@@ -587,7 +587,7 @@ class _ExerciseAnalyticsDashboardState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -601,10 +601,10 @@ class _ExerciseAnalyticsDashboardState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.secondary.withOpacity(0.1),
+                  color: ModernColors.secondary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.category_outlined,
                   color: ModernColors.secondary,
                   size: 20,
@@ -625,14 +625,14 @@ class _ExerciseAnalyticsDashboardState
 
           // 타입별 상세 통계
           ...typeStats.entries.take(5).map((entry) {
-            final stats = entry.value as Map<String, dynamic>;
+            final stats = entry.value;
             return _buildTypeStatsRow(
               entry.key,
               stats['count'] as int,
               stats['totalMinutes'] as int,
               stats['avgIntensity'] as String,
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -649,14 +649,14 @@ class _ExerciseAnalyticsDashboardState
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.2), width: 1),
+        border: Border.all(color: color.withValues(alpha: 0.2), width: 1),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -679,7 +679,7 @@ class _ExerciseAnalyticsDashboardState
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '$count회 • ${totalMinutes}분 • ${_getIntensityLabel(avgIntensity)}',
+                  '$count회 • $totalMinutes분 • ${_getIntensityLabel(avgIntensity)}',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -692,7 +692,7 @@ class _ExerciseAnalyticsDashboardState
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -720,7 +720,7 @@ class _ExerciseAnalyticsDashboardState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -734,10 +734,10 @@ class _ExerciseAnalyticsDashboardState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.success.withOpacity(0.1),
+                  color: ModernColors.success.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.insights_outlined,
                   color: ModernColors.success,
                   size: 20,
@@ -757,7 +757,7 @@ class _ExerciseAnalyticsDashboardState
           const SizedBox(height: 20),
 
           // 인사이트 카드들
-          ...insights.map((insight) => _buildInsightCard(insight)).toList(),
+          ...insights.map((insight) => _buildInsightCard(insight)),
         ],
       ),
     );
@@ -772,13 +772,13 @@ class _ExerciseAnalyticsDashboardState
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            insight['color'].withOpacity(0.1),
-            insight['color'].withOpacity(0.05),
+            insight['color'].withValues(alpha: 0.1),
+            insight['color'].withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: insight['color'].withOpacity(0.2),
+          color: insight['color'].withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -787,7 +787,7 @@ class _ExerciseAnalyticsDashboardState
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: insight['color'].withOpacity(0.2),
+              color: insight['color'].withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
@@ -837,7 +837,7 @@ class _ExerciseAnalyticsDashboardState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -851,10 +851,10 @@ class _ExerciseAnalyticsDashboardState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.warning.withOpacity(0.1),
+                  color: ModernColors.warning.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.compare_arrows,
                   color: ModernColors.warning,
                   size: 20,
@@ -935,7 +935,7 @@ class _ExerciseAnalyticsDashboardState
                   ],
                 ),
               ),
-              Icon(
+              const Icon(
                 Icons.arrow_forward,
                 color: ModernColors.textSecondary,
                 size: 16,
@@ -969,7 +969,7 @@ class _ExerciseAnalyticsDashboardState
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: changeColor.withOpacity(0.1),
+              color: changeColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -1006,7 +1006,7 @@ class _ExerciseAnalyticsDashboardState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -1014,7 +1014,7 @@ class _ExerciseAnalyticsDashboardState
       ),
       child: Column(
         children: [
-          Icon(
+          const Icon(
             Icons.show_chart,
             size: 64,
             color: ModernColors.textSecondary,

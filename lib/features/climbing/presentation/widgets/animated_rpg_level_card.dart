@@ -1,9 +1,7 @@
 // lib/features/home/presentation/widgets/animated_rpg_level_card.dart
 
 import 'package:flutter/material.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:math' as math;
@@ -23,7 +21,7 @@ import '../../../../shared/providers/global_badge_provider.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 
 class AnimatedRPGLevelCard extends ConsumerStatefulWidget {
-  const AnimatedRPGLevelCard({Key? key}) : super(key: key);
+  const AnimatedRPGLevelCard({super.key});
 
   @override
   ConsumerState<AnimatedRPGLevelCard> createState() =>
@@ -163,14 +161,14 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
             boxShadow: [
               // 주요 그림자
               BoxShadow(
-                color: AppColors.primary.withOpacity(0.08),
+                color: AppColors.primary.withValues(alpha: 0.08),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
                 spreadRadius: 0,
               ),
               // 미세한 내부 그림자 효과
               BoxShadow(
-                color: AppColors.textLight.withOpacity(0.05),
+                color: AppColors.textLight.withValues(alpha: 0.05),
                 blurRadius: 12,
                 offset: const Offset(0, 2),
                 spreadRadius: 0,
@@ -191,7 +189,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                   ),
                   child: CustomPaint(
                     painter: MountainSilhouettePainter(
-                      color: AppColors.primary.withOpacity(0.05),
+                      color: AppColors.primary.withValues(alpha: 0.05),
                     ),
                   ),
                 ),
@@ -239,7 +237,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                             width: 56,
                             height: 56,
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
+                              gradient: const LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
@@ -250,7 +248,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.primary.withOpacity(0.25),
+                                  color: AppColors.primary.withValues(alpha: 0.25),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -262,7 +260,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                                 // 산 아이콘 배경
                                 Icon(
                                   Icons.terrain,
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: Colors.white.withValues(alpha: 0.2),
                                   size: 28,
                                 ),
                                 // 레벨 숫자
@@ -301,10 +299,10 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryLight.withOpacity(0.1),
+                              color: AppColors.primaryLight.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: AppColors.primary.withOpacity(0.1),
+                                color: AppColors.primary.withValues(alpha: 0.1),
                                 width: 1,
                               ),
                             ),
@@ -342,7 +340,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                       children: [
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.trending_up,
                               size: 14,
                               color: AppColors.textSecondary,
@@ -388,7 +386,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                               child: Container(
                                 height: 8,
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
+                                  gradient: const LinearGradient(
                                     colors: [
                                       AppColors.primary,
                                       AppColors.primaryLight,
@@ -397,7 +395,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                                   borderRadius: BorderRadius.circular(4),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppColors.primary.withOpacity(0.3),
+                                      color: AppColors.primary.withValues(alpha: 0.3),
                                       blurRadius: 4,
                                       offset: const Offset(0, 1),
                                     ),
@@ -426,7 +424,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: AppColors.warningLight.withOpacity(0.1),
+                              color: AppColors.warningLight.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -470,13 +468,13 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.primary.withOpacity(0.05),
-                  AppColors.primaryLight.withOpacity(0.03),
+                  AppColors.primary.withValues(alpha: 0.05),
+                  AppColors.primaryLight.withValues(alpha: 0.03),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -495,7 +493,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withOpacity(0.1),
+                          color: AppColors.primary.withValues(alpha: 0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -513,7 +511,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                                   0, -2 + _mountainFloatAnimation.value * 2),
                               child: Icon(
                                 Icons.terrain,
-                                color: AppColors.primary.withOpacity(0.2),
+                                color: AppColors.primary.withValues(alpha: 0.2),
                                 size: 35,
                               ),
                             );
@@ -560,9 +558,9 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.divider.withOpacity(0),
+            AppColors.divider.withValues(alpha: 0),
             AppColors.divider,
-            AppColors.divider.withOpacity(0),
+            AppColors.divider.withValues(alpha: 0),
           ],
         ),
       ),
@@ -571,7 +569,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
 
   Widget _buildClimbingStatsSection(dynamic user, double userPower) {
     final equippedBadges = ref.watch(globalEquippedBadgesProvider);
-    final gameSystem = ref.watch(globalGameProvider);
+    // final gameSystem = ref.watch(globalGameProvider); // Not currently used
 
     // GameConstants를 사용한 정확한 계산
 
@@ -645,7 +643,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
           // 섹션 타이틀
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.hiking,
                 size: 16,
                 color: AppColors.primary,
@@ -747,13 +745,13 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                color.withOpacity(0.1),
-                color.withOpacity(0.05),
+                color.withValues(alpha: 0.1),
+                color.withValues(alpha: 0.05),
               ],
             ),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               width: 1,
             ),
           ),

@@ -5,7 +5,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
-import '../models/relationship_stage_model.dart';
 import '../models/shared_memory_model.dart';
 import '../services/memory_management_service.dart';
 
@@ -415,7 +414,7 @@ class GrowthStoryService {
 
         // 마일스톤 진행률 업데이트
         await updateMilestoneProgress(
-          milestoneId: 'milestone_${activityType}',
+          milestoneId: 'milestone_$activityType',
           progressData: activityData,
         );
       }
@@ -459,7 +458,7 @@ class GrowthStoryService {
   static List<MilestoneTracker> _createDefaultMilestones() {
     return [
       // 첫 주 마일스톤
-      MilestoneTracker(
+      const MilestoneTracker(
         id: 'milestone_first_week',
         name: '첫 일주일',
         description: '셰르피와 함께한 첫 일주일을 완성하세요!',
@@ -471,7 +470,7 @@ class GrowthStoryService {
       ),
 
       // 운동 마일스톤
-      MilestoneTracker(
+      const MilestoneTracker(
         id: 'milestone_exercise_champion',
         name: '운동 챔피언',
         description: '30일 동안 총 20시간 이상 운동하세요!',
@@ -483,7 +482,7 @@ class GrowthStoryService {
       ),
 
       // 독서 마일스톤
-      MilestoneTracker(
+      const MilestoneTracker(
         id: 'milestone_bookworm',
         name: '독서광',
         description: '한 달 동안 3권 이상의 책을 읽으세요!',
@@ -495,7 +494,7 @@ class GrowthStoryService {
       ),
 
       // 일기 마일스톤
-      MilestoneTracker(
+      const MilestoneTracker(
         id: 'milestone_reflection_master',
         name: '성찰의 달인',
         description: '20일 연속으로 일기를 작성하세요!',
@@ -507,7 +506,7 @@ class GrowthStoryService {
       ),
 
       // 관계 발전 마일스톤
-      MilestoneTracker(
+      const MilestoneTracker(
         id: 'milestone_best_friend',
         name: '최고의 친구',
         description: '셰르피와 평생 친구 단계에 도달하세요!',
@@ -519,7 +518,7 @@ class GrowthStoryService {
       ),
 
       // 학습 마일스톤
-      MilestoneTracker(
+      const MilestoneTracker(
         id: 'milestone_curious_mind',
         name: '호기심 많은 마음',
         description: '10가지 이상의 다른 주제에 대해 대화하세요!',
@@ -679,7 +678,7 @@ class GrowthStoryService {
       createdAt: DateTime.now(),
       context: milestone.toJson(),
       tags: ['milestone', milestone.category, 'celebration'],
-      emotionalContext: {
+      emotionalContext: const {
         'emotion': 'pride',
         'intensity': 0.9,
       },
@@ -709,8 +708,8 @@ class GrowthStoryService {
       case 'exercise':
         final duration = activityData['duration'] as int? ?? 0;
         final type = activityData['type'] as String? ?? '운동';
-        title = '${type} 완료!';
-        description = '${duration}분간 ${type}을(를) 완료했어요! 건강한 하루네요.';
+        title = '$type 완료!';
+        description = '$duration분간 $type을(를) 완료했어요! 건강한 하루네요.';
         iconEmoji = '💪';
         significance = duration >= 60 ? 0.7 : 0.5;
         tags = ['exercise', 'health'];
@@ -719,7 +718,7 @@ class GrowthStoryService {
       case 'reading':
         final pages = activityData['pages'] as int? ?? 0;
         title = '독서 완료!';
-        description = '${pages}페이지를 읽었어요! 지식이 쌓여가네요.';
+        description = '$pages페이지를 읽었어요! 지식이 쌓여가네요.';
         iconEmoji = '📚';
         significance = pages >= 50 ? 0.6 : 0.4;
         tags = ['reading', 'learning'];
@@ -777,13 +776,13 @@ class GrowthStoryService {
     final name = userName ?? '당신';
     switch (type) {
       case 'level_up':
-        return '${name}이 레벨 ${data['level']}에 도달했어요! 꾸준한 노력의 결과네요.';
+        return '$name이 레벨 ${data['level']}에 도달했어요! 꾸준한 노력의 결과네요.';
       case 'streak':
-        return '${name}이 ${data['days']}일 연속으로 목표를 달성했어요! 정말 대단해요.';
+        return '$name이 ${data['days']}일 연속으로 목표를 달성했어요! 정말 대단해요.';
       case 'perfect_score':
-        return '${name}이 완벽한 점수를 받았어요! 최고의 성과네요.';
+        return '$name이 완벽한 점수를 받았어요! 최고의 성과네요.';
       default:
-        return '${name}이 새로운 성취를 이뤘어요!';
+        return '$name이 새로운 성취를 이뤘어요!';
     }
   }
 

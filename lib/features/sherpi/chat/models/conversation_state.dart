@@ -151,7 +151,7 @@ class ConversationState {
     final userMessageCount = messages.where((m) => m.isUserMessage).length;
     final sherpiMessageCount = messages.where((m) => m.isSherpiMessage).length;
 
-    return '총 ${messageCount}개 메시지 (사용자: $userMessageCount, 셰르피: $sherpiMessageCount)';
+    return '총 $messageCount개 메시지 (사용자: $userMessageCount, 셰르피: $sherpiMessageCount)';
   }
 }
 
@@ -200,7 +200,6 @@ extension ConversationContextExtension on ConversationContext {
         return SherpiEmotion.thinking;
       case ConversationContext.casual:
       case ConversationContext.general:
-      default:
         return SherpiEmotion.happy;
     }
   }
@@ -227,7 +226,6 @@ extension ConversationContextExtension on ConversationContext {
       case ConversationContext.casual:
         return '일상 대화';
       case ConversationContext.general:
-      default:
         return '일반 대화';
     }
   }

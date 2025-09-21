@@ -732,7 +732,7 @@ class CampusEvent {
 
   String get participationText {
     if (isFull) return '마감';
-    if (availableSpots <= 5) return '${availableSpots}자리 남음';
+    if (availableSpots <= 5) return '$availableSpots자리 남음';
     return '$currentParticipants/$maxParticipants명';
   }
 

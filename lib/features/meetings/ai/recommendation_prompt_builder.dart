@@ -1,5 +1,6 @@
 /// AI 모임 추천을 위한 프롬프트 빌더
 /// 사용자 활동 패턴과 모임 목록을 구조화된 프롬프트로 변환
+library;
 
 import 'dart:convert';
 import 'package:sherpa_app/features/sherpi/domain/services/sherpi_insight_repository.dart';

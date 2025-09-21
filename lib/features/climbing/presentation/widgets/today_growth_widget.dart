@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math' as math;
 import '../../../../core/constants/app_colors.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 
@@ -36,11 +35,11 @@ final todayClimbingGrowthProvider = Provider<TodayClimbingGrowthData>((ref) {
 
   // 오늘의 등반 통계 계산
   final successfulCount =
-      todayRecords.where((r) => r.isSuccess ?? false).length;
+      todayRecords.where((r) => r.isSuccess).length;
   final totalExp = todayRecords.fold<double>(
-      0, (sum, r) => sum + (r.rewards?.experience ?? 0));
+      0, (sum, r) => sum + r.rewards.experience);
   final totalPoints = todayRecords.fold<int>(
-      0, (sum, r) => sum + (r.rewards?.points ?? 0).toInt());
+      0, (sum, r) => sum + r.rewards.points);
   final successRate =
       todayRecords.isEmpty ? 0.0 : successfulCount / todayRecords.length;
 
@@ -57,6 +56,8 @@ final todayClimbingGrowthProvider = Provider<TodayClimbingGrowthData>((ref) {
 });
 
 class TodayGrowthWidget extends ConsumerStatefulWidget {
+  const TodayGrowthWidget({super.key});
+
   @override
   ConsumerState<TodayGrowthWidget> createState() => _TodayGrowthWidgetState();
 }
@@ -140,20 +141,20 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.08),
+                    color: AppColors.primary.withValues(alpha: 0.08),
                     blurRadius: 24,
                     offset: const Offset(0, 8),
                     spreadRadius: 0,
                   ),
                   BoxShadow(
-                    color: AppColors.textLight.withOpacity(0.05),
+                    color: AppColors.textLight.withValues(alpha: 0.05),
                     blurRadius: 12,
                     offset: const Offset(0, 2),
                     spreadRadius: 0,
                   ),
                 ],
                 border: Border.all(
-                  color: AppColors.primary.withOpacity(0.1),
+                  color: AppColors.primary.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -182,7 +183,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
@@ -193,7 +194,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.25),
+                  color: AppColors.primary.withValues(alpha: 0.25),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -204,10 +205,10 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
               children: [
                 Icon(
                   Icons.terrain,
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   size: 28,
                 ),
-                Text(
+                const Text(
                   '⛰️',
                   style: TextStyle(fontSize: 24),
                 ),
@@ -234,17 +235,17 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryLight.withOpacity(0.1),
+                    color: AppColors.primaryLight.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: AppColors.primary.withOpacity(0.1),
+                      color: AppColors.primary.withValues(alpha: 0.1),
                       width: 1,
                     ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.trending_up,
                         size: 14,
                         color: AppColors.primary,
@@ -274,7 +275,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.background.withOpacity(0.5),
+        color: AppColors.background.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: AppColors.divider,
@@ -299,7 +300,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.success.withOpacity(0.5),
+                            color: AppColors.success.withValues(alpha: 0.5),
                             blurRadius: 8,
                             spreadRadius: 2,
                           ),
@@ -347,7 +348,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                     (data.currentProgress ?? 0) *
                     0.8,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
                       AppColors.primary,
                       AppColors.primaryLight,
@@ -356,7 +357,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                   borderRadius: BorderRadius.circular(4),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withOpacity(0.3),
+                      color: AppColors.primary.withValues(alpha: 0.3),
                       blurRadius: 4,
                       offset: const Offset(0, 1),
                     ),
@@ -424,7 +425,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                       gradient: LinearGradient(
                         colors: [
                           Colors.transparent,
-                          AppColors.primary.withOpacity(0.2),
+                          AppColors.primary.withValues(alpha: 0.2),
                         ],
                       ),
                     ),
@@ -434,7 +435,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Icon(
                     Icons.star,
-                    color: AppColors.primary.withOpacity(0.3),
+                    color: AppColors.primary.withValues(alpha: 0.3),
                     size: 16,
                   ),
                 ),
@@ -444,7 +445,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.primary.withOpacity(0.2),
+                          AppColors.primary.withValues(alpha: 0.2),
                           Colors.transparent,
                         ],
                       ),
@@ -477,7 +478,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       decoration: BoxDecoration(
-        color: AppColors.background.withOpacity(0.5),
+        color: AppColors.background.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: AppColors.divider,
@@ -490,10 +491,10 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
             width: 32,
             height: 32,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: color.withOpacity(0.3),
+                color: color.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),

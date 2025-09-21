@@ -465,7 +465,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                   ),
                   child: const Icon(
                     Icons.star,
-                    color: const Color(0xFFFBBF24),
+                    color: Color(0xFFFBBF24),
                     size: 18,
                   ),
                 ),
@@ -530,26 +530,26 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                             padding: const EdgeInsets.symmetric(horizontal: 2),
                             child: Stack(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.star_border,
                                   size: 32,
-                                  color: const Color(0xFFFBBF24),
+                                  color: Color(0xFFFBBF24),
                                 ),
                                 if (isFullStar)
-                                  Icon(
+                                  const Icon(
                                     Icons.star,
                                     size: 32,
-                                    color: const Color(0xFFFBBF24),
+                                    color: Color(0xFFFBBF24),
                                   )
                                 else if (isHalfStar)
-                                  ClipRect(
+                                  const ClipRect(
                                     child: Align(
                                       alignment: Alignment.centerLeft,
                                       widthFactor: 0.5,
-                                      child: const Icon(
+                                      child: Icon(
                                         Icons.star,
                                         size: 32,
-                                        color: const Color(0xFFFBBF24),
+                                        color: Color(0xFFFBBF24),
                                       ),
                                     ),
                                   ),
@@ -570,7 +570,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                       overlayColor:
                           const Color(0xFFFBBF24).withValues(alpha: 0.2),
                       trackHeight: 6,
-                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12),
+                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
                     ),
                     child: Slider(
                       value: _satisfaction,
@@ -939,7 +939,7 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
             elevation: 0,
           ),
           child: _isSubmitting
-              ? SizedBox(
+              ? const SizedBox(
                   width: 24,
                   height: 24,
                   child: CircularProgressIndicator(
@@ -992,21 +992,8 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
         isShared: _isShared,
       );
 
-      // 기존 모임 로그를 찾아서 업데이트
-      final user = ref.read(globalUserProvider);
-      final updatedMeetingLogs = user.dailyRecords.meetingLogs.map((log) {
-        if (log.id == widget.meeting.id) {
-          return updatedMeeting;
-        }
-        return log;
-      }).toList();
-
-      final updatedRecords = user.dailyRecords.copyWith(
-        meetingLogs: updatedMeetingLogs,
-      );
-
-      final updatedUser = user.copyWith(dailyRecords: updatedRecords);
-      ref.read(globalUserProvider.notifier).state = updatedUser;
+      // 모임 로그 업데이트 (새로 추가한 updateMeetingLog 메서드 사용)
+      ref.read(globalUserProvider.notifier).updateMeetingLog(updatedMeeting);
 
       if (mounted) {
         Navigator.pop(context);

@@ -519,7 +519,7 @@ class ClimbingState {
   /// 초기 상태
   static ClimbingState get initial => ClimbingState(
         currentSession: null,
-        history: [],
+        history: const [],
         statistics: const ClimbingStatistics(
           totalAttempts: 0,
           successfulClimbs: 0,

@@ -19,11 +19,11 @@ class AllGoalsRewardModal extends ConsumerStatefulWidget {
   final VoidCallback? onRewardClaimed;
 
   const AllGoalsRewardModal({
-    Key? key,
+    super.key,
     required this.userName,
     required this.onClose,
     this.onRewardClaimed,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<AllGoalsRewardModal> createState() =>
@@ -140,7 +140,7 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
     final brandColors = [
       ModernColors.modernPrimary,
       ModernColors.secondary,
-      ModernColors.modernPrimary.withOpacity(0.8),
+      ModernColors.modernPrimary.withValues(alpha: 0.8),
       ModernColors.modernAccent, // 보라색 악센트
       const Color(0xFF3B82F6), // 블루 악센트
     ];
@@ -194,7 +194,7 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
               return GestureDetector(
                 onTap: _closeModal,
                 child: Container(
-                  color: Colors.black.withOpacity(_overlayAnimation.value),
+                  color: Colors.black.withValues(alpha: _overlayAnimation.value),
                 ),
               );
             },
@@ -257,11 +257,11 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
                 width: particle.size,
                 height: particle.size,
                 decoration: BoxDecoration(
-                  color: particle.color.withOpacity(opacity),
+                  color: particle.color.withValues(alpha: opacity),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: particle.color.withOpacity(opacity * 0.5),
+                      color: particle.color.withValues(alpha: opacity * 0.5),
                       blurRadius: 4,
                       spreadRadius: 1,
                     ),
@@ -286,13 +286,13 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
         // 🌟 은은한 단일 그림자로 깊이감 표현
         boxShadow: [
           BoxShadow(
-            color: ModernColors.modernPrimary.withOpacity(0.08),
+            color: ModernColors.modernPrimary.withValues(alpha: 0.08),
             blurRadius: 24,
             offset: const Offset(0, 8),
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
             spreadRadius: 0,
@@ -341,13 +341,13 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
         // 🌟 은은한 그림자로 깊이감만 표현
         boxShadow: [
           BoxShadow(
-            color: ModernColors.modernPrimary.withOpacity(0.25),
+            color: ModernColors.modernPrimary.withValues(alpha: 0.25),
             blurRadius: 16,
             offset: const Offset(0, 6),
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
             spreadRadius: 0,
@@ -380,7 +380,7 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
             color: ModernColors.modernPrimary,
             shadows: [
               Shadow(
-                color: ModernColors.modernPrimary.withOpacity(0.15),
+                color: ModernColors.modernPrimary.withValues(alpha: 0.15),
                 offset: const Offset(0, 2),
                 blurRadius: 4,
               ),
@@ -411,7 +411,7 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
         color: const Color(0xFFFAFBFC),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: ModernColors.modernPrimary.withOpacity(0.08),
+          color: ModernColors.modernPrimary.withValues(alpha: 0.08),
           width: 1,
         ),
       ),
@@ -450,7 +450,7 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
         // 🎨 단일 은은한 그림자로 깔끔하게
         boxShadow: [
           BoxShadow(
-            color: ModernColors.modernPrimary.withOpacity(0.06),
+            color: ModernColors.modernPrimary.withValues(alpha: 0.06),
             blurRadius: 6,
             offset: const Offset(0, 2),
             spreadRadius: 0,
@@ -484,7 +484,7 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
         // 🎨 단일 은은한 그림자로 깔끔하게
         boxShadow: [
           BoxShadow(
-            color: ModernColors.modernPrimary.withOpacity(0.06),
+            color: ModernColors.modernPrimary.withValues(alpha: 0.06),
             blurRadius: 6,
             offset: const Offset(0, 2),
             spreadRadius: 0,
@@ -516,17 +516,17 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       decoration: BoxDecoration(
-        color: ModernColors.modernPrimary.withOpacity(0.05),
+        color: ModernColors.modernPrimary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: ModernColors.modernPrimary.withOpacity(0.1),
+          color: ModernColors.modernPrimary.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.check_circle_outline,
             color: ModernColors.modernPrimary,
             size: 20,

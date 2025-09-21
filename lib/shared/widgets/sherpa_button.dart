@@ -15,7 +15,7 @@ class SherpaButton extends StatelessWidget {
   final double height;
 
   const SherpaButton({
-    Key? key,
+    super.key,
     required this.text,
     this.onPressed,
     this.isEnabled = true,
@@ -25,7 +25,7 @@ class SherpaButton extends StatelessWidget {
     this.textColor,
     this.width,
     this.height = 56.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class SherpaButton extends StatelessWidget {
                   color: (gradient?.colors.first ??
                           backgroundColor ??
                           AppColors.primary)
-                      .withOpacity(0.3),
+                      .withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),

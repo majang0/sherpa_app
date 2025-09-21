@@ -35,15 +35,15 @@ class EmotionSyncIndicator extends ConsumerWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            _getSyncColor(syncLevel).withOpacity(0.1),
-            _getSyncColor(syncLevel).withOpacity(0.05),
+            _getSyncColor(syncLevel).withValues(alpha: 0.1),
+            _getSyncColor(syncLevel).withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(isCompact ? 8 : 12),
         border: Border.all(
-          color: _getSyncColor(syncLevel).withOpacity(0.3),
+          color: _getSyncColor(syncLevel).withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -107,7 +107,7 @@ class EmotionSyncIndicator extends ConsumerWidget {
                 color: _getSyncColor(syncLevel),
                 boxShadow: [
                   BoxShadow(
-                    color: _getSyncColor(syncLevel).withOpacity(0.3),
+                    color: _getSyncColor(syncLevel).withValues(alpha: 0.3),
                     blurRadius: 6,
                     offset: const Offset(0, 2),
                   ),

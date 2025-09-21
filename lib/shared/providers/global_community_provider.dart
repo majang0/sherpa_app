@@ -1,9 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'dart:math' as math;
 import '../../features/home/models/community_model.dart';
-import '../models/point_system_model.dart';
 import 'global_point_provider.dart';
 import 'global_sherpi_provider.dart';
 import '../../core/constants/sherpi_dialogues.dart';

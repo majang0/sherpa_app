@@ -44,8 +44,12 @@ class QuestConditionFormatter {
             formatted = _formatMultipleConditions(condition);
             break;
 
-          default:
-            // formatted는 이미 _formatGenericDescription 결과
+          case QuestTrackingType.userAction:
+            formatted = _formatUserActionCondition(condition);
+            break;
+
+          case QuestTrackingType.dailyCompletion:
+            formatted = _formatDailyCompletionCondition(condition);
             break;
         }
       }
@@ -159,63 +163,63 @@ class QuestConditionFormatter {
       // "주간 [term] [number] 달성" 패턴 (단수형)
       {
         'pattern': RegExp(r'주간 meetingLog (\d+) 달성'),
-        'format': (String num) => '이번 주 모임 ${num}회 참여하기'
+        'format': (String num) => '이번 주 모임 $num회 참여하기'
       },
       {
         'pattern': RegExp(r'주간 movieLog (\d+) 달성'),
-        'format': (String num) => '이번 주 영화 ${num}편 감상하기'
+        'format': (String num) => '이번 주 영화 $num편 감상하기'
       },
       {
         'pattern': RegExp(r'주간 readingPages (\d+) 달성'),
-        'format': (String num) => '이번 주 총 ${num}페이지 읽기'
+        'format': (String num) => '이번 주 총 $num페이지 읽기'
       },
       {
         'pattern': RegExp(r'주간 differentMountains (\d+) 달성'),
-        'format': (String num) => '이번 주 ${num}개 다른 산 등반하기'
+        'format': (String num) => '이번 주 $num개 다른 산 등반하기'
       },
       {
         'pattern': RegExp(r'주간 differentMeetingCategory (\d+) 이상'),
-        'format': (String num) => '이번 주 ${num}가지 다른 모임 참여하기'
+        'format': (String num) => '이번 주 $num가지 다른 모임 참여하기'
       },
       {
         'pattern': RegExp(r'주간 meetingReviews (\d+) 달성'),
-        'format': (String num) => '이번 주 모임 후기 ${num}개 작성하기'
+        'format': (String num) => '이번 주 모임 후기 $num개 작성하기'
       },
 
       // "주간 [term] [number] 달성" 패턴 (복수형) - 핵심 수정사항
       {
         'pattern': RegExp(r'주간 meetingLogs (\d+) 달성'),
-        'format': (String num) => '이번 주 모임 ${num}회 참여하기'
+        'format': (String num) => '이번 주 모임 $num회 참여하기'
       },
       {
         'pattern': RegExp(r'주간 movieLogs (\d+) 달성'),
-        'format': (String num) => '이번 주 영화 ${num}편 감상하기'
+        'format': (String num) => '이번 주 영화 $num편 감상하기'
       },
       {
         'pattern': RegExp(r'주간 readingLogs (\d+) 달성'),
-        'format': (String num) => '이번 주 독서 ${num}회 하기'
+        'format': (String num) => '이번 주 독서 $num회 하기'
       },
       {
         'pattern': RegExp(r'주간 exerciseLogs (\d+) 달성'),
-        'format': (String num) => '이번 주 운동 ${num}회 하기'
+        'format': (String num) => '이번 주 운동 $num회 하기'
       },
 
       // "이번 주 [term] [number] 달성" 패턴 (혹시 놓친 것들)
       {
         'pattern': RegExp(r'이번 주 meetingLog (\d+) 달성'),
-        'format': (String num) => '이번 주 모임 ${num}회 참여하기'
+        'format': (String num) => '이번 주 모임 $num회 참여하기'
       },
       {
         'pattern': RegExp(r'이번 주 meetingLogs (\d+) 달성'),
-        'format': (String num) => '이번 주 모임 ${num}회 참여하기'
+        'format': (String num) => '이번 주 모임 $num회 참여하기'
       },
       {
         'pattern': RegExp(r'이번 주 movieLog (\d+) 달성'),
-        'format': (String num) => '이번 주 영화 ${num}편 감상하기'
+        'format': (String num) => '이번 주 영화 $num편 감상하기'
       },
       {
         'pattern': RegExp(r'이번 주 movieLogs (\d+) 달성'),
-        'format': (String num) => '이번 주 영화 ${num}편 감상하기'
+        'format': (String num) => '이번 주 영화 $num편 감상하기'
       },
     ];
 
@@ -267,63 +271,61 @@ class QuestConditionFormatter {
   static String _convertWeeklyTerm(String term, String number) {
     switch (term.toLowerCase()) {
       case 'readingpages':
-        return '이번 주 총 ${number}페이지 읽기';
+        return '이번 주 총 $number페이지 읽기';
       case 'differentmeetingcategory':
       case 'differentmeetingcategories':
-        return '이번 주 ${number}가지 다른 모임 참여하기';
+        return '이번 주 $number가지 다른 모임 참여하기';
       case 'differentmountains':
-        return '이번 주 ${number}개 다른 산 등반하기';
+        return '이번 주 $number개 다른 산 등반하기';
       case 'movielogs':
-        return '이번 주 영화 ${number}편 감상하기';
+        return '이번 주 영화 $number편 감상하기';
       case 'meetingreviews':
-        return '이번 주 모임 후기 ${number}개 작성하기';
+        return '이번 주 모임 후기 $number개 작성하기';
       case 'meetinglog':
       case 'meetinglogs':
-        return number == '1' ? '이번 주 모임 참여하기' : '이번 주 모임 ${number}회 참여하기';
+        return number == '1' ? '이번 주 모임 참여하기' : '이번 주 모임 $number회 참여하기';
       case 'movielog':
-      case 'movielogs':
-        return number == '1' ? '이번 주 영화 감상하기' : '이번 주 영화 ${number}편 감상하기';
+      // Removed duplicate 'movielogs' case - 'movielog' case already handles it
       case 'exerciseminutes':
-        return '이번 주 총 ${number}분 운동하기';
+        return '이번 주 총 $number분 운동하기';
       case 'focusminutes':
-        return '이번 주 총 ${number}분 집중하기';
+        return '이번 주 총 $number분 집중하기';
       case 'climbingcompletions':
-        return '이번 주 ${number}번 등반 완료하기';
+        return '이번 주 $number번 등반 완료하기';
       case 'exerciserecords':
-        return '이번 주 ${number}일 운동하기';
+        return '이번 주 $number일 운동하기';
       case 'readingrecords':
-        return '이번 주 ${number}일 독서하기';
+        return '이번 주 $number일 독서하기';
       case 'diaryrecords':
-        return '이번 주 ${number}일 일기 쓰기';
+        return '이번 주 $number일 일기 쓰기';
       case 'applaunches':
-        return '이번 주 ${number}일 앱 사용하기';
+        return '이번 주 $number일 앱 사용하기';
       case 'pointsearned':
-        return '이번 주 총 ${number}포인트 획득하기';
+        return '이번 주 총 $number포인트 획득하기';
       case 'steps':
         return '이번 주 총 ${_formatNumber(int.parse(number))}보 걷기';
 
       // 프리미엄 퀘스트용 추가 용어들
       case 'culturalrecords':
-        return '이번 주 문화 활동 ${number}회 기록하기';
+        return '이번 주 문화 활동 $number회 기록하기';
       case 'challengerecords':
-        return '이번 주 챌린지 ${number}회 참여하기';
+        return '이번 주 챌린지 $number회 참여하기';
       case 'consecutiveclimbingsuccess':
-        return '${number}일 연속 등반 성공하기';
+        return '$number일 연속 등반 성공하기';
       case 'consecutivedailyquestcompletion':
-        return '${number}일 연속 일일 퀘스트 완료하기';
+        return '$number일 연속 일일 퀘스트 완료하기';
       case 'meetinghostingwithparticipants':
-        return '참여자가 있는 모임 ${number}회 주최하기';
+        return '참여자가 있는 모임 $number회 주최하기';
       case 'differentexercisetypes':
-        return '이번 주 ${number}가지 다른 운동하기';
+        return '이번 주 $number가지 다른 운동하기';
       case 'differentmeetings':
-        return '이번 주 ${number}개 다른 모임 참여하기';
+        return '이번 주 $number개 다른 모임 참여하기';
       case 'perfectdays':
-        return '${number}일 이상 오늘의 목표 달성하기';
+        return '$number일 이상 오늘의 목표 달성하기';
       case 'allactivitiesdays':
         return '7일간 모든 활동 완료하기';
-
       default:
-        return '이번 주 ${term} ${number}회 달성';
+        return '이번 주 $term $number회 달성';
     }
   }
 
@@ -357,34 +359,34 @@ class QuestConditionFormatter {
       String activityText;
       switch (activity) {
         case 'MovieLog':
-          activityText = number == '1' ? '영화 감상하기' : '영화 ${number}편 감상하기';
+          activityText = number == '1' ? '영화 감상하기' : '영화 $number편 감상하기';
           break;
         case 'MovieReview':
-          activityText = number == '1' ? '영화 리뷰 작성하기' : '영화 리뷰 ${number}개 작성하기';
+          activityText = number == '1' ? '영화 리뷰 작성하기' : '영화 리뷰 $number개 작성하기';
           break;
         case 'MeetingLog':
-          activityText = number == '1' ? '모임 참여하기' : '모임 ${number}회 참여하기';
+          activityText = number == '1' ? '모임 참여하기' : '모임 $number회 참여하기';
           break;
         case 'MeetingReview':
-          activityText = number == '1' ? '모임 후기 작성하기' : '모임 후기 ${number}개 작성하기';
+          activityText = number == '1' ? '모임 후기 작성하기' : '모임 후기 $number개 작성하기';
           break;
         case 'ReadingLog':
-          activityText = number == '1' ? '독서하기' : '독서 ${number}회 하기';
+          activityText = number == '1' ? '독서하기' : '독서 $number회 하기';
           break;
         case 'ExerciseLog':
-          activityText = number == '1' ? '운동하기' : '운동 ${number}회 하기';
+          activityText = number == '1' ? '운동하기' : '운동 $number회 하기';
           break;
         case 'DiaryLog':
-          activityText = number == '1' ? '일기 쓰기' : '일기 ${number}회 쓰기';
+          activityText = number == '1' ? '일기 쓰기' : '일기 $number회 쓰기';
           break;
         case 'FocusLog':
-          activityText = number == '1' ? '집중하기' : '집중 ${number}회 하기';
+          activityText = number == '1' ? '집중하기' : '집중 $number회 하기';
           break;
         case 'ClimbingRecord':
-          activityText = number == '1' ? '등반하기' : '등반 ${number}회 하기';
+          activityText = number == '1' ? '등반하기' : '등반 $number회 하기';
           break;
         default:
-          activityText = '${activity} ${number}회';
+          activityText = '$activity $number회';
       }
 
       return activityText;
@@ -612,39 +614,39 @@ class QuestConditionFormatter {
         case 'readingPages':
           return '${_formatNumber(int.tryParse(value) ?? 0)}페이지 읽기';
         case 'movieLogs':
-          return '영화 ${value}편 감상하기';
+          return '영화 $value편 감상하기';
         case 'exerciseMinutes':
-          return '${value}분 운동하기';
+          return '$value분 운동하기';
         case 'differentExerciseTypes':
-          return '${value}가지 다른 운동하기';
+          return '$value가지 다른 운동하기';
         case 'differentMountains':
-          return '${value}개 다른 산 등반하기';
+          return '$value개 다른 산 등반하기';
         case 'differentMeetingCategories':
-          return '${value}가지 다른 모임 참여하기';
+          return '$value가지 다른 모임 참여하기';
         case '연속등반성공':
-          return '${value}일 연속 등반 성공하기';
+          return '$value일 연속 등반 성공하기';
         case '연속일일퀘스트완료':
-          return '${value}일 연속 일일 퀘스트 완료하기';
+          return '$value일 연속 일일 퀘스트 완료하기';
         case 'perfectDays':
-          return '${value}일간 완벽한 하루 만들기';
+          return '$value일간 완벽한 하루 만들기';
         case 'allActivitiesDays':
-          return '${value}일간 모든 활동 완료하기';
+          return '$value일간 모든 활동 완료하기';
         case 'challengeRecords':
-          return '챌린지 ${value}회 참여하기';
+          return '챌린지 $value회 참여하기';
         case 'differentMeetings':
-          return '${value}개 다른 모임 참여하기';
+          return '$value개 다른 모임 참여하기';
         case '모임주최성공':
-          return '참여자가 있는 모임 ${value}회 주최하기';
+          return '참여자가 있는 모임 $value회 주최하기';
         case 'culturalRecords':
-          return '문화 활동 ${value}회 기록하기';
+          return '문화 활동 $value회 기록하기';
         case 'meetingLogs':
-          return '모임 ${value}회 참여하기';
+          return '모임 $value회 참여하기';
         case 'focusMinutes':
-          return '${value}분 집중하기';
+          return '$value분 집중하기';
         case 'steps':
           return '${_formatNumber(int.tryParse(value) ?? 0)}보 걷기';
         default:
-          return '${key} ${value}회 달성';
+          return '$key $value회 달성';
       }
     }).toList();
 
@@ -668,9 +670,9 @@ class QuestConditionFormatter {
       case 'dailyRecords.todaySteps':
         return '오늘 ${_formatNumber(target)}보 걷기';
       case 'dailyRecords.todayFocusMinutes':
-        return '오늘 ${target}분 집중하기';
+        return '오늘 $target분 집중하기';
       case 'dailyRecords.todayExerciseMinutes':
-        return '오늘 ${target}분 운동하기';
+        return '오늘 $target분 운동하기';
       case 'allDailyActivitiesCompleted':
         return '모든 일일 활동 완료하기';
       case 'dailyGoals.exercise.completed':
@@ -684,64 +686,63 @@ class QuestConditionFormatter {
       case 'ClimbingRecord.isSuccess':
         return '등반 성공하기';
       case 'ReadingLog.pages':
-        return '${target}페이지 읽기';
+        return '$target페이지 읽기';
       case 'dailyPointsEarned':
-        return '하루에 ${target}포인트 획득하기';
+        return '하루에 $target포인트 획득하기';
       case 'badgeEquipped':
         return '뱃지 장착하기';
       case 'MovieLog':
-        return target == 1 ? '영화 감상하기' : '영화 ${target}편 감상하기';
+        return target == 1 ? '영화 감상하기' : '영화 $target편 감상하기';
       case 'MovieReview':
-        return target == 1 ? '영화 리뷰 작성하기' : '영화 리뷰 ${target}개 작성하기';
+        return target == 1 ? '영화 리뷰 작성하기' : '영화 리뷰 $target개 작성하기';
       case 'MeetingReview':
-        return target == 1 ? '모임 후기 작성하기' : '모임 후기 ${target}개 작성하기';
+        return target == 1 ? '모임 후기 작성하기' : '모임 후기 $target개 작성하기';
       case 'MeetingLog':
-        return target == 1 ? '모임 참여하기' : '모임 ${target}회 참여하기';
+        return target == 1 ? '모임 참여하기' : '모임 $target회 참여하기';
       case 'readingPages':
-        return '총 ${target}페이지 읽기';
+        return '총 $target페이지 읽기';
       case 'movieLogs':
-        return '영화 ${target}편 감상하기';
+        return '영화 $target편 감상하기';
       case 'culturalRecords':
-        return '문화 활동 ${target}회 기록하기';
+        return '문화 활동 $target회 기록하기';
       case 'meetingReviews':
-        return '모임 후기 ${target}개 작성하기';
+        return '모임 후기 $target개 작성하기';
       case 'differentMeetingCategories':
-        return '${target}가지 다른 모임 참여하기';
+        return '$target가지 다른 모임 참여하기';
       case 'differentMountains':
-        return '${target}개 다른 산 등반하기';
+        return '$target개 다른 산 등반하기';
 
       // 추가 globalData 경로들
       case 'exerciseMinutes':
-        return '${target}분 운동하기';
+        return '$target분 운동하기';
       case 'focusMinutes':
-        return '${target}분 집중하기';
+        return '$target분 집중하기';
       case 'steps':
         return '${_formatNumber(target)}보 걷기';
       case 'meetingLogs':
-        return target == 1 ? '모임 참여하기' : '모임 ${target}회 참여하기';
+        return target == 1 ? '모임 참여하기' : '모임 $target회 참여하기';
       case '연속등반성공':
-        return '${target}일 연속 등반 성공하기';
+        return '$target일 연속 등반 성공하기';
       case '연속일일퀘스트완료':
-        return '${target}일 연속 일일 퀘스트 완료하기';
+        return '$target일 연속 일일 퀘스트 완료하기';
       case '모임주최성공':
-        return '참여자가 있는 모임 ${target}회 주최하기';
+        return '참여자가 있는 모임 $target회 주최하기';
       case 'differentExerciseTypes':
-        return '${target}가지 다른 운동하기';
+        return '$target가지 다른 운동하기';
       case 'perfectDays':
-        return '${target}일간 완벽한 하루 만들기';
+        return '$target일간 완벽한 하루 만들기';
       case 'allActivitiesDays':
-        return '${target}일간 모든 활동 완료하기';
+        return '$target일간 모든 활동 완료하기';
       case 'challengeRecords':
-        return '챌린지 ${target}회 참여하기';
+        return '챌린지 $target회 참여하기';
       case 'differentMeetings':
-        return '${target}개 다른 모임 참여하기';
+        return '$target개 다른 모임 참여하기';
       case '30일챌린지첫주':
         return '30일 챌린지 첫 주 완료하기';
       case '모든카테고리퀘스트완료':
         return '모든 카테고리 퀘스트 완료하기';
       case '모든주간퀘스트완료':
         return '모든 주간 퀘스트 완료하기';
-
       default:
         // 기본적으로 "조건 달성:" 형태를 자연어로 변환
         if (condition.description.contains('조건 달성:')) {
@@ -790,48 +791,47 @@ class QuestConditionFormatter {
       case 'steps':
         return '이번 주 총 ${_formatNumber(target)}보 걷기';
       case 'focusMinutes':
-        return '이번 주 총 ${target}분 집중하기';
+        return '이번 주 총 $target분 집중하기';
       case 'exerciseRecords':
-        return '이번 주 ${target}일 운동하기';
+        return '이번 주 $target일 운동하기';
       case 'readingRecords':
-        return '이번 주 ${target}일 독서하기';
+        return '이번 주 $target일 독서하기';
       case 'readingPages':
-        return '이번 주 총 ${target}페이지 읽기';
+        return '이번 주 총 $target페이지 읽기';
       case 'diaryRecords':
-        return '이번 주 ${target}일 일기 쓰기';
+        return '이번 주 $target일 일기 쓰기';
       case 'appLaunches':
-        return '이번 주 ${target}일 앱 사용하기';
+        return '이번 주 $target일 앱 사용하기';
       case 'climbingCompletions':
-        return '이번 주 ${target}번 등반 완료하기';
+        return '이번 주 $target번 등반 완료하기';
       case 'pointsEarned':
-        return '이번 주 총 ${target}포인트 획득하기';
+        return '이번 주 총 $target포인트 획득하기';
       case 'differentMeetingCategories':
-        return '이번 주 ${target}가지 다른 모임 참여하기';
+        return '이번 주 $target가지 다른 모임 참여하기';
       case 'differentMountains':
-        return '이번 주 ${target}개 다른 산 등반하기';
+        return '이번 주 $target개 다른 산 등반하기';
       case 'movieLogs':
-        return '이번 주 영화 ${target}편 감상하기';
+        return '이번 주 영화 $target편 감상하기';
       case 'movieReviews':
-        return '이번 주 영화 리뷰 ${target}개 작성하기';
+        return '이번 주 영화 리뷰 $target개 작성하기';
 
       // 프리미엄 퀘스트용 추가 케이스들
       case 'meetingLogs':
-        return '이번 주 모임 ${target}회 참여하기';
+        return '이번 주 모임 $target회 참여하기';
       case 'culturalRecords':
-        return '이번 주 문화 활동 ${target}회 기록하기';
+        return '이번 주 문화 활동 $target회 기록하기';
       case 'challengeRecords':
-        return '이번 주 챌린지 ${target}회 참여하기';
+        return '이번 주 챌린지 $target회 참여하기';
       case 'exerciseMinutes':
-        return '이번 주 총 ${target}분 운동하기';
+        return '이번 주 총 $target분 운동하기';
       case 'differentExerciseTypes':
-        return '이번 주 ${target}가지 다른 운동하기';
+        return '이번 주 $target가지 다른 운동하기';
       case 'differentMeetings':
-        return '이번 주 ${target}개 다른 모임 참여하기';
+        return '이번 주 $target개 다른 모임 참여하기';
       case 'meetingReviews':
-        return '이번 주 모임 후기 ${target}개 작성하기';
-
+        return '이번 주 모임 후기 $target개 작성하기';
       default:
-        return '이번 주 ${dataType} ${target}회 달성';
+        return '이번 주 $dataType $target회 달성';
     }
   }
 
@@ -850,29 +850,29 @@ class QuestConditionFormatter {
         case 'readingPages':
           return '${_formatNumber(value)}페이지 읽기';
         case 'movieLogs':
-          return '영화 ${value}편 감상하기';
+          return '영화 $value편 감상하기';
         case 'exerciseMinutes':
-          return '${value}분 운동하기';
+          return '$value분 운동하기';
         case 'differentExerciseTypes':
-          return '${value}가지 다른 운동하기';
+          return '$value가지 다른 운동하기';
         case 'differentMountains':
-          return '${value}개 다른 산 등반하기';
+          return '$value개 다른 산 등반하기';
         case 'differentMeetingCategories':
-          return '${value}가지 다른 모임 참여하기';
+          return '$value가지 다른 모임 참여하기';
         case '연속등반성공':
-          return '${value}일 연속 등반 성공하기';
+          return '$value일 연속 등반 성공하기';
         case '연속일일퀘스트완료':
-          return '${value}일 연속 일일 퀘스트 완료하기';
+          return '$value일 연속 일일 퀘스트 완료하기';
         case 'perfectDays':
-          return '${value}일간 완벽한 하루 만들기';
+          return '$value일간 완벽한 하루 만들기';
         case 'allActivitiesDays':
-          return '${value}일간 모든 활동 완료하기';
+          return '$value일간 모든 활동 완료하기';
         case 'challengeRecords':
-          return '챌린지 ${value}회 참여하기';
+          return '챌린지 $value회 참여하기';
         case 'differentMeetings':
-          return '${value}개 다른 모임 참여하기';
+          return '$value개 다른 모임 참여하기';
         case '모임주최성공':
-          return '참여자가 있는 모임 ${value}회 주최하기';
+          return '참여자가 있는 모임 $value회 주최하기';
         case '30일챌린지첫주':
           return '30일 챌린지 첫 주 완료하기';
         case '모든카테고리퀘스트완료':
@@ -882,46 +882,21 @@ class QuestConditionFormatter {
         case 'weeklyReadingPages':
           return '이번 주 ${_formatNumber(value)}페이지 읽기';
         case 'weeklyMovieLogs':
-          return '이번 주 영화 ${value}편 감상하기';
+          return '이번 주 영화 $value편 감상하기';
         case 'weeklyMeetingReviews':
-          return '이번 주 모임 후기 ${value}개 작성하기';
+          return '이번 주 모임 후기 $value개 작성하기';
         case 'weeklyDifferentMeetingCategories':
-          return '이번 주 ${value}가지 다른 모임 참여하기';
+          return '이번 주 $value가지 다른 모임 참여하기';
         case 'weeklyDifferentMountains':
-          return '이번 주 ${value}개 다른 산 등반하기';
+          return '이번 주 $value개 다른 산 등반하기';
 
-        // 프리미엄 퀘스트 복합 조건들
-        case '연속등반성공':
-          return '${value}일 연속 등반 성공하기';
-        case '연속일일퀘스트완료':
-          return '${value}일 연속 일일 퀘스트 완료하기';
-        case '모임주최성공':
-          return '참여자가 있는 모임 ${value}회 주최하기';
-        case 'differentExerciseTypes':
-          return '${value}가지 다른 운동하기';
-        case 'perfectDays':
-          return '${value}일간 완벽한 하루 만들기';
-        case 'allActivitiesDays':
-          return '${value}일간 모든 활동 완료하기';
-        case 'challengeRecords':
-          return '챌린지 ${value}회 참여하기';
-        case 'culturalRecords':
-          return '문화 활동 ${value}회 기록하기';
-        case 'differentMeetings':
-          return '${value}개 다른 모임 참여하기';
-        case '30일챌린지첫주':
-          return '30일 챌린지 첫 주 완료하기';
-        case '모든카테고리퀘스트완료':
-          return '모든 카테고리 퀘스트 완료하기';
-        case '모든주간퀘스트완료':
-          return '모든 주간 퀘스트 완료하기';
+        // 프리미엄 퀘스트 복합 조건들 - 중복 제거 (earlier cases handle these)
         case 'weeklyMeetingLogs':
-          return '이번 주 모임 ${value}회 참여하기';
+          return '이번 주 모임 $value회 참여하기';
         case 'weeklyCulturalRecords':
-          return '이번 주 문화 활동 ${value}회 기록하기';
-
+          return '이번 주 문화 활동 $value회 기록하기';
         default:
-          return '$key ${value}회 달성하기';
+          return '$key $value회 달성하기';
       }
     }).toList();
 
@@ -932,6 +907,41 @@ class QuestConditionFormatter {
     } else {
       final last = formattedConditions.removeLast();
       return '${formattedConditions.join(', ')}와 $last';
+    }
+  }
+
+  /// 일일 완료 조건 포맷팅
+  static String _formatDailyCompletionCondition(QuestTrackingCondition condition) {
+    final days = condition.parameters['days'] as int?;
+    final type = condition.parameters['type'] as String?;
+
+    if (type == 'consecutive') {
+      return '${days ?? 1}일 연속 완료하기';
+    } else if (type == 'total') {
+      return '총 ${days ?? 1}일 완료하기';
+    } else {
+      return '오늘의 목표 완료하기';
+    }
+  }
+
+  /// 사용자 액션 조건 포맷팅
+  static String _formatUserActionCondition(QuestTrackingCondition condition) {
+    final action = condition.parameters['action'] as String?;
+    final target = condition.parameters['target'] as int?;
+
+    if (action == null) return '특정 작업 완료하기';
+
+    switch (action) {
+      case 'button_click':
+        return '버튼 ${target ?? 1}회 클릭하기';
+      case 'profile_update':
+        return '프로필 업데이트하기';
+      case 'share':
+        return '공유하기 ${target ?? 1}회';
+      case 'review':
+        return '리뷰 작성하기';
+      default:
+        return '$action ${target ?? 1}회 수행하기';
     }
   }
 
@@ -987,8 +997,6 @@ class QuestConditionFormatter {
         return '보상을 받을 수 있습니다';
       case QuestStatus.claimed:
         return '완료되었습니다';
-      default:
-        return '';
     }
   }
 }

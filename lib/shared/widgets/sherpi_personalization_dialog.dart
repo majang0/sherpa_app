@@ -150,32 +150,32 @@ class _SherpiPersonalizationDialogState
               boxShadow: [
                 // 메인 그림자 (오버레이용 더 강한 깊이감)
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withValues(alpha: 0.15),
                   blurRadius: 40,
                   offset: const Offset(0, 20),
                   spreadRadius: -4,
                 ),
                 // 상단 하이라이트 (3D 효과)
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.95),
+                  color: Colors.white.withValues(alpha: 0.95),
                   blurRadius: 8,
-                  offset: const Offset(0, -2),
+                  offset: const Offset(0, 0),
                   spreadRadius: 0,
                 ),
                 // 측면 그림자 (입체감)
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 32,
-                  offset: const Offset(-12, 12),
+                  offset: const Offset(0, 0),
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
+                  color: Colors.black.withValues(alpha: 0.08),
                   blurRadius: 32,
                   offset: const Offset(12, 12),
                 ),
                 // 글로우 효과 (오버레이용 더 강한 효과)
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.12),
+                  color: AppColors.primary.withValues(alpha: 0.12),
                   blurRadius: 60,
                   offset: const Offset(0, 16),
                 ),
@@ -200,9 +200,9 @@ class _SherpiPersonalizationDialogState
                               center: Alignment.topCenter,
                               radius: 1.2 + (_glowController.value * 0.3),
                               colors: [
-                                AppColors.primary.withOpacity(
+                                AppColors.primary.withValues(alpha:
                                     0.08 + (_glowController.value * 0.04)),
-                                Colors.purple.withOpacity(
+                                Colors.purple.withValues(alpha:
                                     0.03 + (_glowController.value * 0.02)),
                                 Colors.transparent,
                               ],
@@ -232,7 +232,7 @@ class _SherpiPersonalizationDialogState
                   // 로딩 오버레이
                   if (_isLoading)
                     Container(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: 0.3),
                       child: const Center(
                         child: CircularProgressIndicator(
                           valueColor:
@@ -269,7 +269,7 @@ class _SherpiPersonalizationDialogState
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: IconButton(
@@ -299,8 +299,8 @@ class _SherpiPersonalizationDialogState
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  _getPersonalityColor(displayPersonality).withOpacity(0.15),
-                  _getPersonalityColor(displayPersonality).withOpacity(0.08),
+                  _getPersonalityColor(displayPersonality).withValues(alpha: 0.15),
+                  _getPersonalityColor(displayPersonality).withValues(alpha: 0.08),
                   Colors.white,
                 ],
                 stops: const [0.2, 0.6, 1.0],
@@ -309,22 +309,22 @@ class _SherpiPersonalizationDialogState
                 // 메인 그림자
                 BoxShadow(
                   color: _getPersonalityColor(displayPersonality)
-                      .withOpacity(0.15),
+                      .withValues(alpha: 0.15),
                   blurRadius: 24,
                   offset: const Offset(0, 8),
                   spreadRadius: -2,
                 ),
                 // 내부 하이라이트
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                   blurRadius: 4,
-                  offset: const Offset(0, -2),
+                  offset: const Offset(0, 0),
                   spreadRadius: -1,
                 ),
                 // 외부 글로우
                 BoxShadow(
                   color: _getPersonalityColor(displayPersonality)
-                      .withOpacity(0.08),
+                      .withValues(alpha: 0.08),
                   blurRadius: 32,
                   offset: const Offset(0, 4),
                 ),
@@ -348,7 +348,7 @@ class _SherpiPersonalizationDialogState
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: _getPersonalityColor(displayPersonality)
-                              .withOpacity(0.1),
+                              .withValues(alpha: 0.1),
                         ),
                         child: Icon(
                           Icons.person,
@@ -390,22 +390,22 @@ class _SherpiPersonalizationDialogState
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
                 color:
-                    _getPersonalityColor(displayPersonality).withOpacity(0.04),
+                    _getPersonalityColor(displayPersonality).withValues(alpha: 0.04),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   // 내부 그림자 효과
                   BoxShadow(
                     color: _getPersonalityColor(displayPersonality)
-                        .withOpacity(0.12),
+                        .withValues(alpha: 0.12),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                     spreadRadius: -2,
                   ),
                   // 상단 하이라이트
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.6),
+                    color: Colors.white.withValues(alpha: 0.6),
                     blurRadius: 2,
-                    offset: const Offset(0, -1),
+                    offset: const Offset(0, 0),
                     spreadRadius: 0,
                   ),
                 ],
@@ -417,7 +417,7 @@ class _SherpiPersonalizationDialogState
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color:
-                      _getPersonalityColor(displayPersonality).withOpacity(0.8),
+                      _getPersonalityColor(displayPersonality).withValues(alpha: 0.8),
                   letterSpacing: -0.3,
                   height: 1.4,
                 ),
@@ -450,7 +450,7 @@ class _SherpiPersonalizationDialogState
 
   /// 성격 선택 원형 그리드 빌드
   Widget _buildPersonalityGrid() {
-    final personalities = SherpiPersonalityType.values;
+    const personalities = SherpiPersonalityType.values;
 
     return Wrap(
       alignment: WrapAlignment.center,
@@ -535,43 +535,43 @@ class _SherpiPersonalizationDialogState
                     ? [
                         // 선택된 상태 - 강한 그림자와 글로우
                         BoxShadow(
-                          color: color.withOpacity(0.25),
+                          color: color.withValues(alpha: 0.25),
                           blurRadius: 20 + (_glowController.value * 10),
                           offset: const Offset(0, 8),
                           spreadRadius: -2,
                         ),
                         BoxShadow(
-                          color: color.withOpacity(
+                          color: color.withValues(alpha:
                               0.15 + (_glowController.value * 0.1)),
                           blurRadius: 32 + (_glowController.value * 16),
                           offset: const Offset(0, 4),
                         ),
                         // 상단 하이라이트
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                           blurRadius: 4,
-                          offset: const Offset(0, -2),
+                          offset: const Offset(0, 0),
                           spreadRadius: -1,
                         ),
                       ]
                     : [
                         // 선택되지 않은 상태 - 부드러운 그림자
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
+                          color: Colors.black.withValues(alpha: 0.06),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                           spreadRadius: -2,
                         ),
                         // 상단 하이라이트 (버튼 느낌)
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                           blurRadius: 3,
-                          offset: const Offset(0, -1),
+                          offset: const Offset(0, 0),
                           spreadRadius: 0,
                         ),
                         // 측면 그림자 (입체감)
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.04),
+                          color: Colors.grey.withValues(alpha: 0.04),
                           blurRadius: 8,
                           offset: const Offset(2, 2),
                         ),
@@ -594,7 +594,7 @@ class _SherpiPersonalizationDialogState
                           height: 80,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: color.withOpacity(0.2),
+                            color: color.withValues(alpha: 0.2),
                           ),
                           child: Icon(
                             Icons.person,
@@ -619,12 +619,12 @@ class _SherpiPersonalizationDialogState
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: color.withOpacity(0.3),
+                              color: color.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 4,
                               offset: const Offset(0, 1),
                             ),
@@ -651,7 +651,7 @@ class _SherpiPersonalizationDialogState
     return Container(
       padding: const EdgeInsets.fromLTRB(32, 24, 32, 32),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.95),
+        color: Colors.white.withValues(alpha: 0.95),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(28),
           bottomRight: Radius.circular(28),
@@ -672,16 +672,16 @@ class _SherpiPersonalizationDialogState
                   boxShadow: [
                     // 취소 버튼 그림자
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                       spreadRadius: -1,
                     ),
                     // 상단 하이라이트
                     BoxShadow(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                       blurRadius: 2,
-                      offset: const Offset(0, -1),
+                      offset: const Offset(0, 0),
                       spreadRadius: 0,
                     ),
                   ],
@@ -719,7 +719,7 @@ class _SherpiPersonalizationDialogState
                           ? LinearGradient(
                               colors: [
                                 AppColors.primary,
-                                AppColors.primary.withOpacity(0.8),
+                                AppColors.primary.withValues(alpha: 0.8),
                                 Colors.purple.shade400,
                               ],
                               begin: Alignment.topLeft,
@@ -736,20 +736,20 @@ class _SherpiPersonalizationDialogState
                       boxShadow: _hasChanges
                           ? [
                               BoxShadow(
-                                color: AppColors.primary.withOpacity(
+                                color: AppColors.primary.withValues(alpha:
                                     0.4 + (_glowController.value * 0.2)),
                                 blurRadius: 16 + (_glowController.value * 8),
                                 offset: const Offset(0, 6),
                               ),
                               BoxShadow(
-                                color: Colors.purple.withOpacity(
+                                color: Colors.purple.withValues(alpha:
                                     0.2 + (_glowController.value * 0.1)),
                                 blurRadius: 24 + (_glowController.value * 12),
                                 offset: const Offset(0, 8),
                               ),
                               if (_particleController.value > 0)
                                 BoxShadow(
-                                  color: Colors.amber.withOpacity(
+                                  color: Colors.amber.withValues(alpha:
                                       _particleController.value * 0.6),
                                   blurRadius: 32,
                                   offset: const Offset(0, 0),
@@ -757,7 +757,7 @@ class _SherpiPersonalizationDialogState
                             ]
                           : [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -827,13 +827,13 @@ class _SherpiPersonalizationDialogState
                                         width: 6,
                                         height: 6,
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(
+                                          color: Colors.white.withValues(alpha:
                                             _particleController.value * 0.8,
                                           ),
                                           shape: BoxShape.circle,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.amber.withOpacity(
+                                              color: Colors.amber.withValues(alpha:
                                                 _particleController.value * 0.6,
                                               ),
                                               blurRadius: 4,
@@ -865,7 +865,7 @@ class _SherpiPersonalizationDialogState
       // 변경사항이 있으면 프리미엄 확인 다이얼로그 표시
       showDialog(
         context: context,
-        barrierColor: Colors.black.withOpacity(0.6),
+        barrierColor: Colors.black.withValues(alpha: 0.6),
         builder: (context) => _buildExitConfirmationDialog(context),
       );
     } else {
@@ -886,20 +886,20 @@ class _SherpiPersonalizationDialogState
           boxShadow: [
             // 메인 그림자 (강한 임팩트)
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
               blurRadius: 40,
               offset: const Offset(0, 20),
               spreadRadius: -4,
             ),
             // 상단 하이라이트
             BoxShadow(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               blurRadius: 8,
-              offset: const Offset(0, -2),
+              offset: const Offset(0, 0),
             ),
             // 경고 글로우 (주황/빨강 계열)
             BoxShadow(
-              color: Colors.orange.withOpacity(0.15),
+              color: Colors.orange.withValues(alpha: 0.15),
               blurRadius: 32,
               offset: const Offset(0, 8),
             ),
@@ -924,7 +924,7 @@ class _SherpiPersonalizationDialogState
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.orange.withOpacity(0.2),
+                    color: Colors.orange.withValues(alpha: 0.2),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),
@@ -982,14 +982,14 @@ class _SherpiPersonalizationDialogState
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
                           BoxShadow(
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                             blurRadius: 2,
-                            offset: const Offset(0, -1),
+                            offset: const Offset(0, 0),
                           ),
                         ],
                       ),
@@ -1032,12 +1032,12 @@ class _SherpiPersonalizationDialogState
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.red.withOpacity(0.4),
+                            color: Colors.red.withValues(alpha: 0.4),
                             blurRadius: 16,
                             offset: const Offset(0, 6),
                           ),
                           BoxShadow(
-                            color: Colors.red.withOpacity(0.2),
+                            color: Colors.red.withValues(alpha: 0.2),
                             blurRadius: 24,
                             offset: const Offset(0, 8),
                           ),
@@ -1047,7 +1047,7 @@ class _SherpiPersonalizationDialogState
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.exit_to_app_rounded,
                               size: 18,
                               color: Colors.white,

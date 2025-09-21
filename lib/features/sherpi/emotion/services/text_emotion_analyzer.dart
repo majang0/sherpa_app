@@ -923,8 +923,9 @@ class TextEmotionAnalyzer {
 
     // 감탄사가 많으면 흥분/기쁨 우선
     if (patterns['exclamations'] > 2) {
-      if (emotions.contains(EmotionType.excitement))
+      if (emotions.contains(EmotionType.excitement)) {
         return EmotionType.excitement;
+      }
       if (emotions.contains(EmotionType.joy)) return EmotionType.joy;
     }
 

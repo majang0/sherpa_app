@@ -9,6 +9,8 @@ import '../../../core/theme/modern_colors.dart';
 import '../../../shared/providers/global_user_provider.dart';
 
 class StepAnalysisWidget extends ConsumerWidget {
+  const StepAnalysisWidget({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(globalUserProvider);
@@ -36,7 +38,7 @@ class StepAnalysisWidget extends ConsumerWidget {
   /// 메인 카드: 걸음수 분석 헤더 + 오늘의 걸음수 + 랭킹
   Widget _buildMainCard(
       dynamic stepData, AsyncValue<StepStatistics> stepStatsAsync) {
-    final target = 6000;
+    const target = 6000;
     final currentSteps = (stepData.todaySteps as num).toInt();
     final progress = (currentSteps / target).clamp(0.0, 1.0);
     final isCompleted = currentSteps >= target;
@@ -59,7 +61,7 @@ class StepAnalysisWidget extends ConsumerWidget {
           // 헤더: 걸음수 분석 제목 + 랭킹
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.directions_walk,
                 color: ModernColors.primary,
                 size: 24,
@@ -110,7 +112,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: ModernColors.primary.withOpacity(0.1),
+                        color: ModernColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
@@ -194,7 +196,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                 child: Stack(
                   children: [
                     // 배경 원
-                    SizedBox(
+                    const SizedBox(
                       width: 100,
                       height: 100,
                       child: CircularProgressIndicator(
@@ -276,7 +278,7 @@ class StepAnalysisWidget extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.trending_up,
                 color: ModernColors.primary,
                 size: 20,
@@ -295,7 +297,7 @@ class StepAnalysisWidget extends ConsumerWidget {
           const SizedBox(height: 24),
           stepHistoryAsync.when(
             data: (stepHistory) => _buildLineChart(stepHistory),
-            loading: () => Container(
+            loading: () => const SizedBox(
               height: 120,
               child: Center(
                 child: CircularProgressIndicator(
@@ -305,7 +307,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                 ),
               ),
             ),
-            error: (error, stack) => Container(
+            error: (error, stack) => SizedBox(
               height: 120,
               child: Center(
                 child: Text(
@@ -325,7 +327,7 @@ class StepAnalysisWidget extends ConsumerWidget {
   /// 흐름 그래프 (Line Chart)
   Widget _buildLineChart(List<DailyStepData> stepHistory) {
     if (stepHistory.isEmpty) {
-      return Container(
+      return SizedBox(
         height: 120,
         child: Center(
           child: Text(
@@ -342,7 +344,7 @@ class StepAnalysisWidget extends ConsumerWidget {
         stepHistory.map((d) => d.steps).reduce((a, b) => a > b ? a : b);
     final minSteps =
         stepHistory.map((d) => d.steps).reduce((a, b) => a < b ? a : b);
-    final goal = 6000;
+    const goal = 6000;
 
     // 차트 데이터 생성
     final spots = stepHistory.asMap().entries.map((entry) {
@@ -367,24 +369,25 @@ class StepAnalysisWidget extends ConsumerWidget {
                   dashArray: [6, 4],
                 );
               }
-              return FlLine(
+              return const FlLine(
                 color: ModernColors.borderLight,
                 strokeWidth: 0.5,
               );
             },
           ),
           titlesData: FlTitlesData(
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
                 reservedSize: 25,
                 getTitlesWidget: (value, meta) {
                   final index = value.toInt();
-                  if (index < 0 || index >= stepHistory.length)
+                  if (index < 0 || index >= stepHistory.length) {
                     return const SizedBox();
+                  }
 
                   final data = stepHistory[index];
                   final isToday = index == stepHistory.length - 1;
@@ -443,14 +446,14 @@ class StepAnalysisWidget extends ConsumerWidget {
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: ModernColors.primary.withOpacity(0.1),
+                color: ModernColors.primary.withValues(alpha: 0.1),
               ),
             ),
           ],
           lineTouchData: LineTouchData(
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
-              tooltipBgColor: ModernColors.textPrimary.withOpacity(0.8),
+              tooltipBgColor: ModernColors.textPrimary.withValues(alpha: 0.8),
               getTooltipItems: (touchedSpots) {
                 return touchedSpots.map((spot) {
                   final index = spot.x.toInt();
@@ -494,7 +497,7 @@ class StepAnalysisWidget extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.analytics_outlined,
                 color: ModernColors.primary,
                 size: 20,
@@ -513,7 +516,7 @@ class StepAnalysisWidget extends ConsumerWidget {
           const SizedBox(height: 24),
           stepStatsAsync.when(
             data: (stats) => _buildStatsGrid(stats),
-            loading: () => Container(
+            loading: () => const SizedBox(
               height: 60,
               child: Center(
                 child: CircularProgressIndicator(
@@ -523,7 +526,7 @@ class StepAnalysisWidget extends ConsumerWidget {
                 ),
               ),
             ),
-            error: (error, stack) => Container(
+            error: (error, stack) => SizedBox(
               height: 60,
               child: Center(
                 child: Text(
@@ -600,7 +603,7 @@ class StepAnalysisWidget extends ConsumerWidget {
   /// 랭킹 배지 위젯
   Widget _buildRankingBadge(int totalSteps) {
     final ranking = _calculateRanking(totalSteps);
-    final rankingText = '상위 ${ranking}%';
+    final rankingText = '상위 $ranking%';
 
     Color badgeColor;
     if (ranking <= 10) {
@@ -616,10 +619,10 @@ class StepAnalysisWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: badgeColor.withOpacity(0.1),
+        color: badgeColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: badgeColor.withOpacity(0.3),
+          color: badgeColor.withValues(alpha: 0.3),
           width: 1,
         ),
       ),

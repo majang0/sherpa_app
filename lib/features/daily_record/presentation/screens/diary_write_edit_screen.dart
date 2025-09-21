@@ -13,7 +13,7 @@ class DiaryWriteEditScreen extends ConsumerStatefulWidget {
   final DateTime? selectedDate;
   final DiaryLog? existingDiary;
 
-  const DiaryWriteEditScreen({
+  const DiaryWriteEditScreen({super.key, 
     this.selectedDate,
     this.existingDiary,
   });
@@ -113,11 +113,11 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -134,11 +134,11 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
             Container(
               margin: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -173,7 +173,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                   end: Alignment.bottomCenter,
                   colors: [
                     ModernColors.diary,
-                    ModernColors.diary.withOpacity(0.7),
+                    ModernColors.diary.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -248,12 +248,12 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withOpacity(0.2),
+            color: ModernColors.primary.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -270,13 +270,13 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                   gradient: LinearGradient(
                     colors: [
                       ModernColors.primary,
-                      ModernColors.primary.withOpacity(0.8),
+                      ModernColors.primary.withValues(alpha: 0.8),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: ModernColors.primary.withOpacity(0.3),
+                      color: ModernColors.primary.withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -324,8 +324,8 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  ModernColors.diary.withOpacity(0.05),
-                  ModernColors.diary.withOpacity(0.08),
+                  ModernColors.diary.withValues(alpha: 0.05),
+                  ModernColors.diary.withValues(alpha: 0.08),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -333,7 +333,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.diary.withOpacity(0.08),
+                  color: ModernColors.diary.withValues(alpha: 0.08),
                   blurRadius: 12,
                   offset: const Offset(0, 3),
                 ),
@@ -347,20 +347,20 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        ModernColors.diary.withOpacity(0.12),
-                        ModernColors.diary.withOpacity(0.18),
+                        ModernColors.diary.withValues(alpha: 0.12),
+                        ModernColors.diary.withValues(alpha: 0.18),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: ModernColors.diary.withOpacity(0.15),
+                        color: ModernColors.diary.withValues(alpha: 0.15),
                         blurRadius: 6,
                         offset: const Offset(0, 2),
                       ),
                     ],
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.calendar_today,
                     color: ModernColors.diary,
                     size: 18,
@@ -397,7 +397,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -411,10 +411,10 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: ModernColors.primary.withOpacity(0.1),
+                        color: ModernColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.sentiment_satisfied,
                         color: ModernColors.primary,
                         size: 20,
@@ -483,7 +483,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                         colors: [
                           MoodConstants.getMoodBackgroundColor(_selectedMood),
                           MoodConstants.getMoodBackgroundColor(_selectedMood)
-                              .withOpacity(0.7),
+                              .withValues(alpha: 0.7),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -493,12 +493,12 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                         BoxShadow(
                           color:
                               MoodConstants.getMoodSelectedColor(_selectedMood)
-                                  .withOpacity(0.15),
+                                  .withValues(alpha: 0.15),
                           blurRadius: 16,
                           offset: const Offset(0, 4),
                         ),
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                           blurRadius: 2,
                           offset: const Offset(0, 1),
                           spreadRadius: -1,
@@ -517,7 +517,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                               BoxShadow(
                                 color: MoodConstants.getMoodSelectedColor(
                                         _selectedMood)
-                                    .withOpacity(0.4),
+                                    .withValues(alpha: 0.4),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -591,24 +591,24 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: mood['selectedColor'].withOpacity(0.3),
+                    color: mood['selectedColor'].withValues(alpha: 0.3),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),
                   BoxShadow(
-                    color: mood['selectedColor'].withOpacity(0.15),
+                    color: mood['selectedColor'].withValues(alpha: 0.15),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                 ]
               : [
                   BoxShadow(
-                    color: ModernColors.shadowBase.withOpacity(0.04),
+                    color: ModernColors.shadowBase.withValues(alpha: 0.04),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     blurRadius: 1,
                     offset: const Offset(0, 1),
                     spreadRadius: -0.5,
@@ -663,14 +663,14 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: mood['selectedColor'].withOpacity(0.4),
+                      color: mood['selectedColor'].withValues(alpha: 0.4),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
                   ]
                 : [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.02),
+                      color: Colors.black.withValues(alpha: 0.02),
                       blurRadius: 4,
                       offset: const Offset(0, 1),
                     ),
@@ -717,7 +717,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -731,10 +731,10 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: ModernColors.primary.withOpacity(0.1),
+                    color: ModernColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.title,
                     color: ModernColors.primary,
                     size: 18,
@@ -757,10 +757,10 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 gradient: LinearGradient(
                   colors: [
                     _titleController.text.isNotEmpty
-                        ? ModernColors.diary.withOpacity(0.02)
+                        ? ModernColors.diary.withValues(alpha: 0.02)
                         : ModernColors.backgroundElevated,
                     _titleController.text.isNotEmpty
-                        ? ModernColors.diary.withOpacity(0.05)
+                        ? ModernColors.diary.withValues(alpha: 0.05)
                         : ModernColors.backgroundFloating,
                   ],
                   begin: Alignment.topLeft,
@@ -770,13 +770,13 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 boxShadow: [
                   BoxShadow(
                     color: _titleController.text.isNotEmpty
-                        ? ModernColors.diary.withOpacity(0.12)
-                        : ModernColors.textTertiary.withOpacity(0.06),
+                        ? ModernColors.diary.withValues(alpha: 0.12)
+                        : ModernColors.textTertiary.withValues(alpha: 0.06),
                     blurRadius: _titleController.text.isNotEmpty ? 16 : 8,
                     offset: const Offset(0, 3),
                   ),
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     blurRadius: 2,
                     offset: const Offset(0, 1),
                     spreadRadius: -1,
@@ -823,7 +823,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -837,10 +837,10 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: ModernColors.primary.withOpacity(0.1),
+                    color: ModernColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.article,
                     color: ModernColors.primary,
                     size: 18,
@@ -879,13 +879,13 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 gradient: LinearGradient(
                   colors: [
                     _contentController.text.isNotEmpty
-                        ? ModernColors.diary.withOpacity(0.02)
+                        ? ModernColors.diary.withValues(alpha: 0.02)
                         : ModernColors.backgroundElevated,
                     _contentController.text.isNotEmpty
-                        ? ModernColors.diary.withOpacity(0.04)
+                        ? ModernColors.diary.withValues(alpha: 0.04)
                         : ModernColors.backgroundSubtle,
                     _contentController.text.isNotEmpty
-                        ? ModernColors.diary.withOpacity(0.06)
+                        ? ModernColors.diary.withValues(alpha: 0.06)
                         : ModernColors.backgroundFloating,
                   ],
                   begin: Alignment.topLeft,
@@ -896,13 +896,13 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                 boxShadow: [
                   BoxShadow(
                     color: _contentController.text.isNotEmpty
-                        ? ModernColors.diary.withOpacity(0.15)
-                        : ModernColors.shadowBase.withOpacity(0.05),
+                        ? ModernColors.diary.withValues(alpha: 0.15)
+                        : ModernColors.shadowBase.withValues(alpha: 0.05),
                     blurRadius: _contentController.text.isNotEmpty ? 20 : 12,
                     offset: const Offset(0, 4),
                   ),
                   BoxShadow(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     blurRadius: 3,
                     offset: const Offset(0, 1),
                     spreadRadius: -1,
@@ -950,7 +950,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: ModernColors.primary.withOpacity(0.1),
+                        color: ModernColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -985,19 +985,19 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
           boxShadow: canSubmit
               ? [
                   BoxShadow(
-                    color: buttonColor.withOpacity(0.4),
+                    color: buttonColor.withValues(alpha: 0.4),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
                   BoxShadow(
-                    color: buttonColor.withOpacity(0.2),
+                    color: buttonColor.withValues(alpha: 0.2),
                     blurRadius: 25,
                     offset: const Offset(0, 12),
                   ),
                 ]
               : [
                   BoxShadow(
-                    color: ModernColors.shadowBase.withOpacity(0.08),
+                    color: ModernColors.shadowBase.withValues(alpha: 0.08),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),
@@ -1019,7 +1019,7 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 22,
                       height: 22,
                       child: CircularProgressIndicator(

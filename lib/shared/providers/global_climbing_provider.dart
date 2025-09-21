@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:convert';
 import 'dart:math' as math;
 
@@ -13,12 +12,10 @@ import '../../features/climbing/models/badge.dart';
 // 글로벌 Provider imports
 import 'global_user_provider.dart';
 import 'global_point_provider.dart';
-import 'global_sherpi_provider.dart';
 import 'global_game_provider.dart';
 import 'global_user_title_provider.dart';
 
 // 상수 imports
-import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/constants/mountain_data.dart';
 
 /// 글로벌 등반 시스템 Provider
@@ -483,9 +480,9 @@ final climbingTimeRemainingTextProvider = Provider<String>((ref) {
   final minutes = remainingTime.inMinutes % 60;
 
   if (hours > 0) {
-    return '${hours}시간 ${minutes}분 남음';
+    return '$hours시간 $minutes분 남음';
   } else {
-    return '${minutes}분 남음';
+    return '$minutes분 남음';
   }
 });
 

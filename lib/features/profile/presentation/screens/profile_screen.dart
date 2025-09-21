@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:ui';
 
 // ✅ 글로벌 데이터 시스템 Import
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_point_provider.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
-import '../../../../shared/providers/global_sherpi_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
-import '../../../../shared/models/user_level_progress.dart';
 
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/game_constants.dart';
-import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
 // ✅ 챌린지 시스템 Import 추가
@@ -27,6 +21,8 @@ import '../widgets/representative_dashboard.dart';
 import '../widgets/challenge_list_item.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -44,12 +40,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
 
     // 애니메이션 초기화
     _fadeAnimationController = AnimationController(
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
 
     _slideAnimationController = AnimationController(
-      duration: Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 800),
       vsync: this,
     );
 
@@ -62,7 +58,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
     ));
 
     _slideAnimation = Tween<Offset>(
-      begin: Offset(0, 0.1),
+      begin: const Offset(0, 0.1),
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: _slideAnimationController,
@@ -102,33 +98,33 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
     final popularChallenges = ref.watch(globalPopularChallengesProvider);
 
     return Scaffold(
-      backgroundColor: Color(0xFFFAFBFF), // Very Light Blue Background
-      appBar: SherpaCleanAppBar(title: '프로필'),
+      backgroundColor: const Color(0xFFFAFBFF), // Very Light Blue Background
+      appBar: const SherpaCleanAppBar(title: '프로필'),
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SlideTransition(
           position: _slideAnimation,
           child: CustomScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             slivers: [
               // 1. 프로필 헤더 (SliverToBoxAdapter)
-              SliverToBoxAdapter(
+              const SliverToBoxAdapter(
                 child: LiquidGlassProfileHeader(),
               ),
 
               // 2. 성장 요약 카드 (SliverToBoxAdapter)
               SliverToBoxAdapter(
                 child: AnimatedContainer(
-                  duration: Duration(milliseconds: 600),
-                  child: GrowthSummaryCard(),
+                  duration: const Duration(milliseconds: 600),
+                  child: const GrowthSummaryCard(),
                 ),
               ),
 
               // 3. 대표 기록 대시보드 (SliverToBoxAdapter)
               SliverToBoxAdapter(
                 child: AnimatedContainer(
-                  duration: Duration(milliseconds: 800),
-                  child: RepresentativeDashboard(),
+                  duration: const Duration(milliseconds: 800),
+                  child: const RepresentativeDashboard(),
                 ),
               ),
 
@@ -143,7 +139,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
 
               // 5. 참여 중인 챌린지 리스트 (SliverList)
               SliverPadding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     // ✅ 실제 챌린지 데이터 기반의 동적 챌린지
@@ -185,8 +181,8 @@ class _ChallengeSectionHeaderDelegate extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+      decoration: const BoxDecoration(
         color: Color(0xFFFAFBFF),
       ),
       child: Row(
@@ -196,22 +192,22 @@ class _ChallengeSectionHeaderDelegate extends SliverPersistentHeaderDelegate {
             style: GoogleFonts.notoSans(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF1E3A8A),
+              color: const Color(0xFF1E3A8A),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: Color(0xFF3B82F6).withValues(alpha: 0.1),
+              color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              '${participatingCount}개 진행 중',
+              '$participatingCount개 진행 중',
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF3B82F6),
+                color: const Color(0xFF3B82F6),
               ),
             ),
           ),
@@ -318,7 +314,7 @@ List<Widget> _buildRealChallenges(
       category: '건강',
       daysLeft: 7 - (user.dailyRecords.consecutiveDays % 7),
       progress: (user.dailyRecords.todaySteps / 6000).clamp(0.0, 1.0),
-      color: Color(0xFF10B981),
+      color: const Color(0xFF10B981),
     ));
   }
 
@@ -329,12 +325,12 @@ List<Widget> _buildRealChallenges(
       category: '독서',
       daysLeft: 12,
       progress: (user.dailyRecords.readingLogs.length / 10).clamp(0.0, 1.0),
-      color: Color(0xFF8B5CF6),
+      color: const Color(0xFF8B5CF6),
     ));
   }
 
   // 4. 하단 여백 추가
-  challenges.add(SizedBox(height: 40));
+  challenges.add(const SizedBox(height: 40));
 
   return challenges;
 }

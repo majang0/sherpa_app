@@ -4,17 +4,14 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 
 // Models
 import '../models/chat_message.dart';
 import '../models/conversation_state.dart';
 
 // Core
-import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/managers/openai_sherpi_manager.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 
 // Emotion Recognition Integration
@@ -498,9 +495,9 @@ class EnhancedChatConversationNotifier
         userId: 'current_user', // TODO: 실제 사용자 ID 사용
         timestamp: message.timestamp,
         activityType: 'chat',
-        duration: Duration(minutes: 2), // 추정치
+        duration: const Duration(minutes: 2), // 추정치
         activityData: {
-          'message_type': message.type?.name ?? 'text',
+          'message_type': message.type.name,
           'message_length': message.content.length,
           'context': state.context.name,
         },

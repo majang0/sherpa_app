@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -97,7 +96,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
             gradient: LinearGradient(
               colors: [
                 AppColors.primary,
-                AppColors.primary.withOpacity(0.8),
+                AppColors.primary.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -119,7 +118,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -312,7 +311,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -328,7 +327,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: color, size: 20),
@@ -369,7 +368,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -444,7 +443,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -468,13 +467,13 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
               BarChartData(
                 barGroups: _createBarGroups(weeklyData),
                 titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
+                  leftTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
-                  rightTitles: AxisTitles(
+                  rightTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
-                  topTitles: AxisTitles(
+                  topTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: false),
                   ),
                   bottomTitles: AxisTitles(
@@ -491,7 +490,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                   ),
                 ),
                 borderData: FlBorderData(show: false),
-                gridData: FlGridData(show: false),
+                gridData: const FlGridData(show: false),
               ),
             ),
           ),
@@ -515,7 +514,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -577,7 +576,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -596,7 +595,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -637,7 +636,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -678,7 +677,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.orange.withOpacity(0.3),
+            color: Colors.orange.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -700,7 +699,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                   '연속 기록',
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                   ),
                 ),
                 Text(
@@ -715,7 +714,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                   '최장 기록: ${patterns.longestStreak}일',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -735,7 +734,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -813,10 +812,10 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: _getMoodColor(entry.value).withOpacity(0.1),
+                    color: _getMoodColor(entry.value).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: _getMoodColor(entry.value).withOpacity(0.3),
+                      color: _getMoodColor(entry.value).withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(
@@ -854,12 +853,12 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: _getInsightColor(insight.type).withOpacity(0.2),
+          color: _getInsightColor(insight.type).withValues(alpha: 0.2),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: _getInsightColor(insight.type).withOpacity(0.1),
+            color: _getInsightColor(insight.type).withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -872,7 +871,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: _getInsightColor(insight.type).withOpacity(0.1),
+              color: _getInsightColor(insight.type).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -902,7 +901,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: _getInsightColor(insight.type).withOpacity(0.1),
+                        color: _getInsightColor(insight.type).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -942,7 +941,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -969,7 +968,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                       colors: [
                         _getRecommendationColor(recommendation.type),
                         _getRecommendationColor(recommendation.type)
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -1010,7 +1009,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
                           color: _getRecommendationColor(recommendation.type)
-                              .withOpacity(0.1),
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -1268,13 +1267,13 @@ class _PatternPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
+      ..color = Colors.white.withValues(alpha: 0.1)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
     for (int i = 0; i < 10; i++) {
       canvas.drawCircle(
-        Offset(size.width * 0.8, size.height * 0.3),
+        const Offset(0, 0),
         20.0 + (i * 15),
         paint,
       );

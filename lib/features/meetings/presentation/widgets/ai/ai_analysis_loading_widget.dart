@@ -1,10 +1,10 @@
 /// AI 분석 중 로딩 위젯
 /// AI가 사용자 데이터를 분석하는 동안 표시되는 애니메이션 로딩 화면
+library;
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lottie/lottie.dart';
 import 'dart:math' as math;
 
 import '../../../../../core/theme/modern_colors.dart';
@@ -166,7 +166,7 @@ class _AIAnalysisLoadingWidgetState extends State<AIAnalysisLoadingWidget>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
                     ModernColors.primary,
                     ModernColors.secondary,
@@ -370,7 +370,7 @@ class SimpleAILoadingIndicator extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
+          const SizedBox(
             width: 16,
             height: 16,
             child: CircularProgressIndicator(

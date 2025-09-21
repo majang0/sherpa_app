@@ -13,10 +13,10 @@ class ReadingRecordScreen extends ConsumerStatefulWidget {
   final ReadingLog? editingLog;
 
   const ReadingRecordScreen({
-    Key? key,
+    super.key,
     this.targetDate,
     this.editingLog,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<ReadingRecordScreen> createState() =>
@@ -151,11 +151,11 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -172,11 +172,11 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
             Container(
               margin: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -211,7 +211,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   end: Alignment.bottomCenter,
                   colors: [
                     ModernColors.reading,
-                    ModernColors.reading.withOpacity(0.7),
+                    ModernColors.reading.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -327,12 +327,12 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.reading.withOpacity(0.2),
+            color: ModernColors.reading.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -349,13 +349,13 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   gradient: LinearGradient(
                     colors: [
                       ModernColors.reading,
-                      ModernColors.reading.withOpacity(0.8),
+                      ModernColors.reading.withValues(alpha: 0.8),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: ModernColors.reading.withOpacity(0.3),
+                      color: ModernColors.reading.withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -405,17 +405,17 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              color: ModernColors.reading.withOpacity(0.1),
+              color: ModernColors.reading.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: ModernColors.reading.withOpacity(0.2),
+                color: ModernColors.reading.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
+                const Icon(
                   Icons.calendar_today,
                   color: ModernColors.reading,
                   size: 18,
@@ -451,7 +451,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -465,10 +465,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: ModernColors.reading.withOpacity(0.1),
+                        color: ModernColors.reading.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.category,
                         color: ModernColors.reading,
                         size: 20,
@@ -518,10 +518,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: ModernColors.reading.withOpacity(0.1),
+                      color: ModernColors.reading.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: ModernColors.reading.withOpacity(0.2),
+                        color: ModernColors.reading.withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
@@ -572,7 +572,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               ? LinearGradient(
                   colors: [
                     ModernColors.reading,
-                    ModernColors.reading.withOpacity(0.85)
+                    ModernColors.reading.withValues(alpha: 0.85)
                   ],
                 )
               : null,
@@ -581,20 +581,20 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           border: Border.all(
             color: isSelected
                 ? ModernColors.reading
-                : ModernColors.textTertiary.withOpacity(0.2),
+                : ModernColors.textTertiary.withValues(alpha: 0.2),
             width: 1.5,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: ModernColors.reading.withOpacity(0.4),
+                    color: ModernColors.reading.withValues(alpha: 0.4),
                     blurRadius: 15,
                     offset: const Offset(0, 6),
                   ),
                 ]
               : [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.03),
+                    color: Colors.black.withValues(alpha: 0.03),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -632,7 +632,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -646,10 +646,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: ModernColors.reading.withOpacity(0.1),
+                    color: ModernColors.reading.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.menu_book,
                     color: ModernColors.reading,
                     size: 18,
@@ -673,8 +673,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: _bookTitleController.text.isNotEmpty
-                      ? ModernColors.reading.withOpacity(0.3)
-                      : ModernColors.textTertiary.withOpacity(0.2),
+                      ? ModernColors.reading.withValues(alpha: 0.3)
+                      : ModernColors.textTertiary.withValues(alpha: 0.2),
                   width: 1.5,
                 ),
               ),
@@ -700,7 +700,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   contentPadding: const EdgeInsets.all(20),
                   prefixIcon: Container(
                     padding: const EdgeInsets.all(12),
-                    child: Icon(
+                    child: const Icon(
                       Icons.book_outlined,
                       color: ModernColors.reading,
                       size: 24,
@@ -726,7 +726,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -740,10 +740,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: ModernColors.reading.withOpacity(0.1),
+                    color: ModernColors.reading.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.auto_stories,
                     color: ModernColors.reading,
                     size: 18,
@@ -786,8 +786,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: _startPageController.text.isNotEmpty
-                            ? ModernColors.reading.withOpacity(0.3)
-                            : ModernColors.textTertiary.withOpacity(0.2),
+                            ? ModernColors.reading.withValues(alpha: 0.3)
+                            : ModernColors.textTertiary.withValues(alpha: 0.2),
                         width: 1.5,
                       ),
                     ),
@@ -823,10 +823,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: ModernColors.reading.withOpacity(0.1),
+                      color: ModernColors.reading.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.arrow_forward,
                       color: ModernColors.reading,
                       size: 20,
@@ -840,8 +840,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: _endPageController.text.isNotEmpty
-                            ? ModernColors.reading.withOpacity(0.3)
-                            : ModernColors.textTertiary.withOpacity(0.2),
+                            ? ModernColors.reading.withValues(alpha: 0.3)
+                            : ModernColors.textTertiary.withValues(alpha: 0.2),
                         width: 1.5,
                       ),
                     ),
@@ -883,13 +883,13 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: ModernColors.reading.withOpacity(0.1),
+                    color: ModernColors.reading.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.check_circle,
                         color: ModernColors.reading,
                         size: 16,
@@ -923,7 +923,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -937,10 +937,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.amber.withOpacity(0.1),
+                    color: Colors.amber.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.star_rounded,
                     color: Colors.amber,
                     size: 20,
@@ -1079,7 +1079,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -1093,10 +1093,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: ModernColors.reading.withOpacity(0.1),
+                    color: ModernColors.reading.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.mood,
                     color: ModernColors.reading,
                     size: 20,
@@ -1146,10 +1146,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: ModernColors.reading.withOpacity(0.1),
+                  color: ModernColors.reading.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: ModernColors.reading.withOpacity(0.2),
+                    color: ModernColors.reading.withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
@@ -1198,7 +1198,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               ? LinearGradient(
                   colors: [
                     ModernColors.reading,
-                    ModernColors.reading.withOpacity(0.85)
+                    ModernColors.reading.withValues(alpha: 0.85)
                   ],
                 )
               : null,
@@ -1207,20 +1207,20 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           border: Border.all(
             color: isSelected
                 ? ModernColors.reading
-                : ModernColors.textTertiary.withOpacity(0.2),
+                : ModernColors.textTertiary.withValues(alpha: 0.2),
             width: 1.5,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: ModernColors.reading.withOpacity(0.4),
+                    color: ModernColors.reading.withValues(alpha: 0.4),
                     blurRadius: 15,
                     offset: const Offset(0, 6),
                   ),
                 ]
               : [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.03),
+                    color: Colors.black.withValues(alpha: 0.03),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -1258,7 +1258,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -1272,10 +1272,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: ModernColors.reading.withOpacity(0.1),
+                    color: ModernColors.reading.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.format_quote,
                     color: ModernColors.reading,
                     size: 18,
@@ -1315,8 +1315,8 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: _noteController.text.isNotEmpty
-                      ? ModernColors.reading.withOpacity(0.3)
-                      : ModernColors.textTertiary.withOpacity(0.2),
+                      ? ModernColors.reading.withValues(alpha: 0.3)
+                      : ModernColors.textTertiary.withValues(alpha: 0.2),
                   width: 1.5,
                 ),
               ),
@@ -1359,7 +1359,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: ModernColors.reading.withOpacity(0.1),
+                        color: ModernColors.reading.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -1390,7 +1390,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -1404,10 +1404,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: ModernColors.reading.withOpacity(0.1),
+                    color: ModernColors.reading.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.photo_camera,
                     color: ModernColors.reading,
                     size: 18,
@@ -1437,7 +1437,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                   color: const Color(0xFFF8FAFC),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: ModernColors.reading.withOpacity(0.3),
+                    color: ModernColors.reading.withValues(alpha: 0.3),
                     width: 2,
                   ),
                 ),
@@ -1447,10 +1447,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: ModernColors.reading.withOpacity(0.1),
+                        color: ModernColors.reading.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.camera_alt_rounded,
                         color: ModernColors.reading,
                         size: 32,
@@ -1494,7 +1494,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -1505,10 +1505,10 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: ModernColors.reading.withOpacity(0.1),
+                color: ModernColors.reading.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.people_rounded,
                 color: ModernColors.reading,
                 size: 24,
@@ -1546,7 +1546,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
                 boxShadow: _shareWithCommunity
                     ? [
                         BoxShadow(
-                          color: ModernColors.reading.withOpacity(0.3),
+                          color: ModernColors.reading.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -1587,7 +1587,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
           boxShadow: canSubmit
               ? [
                   BoxShadow(
-                    color: buttonColor.withOpacity(0.4),
+                    color: buttonColor.withValues(alpha: 0.4),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -1609,7 +1609,7 @@ class _ReadingRecordScreenState extends ConsumerState<ReadingRecordScreen>
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 22,
                       height: 22,
                       child: CircularProgressIndicator(

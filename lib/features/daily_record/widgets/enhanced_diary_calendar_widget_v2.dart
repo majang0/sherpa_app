@@ -103,7 +103,7 @@ class _EnhancedDiaryCalendarWidgetState
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [ModernColors.diary, ModernColors.diaryAccent],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -149,7 +149,7 @@ class _EnhancedDiaryCalendarWidgetState
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DiaryWriteEditScreen(),
+                builder: (context) => const DiaryWriteEditScreen(),
               ),
             );
           },
@@ -161,7 +161,7 @@ class _EnhancedDiaryCalendarWidgetState
               borderRadius: BorderRadius.circular(12),
               boxShadow: ModernColors.getContextShadow('diary', level: 1),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.add_rounded,
               color: ModernColors.diary,
               size: 20,
@@ -184,7 +184,7 @@ class _EnhancedDiaryCalendarWidgetState
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.textTertiary.withOpacity(0.08),
+            color: ModernColors.textTertiary.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -276,7 +276,7 @@ class _EnhancedDiaryCalendarWidgetState
                 boxShadow: [
                   if (isToday) ...[
                     BoxShadow(
-                      color: ModernColors.diary.withOpacity(0.3),
+                      color: ModernColors.diary.withValues(alpha: 0.3),
                       blurRadius: 6,
                       offset: const Offset(0, 3),
                     ),
@@ -338,7 +338,7 @@ class _EnhancedDiaryCalendarWidgetState
                 width: 4,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: ModernColors.textTertiary.withOpacity(0.3),
+                  color: ModernColors.textTertiary.withValues(alpha: 0.3),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -374,7 +374,7 @@ class _EnhancedDiaryCalendarWidgetState
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
           decoration: BoxDecoration(
-            color: ModernColors.diary.withOpacity(0.1),
+            color: ModernColors.diary.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -409,7 +409,7 @@ class _EnhancedDiaryCalendarWidgetState
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: ModernColors.textTertiary.withOpacity(0.1),
+              color: ModernColors.textTertiary.withValues(alpha: 0.1),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),
@@ -470,7 +470,7 @@ class _EnhancedDiaryCalendarWidgetState
                       ),
                       if (diary.hasAttachments) ...[
                         const SizedBox(width: 4),
-                        Icon(
+                        const Icon(
                           Icons.attachment_rounded,
                           size: 12,
                           color: ModernColors.textTertiary,
@@ -521,7 +521,7 @@ class _EnhancedDiaryCalendarWidgetState
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.textTertiary.withOpacity(0.08),
+            color: ModernColors.textTertiary.withValues(alpha: 0.08),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -537,7 +537,7 @@ class _EnhancedDiaryCalendarWidgetState
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.diary.withOpacity(0.25),
+                  color: ModernColors.diary.withValues(alpha: 0.25),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -586,7 +586,7 @@ class _EnhancedDiaryCalendarWidgetState
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DiaryFullViewWidget(),
+                builder: (context) => const DiaryFullViewWidget(),
               ),
             );
           },
@@ -598,7 +598,7 @@ class _EnhancedDiaryCalendarWidgetState
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.diary.withOpacity(0.12),
+                  color: ModernColors.diary.withValues(alpha: 0.12),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -613,7 +613,7 @@ class _EnhancedDiaryCalendarWidgetState
                     color: ModernColors.surface,
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.calendar_view_month_rounded,
                     color: ModernColors.diary,
                     size: 14,
@@ -660,7 +660,7 @@ class _EnhancedDiaryCalendarWidgetState
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DiaryWriteEditScreen(),
+                      builder: (context) => const DiaryWriteEditScreen(),
                     ),
                   );
                 },
@@ -698,8 +698,8 @@ class _EnhancedDiaryCalendarWidgetState
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    ModernColors.diaryAccent.withOpacity(0.8),
-                    ModernColors.diary.withOpacity(0.6),
+                    ModernColors.diaryAccent.withValues(alpha: 0.8),
+                    ModernColors.diary.withValues(alpha: 0.6),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -765,7 +765,7 @@ class _EnhancedDiaryCalendarWidgetState
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => DiaryWriteEditScreen(),
+                builder: (context) => const DiaryWriteEditScreen(),
               ),
             );
           },
@@ -855,7 +855,7 @@ class _EnhancedDiaryCalendarWidgetState
                   borderRadius: BorderRadius.circular(18),
                   boxShadow: [
                     BoxShadow(
-                      color: ModernColors.diary.withOpacity(0.3),
+                      color: ModernColors.diary.withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -924,7 +924,7 @@ class _EnhancedDiaryCalendarWidgetState
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.diary.withOpacity(0.25),
+            color: ModernColors.diary.withValues(alpha: 0.25),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -973,11 +973,11 @@ class _EnhancedDiaryCalendarWidgetState
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: ModernColors.diaryLight.withOpacity(0.6),
+        color: ModernColors.diaryLight.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.diary.withOpacity(0.06),
+            color: ModernColors.diary.withValues(alpha: 0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -1124,7 +1124,7 @@ class _EnhancedDiaryCalendarWidgetState
             boxShadow: [
               if (!isOutlined)
                 BoxShadow(
-                  color: ModernColors.diary.withOpacity(0.2),
+                  color: ModernColors.diary.withValues(alpha: 0.2),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -1183,8 +1183,8 @@ class _EnhancedDiaryCalendarWidgetState
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            ModernColors.diaryLight.withOpacity(0.5),
-            Colors.white.withOpacity(0.3),
+            ModernColors.diaryLight.withValues(alpha: 0.5),
+            Colors.white.withValues(alpha: 0.3),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -1192,7 +1192,7 @@ class _EnhancedDiaryCalendarWidgetState
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.diary.withOpacity(0.05),
+            color: ModernColors.diary.withValues(alpha: 0.05),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -1262,12 +1262,12 @@ class _EnhancedDiaryCalendarWidgetState
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: isLatest
-                        ? ModernColors.diaryLight.withOpacity(0.6)
+                        ? ModernColors.diaryLight.withValues(alpha: 0.6)
                         : ModernColors.surface,
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
-                        color: ModernColors.diary.withOpacity(0.05),
+                        color: ModernColors.diary.withValues(alpha: 0.05),
                         blurRadius: 10,
                         offset: const Offset(0, 3),
                       ),
@@ -1287,8 +1287,8 @@ class _EnhancedDiaryCalendarWidgetState
                           boxShadow: [
                             BoxShadow(
                               color: isLatest
-                                  ? ModernColors.diary.withOpacity(0.2)
-                                  : Colors.black.withOpacity(0.05),
+                                  ? ModernColors.diary.withValues(alpha: 0.2)
+                                  : Colors.black.withValues(alpha: 0.05),
                               blurRadius: 6,
                               offset: const Offset(0, 2),
                             ),
@@ -1386,7 +1386,7 @@ class _EnhancedDiaryCalendarWidgetState
                       // 화살표 아이콘
                       Icon(
                         Icons.chevron_right_rounded,
-                        color: ModernColors.diary.withOpacity(0.5),
+                        color: ModernColors.diary.withValues(alpha: 0.5),
                         size: 22,
                       ),
                     ],

@@ -8,10 +8,10 @@ class MoodSelector extends StatefulWidget {
   final Function(MoodType) onMoodSelected;
 
   const MoodSelector({
-    Key? key,
+    super.key,
     this.selectedMood,
     required this.onMoodSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<MoodSelector> createState() => _MoodSelectorState();

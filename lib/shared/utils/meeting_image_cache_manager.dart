@@ -1,7 +1,6 @@
 // lib/shared/utils/meeting_image_cache_manager.dart
 
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -117,10 +116,10 @@ class MeetingImageCacheManager {
             return child;
           }
           return AnimatedOpacity(
-            child: child,
             opacity: frame == null ? 0 : 1,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
+            child: child,
           );
         },
         errorBuilder: (context, error, stackTrace) =>
@@ -166,10 +165,10 @@ class MeetingImageCacheManager {
           return child;
         }
         return AnimatedOpacity(
-          child: child,
           opacity: frame == null ? 0 : 1,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
+          child: child,
         );
       },
       errorBuilder: (context, error, stackTrace) =>

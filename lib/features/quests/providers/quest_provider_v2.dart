@@ -31,7 +31,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
   Map<String, dynamic> _lastTrackingData = {};
 
   // 보너스 수령 캐시
-  Set<String> _claimedBonuses = {};
+  final Set<String> _claimedBonuses = {};
 
   // SharedPreferences 동시 접근 방지용 락
   bool _isSaving = false;
@@ -87,7 +87,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
           _allQuests = savedQuests
               .map((questJson) => QuestInstance.fromJson(jsonDecode(questJson)))
               .toList();
-        } catch (e, stack) {
+        } catch (e) {
           _allQuests = [];
         }
       } else {
@@ -248,7 +248,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
           state = AsyncValue.data(_allQuests);
         }
       }
-    } catch (e, stack) {
+    } catch (e) {
       // 전체 동기화 실패 시에도 기존 상태 유지
       // 전체 동기화 실패 시에도 기존 상태 유지 (에러 상태로 설정하지 않음)
     }
@@ -290,7 +290,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
         _lastTrackingData = trackingData;
         await syncWithGlobalData(); // ✅ await 추가!
       }
-    } catch (e, stack) {
+    } catch (e) {
       // 에러 로깅만 하고 앱 크래시 방지
       // 글로벌 데이터 동기화 에러 발생
       // 상태를 에러로 설정하지 않고 기존 데이터 유지
@@ -336,7 +336,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
         await _saveQuests();
         state = AsyncValue.data(_allQuests);
       }
-    } catch (e, stack) {
+    } catch (e) {
       // 탭 방문 기록 에러 발생
       // 에러가 발생해도 앱이 멈추지 않도록 함
     }
@@ -511,7 +511,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       final questJsonList =
           _allQuests.map((quest) => jsonEncode(quest.toJson())).toList();
       await prefs.setStringList('saved_quests_v2', questJsonList);
-    } catch (e, stack) {
+    } catch (e) {
       // 퀘스트 저장 에러 발생
     } finally {
       _isSaving = false;
@@ -717,13 +717,13 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
   int _calculateWeeklyPointsEarned(List<PointTransaction> transactions) {
     final now = DateTime.now();
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    final weekEnd = weekStart.add(Duration(days: 6));
+    final weekEnd = weekStart.add(const Duration(days: 6));
 
     return transactions
         .where((tx) =>
             tx.isEarned &&
-            tx.createdAt.isAfter(weekStart.subtract(Duration(days: 1))) &&
-            tx.createdAt.isBefore(weekEnd.add(Duration(days: 1))))
+            tx.createdAt.isAfter(weekStart.subtract(const Duration(days: 1))) &&
+            tx.createdAt.isBefore(weekEnd.add(const Duration(days: 1))))
         .fold(0, (sum, tx) => sum + tx.amount);
   }
 }

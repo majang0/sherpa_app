@@ -10,14 +10,14 @@ class SherpaCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   const SherpaCard({
-    Key? key,
+    super.key,
     required this.child,
     this.padding,
     this.elevation,
     this.backgroundColor,
     this.borderRadius,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

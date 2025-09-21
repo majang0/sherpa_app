@@ -13,7 +13,7 @@ import 'meeting_edit_screen.dart';
 class MeetingLogDetailScreen extends ConsumerStatefulWidget {
   final MeetingLog meeting;
 
-  const MeetingLogDetailScreen({required this.meeting});
+  const MeetingLogDetailScreen({super.key, required this.meeting});
 
   @override
   ConsumerState<MeetingLogDetailScreen> createState() =>
@@ -92,11 +92,11 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -112,11 +112,11 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
           Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -215,12 +215,12 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: categoryInfo['color'].withOpacity(0.2),
+            color: categoryInfo['color'].withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -240,7 +240,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: categoryInfo['color'].withOpacity(0.3),
+                      color: categoryInfo['color'].withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -279,10 +279,10 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: categoryInfo['color'].withOpacity(0.1),
+                  color: categoryInfo['color'].withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: categoryInfo['color'].withOpacity(0.2),
+                    color: categoryInfo['color'].withValues(alpha: 0.2),
                     width: 1,
                   ),
                 ),
@@ -301,10 +301,10 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
-              color: categoryInfo['color'].withOpacity(0.1),
+              color: categoryInfo['color'].withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: categoryInfo['color'].withOpacity(0.2),
+                color: categoryInfo['color'].withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
@@ -333,7 +333,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -347,7 +347,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: categoryInfo['color'].withOpacity(0.1),
+                    color: categoryInfo['color'].withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -374,7 +374,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: categoryInfo['color'].withOpacity(0.1),
+                  color: categoryInfo['color'].withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -406,7 +406,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -420,7 +420,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: categoryInfo['color'].withOpacity(0.1),
+                    color: categoryInfo['color'].withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -451,15 +451,15 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                       color: const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: const Color(0xFFFBBF24).withOpacity(0.2),
+                        color: const Color(0xFFFBBF24).withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           '⭐',
-                          style: const TextStyle(fontSize: 24),
+                          style: TextStyle(fontSize: 24),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -499,7 +499,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                       color: const Color(0xFFF8FAFC),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: categoryInfo['color'].withOpacity(0.2),
+                        color: categoryInfo['color'].withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
@@ -541,7 +541,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -555,7 +555,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: categoryInfo['color'].withOpacity(0.1),
+                    color: categoryInfo['color'].withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(
@@ -583,7 +583,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: categoryInfo['color'].withOpacity(0.1),
+                  color: categoryInfo['color'].withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -645,7 +645,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: categoryInfo['color'].withOpacity(0.4),
+                    color: categoryInfo['color'].withValues(alpha: 0.4),
                     blurRadius: 15,
                     offset: const Offset(0, 8),
                   ),
@@ -665,7 +665,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.edit, size: 20),
+                    const Icon(Icons.edit, size: 20),
                     const SizedBox(width: 8),
                     Text(
                       '수정하기',
@@ -690,12 +690,12 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: categoryInfo['color'].withOpacity(0.3),
+                color: categoryInfo['color'].withValues(alpha: 0.3),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

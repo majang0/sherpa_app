@@ -184,8 +184,8 @@ class _SearchBar2025State extends State<SearchBar2025>
                   boxShadow: [
                     BoxShadow(
                       color: _isFocused
-                          ? ModernColors.primary.withOpacity(0.2)
-                          : Colors.black.withOpacity(0.04),
+                          ? ModernColors.primary.withValues(alpha: 0.2)
+                          : Colors.black.withValues(alpha: 0.04),
                       blurRadius: _isFocused ? 20 : 10,
                       offset: const Offset(0, 4),
                     ),
@@ -202,8 +202,8 @@ class _SearchBar2025State extends State<SearchBar2025>
                           end: Alignment.bottomRight,
                           colors: isDark
                               ? [
-                                  ModernColors.surface.withOpacity(0.1),
-                                  ModernColors.surface.withOpacity(0.05),
+                                  ModernColors.surface.withValues(alpha: 0.1),
+                                  ModernColors.surface.withValues(alpha: 0.05),
                                 ]
                               : [
                                   ModernColors.surface,
@@ -213,7 +213,7 @@ class _SearchBar2025State extends State<SearchBar2025>
                         border: Border.all(
                           color: _isFocused
                               ? ModernColors.borderFocus
-                              : ModernColors.border.withOpacity(0.1),
+                              : ModernColors.border.withValues(alpha: 0.1),
                           width: _isFocused ? 1.5 : 1,
                         ),
                         borderRadius: BorderRadius.circular(25),
@@ -232,7 +232,7 @@ class _SearchBar2025State extends State<SearchBar2025>
                                     ? ModernColors.primary
                                     : (isDark
                                         ? ModernColors.textOnPrimary
-                                            .withOpacity(0.7)
+                                            .withValues(alpha: 0.7)
                                         : ModernColors.textSecondary),
                               ),
                             ),
@@ -255,7 +255,7 @@ class _SearchBar2025State extends State<SearchBar2025>
                                 hintStyle: TextStyle(
                                   color: isDark
                                       ? ModernColors.textOnPrimary
-                                          .withOpacity(0.5)
+                                          .withValues(alpha: 0.5)
                                       : ModernColors.textTertiary,
                                   fontWeight: FontWeight.w400,
                                 ),
@@ -320,7 +320,7 @@ class _SearchBar2025State extends State<SearchBar2025>
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
@@ -337,8 +337,8 @@ class _SearchBar2025State extends State<SearchBar2025>
                                 end: Alignment.bottomRight,
                                 colors: isDark
                                     ? [
-                                        ModernColors.surface.withOpacity(0.1),
-                                        ModernColors.surface.withOpacity(0.05),
+                                        ModernColors.surface.withValues(alpha: 0.1),
+                                        ModernColors.surface.withValues(alpha: 0.05),
                                       ]
                                     : [
                                         ModernColors.surface,
@@ -346,7 +346,7 @@ class _SearchBar2025State extends State<SearchBar2025>
                                       ],
                               ),
                               border: Border.all(
-                                color: ModernColors.border.withOpacity(0.1),
+                                color: ModernColors.border.withValues(alpha: 0.1),
                                 width: 1,
                               ),
                               borderRadius: BorderRadius.circular(16),
@@ -395,15 +395,15 @@ class _SearchBar2025State extends State<SearchBar2025>
         ),
         decoration: BoxDecoration(
           color: isDark
-              ? ModernColors.surface.withOpacity(0.1)
-              : ModernColors.background.withOpacity(0.5),
+              ? ModernColors.surface.withValues(alpha: 0.1)
+              : ModernColors.background.withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(18),
         ),
         child: Icon(
           icon,
           size: 18,
           color: isDark
-              ? ModernColors.textOnPrimary.withOpacity(0.7)
+              ? ModernColors.textOnPrimary.withValues(alpha: 0.7)
               : ModernColors.textSecondary,
         ),
       ),
@@ -425,7 +425,7 @@ class _SearchBar2025State extends State<SearchBar2025>
               ? Border(
                   bottom: BorderSide(
                     color: isDark
-                        ? ModernColors.border.withOpacity(0.1)
+                        ? ModernColors.border.withValues(alpha: 0.1)
                         : ModernColors.borderLight,
                     width: 0.5,
                   ),
@@ -438,7 +438,7 @@ class _SearchBar2025State extends State<SearchBar2025>
               Icons.search,
               size: 18,
               color: isDark
-                  ? ModernColors.textOnPrimary.withOpacity(0.6)
+                  ? ModernColors.textOnPrimary.withValues(alpha: 0.6)
                   : ModernColors.textTertiary,
             ),
             const SizedBox(width: 12),
@@ -448,7 +448,7 @@ class _SearchBar2025State extends State<SearchBar2025>
                 style: TextStyle(
                   fontSize: 14,
                   color: isDark
-                      ? ModernColors.textOnPrimary.withOpacity(0.7)
+                      ? ModernColors.textOnPrimary.withValues(alpha: 0.7)
                       : ModernColors.textPrimary,
                   fontWeight: FontWeight.w500,
                 ),
@@ -458,7 +458,7 @@ class _SearchBar2025State extends State<SearchBar2025>
               Icons.north_west,
               size: 16,
               color: isDark
-                  ? ModernColors.textOnPrimary.withOpacity(0.38)
+                  ? ModernColors.textOnPrimary.withValues(alpha: 0.38)
                   : ModernColors.textPlaceholder,
             ),
           ],

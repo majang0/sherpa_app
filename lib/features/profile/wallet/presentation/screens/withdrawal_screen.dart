@@ -8,6 +8,8 @@ import '../../../../../shared/models/point_system_model.dart';
 import '../../../../../shared/providers/global_point_provider.dart';
 
 class WithdrawalScreen extends ConsumerStatefulWidget {
+  const WithdrawalScreen({super.key});
+
   @override
   ConsumerState<WithdrawalScreen> createState() => _WithdrawalScreenState();
 }
@@ -49,7 +51,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '포인트 출금',
         backgroundColor: AppColors.background,
       ),
@@ -100,7 +102,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               ),
             ),
             Text(
-              '= ${totalPoints}원',
+              '= $totalPoints원',
               style: GoogleFonts.notoSans(
                 fontSize: 16,
                 color: AppColors.textSecondary,
@@ -117,7 +119,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.info_outline,
                     color: AppColors.warning,
                     size: 16,
@@ -170,7 +172,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: AppColors.primary),
+                  borderSide: const BorderSide(color: AppColors.primary),
                 ),
               ),
               style: GoogleFonts.notoSans(
@@ -202,7 +204,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
           _calculateWithdrawal(amount.toString());
         },
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: AppColors.primary),
+          side: const BorderSide(color: AppColors.primary),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -238,12 +240,12 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
             _buildCalculationRow(
                 '출금 포인트', '${_withdrawalPoints}P', AppColors.primary),
             _buildCalculationRow(
-                '원화 환산', '${_withdrawalPoints}원', AppColors.textSecondary),
+                '원화 환산', '$_withdrawalPoints원', AppColors.textSecondary),
             _buildCalculationRow(
-                '출금 수수료 (10%)', '-${_withdrawalFee}원', AppColors.error),
+                '출금 수수료 (10%)', '-$_withdrawalFee원', AppColors.error),
             const Divider(height: 24),
             _buildCalculationRow(
-                '실제 받는 금액', '${_withdrawalAmount}원', AppColors.success,
+                '실제 받는 금액', '$_withdrawalAmount원', AppColors.success,
                 isTotal: true),
           ],
         ),
@@ -361,8 +363,8 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('출금 포인트: ${_withdrawalPoints}P'),
-            Text('출금 수수료: ${_withdrawalFee}원'),
-            Text('실제 받는 금액: ${_withdrawalAmount}원'),
+            Text('출금 수수료: $_withdrawalFee원'),
+            Text('실제 받는 금액: $_withdrawalAmount원'),
             const SizedBox(height: 12),
             Text(
               '출금을 요청하시겠습니까?',
@@ -373,7 +375,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('취소'),
+            child: const Text('취소'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -381,13 +383,13 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               Navigator.pop(context);
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text('출금 요청이 완료되었습니다!'),
                   backgroundColor: AppColors.success,
                 ),
               );
             },
-            child: Text('출금 요청'),
+            child: const Text('출금 요청'),
           ),
         ],
       ),

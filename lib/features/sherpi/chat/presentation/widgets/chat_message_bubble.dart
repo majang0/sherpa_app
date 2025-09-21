@@ -97,7 +97,7 @@ class ChatMessageBubble extends StatelessWidget {
         gradient: _getEmotionGradient(emotion),
         boxShadow: [
           BoxShadow(
-            color: _getEmotionColor(emotion).withOpacity(0.3),
+            color: _getEmotionColor(emotion).withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -110,7 +110,7 @@ class ChatMessageBubble extends StatelessWidget {
           height: 32,
           fit: BoxFit.cover,
           errorBuilder: (context, error, stackTrace) {
-            return Icon(
+            return const Icon(
               Icons.face,
               size: 20,
               color: Colors.white,
@@ -130,7 +130,7 @@ class ChatMessageBubble extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withOpacity(0.8),
+            AppColors.primary.withValues(alpha: 0.8),
             AppColors.primary,
           ],
           begin: Alignment.topLeft,
@@ -138,7 +138,7 @@ class ChatMessageBubble extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: AppColors.primary.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -171,7 +171,7 @@ class ChatMessageBubble extends StatelessWidget {
             : null,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
-import '../../../../shared/providers/global_user_provider.dart';
+
 import '../../../../shared/providers/global_point_provider.dart';
 import '../../models/available_meeting_model.dart';
 import '../../utils/meeting_animations.dart';
@@ -119,7 +119,7 @@ class _AvailableMeetingDetailScreenState
 
     return Scaffold(
       backgroundColor: ModernColors.background,
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '모험 세부사항',
       ),
       body: AnimatedMeetingCard(
@@ -344,7 +344,7 @@ class _AvailableMeetingDetailScreenState
         errorBuilder: (context, error, stackTrace) {
           return Container(
             color: ModernColors.surface,
-            child: Icon(
+            child: const Icon(
               Icons.broken_image,
               color: ModernColors.textTertiary,
               size: 48,
@@ -412,7 +412,7 @@ class _AvailableMeetingDetailScreenState
           width: 1,
         ),
       ),
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
@@ -420,7 +420,7 @@ class _AvailableMeetingDetailScreenState
             size: 48,
             color: ModernColors.textTertiary,
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             '등록된 이미지가 없습니다',
             style: TextStyle(
@@ -444,7 +444,7 @@ class _AvailableMeetingDetailScreenState
         borderRadius: borderRadius,
         color: ModernColors.surface,
       ),
-      child: Center(
+      child: const Center(
         child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(ModernColors.primary),
         ),
@@ -470,7 +470,7 @@ class _AvailableMeetingDetailScreenState
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             size: 48,
             color: ModernColors.error,
@@ -478,7 +478,7 @@ class _AvailableMeetingDetailScreenState
           const SizedBox(height: 8),
           Text(
             message,
-            style: TextStyle(
+            style: const TextStyle(
               color: ModernColors.error,
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -1060,7 +1060,7 @@ class _AvailableMeetingDetailScreenState
                 color: ModernColors.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.backpack_rounded,
                 size: 16,
                 color: ModernColors.primary,
@@ -1088,7 +1088,7 @@ class _AvailableMeetingDetailScreenState
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.check_circle_outline_rounded,
                   color: ModernColors.success,
                   size: 16,
@@ -1116,7 +1116,7 @@ class _AvailableMeetingDetailScreenState
                     width: 6,
                     height: 6,
                     margin: const EdgeInsets.only(top: 6),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: ModernColors.primary,
                       shape: BoxShape.circle,
                     ),
@@ -1155,7 +1155,7 @@ class _AvailableMeetingDetailScreenState
                 color: ModernColors.accent.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.rule_rounded,
                 size: 16,
                 color: ModernColors.accent,
@@ -1179,7 +1179,7 @@ class _AvailableMeetingDetailScreenState
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
+                const Icon(
                   Icons.check_rounded,
                   color: ModernColors.success,
                   size: 16,
@@ -1218,7 +1218,7 @@ class _AvailableMeetingDetailScreenState
                 color: ModernColors.warning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.info_outline_rounded,
                 size: 16,
                 color: ModernColors.warning,
@@ -1242,7 +1242,7 @@ class _AvailableMeetingDetailScreenState
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
+                const Icon(
                   Icons.warning_amber_rounded,
                   color: ModernColors.warning,
                   size: 16,
@@ -1513,7 +1513,7 @@ class _AvailableMeetingDetailScreenState
         children: [
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on_rounded,
                 color: ModernColors.primary,
                 size: 20,
@@ -1561,7 +1561,7 @@ class _AvailableMeetingDetailScreenState
               onPressed: () {
                 // TODO: 지도 앱 연동
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text('지도 앱으로 길찾기 (구현 예정)'),
                     backgroundColor: ModernColors.primary,
                   ),
@@ -1577,7 +1577,7 @@ class _AvailableMeetingDetailScreenState
               ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: ModernColors.primary,
-                side: BorderSide(color: ModernColors.primary),
+                side: const BorderSide(color: ModernColors.primary),
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -1700,7 +1700,7 @@ class _AvailableMeetingDetailScreenState
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.info_outline_rounded,
                     color: ModernColors.warning,
                     size: 16,
@@ -1739,7 +1739,7 @@ class _AvailableMeetingDetailScreenState
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            offset: const Offset(0, 0),
           ),
         ],
       ),

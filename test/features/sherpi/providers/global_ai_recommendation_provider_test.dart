@@ -63,7 +63,7 @@ void main() {
 
   setUp(() {
     fakeAI = _FakeMeetingRecommendationAI();
-    final sherpiInsights = SherpiInsights(
+    const sherpiInsights = SherpiInsights(
       personalityType: SherpiPersonalityType.balanced,
       sherpiNickname: '셰르피',
       userPreferredName: '연우',

@@ -10,11 +10,9 @@ import '../../../../shared/providers/global_point_provider.dart';
 import '../../../../shared/providers/global_badge_provider.dart';
 import '../../../../shared/providers/global_game_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/game_constants.dart';
 
 class GrowthSummaryCard extends ConsumerWidget {
-  const GrowthSummaryCard({Key? key}) : super(key: key);
+  const GrowthSummaryCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,9 +38,9 @@ class GrowthSummaryCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF1E3A8A).withValues(alpha: 0.1),
+            color: const Color(0xFF1E3A8A).withValues(alpha: 0.1),
             blurRadius: 20,
-            offset: Offset(0, 8),
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -69,7 +67,7 @@ class GrowthSummaryCard extends ConsumerWidget {
                   style: GoogleFonts.notoSans(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1E3A8A),
+                    color: const Color(0xFF1E3A8A),
                   ),
                 ),
 
@@ -102,7 +100,7 @@ class GrowthSummaryCard extends ConsumerWidget {
   }
 
   Widget _buildRadarChart(GlobalStats stats) {
-    return Container(
+    return SizedBox(
       height: 180,
       child: CustomPaint(
         painter: RadarChartPainter(stats),
@@ -112,7 +110,7 @@ class GrowthSummaryCard extends ConsumerWidget {
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF64748B),
+              color: const Color(0xFF64748B),
             ),
           ),
         ),
@@ -130,7 +128,7 @@ class GrowthSummaryCard extends ConsumerWidget {
           '등반력',
           '${climbingPower.toInt()}',
           Icons.trending_up,
-          Color(0xFF10B981),
+          const Color(0xFF10B981),
           isMain: true,
         ),
 
@@ -141,7 +139,7 @@ class GrowthSummaryCard extends ConsumerWidget {
           '레벨',
           '${user.level}',
           Icons.star,
-          Color(0xFFF59E0B),
+          const Color(0xFFF59E0B),
         ),
 
         const SizedBox(height: 12),
@@ -151,7 +149,7 @@ class GrowthSummaryCard extends ConsumerWidget {
           '뱃지',
           '${user.ownedBadgeIds.length}개',
           Icons.emoji_events,
-          Color(0xFF8B5CF6),
+          const Color(0xFF8B5CF6),
         ),
 
         const SizedBox(height: 12),
@@ -161,7 +159,7 @@ class GrowthSummaryCard extends ConsumerWidget {
           '포인트',
           '${totalPoints}P',
           Icons.paid,
-          Color(0xFFEF4444),
+          const Color(0xFFEF4444),
         ),
       ],
     );
@@ -201,7 +199,7 @@ class GrowthSummaryCard extends ConsumerWidget {
                 label,
                 style: GoogleFonts.notoSans(
                   fontSize: isMain ? 12 : 10,
-                  color: Color(0xFF64748B),
+                  color: const Color(0xFF64748B),
                 ),
               ),
             ],
@@ -224,7 +222,7 @@ class RadarChartPainter extends CustomPainter {
 
     // 배경 원들 그리기
     final backgroundPaint = Paint()
-      ..color = Color(0xFFE2E8F0)
+      ..color = const Color(0xFFE2E8F0)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
 
@@ -234,7 +232,7 @@ class RadarChartPainter extends CustomPainter {
 
     // 축 그리기
     final axisPaint = Paint()
-      ..color = Color(0xFFCBD5E1)
+      ..color = const Color(0xFFCBD5E1)
       ..strokeWidth = 1;
 
     final angles = [
@@ -264,11 +262,11 @@ class RadarChartPainter extends CustomPainter {
 
     final path = Path();
     final fillPaint = Paint()
-      ..color = Color(0xFF3B82F6).withValues(alpha: 0.3)
+      ..color = const Color(0xFF3B82F6).withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
     final strokePaint = Paint()
-      ..color = Color(0xFF3B82F6)
+      ..color = const Color(0xFF3B82F6)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
 
@@ -293,7 +291,7 @@ class RadarChartPainter extends CustomPainter {
 
     // 데이터 포인트 그리기
     final pointPaint = Paint()
-      ..color = Color(0xFF3B82F6)
+      ..color = const Color(0xFF3B82F6)
       ..style = PaintingStyle.fill;
 
     for (int i = 0; i < values.length; i++) {

@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:ui';
 import 'dart:io';
 
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
 import '../../../../shared/providers/global_point_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
-import '../../../../shared/models/user_level_progress.dart';
-import '../../../../core/constants/app_colors.dart';
 import 'profile_avatar_widget.dart';
 
 class LiquidGlassProfileHeader extends ConsumerWidget {
-  const LiquidGlassProfileHeader({Key? key}) : super(key: key);
+  const LiquidGlassProfileHeader({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,11 +26,11 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Color(0xFF1E3A8A).withValues(alpha: 0.1), // Navy Blue
-            Color(0xFFEFF6FF).withValues(alpha: 0.3), // Light Sky Blue
+            const Color(0xFF1E3A8A).withValues(alpha: 0.1), // Navy Blue
+            const Color(0xFFEFF6FF).withValues(alpha: 0.3), // Light Sky Blue
             Colors.white,
           ],
-          stops: [0.0, 0.6, 1.0],
+          stops: const [0.0, 0.6, 1.0],
         ),
       ),
       child: Padding(
@@ -66,7 +63,7 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
               style: GoogleFonts.notoSans(
                 fontSize: 28,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF1E3A8A), // Navy Blue
+                color: const Color(0xFF1E3A8A), // Navy Blue
                 letterSpacing: -0.5,
               ),
             ),
@@ -82,14 +79,14 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF64748B),
+                    color: const Color(0xFF64748B),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Color(0xFF3B82F6).withValues(alpha: 0.1),
+                    color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -97,7 +94,7 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF3B82F6),
+                      color: const Color(0xFF3B82F6),
                     ),
                   ),
                 ),
@@ -109,19 +106,19 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
             // ✅ 경험치 바 (개선된 위치 - 사용자 정보 바로 아래)
             Container(
               width: 240, // 더 넓게 조정
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.white.withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Color(0xFF3B82F6).withValues(alpha: 0.2),
+                  color: const Color(0xFF3B82F6).withValues(alpha: 0.2),
                   width: 1,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 8,
-                    offset: Offset(0, 2),
+                    offset: const Offset(0, 2),
                   ),
                 ],
               ),
@@ -135,7 +132,7 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                         style: GoogleFonts.notoSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF64748B),
+                          color: const Color(0xFF64748B),
                         ),
                       ),
                       Text(
@@ -143,7 +140,7 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                         style: GoogleFonts.notoSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFF3B82F6),
+                          color: const Color(0xFF3B82F6),
                         ),
                       ),
                     ],
@@ -152,7 +149,7 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                   Container(
                     height: 8,
                     decoration: BoxDecoration(
-                      color: Color(0xFFE2E8F0),
+                      color: const Color(0xFFE2E8F0),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: FractionallySizedBox(
@@ -160,15 +157,15 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                       widthFactor: userProgress.progress,
                       child: Container(
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
+                          gradient: const LinearGradient(
                             colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
                           ),
                           borderRadius: BorderRadius.circular(4),
                           boxShadow: [
                             BoxShadow(
-                              color: Color(0xFF3B82F6).withValues(alpha: 0.3),
+                              color: const Color(0xFF3B82F6).withValues(alpha: 0.3),
                               blurRadius: 4,
-                              offset: Offset(0, 1),
+                              offset: const Offset(0, 1),
                             ),
                           ],
                         ),
@@ -180,7 +177,7 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                     '다음 레벨까지 ${userProgress.requiredExpForNextLevel - userProgress.currentLevelExp} XP',
                     style: GoogleFonts.notoSans(
                       fontSize: 11,
-                      color: Color(0xFF94A3B8),
+                      color: const Color(0xFF94A3B8),
                     ),
                   ),
                 ],
@@ -195,7 +192,7 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
               textAlign: TextAlign.center,
               style: GoogleFonts.notoSans(
                 fontSize: 14,
-                color: Color(0xFF475569), // Dark Slate Gray
+                color: const Color(0xFF475569), // Dark Slate Gray
                 height: 1.4,
               ),
             ),
@@ -207,15 +204,15 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildSocialStat(
-                    '팔로잉', '${_calculateFollowing(user)}', Color(0xFF3B82F6)),
+                    '팔로잉', '${_calculateFollowing(user)}', const Color(0xFF3B82F6)),
                 _buildSocialStat(
-                    '팔로워', '${_calculateFollowers(user)}', Color(0xFF10B981)),
+                    '팔로워', '${_calculateFollowers(user)}', const Color(0xFF10B981)),
                 _buildSocialStat(
                     '포인트',
-                    '${_formatPoints(pointData.totalPoints)}',
-                    Color(0xFFF59E0B)),
+                    _formatPoints(pointData.totalPoints),
+                    const Color(0xFFF59E0B)),
                 _buildSocialStat('연속접속',
-                    '${user.dailyRecords.consecutiveDays}일', Color(0xFF8B5CF6)),
+                    '${user.dailyRecords.consecutiveDays}일', const Color(0xFF8B5CF6)),
               ],
             ),
 
@@ -226,10 +223,10 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
               spacing: 8,
               runSpacing: 4,
               children: [
-                _buildInterestChip('러닝', Color(0xFF10B981)),
-                _buildInterestChip('독서', Color(0xFFF59E0B)),
-                _buildInterestChip('영화', Color(0xFF8B5CF6)),
-                _buildInterestChip('클라이밍', Color(0xFF3B82F6)),
+                _buildInterestChip('러닝', const Color(0xFF10B981)),
+                _buildInterestChip('독서', const Color(0xFFF59E0B)),
+                _buildInterestChip('영화', const Color(0xFF8B5CF6)),
+                _buildInterestChip('클라이밍', const Color(0xFF3B82F6)),
               ],
             ),
 
@@ -257,7 +254,7 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
           style: GoogleFonts.notoSans(
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF64748B),
+            color: const Color(0xFF64748B),
           ),
         ),
       ],
@@ -419,7 +416,7 @@ class _ImageViewerDialog extends StatelessWidget {
                   ? loadingProgress.cumulativeBytesLoaded /
                       loadingProgress.expectedTotalBytes!
                   : null,
-              color: Color(0xFF3B82F6),
+              color: const Color(0xFF3B82F6),
             ),
           );
         },
@@ -435,7 +432,7 @@ class _ImageViewerDialog extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline,
             size: 64,
             color: Colors.white54,

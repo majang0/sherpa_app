@@ -13,7 +13,7 @@ import 'diary_write_edit_screen.dart';
 class DiaryDetailScreen extends ConsumerStatefulWidget {
   final DiaryLog diary;
 
-  const DiaryDetailScreen({required this.diary});
+  const DiaryDetailScreen({super.key, required this.diary});
 
   @override
   ConsumerState<DiaryDetailScreen> createState() => _DiaryDetailScreenState();
@@ -89,11 +89,11 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -109,11 +109,11 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
           Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -121,7 +121,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
             ),
             child: IconButton(
               onPressed: _editDiary,
-              icon: Icon(
+              icon: const Icon(
                 Icons.edit_outlined,
                 color: ModernColors.diary,
                 size: 20,
@@ -143,7 +143,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                   end: Alignment.bottomCenter,
                   colors: [
                     ModernColors.diary,
-                    ModernColors.diary.withOpacity(0.7),
+                    ModernColors.diary.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -197,12 +197,12 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.diary.withOpacity(0.2),
+            color: ModernColors.diary.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -221,12 +221,12 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: moodInfo['selectedColor'].withOpacity(0.4),
+                      color: moodInfo['selectedColor'].withValues(alpha: 0.4),
                       blurRadius: 16,
                       offset: const Offset(0, 8),
                     ),
                     BoxShadow(
-                      color: moodInfo['selectedColor'].withOpacity(0.2),
+                      color: moodInfo['selectedColor'].withValues(alpha: 0.2),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -271,8 +271,8 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  ModernColors.diary.withOpacity(0.06),
-                  ModernColors.diary.withOpacity(0.10),
+                  ModernColors.diary.withValues(alpha: 0.06),
+                  ModernColors.diary.withValues(alpha: 0.10),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -280,12 +280,12 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.diary.withOpacity(0.12),
+                  color: ModernColors.diary.withValues(alpha: 0.12),
                   blurRadius: 16,
                   offset: const Offset(0, 4),
                 ),
                 BoxShadow(
-                  color: Colors.white.withOpacity(0.8),
+                  color: Colors.white.withValues(alpha: 0.8),
                   blurRadius: 2,
                   offset: const Offset(0, 1),
                   spreadRadius: -1,
@@ -298,17 +298,17 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: ModernColors.diary.withOpacity(0.15),
+                    color: ModernColors.diary.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
-                        color: ModernColors.diary.withOpacity(0.2),
+                        color: ModernColors.diary.withValues(alpha: 0.2),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
                     ],
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.calendar_today,
                     color: ModernColors.diary,
                     size: 18,
@@ -346,7 +346,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -360,10 +360,10 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: ModernColors.primary.withOpacity(0.1),
+                          color: ModernColors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.title,
                           color: ModernColors.primary,
                           size: 18,
@@ -405,7 +405,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -419,10 +419,10 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: ModernColors.primary.withOpacity(0.1),
+                        color: ModernColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.article,
                         color: ModernColors.primary,
                         size: 18,
@@ -464,7 +464,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -478,10 +478,10 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: ModernColors.primary.withOpacity(0.1),
+                          color: ModernColors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.attach_file,
                           color: ModernColors.primary,
                           size: 18,
@@ -541,7 +541,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: ModernColors.diary.withOpacity(0.3),
+                    color: ModernColors.diary.withValues(alpha: 0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -586,7 +586,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -594,7 +594,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
             ),
             child: IconButton(
               onPressed: _shareDiary,
-              icon: Icon(
+              icon: const Icon(
                 Icons.share,
                 color: ModernColors.diary,
                 size: 22,
@@ -613,7 +613,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -621,7 +621,7 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
             ),
             child: IconButton(
               onPressed: _copyDiary,
-              icon: Icon(
+              icon: const Icon(
                 Icons.copy,
                 color: ModernColors.diary,
                 size: 20,
@@ -644,8 +644,8 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            color.withOpacity(0.04),
-            color.withOpacity(0.08),
+            color.withValues(alpha: 0.04),
+            color.withValues(alpha: 0.08),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -653,12 +653,12 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             blurRadius: 12,
             offset: const Offset(0, 3),
           ),
           BoxShadow(
-            color: ModernColors.surface.withOpacity(0.9),
+            color: ModernColors.surface.withValues(alpha: 0.9),
             blurRadius: 2,
             offset: const Offset(0, 1),
             spreadRadius: -1,
@@ -670,11 +670,11 @@ class _DiaryDetailScreenState extends ConsumerState<DiaryDetailScreen>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
+              color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.2),
+                  color: color.withValues(alpha: 0.2),
                   blurRadius: 6,
                   offset: const Offset(0, 2),
                 ),

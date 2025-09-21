@@ -1,4 +1,3 @@
-import '../../core/constants/sherpi_emotions.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 
 /// 📝 셰르피 메시지 히스토리 모델

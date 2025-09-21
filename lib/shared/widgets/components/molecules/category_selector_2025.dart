@@ -132,40 +132,40 @@ class _CategorySelector2025State extends State<CategorySelector2025>
                       end: Alignment.bottomRight,
                       colors: [
                         category.color,
-                        category.color.withOpacity(0.8),
+                        category.color.withValues(alpha: 0.8),
                       ],
                     )
                   : null,
               color: isSelected
                   ? null
                   : isDark
-                      ? ModernColors.surface.withOpacity(0.1)
-                      : ModernColors.background.withOpacity(0.5),
+                      ? ModernColors.surface.withValues(alpha: 0.1)
+                      : ModernColors.background.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(25),
               border: Border.all(
                 color: isSelected
-                    ? category.color.withOpacity(0.3)
+                    ? category.color.withValues(alpha: 0.3)
                     : isDark
-                        ? ModernColors.border.withOpacity(0.1)
+                        ? ModernColors.border.withValues(alpha: 0.1)
                         : ModernColors.borderLight,
                 width: isSelected ? 1.5 : 1,
               ),
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: category.color.withOpacity(0.3),
+                        color: category.color.withValues(alpha: 0.3),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
                       BoxShadow(
-                        color: category.color.withOpacity(0.1),
+                        color: category.color.withValues(alpha: 0.1),
                         blurRadius: 20,
                         offset: const Offset(0, 8),
                       ),
                     ]
                   : [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withValues(alpha: 0.04),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -215,7 +215,7 @@ class _CategorySelector2025State extends State<CategorySelector2025>
                       borderRadius: BorderRadius.circular(2),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withValues(alpha: 0.5),
                           blurRadius: 4,
                           offset: const Offset(0, 0),
                         ),
@@ -259,23 +259,23 @@ class CategoryFilterChip2025 extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? category.color.withOpacity(0.9)
+              ? category.color.withValues(alpha: 0.9)
               : isDark
-                  ? Colors.white.withOpacity(0.05)
-                  : Colors.black.withOpacity(0.05),
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : Colors.black.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
-                ? category.color.withOpacity(0.3)
+                ? category.color.withValues(alpha: 0.3)
                 : isDark
-                    ? Colors.white.withOpacity(0.1)
-                    : Colors.black.withOpacity(0.1),
+                    ? Colors.white.withValues(alpha: 0.1)
+                    : Colors.black.withValues(alpha: 0.1),
             width: 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: category.color.withOpacity(0.3),
+                    color: category.color.withValues(alpha: 0.3),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -298,8 +298,8 @@ class CategoryFilterChip2025 extends StatelessWidget {
                 color: isSelected
                     ? Colors.white
                     : isDark
-                        ? Colors.white.withOpacity(0.8)
-                        : Colors.black.withOpacity(0.7),
+                        ? Colors.white.withValues(alpha: 0.8)
+                        : Colors.black.withValues(alpha: 0.7),
               ),
             ),
             if (showCount && count != null) ...[
@@ -308,8 +308,8 @@ class CategoryFilterChip2025 extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Colors.white.withOpacity(0.2)
-                      : category.color.withOpacity(0.1),
+                      ? Colors.white.withValues(alpha: 0.2)
+                      : category.color.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(

@@ -37,13 +37,13 @@ enum GlobalBadgeTier {
   Color get glowColor {
     switch (this) {
       case GlobalBadgeTier.common:
-        return const Color(0xFF9E9E9E).withOpacity(0.3);
+        return const Color(0xFF9E9E9E).withValues(alpha: 0.3);
       case GlobalBadgeTier.rare:
-        return const Color(0xFF4A90E2).withOpacity(0.4);
+        return const Color(0xFF4A90E2).withValues(alpha: 0.4);
       case GlobalBadgeTier.epic:
-        return const Color(0xFF9C27B0).withOpacity(0.5);
+        return const Color(0xFF9C27B0).withValues(alpha: 0.5);
       case GlobalBadgeTier.legendary:
-        return const Color(0xFFFF9800).withOpacity(0.6);
+        return const Color(0xFFFF9800).withValues(alpha: 0.6);
     }
   }
 }

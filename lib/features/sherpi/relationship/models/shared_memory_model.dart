@@ -420,13 +420,13 @@ class MemoryTemplate {
     return SharedMemory(
       id: 'memory_${DateTime.now().millisecondsSinceEpoch}',
       title: title,
-      content: '오늘 ${achievement}을(를) 달성했어요! 정말 자랑스러워요. 🎉',
+      content: '오늘 $achievement을(를) 달성했어요! 정말 자랑스러워요. 🎉',
       category: MemoryCategory.achievement,
       importance: MemoryImportance.meaningful,
       createdAt: DateTime.now(),
       context: context,
       tags: tags ?? ['achievement', 'proud'],
-      emotionalContext: {
+      emotionalContext: const {
         'emotion': 'pride',
         'intensity': 0.8,
       },
@@ -448,7 +448,7 @@ class MemoryTemplate {
       createdAt: DateTime.now(),
       context: context,
       tags: tags ?? ['celebration', 'happy'],
-      emotionalContext: {
+      emotionalContext: const {
         'emotion': 'joy',
         'intensity': 0.9,
       },
@@ -465,13 +465,13 @@ class MemoryTemplate {
     return SharedMemory(
       id: 'memory_${DateTime.now().millisecondsSinceEpoch}',
       title: title,
-      content: '${challenge}라는 어려움을 만났지만, ${outcome}. 함께 극복해서 더욱 뿌듯해요!',
+      content: '$challenge라는 어려움을 만났지만, $outcome. 함께 극복해서 더욱 뿌듯해요!',
       category: MemoryCategory.challenge,
       importance: MemoryImportance.meaningful,
       createdAt: DateTime.now(),
       context: context,
       tags: tags ?? ['challenge', 'overcome', 'growth'],
-      emotionalContext: {
+      emotionalContext: const {
         'emotion': 'resilience',
         'intensity': 0.7,
       },
@@ -493,7 +493,7 @@ class MemoryTemplate {
       createdAt: DateTime.now(),
       context: context,
       tags: tags ?? ['daily', 'routine'],
-      emotionalContext: {
+      emotionalContext: const {
         'emotion': 'content',
         'intensity': 0.5,
       },

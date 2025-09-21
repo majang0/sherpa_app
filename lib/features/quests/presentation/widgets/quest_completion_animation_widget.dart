@@ -4,16 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 import '../../../../core/theme/modern_colors.dart';
 import '../../models/quest_instance_model.dart';
-import '../../models/quest_template_model.dart';
 
 /// 퀘스트 완료 애니메이션 위젯 (내부 컨트롤러 사용)
 class QuestCompletionAnimationWidget extends ConsumerStatefulWidget {
   final AnimationController? animationController; // 선택사항 (사용안함)
 
   const QuestCompletionAnimationWidget({
-    Key? key,
+    super.key,
     this.animationController, // 선택사항으로 변경
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<QuestCompletionAnimationWidget> createState() =>
@@ -339,7 +338,7 @@ class QuestCompletionAnimationState
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.trending_up,
                           size: 16,
                           color: ModernColors.success,

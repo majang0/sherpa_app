@@ -41,35 +41,35 @@ class UserTitle {
 
 // 칭호 목록 (레벨별 자동 승급)
 final List<UserTitle> userTitles = [
-  UserTitle(
+  const UserTitle(
     title: '초보 등반가',
     description: '등반의 첫 걸음을 내딛은 용감한 도전자',
     levelRequirement: 0,
     bonus: 0,
     icon: '🥾',
   ),
-  UserTitle(
+  const UserTitle(
     title: '신참 등반가',
     description: '기초를 다진 든든한 등반가',
     levelRequirement: 10,
     bonus: 50,
     icon: '⛰️',
   ),
-  UserTitle(
+  const UserTitle(
     title: '숙련된 등반가',
     description: '경험과 실력을 겸비한 등반 전문가',
     levelRequirement: 20,
     bonus: 120,
     icon: '🏔️',
   ),
-  UserTitle(
+  const UserTitle(
     title: '등반의 달인',
     description: '모든 산을 정복한 전설적인 등반가',
     levelRequirement: 30,
     bonus: 250,
     icon: '👑',
   ),
-  UserTitle(
+  const UserTitle(
     title: '산의 정령',
     description: '산과 하나가 된 초월적 존재',
     levelRequirement: 50,

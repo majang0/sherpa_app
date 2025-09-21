@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../core/theme/modern_colors.dart';
-import '../../widgets/sherpa_clean_app_bar.dart';
 import '../../widgets/components/components.dart';
 import '../../widgets/components/molecules/sherpa_smart_filter_2025.dart';
 import '../../widgets/components/molecules/sherpa_quick_filter_2025.dart';
@@ -15,7 +13,7 @@ import '../../widgets/components/molecules/category_selector_2025.dart';
 import '../../../../features/meetings/models/available_meeting_model.dart';
 
 class ComponentViewerScreen extends StatefulWidget {
-  const ComponentViewerScreen({Key? key}) : super(key: key);
+  const ComponentViewerScreen({super.key});
 
   @override
   State<ComponentViewerScreen> createState() => _ComponentViewerScreenState();
@@ -41,7 +39,7 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ModernColors.background,
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '셰르파 디자인 시스템',
         showBackButton: true,
       ),
@@ -109,7 +107,7 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
                           ? LinearGradient(
                               colors: [
                                 category['color'],
-                                category['color'].withOpacity(0.7),
+                                category['color'].withValues(alpha: 0.7),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
@@ -126,7 +124,7 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
                       boxShadow: isSelected
                           ? [
                               BoxShadow(
-                                color: category['color'].withOpacity(0.3),
+                                color: category['color'].withValues(alpha: 0.3),
                                 blurRadius: 12,
                                 offset: const Offset(0, 4),
                               ),
@@ -244,10 +242,10 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
                   SherpaNotificationBadge2025.notification(
                     child: const Icon(Icons.message, size: 30),
                   ),
-                  SherpaNotificationBadge2025(
+                  const SherpaNotificationBadge2025(
                     text: 'NEW',
                     variant: SherpaNotificationBadgeVariant2025.pill,
-                    child: const Icon(Icons.star, size: 30),
+                    child: Icon(Icons.star, size: 30),
                   ),
                 ],
               ),
@@ -259,10 +257,10 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
                     count: 99,
                     child: const Icon(Icons.email, size: 30),
                   ),
-                  SherpaNotificationBadge2025(
+                  const SherpaNotificationBadge2025(
                     text: 'HOT',
                     variant: SherpaNotificationBadgeVariant2025.pill,
-                    child: const Icon(Icons.local_fire_department, size: 30),
+                    child: Icon(Icons.local_fire_department, size: 30),
                   ),
                 ],
               ),
@@ -275,9 +273,9 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
 
   // 토스트 탭 - 현재 사용 가능한 토스트 컴포넌트가 없음
   Widget _buildToastTab() {
-    return Center(
+    return const Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -286,7 +284,7 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
               size: 64,
               color: ModernColors.textSecondary,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Text(
               '토스트 컴포넌트 없음',
               style: TextStyle(
@@ -295,7 +293,7 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
                 color: ModernColors.textPrimary,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               '현재 사용 가능한 토스트 컴포넌트가 없습니다.\n필요시 새로운 토스트 컴포넌트를 추가해주세요.',
               textAlign: TextAlign.center,
@@ -350,7 +348,7 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
           Column(
             children: [
               SherpaQuickFilter2025.korean(
-                activeFilters: {'weekend', 'free'},
+                activeFilters: const {'weekend', 'free'},
                 onFiltersChanged: (filters) =>
                     _showToast('필터 변경: ${filters.join(', ')}'),
                 onFilterToggle: (filter) => _showToast('필터 토글: $filter'),
@@ -358,27 +356,27 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
               ),
               const SizedBox(height: 20),
               SherpaQuickFilter2025.modern(
-                items: [
-                  const SherpaQuickFilterItem2025(
+                items: const [
+                  SherpaQuickFilterItem2025(
                     key: 'beginner',
                     label: '초보자',
                     icon: Icons.star_border,
                     color: Colors.blue,
                   ),
-                  const SherpaQuickFilterItem2025(
+                  SherpaQuickFilterItem2025(
                     key: 'advanced',
                     label: '고수',
                     icon: Icons.star,
                     color: Colors.orange,
                   ),
-                  const SherpaQuickFilterItem2025(
+                  SherpaQuickFilterItem2025(
                     key: 'premium',
                     label: '프리미엄',
                     icon: Icons.diamond,
                     color: Colors.purple,
                   ),
                 ],
-                activeFilters: {'beginner'},
+                activeFilters: const {'beginner'},
                 onFiltersChanged: (filters) =>
                     _showToast('모던 필터: ${filters.join(', ')}'),
                 category: 'exercise',
@@ -446,7 +444,7 @@ class _ComponentViewerScreenState extends State<ComponentViewerScreen> {
         _buildComponentSection(
           'ParticipantAvatars2025',
           '참가자 아바타 표시',
-          ParticipantAvatars2025(
+          const ParticipantAvatars2025(
             currentParticipants: 5,
             maxParticipants: 10,
             participantNames: ['김철수', '이영희', '박민수', '정수진', '최영수'],

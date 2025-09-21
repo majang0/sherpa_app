@@ -43,10 +43,6 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
     // ✅ 글로벌 칭호 데이터 가져오기 (검색 결과[3-4] Provider 패턴)
     final userTitle = ref.watch(globalUserTitleProvider);
 
-    if (user == null) {
-      return _buildLoadingCard(context);
-    }
-
     final isNearLevelUp = progressData.progress >= 0.9;
 
     if (isNearLevelUp && !_pulseController.isAnimating) {
@@ -71,7 +67,7 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -99,7 +95,7 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.1),
+                          color: AppColors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12)),
                       // ✅ 글로벌 데이터 기반 칭호 표시 (메모리[8-9] 등반 배지 시스템)
                       child: Text(userTitleText,
@@ -161,7 +157,7 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
             gradient: AppColors.primaryGradient,
             boxShadow: [
               BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColors.primary.withValues(alpha: 0.3),
                   blurRadius: 12,
                   spreadRadius: 1)
             ],
@@ -174,7 +170,7 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                 child: Text('👨‍🎓',
                     style: TextStyle(fontSize: 42, shadows: [
                       Shadow(
-                          color: AppColors.primary.withOpacity(0.2),
+                          color: AppColors.primary.withValues(alpha: 0.2),
                           blurRadius: 4)
                     ]))),
           ),
@@ -189,7 +185,7 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                    color: AppColors.accent.withOpacity(0.5),
+                    color: AppColors.accent.withValues(alpha: 0.5),
                     blurRadius: 8,
                     spreadRadius: 1)
               ],

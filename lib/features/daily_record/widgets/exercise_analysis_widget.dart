@@ -6,6 +6,8 @@ import '../../../shared/providers/global_user_provider.dart';
 
 /// 운동 분석 위젯
 class ExerciseAnalysisWidget extends ConsumerWidget {
+  const ExerciseAnalysisWidget({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(globalUserProvider);
@@ -40,7 +42,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
                   color: ModernColors.exerciseLight,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.fitness_center,
                   color: ModernColors.exercise,
                   size: 20,
@@ -92,7 +94,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
           child: _buildStatCard(
             icon: Icons.timer,
             title: '총 운동시간',
-            value: '${totalMinutes}분',
+            value: '$totalMinutes분',
             color: ModernColors.exercise,
           ),
         ),
@@ -101,7 +103,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
           child: _buildStatCard(
             icon: Icons.calendar_today,
             title: '운동 일수',
-            value: '${totalDays}일',
+            value: '$totalDays일',
             color: ModernColors.focus,
           ),
         ),
@@ -161,7 +163,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
 
   Widget _buildWeeklyTimeChart(List<dynamic> exerciseLogs) {
     // 주간 목표 시간 (WHO 권장)
-    final weeklyGoal = 150; // 주간 목표 150분 (WHO 권장)
+    const weeklyGoal = 150; // 주간 목표 150분 (WHO 권장)
     final weeklyMinutes = exerciseLogs.fold<int>(
         0, (sum, log) => sum + (log.durationMinutes as int)); // ✅ 타입 수정
     final progress = (weeklyMinutes / weeklyGoal).clamp(0.0, 1.0);
@@ -216,7 +218,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${weeklyMinutes}분 / ${weeklyGoal}분',
+                    '$weeklyMinutes분 / $weeklyGoal분',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
                       color: ModernColors.textSecondary,
@@ -375,7 +377,7 @@ class ExerciseAnalysisWidget extends ConsumerWidget {
               ],
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }

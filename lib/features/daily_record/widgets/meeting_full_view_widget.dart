@@ -3,9 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../constants/record_colors.dart';
 import '../presentation/screens/meeting_log_detail_screen.dart';
 import '../../../shared/providers/global_user_provider.dart';
@@ -14,6 +12,8 @@ import '../../../core/constants/meeting_categories.dart';
 import '../../../shared/models/global_user_model.dart';
 
 class MeetingFullViewWidget extends ConsumerStatefulWidget {
+  const MeetingFullViewWidget({super.key});
+
   @override
   ConsumerState<MeetingFullViewWidget> createState() =>
       _MeetingFullViewWidgetState();
@@ -105,11 +105,11 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -135,7 +135,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                   end: Alignment.bottomCenter,
                   colors: [
                     const Color(0xFF8B5CF6),
-                    const Color(0xFF8B5CF6).withOpacity(0.7),
+                    const Color(0xFF8B5CF6).withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -202,12 +202,12 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF8B5CF6).withOpacity(0.2),
+            color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -221,22 +221,22 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
-                      const Color(0xFF8B5CF6),
-                      const Color(0xFF7C3AED),
+                      Color(0xFF8B5CF6),
+                      Color(0xFF7C3AED),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF8B5CF6).withOpacity(0.3),
+                      color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
                   ],
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.people,
                   color: Colors.white,
                   size: 32,
@@ -276,19 +276,19 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFF8B5CF6).withOpacity(0.1),
+              color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFF8B5CF6).withOpacity(0.2),
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
+                const Icon(
                   Icons.calendar_month,
-                  color: const Color(0xFF8B5CF6),
+                  color: Color(0xFF8B5CF6),
                   size: 18,
                 ),
                 const SizedBox(width: 8),
@@ -318,7 +318,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -330,10 +330,10 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: const Color(0xFF8B5CF6).withOpacity(0.2),
+                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -345,9 +345,9 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                   });
                   HapticFeedbackManager.lightImpact();
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.chevron_left_rounded,
-                  color: const Color(0xFF8B5CF6),
+                  color: Color(0xFF8B5CF6),
                   size: 20,
                 ),
               ),
@@ -381,10 +381,10 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: const Color(0xFF8B5CF6).withOpacity(0.2),
+                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -396,9 +396,9 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                   });
                   HapticFeedbackManager.lightImpact();
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.chevron_right_rounded,
-                  color: const Color(0xFF8B5CF6),
+                  color: Color(0xFF8B5CF6),
                   size: 20,
                 ),
               ),
@@ -437,7 +437,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -452,12 +452,12 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.calendar_view_month,
-                    color: const Color(0xFF8B5CF6),
+                    color: Color(0xFF8B5CF6),
                     size: 18,
                   ),
                 ),
@@ -503,12 +503,12 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                  color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                   width: 1,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
+                    color: Colors.black.withValues(alpha: 0.02),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -594,12 +594,12 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
               height: 6,
               decoration: BoxDecoration(
                 color: isToday
-                    ? Colors.white.withOpacity(0.9)
+                    ? Colors.white.withValues(alpha: 0.9)
                     : _getCategoryColor(meeting.category),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: _getCategoryColor(meeting.category).withOpacity(0.3),
+                    color: _getCategoryColor(meeting.category).withValues(alpha: 0.3),
                     blurRadius: 2,
                     offset: const Offset(0, 1),
                   ),
@@ -612,13 +612,13 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
             padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
             decoration: BoxDecoration(
               color: isToday
-                  ? Colors.white.withOpacity(0.2)
-                  : const Color(0xFF8B5CF6).withOpacity(0.1),
+                  ? Colors.white.withValues(alpha: 0.2)
+                  : const Color(0xFF8B5CF6).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(6),
               border: Border.all(
                 color: isToday
-                    ? Colors.white.withOpacity(0.4)
-                    : const Color(0xFF8B5CF6).withOpacity(0.3),
+                    ? Colors.white.withValues(alpha: 0.4)
+                    : const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                 width: 0.5,
               ),
             ),
@@ -628,7 +628,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                 fontSize: 6,
                 fontWeight: FontWeight.w700,
                 color: isToday
-                    ? Colors.white.withOpacity(0.9)
+                    ? Colors.white.withValues(alpha: 0.9)
                     : const Color(0xFF8B5CF6),
               ),
             ),
@@ -651,34 +651,34 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
         height: 64,
         decoration: BoxDecoration(
           gradient: isToday
-              ? LinearGradient(
-                  colors: [const Color(0xFF8B5CF6), const Color(0xFF7C3AED)],
+              ? const LinearGradient(
+                  colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
                 )
               : null,
           color: !isToday
               ? (hasMeeting
-                  ? const Color(0xFF8B5CF6).withOpacity(0.1)
+                  ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
                   : (isFuture
-                      ? Colors.grey.shade200.withOpacity(0.5)
+                      ? Colors.grey.shade200.withValues(alpha: 0.5)
                       : (isCurrentMonth
                           ? Colors.white
-                          : Colors.grey.shade100.withOpacity(0.3))))
+                          : Colors.grey.shade100.withValues(alpha: 0.3))))
               : null,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isToday
                 ? Colors.transparent
                 : (hasMeeting
-                    ? const Color(0xFF8B5CF6).withOpacity(0.3)
+                    ? const Color(0xFF8B5CF6).withValues(alpha: 0.3)
                     : (isCurrentMonth
-                        ? RecordColors.textLight.withOpacity(0.1)
+                        ? RecordColors.textLight.withValues(alpha: 0.1)
                         : Colors.transparent)),
             width: 1.5,
           ),
           boxShadow: hasMeeting || isToday
               ? [
                   BoxShadow(
-                    color: const Color(0xFF8B5CF6).withOpacity(0.15),
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.15),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),
@@ -702,9 +702,9 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                           ? (isToday
                               ? Colors.white
                               : (isFuture
-                                  ? RecordColors.textLight.withOpacity(0.4)
+                                  ? RecordColors.textLight.withValues(alpha: 0.4)
                                   : RecordColors.textPrimary))
-                          : RecordColors.textLight.withOpacity(0.25),
+                          : RecordColors.textLight.withValues(alpha: 0.25),
                     ),
                   ),
                 ),
@@ -765,7 +765,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -795,15 +795,15 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
-                            const Color(0xFF8B5CF6),
-                            const Color(0xFF7C3AED)
+                            Color(0xFF8B5CF6),
+                            Color(0xFF7C3AED)
                           ],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.calendar_month,
                         color: Colors.white,
                         size: 20,
@@ -866,10 +866,10 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                         child: Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF8B5CF6).withOpacity(0.05),
+                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                              color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                               width: 1,
                             ),
                           ),
@@ -881,7 +881,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                                 height: 36,
                                 decoration: BoxDecoration(
                                   color: _getCategoryColor(meeting.category)
-                                      .withOpacity(0.1),
+                                      .withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Center(
@@ -942,21 +942,21 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
 
                                               return Stack(
                                                 children: [
-                                                  Icon(
+                                                  const Icon(
                                                     Icons.star_border,
                                                     size: 12,
                                                     color:
-                                                        const Color(0xFFFBBF24),
+                                                        Color(0xFFFBBF24),
                                                   ),
                                                   if (isFullStar)
-                                                    Icon(
+                                                    const Icon(
                                                       Icons.star,
                                                       size: 12,
-                                                      color: const Color(
+                                                      color: Color(
                                                           0xFFFBBF24),
                                                     )
                                                   else if (isHalfStar)
-                                                    ClipRect(
+                                                    const ClipRect(
                                                       child: Align(
                                                         alignment: Alignment
                                                             .centerLeft,
@@ -964,7 +964,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                                                         child: Icon(
                                                           Icons.star,
                                                           size: 12,
-                                                          color: const Color(
+                                                          color: Color(
                                                               0xFFFBBF24),
                                                         ),
                                                       ),
@@ -981,7 +981,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                               ),
 
                               // 화살표
-                              Icon(
+                              const Icon(
                                 Icons.chevron_right,
                                 color: RecordColors.textLight,
                                 size: 20,
@@ -1013,7 +1013,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF8B5CF6).withOpacity(0.4),
+              color: const Color(0xFF8B5CF6).withValues(alpha: 0.4),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -1036,7 +1036,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.arrow_back, size: 22),
+              const Icon(Icons.arrow_back, size: 22),
               const SizedBox(width: 10),
               Text(
                 '돌아가기',
@@ -1085,15 +1085,15 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
   /// 카테고리 색상 범례 위젯
   Widget _buildCategoryLegend() {
     final categories = [
-      {'이름': '스터디', '색상': Color(0xFF3B82F6)},
-      {'이름': '운동', '색상': Color(0xFF10B981)},
-      {'이름': '독서', '색상': Color(0xFF8B5CF6)},
-      {'이름': '취미', '색상': Color(0xFFF59E0B)},
-      {'이름': '네트워킹', '색상': Color(0xFFEC4899)},
-      {'이름': '업무', '색상': Color(0xFF6B7280)},
-      {'이름': '친목', '색상': Color(0xFFEF4444)},
-      {'이름': '종교', '색상': Color(0xFF06B6D4)},
-      {'이름': '봉사', '색상': Color(0xFF84CC16)},
+      {'이름': '스터디', '색상': const Color(0xFF3B82F6)},
+      {'이름': '운동', '색상': const Color(0xFF10B981)},
+      {'이름': '독서', '색상': const Color(0xFF8B5CF6)},
+      {'이름': '취미', '색상': const Color(0xFFF59E0B)},
+      {'이름': '네트워킹', '색상': const Color(0xFFEC4899)},
+      {'이름': '업무', '색상': const Color(0xFF6B7280)},
+      {'이름': '친목', '색상': const Color(0xFFEF4444)},
+      {'이름': '종교', '색상': const Color(0xFF06B6D4)},
+      {'이름': '봉사', '색상': const Color(0xFF84CC16)},
     ];
 
     return Container(
@@ -1104,12 +1104,12 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: const Color(0xFF8B5CF6).withOpacity(0.1),
+            color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 6,
               offset: const Offset(0, 1),
             ),
@@ -1123,12 +1123,12 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                 Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF8B5CF6).withOpacity(0.1),
+                    color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.palette_outlined,
-                    color: const Color(0xFF8B5CF6),
+                    color: Color(0xFF8B5CF6),
                     size: 16,
                   ),
                 ),
@@ -1161,7 +1161,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                             boxShadow: [
                               BoxShadow(
                                 color:
-                                    (category['색상'] as Color).withOpacity(0.3),
+                                    (category['색상'] as Color).withValues(alpha: 0.3),
                                 blurRadius: 2,
                                 offset: const Offset(0, 1),
                               ),

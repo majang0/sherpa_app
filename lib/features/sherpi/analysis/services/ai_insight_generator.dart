@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/models/point_system_model.dart';
@@ -81,7 +78,7 @@ class AiInsightGenerator {
     if (_ref != null) {
       if (!_hasEnoughPoints()) {
         throw InsufficientPointsException(
-            '포인트 부족: 분석을 위해서는 ${ANALYSIS_COST}포인트가 필요합니다.');
+            '포인트 부족: 분석을 위해서는 $ANALYSIS_COST포인트가 필요합니다.');
       }
       deducted = await _deductPoints();
       if (!deducted) {
@@ -138,7 +135,7 @@ class AiInsightGenerator {
     if (_ref != null) {
       if (!_hasEnoughPoints()) {
         throw InsufficientPointsException(
-            '포인트 부족: 분석을 위해서는 ${ANALYSIS_COST}포인트가 필요합니다.');
+            '포인트 부족: 분석을 위해서는 $ANALYSIS_COST포인트가 필요합니다.');
       }
       deducted = await _deductPoints();
       if (!deducted) {
@@ -201,7 +198,7 @@ class AiInsightGenerator {
     if (_ref != null) {
       if (!_hasEnoughPoints()) {
         throw InsufficientPointsException(
-            '포인트 부족: 분석을 위해서는 ${ANALYSIS_COST}포인트가 필요합니다.');
+            '포인트 부족: 분석을 위해서는 $ANALYSIS_COST포인트가 필요합니다.');
       }
       deducted = await _deductPoints();
       if (!deducted) {
@@ -448,7 +445,7 @@ ${_getWeakAreas(analysisResult).map((area) => '- $area').join('\n')}
 
     // 길이 제한 (1000자)
     if (processed.length > 1000) {
-      processed = processed.substring(0, 1000) + '...';
+      processed = '${processed.substring(0, 1000)}...';
     }
 
     return processed.isEmpty ? _getDefaultGrowthPlan(null, null) : processed;

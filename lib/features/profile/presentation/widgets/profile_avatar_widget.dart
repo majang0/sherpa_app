@@ -15,12 +15,12 @@ class ProfileAvatarWidget extends ConsumerWidget {
   final VoidCallback? onTap;
 
   const ProfileAvatarWidget({
-    Key? key,
+    super.key,
     required this.user,
     this.size = 60,
     this.showLevelBadge = true,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,8 +48,8 @@ class ProfileAvatarWidget extends ConsumerWidget {
               child: Container(
                 width: size * 0.35,
                 height: size * 0.35,
-                padding: EdgeInsets.all(2), // 흰색 테두리를 위한 패딩
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.all(2), // 흰색 테두리를 위한 패딩
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white, // 테두리 색상
                 ),
@@ -76,8 +76,8 @@ class ProfileAvatarWidget extends ConsumerWidget {
               child: Container(
                 width: size * 0.2,
                 height: size * 0.2,
-                padding: EdgeInsets.all(1), // 흰색 테두리를 위한 패딩
-                decoration: BoxDecoration(
+                padding: const EdgeInsets.all(1), // 흰색 테두리를 위한 패딩
+                decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white, // 테두리 색상
                 ),

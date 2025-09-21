@@ -123,17 +123,17 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                           end: Alignment.bottomRight,
                           colors: isDark
                               ? [
-                                  Colors.white.withOpacity(0.1),
-                                  Colors.white.withOpacity(0.05),
+                                  Colors.white.withValues(alpha: 0.1),
+                                  Colors.white.withValues(alpha: 0.05),
                                 ]
                               : [
-                                  Colors.white.withOpacity(0.7),
-                                  Colors.white.withOpacity(0.3),
+                                  Colors.white.withValues(alpha: 0.7),
+                                  Colors.white.withValues(alpha: 0.3),
                                 ],
                         ),
                         borderRadius: BorderRadius.circular(24),
                         border: Border.all(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           width: 1.5,
                         ),
                       ),
@@ -157,7 +157,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                   end: Alignment.bottomCenter,
                                   colors: [
                                     Colors.transparent,
-                                    Colors.black.withOpacity(0.7),
+                                    Colors.black.withValues(alpha: 0.7),
                                   ],
                                   stops: const [0.3, 1.0],
                                 ),
@@ -206,7 +206,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                       Icon(
                                         Icons.location_on_outlined,
                                         size: widget.compact ? 14 : 16,
-                                        color: Colors.white.withOpacity(0.8),
+                                        color: Colors.white.withValues(alpha: 0.8),
                                       ),
                                       SizedBox(width: widget.compact ? 3 : 4),
                                       Expanded(
@@ -216,7 +216,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                           style: TextStyle(
                                             fontSize: widget.compact ? 12 : 14,
                                             color:
-                                                Colors.white.withOpacity(0.8),
+                                                Colors.white.withValues(alpha: 0.8),
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -232,7 +232,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                       Icon(
                                         Icons.schedule_outlined,
                                         size: widget.compact ? 14 : 16,
-                                        color: Colors.white.withOpacity(0.8),
+                                        color: Colors.white.withValues(alpha: 0.8),
                                       ),
                                       SizedBox(width: widget.compact ? 3 : 4),
                                       Expanded(
@@ -241,7 +241,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                           style: TextStyle(
                                             fontSize: widget.compact ? 12 : 14,
                                             color:
-                                                Colors.white.withOpacity(0.8),
+                                                Colors.white.withValues(alpha: 0.8),
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -296,11 +296,11 @@ class _MeetingCard2025State extends State<MeetingCard2025>
         vertical: widget.compact ? 4 : 6,
       ),
       decoration: BoxDecoration(
-        color: widget.meeting.category.color.withOpacity(0.9),
+        color: widget.meeting.category.color.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(widget.compact ? 16 : 20),
         boxShadow: [
           BoxShadow(
-            color: widget.meeting.category.color.withOpacity(0.3),
+            color: widget.meeting.category.color.withValues(alpha: 0.3),
             blurRadius: widget.compact ? 6 : 8,
             offset: const Offset(0, 2),
           ),
@@ -337,10 +337,10 @@ class _MeetingCard2025State extends State<MeetingCard2025>
         width: size,
         height: size,
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.3),
+          color: Colors.black.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(size / 2),
           border: Border.all(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withValues(alpha: 0.2),
             width: 1,
           ),
         ),
@@ -357,10 +357,10 @@ class _MeetingCard2025State extends State<MeetingCard2025>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
+        color: Colors.black.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -370,7 +370,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
           Icon(
             Icons.people_outline,
             size: 14,
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
           ),
           const SizedBox(width: 4),
           Text(
@@ -378,7 +378,7 @@ class _MeetingCard2025State extends State<MeetingCard2025>
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
         ],
@@ -399,13 +399,13 @@ class _MeetingCard2025State extends State<MeetingCard2025>
       ),
       decoration: BoxDecoration(
         color: isLowFee
-            ? Colors.green.withOpacity(0.2)
-            : Colors.orange.withOpacity(0.2),
+            ? Colors.green.withValues(alpha: 0.2)
+            : Colors.orange.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(widget.compact ? 12 : 16),
         border: Border.all(
           color: isLowFee
-              ? Colors.green.withOpacity(0.3)
-              : Colors.orange.withOpacity(0.3),
+              ? Colors.green.withValues(alpha: 0.3)
+              : Colors.orange.withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -509,8 +509,8 @@ class _MeetingCard2025State extends State<MeetingCard2025>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            widget.meeting.category.color.withOpacity(0.8),
-            widget.meeting.category.color.withOpacity(0.6),
+            widget.meeting.category.color.withValues(alpha: 0.8),
+            widget.meeting.category.color.withValues(alpha: 0.6),
           ],
         ),
       ),

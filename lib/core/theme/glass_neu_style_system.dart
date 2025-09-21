@@ -46,30 +46,30 @@ class GlassNeuStyle {
 
     return BoxDecoration(
       color:
-          (color ?? ModernColors.surface.withOpacity(0.2)).withOpacity(opacity),
+          (color ?? ModernColors.surface.withValues(alpha: 0.2)).withValues(alpha: opacity),
       borderRadius: BorderRadius.circular(borderRadius),
       border: borderColor != null
           ? Border.all(
-              color: borderColor.withOpacity(0.3),
+              color: borderColor.withValues(alpha: 0.3),
               width: borderWidth,
             )
           : Border.all(
-              color: ModernColors.border.withOpacity(0.1),
+              color: ModernColors.border.withValues(alpha: 0.1),
               width: borderWidth,
             ),
       boxShadow: [
         // 메인 그림자
         BoxShadow(
-          color: Colors.black.withOpacity(0.04),
+          color: Colors.black.withValues(alpha: 0.04),
           blurRadius: elevationValue * 1.5,
           offset: Offset(0, elevationValue * 0.5),
           spreadRadius: 0,
         ),
         // 상단 하이라이트
         BoxShadow(
-          color: ModernColors.surface.withOpacity(0.1),
+          color: ModernColors.surface.withValues(alpha: 0.1),
           blurRadius: elevationValue * 0.5,
-          offset: Offset(0, -elevationValue * 0.2),
+          offset: Offset(0, elevationValue * 0.5),
           spreadRadius: 0,
         ),
       ],
@@ -84,10 +84,10 @@ class GlassNeuStyle {
   }) {
     return glassMorphism(
       elevation: elevation,
-      color: ModernColors.primary.withOpacity(0.2),
+      color: ModernColors.primary.withValues(alpha: 0.2),
       borderRadius: borderRadius,
       opacity: opacity,
-      borderColor: ModernColors.primary.withOpacity(0.2),
+      borderColor: ModernColors.primary.withValues(alpha: 0.2),
     );
   }
 
@@ -99,7 +99,7 @@ class GlassNeuStyle {
     double opacity = 0.15,
   }) {
     final categoryColor =
-        ModernColors.getFunctionColor(category).withOpacity(0.2);
+        ModernColors.getFunctionColor(category).withValues(alpha: 0.2);
     final baseColor = ModernColors.getFunctionColor(category);
 
     return glassMorphism(
@@ -152,14 +152,14 @@ class GlassNeuStyle {
         BoxShadow(
           color: Color.lerp(baseColor, Colors.black, 0.1)!,
           blurRadius: elevation,
-          offset: Offset(elevation * 0.5, elevation * 0.5),
+          offset: Offset(0, elevation * 0.5),
           spreadRadius: 0,
         ),
         // 밝은 하이라이트 (왼쪽 위)
         BoxShadow(
           color: Color.lerp(baseColor, Colors.white, 0.1)!,
           blurRadius: elevation * 0.5,
-          offset: Offset(-elevation * 0.2, -elevation * 0.2),
+          offset: Offset(0, elevation * 0.5),
           spreadRadius: 0,
         ),
       ],
@@ -180,14 +180,14 @@ class GlassNeuStyle {
         BoxShadow(
           color: Color.lerp(baseColor, Colors.black, 0.15)!,
           blurRadius: elevation * 0.8,
-          offset: Offset(elevation * 0.3, elevation * 0.3),
+          offset: Offset(0, elevation * 0.5),
           spreadRadius: -elevation * 0.3,
         ),
         // 내부 밝은 하이라이트
         BoxShadow(
           color: Color.lerp(baseColor, Colors.white, 0.05)!,
           blurRadius: elevation * 0.5,
-          offset: Offset(-elevation * 0.2, -elevation * 0.2),
+          offset: Offset(0, elevation * 0.5),
           spreadRadius: -elevation * 0.2,
         ),
       ],
@@ -202,7 +202,7 @@ class GlassNeuStyle {
   }) {
     return neumorphism(
       elevation: elevation,
-      baseColor: ModernColors.primary.withOpacity(0.1),
+      baseColor: ModernColors.primary.withValues(alpha: 0.1),
       borderRadius: borderRadius,
       isPressed: isPressed,
     );
@@ -239,11 +239,11 @@ class GlassNeuStyle {
   ) {
     return BoxDecoration(
       // 글래스 효과를 위한 반투명 색상
-      color: baseColor.withOpacity(glassOpacity),
+      color: baseColor.withValues(alpha: glassOpacity),
       borderRadius: BorderRadius.circular(borderRadius),
       // 글래스 테두리
       border: Border.all(
-        color: baseColor.withOpacity(0.2),
+        color: baseColor.withValues(alpha: 0.2),
         width: 1,
       ),
       boxShadow: [
@@ -251,21 +251,21 @@ class GlassNeuStyle {
         BoxShadow(
           color: Color.lerp(ModernColors.background, Colors.black, 0.1)!,
           blurRadius: elevation,
-          offset: Offset(elevation * 0.5, elevation * 0.5),
+          offset: Offset(0, elevation * 0.5),
           spreadRadius: 0,
         ),
         // 뉴모피즘 밝은 하이라이트
         BoxShadow(
           color: Colors.white,
           blurRadius: elevation * 0.5,
-          offset: Offset(-elevation * 0.2, -elevation * 0.2),
+          offset: Offset(0, elevation * 0.5),
           spreadRadius: 0,
         ),
         // 글래스 하이라이트
         BoxShadow(
-          color: ModernColors.surface.withOpacity(0.1),
+          color: ModernColors.surface.withValues(alpha: 0.1),
           blurRadius: elevation * 0.3,
-          offset: Offset(0, -elevation * 0.1),
+          offset: Offset(0, elevation * 0.5),
           spreadRadius: 0,
         ),
       ],
@@ -283,7 +283,7 @@ class GlassNeuStyle {
       color: Color.lerp(ModernColors.background, Colors.black, 0.02)!,
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: baseColor.withOpacity(0.3),
+        color: baseColor.withValues(alpha: 0.3),
         width: 1,
       ),
       boxShadow: [
@@ -291,14 +291,14 @@ class GlassNeuStyle {
         BoxShadow(
           color: Color.lerp(ModernColors.background, Colors.black, 0.15)!,
           blurRadius: elevation * 0.6,
-          offset: Offset(elevation * 0.2, elevation * 0.2),
+          offset: Offset(0, elevation * 0.5),
           spreadRadius: -elevation * 0.2,
         ),
         // 글래스 효과 유지
         BoxShadow(
-          color: baseColor.withOpacity(glassOpacity * 0.5),
+          color: baseColor.withValues(alpha: glassOpacity * 0.5),
           blurRadius: elevation * 0.3,
-          offset: Offset(0, 0),
+          offset: const Offset(0, 0),
           spreadRadius: 0,
         ),
       ],
@@ -314,31 +314,31 @@ class GlassNeuStyle {
     double elevation = 12,
   }) {
     return BoxDecoration(
-      color: (color ?? ModernColors.surface.withOpacity(0.2)).withOpacity(0.25),
+      color: (color ?? ModernColors.surface.withValues(alpha: 0.2)).withValues(alpha: 0.25),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: ModernColors.border.withOpacity(0.1),
+        color: ModernColors.border.withValues(alpha: 0.1),
         width: 1,
       ),
       boxShadow: [
         // 메인 플로팅 그림자
         BoxShadow(
-          color: Colors.black.withOpacity(0.08),
+          color: Colors.black.withValues(alpha: 0.08),
           blurRadius: elevation * 2,
           offset: Offset(0, elevation),
           spreadRadius: 0,
         ),
         // 글래스 하이라이트
         BoxShadow(
-          color: ModernColors.surface.withOpacity(0.3),
+          color: ModernColors.surface.withValues(alpha: 0.3),
           blurRadius: elevation * 0.5,
-          offset: Offset(0, -elevation * 0.3),
+          offset: Offset(0, elevation * 0.5),
           spreadRadius: 0,
         ),
         // 컬러 글로우
         if (color != null)
           BoxShadow(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             blurRadius: elevation * 1.5,
             offset: Offset(0, elevation * 0.5),
             spreadRadius: elevation * 0.2,
@@ -455,19 +455,19 @@ class GlassNeuStyle {
         end: linearGradient.end,
         colors: linearGradient.colors
             .map(
-              (color) => color.withOpacity(opacity),
+              (color) => color.withValues(alpha: opacity),
             )
             .toList(),
         stops: linearGradient.stops,
       ),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: ModernColors.border.withOpacity(0.1),
+        color: ModernColors.border.withValues(alpha: 0.1),
         width: 1,
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.04),
+          color: Colors.black.withValues(alpha: 0.04),
           blurRadius: elevationValue * 1.5,
           offset: Offset(0, elevationValue * 0.5),
           spreadRadius: 0,

@@ -75,19 +75,19 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color:
-                    isCompleted ? Colors.green.withOpacity(0.1) : Colors.white,
+                    isCompleted ? Colors.green.withValues(alpha: 0.1) : Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: isCompleted
-                      ? Colors.green.withOpacity(0.3)
+                      ? Colors.green.withValues(alpha: 0.3)
                       : Colors.grey[200]!,
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: isCompleted
-                        ? Colors.green.withOpacity(0.1)
-                        : Colors.black.withOpacity(0.03),
+                        ? Colors.green.withValues(alpha: 0.1)
+                        : Colors.black.withValues(alpha: 0.03),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),
@@ -173,8 +173,8 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                         ),
                         decoration: BoxDecoration(
                           color: isCompleted
-                              ? Colors.green.withOpacity(0.1)
-                              : AppColors.primary.withOpacity(0.1),
+                              ? Colors.green.withValues(alpha: 0.1)
+                              : AppColors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(

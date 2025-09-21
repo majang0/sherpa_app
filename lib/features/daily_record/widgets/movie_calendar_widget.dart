@@ -12,6 +12,8 @@ import '../presentation/screens/movie_detail_screen.dart';
 import '../presentation/screens/movie_add_screen.dart';
 
 class MovieCalendarWidget extends ConsumerStatefulWidget {
+  const MovieCalendarWidget({super.key});
+
   @override
   ConsumerState<MovieCalendarWidget> createState() =>
       _MovieCalendarWidgetState();
@@ -87,7 +89,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFEF4444).withOpacity(0.08),
+                color: const Color(0xFFEF4444).withValues(alpha: 0.08),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -102,12 +104,12 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEF4444).withOpacity(0.1),
+                      color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.movie,
-                      color: const Color(0xFFEF4444),
+                      color: Color(0xFFEF4444),
                       size: 24,
                     ),
                   ),
@@ -142,29 +144,29 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MovieAddScreen(),
+                          builder: (context) => const MovieAddScreen(),
                         ),
                       );
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
-                            const Color(0xFFEF4444),
-                            const Color(0xFFDC2626)
+                            Color(0xFFEF4444),
+                            Color(0xFFDC2626)
                           ],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFEF4444).withOpacity(0.3),
+                            color: const Color(0xFFEF4444).withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
                         ],
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.add,
                         color: Colors.white,
                         size: 20,
@@ -238,13 +240,13 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFFEF4444).withOpacity(0.1),
-            const Color(0xFFDC2626).withOpacity(0.05),
+            const Color(0xFFEF4444).withValues(alpha: 0.1),
+            const Color(0xFFDC2626).withValues(alpha: 0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: const Color(0xFFEF4444).withOpacity(0.2),
+          color: const Color(0xFFEF4444).withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -260,7 +262,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
           Container(
             width: 1,
             height: 40,
-            color: ModernColors.textTertiary.withOpacity(0.3),
+            color: ModernColors.textTertiary.withValues(alpha: 0.3),
           ),
           Expanded(
             child: _buildStatItem(
@@ -272,7 +274,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
           Container(
             width: 1,
             height: 40,
-            color: ModernColors.textTertiary.withOpacity(0.3),
+            color: ModernColors.textTertiary.withValues(alpha: 0.3),
           ),
           Expanded(
             child: _buildStatItem(
@@ -367,13 +369,13 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                       height: 40,
                       decoration: BoxDecoration(
                         color: isFirst
-                            ? const Color(0xFFEF4444).withOpacity(0.15)
+                            ? const Color(0xFFEF4444).withValues(alpha: 0.15)
                             : Colors.white,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: isFirst
-                              ? const Color(0xFFEF4444).withOpacity(0.3)
-                              : ModernColors.textTertiary.withOpacity(0.2),
+                              ? const Color(0xFFEF4444).withValues(alpha: 0.3)
+                              : ModernColors.textTertiary.withValues(alpha: 0.2),
                           width: 1,
                         ),
                       ),
@@ -442,10 +444,10 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: const Color(0xFFEF4444).withOpacity(0.1),
+                color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: const Color(0xFFEF4444).withOpacity(0.3),
+                  color: const Color(0xFFEF4444).withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -479,10 +481,10 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                       ),
                       ...List.generate(
                         movie.rating.round(),
-                        (index) => Icon(
+                        (index) => const Icon(
                           Icons.star,
                           size: 12,
-                          color: const Color(0xFFFBBF24),
+                          color: Color(0xFFFBBF24),
                         ),
                       ),
                     ],
@@ -524,7 +526,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
 
             // 공유 아이콘
             if (movie.isShared)
-              Icon(
+              const Icon(
                 Icons.share,
                 size: 14,
                 color: ModernColors.primary,
@@ -549,9 +551,9 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
       child: Column(
         children: [
           const SizedBox(height: 12),
-          Text(
+          const Text(
             '🎬',
-            style: const TextStyle(fontSize: 32),
+            style: TextStyle(fontSize: 32),
           ),
           const SizedBox(height: 8),
           Text(
@@ -578,27 +580,27 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MovieAddScreen(),
+                  builder: (context) => const MovieAddScreen(),
                 ),
               );
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFEF4444).withOpacity(0.1),
+                color: const Color(0xFFEF4444).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: const Color(0xFFEF4444).withOpacity(0.3),
+                  color: const Color(0xFFEF4444).withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.add,
                     size: 16,
-                    color: const Color(0xFFEF4444),
+                    color: Color(0xFFEF4444),
                   ),
                   const SizedBox(width: 4),
                   Text(
@@ -629,14 +631,14 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MovieFullViewWidget(),
+              builder: (context) => const MovieFullViewWidget(),
             ),
           );
         },
         style: OutlinedButton.styleFrom(
           foregroundColor: const Color(0xFFEF4444),
           side: BorderSide(
-            color: const Color(0xFFEF4444).withOpacity(0.3),
+            color: const Color(0xFFEF4444).withValues(alpha: 0.3),
             width: 1.5,
           ),
           padding: const EdgeInsets.symmetric(vertical: 12),
@@ -648,9 +650,9 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.calendar_view_month,
-              color: const Color(0xFFEF4444),
+              color: Color(0xFFEF4444),
               size: 18,
             ),
             const SizedBox(width: 8),
@@ -669,7 +671,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
   }
 
   Widget _buildWriteButton() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
@@ -677,7 +679,7 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MovieAddScreen(),
+              builder: (context) => const MovieAddScreen(),
             ),
           );
         },
@@ -689,12 +691,12 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
             borderRadius: BorderRadius.circular(16),
           ),
           elevation: 0,
-          shadowColor: const Color(0xFFEF4444).withOpacity(0.3),
+          shadowColor: const Color(0xFFEF4444).withValues(alpha: 0.3),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.movie, size: 20),
+            const Icon(Icons.movie, size: 20),
             const SizedBox(width: 8),
             Text(
               '영화 기록 작성하기',

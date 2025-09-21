@@ -2,14 +2,10 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter/services.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../core/theme/modern_colors.dart';
 import 'package:sherpa_app/core/ai/services/activity_analysis_service.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../../../../core/utils/exercise_calculator.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
 
@@ -453,8 +449,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 boxShadow: [
                   BoxShadow(
                     color: isToday
-                        ? ModernColors.exercise.withOpacity(0.3)
-                        : ModernColors.border.withOpacity(0.3),
+                        ? ModernColors.exercise.withValues(alpha: 0.3)
+                        : ModernColors.border.withValues(alpha: 0.3),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -482,7 +478,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                             color: isToday
-                                ? Colors.white.withOpacity(0.8)
+                                ? Colors.white.withValues(alpha: 0.8)
                                 : ModernColors.textSecondary,
                           ),
                         ),
@@ -518,7 +514,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                         Icons.touch_app_rounded,
                         size: 16,
                         color: isToday
-                            ? Colors.white.withOpacity(0.6)
+                            ? Colors.white.withValues(alpha: 0.6)
                             : ModernColors.textTertiary,
                       ),
                       const SizedBox(width: 4),
@@ -528,7 +524,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
                           color: isToday
-                              ? Colors.white.withOpacity(0.6)
+                              ? Colors.white.withValues(alpha: 0.6)
                               : ModernColors.textTertiary,
                         ),
                       ),
@@ -589,7 +585,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         Container(
           width: 1,
           height: 50,
-          color: isToday ? Colors.white.withOpacity(0.3) : ModernColors.border,
+          color: isToday ? Colors.white.withValues(alpha: 0.3) : ModernColors.border,
         ),
 
         // 시간
@@ -615,7 +611,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: isToday
-                          ? Colors.white.withOpacity(0.8)
+                          ? Colors.white.withValues(alpha: 0.8)
                           : ModernColors.textSecondary,
                     ),
                   ),
@@ -629,7 +625,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
                 color: isToday
-                    ? Colors.white.withOpacity(0.8)
+                    ? Colors.white.withValues(alpha: 0.8)
                     : ModernColors.textSecondary,
               ),
             ),
@@ -640,7 +636,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         Container(
           width: 1,
           height: 50,
-          color: isToday ? Colors.white.withOpacity(0.3) : ModernColors.border,
+          color: isToday ? Colors.white.withValues(alpha: 0.3) : ModernColors.border,
         ),
 
         // 강도
@@ -702,7 +698,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   fontSize: 12, // 14 -> 12로 더 줄임
                   fontWeight: FontWeight.w500,
                   color: isToday
-                      ? Colors.white.withOpacity(0.8)
+                      ? Colors.white.withValues(alpha: 0.8)
                       : ModernColors.textSecondary,
                 ),
               ),
@@ -718,7 +714,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             fontSize: 11, // 12 -> 11로 줄임
             fontWeight: FontWeight.w500,
             color: isToday
-                ? Colors.white.withOpacity(0.8)
+                ? Colors.white.withValues(alpha: 0.8)
                 : ModernColors.textSecondary,
           ),
         ),
@@ -741,7 +737,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             color: isActive
                 ? (isToday ? Colors.white : _getIntensityColor(intensity))
                 : (isToday
-                    ? Colors.white.withOpacity(0.3)
+                    ? Colors.white.withValues(alpha: 0.3)
                     : ModernColors.border),
             borderRadius: BorderRadius.circular(4),
           ),
@@ -766,7 +762,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.08),
+            color: ModernColors.exercise.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 5),
           ),
@@ -971,7 +967,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: ModernColors.exercise.withOpacity(0.2),
+                      color: ModernColors.exercise.withValues(alpha: 0.2),
                       width: 1,
                     ),
                   ),
@@ -1004,7 +1000,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
 
                 // AI 개인화 메시지 - Clean Modern Design
                 if (_analysisData?.benefits != null &&
-                    _analysisData!.benefits!.isNotEmpty)
+                    _analysisData!.benefits.isNotEmpty)
                   Container(
                     margin: const EdgeInsets.only(top: 10),
                     padding: const EdgeInsets.all(12),
@@ -1019,7 +1015,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.auto_awesome_rounded,
                           color: ModernColors.exercise,
                           size: 20,
@@ -1039,7 +1035,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                _analysisData!.benefits!,
+                                _analysisData!.benefits,
                                 style: GoogleFonts.notoSans(
                                   fontSize: 13,
                                   height: 1.5,
@@ -1148,7 +1144,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 25,
             offset: const Offset(0, 8),
           ),
@@ -1159,10 +1155,10 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           // 헤더 - Clean Design
           Container(
             padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: ModernColors.exercise,
               borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
+                  BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Row(
               children: [
@@ -1171,10 +1167,10 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
+                    color: Colors.white.withValues(alpha: 0.9),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.lightbulb_rounded,
                     color: ModernColors.exercise,
                     size: 26,
@@ -1198,7 +1194,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                         ),
                       ),
                     ],
@@ -1238,16 +1234,16 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            ModernColors.exerciseLight.withOpacity(0.5),
+            ModernColors.exerciseLight.withValues(alpha: 0.5),
             Colors.white,
-            ModernColors.exerciseLight.withOpacity(0.3),
+            ModernColors.exerciseLight.withValues(alpha: 0.3),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.15),
+          color: ModernColors.exercise.withValues(alpha: 0.15),
           width: 1,
         ),
       ),
@@ -1267,7 +1263,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: ModernColors.exercise.withOpacity(0.3),
+                        color: ModernColors.exercise.withValues(alpha: 0.3),
                         blurRadius: 20,
                         spreadRadius: 2,
                       ),
@@ -1305,10 +1301,10 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 margin: const EdgeInsets.only(top: 10),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: ModernColors.exercise.withOpacity(0.2),
+                    color: ModernColors.exercise.withValues(alpha: 0.2),
                     width: 1.5,
                   ),
                 ),
@@ -1332,8 +1328,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                   child: CustomPaint(
                     size: const Size(20, 10),
                     painter: _BubbleTailPainter(
-                      color: Colors.white.withOpacity(0.9),
-                      borderColor: ModernColors.exercise.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.9),
+                      borderColor: ModernColors.exercise.withValues(alpha: 0.2),
                     ),
                   ),
                 ),
@@ -1378,7 +1374,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       ),
       child: Column(
         children: [
-          CircularProgressIndicator(
+          const CircularProgressIndicator(
             color: ModernColors.exercise,
             strokeWidth: 3,
           ),
@@ -1469,7 +1465,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.04),
+            color: ModernColors.exercise.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -1485,7 +1481,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                 width: 28, // Reduced from 32 to 28
                 height: 28, // Reduced from 32 to 28
                 decoration: BoxDecoration(
-                  color: ModernColors.exercise.withOpacity(0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
@@ -1565,10 +1561,10 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
       padding: const EdgeInsets.all(10), // Reduced padding for compact design
       decoration: BoxDecoration(
         color:
-            ModernColors.exercise.withOpacity(0.02), // Very subtle background
+            ModernColors.exercise.withValues(alpha: 0.02), // Very subtle background
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: ModernColors.exercise.withOpacity(0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
       ),
@@ -1580,8 +1576,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             padding: const EdgeInsets.only(bottom: 6),
             child: Row(
               children: [
-                Text('💡',
-                    style: const TextStyle(fontSize: 12)), // Smaller icon
+                const Text('💡',
+                    style: TextStyle(fontSize: 12)), // Smaller icon
                 const SizedBox(width: 6),
                 Text(
                   '재미있는 사실',
@@ -1597,11 +1593,11 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
           ),
 
           // Compact facts with better spacing
-          _buildCompactFact('🏃', '${duration}분 = 계단 ${stairs}층'),
+          _buildCompactFact('🏃', '$duration분 = 계단 $stairs층'),
           const SizedBox(height: 6), // Tighter spacing
-          _buildCompactFact('🍎', '${calories}kcal = 사과 ${apples}개'),
+          _buildCompactFact('🍎', '${calories}kcal = 사과 $apples개'),
           const SizedBox(height: 6), // Tighter spacing
-          _buildCompactFact('💓', '심장박동 = ${heartBeats}회 증가'),
+          _buildCompactFact('💓', '심장박동 = $heartBeats회 증가'),
         ],
       ),
     )
@@ -1680,7 +1676,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             width: 6,
             height: 6,
             margin: const EdgeInsets.only(top: 7, right: 10),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: ModernColors.exercise,
               shape: BoxShape.circle,
             ),
@@ -1718,7 +1714,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.05),
+            color: ModernColors.exercise.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -1776,7 +1772,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: ModernColors.exercise.withOpacity(0.15),
+              color: ModernColors.exercise.withValues(alpha: 0.15),
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -1820,7 +1816,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withOpacity(0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -2007,7 +2003,7 @@ class ExercisePatternPainter extends CustomPainter {
 
     // 왼쪽 웨이트
     final leftWeight = Rect.fromCenter(
-      center: Offset(centerX - width * 0.25, centerY),
+      center: const Offset(0, 0),
       width: width * 0.2,
       height: height * 0.8,
     );
@@ -2018,7 +2014,7 @@ class ExercisePatternPainter extends CustomPainter {
 
     // 오른쪽 웨이트
     final rightWeight = Rect.fromCenter(
-      center: Offset(centerX + width * 0.25, centerY),
+      center: const Offset(0, 0),
       width: width * 0.2,
       height: height * 0.8,
     );

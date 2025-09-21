@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/modern_colors.dart';
@@ -8,7 +7,7 @@ import '../../models/notification_model.dart';
 import '../../widgets/notification_item_widget.dart';
 
 class NotificationScreen extends ConsumerStatefulWidget {
-  const NotificationScreen({Key? key}) : super(key: key);
+  const NotificationScreen({super.key});
 
   @override
   ConsumerState<NotificationScreen> createState() => _NotificationScreenState();
@@ -43,7 +42,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
         elevation: 0,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Icons.arrow_back, color: ModernColors.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: ModernColors.textPrimary),
         ),
         title: Text(
           '알림',
@@ -73,7 +72,7 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
                   break;
               }
             },
-            icon: Icon(Icons.more_vert, color: ModernColors.textSecondary),
+            icon: const Icon(Icons.more_vert, color: ModernColors.textSecondary),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -140,11 +139,11 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
             Container(
               width: 80,
               height: 80,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: ModernColors.gray100,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.notifications_none_rounded,
                 size: 40,
                 color: ModernColors.textTertiary,
@@ -206,9 +205,9 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.75,
         ),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.only(
+          borderRadius: BorderRadius.only(
             topLeft: Radius.circular(24),
             topRight: Radius.circular(24),
           ),

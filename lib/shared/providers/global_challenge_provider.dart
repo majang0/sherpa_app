@@ -1,13 +1,10 @@
 // lib/shared/providers/global_challenge_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
 import '../../features/meetings/models/available_challenge_model.dart';
-import '../models/global_user_model.dart';
 import 'global_user_provider.dart';
 import 'global_point_provider.dart';
 import 'global_sherpi_provider.dart';
-import 'global_badge_provider.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 
 /// 🌍 글로벌 챌린지 관리 Provider
@@ -421,27 +418,39 @@ class GlobalChallengeNotifier extends StateNotifier<GlobalChallengeState> {
       // 체력이 낮으면 건강 챌린지 추천
       sortedChallenges.sort((a, b) {
         if (a.categoryType == ChallengeCategory.fitness &&
-            b.categoryType != ChallengeCategory.fitness) return -1;
+            b.categoryType != ChallengeCategory.fitness) {
+          return -1;
+        }
         if (a.categoryType != ChallengeCategory.fitness &&
-            b.categoryType == ChallengeCategory.fitness) return 1;
+            b.categoryType == ChallengeCategory.fitness) {
+          return 1;
+        }
         return 0;
       });
     } else if (stats.knowledge <= stats.technique) {
       // 지식이 낮으면 학습 챌린지 추천
       sortedChallenges.sort((a, b) {
         if (a.categoryType == ChallengeCategory.study &&
-            b.categoryType != ChallengeCategory.study) return -1;
+            b.categoryType != ChallengeCategory.study) {
+          return -1;
+        }
         if (a.categoryType != ChallengeCategory.study &&
-            b.categoryType == ChallengeCategory.study) return 1;
+            b.categoryType == ChallengeCategory.study) {
+          return 1;
+        }
         return 0;
       });
     } else {
       // 기술이 낮으면 라이프스타일 챌린지 추천
       sortedChallenges.sort((a, b) {
         if (a.categoryType == ChallengeCategory.lifestyle &&
-            b.categoryType != ChallengeCategory.lifestyle) return -1;
+            b.categoryType != ChallengeCategory.lifestyle) {
+          return -1;
+        }
         if (a.categoryType != ChallengeCategory.lifestyle &&
-            b.categoryType == ChallengeCategory.lifestyle) return 1;
+            b.categoryType == ChallengeCategory.lifestyle) {
+          return 1;
+        }
         return 0;
       });
     }

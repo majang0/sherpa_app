@@ -27,7 +27,6 @@ import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../meetings/ai/models/ai_recommended_meeting.dart';
 import '../../../meetings/presentation/widgets/ai/ai_analysis_loading_widget.dart';
 import '../../../meetings/presentation/widgets/ai/ai_recommendation_result_cards.dart';
-import '../../../../shared/models/global_user_model.dart';
 
 /// 🎯 셰르피가 추천하는 맞춤 모임 위젯
 /// 사용자의 활동 데이터를 분석해 개인화된 모임을 추천하는 위젯
@@ -696,7 +695,7 @@ class _SherpiPersonalizedMeetingWidgetState
             },
             child: Container(
               padding: const EdgeInsets.all(8),
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
                 color: ModernColors.modernPrimary,
@@ -784,7 +783,7 @@ class _SherpiPersonalizedMeetingWidgetState
                   ),
                 ] else if (insight.contains('📚')) ...[
                   TextSpan(
-                    text: insight.split('!')[0] + '! ',
+                    text: '${insight.split('!')[0]}! ',
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -804,7 +803,7 @@ class _SherpiPersonalizedMeetingWidgetState
                     ),
                 ] else if (insight.contains('🤝')) ...[
                   TextSpan(
-                    text: insight.split('!')[0] + '! ',
+                    text: '${insight.split('!')[0]}! ',
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -1168,7 +1167,7 @@ class _CompactAIRecommendationButton extends ConsumerWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
+            const Icon(
               Icons.auto_awesome,
               size: 14,
               color: ModernColors.primary,
@@ -1191,7 +1190,7 @@ class _CompactAIRecommendationButton extends ConsumerWidget {
             ),
             if (aiState.isLoading) ...[
               const SizedBox(width: 4),
-              SizedBox(
+              const SizedBox(
                 width: 10,
                 height: 10,
                 child: CircularProgressIndicator(

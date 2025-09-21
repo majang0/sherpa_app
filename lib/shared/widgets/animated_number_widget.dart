@@ -13,7 +13,7 @@ class AnimatedNumberWidget extends StatefulWidget {
   final Duration animationDuration;
 
   const AnimatedNumberWidget({
-    Key? key,
+    super.key,
     required this.value,
     this.suffix = '',
     required this.color,
@@ -21,7 +21,7 @@ class AnimatedNumberWidget extends StatefulWidget {
     this.enableHaptic = true,
     this.enableGlow = true,
     this.animationDuration = const Duration(milliseconds: 1500),
-  }) : super(key: key);
+  });
 
   @override
   State<AnimatedNumberWidget> createState() => _AnimatedNumberWidgetState();

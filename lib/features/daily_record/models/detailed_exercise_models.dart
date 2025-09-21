@@ -60,7 +60,7 @@ class RunningRecord extends DetailedExerciseRecord {
 
   double get averageSpeed => 60 / averagePace; // km/h
   String get paceText =>
-      '${averagePace.toInt()}\'${((averagePace - averagePace.toInt()) * 60).toInt()}\"';
+      '${averagePace.toInt()}\'${((averagePace - averagePace.toInt()) * 60).toInt()}"';
 
   @override
   Map<String, dynamic> toJson() {

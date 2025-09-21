@@ -1,5 +1,6 @@
 /// AI 기반 모임 추천 엔진
 /// OpenAI GPT-5를 활용하여 사용자 맞춤형 모임을 추천
+library;
 
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -504,9 +505,9 @@ class MeetingRecommendationAI {
 
           // 모임 제목에서 운동 종류 추출 시도
           String meetingActivity = meeting.title;
-          if (meeting.title.contains('러닝'))
+          if (meeting.title.contains('러닝')) {
             meetingActivity = '러닝';
-          else if (meeting.title.contains('홈트'))
+          } else if (meeting.title.contains('홈트'))
             meetingActivity = '홈트레이닝';
           else if (meeting.title.contains('요가'))
             meetingActivity = '요가';
@@ -535,7 +536,7 @@ class MeetingRecommendationAI {
         final meetingPeriod = _getTimePeriod(meetingHour);
         if (pattern.exercisePattern.preferredTimes.contains(meetingPeriod)) {
           reasons
-              .add('평소 $meetingPeriod에 운동하시는데, 모임 시간이 ${meetingHour}시라 딱 맞아요');
+              .add('평소 $meetingPeriod에 운동하시는데, 모임 시간이 $meetingHour시라 딱 맞아요');
         }
       }
     }
@@ -628,7 +629,7 @@ class MeetingRecommendationAI {
       final activities = pattern.timePatterns[meetingPeriod]!;
       if (activities.isEmpty) {
         reasons.add(
-            '$meetingDay $meetingPeriod ${meetingHour}시가 비어있어서 부담 없이 참여 가능해요');
+            '$meetingDay $meetingPeriod $meetingHour시가 비어있어서 부담 없이 참여 가능해요');
       } else if (!activities.contains('운동') &&
           meeting.category == MeetingCategory.exercise) {
         reasons.add('$meetingPeriod에 운동을 추가하면 하루가 더 균형잡혀요');
@@ -756,7 +757,7 @@ class MeetingRecommendationAI {
     final hour = meeting.dateTime.hour;
     final dayOfWeek = _getDayOfWeek(meeting.dateTime.weekday);
     final period = _getTimePeriod(hour);
-    points.add('$dayOfWeek $period ${hour}시');
+    points.add('$dayOfWeek $period $hour시');
 
     // 장소 정보
     if (pattern.preferredLocations.isNotEmpty) {

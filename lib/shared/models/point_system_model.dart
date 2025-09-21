@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 // 포인트 시스템 기본 설정
 class PointSystemConfig {
@@ -180,8 +179,8 @@ class PointUtils {
         return 200;
       case PointSource.signup:
         return PointSystemConfig.SIGNUP_BONUS_POINTS;
-      default:
-        return 0;
+      case PointSource.goalCompletion:
+        return 100; // 목표 달성 시 100 포인트
     }
   }
 
@@ -212,8 +211,6 @@ class PointUtils {
         return 0; // 기부 금액에 따라 다름
       case PointSpendType.newUserSupport:
         return 1000;
-      default:
-        return 0;
     }
   }
 
@@ -256,8 +253,8 @@ class PointUtils {
         return '레벨업 달성';
       case PointSource.signup:
         return '회원가입 보너스';
-      default:
-        return '포인트 획득';
+      case PointSource.goalCompletion:
+        return '목표 달성 보너스';
     }
   }
 
@@ -288,8 +285,6 @@ class PointUtils {
         return '포인트 기부';
       case PointSpendType.newUserSupport:
         return '신규 유저 지원 팩 구매';
-      default:
-        return '포인트 사용';
     }
   }
 }

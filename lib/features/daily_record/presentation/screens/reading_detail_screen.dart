@@ -13,9 +13,9 @@ class ReadingDetailScreen extends ConsumerStatefulWidget {
   final ReadingLog readingLog;
 
   const ReadingDetailScreen({
-    Key? key,
+    super.key,
     required this.readingLog,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<ReadingDetailScreen> createState() =>
@@ -39,38 +39,38 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
     'happy': {
       'emoji': '😊',
       'label': '기뻤어요',
-      'color': Color(0xFF4ECDC4),
-      'gradient': [Color(0xFF4ECDC4), Color(0xFF44A08D)]
+      'color': const Color(0xFF4ECDC4),
+      'gradient': [const Color(0xFF4ECDC4), const Color(0xFF44A08D)]
     },
     'excited': {
       'emoji': '🥰',
       'label': '설렜어요',
-      'color': Color(0xFFFF6B9D),
-      'gradient': [Color(0xFFFF6B9D), Color(0xFFF093FB)]
+      'color': const Color(0xFFFF6B9D),
+      'gradient': [const Color(0xFFFF6B9D), const Color(0xFFF093FB)]
     },
     'thoughtful': {
       'emoji': '🤔',
       'label': '생각이 많아졌어요',
-      'color': Color(0xFF9B59B6),
-      'gradient': [Color(0xFF9B59B6), Color(0xFF8E44AD)]
+      'color': const Color(0xFF9B59B6),
+      'gradient': [const Color(0xFF9B59B6), const Color(0xFF8E44AD)]
     },
     'moved': {
       'emoji': '🥺',
       'label': '감동적이었어요',
-      'color': Color(0xFF5DADE2),
-      'gradient': [Color(0xFF5DADE2), Color(0xFF3498DB)]
+      'color': const Color(0xFF5DADE2),
+      'gradient': [const Color(0xFF5DADE2), const Color(0xFF3498DB)]
     },
     'surprised': {
       'emoji': '😮',
       'label': '놀라웠어요',
-      'color': Color(0xFFF39C12),
-      'gradient': [Color(0xFFF39C12), Color(0xFFE67E22)]
+      'color': const Color(0xFFF39C12),
+      'gradient': [const Color(0xFFF39C12), const Color(0xFFE67E22)]
     },
     'calm': {
       'emoji': '😌',
       'label': '편안했어요',
-      'color': Color(0xFF96CEB4),
-      'gradient': [Color(0xFF96CEB4), Color(0xFF87CEEB)]
+      'color': const Color(0xFF96CEB4),
+      'gradient': [const Color(0xFF96CEB4), const Color(0xFF87CEEB)]
     },
   };
 
@@ -142,11 +142,11 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -162,11 +162,11 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
           Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -196,7 +196,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                   end: Alignment.bottomCenter,
                   colors: [
                     const Color(0xFF10B981),
-                    const Color(0xFF10B981).withOpacity(0.7),
+                    const Color(0xFF10B981).withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -270,12 +270,12 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF10B981).withOpacity(0.2),
+            color: const Color(0xFF10B981).withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -292,13 +292,13 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                   gradient: LinearGradient(
                     colors: [
                       const Color(0xFF10B981),
-                      const Color(0xFF10B981).withOpacity(0.8),
+                      const Color(0xFF10B981).withValues(alpha: 0.8),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF10B981).withOpacity(0.3),
+                      color: const Color(0xFF10B981).withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -344,19 +344,19 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFF10B981).withOpacity(0.1),
+              color: const Color(0xFF10B981).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFF10B981).withOpacity(0.2),
+                color: const Color(0xFF10B981).withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
+                const Icon(
                   Icons.calendar_today,
-                  color: const Color(0xFF10B981),
+                  color: Color(0xFF10B981),
                   size: 18,
                 ),
                 const SizedBox(width: 8),
@@ -390,7 +390,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -401,7 +401,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: currentReadingLog.categoryColor.withOpacity(0.1),
+                      color: currentReadingLog.categoryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -444,7 +444,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -455,12 +455,12 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withOpacity(0.1),
+                      color: const Color(0xFF10B981).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.auto_stories,
-                      color: const Color(0xFF10B981),
+                      color: Color(0xFF10B981),
                       size: 24,
                     ),
                   ),
@@ -498,7 +498,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -510,8 +510,8 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: currentReadingLog.isShared
-                          ? const Color(0xFF10B981).withOpacity(0.1)
-                          : Colors.grey.withOpacity(0.1),
+                          ? const Color(0xFF10B981).withValues(alpha: 0.1)
+                          : Colors.grey.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -569,7 +569,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -582,10 +582,10 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.amber.withOpacity(0.1),
+                        color: Colors.amber.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.star_rounded,
                         color: Colors.amber,
                         size: 18,
@@ -644,7 +644,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 15,
                     offset: const Offset(0, 5),
                   ),
@@ -657,7 +657,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: emotionInfo['color'].withOpacity(0.1),
+                          color: emotionInfo['color'].withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Icon(
@@ -725,7 +725,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -739,12 +739,12 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withOpacity(0.1),
+                    color: const Color(0xFF10B981).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.format_quote,
-                    color: const Color(0xFF10B981),
+                    color: Color(0xFF10B981),
                     size: 18,
                   ),
                 ),
@@ -767,7 +767,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFF10B981).withOpacity(0.1),
+                  color: const Color(0xFF10B981).withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -800,7 +800,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF10B981).withOpacity(0.3),
+                    color: const Color(0xFF10B981).withValues(alpha: 0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -845,7 +845,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -872,7 +872,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

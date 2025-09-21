@@ -14,6 +14,8 @@ import '../../../shared/utils/haptic_feedback_manager.dart';
 // ═══════════════════════════════════════════════════════════════
 
 class FocusTimeAnalysisWidget extends ConsumerStatefulWidget {
+  const FocusTimeAnalysisWidget({super.key});
+
   @override
   ConsumerState<FocusTimeAnalysisWidget> createState() =>
       _FocusTimeAnalysisWidgetState();
@@ -119,7 +121,7 @@ class _FocusTimeAnalysisWidgetState
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 10,
                   offset: const Offset(0, 2),
                 ),
@@ -161,15 +163,15 @@ class _FocusTimeAnalysisWidgetState
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    _levelTwoColor.withOpacity(0.1),
-                    _levelTwoColor.withOpacity(0.05)
+                    _levelTwoColor.withValues(alpha: 0.1),
+                    _levelTwoColor.withValues(alpha: 0.05)
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.timer_outlined,
                 color: _levelTwoColor,
                 size: 24,
@@ -294,7 +296,7 @@ class _FocusTimeAnalysisWidgetState
                           boxShadow: [
                             BoxShadow(
                               color: _getCurrentColor(todayMinutes)
-                                  .withOpacity(0.12),
+                                  .withValues(alpha: 0.12),
                               blurRadius: 20,
                               offset: const Offset(0, 4),
                             ),
@@ -356,10 +358,10 @@ class _FocusTimeAnalysisWidgetState
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: levelColor.withOpacity(0.05),
+        color: levelColor.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: levelColor.withOpacity(0.1),
+          color: levelColor.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -371,7 +373,7 @@ class _FocusTimeAnalysisWidgetState
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: levelColor.withOpacity(0.1),
+                  color: levelColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Icon(
@@ -411,7 +413,7 @@ class _FocusTimeAnalysisWidgetState
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
-                  color: levelColor.withOpacity(0.1),
+                  color: levelColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
@@ -479,7 +481,7 @@ class _FocusTimeAnalysisWidgetState
                           final minutes = focusData[groupIndex];
                           final isToday = groupIndex == focusData.length - 1;
                           final daysAgo = 13 - groupIndex;
-                          final dateText = isToday ? '오늘' : '${daysAgo}일 전';
+                          final dateText = isToday ? '오늘' : '$daysAgo일 전';
                           final level = _getFocusLevel(minutes);
 
                           return BarTooltipItem(
@@ -504,7 +506,7 @@ class _FocusTimeAnalysisWidgetState
                             if (index % 2 != 0) return const SizedBox.shrink();
 
                             final daysAgo = 13 - index;
-                            final text = daysAgo == 0 ? '오늘' : '${daysAgo}';
+                            final text = daysAgo == 0 ? '오늘' : '$daysAgo';
 
                             return Text(
                               text,
@@ -518,13 +520,13 @@ class _FocusTimeAnalysisWidgetState
                           reservedSize: 24,
                         ),
                       ),
-                      leftTitles: AxisTitles(
+                      leftTitles: const AxisTitles(
                         sideTitles: SideTitles(showTitles: false),
                       ),
-                      rightTitles: AxisTitles(
+                      rightTitles: const AxisTitles(
                         sideTitles: SideTitles(showTitles: false),
                       ),
-                      topTitles: AxisTitles(
+                      topTitles: const AxisTitles(
                         sideTitles: SideTitles(showTitles: false),
                       ),
                     ),
@@ -535,13 +537,13 @@ class _FocusTimeAnalysisWidgetState
                       getDrawingHorizontalLine: (value) {
                         if (value == 30) {
                           return FlLine(
-                            color: _levelTwoColor.withOpacity(0.3),
+                            color: _levelTwoColor.withValues(alpha: 0.3),
                             strokeWidth: 1.5,
                             dashArray: [5, 3],
                           );
                         } else if (value == 120) {
                           return FlLine(
-                            color: _levelThreeColor.withOpacity(0.3),
+                            color: _levelThreeColor.withValues(alpha: 0.3),
                             strokeWidth: 1.5,
                             dashArray: [5, 3],
                           );
@@ -568,13 +570,13 @@ class _FocusTimeAnalysisWidgetState
                             gradient: LinearGradient(
                               colors: [
                                 barColor,
-                                barColor.withOpacity(0.7),
+                                barColor.withValues(alpha: 0.7),
                               ],
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                             ),
                             width: 16,
-                            borderRadius: BorderRadius.only(
+                            borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(6),
                               topRight: Radius.circular(6),
                             ),
@@ -629,13 +631,13 @@ class _FocusTimeAnalysisWidgetState
     if (minutes < 30) {
       // 30분 미만
       final remaining = 30 - minutes;
-      mainMessage = '목표 달성까지 ${remaining}분';
+      mainMessage = '목표 달성까지 $remaining분';
       subMessage = '힘내세요!';
       subMessageColor = _levelTwoColor; // 파란색
     } else if (minutes < 120) {
       // 30분 이상 120분 미만
       final remaining = 120 - minutes;
-      mainMessage = '초월 달성까지 ${remaining}분';
+      mainMessage = '초월 달성까지 $remaining분';
       subMessage = '해냈어요!';
       subMessageColor = _levelTwoColor; // 파란색
     } else {
@@ -682,7 +684,7 @@ class _FocusTimeAnalysisWidgetState
           HapticFeedbackManager.mediumImpact();
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => FocusTimerRecordScreen(),
+              builder: (context) => const FocusTimerRecordScreen(),
             ),
           );
         },
@@ -698,7 +700,7 @@ class _FocusTimeAnalysisWidgetState
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.play_arrow_rounded, size: 24),
+            const Icon(Icons.play_arrow_rounded, size: 24),
             const SizedBox(width: 8),
             Text(
               '몰입 시작하기',
@@ -780,9 +782,9 @@ class _FocusTimeAnalysisWidgetState
     final hours = minutes ~/ 60;
     final mins = minutes % 60;
     if (hours > 0) {
-      return '${hours}시간 ${mins}분';
+      return '$hours시간 $mins분';
     }
-    return '${mins}분';
+    return '$mins분';
   }
 
   // 부드러운 전환을 위한 곡선 함수
@@ -821,7 +823,7 @@ class _FocusTimeAnalysisWidgetState
     if (hours > 0) {
       return mins == 0 ? '${hours}h' : '${hours}h ${mins}m';
     }
-    return '${mins}분';
+    return '$mins분';
   }
 
   // Get goal-based progress text (30분 = 100%)
@@ -838,13 +840,13 @@ class _FocusTimeAnalysisWidgetState
   String _getStatusMessage(int minutes) {
     if (minutes < 30) {
       final remaining = 30 - minutes;
-      return '목표까지 ${remaining}분';
+      return '목표까지 $remaining분';
     } else if (minutes < 120) {
       final over = minutes - 30;
-      return '초과달성 +${over}분';
+      return '초과달성 +$over분';
     } else {
       final over = minutes - 30;
-      return '대단해요! +${over}분';
+      return '대단해요! +$over분';
     }
   }
 
@@ -892,15 +894,15 @@ class _FocusTimeAnalysisWidgetState
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          _levelTwoColor.withOpacity(0.1),
-                          _levelTwoColor.withOpacity(0.05)
+                          _levelTwoColor.withValues(alpha: 0.1),
+                          _levelTwoColor.withValues(alpha: 0.05)
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.analytics_outlined,
                       color: _levelTwoColor,
                       size: 24,
@@ -1066,7 +1068,7 @@ class SimpleFocusProgressPainter extends CustomPainter {
     // Add glow effect for better visibility
     if (progressRatio > 0.05) {
       final glowPaint = Paint()
-        ..color = currentColor.withOpacity(0.3)
+        ..color = currentColor.withValues(alpha: 0.3)
         ..strokeWidth = strokeWidth * 1.5
         ..style = PaintingStyle.stroke
         ..strokeCap = StrokeCap.round
@@ -1091,7 +1093,7 @@ class SimpleFocusProgressPainter extends CustomPainter {
     final outerRect = Rect.fromCircle(center: rect.center, radius: outerRadius);
 
     final bonusPaint = Paint()
-      ..color = bonusColor.withOpacity(0.7)
+      ..color = bonusColor.withValues(alpha: 0.7)
       ..strokeWidth = strokeWidth * 0.6
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -1101,7 +1103,7 @@ class SimpleFocusProgressPainter extends CustomPainter {
 
   void _drawGoalMarker(Canvas canvas, Offset center, double radius) {
     // 30-minute goal marker at the top
-    final goalAngle =
+    const goalAngle =
         -math.pi / 2 + (2 * math.pi * 1.0); // Full circle = 30min goal
     final markerPoint = Offset(
       center.dx + radius * math.cos(goalAngle),
@@ -1137,7 +1139,7 @@ class SimpleFocusProgressPainter extends CustomPainter {
       pointerPoint,
       pulseRadius,
       Paint()
-        ..color = currentColor.withOpacity(0.4)
+        ..color = currentColor.withValues(alpha: 0.4)
         ..style = PaintingStyle.fill
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
     );

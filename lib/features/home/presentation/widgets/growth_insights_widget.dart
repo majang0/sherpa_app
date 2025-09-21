@@ -9,13 +9,12 @@ import '../../../../core/constants/app_colors.dart';
 // Shared Providers
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_point_provider.dart';
-import '../../../../shared/providers/global_game_provider.dart';
 
 // Shared Models
 import '../../../../shared/models/global_user_model.dart';
 
 class GrowthInsightsWidget extends ConsumerStatefulWidget {
-  const GrowthInsightsWidget({Key? key}) : super(key: key);
+  const GrowthInsightsWidget({super.key});
 
   @override
   ConsumerState<GrowthInsightsWidget> createState() =>
@@ -77,7 +76,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.08),
+            color: AppColors.primary.withValues(alpha: 0.08),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -104,7 +103,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -144,16 +143,16 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
           // 하단 인사이트
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.surface,
-              borderRadius: const BorderRadius.only(
+              borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(24),
                 bottomRight: Radius.circular(24),
               ),
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.insights,
                   size: 16,
                   color: AppColors.primary,
@@ -210,7 +209,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                               user.stats.willpower) /
                           5;
                       return Text(
-                        '${(avgStat * _numberAnimation.value).toStringAsFixed(1)}',
+                        (avgStat * _numberAnimation.value).toStringAsFixed(1),
                         style: GoogleFonts.notoSans(
                           fontSize: 28,
                           fontWeight: FontWeight.w800,
@@ -286,7 +285,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
@@ -325,7 +324,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                           color: (trendPositive
                                   ? AppColors.success
                                   : AppColors.error)
-                              .withOpacity(0.1),
+                              .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(

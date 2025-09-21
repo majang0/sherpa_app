@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/quest_template_model.dart';
 import '../models/quest_instance_model.dart';
 import '../../../shared/models/global_user_model.dart';
-import '../../../shared/providers/global_point_provider.dart';
 
 /// 퀘스트 추적 서비스
 /// 글로벌 데이터와 연동하여 퀘스트 진행률을 실시간으로 업데이트합니다.
@@ -327,18 +325,17 @@ class QuestTrackingService {
       // 모임/소셜 관련
       'MeetingReview': meetingReviewsCount,
       'MeetingLog': todayMeetingLogs,
-      'meetingReviews': meetingReviewsCount,
+      'todayMeetingReviews': meetingReviewsCount,
       'weekly_meetingLogs': weeklyMeetingLogsCount,
       'weekly_meetingReviews': _calculateWeeklyMeetingReviews(dailyRecords),
       'weekly_differentMeetings': weeklyMeetingLogsCount, // 2개 모임 동시 참여 퀘스트용
 
       // 독서/영화 관련
       'ReadingLog.pages': todayReadingPages,
-      'MovieLog': todayMovieLogs,
-      'movieLogs': todayMovieLogs,
+      'todayMovieLogs': todayMovieLogs,
       'movieReviews': todayMovieReviews,
-      'readingPages': todayReadingPages,
-      'culturalRecords':
+      'todayReadingPages': todayReadingPages,
+      'todayCulturalRecords':
           todayMovieLogs + (todayReadingPages > 0 ? 1 : 0), // 영화 + 독서
 
       // 뱃지 관련
@@ -347,13 +344,10 @@ class QuestTrackingService {
       // 복합 조건용 데이터
       'exerciseMinutes': todayExerciseMinutes,
       'differentExerciseTypes': _calculateDifferentExerciseTypes(dailyRecords),
-      'differentMountains': weeklyDifferentMountains,
-      'differentMeetingCategories': weeklyDifferentMeetingCategories,
-      'meetingLogs': weeklyMeetingLogsCount,
       '연속등반성공': _calculateConsecutiveClimbingSuccess(dailyRecords),
       '연속일일퀘스트완료': 0, // 나중에 퀘스트 완료 연속일 계산 로직 추가 예정
-      'perfectDays': _calculatePerfectDays(dailyRecords),
-      'allActivitiesDays': _calculateAllActivitiesDays(dailyRecords),
+      'todayPerfectDays': _calculatePerfectDays(dailyRecords),
+      'todayAllActivitiesDays': _calculateAllActivitiesDays(dailyRecords),
       'challengeRecords': dailyRecords.challengeRecords.length,
       'differentMeetings': weeklyMeetingLogsCount,
       '모임주최성공': 0, // 나중에 모임 주최 기능 추가 시 구현 예정
@@ -567,7 +561,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     return dailyRecords.movieLogs
         .where((log) =>
@@ -583,7 +577,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     return dailyRecords.readingLogs
         .where((log) =>
@@ -599,7 +593,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     final exerciseDays = <String>{};
     for (final log in dailyRecords.exerciseLogs) {
@@ -615,7 +609,7 @@ class QuestTrackingService {
   static int _calculateWeeklyMeetingLogs(DailyRecordData dailyRecords) {
     final now = DateTime.now();
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    final weekEnd = weekStart.add(Duration(days: 6));
+    final weekEnd = weekStart.add(const Duration(days: 6));
 
     return dailyRecords.meetingLogs.where((log) {
       // 이번 주 월요일 0시부터 일요일 23시59분까지만 포함
@@ -636,7 +630,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     final categories = <String>{};
     for (final log in dailyRecords.meetingLogs) {
@@ -655,7 +649,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     final mountains = <String>{};
     for (final log in dailyRecords.climbingLogs) {
@@ -715,7 +709,7 @@ class QuestTrackingService {
   static int _calculateWeeklySteps(DailyRecordData dailyRecords) {
     final now = DateTime.now();
     final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    final weekEnd = weekStart.add(Duration(days: 6));
+    final weekEnd = weekStart.add(const Duration(days: 6));
 
     // 주간 걸음 수는 현재 todaySteps만 있으므로 임시로 오늘 기준으로 계산
     // 실제로는 각 날짜별 걸음 수 기록이 필요함
@@ -737,7 +731,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     final readingDays = <String>{};
     for (final log in dailyRecords.readingLogs) {
@@ -757,7 +751,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     final diaryDays = <String>{};
     for (final log in dailyRecords.diaryLogs) {
@@ -784,7 +778,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     return dailyRecords.climbingLogs
         .where((log) =>
@@ -802,7 +796,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     return dailyRecords.meetingLogs
         .where((log) =>
@@ -821,7 +815,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     // 이번 주 영화 로그 개수 (월요일 ~ 일요일)
     final weeklyMovieCount = dailyRecords.movieLogs
@@ -847,7 +841,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     // 이번 주 중에 모든 목표를 달성하고 보상을 받은 날짜 개수
     return dailyRecords.allGoalsRewardClaimedDates
@@ -864,7 +858,7 @@ class QuestTrackingService {
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
     final weekEnd =
-        weekStart.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     // 이번 주 중에 모든 목표를 달성하고 보상을 받은 날짜 개수
     return dailyRecords.allGoalsRewardClaimedDates

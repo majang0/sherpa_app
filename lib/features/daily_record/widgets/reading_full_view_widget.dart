@@ -12,6 +12,8 @@ import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../shared/models/global_user_model.dart';
 
 class ReadingFullViewWidget extends ConsumerStatefulWidget {
+  const ReadingFullViewWidget({super.key});
+
   @override
   ConsumerState<ReadingFullViewWidget> createState() =>
       _ReadingFullViewWidgetState();
@@ -93,11 +95,11 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
         leading: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -123,7 +125,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                   end: Alignment.bottomCenter,
                   colors: [
                     const Color(0xFF10B981),
-                    const Color(0xFF10B981).withOpacity(0.7),
+                    const Color(0xFF10B981).withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -190,12 +192,12 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF10B981).withOpacity(0.2),
+            color: const Color(0xFF10B981).withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -209,22 +211,22 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
-                      const Color(0xFF10B981),
-                      const Color(0xFF059669),
+                      Color(0xFF10B981),
+                      Color(0xFF059669),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF10B981).withOpacity(0.3),
+                      color: const Color(0xFF10B981).withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
                   ],
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.menu_book,
                   color: Colors.white,
                   size: 32,
@@ -256,19 +258,19 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFF10B981).withOpacity(0.1),
+              color: const Color(0xFF10B981).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: const Color(0xFF10B981).withOpacity(0.2),
+                color: const Color(0xFF10B981).withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
+                const Icon(
                   Icons.calendar_month,
-                  color: const Color(0xFF10B981),
+                  color: Color(0xFF10B981),
                   size: 18,
                 ),
                 const SizedBox(width: 8),
@@ -298,7 +300,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -310,10 +312,10 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFF10B981).withOpacity(0.1),
+                color: const Color(0xFF10B981).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: const Color(0xFF10B981).withOpacity(0.2),
+                  color: const Color(0xFF10B981).withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -325,9 +327,9 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                   });
                   HapticFeedbackManager.lightImpact();
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.chevron_left_rounded,
-                  color: const Color(0xFF10B981),
+                  color: Color(0xFF10B981),
                   size: 20,
                 ),
               ),
@@ -353,10 +355,10 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFF10B981).withOpacity(0.1),
+                color: const Color(0xFF10B981).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: const Color(0xFF10B981).withOpacity(0.2),
+                  color: const Color(0xFF10B981).withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
@@ -368,9 +370,9 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                   });
                   HapticFeedbackManager.lightImpact();
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.chevron_right_rounded,
-                  color: const Color(0xFF10B981),
+                  color: Color(0xFF10B981),
                   size: 20,
                 ),
               ),
@@ -396,7 +398,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -411,12 +413,12 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF10B981).withOpacity(0.1),
+                    color: const Color(0xFF10B981).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.calendar_view_month,
-                    color: const Color(0xFF10B981),
+                    color: Color(0xFF10B981),
                     size: 18,
                   ),
                 ),
@@ -457,7 +459,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFF10B981).withOpacity(0.1),
+                  color: const Color(0xFF10B981).withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -536,39 +538,39 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
         margin: const EdgeInsets.all(2),
         decoration: BoxDecoration(
           gradient: isToday
-              ? LinearGradient(
-                  colors: [const Color(0xFF10B981), const Color(0xFF059669)],
+              ? const LinearGradient(
+                  colors: [Color(0xFF10B981), Color(0xFF059669)],
                 )
               : hasReading
                   ? LinearGradient(
                       colors: [
-                        const Color(0xFF10B981).withOpacity(0.1),
-                        const Color(0xFF059669).withOpacity(0.05)
+                        const Color(0xFF10B981).withValues(alpha: 0.1),
+                        const Color(0xFF059669).withValues(alpha: 0.05)
                       ],
                     )
                   : null,
           color: !isToday && !hasReading
               ? (isFuture
-                  ? Colors.grey.shade200.withOpacity(0.5)
+                  ? Colors.grey.shade200.withValues(alpha: 0.5)
                   : (isCurrentMonth
                       ? Colors.white
-                      : Colors.grey.shade100.withOpacity(0.3)))
+                      : Colors.grey.shade100.withValues(alpha: 0.3)))
               : null,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isToday
                 ? Colors.transparent
                 : (hasReading
-                    ? const Color(0xFF10B981).withOpacity(0.3)
+                    ? const Color(0xFF10B981).withValues(alpha: 0.3)
                     : (isCurrentMonth
-                        ? ModernColors.textTertiary.withOpacity(0.1)
+                        ? ModernColors.textTertiary.withValues(alpha: 0.1)
                         : Colors.transparent)),
             width: 1.5,
           ),
           boxShadow: hasReading || isToday
               ? [
                   BoxShadow(
-                    color: const Color(0xFF10B981).withOpacity(0.15),
+                    color: const Color(0xFF10B981).withValues(alpha: 0.15),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),
@@ -601,7 +603,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                     fontSize: 8,
                     fontWeight: FontWeight.w600,
                     color: isToday
-                        ? Colors.white.withOpacity(0.9)
+                        ? Colors.white.withValues(alpha: 0.9)
                         : const Color(0xFF10B981),
                   ),
                 ),
@@ -611,7 +613,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                     fontSize: 8,
                     fontWeight: FontWeight.w600,
                     color: isToday
-                        ? Colors.white.withOpacity(0.9)
+                        ? Colors.white.withValues(alpha: 0.9)
                         : const Color(0xFF10B981),
                   ),
                 ),
@@ -649,9 +651,9 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                         ? (isToday
                             ? Colors.white
                             : (isFuture
-                                ? ModernColors.textTertiary.withOpacity(0.4)
+                                ? ModernColors.textTertiary.withValues(alpha: 0.4)
                                 : ModernColors.textPrimary))
-                        : ModernColors.textTertiary.withOpacity(0.25),
+                        : ModernColors.textTertiary.withValues(alpha: 0.25),
                   ),
                 ),
                 if (isClickable && !hasReading && !isFuture) ...[
@@ -660,17 +662,17 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                     width: 16,
                     height: 16,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF10B981).withOpacity(0.2),
+                      color: const Color(0xFF10B981).withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: const Color(0xFF10B981).withOpacity(0.5),
+                        color: const Color(0xFF10B981).withValues(alpha: 0.5),
                         width: 1,
                       ),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.add,
                       size: 10,
-                      color: const Color(0xFF10B981),
+                      color: Color(0xFF10B981),
                     ),
                   ),
                 ],
@@ -825,10 +827,10 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: log.categoryColor.withOpacity(0.1),
+                                color: log.categoryColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                  color: log.categoryColor.withOpacity(0.3),
+                                  color: log.categoryColor.withValues(alpha: 0.3),
                                   width: 1,
                                 ),
                               ),
@@ -876,7 +878,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                                   children: [
                                     ...List.generate(
                                       log.rating?.round() ?? 0,
-                                      (index) => Icon(
+                                      (index) => const Icon(
                                         Icons.star,
                                         size: 10,
                                         color: Colors.white,
@@ -914,7 +916,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF10B981).withOpacity(0.4),
+              color: const Color(0xFF10B981).withValues(alpha: 0.4),
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -925,7 +927,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
             HapticFeedbackManager.mediumImpact();
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ReadingRecordScreen(),
+                builder: (context) => const ReadingRecordScreen(),
               ),
             );
           },
@@ -941,7 +943,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.menu_book, size: 22),
+              const Icon(Icons.menu_book, size: 22),
               const SizedBox(width: 10),
               Text(
                 '새 독서 기록 작성하기',

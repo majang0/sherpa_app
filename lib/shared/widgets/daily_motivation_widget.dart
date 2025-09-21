@@ -4,6 +4,8 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'dart:math' as math;
 
 class DailyMotivationWidget extends StatefulWidget {
+  const DailyMotivationWidget({super.key});
+
   @override
   State<DailyMotivationWidget> createState() => _DailyMotivationWidgetState();
 }
@@ -21,27 +23,27 @@ class _DailyMotivationWidgetState extends State<DailyMotivationWidget>
     {
       'text': '오늘도 한 걸음씩 성장해나가요! 🌱',
       'emoji': '🌱',
-      'color': Color(0xFF4CAF50),
+      'color': const Color(0xFF4CAF50),
     },
     {
       'text': '작은 성취도 큰 변화의 시작이에요! ⭐',
       'emoji': '⭐',
-      'color': Color(0xFFFF9800),
+      'color': const Color(0xFFFF9800),
     },
     {
       'text': '당신의 잠재력이 빛나고 있어요! ✨',
       'emoji': '✨',
-      'color': Color(0xFF9C27B0),
+      'color': const Color(0xFF9C27B0),
     },
     {
       'text': '오늘 하루도 멋진 모험이 될 거예요! 🚀',
       'emoji': '🚀',
-      'color': Color(0xFF2196F3),
+      'color': const Color(0xFF2196F3),
     },
     {
       'text': '함께 성장하는 여정, 응원해요! 💪',
       'emoji': '💪',
-      'color': Color(0xFFE91E63),
+      'color': const Color(0xFFE91E63),
     },
   ];
 

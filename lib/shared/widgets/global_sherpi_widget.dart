@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
 
 // Core
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/animation/micro_interactions.dart';
-import '../../core/theme/modern_colors.dart';
 
 // Features
 import '../../features/sherpi/chat/presentation/screens/sherpi_chat_screen.dart';
@@ -90,7 +90,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
     showDialog(
       context: context,
       barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (context) => const SherpiExpandedDialog(),
     );
   }
@@ -159,12 +159,12 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
         gradient: _getEmotionGradient(emotionTheme),
         boxShadow: [
           BoxShadow(
-            color: _getEmotionColor(emotionTheme).withOpacity(0.4), // 더 진한 그림자
+            color: _getEmotionColor(emotionTheme).withValues(alpha: 0.4), // 더 진한 그림자
             blurRadius: 16, // 더 큰 블러 효과 (12→16)
             offset: const Offset(0, 6), // 더 깊은 그림자 (4→6)
           ),
           BoxShadow(
-            color: _getEmotionColor(emotionTheme).withOpacity(0.2),
+            color: _getEmotionColor(emotionTheme).withValues(alpha: 0.2),
             blurRadius: 24, // 추가 외부 그림자로 입체감 증가
             offset: const Offset(0, 8),
           ),
@@ -181,7 +181,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
                 height: 90,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  return Icon(
+                  return const Icon(
                     Icons.face,
                     size: 40, // 폴백 아이콘 크기도 증가
                     color: Colors.white,
@@ -205,7 +205,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
                   border: Border.all(color: Colors.white, width: 2),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.error.withOpacity(0.3),
+                      color: AppColors.error.withValues(alpha: 0.3),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -237,7 +237,7 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
                       BoxShadow(
                         color:
                             _getIntimacyLevelColor(relationship.intimacyLevel)
-                                .withOpacity(0.3),
+                                .withValues(alpha: 0.3),
                         blurRadius: 4,
                         offset: const Offset(0, 1),
                       ),
@@ -408,7 +408,7 @@ class SherpiExpandedDialog extends ConsumerStatefulWidget {
 
 class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
     with TickerProviderStateMixin {
-  int _currentTabIndex = 0;
+  final int _currentTabIndex = 0;
   late TabController _tabController;
 
   @override
@@ -443,25 +443,25 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.white.withOpacity(0.95),
-                  Colors.white.withOpacity(0.85),
+                  Colors.white.withValues(alpha: 0.95),
+                  Colors.white.withValues(alpha: 0.85),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(32),
               border: Border.all(
-                color: Colors.white.withOpacity(0.3),
+                color: Colors.white.withValues(alpha: 0.3),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.08),
+                  color: AppColors.primary.withValues(alpha: 0.08),
                   blurRadius: 30,
                   offset: const Offset(0, 15),
                 ),
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 50,
                   offset: const Offset(0, 25),
                 ),
@@ -478,7 +478,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.primary.withOpacity(0.05),
+                          AppColors.primary.withValues(alpha: 0.05),
                           Colors.transparent,
                         ],
                         begin: Alignment.topCenter,
@@ -495,19 +495,19 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                             shape: BoxShape.circle,
                             gradient: LinearGradient(
                               colors: [
-                                Colors.white.withOpacity(0.9),
-                                Colors.white.withOpacity(0.7),
+                                Colors.white.withValues(alpha: 0.9),
+                                Colors.white.withValues(alpha: 0.7),
                               ],
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                             ),
                             border: Border.all(
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                               width: 2,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.primary.withOpacity(0.15),
+                                color: AppColors.primary.withValues(alpha: 0.15),
                                 blurRadius: 20,
                                 offset: const Offset(0, 8),
                               ),
@@ -546,14 +546,14 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                   color:
-                                      AppColors.textSecondary.withOpacity(0.8),
+                                      AppColors.textSecondary.withValues(alpha: 0.8),
                                   letterSpacing: -0.2,
                                 ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 8),
-                              CompactIntimacyWidget(),
+                              const CompactIntimacyWidget(),
                             ],
                           ),
                         ),
@@ -574,20 +574,20 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  Colors.white.withOpacity(0.7),
-                                  Colors.white.withOpacity(0.5),
+                                  Colors.white.withValues(alpha: 0.7),
+                                  Colors.white.withValues(alpha: 0.5),
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.3),
+                                color: Colors.white.withValues(alpha: 0.3),
                                 width: 1,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.primary.withOpacity(0.05),
+                                  color: AppColors.primary.withValues(alpha: 0.05),
                                   blurRadius: 15,
                                   offset: const Offset(0, 5),
                                 ),
@@ -606,7 +606,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                                           Icons.auto_awesome,
                                           size: 20,
                                           color: AppColors.primary
-                                              .withOpacity(0.7),
+                                              .withValues(alpha: 0.7),
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
@@ -615,7 +615,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,
                                             color: AppColors.primary
-                                                .withOpacity(0.8),
+                                                .withValues(alpha: 0.8),
                                             letterSpacing: -0.2,
                                           ),
                                         ),
@@ -639,7 +639,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                     color:
-                                        AppColors.textPrimary.withOpacity(0.9),
+                                        AppColors.textPrimary.withValues(alpha: 0.9),
                                     height: 1.6,
                                     letterSpacing: -0.2,
                                   ),
@@ -657,15 +657,15 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  Colors.white.withOpacity(0.7),
-                                  Colors.white.withOpacity(0.5),
+                                  Colors.white.withValues(alpha: 0.7),
+                                  Colors.white.withValues(alpha: 0.5),
                                 ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.3),
+                                color: Colors.white.withValues(alpha: 0.3),
                                 width: 1,
                               ),
                             ),
@@ -674,7 +674,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                               style: GoogleFonts.notoSans(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                color: AppColors.textPrimary.withOpacity(0.9),
+                                color: AppColors.textPrimary.withValues(alpha: 0.9),
                                 height: 1.6,
                                 letterSpacing: -0.2,
                               ),
@@ -766,7 +766,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.white.withValues(alpha: 0.3),
                           ),
                           child: const SherpiRelationshipGrowthWidget(
                               showFullStats: false),
@@ -787,7 +787,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: Colors.black.withValues(alpha: 0.05),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -855,25 +855,25 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.white.withOpacity(0.9),
-              Colors.white.withOpacity(0.7),
+              Colors.white.withValues(alpha: 0.9),
+              Colors.white.withValues(alpha: 0.7),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Colors.white.withOpacity(0.3),
+            color: Colors.white.withValues(alpha: 0.3),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: gradient.colors.first.withOpacity(0.1),
+              color: gradient.colors.first.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: Colors.black.withValues(alpha: 0.03),
               blurRadius: 30,
               offset: const Offset(0, 12),
             ),
@@ -895,7 +895,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: gradient.colors.first.withOpacity(0.3),
+                          color: gradient.colors.first.withValues(alpha: 0.3),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
@@ -930,7 +930,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                           style: GoogleFonts.notoSans(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.textSecondary.withOpacity(0.8),
+                            color: AppColors.textSecondary.withValues(alpha: 0.8),
                             height: 1.3,
                             letterSpacing: -0.2,
                           ),
@@ -944,7 +944,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                     width: 32,
                     height: 32,
                     decoration: BoxDecoration(
-                      color: gradient.colors.first.withOpacity(0.1),
+                      color: gradient.colors.first.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
@@ -1025,7 +1025,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
   /// 패턴 분석 표시
   void _showPatternAnalysis(BuildContext context) async {
     // ✅ ref 사용을 Widget dispose 전에 미리 실행
-    late final globalUser;
+    late final GlobalUser globalUser;
     try {
       globalUser = ref.read(globalUserProvider);
     } catch (e) {
@@ -1065,7 +1065,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -1082,7 +1082,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                   gradient: LinearGradient(
                     colors: [
                       AppColors.primary,
-                      AppColors.primary.withOpacity(0.7)
+                      AppColors.primary.withValues(alpha: 0.7)
                     ],
                   ),
                   borderRadius: BorderRadius.circular(30),
@@ -1130,7 +1130,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                       LinearProgressIndicator(
                         value: progress,
                         backgroundColor: Colors.grey.shade200,
-                        valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                        valueColor: const AlwaysStoppedAnimation(AppColors.primary),
                         borderRadius: BorderRadius.circular(8),
                         minHeight: 8,
                       ),
@@ -1277,7 +1277,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
           ),
         );
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       // 오류 발생 시 로딩 다이얼로그 닫기
       if (navigatorContext.mounted) {
         Navigator.of(navigatorContext).pop();
@@ -1366,7 +1366,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
     showDialog(
       context: context,
       barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.5),
+      barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (dialogContext) => const EnhancedTodayAnalysisDialog(),
     );
   }
@@ -1377,7 +1377,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
     showDialog(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.black.withOpacity(0.3), // 더 어둡게 하여 계층 구분
+      barrierColor: Colors.black.withValues(alpha: 0.3), // 더 어둡게 하여 계층 구분
       builder: (context) => const SherpiPersonalizationDialog(),
     );
   }
@@ -1395,26 +1395,26 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.white.withOpacity(0.9),
-            Colors.white.withOpacity(0.7),
+            Colors.white.withValues(alpha: 0.9),
+            Colors.white.withValues(alpha: 0.7),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.15),
+          color: AppColors.primary.withValues(alpha: 0.15),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.08),
+            color: AppColors.primary.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             blurRadius: 1,
             offset: const Offset(0, 1),
             spreadRadius: 0,
@@ -1435,7 +1435,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
             child: Icon(
               Icons.settings,
               size: 16,
-              color: AppColors.primary.withOpacity(0.8),
+              color: AppColors.primary.withValues(alpha: 0.8),
             ),
           ),
         ),
@@ -1450,26 +1450,26 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Colors.white.withOpacity(0.9),
-            Colors.white.withOpacity(0.7),
+            Colors.white.withValues(alpha: 0.9),
+            Colors.white.withValues(alpha: 0.7),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.15),
+          color: AppColors.primary.withValues(alpha: 0.15),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.08),
+            color: AppColors.primary.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
             spreadRadius: 0,
           ),
           BoxShadow(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             blurRadius: 1,
             offset: const Offset(0, 1),
             spreadRadius: 0,
@@ -1489,7 +1489,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                 Icon(
                   Icons.forum_outlined,
                   size: 16,
-                  color: AppColors.primary.withOpacity(0.8),
+                  color: AppColors.primary.withValues(alpha: 0.8),
                 ),
                 const SizedBox(width: 6),
                 Text(
@@ -1497,7 +1497,7 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.primary.withOpacity(0.9),
+                    color: AppColors.primary.withValues(alpha: 0.9),
                     letterSpacing: -0.1,
                   ),
                 ),

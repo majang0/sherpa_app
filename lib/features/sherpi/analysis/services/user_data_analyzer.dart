@@ -169,7 +169,7 @@ class UserDataAnalyzer {
         recommendations: recommendations,
         analyzedAt: now,
       );
-    } catch (e, stackTrace) {
+    } catch (e) {
       // 분석 중 오류 발생 시 기본 결과 반환
       // 분석 오류 시 기본 결과 반환
       return _createDefaultAnalysisResult(user, DateTime.now());
@@ -230,9 +230,9 @@ class UserDataAnalyzer {
     double eveningActivity = 0.0;
 
     hourlyDistribution.forEach((hour, percentage) {
-      if (hour >= 6 && hour < 12)
+      if (hour >= 6 && hour < 12) {
         morningActivity += percentage;
-      else if (hour >= 12 && hour < 18)
+      } else if (hour >= 12 && hour < 18)
         afternoonActivity += percentage;
       else if (hour >= 18 && hour < 24) eveningActivity += percentage;
     });
@@ -428,7 +428,7 @@ class UserDataAnalyzer {
 
     // 기분 관련 인사이트
     if (mood.dominantMood == 'happy' || mood.dominantMood == 'very_happy') {
-      insights.add(Insight(
+      insights.add(const Insight(
         title: '긍정적인 마인드셋',
         description: '대부분의 활동에서 행복한 기분을 유지하고 있어요. 이는 목표 달성에 큰 도움이 됩니다.',
         type: InsightType.strength,
@@ -534,7 +534,7 @@ class UserDataAnalyzer {
 
     // 기분 개선 추천
     if (mood.moodStability < AnalysisConstants.moodStabilityThreshold) {
-      recommendations.add(Recommendation(
+      recommendations.add(const Recommendation(
         title: '기분 안정성 향상',
         description: '규칙적인 운동과 충분한 휴식으로 기분의 안정성을 높여보세요.',
         actionText: '운동 계획 세우기',
@@ -546,7 +546,7 @@ class UserDataAnalyzer {
 
     // 새로운 목표 추천
     if (metrics.goalCompletionRate > AnalysisConstants.highGoalCompletionRate) {
-      recommendations.add(Recommendation(
+      recommendations.add(const Recommendation(
         title: '더 높은 목표 설정',
         description: '현재 목표를 잘 달성하고 계세요! 조금 더 도전적인 목표를 설정해보는 건 어떨까요?',
         actionText: '새 목표 만들기',
@@ -718,7 +718,7 @@ class UserDataAnalyzer {
         currentStreak: 0,
         longestStreak: 0,
       ),
-      moodAnalysis: MoodAnalysis(
+      moodAnalysis: const MoodAnalysis(
         moodDistribution: {'normal': 100.0},
         dominantMood: 'normal',
         moodStability: 50.0,
@@ -740,7 +740,7 @@ class UserDataAnalyzer {
         categoryPerformance: {'운동': 0.0, '독서': 0.0, '일기': 0.0, '모임': 0.0},
       ),
       insights: [
-        Insight(
+        const Insight(
           title: '새로운 시작',
           description:
               '아직 충분한 데이터가 없지만, 지금부터 시작해보세요! 작은 활동부터 기록해나가면 멋진 성장 패턴을 만들 수 있어요.',
@@ -750,7 +750,7 @@ class UserDataAnalyzer {
         ),
       ],
       recommendations: [
-        Recommendation(
+        const Recommendation(
           title: '첫 활동 시작하기',
           description: '오늘부터 하나씩 활동을 기록해보세요. 운동, 독서, 일기 중 어떤 것부터 시작할까요?',
           actionText: '활동 기록하기',

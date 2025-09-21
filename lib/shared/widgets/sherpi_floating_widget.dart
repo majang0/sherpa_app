@@ -9,10 +9,10 @@ class SherpiFloatingWidget extends ConsumerStatefulWidget {
   final Offset? initialPosition;
 
   const SherpiFloatingWidget({
-    Key? key,
+    super.key,
     this.isDraggable = true,
     this.initialPosition,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<SherpiFloatingWidget> createState() =>
@@ -43,7 +43,7 @@ class _SherpiFloatingWidgetState extends ConsumerState<SherpiFloatingWidget> {
       top: _position.dy,
       child: widget.isDraggable
           ? Draggable(
-              feedback: SherpiWidget(
+              feedback: const SherpiWidget(
                 width: 100,
                 height: 100,
                 showDialogue: false,
@@ -57,13 +57,13 @@ class _SherpiFloatingWidgetState extends ConsumerState<SherpiFloatingWidget> {
                   );
                 });
               },
-              child: SherpiWidget(
+              child: const SherpiWidget(
                 width: 100,
                 height: 100,
                 showDialogue: true,
               ),
             )
-          : SherpiWidget(
+          : const SherpiWidget(
               width: 100,
               height: 100,
               showDialogue: true,

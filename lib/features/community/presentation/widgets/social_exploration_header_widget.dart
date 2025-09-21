@@ -106,7 +106,7 @@ class SocialExplorationHeaderWidget extends ConsumerWidget {
                 child: _buildStatCard(
                   icon: Icons.social_distance,
                   label: '사교성',
-                  value: '${user.stats.sociality.toStringAsFixed(1)}',
+                  value: user.stats.sociality.toStringAsFixed(1),
                   color: Colors.white.withValues(alpha: 0.9),
                 ),
               ),
@@ -115,7 +115,7 @@ class SocialExplorationHeaderWidget extends ConsumerWidget {
                 child: _buildStatCard(
                   icon: Icons.psychology,
                   label: '의지력',
-                  value: '${user.stats.willpower.toStringAsFixed(1)}',
+                  value: user.stats.willpower.toStringAsFixed(1),
                   color: Colors.white.withValues(alpha: 0.9),
                 ),
               ),

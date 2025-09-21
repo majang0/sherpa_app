@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../providers/relationship_provider.dart';
-import '../../../../../shared/models/sherpi_relationship_model.dart';
 
 /// 💝 친밀도 레벨 표시 위젯
 ///
@@ -32,15 +31,15 @@ class IntimacyLevelWidget extends ConsumerWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            _getIntimacyColor(relationship.intimacyLevel).withOpacity(0.1),
-            _getIntimacyColor(relationship.intimacyLevel).withOpacity(0.05),
+            _getIntimacyColor(relationship.intimacyLevel).withValues(alpha: 0.1),
+            _getIntimacyColor(relationship.intimacyLevel).withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: _getIntimacyColor(relationship.intimacyLevel).withOpacity(0.3),
+          color: _getIntimacyColor(relationship.intimacyLevel).withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -56,7 +55,7 @@ class IntimacyLevelWidget extends ConsumerWidget {
               boxShadow: [
                 BoxShadow(
                   color: _getIntimacyColor(relationship.intimacyLevel)
-                      .withOpacity(0.3),
+                      .withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -229,10 +228,10 @@ class CompactIntimacyWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: _getIntimacyColor(relationship.intimacyLevel).withOpacity(0.1),
+        color: _getIntimacyColor(relationship.intimacyLevel).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: _getIntimacyColor(relationship.intimacyLevel).withOpacity(0.3),
+          color: _getIntimacyColor(relationship.intimacyLevel).withValues(alpha: 0.3),
         ),
       ),
       child: Row(

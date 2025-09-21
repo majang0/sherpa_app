@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/ai/services/activity_analysis_service.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 
 // Test data helpers
 Map<String, dynamic> _createMockTodayExercise() {

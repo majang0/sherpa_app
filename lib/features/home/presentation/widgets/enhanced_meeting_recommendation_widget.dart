@@ -151,7 +151,7 @@ class _EnhancedMeetingRecommendationWidgetState
               children: [
                 const SizedBox(width: 4), // 아이콘을 우측으로 4픽셀 이동
                 // 🎯 섹션 아이콘 - 배경 없이 아이콘만
-                Icon(
+                const Icon(
                   Icons.explore_rounded, // 탐험/발견을 의미하는 아이콘
                   color: ModernColors.modernPrimary,
                   size: 40,
@@ -198,7 +198,7 @@ class _EnhancedMeetingRecommendationWidgetState
             },
             child: Container(
               padding: const EdgeInsets.all(8),
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
                 color: ModernColors.modernPrimary,

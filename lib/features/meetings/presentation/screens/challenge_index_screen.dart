@@ -15,6 +15,8 @@ import '../../models/available_challenge_model.dart';
 /// 🏆 챌린지 탐험 게시판 (Challenge Exploration Board)
 /// 모임 탭과 통일된 디자인 언어로 설계된 챌린지 화면
 class ChallengeIndexScreen extends ConsumerStatefulWidget {
+  const ChallengeIndexScreen({super.key});
+
   @override
   ConsumerState<ChallengeIndexScreen> createState() =>
       _ChallengeIndexScreenState();
@@ -176,13 +178,13 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: ModernColors.warning.withOpacity(0.08), // 챌린지 - 주황색 액센트
+                color: ModernColors.warning.withValues(alpha: 0.08), // 챌린지 - 주황색 액센트
                 blurRadius: 24,
                 offset: const Offset(0, 8),
                 spreadRadius: 0,
               ),
               BoxShadow(
-                color: ModernColors.textTertiary.withOpacity(0.05),
+                color: ModernColors.textTertiary.withValues(alpha: 0.05),
                 blurRadius: 12,
                 offset: const Offset(0, 2),
                 spreadRadius: 0,
@@ -203,7 +205,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                   ),
                   child: CustomPaint(
                     painter: ChallengeTrophyPainter(
-                      color: ModernColors.warning.withOpacity(0.05),
+                      color: ModernColors.warning.withValues(alpha: 0.05),
                     ),
                   ),
                 ),
@@ -256,13 +258,13 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                                 end: Alignment.bottomRight,
                                 colors: [
                                   ModernColors.warning,
-                                  ModernColors.warning.withOpacity(0.8),
+                                  ModernColors.warning.withValues(alpha: 0.8),
                                 ],
                               ),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: ModernColors.warning.withOpacity(0.25),
+                                  color: ModernColors.warning.withValues(alpha: 0.25),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -274,7 +276,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                                 // 트로피 아이콘 배경
                                 Icon(
                                   Icons.emoji_events,
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: Colors.white.withValues(alpha: 0.2),
                                   size: 28,
                                 ),
                                 // 레벨 숫자
@@ -314,11 +316,11 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                             ),
                             decoration: BoxDecoration(
                               color: ModernColors.warning
-                                  .withOpacity(0.8)
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.8)
+                                  .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: ModernColors.warning.withOpacity(0.1),
+                                color: ModernColors.warning.withValues(alpha: 0.1),
                                 width: 1,
                               ),
                             ),
@@ -369,7 +371,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
           children: [
             Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.trending_up,
                   size: 14,
                   color: ModernColors.textSecondary,
@@ -414,13 +416,13 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                   gradient: LinearGradient(
                     colors: [
                       ModernColors.warning,
-                      ModernColors.warning.withOpacity(0.8),
+                      ModernColors.warning.withValues(alpha: 0.8),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(4),
                   boxShadow: [
                     BoxShadow(
-                      color: ModernColors.warning.withOpacity(0.3),
+                      color: ModernColors.warning.withValues(alpha: 0.3),
                       blurRadius: 4,
                       offset: const Offset(0, 1),
                     ),
@@ -446,7 +448,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: ModernColors.warning.withOpacity(0.8).withOpacity(0.1),
+                  color: ModernColors.warning.withValues(alpha: 0.8).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -484,13 +486,13 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  ModernColors.warning.withOpacity(0.05),
-                  ModernColors.warning.withOpacity(0.8).withOpacity(0.03),
+                  ModernColors.warning.withValues(alpha: 0.05),
+                  ModernColors.warning.withValues(alpha: 0.8).withValues(alpha: 0.03),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: ModernColors.warning.withOpacity(0.1),
+                color: ModernColors.warning.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -509,7 +511,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: ModernColors.warning.withOpacity(0.1),
+                          color: ModernColors.warning.withValues(alpha: 0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -522,7 +524,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                           fontSize: 32,
                           shadows: [
                             Shadow(
-                              color: ModernColors.warning.withOpacity(0.2),
+                              color: ModernColors.warning.withValues(alpha: 0.2),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -558,9 +560,9 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            ModernColors.border.withOpacity(0),
+            ModernColors.border.withValues(alpha: 0),
             ModernColors.border,
-            ModernColors.border.withOpacity(0),
+            ModernColors.border.withValues(alpha: 0),
           ],
         ),
       ),
@@ -577,7 +579,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
           // 섹션 타이틀
           Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.emoji_events,
                 size: 16,
                 color: ModernColors.warning,
@@ -607,7 +609,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               ),
               _buildChallengeStatItem(
                 icon: Icons.local_fire_department_rounded,
-                value: '${user.stats.willpower.toStringAsFixed(1)}',
+                value: user.stats.willpower.toStringAsFixed(1),
                 label: '의지력',
                 color: ModernColors.error,
                 description: '현재 능력치',
@@ -644,13 +646,13 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                color.withOpacity(0.1),
-                color.withOpacity(0.05),
+                color.withValues(alpha: 0.1),
+                color.withValues(alpha: 0.05),
               ],
             ),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               width: 1,
             ),
           ),
@@ -746,7 +748,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: ModernColors.primary.withOpacity(0.08),
+              color: ModernColors.primary.withValues(alpha: 0.08),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -783,10 +785,10 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: challenge.category.color.withOpacity(0.1),
+                          color: challenge.category.color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: challenge.category.color.withOpacity(0.2),
+                            color: challenge.category.color.withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
@@ -839,10 +841,10 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: challenge.statusColor.withOpacity(0.1),
+                          color: challenge.statusColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: challenge.statusColor.withOpacity(0.2),
+                            color: challenge.statusColor.withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
@@ -915,13 +917,13 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                             gradient: LinearGradient(
                               colors: [
                                 ModernColors.warning,
-                                ModernColors.warning.withOpacity(0.8),
+                                ModernColors.warning.withValues(alpha: 0.8),
                               ],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: ModernColors.warning.withOpacity(0.3),
+                                color: ModernColors.warning.withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -975,7 +977,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                               gradient: LinearGradient(
                                 colors: [
                                   challenge.category.color,
-                                  challenge.category.color.withOpacity(0.7),
+                                  challenge.category.color.withValues(alpha: 0.7),
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(2),
@@ -1035,13 +1037,13 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                 gradient: LinearGradient(
                   colors: [
                     ModernColors.warning,
-                    ModernColors.warning.withOpacity(0.8),
+                    ModernColors.warning.withValues(alpha: 0.8),
                   ],
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: ModernColors.warning.withOpacity(0.3),
+                    color: ModernColors.warning.withValues(alpha: 0.3),
                     blurRadius: 20,
                     offset: const Offset(0, 5),
                   ),
@@ -1137,7 +1139,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               gradient: LinearGradient(
                 colors: [
                   ModernColors.warning,
-                  ModernColors.warning.withOpacity(0.8)
+                  ModernColors.warning.withValues(alpha: 0.8)
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
@@ -1233,7 +1235,7 @@ class _ScopeSelectorDelegate extends SliverPersistentHeaderDelegate {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -1257,13 +1259,13 @@ class _ScopeSelectorDelegate extends SliverPersistentHeaderDelegate {
               gradient: LinearGradient(
                 colors: [
                   ModernColors.warning,
-                  ModernColors.warning.withOpacity(0.8),
+                  ModernColors.warning.withValues(alpha: 0.8),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: ModernColors.warning.withOpacity(0.3),
+                  color: ModernColors.warning.withValues(alpha: 0.3),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -1274,14 +1276,14 @@ class _ScopeSelectorDelegate extends SliverPersistentHeaderDelegate {
             dividerColor: Colors.transparent,
             splashFactory: NoSplash.splashFactory,
             overlayColor: WidgetStateProperty.all(Colors.transparent),
-            tabs: [
+            tabs: const [
               Tab(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.public, size: 18),
-                    const SizedBox(width: 6),
-                    const Text('전체'),
+                    Icon(Icons.public, size: 18),
+                    SizedBox(width: 6),
+                    Text('전체'),
                   ],
                 ),
               ),
@@ -1289,9 +1291,9 @@ class _ScopeSelectorDelegate extends SliverPersistentHeaderDelegate {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.school, size: 18),
-                    const SizedBox(width: 6),
-                    const Text('우리 학교'),
+                    Icon(Icons.school, size: 18),
+                    SizedBox(width: 6),
+                    Text('우리 학교'),
                   ],
                 ),
               ),
@@ -1359,7 +1361,7 @@ class ChallengeTrophyPainter extends CustomPainter {
 
     // 트로피 베이스
     path.addRect(Rect.fromCenter(
-      center: Offset(centerX, centerY + size * 0.6),
+      center: const Offset(0, 0),
       width: size * 0.6,
       height: size * 0.3,
     ));

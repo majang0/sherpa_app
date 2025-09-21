@@ -62,7 +62,7 @@ class _SherpiMessageHistoryScreenState
 
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '셰르피와의 대화',
         backgroundColor: Colors.white,
       ),
@@ -109,7 +109,7 @@ class _SherpiMessageHistoryScreenState
             '셰르피가 곧 대화를 시작할 거예요!',
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: AppColors.textSecondary.withOpacity(0.7),
+              color: AppColors.textSecondary.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -133,9 +133,9 @@ class _SherpiMessageHistoryScreenState
             height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withValues(alpha: 0.1),
               border: Border.all(
-                color: AppColors.primary.withOpacity(0.2),
+                color: AppColors.primary.withValues(alpha: 0.2),
                 width: 1.5,
               ),
             ),
@@ -158,7 +158,7 @@ class _SherpiMessageHistoryScreenState
                   _formatTime(message.timestamp),
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: AppColors.textSecondary.withOpacity(0.6),
+                    color: AppColors.textSecondary.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -178,7 +178,7 @@ class _SherpiMessageHistoryScreenState
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.04),
+                        color: Colors.black.withValues(alpha: 0.04),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),

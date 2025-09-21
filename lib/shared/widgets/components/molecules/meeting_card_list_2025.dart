@@ -97,20 +97,20 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
                 color: isDark
                     ? Color.lerp(
                         Colors.transparent,
-                        Colors.white.withOpacity(0.03),
+                        Colors.white.withValues(alpha: 0.03),
                         _backgroundAnimation.value,
                       )
                     : Color.lerp(
                         Colors.transparent,
-                        Colors.black.withOpacity(0.02),
+                        Colors.black.withValues(alpha: 0.02),
                         _backgroundAnimation.value,
                       ),
                 border: widget.showDivider
                     ? Border(
                         bottom: BorderSide(
                           color: isDark
-                              ? Colors.white.withOpacity(0.08)
-                              : Colors.black.withOpacity(0.08),
+                              ? Colors.white.withValues(alpha: 0.08)
+                              : Colors.black.withValues(alpha: 0.08),
                           width: 0.5,
                         ),
                       )
@@ -262,7 +262,7 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -349,8 +349,8 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            widget.meeting.category.color.withOpacity(0.8),
-            widget.meeting.category.color.withOpacity(0.6),
+            widget.meeting.category.color.withValues(alpha: 0.8),
+            widget.meeting.category.color.withValues(alpha: 0.6),
           ],
         ),
         borderRadius: BorderRadius.circular(12),
@@ -385,8 +385,8 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
         decoration: BoxDecoration(
           color: _isHovered
               ? (isDark
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.05))
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.black.withValues(alpha: 0.05))
               : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
         ),
@@ -456,17 +456,17 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isNearFull
-            ? Colors.orange.withOpacity(0.1)
+            ? Colors.orange.withValues(alpha: 0.1)
             : (isDark
-                ? Colors.white.withOpacity(0.05)
-                : Colors.black.withOpacity(0.05)),
+                ? Colors.white.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.05)),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isNearFull
-              ? Colors.orange.withOpacity(0.3)
+              ? Colors.orange.withValues(alpha: 0.3)
               : (isDark
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.1)),
+                  ? Colors.white.withValues(alpha: 0.1)
+                  : Colors.black.withValues(alpha: 0.1)),
           width: 0.5,
         ),
       ),
@@ -503,13 +503,13 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isLowFee
-            ? Colors.green.withOpacity(0.1)
-            : Colors.orange.withOpacity(0.1),
+            ? Colors.green.withValues(alpha: 0.1)
+            : Colors.orange.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isLowFee
-              ? Colors.green.withOpacity(0.3)
-              : Colors.orange.withOpacity(0.3),
+              ? Colors.green.withValues(alpha: 0.3)
+              : Colors.orange.withValues(alpha: 0.3),
           width: 0.5,
         ),
       ),
@@ -530,10 +530,10 @@ class _MeetingCardList2025State extends State<MeetingCardList2025>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: widget.meeting.statusColor.withOpacity(0.1),
+        color: widget.meeting.statusColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: widget.meeting.statusColor.withOpacity(0.3),
+          color: widget.meeting.statusColor.withValues(alpha: 0.3),
           width: 0.5,
         ),
       ),

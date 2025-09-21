@@ -320,7 +320,7 @@ class ModernColors {
       case 1:
         return [
           BoxShadow(
-            color: shadowBase.withOpacity(shadowSubtleOpacity),
+            color: shadowBase.withValues(alpha: shadowSubtleOpacity),
             blurRadius: 6,
             offset: const Offset(0, 1),
           ),
@@ -328,7 +328,7 @@ class ModernColors {
       case 2:
         return [
           BoxShadow(
-            color: shadowBase.withOpacity(shadowLightOpacity),
+            color: shadowBase.withValues(alpha: shadowLightOpacity),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -336,7 +336,7 @@ class ModernColors {
       case 3:
         return [
           BoxShadow(
-            color: shadowBase.withOpacity(shadowMediumOpacity),
+            color: shadowBase.withValues(alpha: shadowMediumOpacity),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -344,7 +344,7 @@ class ModernColors {
       case 4:
         return [
           BoxShadow(
-            color: shadowBase.withOpacity(shadowStrongOpacity),
+            color: shadowBase.withValues(alpha: shadowStrongOpacity),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -364,7 +364,7 @@ class ModernColors {
       case 1:
         return [
           BoxShadow(
-            color: contextColor.withOpacity(opacity),
+            color: contextColor.withValues(alpha: opacity),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -372,7 +372,7 @@ class ModernColors {
       case 2:
         return [
           BoxShadow(
-            color: contextColor.withOpacity(opacity),
+            color: contextColor.withValues(alpha: opacity),
             blurRadius: 12,
             offset: const Offset(0, 3),
           ),
@@ -380,7 +380,7 @@ class ModernColors {
       case 3:
         return [
           BoxShadow(
-            color: contextColor.withOpacity(opacity),
+            color: contextColor.withValues(alpha: opacity),
             blurRadius: 18,
             offset: const Offset(0, 5),
           ),
@@ -388,7 +388,7 @@ class ModernColors {
       case 4:
         return [
           BoxShadow(
-            color: contextColor.withOpacity(opacity),
+            color: contextColor.withValues(alpha: opacity),
             blurRadius: 28,
             offset: const Offset(0, 10),
           ),
@@ -483,7 +483,7 @@ class ModernColors {
 
   /// 색상에 투명도 적용
   static Color withOpacity(Color color, double opacity) {
-    return color.withOpacity(opacity);
+    return color.withValues(alpha: opacity);
   }
 
   /// 상태별 색상 반환
@@ -588,14 +588,14 @@ class ModernColors {
       case 'excited':
       case 'happy':
       case 'good':
-        return LinearGradient(
+        return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [joyLight, joyMedium],
         );
       case 'normal':
       case 'thoughtful':
-        return LinearGradient(
+        return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [calmLight, calmMedium],
@@ -603,13 +603,13 @@ class ModernColors {
       case 'tired':
       case 'sad':
       case 'angry':
-        return LinearGradient(
+        return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [thoughtLight, thoughtMedium],
         );
       default:
-        return LinearGradient(
+        return const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [calmLight, calmMedium],
@@ -680,19 +680,19 @@ class ModernColors {
           {required Color primaryColor, required Color lightColor}) =>
       [
         BoxShadow(
-          color: primaryColor.withOpacity(0.25),
+          color: primaryColor.withValues(alpha: 0.25),
           blurRadius: 16,
           offset: const Offset(0, 6),
           spreadRadius: 0,
         ),
         BoxShadow(
-          color: lightColor.withOpacity(0.15),
+          color: lightColor.withValues(alpha: 0.15),
           blurRadius: 8,
           offset: const Offset(0, 3),
           spreadRadius: 0,
         ),
         BoxShadow(
-          color: Colors.black.withOpacity(0.08),
+          color: Colors.black.withValues(alpha: 0.08),
           blurRadius: 4,
           offset: const Offset(0, 1),
           spreadRadius: 0,
@@ -702,19 +702,19 @@ class ModernColors {
   /// 🌫️ 소프트 그림자 - 부드러운 3단계 그림자 효과
   static List<BoxShadow> softShadow({required Color primaryColor}) => [
         BoxShadow(
-          color: primaryColor.withOpacity(0.1),
+          color: primaryColor.withValues(alpha: 0.1),
           blurRadius: 12,
           offset: const Offset(0, 4),
           spreadRadius: 0,
         ),
         BoxShadow(
-          color: primaryColor.withOpacity(0.06),
+          color: primaryColor.withValues(alpha: 0.06),
           blurRadius: 6,
           offset: const Offset(0, 2),
           spreadRadius: 0,
         ),
         BoxShadow(
-          color: Colors.black.withOpacity(0.03),
+          color: Colors.black.withValues(alpha: 0.03),
           blurRadius: 3,
           offset: const Offset(0, 1),
           spreadRadius: 0,
@@ -724,19 +724,19 @@ class ModernColors {
   /// 🏆 황금빛 보상 그림자 - 특별한 보상용 다층 그림자 효과
   static List<BoxShadow> rewardShadow() => [
         BoxShadow(
-          color: rewardGradient1.withOpacity(0.3),
+          color: rewardGradient1.withValues(alpha: 0.3),
           blurRadius: 20,
           offset: const Offset(0, 8),
           spreadRadius: 1,
         ),
         BoxShadow(
-          color: rewardGradient2.withOpacity(0.2),
+          color: rewardGradient2.withValues(alpha: 0.2),
           blurRadius: 12,
           offset: const Offset(0, 4),
           spreadRadius: 0,
         ),
         BoxShadow(
-          color: Colors.black.withOpacity(0.1),
+          color: Colors.black.withValues(alpha: 0.1),
           blurRadius: 6,
           offset: const Offset(0, 2),
           spreadRadius: 0,

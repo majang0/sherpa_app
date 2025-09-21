@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
-import '../../core/constants/sherpi_emotions.dart';
 import 'package:sherpa_app/core/ai/managers/sherpi_message_manager.dart';
 import 'package:sherpa_app/core/ai/managers/static_sherpi_manager.dart';
 import 'package:sherpa_app/core/ai/services/real_data_connector.dart';
 import '../../features/sherpi/relationship/providers/relationship_provider.dart';
 import '../../features/sherpi/emotion/providers/emotion_analysis_provider.dart';
-import '../../features/sherpi/domain/models/sherpi_response.dart';
 import '../models/sherpi_message_history.dart';
 import '../models/sherpi_relationship_model.dart';
 import 'global_user_provider.dart'; // Phase 1: 실제 사용자 이름을 가져오기 위해 추가
