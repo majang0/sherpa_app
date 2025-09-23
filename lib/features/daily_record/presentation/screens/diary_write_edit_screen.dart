@@ -13,7 +13,8 @@ class DiaryWriteEditScreen extends ConsumerStatefulWidget {
   final DateTime? selectedDate;
   final DiaryLog? existingDiary;
 
-  const DiaryWriteEditScreen({super.key, 
+  const DiaryWriteEditScreen({
+    super.key,
     this.selectedDate,
     this.existingDiary,
   });
@@ -562,80 +563,6 @@ class _DiaryWriteEditScreenState extends ConsumerState<DiaryWriteEditScreen>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMoodChip(Map<String, dynamic> mood) {
-    final isSelected = _selectedMood == mood['id'];
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedMood = mood['id'];
-        });
-        HapticFeedbackManager.lightImpact();
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOutBack,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? mood['selectedColor']
-              : ModernColors.backgroundElevated,
-          borderRadius: BorderRadius.circular(22),
-          border: isSelected
-              ? Border.all(color: mood['selectedColor'], width: 2)
-              : Border.all(color: ModernColors.border, width: 1),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: mood['selectedColor'].withValues(alpha: 0.3),
-                    blurRadius: 16,
-                    offset: const Offset(0, 6),
-                  ),
-                  BoxShadow(
-                    color: mood['selectedColor'].withValues(alpha: 0.15),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: ModernColors.shadowBase.withValues(alpha: 0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                  BoxShadow(
-                    color: Colors.white.withValues(alpha: 0.8),
-                    blurRadius: 1,
-                    offset: const Offset(0, 1),
-                    spreadRadius: -0.5,
-                  ),
-                ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 300),
-              style: TextStyle(
-                fontSize: isSelected ? 22 : 18,
-              ),
-              child: Text(mood['emoji']),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              mood['label'],
-              style: GoogleFonts.notoSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.white : ModernColors.textPrimary,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -535,8 +535,7 @@ class MeetingRecommendationAI {
         final meetingHour = meeting.dateTime.hour;
         final meetingPeriod = _getTimePeriod(meetingHour);
         if (pattern.exercisePattern.preferredTimes.contains(meetingPeriod)) {
-          reasons
-              .add('평소 $meetingPeriod에 운동하시는데, 모임 시간이 $meetingHour시라 딱 맞아요');
+          reasons.add('평소 $meetingPeriod에 운동하시는데, 모임 시간이 $meetingHour시라 딱 맞아요');
         }
       }
     }

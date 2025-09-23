@@ -264,17 +264,6 @@ class Phase1PerformanceBenchmark {
     return validation;
   }
 
-  /// 🧮 헬퍼 메서드들
-  static double _calculateAverage(List<int> values) {
-    if (values.isEmpty) return 0.0;
-    return values.reduce((a, b) => a + b) / values.length;
-  }
-
-  static int _calculateMax(List<int> values) {
-    if (values.isEmpty) return 0;
-    return values.reduce((a, b) => a > b ? a : b);
-  }
-
   /// 📋 벤치마크 리포트 생성
   static String generateBenchmarkReport(Map<String, dynamic> results) {
     final buffer = StringBuffer();

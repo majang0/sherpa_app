@@ -337,8 +337,10 @@ class _SearchBar2025State extends State<SearchBar2025>
                                 end: Alignment.bottomRight,
                                 colors: isDark
                                     ? [
-                                        ModernColors.surface.withValues(alpha: 0.1),
-                                        ModernColors.surface.withValues(alpha: 0.05),
+                                        ModernColors.surface
+                                            .withValues(alpha: 0.1),
+                                        ModernColors.surface
+                                            .withValues(alpha: 0.05),
                                       ]
                                     : [
                                         ModernColors.surface,
@@ -346,7 +348,8 @@ class _SearchBar2025State extends State<SearchBar2025>
                                       ],
                               ),
                               border: Border.all(
-                                color: ModernColors.border.withValues(alpha: 0.1),
+                                color:
+                                    ModernColors.border.withValues(alpha: 0.1),
                                 width: 1,
                               ),
                               borderRadius: BorderRadius.circular(16),

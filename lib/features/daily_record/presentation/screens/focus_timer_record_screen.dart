@@ -465,7 +465,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: const Color(0xFF0EA5E9).withValues(alpha: 0.15),
+                          color:
+                              const Color(0xFF0EA5E9).withValues(alpha: 0.15),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -530,7 +531,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF0EA5E9).withValues(alpha: 0.25),
+                            color:
+                                const Color(0xFF0EA5E9).withValues(alpha: 0.25),
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
@@ -1554,8 +1556,8 @@ class _FocusTimerRecordScreenState extends ConsumerState<FocusTimerRecordScreen>
                     decoration: BoxDecoration(
                       color: hpColor.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(8),
-                      border:
-                          Border.all(color: hpColor.withValues(alpha: 0.5), width: 1),
+                      border: Border.all(
+                          color: hpColor.withValues(alpha: 0.5), width: 1),
                     ),
                     child: Text(
                       hpStatus,

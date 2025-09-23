@@ -1951,8 +1951,9 @@ class _NewMeetingDiscoveryScreenState
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color:
-              isActive ? ModernColors.primary.withValues(alpha: 0.1) : Colors.white,
+          color: isActive
+              ? ModernColors.primary.withValues(alpha: 0.1)
+              : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isActive ? ModernColors.primary : ModernColors.borderLight,
@@ -4261,7 +4262,8 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
                           color: ModernColors.primary,
                         ),
                       ),
-                      backgroundColor: ModernColors.primary.withValues(alpha: 0.1),
+                      backgroundColor:
+                          ModernColors.primary.withValues(alpha: 0.1),
                       deleteIcon: const Icon(
                         Icons.close_rounded,
                         size: 16,

@@ -84,7 +84,8 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
                     color: const Color(0xFF3B82F6).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -163,7 +164,8 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(4),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF3B82F6).withValues(alpha: 0.3),
+                              color: const Color(0xFF3B82F6)
+                                  .withValues(alpha: 0.3),
                               blurRadius: 4,
                               offset: const Offset(0, 1),
                             ),
@@ -203,16 +205,16 @@ class LiquidGlassProfileHeader extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildSocialStat(
-                    '팔로잉', '${_calculateFollowing(user)}', const Color(0xFF3B82F6)),
-                _buildSocialStat(
-                    '팔로워', '${_calculateFollowers(user)}', const Color(0xFF10B981)),
-                _buildSocialStat(
-                    '포인트',
-                    _formatPoints(pointData.totalPoints),
+                _buildSocialStat('팔로잉', '${_calculateFollowing(user)}',
+                    const Color(0xFF3B82F6)),
+                _buildSocialStat('팔로워', '${_calculateFollowers(user)}',
+                    const Color(0xFF10B981)),
+                _buildSocialStat('포인트', _formatPoints(pointData.totalPoints),
                     const Color(0xFFF59E0B)),
-                _buildSocialStat('연속접속',
-                    '${user.dailyRecords.consecutiveDays}일', const Color(0xFF8B5CF6)),
+                _buildSocialStat(
+                    '연속접속',
+                    '${user.dailyRecords.consecutiveDays}일',
+                    const Color(0xFF8B5CF6)),
               ],
             ),
 

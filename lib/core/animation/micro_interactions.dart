@@ -301,7 +301,8 @@ class MicroInteractions {
       child: InkWell(
         onTap: onTap,
         splashColor: rippleColor ?? ModernColors.primary.withValues(alpha: 0.1),
-        highlightColor: rippleColor ?? ModernColors.primary.withValues(alpha: 0.05),
+        highlightColor:
+            rippleColor ?? ModernColors.primary.withValues(alpha: 0.05),
         borderRadius: borderRadius ?? BorderRadius.circular(12),
         child: child,
       ),

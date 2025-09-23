@@ -220,7 +220,8 @@ class _PersonalizedGrowthDashboardWidgetState
                         letterSpacing: -0.3,
                         shadows: [
                           Shadow(
-                            color: ModernColors.modernPrimary.withValues(alpha: 0.15),
+                            color: ModernColors.modernPrimary
+                                .withValues(alpha: 0.15),
                             offset: const Offset(0, 2),
                             blurRadius: 4,
                           ),
@@ -246,7 +247,8 @@ class _PersonalizedGrowthDashboardWidgetState
                         letterSpacing: -0.1,
                         shadows: [
                           Shadow(
-                            color: ModernColors.modernPrimary.withValues(alpha: 0.1),
+                            color: ModernColors.modernPrimary
+                                .withValues(alpha: 0.1),
                             offset: const Offset(0, 1),
                             blurRadius: 2,
                           ),
@@ -1065,7 +1067,8 @@ class _PersonalizedGrowthDashboardWidgetState
                           : [
                               Shadow(
                                 color: shouldDisable
-                                    ? ModernColors.streakGold.withValues(alpha: 0.1)
+                                    ? ModernColors.streakGold
+                                        .withValues(alpha: 0.1)
                                     : ModernColors.modernPrimary
                                         .withValues(alpha: 0.1),
                                 offset: const Offset(0, 0.5),
@@ -1332,7 +1335,8 @@ class _PersonalizedGrowthDashboardWidgetState
                   boxShadow: isCompleted
                       ? [
                           BoxShadow(
-                            color: ModernColors.modernPrimary.withValues(alpha: 0.15),
+                            color: ModernColors.modernPrimary
+                                .withValues(alpha: 0.15),
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),

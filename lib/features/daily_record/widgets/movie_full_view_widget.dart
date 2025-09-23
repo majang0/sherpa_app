@@ -580,10 +580,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFFEF4444),
-                            Color(0xFFDC2626)
-                          ],
+                          colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -707,10 +704,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFFEF4444),
-                            Color(0xFFDC2626)
-                          ],
+                          colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -833,10 +827,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFFEF4444),
-                            Color(0xFFDC2626)
-                          ],
+                          colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -1125,7 +1116,8 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      color: _getGenreColor(movie.genre).withValues(alpha: 0.15),
+                      color:
+                          _getGenreColor(movie.genre).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
@@ -1374,7 +1366,8 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       width: 36,
                       height: 36,
                       decoration: BoxDecoration(
-                        color: _getGenreColor(movie.genre).withValues(alpha: 0.1),
+                        color:
+                            _getGenreColor(movie.genre).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(

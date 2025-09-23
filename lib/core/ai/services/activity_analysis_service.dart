@@ -358,9 +358,11 @@ ${previousExercise != null ? '''
     // 글자수 체크 (100-130자)
     for (var entry in sections.entries) {
       if (entry.value.length < 100) {
-        analysisLogger.w('경고: ${entry.key}가 너무 짧습니다 (${entry.value.length}자 < 100자)');
+        analysisLogger
+            .w('경고: ${entry.key}가 너무 짧습니다 (${entry.value.length}자 < 100자)');
       } else if (entry.value.length > 130) {
-        analysisLogger.w('경고: ${entry.key}가 너무 깁니다 (${entry.value.length}자 > 130자)');
+        analysisLogger
+            .w('경고: ${entry.key}가 너무 깁니다 (${entry.value.length}자 > 130자)');
       }
     }
 
@@ -1565,7 +1567,8 @@ JSON 형식으로만 응답하세요.''';
     try {
       final response = await _client.createChatCompletion(
         request: CreateChatCompletionRequest(
-          model: const ChatCompletionModel.model(ChatCompletionModels.gpt4oMini),
+          model:
+              const ChatCompletionModel.model(ChatCompletionModels.gpt4oMini),
           messages: [
             const ChatCompletionMessage.system(
               content: '당신은 사용자의 하루를 종합적으로 분석하는 AI 동반자입니다. JSON 형식으로만 응답하세요.',

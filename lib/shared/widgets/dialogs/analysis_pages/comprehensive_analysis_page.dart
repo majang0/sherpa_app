@@ -151,7 +151,8 @@ class _ComprehensiveAnalysisPageState
             ),
             title: Row(
               children: [
-                const Icon(Icons.warning_amber_rounded, color: ModernColors.warning),
+                const Icon(Icons.warning_amber_rounded,
+                    color: ModernColors.warning),
                 const SizedBox(width: 8),
                 Text(
                   '포인트 부족',
@@ -278,11 +279,12 @@ class _ComprehensiveAnalysisPageState
     }
 
     // 포인트 차감
-    final deductSuccess = ref.read(globalPointProvider.notifier).spendPointsDetailed(
-      analysisPointCost,
-      PointSpendType.analysisReport,
-      'AI 종합 분석',
-    );
+    final deductSuccess =
+        ref.read(globalPointProvider.notifier).spendPointsDetailed(
+              analysisPointCost,
+              PointSpendType.analysisReport,
+              'AI 종합 분석',
+            );
 
     if (!deductSuccess) {
       // 포인트 차감 실패
@@ -503,9 +505,7 @@ class _ComprehensiveAnalysisPageState
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      hasEnoughPoints
-                          ? '분석 가능'
-                          : '포인트 부족',
+                      hasEnoughPoints ? '분석 가능' : '포인트 부족',
                       style: GoogleFonts.notoSans(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -601,9 +601,7 @@ class _ComprehensiveAnalysisPageState
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    hasEnoughPoints
-                        ? '종합 분석 생성'
-                        : '포인트 부족',
+                    hasEnoughPoints ? '종합 분석 생성' : '포인트 부족',
                     style: GoogleFonts.notoSans(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -1224,6 +1222,7 @@ class _ComprehensiveAnalysisPageState
         .slideY(begin: 0.2, end: 0)
         .then()
         .shimmer(
-            duration: 2000.ms, color: ModernColors.primary.withValues(alpha: 0.1));
+            duration: 2000.ms,
+            color: ModernColors.primary.withValues(alpha: 0.1));
   }
 }

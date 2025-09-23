@@ -585,7 +585,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         Container(
           width: 1,
           height: 50,
-          color: isToday ? Colors.white.withValues(alpha: 0.3) : ModernColors.border,
+          color: isToday
+              ? Colors.white.withValues(alpha: 0.3)
+              : ModernColors.border,
         ),
 
         // 시간
@@ -636,7 +638,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         Container(
           width: 1,
           height: 50,
-          color: isToday ? Colors.white.withValues(alpha: 0.3) : ModernColors.border,
+          color: isToday
+              ? Colors.white.withValues(alpha: 0.3)
+              : ModernColors.border,
         ),
 
         // 강도
@@ -1157,8 +1161,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             padding: const EdgeInsets.all(18),
             decoration: const BoxDecoration(
               color: ModernColors.exercise,
-              borderRadius:
-                  BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Row(
               children: [
@@ -1560,8 +1563,8 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     return Container(
       padding: const EdgeInsets.all(10), // Reduced padding for compact design
       decoration: BoxDecoration(
-        color:
-            ModernColors.exercise.withValues(alpha: 0.02), // Very subtle background
+        color: ModernColors.exercise
+            .withValues(alpha: 0.02), // Very subtle background
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: ModernColors.exercise.withValues(alpha: 0.08),

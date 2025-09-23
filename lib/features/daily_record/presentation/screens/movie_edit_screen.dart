@@ -546,9 +546,11 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                       inactiveTrackColor:
                           const Color(0xFFFBBF24).withValues(alpha: 0.2),
                       thumbColor: const Color(0xFFFBBF24),
-                      overlayColor: const Color(0xFFFBBF24).withValues(alpha: 0.2),
+                      overlayColor:
+                          const Color(0xFFFBBF24).withValues(alpha: 0.2),
                       trackHeight: 6,
-                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
+                      thumbShape:
+                          const RoundSliderThumbShape(enabledThumbRadius: 12),
                     ),
                     child: Slider(
                       value: _rating,

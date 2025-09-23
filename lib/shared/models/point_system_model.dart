@@ -1,4 +1,3 @@
-
 // 포인트 시스템 기본 설정
 class PointSystemConfig {
   static const int POINT_TO_WON_RATIO = 1; // 1포인트 = 1원

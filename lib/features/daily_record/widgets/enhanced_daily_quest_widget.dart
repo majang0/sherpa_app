@@ -198,7 +198,8 @@ class _EnhancedDailyQuestWidgetState
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF3B82F6).withValues(alpha: 0.25),
+                          color:
+                              const Color(0xFF3B82F6).withValues(alpha: 0.25),
                           blurRadius: 16,
                           offset: const Offset(0, 6),
                         ),
@@ -403,8 +404,8 @@ class _EnhancedDailyQuestWidgetState
                             ? null
                             : [
                                 BoxShadow(
-                                  color:
-                                      ModernColors.shadowBase.withValues(alpha: 0.04),
+                                  color: ModernColors.shadowBase
+                                      .withValues(alpha: 0.04),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2),
                                 ),

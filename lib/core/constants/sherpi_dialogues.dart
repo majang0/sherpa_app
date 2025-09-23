@@ -652,7 +652,8 @@ String getCategorySpecificMeetingMessage({
 
   if (messages == null || messages.isEmpty) {
     // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
-    LoggerService.instance.d('No messages found for category: "$koreanCategory"');
+    LoggerService.instance
+        .d('No messages found for category: "$koreanCategory"');
     return '$userName님, "$meetingTitle" 모임을 개설하셨어요! 🎉 함께 성장할 동료들이 곧 모일 거예요!';
   }
 
@@ -699,7 +700,8 @@ String getCategorySpecificMeetingJoinedMessage({
 
   if (messages == null || messages.isEmpty) {
     // 카테고리를 찾을 수 없는 경우 기본 메시지 반환
-    LoggerService.instance.d('No joined messages found for category: "$koreanCategory"');
+    LoggerService.instance
+        .d('No joined messages found for category: "$koreanCategory"');
     return '$userName님, "$meetingTitle" 모임에 참가하셨어요! 🎉 함께 성장하는 즐거움을 느껴보세요!';
   }
 
@@ -781,14 +783,16 @@ String getDiaryCompletionMessage({
   required String userName,
 }) {
   // 디버그: 감정 확인
-  LoggerService.instance.d('Diary Completion - Mood: "$mood", User: "$userName"');
+  LoggerService.instance
+      .d('Diary Completion - Mood: "$mood", User: "$userName"');
 
   // 해당 감정의 메시지 리스트 가져오기
   final messages = diaryMoodMessages[mood];
 
   if (messages == null || messages.isEmpty) {
     // 감정을 찾을 수 없는 경우 기본 메시지 반환
-    LoggerService.instance.d('No diary messages found for mood: "$mood", using default');
+    LoggerService.instance
+        .d('No diary messages found for mood: "$mood", using default');
     return '$userName님, 오늘의 이야기를 일기에 담으셨네요! 📝 일기 내용은 비밀로 할게요. 내일은 더 좋은 하루가 되길!';
   }
 
@@ -868,9 +872,12 @@ class StaticDialogueSource implements SherpiDialogueSource {
       // 감정 정보가 있으면 감정별 메시지 생성
       final mood = userContext['mood'] as String?;
       if (mood != null && mood.isNotEmpty) {
-        LoggerService.instance.d('StaticDialogueSource: Diary completion detected');
-        LoggerService.instance.d('StaticDialogueSource: userContext: $userContext');
-        LoggerService.instance.d('StaticDialogueSource: gameContext: $gameContext');
+        LoggerService.instance
+            .d('StaticDialogueSource: Diary completion detected');
+        LoggerService.instance
+            .d('StaticDialogueSource: userContext: $userContext');
+        LoggerService.instance
+            .d('StaticDialogueSource: gameContext: $gameContext');
 
         LoggerService.instance.d(
             '[DEBUG StaticDialogueSource] Extracted - userName: "$userName", mood: "$mood"');
@@ -888,9 +895,12 @@ class StaticDialogueSource implements SherpiDialogueSource {
       // 독서 활동인지 확인 (additionalData에서 bookTitle이 있으면 독서)
       final bookTitle = userContext['bookTitle'] as String?;
       if (bookTitle != null) {
-        LoggerService.instance.d('StaticDialogueSource: Reading completion detected');
-        LoggerService.instance.d('StaticDialogueSource: userContext: $userContext');
-        LoggerService.instance.d('StaticDialogueSource: gameContext: $gameContext');
+        LoggerService.instance
+            .d('StaticDialogueSource: Reading completion detected');
+        LoggerService.instance
+            .d('StaticDialogueSource: userContext: $userContext');
+        LoggerService.instance
+            .d('StaticDialogueSource: gameContext: $gameContext');
 
         // 독서 정보 가져오기
         final pages = userContext['pages'] as int? ?? 0;
@@ -911,9 +921,12 @@ class StaticDialogueSource implements SherpiDialogueSource {
 
     // 운동 완료 시 메시지 처리
     if (context == SherpiContext.exerciseComplete && userContext != null) {
-      LoggerService.instance.d('StaticDialogueSource: Exercise completion detected');
-      LoggerService.instance.d('StaticDialogueSource: userContext: $userContext');
-      LoggerService.instance.d('StaticDialogueSource: gameContext: $gameContext');
+      LoggerService.instance
+          .d('StaticDialogueSource: Exercise completion detected');
+      LoggerService.instance
+          .d('StaticDialogueSource: userContext: $userContext');
+      LoggerService.instance
+          .d('StaticDialogueSource: gameContext: $gameContext');
 
       // 운동 정보 가져오기
       final exerciseType = userContext['exerciseType'] as String? ?? '운동';
@@ -976,9 +989,12 @@ class StaticDialogueSource implements SherpiDialogueSource {
 
     // 모임 개설 시 카테고리별 메시지 처리
     if (context == SherpiContext.meetingCreated && userContext != null) {
-      LoggerService.instance.d('StaticDialogueSource: meetingCreated context detected');
-      LoggerService.instance.d('StaticDialogueSource: userContext: $userContext');
-      LoggerService.instance.d('StaticDialogueSource: gameContext: $gameContext');
+      LoggerService.instance
+          .d('StaticDialogueSource: meetingCreated context detected');
+      LoggerService.instance
+          .d('StaticDialogueSource: userContext: $userContext');
+      LoggerService.instance
+          .d('StaticDialogueSource: gameContext: $gameContext');
 
       // 모임 정보 가져오기
       final meetingTitle = userContext['meetingTitle'] ?? '새로운 모임';
@@ -997,9 +1013,12 @@ class StaticDialogueSource implements SherpiDialogueSource {
 
     // 모임 참가 시 카테고리별 메시지 처리
     if (context == SherpiContext.meetingJoined && userContext != null) {
-      LoggerService.instance.d('StaticDialogueSource: meetingJoined context detected');
-      LoggerService.instance.d('StaticDialogueSource: userContext: $userContext');
-      LoggerService.instance.d('StaticDialogueSource: gameContext: $gameContext');
+      LoggerService.instance
+          .d('StaticDialogueSource: meetingJoined context detected');
+      LoggerService.instance
+          .d('StaticDialogueSource: userContext: $userContext');
+      LoggerService.instance
+          .d('StaticDialogueSource: gameContext: $gameContext');
 
       // 모임 정보 가져오기
       final meetingTitle = userContext['meeting_title'] ??

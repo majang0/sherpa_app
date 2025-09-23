@@ -819,7 +819,8 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: ModernColors.textTertiary),
+                    icon: const Icon(Icons.close,
+                        color: ModernColors.textTertiary),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ],
@@ -885,7 +886,8 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: exerciseColor.withValues(alpha: 0.3),
+                                      color:
+                                          exerciseColor.withValues(alpha: 0.3),
                                       blurRadius: 6,
                                       offset: const Offset(0, 2),
                                     ),

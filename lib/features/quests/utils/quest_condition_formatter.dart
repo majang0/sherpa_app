@@ -911,7 +911,8 @@ class QuestConditionFormatter {
   }
 
   /// 일일 완료 조건 포맷팅
-  static String _formatDailyCompletionCondition(QuestTrackingCondition condition) {
+  static String _formatDailyCompletionCondition(
+      QuestTrackingCondition condition) {
     final days = condition.parameters['days'] as int?;
     final type = condition.parameters['type'] as String?;
 

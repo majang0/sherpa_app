@@ -45,8 +45,8 @@ class GlassNeuStyle {
     final elevationValue = _elevationValues[elevation] ?? 8;
 
     return BoxDecoration(
-      color:
-          (color ?? ModernColors.surface.withValues(alpha: 0.2)).withValues(alpha: opacity),
+      color: (color ?? ModernColors.surface.withValues(alpha: 0.2))
+          .withValues(alpha: opacity),
       borderRadius: BorderRadius.circular(borderRadius),
       border: borderColor != null
           ? Border.all(
@@ -314,7 +314,8 @@ class GlassNeuStyle {
     double elevation = 12,
   }) {
     return BoxDecoration(
-      color: (color ?? ModernColors.surface.withValues(alpha: 0.2)).withValues(alpha: 0.25),
+      color: (color ?? ModernColors.surface.withValues(alpha: 0.2))
+          .withValues(alpha: 0.25),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: ModernColors.border.withValues(alpha: 0.1),

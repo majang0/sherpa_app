@@ -23,7 +23,8 @@ class UserActivityAnalyzer {
   /// 사용자 활동 패턴 분석
   UserActivityPattern analyzeUserActivity(GlobalUser user) {
     final now = DateTime.now();
-    final analysisStart = now.subtract(const Duration(days: _analysisWindowDays));
+    final analysisStart =
+        now.subtract(const Duration(days: _analysisWindowDays));
 
     // 각 활동 타입별 패턴 분석
     final exercisePattern = _analyzeExercisePattern(user, analysisStart);

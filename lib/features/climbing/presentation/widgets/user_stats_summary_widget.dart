@@ -296,7 +296,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                         HapticFeedbackManager.lightImpact();
                         _showStatQuickInfo(labels[index], values[index]);
                       }
-                                        }
+                    }
                   }
                 },
               ),
@@ -389,7 +389,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
               onTap: () {
-                LoggerService.instance.d('🎯 능력치 터치됨: ${stat['name']}'); // 디버그 로그
+                LoggerService.instance
+                    .d('🎯 능력치 터치됨: ${stat['name']}'); // 디버그 로그
                 HapticFeedbackManager.lightImpact();
                 _showRPGStatDetails(
                   context,
@@ -722,10 +723,12 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 12, vertical: 6),
                                       decoration: BoxDecoration(
-                                        color: gradeColor.withValues(alpha: 0.15),
+                                        color:
+                                            gradeColor.withValues(alpha: 0.15),
                                         borderRadius: BorderRadius.circular(8),
                                         border: Border.all(
-                                          color: gradeColor.withValues(alpha: 0.3),
+                                          color:
+                                              gradeColor.withValues(alpha: 0.3),
                                           width: 1,
                                         ),
                                       ),
@@ -746,8 +749,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                             style: GoogleFonts.notoSans(
                                               fontSize: 10,
                                               fontWeight: FontWeight.w600,
-                                              color:
-                                                  gradeColor.withValues(alpha: 0.8),
+                                              color: gradeColor.withValues(
+                                                  alpha: 0.8),
                                               letterSpacing: 1,
                                             ),
                                           ),
@@ -758,10 +761,12 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 10, vertical: 4),
                                       decoration: BoxDecoration(
-                                        color: gradeColor.withValues(alpha: 0.1),
+                                        color:
+                                            gradeColor.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(6),
                                         border: Border.all(
-                                          color: gradeColor.withValues(alpha: 0.3),
+                                          color:
+                                              gradeColor.withValues(alpha: 0.3),
                                           width: 1,
                                         ),
                                       ),
@@ -818,7 +823,10 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                         child: Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [gradeColor, gradeColor.withValues(alpha: 0.8)],
+                              colors: [
+                                gradeColor,
+                                gradeColor.withValues(alpha: 0.8)
+                              ],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [

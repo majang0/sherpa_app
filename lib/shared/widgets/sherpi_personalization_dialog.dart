@@ -200,10 +200,12 @@ class _SherpiPersonalizationDialogState
                               center: Alignment.topCenter,
                               radius: 1.2 + (_glowController.value * 0.3),
                               colors: [
-                                AppColors.primary.withValues(alpha:
-                                    0.08 + (_glowController.value * 0.04)),
-                                Colors.purple.withValues(alpha:
-                                    0.03 + (_glowController.value * 0.02)),
+                                AppColors.primary.withValues(
+                                    alpha:
+                                        0.08 + (_glowController.value * 0.04)),
+                                Colors.purple.withValues(
+                                    alpha:
+                                        0.03 + (_glowController.value * 0.02)),
                                 Colors.transparent,
                               ],
                             ),
@@ -299,8 +301,10 @@ class _SherpiPersonalizationDialogState
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  _getPersonalityColor(displayPersonality).withValues(alpha: 0.15),
-                  _getPersonalityColor(displayPersonality).withValues(alpha: 0.08),
+                  _getPersonalityColor(displayPersonality)
+                      .withValues(alpha: 0.15),
+                  _getPersonalityColor(displayPersonality)
+                      .withValues(alpha: 0.08),
                   Colors.white,
                 ],
                 stops: const [0.2, 0.6, 1.0],
@@ -389,8 +393,8 @@ class _SherpiPersonalizationDialogState
               key: ValueKey('desc_$displayPersonality'),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
-                color:
-                    _getPersonalityColor(displayPersonality).withValues(alpha: 0.04),
+                color: _getPersonalityColor(displayPersonality)
+                    .withValues(alpha: 0.04),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   // 내부 그림자 효과
@@ -416,8 +420,8 @@ class _SherpiPersonalizationDialogState
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color:
-                      _getPersonalityColor(displayPersonality).withValues(alpha: 0.8),
+                  color: _getPersonalityColor(displayPersonality)
+                      .withValues(alpha: 0.8),
                   letterSpacing: -0.3,
                   height: 1.4,
                 ),
@@ -541,8 +545,8 @@ class _SherpiPersonalizationDialogState
                           spreadRadius: -2,
                         ),
                         BoxShadow(
-                          color: color.withValues(alpha:
-                              0.15 + (_glowController.value * 0.1)),
+                          color: color.withValues(
+                              alpha: 0.15 + (_glowController.value * 0.1)),
                           blurRadius: 32 + (_glowController.value * 16),
                           offset: const Offset(0, 4),
                         ),
@@ -736,21 +740,21 @@ class _SherpiPersonalizationDialogState
                       boxShadow: _hasChanges
                           ? [
                               BoxShadow(
-                                color: AppColors.primary.withValues(alpha:
-                                    0.4 + (_glowController.value * 0.2)),
+                                color: AppColors.primary.withValues(
+                                    alpha: 0.4 + (_glowController.value * 0.2)),
                                 blurRadius: 16 + (_glowController.value * 8),
                                 offset: const Offset(0, 6),
                               ),
                               BoxShadow(
-                                color: Colors.purple.withValues(alpha:
-                                    0.2 + (_glowController.value * 0.1)),
+                                color: Colors.purple.withValues(
+                                    alpha: 0.2 + (_glowController.value * 0.1)),
                                 blurRadius: 24 + (_glowController.value * 12),
                                 offset: const Offset(0, 8),
                               ),
                               if (_particleController.value > 0)
                                 BoxShadow(
-                                  color: Colors.amber.withValues(alpha:
-                                      _particleController.value * 0.6),
+                                  color: Colors.amber.withValues(
+                                      alpha: _particleController.value * 0.6),
                                   blurRadius: 32,
                                   offset: const Offset(0, 0),
                                 ),
@@ -827,14 +831,17 @@ class _SherpiPersonalizationDialogState
                                         width: 6,
                                         height: 6,
                                         decoration: BoxDecoration(
-                                          color: Colors.white.withValues(alpha:
-                                            _particleController.value * 0.8,
+                                          color: Colors.white.withValues(
+                                            alpha:
+                                                _particleController.value * 0.8,
                                           ),
                                           shape: BoxShape.circle,
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.amber.withValues(alpha:
-                                                _particleController.value * 0.6,
+                                              color: Colors.amber.withValues(
+                                                alpha:
+                                                    _particleController.value *
+                                                        0.6,
                                               ),
                                               blurRadius: 4,
                                             ),

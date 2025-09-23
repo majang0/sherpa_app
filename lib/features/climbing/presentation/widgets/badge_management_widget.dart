@@ -107,7 +107,8 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
             color: AppColors.primary,
             shape: BoxShape.circle,
           ),
-          child: const Center(child: Text('🏅', style: TextStyle(fontSize: 18))),
+          child:
+              const Center(child: Text('🏅', style: TextStyle(fontSize: 18))),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -376,7 +377,8 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                 HapticFeedbackManager.lightImpact();
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: isSelected ? AppColors.primary : Colors.white,
                   borderRadius: BorderRadius.circular(14),
@@ -584,7 +586,8 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                 border: Border.all(color: badge.tier.color, width: 2),
               ),
               child: Center(
-                child: Text(badge.iconEmoji, style: const TextStyle(fontSize: 20)),
+                child:
+                    Text(badge.iconEmoji, style: const TextStyle(fontSize: 20)),
               ),
             ),
             const SizedBox(width: 12),
@@ -597,7 +600,8 @@ class _BadgeManagementWidgetState extends ConsumerState<BadgeManagementWidget>
                     style: GoogleFonts.notoSans(fontWeight: FontWeight.w700),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: badge.tier.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),

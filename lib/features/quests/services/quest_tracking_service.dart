@@ -560,8 +560,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     return dailyRecords.movieLogs
         .where((log) =>
@@ -576,8 +576,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     return dailyRecords.readingLogs
         .where((log) =>
@@ -592,8 +592,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     final exerciseDays = <String>{};
     for (final log in dailyRecords.exerciseLogs) {
@@ -629,8 +629,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     final categories = <String>{};
     for (final log in dailyRecords.meetingLogs) {
@@ -648,8 +648,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     final mountains = <String>{};
     for (final log in dailyRecords.climbingLogs) {
@@ -730,8 +730,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     final readingDays = <String>{};
     for (final log in dailyRecords.readingLogs) {
@@ -750,8 +750,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     final diaryDays = <String>{};
     for (final log in dailyRecords.diaryLogs) {
@@ -777,8 +777,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     return dailyRecords.climbingLogs
         .where((log) =>
@@ -795,8 +795,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     return dailyRecords.meetingLogs
         .where((log) =>
@@ -814,8 +814,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     // 이번 주 영화 로그 개수 (월요일 ~ 일요일)
     final weeklyMovieCount = dailyRecords.movieLogs
@@ -840,8 +840,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     // 이번 주 중에 모든 목표를 달성하고 보상을 받은 날짜 개수
     return dailyRecords.allGoalsRewardClaimedDates
@@ -857,8 +857,8 @@ class QuestTrackingService {
     final weekStart = DateTime(now.year, now.month, now.day)
         .subtract(Duration(days: now.weekday - 1));
     // 이번주 일요일 23:59:59
-    final weekEnd =
-        weekStart.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+    final weekEnd = weekStart
+        .add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
 
     // 이번 주 중에 모든 목표를 달성하고 보상을 받은 날짜 개수
     return dailyRecords.allGoalsRewardClaimedDates

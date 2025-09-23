@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/managers/sherpi_message_manager.dart';
-import 'package:sherpa_app/core/ai/managers/static_sherpi_manager.dart';
+import 'package:sherpa_app/core/ai/managers/unified_sherpi_manager.dart';
+import 'package:sherpa_app/shared/utils/sherpi_text_utils.dart';
 import 'package:sherpa_app/core/ai/services/real_data_connector.dart';
 import '../../features/sherpi/relationship/providers/relationship_provider.dart';
 import '../../features/sherpi/emotion/providers/emotion_analysis_provider.dart';
@@ -180,7 +181,7 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
   SherpiNotifier(
     this._ref, {
     SherpiMessageManager? messageManager,
-  })  : _messageManager = messageManager ?? StaticSherpiManager(),
+  })  : _messageManager = messageManager ?? UnifiedSherpiManager(),
         _dataConnector = RealDataConnector(_ref),
         super(const SherpiState()) {
     // 친밀도 레벨 초기화
@@ -775,28 +776,21 @@ void initializeSherpi() {
   bool _isDuplicateMessage(SherpiContext context, String? dialogue) {
     final now = DateTime.now();
 
-    // 첫 번째 메시지인 경우
-    if (_lastMessageTime == null) {
+    final isDuplicate = SherpiTextUtils.isDuplicateMessage(
+      lastMessageTime: _lastMessageTime,
+      lastContext: _lastContext?.name,
+      lastMessage: _lastDialogue,
+      currentTime: now,
+      currentContext: context.name,
+      currentMessage: dialogue,
+      thresholdSeconds: 3,
+    );
+
+    if (!isDuplicate) {
       _updateLastMessage(now, context, dialogue);
-      return false;
     }
 
-    // 3초 이내에 같은 컨텍스트의 메시지가 온 경우 (탭 전환 시 중복 방지를 위해 시간 증가)
-    final timeDiff = now.difference(_lastMessageTime!);
-    if (timeDiff.inSeconds < 3 && _lastContext == context) {
-      // 같은 메시지 내용인 경우 중복으로 간주
-      if (dialogue != null && _lastDialogue == dialogue) {
-        return true;
-      }
-      // 메시지 내용이 null인 경우 (showMessage 호출) 컨텍스트만으로 중복 판단
-      if (dialogue == null) {
-        return true;
-      }
-    }
-
-    // 중복이 아닌 경우 최근 메시지 정보 업데이트
-    _updateLastMessage(now, context, dialogue);
-    return false;
+    return isDuplicate;
   }
 
   /// 최근 메시지 정보 업데이트
@@ -808,9 +802,9 @@ void initializeSherpi() {
   }
 }
 
-// ✅ 초기화 기능이 추가된 Provider
+// ✅ 통합 메시지 매니저 Provider
 final sherpiMessageManagerProvider = Provider<SherpiMessageManager>((ref) {
-  return StaticSherpiManager();
+  return UnifiedSherpiManager();
 });
 
 final sherpiProvider =

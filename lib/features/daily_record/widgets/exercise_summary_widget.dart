@@ -173,16 +173,13 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFF059669),
-                                  Color(0xFF047857)
-                                ],
+                                colors: [Color(0xFF059669), Color(0xFF047857)],
                               ),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color:
-                                      const Color(0xFF059669).withValues(alpha: 0.3),
+                                  color: const Color(0xFF059669)
+                                      .withValues(alpha: 0.3),
                                   blurRadius: 6,
                                   offset: const Offset(0, 2),
                                 ),
@@ -211,15 +208,13 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFFF97316),
-                                Color(0xFFEA580C)
-                              ],
+                              colors: [Color(0xFFF97316), Color(0xFFEA580C)],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFFF97316).withValues(alpha: 0.3),
+                                color: const Color(0xFFF97316)
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -471,8 +466,9 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
         width: 40,
         height: 60,
         decoration: BoxDecoration(
-          color:
-              isToday ? const Color(0xFFF97316).withValues(alpha: 0.1) : Colors.white,
+          color: isToday
+              ? const Color(0xFFF97316).withValues(alpha: 0.1)
+              : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isToday
@@ -869,10 +865,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFFF97316),
-                            Color(0xFFEA580C)
-                          ],
+                          colors: [Color(0xFFF97316), Color(0xFFEA580C)],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -1386,44 +1379,42 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
           const SizedBox(height: 16),
 
           // 제안 사항들
-          ...suggestions
-              .map((suggestion) => Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: ModernColors.textTertiary.withValues(alpha: 0.2),
-                        width: 1,
+          ...suggestions.map((suggestion) => Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: ModernColors.textTertiary.withValues(alpha: 0.2),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 6,
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF97316),
+                        borderRadius: BorderRadius.circular(3),
                       ),
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 6,
-                          height: 6,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF97316),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        suggestion,
+                        style: GoogleFonts.notoSans(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: ModernColors.textSecondary,
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            suggestion,
-                            style: GoogleFonts.notoSans(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                              color: ModernColors.textSecondary,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ))
-              ,
+                  ],
+                ),
+              )),
 
           const SizedBox(height: 24),
 
@@ -1843,7 +1834,8 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                           color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                            color:
+                                const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                             width: 1,
                           ),
                         ),
@@ -1903,7 +1895,8 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                           color: const Color(0xFF8B5CF6).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                            color:
+                                const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                             width: 1,
                           ),
                         ),

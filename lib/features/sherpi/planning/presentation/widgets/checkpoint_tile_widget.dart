@@ -74,8 +74,9 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
               margin: const EdgeInsets.only(bottom: 12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color:
-                    isCompleted ? Colors.green.withValues(alpha: 0.1) : Colors.white,
+                color: isCompleted
+                    ? Colors.green.withValues(alpha: 0.1)
+                    : Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: isCompleted

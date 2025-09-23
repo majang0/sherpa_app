@@ -31,15 +31,18 @@ class IntimacyLevelWidget extends ConsumerWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            _getIntimacyColor(relationship.intimacyLevel).withValues(alpha: 0.1),
-            _getIntimacyColor(relationship.intimacyLevel).withValues(alpha: 0.05),
+            _getIntimacyColor(relationship.intimacyLevel)
+                .withValues(alpha: 0.1),
+            _getIntimacyColor(relationship.intimacyLevel)
+                .withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: _getIntimacyColor(relationship.intimacyLevel).withValues(alpha: 0.3),
+          color: _getIntimacyColor(relationship.intimacyLevel)
+              .withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -228,10 +231,12 @@ class CompactIntimacyWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: _getIntimacyColor(relationship.intimacyLevel).withValues(alpha: 0.1),
+        color: _getIntimacyColor(relationship.intimacyLevel)
+            .withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: _getIntimacyColor(relationship.intimacyLevel).withValues(alpha: 0.3),
+          color: _getIntimacyColor(relationship.intimacyLevel)
+              .withValues(alpha: 0.3),
         ),
       ),
       child: Row(

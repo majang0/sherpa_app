@@ -826,7 +826,8 @@ class _ExerciseEditScreenState extends ConsumerState<ExerciseEditScreen>
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     activeTrackColor: ModernColors.exercise,
-                    inactiveTrackColor: ModernColors.exercise.withValues(alpha: 0.2),
+                    inactiveTrackColor:
+                        ModernColors.exercise.withValues(alpha: 0.2),
                     thumbColor: ModernColors.exercise,
                     overlayColor: ModernColors.exercise.withValues(alpha: 0.2),
                     trackHeight: 6.0,

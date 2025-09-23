@@ -178,7 +178,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: ModernColors.warning.withValues(alpha: 0.08), // 챌린지 - 주황색 액센트
+                color: ModernColors.warning
+                    .withValues(alpha: 0.08), // 챌린지 - 주황색 액센트
                 blurRadius: 24,
                 offset: const Offset(0, 8),
                 spreadRadius: 0,
@@ -264,7 +265,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: ModernColors.warning.withValues(alpha: 0.25),
+                                  color: ModernColors.warning
+                                      .withValues(alpha: 0.25),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -320,7 +322,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                                   .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: ModernColors.warning.withValues(alpha: 0.1),
+                                color:
+                                    ModernColors.warning.withValues(alpha: 0.1),
                                 width: 1,
                               ),
                             ),
@@ -448,7 +451,9 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: ModernColors.warning.withValues(alpha: 0.8).withValues(alpha: 0.1),
+                  color: ModernColors.warning
+                      .withValues(alpha: 0.8)
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -487,7 +492,9 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                 end: Alignment.bottomRight,
                 colors: [
                   ModernColors.warning.withValues(alpha: 0.05),
-                  ModernColors.warning.withValues(alpha: 0.8).withValues(alpha: 0.03),
+                  ModernColors.warning
+                      .withValues(alpha: 0.8)
+                      .withValues(alpha: 0.03),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
@@ -524,7 +531,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                           fontSize: 32,
                           shadows: [
                             Shadow(
-                              color: ModernColors.warning.withValues(alpha: 0.2),
+                              color:
+                                  ModernColors.warning.withValues(alpha: 0.2),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
                             ),
@@ -785,10 +793,12 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          color: challenge.category.color.withValues(alpha: 0.1),
+                          color:
+                              challenge.category.color.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: challenge.category.color.withValues(alpha: 0.2),
+                            color:
+                                challenge.category.color.withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
@@ -923,7 +933,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: ModernColors.warning.withValues(alpha: 0.3),
+                                color:
+                                    ModernColors.warning.withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -977,7 +988,8 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
                               gradient: LinearGradient(
                                 colors: [
                                   challenge.category.color,
-                                  challenge.category.color.withValues(alpha: 0.7),
+                                  challenge.category.color
+                                      .withValues(alpha: 0.7),
                                 ],
                               ),
                               borderRadius: BorderRadius.circular(2),

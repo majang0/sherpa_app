@@ -511,8 +511,10 @@ class _FriendsActivityFeedWidgetState
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
                                       colors: [
-                                        ModernColors.warning.withValues(alpha: 0.2),
-                                        ModernColors.warning.withValues(alpha: 0.1),
+                                        ModernColors.warning
+                                            .withValues(alpha: 0.2),
+                                        ModernColors.warning
+                                            .withValues(alpha: 0.1),
                                       ],
                                     ),
                                     borderRadius: BorderRadius.circular(6),
@@ -807,7 +809,8 @@ class _FriendsActivityFeedWidgetState
                             borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(
-                                color: ModernColors.primary.withValues(alpha: 0.3),
+                                color:
+                                    ModernColors.primary.withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -1021,8 +1024,8 @@ class _FriendsActivityFeedWidgetState
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading:
-                  const Icon(Icons.person_add_outlined, color: ModernColors.primary),
+              leading: const Icon(Icons.person_add_outlined,
+                  color: ModernColors.primary),
               title: Text('${activity.friendName}님 팔로우'),
               onTap: () => Navigator.pop(context),
             ),
@@ -1033,7 +1036,8 @@ class _FriendsActivityFeedWidgetState
               onTap: () => Navigator.pop(context),
             ),
             ListTile(
-              leading: const Icon(Icons.block_outlined, color: ModernColors.error),
+              leading:
+                  const Icon(Icons.block_outlined, color: ModernColors.error),
               title: const Text('숨기기'),
               onTap: () => Navigator.pop(context),
             ),

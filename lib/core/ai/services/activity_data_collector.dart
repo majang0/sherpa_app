@@ -61,8 +61,7 @@ class ActivityDataCollector {
         'totalMinutes': todayExercises.fold<int>(
                 0, (sum, log) => sum + log.durationMinutes) +
             durationMinutes,
-        'exerciseTypes':
-            {...exerciseTypeStats.keys, exerciseType}.toList(),
+        'exerciseTypes': {...exerciseTypeStats.keys, exerciseType}.toList(),
         'averageIntensity':
             _calculateAverageIntensityScore(todayExercises, intensity),
         'timePattern': timePattern,

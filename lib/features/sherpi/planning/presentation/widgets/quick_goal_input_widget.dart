@@ -310,7 +310,8 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
           color: isSelected ? color.withValues(alpha: 0.15) : Colors.grey[100],
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? color.withValues(alpha: 0.3) : Colors.transparent,
+            color:
+                isSelected ? color.withValues(alpha: 0.3) : Colors.transparent,
             width: 1.5,
           ),
         ),

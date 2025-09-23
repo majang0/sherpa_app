@@ -468,7 +468,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
             children: [
               Row(
                 children: [
-                  const Icon(Icons.flash_on, color: AppColors.primary, size: 20),
+                  const Icon(Icons.flash_on,
+                      color: AppColors.primary, size: 20),
                   const SizedBox(width: 4),
                   Text(
                     '${userPower.toInt()}',
@@ -599,7 +600,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: difficultyColor.withValues(alpha: isSelected ? 0.4 : 0.2),
+                  color:
+                      difficultyColor.withValues(alpha: isSelected ? 0.4 : 0.2),
                   blurRadius: isSelected ? 20 : 12,
                   offset: Offset(0, isSelected ? 8 : 4),
                 ),
@@ -1469,82 +1471,6 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     );
   }
 
-  Widget _buildSuccessRate(double probability) {
-    final color = _getSuccessColor(probability);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.trending_up, size: 14, color: color),
-          const SizedBox(width: 4),
-          Text(
-            '성공률 ${(probability * 100).toInt()}%',
-            style: GoogleFonts.notoSans(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: color,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRewardPreview(Mountain mountain, int playerLevel) {
-    // 실제 보상 계산 (플레이어 레벨 포함)
-    final xp = GameConstants.calculateDisplayXp(
-      mountain.difficultyLevel,
-      mountain.durationHours,
-      playerLevel: playerLevel,
-    ).toInt();
-    final points = GameConstants.calculateDisplayPoints(
-      mountain.difficultyLevel,
-      mountain.durationHours,
-      playerLevel: playerLevel,
-    );
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          children: [
-            const Text('✨', style: TextStyle(fontSize: 13)),
-            const SizedBox(width: 4),
-            Text(
-              '$xp',
-              style: GoogleFonts.notoSans(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(width: 16),
-        Row(
-          children: [
-            const Text('💰', style: TextStyle(fontSize: 13)),
-            const SizedBox(width: 4),
-            Text(
-              '$points',
-              style: GoogleFonts.notoSans(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   Widget _buildStatItem({
     required IconData icon,
     required String label,
@@ -1592,35 +1518,6 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     );
   }
 
-  Widget _buildRewardRow(String label, String value, String emoji) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(emoji, style: const TextStyle(fontSize: 24)),
-          const SizedBox(width: 12),
-          Text(
-            label,
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              color: AppColors.textSecondary,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            value,
-            style: GoogleFonts.notoSans(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // 유틸리티 메서드들
   Color _getDifficultyColor(int difficulty) {
     if (difficulty >= 100) return const Color(0xFFE91E63);
@@ -1634,17 +1531,6 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     if (probability >= 0.7) return AppColors.success;
     if (probability >= 0.5) return AppColors.warning;
     return AppColors.error;
-  }
-
-  String _getEncouragementMessage() {
-    final messages = [
-      '조금만 더! 정상이 가까워요!',
-      '잘하고 있어요! 계속 올라가요!',
-      '멋진 페이스예요! 화이팅!',
-      '거의 다 왔어요! 포기하지 마세요!',
-      '당신은 할 수 있어요! 🎯',
-    ];
-    return messages[DateTime.now().second % messages.length];
   }
 
   void _startClimbing(Mountain mountain) {

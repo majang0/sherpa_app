@@ -651,7 +651,8 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                         ? (isToday
                             ? Colors.white
                             : (isFuture
-                                ? ModernColors.textTertiary.withValues(alpha: 0.4)
+                                ? ModernColors.textTertiary
+                                    .withValues(alpha: 0.4)
                                 : ModernColors.textPrimary))
                         : ModernColors.textTertiary.withValues(alpha: 0.25),
                   ),
@@ -830,7 +831,8 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                                 color: log.categoryColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                  color: log.categoryColor.withValues(alpha: 0.3),
+                                  color:
+                                      log.categoryColor.withValues(alpha: 0.3),
                                   width: 1,
                                 ),
                               ),

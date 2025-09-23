@@ -401,7 +401,8 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: currentReadingLog.categoryColor.withValues(alpha: 0.1),
+                      color: currentReadingLog.categoryColor
+                          .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(

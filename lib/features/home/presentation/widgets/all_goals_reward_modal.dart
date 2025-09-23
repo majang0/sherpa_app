@@ -194,7 +194,8 @@ class _AllGoalsRewardModalState extends ConsumerState<AllGoalsRewardModal>
               return GestureDetector(
                 onTap: _closeModal,
                 child: Container(
-                  color: Colors.black.withValues(alpha: _overlayAnimation.value),
+                  color:
+                      Colors.black.withValues(alpha: _overlayAnimation.value),
                 ),
               );
             },

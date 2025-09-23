@@ -139,10 +139,9 @@ class _ChatInputFieldState extends State<ChatInputField>
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 0)
-              ),
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 0)),
             ],
           ),
           child: SafeArea(
@@ -225,17 +224,17 @@ class _ChatInputFieldState extends State<ChatInputField>
                                   ? AppColors.primary
                                   : Colors.grey.shade300,
                           shape: BoxShape.circle,
-                          boxShadow: _hasText &&
-                                  widget.isEnabled &&
-                                  !widget.isLoading
-                              ? [
-                                  BoxShadow(
-                                    color: AppColors.primary.withValues(alpha: 0.3),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ]
-                              : [],
+                          boxShadow:
+                              _hasText && widget.isEnabled && !widget.isLoading
+                                  ? [
+                                      BoxShadow(
+                                        color: AppColors.primary
+                                            .withValues(alpha: 0.3),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ]
+                                  : [],
                         ),
                         child: Material(
                           color: Colors.transparent,
@@ -290,10 +289,9 @@ class _ChatInputFieldState extends State<ChatInputField>
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 0)
-                  ),
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 0)),
                 ],
               ),
               child: ListView.builder(

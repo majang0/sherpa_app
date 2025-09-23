@@ -115,7 +115,8 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
 
     // 등반 시작 시에는 셰르피 메시지 없음
 
-    LoggerService.instance.d('등반 시작: $mountainName (예상 소요 시간: ${durationHours}h)');
+    LoggerService.instance
+        .d('등반 시작: $mountainName (예상 소요 시간: ${durationHours}h)');
   }
 
   /// 등반 완료 (수동 또는 자동)
@@ -194,7 +195,8 @@ class GlobalClimbingNotifier extends StateNotifier<ClimbingState> {
     // 등반 성공 시 셰르피 메시지는 handleActivityCompletion에서 처리하므로 여기서는 제거
 
     _saveClimbingData();
-    LoggerService.instance.d('등반 완료: ${session.mountainName} - ${isSuccess ? "성공" : "실패"}');
+    LoggerService.instance
+        .d('등반 완료: ${session.mountainName} - ${isSuccess ? "성공" : "실패"}');
   }
 
   /// 등반 취소

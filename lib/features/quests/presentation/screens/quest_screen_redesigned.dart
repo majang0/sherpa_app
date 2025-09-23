@@ -1101,7 +1101,8 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
                           : Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
-                                color: ModernColors.inactive.withValues(alpha: 0.1),
+                                color: ModernColors.inactive
+                                    .withValues(alpha: 0.1),
                                 border: Border.all(
                                   color: ModernColors.inactive,
                                   width: 2,

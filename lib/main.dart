@@ -161,7 +161,8 @@ class MyApp extends ConsumerWidget {
         },
         '/meeting_list_all': (context) => const MeetingListAllScreen(),
         // ✅ 일일 기록 화면들 추가
-        '/daily_record': (context) => const EnhancedDailyRecordScreen(), // 메인 기록 화면
+        '/daily_record': (context) =>
+            const EnhancedDailyRecordScreen(), // 메인 기록 화면
         '/diary_record': (context) => const DiaryWriteEditScreen(),
         '/exercise_record': (context) {
           final args = ModalRoute.of(context)?.settings.arguments
@@ -194,7 +195,8 @@ class MyApp extends ConsumerWidget {
         '/focus_timer_record': (context) => const FocusTimerRecordScreen(),
         '/diary_analysis': (context) => const DiaryAnalysisPage(),
         '/component_viewer': (context) => const ComponentViewerScreen(),
-        '/sherpi_message_history': (context) => const SherpiMessageHistoryScreen(),
+        '/sherpi_message_history': (context) =>
+            const SherpiMessageHistoryScreen(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,

@@ -206,7 +206,8 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                       Icon(
                                         Icons.location_on_outlined,
                                         size: widget.compact ? 14 : 16,
-                                        color: Colors.white.withValues(alpha: 0.8),
+                                        color:
+                                            Colors.white.withValues(alpha: 0.8),
                                       ),
                                       SizedBox(width: widget.compact ? 3 : 4),
                                       Expanded(
@@ -215,8 +216,8 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                               widget.meeting.location),
                                           style: TextStyle(
                                             fontSize: widget.compact ? 12 : 14,
-                                            color:
-                                                Colors.white.withValues(alpha: 0.8),
+                                            color: Colors.white
+                                                .withValues(alpha: 0.8),
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -232,7 +233,8 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                       Icon(
                                         Icons.schedule_outlined,
                                         size: widget.compact ? 14 : 16,
-                                        color: Colors.white.withValues(alpha: 0.8),
+                                        color:
+                                            Colors.white.withValues(alpha: 0.8),
                                       ),
                                       SizedBox(width: widget.compact ? 3 : 4),
                                       Expanded(
@@ -240,8 +242,8 @@ class _MeetingCard2025State extends State<MeetingCard2025>
                                           widget.meeting.formattedDate,
                                           style: TextStyle(
                                             fontSize: widget.compact ? 12 : 14,
-                                            color:
-                                                Colors.white.withValues(alpha: 0.8),
+                                            color: Colors.white
+                                                .withValues(alpha: 0.8),
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,

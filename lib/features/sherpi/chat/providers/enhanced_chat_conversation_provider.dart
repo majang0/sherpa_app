@@ -11,7 +11,7 @@ import '../models/conversation_state.dart';
 
 // Core
 import '../../../../core/constants/sherpi_dialogues.dart';
-import 'package:sherpa_app/core/ai/managers/openai_sherpi_manager.dart';
+import 'package:sherpa_app/core/ai/managers/unified_sherpi_manager.dart';
 import '../../../../shared/providers/global_sherpi_provider.dart';
 
 // Emotion Recognition Integration
@@ -27,7 +27,7 @@ import '../../emotion/services/behavior_emotion_analyzer.dart';
 /// 사용자별 맞춤형 응답과 학습 기능을 제공합니다.
 class EnhancedChatConversationNotifier
     extends StateNotifier<ConversationState> {
-  final OpenAISherpiManager _smartManager = OpenAISherpiManager();
+  final UnifiedSherpiManager _smartManager = UnifiedSherpiManager();
   final Ref _ref;
   Timer? _typingTimer;
 

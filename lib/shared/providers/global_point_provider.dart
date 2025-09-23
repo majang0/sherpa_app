@@ -409,8 +409,7 @@ class GlobalPointNotifier extends StateNotifier<PointData> {
   void onStreakBonus(int consecutiveDays) {
     final bonus = getStreakBonus(consecutiveDays);
     if (bonus > 0) {
-      earnPoints(
-          bonus, PointSource.streakBonus, '$consecutiveDays일 연속 기록 보너스');
+      earnPoints(bonus, PointSource.streakBonus, '$consecutiveDays일 연속 기록 보너스');
     }
   }
 

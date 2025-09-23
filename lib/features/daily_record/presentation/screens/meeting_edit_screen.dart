@@ -570,7 +570,8 @@ class _MeetingEditScreenState extends ConsumerState<MeetingEditScreen>
                       overlayColor:
                           const Color(0xFFFBBF24).withValues(alpha: 0.2),
                       trackHeight: 6,
-                      thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
+                      thumbShape:
+                          const RoundSliderThumbShape(enabledThumbRadius: 12),
                     ),
                     child: Slider(
                       value: _satisfaction,

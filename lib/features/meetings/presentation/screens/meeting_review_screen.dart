@@ -515,7 +515,8 @@ class _MeetingReviewScreenState extends ConsumerState<MeetingReviewScreen>
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(color: ModernColors.primary, width: 2),
+                borderSide:
+                    const BorderSide(color: ModernColors.primary, width: 2),
               ),
               filled: true,
               fillColor: Colors.grey.shade50,

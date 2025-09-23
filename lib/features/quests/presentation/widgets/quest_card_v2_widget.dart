@@ -78,7 +78,8 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                       decoration: BoxDecoration(
                         color: _getCategoryColor(quest).withValues(alpha: 0.1),
                         border: Border.all(
-                          color: _getCategoryColor(quest).withValues(alpha: 0.3),
+                          color:
+                              _getCategoryColor(quest).withValues(alpha: 0.3),
                           width: 2,
                         ),
                         shape: BoxShape.circle,
@@ -107,10 +108,12 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: quest.rarityColor.withValues(alpha: 0.1),
+                                  color:
+                                      quest.rarityColor.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(100),
                                   border: Border.all(
-                                    color: quest.rarityColor.withValues(alpha: 0.3),
+                                    color: quest.rarityColor
+                                        .withValues(alpha: 0.3),
                                     width: 1,
                                   ),
                                 ),
@@ -154,7 +157,8 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: quest.type.color.withValues(alpha: 0.1),
+                                  color:
+                                      quest.type.color.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(100),
                                 ),
                                 child: Text(

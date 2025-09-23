@@ -53,7 +53,8 @@ class MeetingImageUtils {
       final tempFile = tempFiles[i];
 
       if (!await tempFile.exists()) {
-        LoggerService.instance.d('⚠️ Warning: Temporary file does not exist: ${tempFile.path}');
+        LoggerService.instance
+            .d('⚠️ Warning: Temporary file does not exist: ${tempFile.path}');
         continue;
       }
 
@@ -69,7 +70,8 @@ class MeetingImageUtils {
         await tempFile.copy(targetFile.path);
         savedFileNames.add(fileName);
 
-        LoggerService.instance.d('✅ Image saved: $fileName (${await tempFile.length()} bytes)');
+        LoggerService.instance
+            .d('✅ Image saved: $fileName (${await tempFile.length()} bytes)');
       } catch (e) {
         LoggerService.instance.d('❌ Error saving image ${tempFile.path}: $e');
       }
@@ -119,7 +121,8 @@ class MeetingImageUtils {
           final imageData = await imageFile.readAsBytes();
           imageDataList.add(imageData);
         } catch (e) {
-          LoggerService.instance.d('❌ Error reading image data from $fileName: $e');
+          LoggerService.instance
+              .d('❌ Error reading image data from $fileName: $e');
         }
       }
     }
@@ -172,7 +175,8 @@ class MeetingImageUtils {
         try {
           totalSize += await file.length();
         } catch (e) {
-          LoggerService.instance.d('Warning: Could not get size of ${file.path}');
+          LoggerService.instance
+              .d('Warning: Could not get size of ${file.path}');
         }
       }
 
@@ -208,10 +212,12 @@ class MeetingImageUtils {
           if (fileStat.modified.isBefore(cutoffDate)) {
             await file.delete();
             deletedCount++;
-            LoggerService.instance.d('🧹 Cleaned up old image: ${path.basename(file.path)}');
+            LoggerService.instance
+                .d('🧹 Cleaned up old image: ${path.basename(file.path)}');
           }
         } catch (e) {
-          LoggerService.instance.d('Warning: Could not check/delete ${file.path}: $e');
+          LoggerService.instance
+              .d('Warning: Could not check/delete ${file.path}: $e');
         }
       }
 
@@ -263,7 +269,8 @@ class MeetingImageUtils {
 
       return matchingFiles;
     } catch (e) {
-      LoggerService.instance.d('❌ Error finding images for meeting $meetingId: $e');
+      LoggerService.instance
+          .d('❌ Error finding images for meeting $meetingId: $e');
       return [];
     }
   }

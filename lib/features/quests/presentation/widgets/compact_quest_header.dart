@@ -266,7 +266,8 @@ class CompactQuestHeader extends ConsumerWidget {
                     child: LinearProgressIndicator(
                       value: overallProgress,
                       backgroundColor: Colors.transparent,
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                   ),
                 ),

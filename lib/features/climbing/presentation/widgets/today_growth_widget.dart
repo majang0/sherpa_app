@@ -34,12 +34,11 @@ final todayClimbingGrowthProvider = Provider<TodayClimbingGrowthData>((ref) {
   final todayRecords = ref.watch(todayClimbingRecordsProvider);
 
   // 오늘의 등반 통계 계산
-  final successfulCount =
-      todayRecords.where((r) => r.isSuccess).length;
-  final totalExp = todayRecords.fold<double>(
-      0, (sum, r) => sum + r.rewards.experience);
-  final totalPoints = todayRecords.fold<int>(
-      0, (sum, r) => sum + r.rewards.points);
+  final successfulCount = todayRecords.where((r) => r.isSuccess).length;
+  final totalExp =
+      todayRecords.fold<double>(0, (sum, r) => sum + r.rewards.experience);
+  final totalPoints =
+      todayRecords.fold<int>(0, (sum, r) => sum + r.rewards.points);
   final successRate =
       todayRecords.isEmpty ? 0.0 : successfulCount / todayRecords.length;
 

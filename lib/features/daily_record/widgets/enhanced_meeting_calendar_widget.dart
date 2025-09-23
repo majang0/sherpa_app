@@ -153,15 +153,13 @@ class _EnhancedMeetingCalendarWidgetState
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFF8B5CF6),
-                            Color(0xFF7C3AED)
-                          ],
+                          colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF8B5CF6).withValues(alpha: 0.3),
+                            color:
+                                const Color(0xFF8B5CF6).withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -625,8 +623,9 @@ class _EnhancedMeetingCalendarWidgetState
         width: 36,
         height: 60,
         decoration: BoxDecoration(
-          color:
-              isToday ? const Color(0xFF8B5CF6).withValues(alpha: 0.1) : Colors.white,
+          color: isToday
+              ? const Color(0xFF8B5CF6).withValues(alpha: 0.1)
+              : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isToday
@@ -1167,10 +1166,7 @@ class _EnhancedMeetingCalendarWidgetState
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFF8B5CF6),
-                            Color(0xFF7C3AED)
-                          ],
+                          colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
                         ),
                         borderRadius: BorderRadius.circular(16),
                       ),

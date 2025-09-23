@@ -177,7 +177,8 @@ class MountainPathWidget extends StatelessWidget {
                 color: isCompleted
                     ? Colors.green.withValues(alpha: 0.2)
                     : (isActive
-                        ? _getCategoryColor(goal.category).withValues(alpha: 0.2)
+                        ? _getCategoryColor(goal.category)
+                            .withValues(alpha: 0.2)
                         : Colors.grey.withValues(alpha: 0.2)),
                 shape: BoxShape.circle,
               ),

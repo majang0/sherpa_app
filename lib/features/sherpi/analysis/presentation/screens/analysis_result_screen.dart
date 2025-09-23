@@ -901,7 +901,8 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
-                        color: _getInsightColor(insight.type).withValues(alpha: 0.1),
+                        color: _getInsightColor(insight.type)
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(

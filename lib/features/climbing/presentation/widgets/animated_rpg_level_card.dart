@@ -14,7 +14,6 @@ import '../../../../core/constants/sherpi_emotions.dart';
 // Shared Providers
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
-import '../../../../shared/providers/global_game_provider.dart';
 import '../../../../shared/providers/global_badge_provider.dart';
 
 // Shared Widgets
@@ -248,7 +247,8 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.primary.withValues(alpha: 0.25),
+                                  color:
+                                      AppColors.primary.withValues(alpha: 0.25),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -299,7 +299,8 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryLight.withValues(alpha: 0.1),
+                              color:
+                                  AppColors.primaryLight.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: AppColors.primary.withValues(alpha: 0.1),
@@ -395,7 +396,8 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                                   borderRadius: BorderRadius.circular(4),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppColors.primary.withValues(alpha: 0.3),
+                                      color: AppColors.primary
+                                          .withValues(alpha: 0.3),
                                       blurRadius: 4,
                                       offset: const Offset(0, 1),
                                     ),
@@ -424,7 +426,8 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: AppColors.warningLight.withValues(alpha: 0.1),
+                              color:
+                                  AppColors.warningLight.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -623,10 +626,12 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
 
     // 디버그 출력 (개발 중에만 사용)
     LoggerService.instance.d('=== 등반 능력 계산 디버그 ===');
-    LoggerService.instance.d('사용자 스탯 - 사교성: ${user.stats.sociality}, 의지: ${user.stats.willpower}');
+    LoggerService.instance.d(
+        '사용자 스탯 - 사교성: ${user.stats.sociality}, 의지: ${user.stats.willpower}');
     LoggerService.instance.d('장착된 뱃지 수: ${equippedBadges.length}');
     for (final badge in equippedBadges) {
-      LoggerService.instance.d('- ${badge.name}: ${badge.effectType} = ${badge.effectValue}%');
+      LoggerService.instance
+          .d('- ${badge.name}: ${badge.effectType} = ${badge.effectValue}%');
     }
     LoggerService.instance.d('계산 결과:');
     LoggerService.instance.d('- 등반력 보너스: $powerBonus%');

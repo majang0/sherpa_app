@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sherpa_app/core/ai/managers/static_sherpi_manager.dart';
+import 'package:sherpa_app/core/ai/managers/unified_sherpi_manager.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/features/sherpi/domain/models/sherpi_response.dart';
 import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
@@ -7,9 +7,9 @@ import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('StaticSherpiManager', () {
+  group('UnifiedSherpiManager', () {
     test('personalized meetingCreated message reflects meeting data', () async {
-      final manager = StaticSherpiManager();
+      final manager = UnifiedSherpiManager();
       manager.setPersonalizationSettings(
         const PersonalizationSettings(
           userPreferredName: '연우',
@@ -34,7 +34,7 @@ void main() {
     });
 
     test('disables emojis when useEmojisInMessages is false', () async {
-      final manager = StaticSherpiManager();
+      final manager = UnifiedSherpiManager();
       manager.setPersonalizationSettings(
         const PersonalizationSettings(
           userPreferredName: '연우',
@@ -53,7 +53,7 @@ void main() {
     });
 
     test('system status reports static-only configuration', () async {
-      final manager = StaticSherpiManager();
+      final manager = UnifiedSherpiManager();
       final status = await manager.getSystemStatus();
 
       expect(status['mode'], 'static_only');

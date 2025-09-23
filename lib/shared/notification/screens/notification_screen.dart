@@ -72,7 +72,8 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen>
                   break;
               }
             },
-            icon: const Icon(Icons.more_vert, color: ModernColors.textSecondary),
+            icon:
+                const Icon(Icons.more_vert, color: ModernColors.textSecondary),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

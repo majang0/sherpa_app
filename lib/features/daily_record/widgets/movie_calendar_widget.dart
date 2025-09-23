@@ -152,15 +152,13 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFFEF4444),
-                            Color(0xFFDC2626)
-                          ],
+                          colors: [Color(0xFFEF4444), Color(0xFFDC2626)],
                         ),
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFEF4444).withValues(alpha: 0.3),
+                            color:
+                                const Color(0xFFEF4444).withValues(alpha: 0.3),
                             blurRadius: 8,
                             offset: const Offset(0, 2),
                           ),
@@ -375,7 +373,8 @@ class _MovieCalendarWidgetState extends ConsumerState<MovieCalendarWidget>
                         border: Border.all(
                           color: isFirst
                               ? const Color(0xFFEF4444).withValues(alpha: 0.3)
-                              : ModernColors.textTertiary.withValues(alpha: 0.2),
+                              : ModernColors.textTertiary
+                                  .withValues(alpha: 0.2),
                           width: 1,
                         ),
                       ),

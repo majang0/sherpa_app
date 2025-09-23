@@ -336,7 +336,8 @@ class UnifiedExerciseRecordFormState
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: ModernColors.exercise.withValues(alpha: 0.3),
+                                  color: ModernColors.exercise
+                                      .withValues(alpha: 0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
@@ -517,7 +518,8 @@ class UnifiedExerciseRecordFormState
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     activeTrackColor: ModernColors.exercise,
-                    inactiveTrackColor: ModernColors.exercise.withValues(alpha: 0.2),
+                    inactiveTrackColor:
+                        ModernColors.exercise.withValues(alpha: 0.2),
                     thumbColor: ModernColors.exercise,
                     overlayColor: ModernColors.exercise.withValues(alpha: 0.2),
                     trackHeight: 6.0,

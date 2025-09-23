@@ -479,10 +479,7 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
               offset: const Offset(0, 6),
             ),
             const BoxShadow(
-              color: Colors.white,
-              blurRadius: 8,
-              offset: Offset(0, 0)
-            ),
+                color: Colors.white, blurRadius: 8, offset: Offset(0, 0)),
           ],
         ),
         child: Column(

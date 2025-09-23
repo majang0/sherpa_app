@@ -187,10 +187,12 @@ class _ClimbingPowerAnalysisWidgetState
           children: [
             _buildAuroraWave(
               colors: [
-                const Color(0x55FFDAB9).withValues(alpha: 0.4 +
-                    0.2 * math.sin(_auroraController.value * math.pi * 2)),
-                const Color(0x55FFE4B5).withValues(alpha: 0.3 +
-                    0.1 * math.sin(_auroraController.value * math.pi * 2)),
+                const Color(0x55FFDAB9).withValues(
+                    alpha: 0.4 +
+                        0.2 * math.sin(_auroraController.value * math.pi * 2)),
+                const Color(0x55FFE4B5).withValues(
+                    alpha: 0.3 +
+                        0.1 * math.sin(_auroraController.value * math.pi * 2)),
                 Colors.transparent,
               ],
               offset: _auroraController.value * 100,
@@ -198,14 +200,16 @@ class _ClimbingPowerAnalysisWidgetState
             ),
             _buildAuroraWave(
               colors: [
-                const Color(0x55FFB6C1).withValues(alpha: 0.3 +
-                    0.15 *
-                        math.sin(
-                            (_auroraController.value + 0.3) * math.pi * 2)),
-                const Color(0x55FFC0CB).withValues(alpha: 0.2 +
-                    0.1 *
-                        math.sin(
-                            (_auroraController.value + 0.3) * math.pi * 2)),
+                const Color(0x55FFB6C1).withValues(
+                    alpha: 0.3 +
+                        0.15 *
+                            math.sin(
+                                (_auroraController.value + 0.3) * math.pi * 2)),
+                const Color(0x55FFC0CB).withValues(
+                    alpha: 0.2 +
+                        0.1 *
+                            math.sin(
+                                (_auroraController.value + 0.3) * math.pi * 2)),
                 Colors.transparent,
               ],
               offset: (_auroraController.value + 0.5) * 80,
@@ -213,14 +217,16 @@ class _ClimbingPowerAnalysisWidgetState
             ),
             _buildAuroraWave(
               colors: [
-                const Color(0x55FFA07A).withValues(alpha: 0.35 +
-                    0.15 *
-                        math.sin(
-                            (_auroraController.value + 0.6) * math.pi * 2)),
-                const Color(0x55FFCCCB).withValues(alpha: 0.25 +
-                    0.1 *
-                        math.sin(
-                            (_auroraController.value + 0.6) * math.pi * 2)),
+                const Color(0x55FFA07A).withValues(
+                    alpha: 0.35 +
+                        0.15 *
+                            math.sin(
+                                (_auroraController.value + 0.6) * math.pi * 2)),
+                const Color(0x55FFCCCB).withValues(
+                    alpha: 0.25 +
+                        0.1 *
+                            math.sin(
+                                (_auroraController.value + 0.6) * math.pi * 2)),
                 Colors.transparent,
               ],
               offset: (_auroraController.value + 0.8) * 120,
@@ -363,7 +369,8 @@ class _ClimbingPowerAnalysisWidgetState
                         color: AppColors.primaryDark,
                         shadows: [
                           Shadow(
-                            color: const Color(0xFFFFD700).withValues(alpha: 0.3),
+                            color:
+                                const Color(0xFFFFD700).withValues(alpha: 0.3),
                             blurRadius: 2,
                           ),
                         ],
@@ -450,10 +457,10 @@ class _ClimbingPowerAnalysisWidgetState
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            const Color(0xFFFFD700)
-                                .withValues(alpha: 0.3 * _crystalController.value),
-                            const Color(0xFFFFA500)
-                                .withValues(alpha: 0.2 * _crystalController.value),
+                            const Color(0xFFFFD700).withValues(
+                                alpha: 0.3 * _crystalController.value),
+                            const Color(0xFFFFA500).withValues(
+                                alpha: 0.2 * _crystalController.value),
                             Colors.transparent,
                           ],
                         ),
@@ -482,7 +489,8 @@ class _ClimbingPowerAnalysisWidgetState
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFFFD700).withValues(alpha: 0.4),
+                            color:
+                                const Color(0xFFFFD700).withValues(alpha: 0.4),
                             blurRadius: 15,
                             spreadRadius: 3,
                           ),
@@ -512,7 +520,8 @@ class _ClimbingPowerAnalysisWidgetState
                                   color: AppColors.primaryDark,
                                   shadows: [
                                     Shadow(
-                                      color: const Color(0xFFFFD700).withValues(alpha: 0.6),
+                                      color: const Color(0xFFFFD700)
+                                          .withValues(alpha: 0.6),
                                       blurRadius: 6,
                                     ),
                                   ],
@@ -1030,7 +1039,8 @@ class _ClimbingPowerAnalysisWidgetState
                 decoration: BoxDecoration(
                   color: AppColors.primary.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+                  border: Border.all(
+                      color: AppColors.primary.withValues(alpha: 0.2)),
                 ),
                 child: Text(
                   formula,
@@ -1086,11 +1096,6 @@ class _ClimbingPowerAnalysisWidgetState
     }
 
     return bonus;
-  }
-
-  double _calculateBadgeBonus(List<String> badgeIds) {
-    final equippedBadges = ref.read(globalEquippedBadgesProvider);
-    return _calculateRealBadgeBonus(equippedBadges);
   }
 
   void _showLegendaryJourney() {
@@ -1370,7 +1375,8 @@ class GoldenSparklePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFFFFD700).withValues(alpha: 0.6 + 0.4 * animationValue)
+      ..color =
+          const Color(0xFFFFD700).withValues(alpha: 0.6 + 0.4 * animationValue)
       ..style = PaintingStyle.fill;
 
     final sparkles = [

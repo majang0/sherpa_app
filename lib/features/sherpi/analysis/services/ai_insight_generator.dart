@@ -41,11 +41,12 @@ class AiInsightGenerator {
   Future<bool> _deductPoints() async {
     if (_ref == null) return false;
     try {
-      final result = _ref!.read(globalPointProvider.notifier).spendPointsDetailed(
-        ANALYSIS_COST,
-        PointSpendType.analysisReport,
-        'AI 분석 사용료',
-      );
+      final result =
+          _ref!.read(globalPointProvider.notifier).spendPointsDetailed(
+                ANALYSIS_COST,
+                PointSpendType.analysisReport,
+                'AI 분석 사용료',
+              );
       if (result) {
         LoggerService.instance.i('✅ 분석 포인트 차감 성공: ${ANALYSIS_COST}P');
       } else {

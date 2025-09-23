@@ -995,7 +995,9 @@ ${widget.movie.review ?? ''}
 
                 try {
                   // 영화 기록 삭제 (새로 추가한 deleteMovieLog 메서드 사용)
-                  ref.read(globalUserProvider.notifier).deleteMovieLog(widget.movie.id);
+                  ref
+                      .read(globalUserProvider.notifier)
+                      .deleteMovieLog(widget.movie.id);
 
                   if (mounted) {
                     Navigator.pop(context); // 상세 화면 닫기
