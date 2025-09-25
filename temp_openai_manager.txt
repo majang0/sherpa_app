@@ -1,1 +1,0 @@
-fatal: path 'lib/core/ai/openai_sherpi_manager.dart' does not exist in 'c6fc378'
