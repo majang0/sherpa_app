@@ -218,17 +218,23 @@ class _EnhancedReadingCalendarWidgetState
   }
 
   Widget _buildTodayStats(List<ReadingLog> readingLogs) {
-    final today = DateTime.now();
-    final thisWeekStart = today.subtract(Duration(days: today.weekday - 1));
-    final thisWeekReadings = readingLogs
-        .where((log) =>
-            log.date.isAfter(thisWeekStart.subtract(const Duration(days: 1))) &&
-            log.date.isBefore(today.add(const Duration(days: 1))))
-        .toList();
-    final todayReadings = readingLogs
-        .where((log) => ReadingUtils.isSameDay(log.date, today))
-        .toList();
-    final totalPages =
+    final now = DateTime.now();
+    final weekStart = ReadingUtils.getWeekStart(now);
+    final weekStartDate =
+        DateTime(weekStart.year, weekStart.month, weekStart.day);
+    final weekEndExclusive = weekStartDate.add(const Duration(days: 7));
+
+    final todayReadings =
+        readingLogs.where((log) => ReadingUtils.isSameDay(log.date, now)).toList();
+
+    final thisWeekReadings = readingLogs.where((log) {
+      final logDate = DateTime(log.date.year, log.date.month, log.date.day);
+      final isOnOrAfterStart = !logDate.isBefore(weekStartDate);
+      final isBeforeEnd = logDate.isBefore(weekEndExclusive);
+      return isOnOrAfterStart && isBeforeEnd;
+    }).toList();
+
+    final todayTotalPages =
         todayReadings.fold<int>(0, (sum, log) => sum + log.pages);
     final weeklyReadingCount = thisWeekReadings.length;
 
@@ -262,7 +268,7 @@ class _EnhancedReadingCalendarWidgetState
           Expanded(
             child: _buildStatItem(
               '📄',
-              '$totalPages페이지',
+              '${todayTotalPages}페이지',
               '오늘 읽은 양',
             ),
           ),

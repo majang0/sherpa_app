@@ -27,6 +27,7 @@ enum PointSource {
   firstHostBonus, // 첫 호스팅 보너스
   monthlyAttendBonus, // 월 5회 이상 참석 보너스
   monthlyHostBonus, // 월 5회 이상 호스팅 보너스
+  peerReview, // 동료 평가 완료 (100 Point)
 
   // 커뮤니티
   popularPost, // 인기 게시글
@@ -143,31 +144,33 @@ class PointUtils {
   static int calculateEarnedPoints(PointSource source) {
     switch (source) {
       case PointSource.dailyQuestAd:
-        return 100;
+        return 50;
       case PointSource.weeklyQuestHard:
-        return 500;
+        return 100;
       case PointSource.weeklyQuestAd:
-        return 300;
+        return 100;
       case PointSource.premiumQuestRare:
-        return 200;
+        return 100;
       case PointSource.premiumQuestEpic:
-        return 500;
+        return 200;
       case PointSource.premiumQuestLegend:
-        return 1000;
+        return 300;
       case PointSource.dailyGoalAd:
         return 50;
       case PointSource.streakBonus:
         return 100;
       case PointSource.meetingAttend:
-        return 50;
-      case PointSource.meetingHost:
         return 100;
+      case PointSource.meetingHost:
+        return 300;
       case PointSource.firstHostBonus:
-        return 500;
+        return 700;
       case PointSource.monthlyAttendBonus:
         return 300;
       case PointSource.monthlyHostBonus:
         return 500;
+      case PointSource.peerReview:
+        return 100;
       case PointSource.popularPost:
         return 100;
       case PointSource.helpfulAnswer:
@@ -175,7 +178,7 @@ class PointUtils {
       case PointSource.dailyActivity:
         return 20;
       case PointSource.levelUp:
-        return 200;
+        return 100;
       case PointSource.signup:
         return PointSystemConfig.SIGNUP_BONUS_POINTS;
       case PointSource.goalCompletion:
@@ -242,6 +245,8 @@ class PointUtils {
         return '월간 참석 보너스';
       case PointSource.monthlyHostBonus:
         return '월간 호스팅 보너스';
+      case PointSource.peerReview:
+        return '동료 평가 완료';
       case PointSource.popularPost:
         return '인기 게시글 작성';
       case PointSource.helpfulAnswer:
