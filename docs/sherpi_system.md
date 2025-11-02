@@ -7,7 +7,7 @@
 
 ## 1. 개요
 - **역할**: Sherpi는 셰르파 앱 전역에 걸친 동반자 AI/캐릭터 시스템으로, 사용자 활동에 맞춘 메시지·감정·추천을 노출한다.
-- **현재 모드**: 기본은 정적 메시지, 필요 시 OpenAI GPT-5 기반 하이브리드 응답 (수동 트리거) — Gemini는 분석/인사이트 모듈에서 사용.
+- **현재 모드**: 기본은 정적 메시지, 필요 시 OpenAI GPT-5 기반 하이브리드 응답 (수동 트리거).
 - **구성 원칙**
   1. **DI 기반 매니저 구조**: `SherpiMessageManager` → `StaticSherpiManager` / `OpenAISherpiManager`.
   2. **도메인 모델 단일화**: 모든 Sherpi 모델은 `lib/features/sherpi/domain/`에서 관리.
@@ -31,7 +31,6 @@ lib/
 │       │   ├── activity_prompt_templates.dart
 │       │   └── real_data_connector.dart
 │       └── sources/
-│           ├── enhanced_gemini_dialogue_source.dart
 │           └── openai_dialogue_source.dart
 ├── features/
 │   └── sherpi/
@@ -73,7 +72,6 @@ lib/
 | Static Manager | `static_sherpi_manager.dart` | 정적 메시지 전용. 성격/개인화 반영. |
 | OpenAI Manager | `openai_sherpi_manager.dart` | 캐시·AI 하이브리드. 수동 트리거 + fallback. |
 | Dialogue Source | `openai_dialogue_source.dart` | GPT-5 연동. 프롬프트 빌더 사용. |
-| Gemini Source | `enhanced_gemini_dialogue_source.dart` | 분석/인사이트용 Gemini 2.5. |
 | Prompt Templates | `activity_prompt_templates.dart` | 활동별 프롬프트. 회귀 시 참고. |
 | Data Collector | `real_data_connector.dart` | 사용자/게임 컨텍스트 조합. (현재 일부 경로에서 주석 처리) |
 | Domain Models | `sherpi_response.dart` 등 | Sherpi 메시지/관계/히스토리 일원화. |

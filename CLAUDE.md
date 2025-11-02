@@ -388,12 +388,12 @@ changeEmotion(SherpiEmotion emotion)
 
 ## 🧠 AI System Architecture
 
-Sherpa App uses a **3-layer AI architecture** supporting multiple AI providers (OpenAI GPT-5, Google Gemini).
+Sherpa App uses a **3-layer AI architecture** with OpenAI GPT-5 as the AI provider.
 
 ### Architecture Overview (Issue #7, 2025-11-02)
 
 **Layer 1: Core Infrastructure** (`core/ai/`)
-- Generic AI services (OpenAI, Gemini)
+- OpenAI GPT-5 service integration
 - AI-agnostic caching system
 - Shared dialogue sources
 
@@ -407,21 +407,15 @@ Sherpa App uses a **3-layer AI architecture** supporting multiple AI providers (
 - Activity pattern analysis
 - Feature-specific AI integration
 
-### Supported AI Providers
+### AI Provider
 
-**1. OpenAI GPT-5** (Primary)
+**OpenAI GPT-5**
 - **Model**: `gpt-5-chat-latest`
 - **Package**: openai_dart ^0.5.4
 - **Service**: `core/ai/services/openai_service.dart`
 - **Uses**: User insights, meeting recommendations, growth plans
 
-**2. Google Gemini** (Alternative)
-- **Model**: `gemini-2.0-flash-exp`
-- **Package**: google_generative_ai ^0.4.6
-- **Service**: `core/ai/services/gemini_service.dart`
-- **Uses**: Content generation, chat completions
-
-**API Keys**: Set via `.env` file or `--dart-define` (see Environment Setup section)
+**API Key**: Set via `.env` file or `--dart-define` (see Environment Setup section)
 
 ### When AI is Used
 
@@ -465,7 +459,7 @@ Sherpa App uses a **3-layer AI architecture** supporting multiple AI providers (
 ### AI Caching System
 
 **Generic Cache** (`AiMessageCache`, v3):
-- AI-agnostic caching (works with OpenAI, Gemini, any provider)
+- AI-agnostic caching (works with any AI provider)
 - String-based context keys (no provider-specific enums)
 - Injectable TTL per context
 - Location: `core/ai/cache/ai_message_cache.dart`
@@ -487,7 +481,6 @@ Sherpa App uses a **3-layer AI architecture** supporting multiple AI providers (
 
 **Core Infrastructure**:
 - `core/ai/services/openai_service.dart` - OpenAI GPT-5 service (singleton)
-- `core/ai/services/gemini_service.dart` - Google Gemini service (singleton)
 - `core/ai/cache/ai_message_cache.dart` - AI-agnostic caching (v3)
 - `core/ai/sources/openai_dialogue_source.dart` - OpenAI dialogue wrapper
 - `core/config/api_config.dart` - API key configuration
@@ -637,7 +630,7 @@ For complex analysis beyond automated Agents, use **SKILL system** (Sonnet-based
 **State & Storage**: riverpod, shared_preferences (NOT Hive)
 **UI & Animation**: flutter_animate, lottie, confetti, fl_chart
 **Hardware & Permissions**: pedometer, geolocator, camera, permission_handler
-**AI Integration**: openai_dart (GPT-5), google_generative_ai (Gemini), flutter_dotenv (environment variables)
+**AI Integration**: openai_dart (GPT-5), flutter_dotenv (environment variables)
 **Maps**: google_maps_flutter, geocoding
 
 **⚠️ IMPORTANT**: Always handle permissions properly when using hardware features
@@ -740,7 +733,6 @@ Sherpa App requires API keys for AI features. Configure them via `.env` file or 
 # C:\sherpa_app\.env
 
 OPENAI_API_KEY=your_openai_api_key_here
-GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 ```bash
@@ -752,10 +744,10 @@ flutter run
 
 ```bash
 # Development
-flutter run --dart-define=OPENAI_API_KEY=your_key --dart-define=GEMINI_API_KEY=your_key
+flutter run --dart-define=OPENAI_API_KEY=your_key
 
 # Production (use secrets manager, never commit keys)
-flutter build apk --dart-define=OPENAI_API_KEY=@secret@ --dart-define=GEMINI_API_KEY=@secret@
+flutter build apk --dart-define=OPENAI_API_KEY=@secret@
 ```
 
 **API Key Priority** (highest to lowest):

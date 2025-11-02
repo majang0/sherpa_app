@@ -200,8 +200,6 @@ class SherpiSystemChecker {
         'message_cache_limit': 100,
         'current_cache_size': cacheStatus['total'] ?? 0,
         'memory_optimization_applied': true,
-        'quality_metrics_limit': 50, // enhanced_gemini_dialogue_source.dart에서 설정
-        'template_cache_limit': 20, // enhanced_gemini_dialogue_source.dart에서 설정
       };
     } catch (e) {
       return {

@@ -17,8 +17,7 @@ lib/
 │   │   │   ├── static_sherpi_manager.dart       # Static-only implementation
 │   │   │   └── openai_sherpi_manager.dart       # Hybrid message management
 │   │   ├── sources/
-│   │   │   ├── openai_dialogue_source.dart      # OpenAI GPT-5 integration
-│   │   │   └── enhanced_gemini_dialogue_source.dart # Gemini API (fallback)
+│   │   │   └── openai_dialogue_source.dart      # OpenAI GPT-5 integration
 │   │   ├── services/
 │   │   │   ├── activity_prompt_templates.dart   # Prompt builders
 │   │   │   └── real_data_connector.dart         # Context builders
@@ -43,8 +42,7 @@ lib/
 
 - **Default**: 100% static messages from `sherpi_dialogues.dart`
 - **AI Calls**: Only when explicitly requested by user
-- **Primary AI**: OpenAI GPT-5 (`gpt-5-chat-latest`)
-- **Fallback AI**: Gemini 2.5 Flash
+- **AI Provider**: OpenAI GPT-5 (`gpt-5-chat-latest`)
 - **Pricing**: Input $1.25/1M tokens, Output $10/1M tokens
 
 ### 13-Emotion System
@@ -76,13 +74,11 @@ Each emotion maps to: `assets/images/sherpi/sherpi_[emotion].png`
 **Method 1: .env file (Recommended)**
 ```bash
 # .env file
-GEMINI_API_KEY=AIzaSyB...actualkey
 OPENAI_API_KEY=sk-...actualkey
 ```
 
 **Method 2: Runtime arguments**
 ```bash
-flutter run --dart-define=GEMINI_API_KEY=your_key
 flutter run --dart-define=OPENAI_API_KEY=your_key
 ```
 
@@ -157,11 +153,6 @@ switch (activityType) {
 - **Automatic fallback**: Always falls back to static on error
 
 ### Known Issues & Solutions
-
-#### Gemini SDK Compatibility
-- **Issue**: FormatException with Gemini 2.5 Flash
-- **Solution**: Background caching disabled
-- **Status**: Awaiting Firebase AI Logic SDK migration
 
 #### API Key Security
 - Never hardcode keys in source

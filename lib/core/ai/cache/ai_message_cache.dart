@@ -40,7 +40,7 @@ class CachedMessage {
 
 /// 🧠 AI-Agnostic 메시지 캐시 시스템
 ///
-/// OpenAI, Gemini 등 모든 AI 제공자의 응답을 캐싱합니다.
+/// OpenAI 등 모든 AI 제공자의 응답을 캐싱합니다.
 /// Feature-agnostic: 모든 feature에서 재사용 가능 (sherpi, meetings, analysis, etc.)
 class AiMessageCache {
   static const String _cacheKey = 'ai_message_cache_v3'; // v3: AI-agnostic
