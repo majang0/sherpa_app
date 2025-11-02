@@ -31,9 +31,9 @@ class ActivityAnalysisService {
       final apiKey = ApiConfig.openAIApiKey;
 
       // 모든 플랫폼에서 동일하게 처리 (Dio 제거)
-      // baseUrl 제거 - openai_dart 패키지의 기본 설정 사용
       _client = OpenAIClient(
         apiKey: apiKey,
+        baseUrl: 'https://api.openai.com/v1',
       );
     } catch (e) {
       rethrow;
@@ -233,19 +233,6 @@ ${previousExercise != null ? '''
   /// 종합 운동 분석용 OpenAI 호출
   Future<String> _callOpenAIForComprehensive(String prompt) async {
     try {
-      analysisLogger.d('OpenAI API 호출 시작...');
-      analysisLogger.d('프롬프트 길이: ${prompt.length}자');
-      analysisLogger.d('🔍 디버그: API 키 길이 = ${ApiConfig.openAIApiKey.length}');
-      analysisLogger.d('🔍 디버그: API 키 앞 10자 = ${ApiConfig.openAIApiKey.substring(0, 10)}...');
-      analysisLogger.d('🔍 디버그: _client runtimeType = ${_client.runtimeType}');
-
-      // 프롬프트를 500자씩 나눠서 출력
-      analysisLogger.t('=====프롬프트 시작=====');
-      for (int i = 0; i < prompt.length; i += 500) {
-        final end = (i + 500 < prompt.length) ? i + 500 : prompt.length;
-        analysisLogger.t('[$i-$end] ${prompt.substring(i, end)}');
-      }
-      analysisLogger.t('=====프롬프트 끝=====');
       final chatCompletion = await _client
           .createChatCompletion(
             request: CreateChatCompletionRequest(
@@ -292,16 +279,6 @@ ${previousExercise != null ? '''
       final responseText = chatCompletion.choices.firstOrNull?.message.content;
 
       if (responseText != null && responseText.isNotEmpty) {
-        analysisLogger.d('응답 길이: ${responseText.length}자');
-        analysisLogger.t('실제 받은 AI 응답:');
-        analysisLogger.t('=====응답 시작=====');
-        // 응답을 300자씩 나눠서 출력
-        for (int i = 0; i < responseText.length; i += 300) {
-          final end =
-              (i + 300 < responseText.length) ? i + 300 : responseText.length;
-          analysisLogger.t('[$i-$end] ${responseText.substring(i, end)}');
-        }
-        analysisLogger.t('=====응답 끝====');
         return responseText;
       }
 
@@ -315,9 +292,6 @@ ${previousExercise != null ? '''
   /// 종합 운동 분석 응답 파싱
   ComprehensiveExerciseAnalysis _parseComprehensiveExerciseResponse(
       String response) {
-    analysisLogger.d('응답 파싱 시작...');
-    analysisLogger.t('원본 응답:\n$response');
-
     final sections = <String, String>{};
 
     // 섹션별로 파싱 (줄바꿈과 공백 처리 개선)
@@ -333,12 +307,6 @@ ${previousExercise != null ? '''
     final section4Match =
         RegExp(r'\[SECTION_4\]\s*(.*?)$', dotAll: true).firstMatch(response);
 
-    analysisLogger.d('파싱 결과:');
-    analysisLogger.d('  SECTION_1 찾음: ${section1Match != null}');
-    analysisLogger.d('  SECTION_2 찾음: ${section2Match != null}');
-    analysisLogger.d('  SECTION_3 찾음: ${section3Match != null}');
-    analysisLogger.d('  SECTION_4 찾음: ${section4Match != null}');
-
     sections['comparison'] =
         section1Match?.group(1)?.trim() ?? '지난번 운동과 비교하여 꾸준히 발전하고 계세요! 💪';
     sections['benefits'] =
@@ -347,16 +315,6 @@ ${previousExercise != null ? '''
         '내일도 함께 운동해요! 조금씩 강도를 높여보는 것도 좋아요. 🎯';
     sections['encouragement'] = section4Match?.group(1)?.trim() ??
         '오늘도 정말 수고하셨어요! 셰르피가 항상 응원하고 있어요! 💝';
-
-    analysisLogger.d('파싱된 섹션:');
-    analysisLogger.d(
-        '  comparison (${sections['comparison']!.length}자): ${sections['comparison']}');
-    analysisLogger.d(
-        '  benefits (${sections['benefits']!.length}자): ${sections['benefits']}');
-    analysisLogger.d(
-        '  recommendation (${sections['recommendation']!.length}자): ${sections['recommendation']}');
-    analysisLogger.d(
-        '  encouragement (${sections['encouragement']!.length}자): ${sections['encouragement']}');
 
     // 글자수 체크 (100-130자)
     for (var entry in sections.entries) {
@@ -399,8 +357,6 @@ ${previousExercise != null ? '''
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_exercise_$dateKey';
 
-      analysisLogger.d('캐시 저장 시작: $fullKey');
-
       final data = {
         'comparison': analysis.comparison,
         'benefits': analysis.benefits,
@@ -410,7 +366,7 @@ ${previousExercise != null ? '''
       };
 
       await prefs.setString(fullKey, jsonEncode(data));
-      analysisLogger.i('캐시 저장 완료!');
+      analysisLogger.i('캐시 저장 완료');
     } catch (e) {
       analysisLogger.e('캐시 저장 실패', error: e);
     }
@@ -891,8 +847,6 @@ $previousBookInfo
   /// 종합 독서 분석용 OpenAI 호출
   Future<String> _callOpenAIForReadingComprehensive(String prompt) async {
     try {
-      analysisLogger.d('OpenAI API 호출 시작 (독서 분석)...');
-
       final chatCompletion = await _client
           .createChatCompletion(
             request: CreateChatCompletionRequest(
@@ -937,7 +891,6 @@ $previousBookInfo
       final responseText = chatCompletion.choices.firstOrNull?.message.content;
 
       if (responseText != null && responseText.isNotEmpty) {
-        analysisLogger.d('독서 분석 응답 길이: ${responseText.length}자');
         return responseText;
       }
 
@@ -951,8 +904,6 @@ $previousBookInfo
   /// 종합 독서 분석 응답 파싱
   ComprehensiveReadingAnalysis _parseComprehensiveReadingResponse(
       String response) {
-    analysisLogger.d('독서 응답 파싱 시작...');
-
     // 섹션별로 파싱
     final section1Match =
         RegExp(r'\[SECTION_1\]\s*(.*?)\s*(?=\[SECTION_2\]|$)', dotAll: true)
@@ -1043,8 +994,6 @@ $previousBookInfo
       final dateKey = _getTodayDateKey();
       final fullKey = 'comprehensive_reading_$dateKey';
 
-      analysisLogger.d('독서 분석 캐시 저장 시작: $fullKey');
-
       final data = {
         'previousInsight': analysis.previousInsight,
         'todayInsight': analysis.todayInsight,
@@ -1055,7 +1004,7 @@ $previousBookInfo
       };
 
       await prefs.setString(fullKey, jsonEncode(data));
-      analysisLogger.i('독서 분석 캐시 저장 완료!');
+      analysisLogger.i('독서 분석 캐시 저장 완료');
     } catch (e) {
       analysisLogger.e('독서 분석 캐시 저장 실패', error: e);
     }

@@ -19,9 +19,9 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
     try {
       final apiKey = ApiConfig.openAIApiKey;
 
-      // baseUrl 제거 - openai_dart 패키지의 기본 설정 사용
       _client = OpenAIClient(
         apiKey: apiKey,
+        baseUrl: 'https://api.openai.com/v1',
       );
 
       aiLogger.i('OpenAI GPT-5 클라이언트 초기화 성공');
@@ -248,6 +248,5 @@ class OpenAIDialogueSource implements SherpiDialogueSource {
   /// 리소스 정리
   void dispose() {
     // OpenAI 클라이언트는 특별한 정리가 필요 없음
-    aiLogger.d('OpenAI 클라이언트 정리 완료');
   }
 }
