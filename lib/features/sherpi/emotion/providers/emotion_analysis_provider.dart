@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../models/emotion_analysis_model.dart';
-import '../services/emotion_analysis_service.dart';
-import '../../../../core/constants/sherpi_dialogues.dart';
+import 'package:sherpa_app/features/sherpi/intelligence/services/emotion/emotion_analysis_service.dart';
+import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 
 /// 🎭 감정 분석 상태
 class EmotionAnalysisState {

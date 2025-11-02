@@ -3,7 +3,7 @@
 // 사용자의 앱 내 행동 패턴을 분석하여 감정 상태를 추론하는 시스템
 
 import 'dart:math';
-import '../models/emotion_state_model.dart';
+import 'package:sherpa_app/features/sherpi/emotion/models/emotion_state_model.dart';
 
 /// 🎯 행동 패턴 데이터
 class BehaviorPattern {

@@ -5,7 +5,7 @@ library;
 import 'dart:convert';
 import 'package:sherpa_app/features/sherpi/domain/services/sherpi_insight_repository.dart';
 
-import '../models/available_meeting_model.dart';
+import 'package:sherpa_app/features/meetings/models/available_meeting_model.dart';
 import 'models/user_activity_pattern.dart';
 
 class RecommendationPromptBuilder {

@@ -1,6 +1,6 @@
 import 'dart:math';
-import '../models/emotion_analysis_model.dart';
-import '../../../../core/constants/sherpi_dialogues.dart';
+import 'package:sherpa_app/features/sherpi/emotion/models/emotion_analysis_model.dart';
+import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 
 /// 🧠 사용자 감정 분석 서비스
 ///

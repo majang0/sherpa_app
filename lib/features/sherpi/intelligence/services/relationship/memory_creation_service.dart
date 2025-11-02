@@ -2,10 +2,10 @@
 //
 // 사용자의 활동과 상호작용을 기반으로 자동으로 추억을 생성하는 서비스
 
-import '../models/shared_memory_model.dart';
-import '../services/memory_management_service.dart';
-import '../../emotion/models/emotion_state_model.dart';
-import '../../../../core/utils/logger_service.dart';
+import 'package:sherpa_app/features/sherpi/relationship/models/shared_memory_model.dart';
+import 'memory_management_service.dart';
+import 'package:sherpa_app/features/sherpi/emotion/models/emotion_state_model.dart';
+import 'package:sherpa_app/core/utils/logger_service.dart';
 
 /// 🎯 자동 추억 생성 서비스
 class MemoryCreationService {

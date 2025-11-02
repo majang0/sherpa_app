@@ -3,8 +3,8 @@
 library;
 
 import 'dart:math';
-import '../../../../shared/models/global_user_model.dart';
-import '../models/available_meeting_model.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/features/meetings/models/available_meeting_model.dart';
 import 'models/user_activity_pattern.dart';
 
 class UserActivityAnalyzer {

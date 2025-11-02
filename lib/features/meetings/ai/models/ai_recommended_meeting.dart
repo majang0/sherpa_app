@@ -2,7 +2,7 @@
 /// AI가 추천한 모임과 추천 이유, 매칭 점수 등을 포함하는 데이터 모델
 library;
 
-import '../../models/available_meeting_model.dart';
+import 'package:sherpa_app/features/meetings/models/available_meeting_model.dart';
 
 /// AI가 추천한 모임 정보
 class AIRecommendedMeeting {

@@ -5,8 +5,8 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
-import '../models/shared_memory_model.dart';
-import '../services/memory_management_service.dart';
+import 'package:sherpa_app/features/sherpi/relationship/models/shared_memory_model.dart';
+import 'memory_management_service.dart';
 
 /// 📖 성장 스토리 항목
 class GrowthStoryItem {

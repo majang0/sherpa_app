@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 
 /// 📦 캐시된 메시지 데이터 구조 (LRU 지원)
 class CachedMessage {
@@ -39,29 +38,24 @@ class CachedMessage {
   }
 }
 
-/// 🧠 단순화된 AI 메시지 캐시 시스템 (비활성화됨)
+/// 🧠 AI-Agnostic 메시지 캐시 시스템
 ///
-/// AI 시스템이 비활성화되어 캐시 기능도 사용하지 않습니다.
+/// OpenAI, Gemini 등 모든 AI 제공자의 응답을 캐싱합니다.
+/// Feature-agnostic: 모든 feature에서 재사용 가능 (sherpi, meetings, analysis, etc.)
 class AiMessageCache {
-  static const String _cacheKey = 'ai_message_cache_v2';
-  static const int _cacheVersion = 2;
+  static const String _cacheKey = 'ai_message_cache_v3'; // v3: AI-agnostic
+  static const int _cacheVersion = 3;
   static const Duration _fallbackTTL = Duration(hours: 12);
   static const int _maxCacheSize = 50;
 
-  static const Map<SherpiContext, Duration> _contextTTL = {
-    SherpiContext.dailyGreeting: Duration(hours: 12),
-    SherpiContext.longTimeNoSee: Duration(hours: 24),
-    SherpiContext.questComplete: Duration(hours: 24),
-    SherpiContext.exerciseComplete: Duration(hours: 6),
-    SherpiContext.readingComplete: Duration(hours: 6),
-    SherpiContext.diaryWritten: Duration(hours: 6),
-    SherpiContext.climbingSuccess: Duration(hours: 12),
-    SherpiContext.climbingFailure: Duration(hours: 2),
-    SherpiContext.encouragement: Duration(hours: 6),
-    SherpiContext.guidance: Duration(hours: 6),
-  };
+  /// Context별 TTL 설정 (feature에서 주입 가능)
+  final Map<String, Duration> _contextTTL;
 
   static Map<String, dynamic>? _lastMeta;
+
+  /// 생성자: TTL 설정을 주입받거나 기본값 사용
+  AiMessageCache({Map<String, Duration>? contextTTL})
+      : _contextTTL = contextTTL ?? {};
 
   /// 🚀 핵심 메시지만 백그라운드 생성 (비활성화됨)
   Future<void> pregenerateImportantMessages({
@@ -89,11 +83,17 @@ class AiMessageCache {
   }
 
   /// ⚡ 캐시된 AI 메시지 즉시 반환
+  ///
+  /// [context]: AI 컨텍스트 (예: 'dailyGreeting', 'questComplete', 'meeting_suggestion')
+  /// [userId]: 사용자 ID
+  /// [userContext]: 사용자 컨텍스트 (레벨, 활동 등)
+  /// [customTTL]: 커스텀 TTL (선택적, 없으면 contextTTL 또는 fallback 사용)
   Future<String?> getCachedMessage({
     required String userId,
-    required SherpiContext context,
+    required String context,
     required Map<String, dynamic> userContext,
     String? meetingSetId,
+    Duration? customTTL,
   }) async {
     final cache = await _loadCache();
     await _cleanupExpired(cache);
@@ -120,12 +120,20 @@ class AiMessageCache {
     return cached.message;
   }
 
+  /// 💾 AI 메시지 캐시에 저장
+  ///
+  /// [context]: AI 컨텍스트 (예: 'dailyGreeting', 'questComplete', 'meeting_suggestion')
+  /// [userId]: 사용자 ID
+  /// [message]: 캐시할 AI 응답 메시지
+  /// [userContext]: 사용자 컨텍스트 (레벨, 활동 등)
+  /// [customTTL]: 커스텀 TTL (선택적, 없으면 contextTTL 또는 fallback 사용)
   Future<void> storeMessage({
     required String userId,
-    required SherpiContext context,
+    required String context,
     required Map<String, dynamic> userContext,
     required String message,
     String? meetingSetId,
+    Duration? customTTL,
   }) async {
     final cache = await _loadCache();
     await _cleanupExpired(cache);
@@ -136,7 +144,10 @@ class AiMessageCache {
       userContext: userContext,
       meetingSetId: meetingSetId,
     );
-    final ttl = _contextTTL[context] ?? _fallbackTTL;
+
+    // TTL 우선순위: customTTL > contextTTL map > fallback
+    final ttl = customTTL ?? _contextTTL[context] ?? _fallbackTTL;
+
     cache[key] = CachedMessage(
       message: message,
       generatedAt: DateTime.now(),
@@ -230,13 +241,13 @@ class AiMessageCache {
 
   String _buildCacheKey({
     required String userId,
-    required SherpiContext context,
+    required String context,
     required Map<String, dynamic> userContext,
     String? meetingSetId,
   }) {
     final buffer = StringBuffer()
       ..write('user:$userId')
-      ..write(':ctx:${context.name}');
+      ..write(':ctx:$context'); // Generic context string
 
     if (meetingSetId != null && meetingSetId.isNotEmpty) {
       buffer.write(':meet:$meetingSetId');

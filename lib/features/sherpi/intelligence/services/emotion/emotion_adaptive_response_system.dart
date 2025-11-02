@@ -3,9 +3,9 @@
 // 사용자의 감정 상태에 따라 셰르피의 응답 스타일과 내용을 적응시키는 시스템
 
 import 'dart:math';
-import '../models/emotion_state_model.dart';
-import '../../../../core/constants/sherpi_emotions.dart';
-import '../../../../core/constants/sherpi_dialogues.dart';
+import 'package:sherpa_app/features/sherpi/emotion/models/emotion_state_model.dart';
+import 'package:sherpa_app/core/constants/sherpi_emotions.dart';
+import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 
 /// 🎭 응답 스타일 설정
 enum ResponseStyle {

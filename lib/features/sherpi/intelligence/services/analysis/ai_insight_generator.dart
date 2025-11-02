@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
-import '../../../../core/constants/sherpi_dialogues.dart';
-import '../../../../shared/models/global_user_model.dart';
-import '../../../../shared/models/point_system_model.dart';
+import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/shared/models/point_system_model.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
 import 'user_data_analyzer.dart';
 

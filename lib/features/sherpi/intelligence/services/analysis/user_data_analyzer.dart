@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import '../../../../shared/models/global_user_model.dart';
-import '../constants/analysis_constants.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/features/sherpi/analysis/constants/analysis_constants.dart';
 
 /// 사용자 데이터 분석 결과 모델
 class AnalysisResult {

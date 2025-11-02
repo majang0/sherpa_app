@@ -4,7 +4,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
-import '../services/growth_story_service.dart';
+import 'package:sherpa_app/features/sherpi/intelligence/services/relationship/growth_story_service.dart';
 
 /// 📊 성장 스토리 상태
 class GrowthStoryState {

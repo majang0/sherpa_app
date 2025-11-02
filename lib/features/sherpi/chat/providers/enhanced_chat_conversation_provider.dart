@@ -15,9 +15,9 @@ import 'package:sherpa_app/core/ai/managers/unified_sherpi_manager.dart';
 import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
 
 // Emotion Recognition Integration
-import '../../emotion/providers/emotion_state_provider.dart';
-import '../../emotion/models/emotion_state_model.dart';
-import '../../emotion/services/behavior_emotion_analyzer.dart';
+import 'package:sherpa_app/features/sherpi/emotion/providers/emotion_state_provider.dart';
+import 'package:sherpa_app/features/sherpi/emotion/models/emotion_state_model.dart';
+import 'package:sherpa_app/features/sherpi/intelligence/services/emotion/behavior_emotion_analyzer.dart';
 
 // Personalization Integration (removed)
 

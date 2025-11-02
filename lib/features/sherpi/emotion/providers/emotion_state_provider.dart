@@ -8,10 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import '../models/emotion_state_model.dart';
-import '../services/text_emotion_analyzer.dart';
-import '../services/behavior_emotion_analyzer.dart';
-import '../services/emotion_adaptive_response_system.dart';
-import '../services/emotion_history_analyzer.dart';
+import 'package:sherpa_app/features/sherpi/intelligence/services/emotion/text_emotion_analyzer.dart';
+import 'package:sherpa_app/features/sherpi/intelligence/services/emotion/behavior_emotion_analyzer.dart';
+import 'package:sherpa_app/features/sherpi/intelligence/services/emotion/emotion_adaptive_response_system.dart';
+import 'package:sherpa_app/features/sherpi/intelligence/services/emotion/emotion_history_analyzer.dart';
 
 /// 📊 감정 상태 관리 상태
 class EmotionStateManagement {

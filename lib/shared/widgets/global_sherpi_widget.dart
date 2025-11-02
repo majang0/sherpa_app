@@ -12,8 +12,8 @@ import '../../core/animation/micro_interactions.dart';
 
 // Features
 import '../../features/sherpi/chat/presentation/screens/sherpi_chat_screen.dart';
-import '../../features/sherpi/analysis/services/user_data_analyzer.dart';
-// import '../../features/sherpi/analysis/services/ai_insight_generator.dart'; // AI 시스템 비활성화 - 사용하지 않는 import 제거
+import 'package:sherpa_app/features/sherpi/intelligence/services/analysis/user_data_analyzer.dart';
+// import 'package:sherpa_app/features/sherpi/intelligence/services/analysis/ai_insight_generator.dart'; // AI 시스템 비활성화 - 사용하지 않는 import 제거
 import '../../features/sherpi/analysis/presentation/screens/analysis_result_screen.dart';
 import '../../features/sherpi/planning/presentation/screens/simple_planner_screen.dart';
 

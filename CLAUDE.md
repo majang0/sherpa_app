@@ -386,33 +386,63 @@ changeEmotion(SherpiEmotion emotion)
 
 ---
 
-## 🧠 AI Analysis System
+## 🧠 AI System Architecture
 
-Sherpa App integrates **OpenAI GPT-5** for deep user analysis when explicitly requested by the user.
+Sherpa App uses a **3-layer AI architecture** supporting multiple AI providers (OpenAI GPT-5, Google Gemini).
 
-### OpenAI GPT-5 Integration
+### Architecture Overview (Issue #7, 2025-11-02)
 
-**Model**: `gpt-5-chat-latest`
-**Package**: openai_dart ^0.5.4
-**API Key**: Set via `OPENAI_API_KEY` environment variable
+**Layer 1: Core Infrastructure** (`core/ai/`)
+- Generic AI services (OpenAI, Gemini)
+- AI-agnostic caching system
+- Shared dialogue sources
 
-**When AI is Used**:
+**Layer 2: Feature Intelligence** (`features/sherpi/intelligence/`)
+- Analysis services (insights, user data)
+- Emotion services (analysis, adaptive responses)
+- Relationship services (memory, growth stories)
+
+**Layer 3: Domain Features** (`features/meetings/ai/`, etc.)
+- Meeting recommendations
+- Activity pattern analysis
+- Feature-specific AI integration
+
+### Supported AI Providers
+
+**1. OpenAI GPT-5** (Primary)
+- **Model**: `gpt-5-chat-latest`
+- **Package**: openai_dart ^0.5.4
+- **Service**: `core/ai/services/openai_service.dart`
+- **Uses**: User insights, meeting recommendations, growth plans
+
+**2. Google Gemini** (Alternative)
+- **Model**: `gemini-2.0-flash-exp`
+- **Package**: google_generative_ai ^0.4.6
+- **Service**: `core/ai/services/gemini_service.dart`
+- **Uses**: Content generation, chat completions
+
+**API Keys**: Set via `.env` file or `--dart-define` (see Environment Setup section)
+
+### When AI is Used
+
 - ✅ User initiates "Today's Analysis" or similar analysis features
-- ✅ User requests personalized insights
+- ✅ User requests personalized insights (Sherpi intelligence)
+- ✅ User requests meeting recommendations
 - ✅ User requests growth plan generation
 - ❌ NOT used for floating messages (always static)
 - ❌ NOT used automatically in background
 
 ### AI Features
 
-**1. AI Insights** (`generateAIInsights`)
+**1. User Insights** (`AiInsightGenerator`)
 - Analyzes user activity patterns, mood, performance metrics
-- Generates personalized insights using GPT-5
-- Combines AI insights with basic statistical analysis
+- Generates personalized insights using OpenAI GPT-5
+- Combines AI insights with statistical analysis
 - Returns top 8 insights sorted by importance
 - Cost: 30 points
+- Location: `features/sherpi/intelligence/services/analysis/ai_insight_generator.dart`
 
-**2. AI Recommendations** (`generateAIRecommendations`)
+**2. Growth Recommendations** (`generateAIRecommendations`)
 - Creates personalized growth recommendations
 - Identifies weak areas and suggests improvements
 - Leverages user's strengths for motivation
@@ -425,6 +455,26 @@ Sherpa App integrates **OpenAI GPT-5** for deep user analysis when explicitly re
 - Includes weekly milestones and action items
 - Cost: 30 points
 
+**4. Meeting Recommendations** (`MeetingRecommendationAI`)
+- AI-powered meeting suggestions based on activity patterns
+- Uses OpenAI GPT-5 for personalized matching
+- 24-hour caching with force refresh option
+- Fallback to rule-based recommendations
+- Location: `features/meetings/ai/meeting_recommendation_ai.dart`
+
+### AI Caching System
+
+**Generic Cache** (`AiMessageCache`, v3):
+- AI-agnostic caching (works with OpenAI, Gemini, any provider)
+- String-based context keys (no provider-specific enums)
+- Injectable TTL per context
+- Location: `core/ai/cache/ai_message_cache.dart`
+
+**Default TTL**:
+- Meeting recommendations: 24 hours
+- User insights: Session-based
+- Custom contexts: Configurable
+
 ### Fallback Mechanism
 
 **If AI fails** (API error, invalid key, network issues):
@@ -433,12 +483,25 @@ Sherpa App integrates **OpenAI GPT-5** for deep user analysis when explicitly re
 - Refunds points if AI generation fails
 - User experience remains functional
 
-### Key Files
+### Key Files (Consolidated Architecture)
 
-- `features/sherpi/analysis/services/ai_insight_generator.dart` - Main AI analysis engine
-- `core/ai/sources/openai_dialogue_source.dart` - OpenAI GPT-5 API wrapper
+**Core Infrastructure**:
+- `core/ai/services/openai_service.dart` - OpenAI GPT-5 service (singleton)
+- `core/ai/services/gemini_service.dart` - Google Gemini service (singleton)
+- `core/ai/cache/ai_message_cache.dart` - AI-agnostic caching (v3)
+- `core/ai/sources/openai_dialogue_source.dart` - OpenAI dialogue wrapper
 - `core/config/api_config.dart` - API key configuration
-- `features/sherpi/analysis/services/user_data_analyzer.dart` - Statistical analysis (non-AI)
+
+**Sherpi Intelligence**:
+- `features/sherpi/intelligence/services/analysis/ai_insight_generator.dart` - AI insights
+- `features/sherpi/intelligence/services/analysis/user_data_analyzer.dart` - Statistical analysis
+- `features/sherpi/intelligence/services/emotion/*` - Emotion analysis (5 services)
+- `features/sherpi/intelligence/services/relationship/*` - Relationship services (3 services)
+
+**Meeting AI**:
+- `features/meetings/ai/meeting_recommendation_ai.dart` - AI recommendations
+- `features/meetings/ai/user_activity_analyzer.dart` - Activity pattern analysis
+- `features/meetings/ai/recommendation_prompt_builder.dart` - Prompt generation
 
 ### Usage Example
 

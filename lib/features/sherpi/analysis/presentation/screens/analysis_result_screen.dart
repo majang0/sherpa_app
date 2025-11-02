@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 import '../../../../../core/theme/modern_colors.dart';
-import '../../services/user_data_analyzer.dart';
+import 'package:sherpa_app/features/sherpi/intelligence/services/analysis/user_data_analyzer.dart';
 
 /// 분석 결과 화면
 class AnalysisResultScreen extends ConsumerStatefulWidget {

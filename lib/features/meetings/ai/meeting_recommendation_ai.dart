@@ -9,9 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
 import 'package:sherpa_app/features/sherpi/domain/services/sherpi_insight_repository.dart';
 
-import '../../../../core/constants/sherpi_dialogues.dart';
-import '../../../../shared/models/global_user_model.dart';
-import '../models/available_meeting_model.dart';
+import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/features/meetings/models/available_meeting_model.dart';
 import 'user_activity_analyzer.dart';
 import 'recommendation_prompt_builder.dart';
 import 'models/ai_recommended_meeting.dart';

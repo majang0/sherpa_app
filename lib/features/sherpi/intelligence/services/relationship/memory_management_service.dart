@@ -5,7 +5,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
-import '../models/shared_memory_model.dart';
+import 'package:sherpa_app/features/sherpi/relationship/models/shared_memory_model.dart';
 
 /// 📚 메모리 관리 서비스
 class MemoryManagementService {

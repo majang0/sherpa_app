@@ -5,7 +5,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import '../models/shared_memory_model.dart';
-import '../services/memory_management_service.dart';
+import 'package:sherpa_app/features/sherpi/intelligence/services/relationship/memory_management_service.dart';
 
 /// 📊 메모리 상태 관리
 class MemoryState {

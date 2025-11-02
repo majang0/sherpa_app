@@ -4,7 +4,7 @@
 // 장기적인 감정 건강 관리를 지원하는 시스템
 
 import 'dart:math';
-import '../models/emotion_state_model.dart';
+import 'package:sherpa_app/features/sherpi/emotion/models/emotion_state_model.dart';
 
 /// 📊 감정 트렌드 분석 결과
 class EmotionTrendAnalysis {
