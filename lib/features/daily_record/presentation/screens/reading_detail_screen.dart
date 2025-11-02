@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import 'reading_record_screen.dart';
@@ -329,7 +329,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                   ],
@@ -426,7 +426,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                     '분야',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: RecordColors.textLight,
+                      color: ModernColors.textTertiary,
                     ),
                   ),
                 ],
@@ -480,7 +480,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                     '읽은 페이지',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: RecordColors.textLight,
+                      color: ModernColors.textTertiary,
                     ),
                   ),
                 ],
@@ -540,7 +540,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                     '공유 상태',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: RecordColors.textLight,
+                      color: ModernColors.textTertiary,
                     ),
                   ),
                 ],
@@ -598,7 +598,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -673,7 +673,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                     ],
@@ -755,7 +755,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -777,7 +777,7 @@ class _ReadingDetailScreenState extends ConsumerState<ReadingDetailScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.7,
                 ),
               ),
@@ -972,7 +972,7 @@ ${currentReadingLog.note?.isNotEmpty == true ? '\n한마디:\n${currentReadingLo
             ),
           ],
         ),
-        backgroundColor: RecordColors.success,
+        backgroundColor: ModernColors.success,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../../shared/widgets/sherpa_card.dart';
 import '../../../../../shared/providers/global_point_provider.dart';
@@ -19,16 +19,16 @@ class EnhancedPointShopScreen extends ConsumerWidget {
     final userData = ref.watch(globalUserProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ModernColors.background,
       appBar: SherpaCleanAppBar(
         title: '포인트샵',
-        backgroundColor: AppColors.background,
+        backgroundColor: ModernColors.background,
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              gradient: AppColors.accentGradient,
+              gradient: ModernColors.accentGradient,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
@@ -140,7 +140,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          gradient: AppColors.primaryGradient,
+          gradient: ModernColors.primaryGradient,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -217,14 +217,14 @@ class EnhancedPointShopScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Icon(icon, color: AppColors.primary, size: 20),
+            Icon(icon, color: ModernColors.primary, size: 20),
             const SizedBox(width: 8),
             Text(
               title,
               style: GoogleFonts.notoSans(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
           ],
@@ -251,12 +251,12 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   item.icon,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                   size: 24,
                 ),
               ),
@@ -270,14 +270,14 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                       style: GoogleFonts.notoSans(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     Text(
                       item.description,
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -291,7 +291,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppColors.accent.withValues(alpha: 0.1),
+                        color: ModernColors.accent.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -299,7 +299,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.accent,
+                          color: ModernColors.accent,
                         ),
                       ),
                     ),
@@ -309,7 +309,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
                     onPressed: canAfford ? item.onPurchase : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor:
-                          canAfford ? AppColors.primary : Colors.grey,
+                          canAfford ? ModernColors.primary : Colors.grey,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                       shape: RoundedRectangleBorder(
@@ -594,7 +594,7 @@ void _showSuccessMessage(BuildContext context, WidgetRef ref, String message) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message),
-      backgroundColor: AppColors.primary,
+      backgroundColor: ModernColors.primary,
       duration: const Duration(seconds: 3),
     ),
   );

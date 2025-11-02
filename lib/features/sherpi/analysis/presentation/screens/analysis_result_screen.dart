@@ -4,7 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../services/user_data_analyzer.dart';
 
 /// 분석 결과 화면
@@ -81,7 +81,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
     return SliverAppBar(
       expandedHeight: 200,
       pinned: true,
-      backgroundColor: AppColors.primary,
+      backgroundColor: ModernColors.primary,
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
           '나의 성장 분석',
@@ -95,8 +95,8 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.primary,
-                AppColors.primary.withValues(alpha: 0.8),
+                ModernColors.primary,
+                ModernColors.primary.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -338,14 +338,14 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             Text(
               title,
               style: GoogleFonts.notoSans(
                 fontSize: 11,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -382,7 +382,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 20),
@@ -419,7 +419,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                     '${entry.key}: ${entry.value}회',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -457,7 +457,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 20),
@@ -528,7 +528,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 20),
@@ -550,7 +550,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                           _getMoodLabel(entry.key),
                           style: GoogleFonts.notoSans(
                             fontSize: 14,
-                            color: AppColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -570,7 +570,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                 ],
@@ -606,14 +606,14 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.primary, size: 24),
+              Icon(icon, color: ModernColors.primary, size: 24),
               const SizedBox(width: 8),
               Text(
                 title,
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -647,7 +647,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
               label,
               style: GoogleFonts.notoSans(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ),
@@ -656,7 +656,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
         ],
@@ -748,7 +748,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 16),
@@ -767,7 +767,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                       '주요 기분',
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                     Text(
@@ -775,7 +775,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -783,7 +783,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                       '안정성: ${mood.moodStability.toStringAsFixed(0)}%',
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -800,7 +800,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
@@ -825,7 +825,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                         entry.key,
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
-                          color: AppColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                       ),
                       const SizedBox(width: 4),
@@ -893,7 +893,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                       ),
                     ),
@@ -921,7 +921,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                   insight.description,
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     height: 1.4,
                   ),
                 ),
@@ -992,7 +992,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -1000,7 +1000,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
                         recommendation.description,
                         style: GoogleFonts.notoSans(
                           fontSize: 13,
-                          color: AppColors.textSecondary,
+                          color: ModernColors.textSecondary,
                           height: 1.3,
                         ),
                       ),
@@ -1085,7 +1085,7 @@ class _AnalysisResultScreenState extends ConsumerState<AnalysisResultScreen>
         barRods: [
           BarChartRodData(
             toY: entry.value,
-            color: AppColors.primary,
+            color: ModernColors.primary,
             width: 20,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
           ),
@@ -1239,9 +1239,9 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
       color: Colors.white,
       child: TabBar(
         controller: tabController,
-        labelColor: AppColors.primary,
-        unselectedLabelColor: AppColors.textSecondary,
-        indicatorColor: AppColors.primary,
+        labelColor: ModernColors.primary,
+        unselectedLabelColor: ModernColors.textSecondary,
+        indicatorColor: ModernColors.primary,
         tabs: const [
           Tab(text: '개요'),
           Tab(text: '패턴'),

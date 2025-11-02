@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import 'exercise_record_screen.dart';
 
@@ -122,7 +122,7 @@ class _ExerciseSelectionScreenState
           style: GoogleFonts.notoSans(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: RecordColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
       ),
@@ -169,7 +169,7 @@ class _ExerciseSelectionScreenState
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withValues(alpha: 0.1),
+          color: ModernColors.textTertiary.withValues(alpha: 0.1),
           width: 1,
         ),
         boxShadow: [
@@ -205,7 +205,7 @@ class _ExerciseSelectionScreenState
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -214,7 +214,7 @@ class _ExerciseSelectionScreenState
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -232,7 +232,7 @@ class _ExerciseSelectionScreenState
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: RecordColors.textLight.withValues(alpha: 0.1),
+          color: ModernColors.textTertiary.withValues(alpha: 0.1),
           width: 1,
         ),
         boxShadow: [
@@ -288,7 +288,7 @@ class _ExerciseSelectionScreenState
                 ? null
                 : Border(
                     bottom: BorderSide(
-                      color: RecordColors.textLight.withValues(alpha: 0.1),
+                      color: ModernColors.textTertiary.withValues(alpha: 0.1),
                       width: 1,
                     ),
                   ),
@@ -320,7 +320,7 @@ class _ExerciseSelectionScreenState
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ),
@@ -340,7 +340,7 @@ class _ExerciseSelectionScreenState
               // 화살표 아이콘
               const Icon(
                 Icons.chevron_right,
-                color: RecordColors.textLight,
+                color: ModernColors.textTertiary,
                 size: 20,
               ),
             ],

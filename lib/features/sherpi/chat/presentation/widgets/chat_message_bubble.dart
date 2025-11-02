@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../models/chat_message.dart';
 
 // Core
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../../../../core/constants/sherpi_emotions.dart';
 
 /// 💬 채팅 메시지 말풍선 위젯
@@ -130,15 +130,15 @@ class ChatMessageBubble extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withValues(alpha: 0.8),
-            AppColors.primary,
+            ModernColors.primary.withValues(alpha: 0.8),
+            ModernColors.primary,
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.3),
+            color: ModernColors.primary.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -283,7 +283,7 @@ class ChatMessageBubble extends StatelessWidget {
   /// 🎨 말풍선 색상 결정
   Color _getBubbleColor(bool isUser, bool isSpecial) {
     if (isUser) {
-      return AppColors.primary;
+      return ModernColors.primary;
     }
 
     if (isSpecial) {
@@ -295,7 +295,7 @@ class ChatMessageBubble extends StatelessWidget {
 
   /// 🎨 텍스트 색상 결정
   Color _getTextColor(bool isUser) {
-    return isUser ? Colors.white : AppColors.textPrimary;
+    return isUser ? Colors.white : ModernColors.textPrimary;
   }
 
   /// 🎨 특별 메시지 테두리 색상

@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
@@ -164,7 +164,7 @@ class _ExerciseDashboardScreenState
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
               if (currentStreak > 0)
@@ -174,8 +174,8 @@ class _ExerciseDashboardScreenState
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        RecordColors.success,
-                        RecordColors.success.withValues(alpha: 0.8)
+                        ModernColors.success,
+                        ModernColors.success.withValues(alpha: 0.8)
                       ],
                     ),
                     borderRadius: BorderRadius.circular(20),
@@ -213,7 +213,7 @@ class _ExerciseDashboardScreenState
                   '$weeklyMinutes분',
                   '목표: 300분',
                   Icons.timer_outlined,
-                  RecordColors.primary,
+                  ModernColors.primary,
                   weeklyMinutes / 300.0, // 주간 목표 300분 가정
                 ),
               ),
@@ -224,7 +224,7 @@ class _ExerciseDashboardScreenState
                   '$monthlyCount회',
                   '목표: 12회',
                   Icons.fitness_center,
-                  RecordColors.secondary,
+                  ModernColors.secondary,
                   monthlyCount / 12.0, // 월간 목표 12회 가정
                 ),
               ),
@@ -241,7 +241,7 @@ class _ExerciseDashboardScreenState
                   '$longestSession분',
                   '최장 운동시간',
                   Icons.emoji_events,
-                  RecordColors.warning,
+                  ModernColors.warning,
                   null, // 프로그레스 바 없음
                 ),
               ),
@@ -252,7 +252,7 @@ class _ExerciseDashboardScreenState
                   '${totalCalories}kcal',
                   '${exerciseLogs.length}회 운동',
                   Icons.local_fire_department,
-                  RecordColors.error,
+                  ModernColors.error,
                   null, // 프로그레스 바 없음
                 ),
               ),
@@ -308,7 +308,7 @@ class _ExerciseDashboardScreenState
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: progressValue >= 1.0
-                        ? RecordColors.success
+                        ? ModernColors.success
                         : color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -329,7 +329,7 @@ class _ExerciseDashboardScreenState
             style: GoogleFonts.notoSans(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 2),
@@ -338,7 +338,7 @@ class _ExerciseDashboardScreenState
             style: GoogleFonts.notoSans(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 4),
@@ -347,7 +347,7 @@ class _ExerciseDashboardScreenState
             style: GoogleFonts.notoSans(
               fontSize: 10,
               fontWeight: FontWeight.w500,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
 
@@ -365,7 +365,7 @@ class _ExerciseDashboardScreenState
                 widthFactor: progressValue.clamp(0.0, 1.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: progressValue >= 1.0 ? RecordColors.success : color,
+                    color: progressValue >= 1.0 ? ModernColors.success : color,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -414,12 +414,12 @@ class _ExerciseDashboardScreenState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.info.withValues(alpha: 0.1),
+                  color: ModernColors.info.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.pie_chart_outline,
-                  color: RecordColors.info,
+                  color: ModernColors.info,
                   size: 20,
                 ),
               ),
@@ -429,7 +429,7 @@ class _ExerciseDashboardScreenState
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -478,7 +478,7 @@ class _ExerciseDashboardScreenState
                                 style: GoogleFonts.notoSans(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
-                                  color: RecordColors.textSecondary,
+                                  color: ModernColors.textSecondary,
                                 ),
                               ),
                             ),
@@ -516,7 +516,7 @@ class _ExerciseDashboardScreenState
           const Icon(
             Icons.bar_chart,
             size: 64,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
           const SizedBox(height: 16),
           Text(
@@ -524,7 +524,7 @@ class _ExerciseDashboardScreenState
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -532,7 +532,7 @@ class _ExerciseDashboardScreenState
             '첫 운동을 기록해보세요!',
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
         ],
@@ -589,12 +589,12 @@ class _ExerciseDashboardScreenState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.info.withValues(alpha: 0.1),
+                  color: ModernColors.info.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.lightbulb_outline,
-                  color: RecordColors.info,
+                  color: ModernColors.info,
                   size: 20,
                 ),
               ),
@@ -604,7 +604,7 @@ class _ExerciseDashboardScreenState
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -660,7 +660,7 @@ class _ExerciseDashboardScreenState
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -669,7 +669,7 @@ class _ExerciseDashboardScreenState
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -703,12 +703,12 @@ class _ExerciseDashboardScreenState
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.flash_on,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 20,
                 ),
               ),
@@ -718,7 +718,7 @@ class _ExerciseDashboardScreenState
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -736,7 +736,7 @@ class _ExerciseDashboardScreenState
                       '/daily_record',
                     );
                   },
-                  backgroundColor: RecordColors.primary,
+                  backgroundColor: ModernColors.primary,
                   height: 48,
                 ),
               ),
@@ -748,7 +748,7 @@ class _ExerciseDashboardScreenState
                     HapticFeedbackManager.lightImpact();
                     Navigator.pushNamed(context, '/exercise_analytics');
                   },
-                  backgroundColor: RecordColors.secondary,
+                  backgroundColor: ModernColors.secondary,
                   height: 48,
                 ),
               ),
@@ -791,7 +791,7 @@ class _ExerciseDashboardScreenState
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
               TextButton(
@@ -803,7 +803,7 @@ class _ExerciseDashboardScreenState
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.primary,
+                    color: ModernColors.primary,
                   ),
                 ),
               ),
@@ -888,7 +888,7 @@ class _ExerciseDashboardScreenState
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         Container(
@@ -915,7 +915,7 @@ class _ExerciseDashboardScreenState
                         const Icon(
                           Icons.timer_outlined,
                           size: 14,
-                          color: RecordColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                         const SizedBox(width: 4),
                         Text(
@@ -923,7 +923,7 @@ class _ExerciseDashboardScreenState
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -949,7 +949,7 @@ class _ExerciseDashboardScreenState
                       style: GoogleFonts.notoSans(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -977,7 +977,7 @@ class _ExerciseDashboardScreenState
                       icon: const Icon(
                         Icons.edit_outlined,
                         size: 18,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                       tooltip: '수정',
                       padding: const EdgeInsets.all(8),
@@ -990,7 +990,7 @@ class _ExerciseDashboardScreenState
                   const SizedBox(width: 8),
                   const Icon(
                     Icons.chevron_right,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     size: 20,
                   ),
                 ],
@@ -1022,7 +1022,7 @@ class _ExerciseDashboardScreenState
           const Icon(
             Icons.history,
             size: 64,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
           const SizedBox(height: 16),
           Text(
@@ -1030,7 +1030,7 @@ class _ExerciseDashboardScreenState
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -1038,7 +1038,7 @@ class _ExerciseDashboardScreenState
             '첫 운동을 기록해보세요!',
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: RecordColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
         ],
@@ -1107,7 +1107,7 @@ class _ExerciseDashboardScreenState
         'title': '선호 운동',
         'description':
             '${favoriteType.key}을(를) 가장 많이 하셨네요! (${favoriteType.value}회)',
-        'color': RecordColors.secondary,
+        'color': ModernColors.secondary,
       });
     }
 
@@ -1128,7 +1128,7 @@ class _ExerciseDashboardScreenState
         'title': '활동적인 요일',
         'description':
             '${weekdayNames[mostActiveWeekday.key - 1]}요일에 가장 활발하게 운동하세요!',
-        'color': RecordColors.primary,
+        'color': ModernColors.primary,
       });
     }
 
@@ -1141,14 +1141,14 @@ class _ExerciseDashboardScreenState
         'icon': Icons.trending_up,
         'title': '지속력 최고',
         'description': '평균 ${avgDuration.round()}분 운동! 꾸준함이 최고의 무기입니다.',
-        'color': RecordColors.success,
+        'color': ModernColors.success,
       });
     } else if (avgDuration < 20) {
       insights.add({
         'icon': Icons.access_time,
         'title': '운동 시간 늘리기',
         'description': '조금씩 운동 시간을 늘려보세요. 현재 평균 ${avgDuration.round()}분이에요.',
-        'color': RecordColors.warning,
+        'color': ModernColors.warning,
       });
     }
 
@@ -1163,14 +1163,14 @@ class _ExerciseDashboardScreenState
         'icon': Icons.emoji_events,
         'title': '일주일 챔피언',
         'description': '이번 주 $recentExercises회 운동! 정말 대단해요! 🏆',
-        'color': RecordColors.warning,
+        'color': ModernColors.warning,
       });
     } else if (recentExercises >= 3) {
       insights.add({
         'icon': Icons.thumb_up,
         'title': '좋은 페이스',
         'description': '이번 주 $recentExercises회 운동 중이에요. 계속 화이팅!',
-        'color': RecordColors.info,
+        'color': ModernColors.info,
       });
     }
 

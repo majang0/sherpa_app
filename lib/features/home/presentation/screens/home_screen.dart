@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Core
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 
 // Shared Providers
@@ -158,7 +158,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     final totalPoints = ref.watch(globalTotalPointsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ModernColors.background,
       appBar: const SherpaCleanAppBar(),
       body: _isLoading
           ? _buildLoadingState()
@@ -192,13 +192,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               return Icon(
                 Icons.terrain_outlined,
                 size: 64,
-                color: AppColors.primary.withValues(alpha: 0.3),
+                color: ModernColors.primary.withValues(alpha: 0.3),
               );
             },
           ),
           const SizedBox(height: 20),
           const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+            valueColor: AlwaysStoppedAnimation<Color>(ModernColors.primary),
             strokeWidth: 3,
           ),
           const SizedBox(height: 12),
@@ -206,7 +206,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             '로딩 중...',
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
               fontWeight: FontWeight.w500,
             ),
           ),

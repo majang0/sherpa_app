@@ -4,7 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Core
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 
 // Shared
 import '../../../../../shared/providers/global_user_provider.dart';
@@ -80,7 +80,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: ModernColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -88,7 +88,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                 const Icon(
                   Icons.trending_up,
                   size: 16,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                 ),
                 const SizedBox(width: 4),
                 Text(
@@ -96,7 +96,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
+                    color: ModernColors.primary,
                   ),
                 ),
               ],
@@ -141,7 +141,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                               const Icon(
                                 Icons.list_alt,
                                 size: 18,
-                                color: AppColors.primary,
+                                color: ModernColors.primary,
                               ),
                               const SizedBox(width: 6),
                               Text(
@@ -149,7 +149,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                                 style: GoogleFonts.notoSans(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.primary,
+                                  color: ModernColors.primary,
                                 ),
                               ),
                             ],
@@ -238,7 +238,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       // 플로팅 액션 버튼 - 목표 추가
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showQuickGoalInput,
-        backgroundColor: AppColors.primary,
+        backgroundColor: ModernColors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
         label: Text(
           '새 목표',
@@ -534,7 +534,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       case 'social':
         return Colors.orange;
       default:
-        return AppColors.primary;
+        return ModernColors.primary;
     }
   }
 
@@ -587,7 +587,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
             icon: const Icon(Icons.add),
             label: const Text('첫 목표 만들기'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: ModernColors.primary,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(

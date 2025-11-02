@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
@@ -284,7 +284,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -321,12 +321,12 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: RecordColors.textLight.withValues(alpha: 0.1),
+                    color: ModernColors.textTertiary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
                     Icons.lock_outlined,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     size: 18,
                   ),
                 ),
@@ -336,7 +336,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -348,7 +348,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                 color: const Color(0xFFF8FAFC),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: RecordColors.textLight.withValues(alpha: 0.1),
+                  color: ModernColors.textTertiary.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -375,7 +375,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: RecordColors.textLight,
+                color: ModernColors.textTertiary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -398,7 +398,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
           style: GoogleFonts.notoSans(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
         const Spacer(),
@@ -408,7 +408,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
             style: GoogleFonts.notoSans(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
             textAlign: TextAlign.end,
             overflow: TextOverflow.ellipsis,
@@ -457,7 +457,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const Spacer(),
@@ -613,7 +613,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -622,7 +622,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -648,14 +648,14 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                   hintStyle: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textLight,
+                    color: ModernColors.textTertiary,
                   ),
                   counterText: '',
                 ),
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.5,
                 ),
               ),
@@ -705,7 +705,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -738,7 +738,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -746,7 +746,7 @@ class _MovieEditScreenState extends ConsumerState<MovieEditScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],

@@ -12,7 +12,6 @@ import '../../../../shared/providers/global_user_title_provider.dart';
 import '../../../../shared/providers/notification_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/models/notification_model.dart';
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_card.dart';
 import '../widgets/profile_avatar_widget.dart';
@@ -27,7 +26,7 @@ class MyInfoScreen extends ConsumerWidget {
     final userTitle = ref.watch(globalUserTitleProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ModernColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -36,12 +35,12 @@ class MyInfoScreen extends ConsumerWidget {
           style: GoogleFonts.notoSans(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+          icon: const Icon(Icons.arrow_back, color: ModernColors.textPrimary),
         ),
       ),
       body: SingleChildScrollView(
@@ -73,7 +72,7 @@ class MyInfoScreen extends ConsumerWidget {
                       style: GoogleFonts.notoSans(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -81,7 +80,7 @@ class MyInfoScreen extends ConsumerWidget {
                       userTitle.title, // ✅ 실제 칭호 데이터 사용
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -91,11 +90,11 @@ class MyInfoScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _buildUserStat(
-                            '레벨', '${user.level}', AppColors.primary),
+                            '레벨', '${user.level}', ModernColors.primary),
                         _buildUserStat('XP', '${user.experience.toInt()}',
-                            AppColors.warning),
+                            ModernColors.warning),
                         _buildUserStat('뱃지', '${user.ownedBadgeIds.length}',
-                            AppColors.success),
+                            ModernColors.success),
                       ],
                     ),
                   ],
@@ -188,7 +187,7 @@ class MyInfoScreen extends ConsumerWidget {
           label,
           style: GoogleFonts.notoSans(
             fontSize: 12,
-            color: AppColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
       ],
@@ -207,30 +206,30 @@ class MyInfoScreen extends ConsumerWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.1),
+          color: ModernColors.primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Icon(icon, color: AppColors.primary, size: 20),
+        child: Icon(icon, color: ModernColors.primary, size: 20),
       ),
       title: Text(
         title,
         style: GoogleFonts.notoSans(
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
+          color: ModernColors.textPrimary,
         ),
       ),
       subtitle: Text(
         subtitle,
         style: GoogleFonts.notoSans(
           fontSize: 12,
-          color: AppColors.textSecondary,
+          color: ModernColors.textSecondary,
         ),
       ),
       trailing: const Icon(
         Icons.arrow_forward_ios,
         size: 16,
-        color: AppColors.textLight,
+        color: ModernColors.textLight,
       ),
       onTap: onTap,
     );

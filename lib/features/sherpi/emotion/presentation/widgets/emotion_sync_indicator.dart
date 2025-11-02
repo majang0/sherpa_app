@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../providers/emotion_analysis_provider.dart';
 import '../../models/emotion_analysis_model.dart';
 import '../../../relationship/providers/relationship_provider.dart';
@@ -82,7 +82,7 @@ class EmotionSyncIndicator extends ConsumerWidget {
             style: GoogleFonts.notoSans(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
         ],
@@ -132,14 +132,14 @@ class EmotionSyncIndicator extends ConsumerWidget {
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                   Text(
                     syncLevel.description,
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -194,7 +194,7 @@ class EmotionSyncIndicator extends ConsumerWidget {
                 '현재 기분: ${_getEmotionText(currentEmotion)}',
                 style: GoogleFonts.notoSans(
                   fontSize: 11,
-                  color: AppColors.textLight,
+                  color: ModernColors.textTertiary,
                 ),
               ),
             ],

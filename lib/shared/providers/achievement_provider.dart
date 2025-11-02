@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/achievement_model.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/theme/modern_colors.dart';
 
 class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
   AchievementNotifier() : super(_getInitialAchievements());
@@ -140,7 +140,7 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
         message: '🎉 "${achievement.title}" 배지를 획득했습니다!',
         type: 'achievement',
         emoji: achievement.emoji,
-        color: AppColors.success,
+        color: ModernColors.success,
         timestamp: achievement.unlockedAt!,
       ));
     }
@@ -152,7 +152,7 @@ class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
             '${achievement.emoji} "${achievement.title}" 달성까지 ${achievement.requiredValue - achievement.currentProgress}개 남았어요!',
         type: 'encouragement',
         emoji: '💪',
-        color: AppColors.warning,
+        color: ModernColors.warning,
         timestamp: DateTime.now(),
       ));
     }

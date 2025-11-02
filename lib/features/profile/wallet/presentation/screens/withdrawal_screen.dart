@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../../shared/widgets/sherpa_card.dart';
 import '../../../../../shared/models/point_system_model.dart';
@@ -50,10 +50,10 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
     final pointData = ref.watch(globalPointProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ModernColors.background,
       appBar: const SherpaCleanAppBar(
         title: '포인트 출금',
-        backgroundColor: AppColors.background,
+        backgroundColor: ModernColors.background,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -89,7 +89,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               style: GoogleFonts.notoSans(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 12),
@@ -98,30 +98,30 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               style: GoogleFonts.notoSans(
                 fontSize: 32,
                 fontWeight: FontWeight.w700,
-                color: AppColors.primary,
+                color: ModernColors.primary,
               ),
             ),
             Text(
               '= $totalPoints원',
               style: GoogleFonts.notoSans(
                 fontSize: 16,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.warning.withValues(alpha: 0.1),
+                color: ModernColors.warning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border:
-                    Border.all(color: AppColors.warning.withValues(alpha: 0.3)),
+                    Border.all(color: ModernColors.warning.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
                   const Icon(
                     Icons.info_outline,
-                    color: AppColors.warning,
+                    color: ModernColors.warning,
                     size: 16,
                   ),
                   const SizedBox(width: 8),
@@ -130,7 +130,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
                       '최소 출금 금액: 10,000P (10,000원)',
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
-                        color: AppColors.warning,
+                        color: ModernColors.warning,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -156,7 +156,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               style: GoogleFonts.notoSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 12),
@@ -172,7 +172,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppColors.primary),
+                  borderSide: const BorderSide(color: ModernColors.primary),
                 ),
               ),
               style: GoogleFonts.notoSans(
@@ -204,7 +204,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
           _calculateWithdrawal(amount.toString());
         },
         style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: AppColors.primary),
+          side: const BorderSide(color: ModernColors.primary),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
@@ -214,7 +214,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
           style: GoogleFonts.notoSans(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: AppColors.primary,
+            color: ModernColors.primary,
           ),
         ),
       ),
@@ -233,19 +233,19 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               style: GoogleFonts.notoSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 16),
             _buildCalculationRow(
-                '출금 포인트', '${_withdrawalPoints}P', AppColors.primary),
+                '출금 포인트', '${_withdrawalPoints}P', ModernColors.primary),
             _buildCalculationRow(
-                '원화 환산', '$_withdrawalPoints원', AppColors.textSecondary),
+                '원화 환산', '$_withdrawalPoints원', ModernColors.textSecondary),
             _buildCalculationRow(
-                '출금 수수료 (10%)', '-$_withdrawalFee원', AppColors.error),
+                '출금 수수료 (10%)', '-$_withdrawalFee원', ModernColors.error),
             const Divider(height: 24),
             _buildCalculationRow(
-                '실제 받는 금액', '$_withdrawalAmount원', AppColors.success,
+                '실제 받는 금액', '$_withdrawalAmount원', ModernColors.success,
                 isTotal: true),
           ],
         ),
@@ -265,7 +265,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
             style: GoogleFonts.notoSans(
               fontSize: isTotal ? 16 : 14,
               fontWeight: isTotal ? FontWeight.w600 : FontWeight.w400,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           Text(
@@ -292,7 +292,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
       child: ElevatedButton(
         onPressed: canWithdraw ? () => _requestWithdrawal(context, ref) : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: canWithdraw ? AppColors.primary : Colors.grey,
+          backgroundColor: canWithdraw ? ModernColors.primary : Colors.grey,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -322,7 +322,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               style: GoogleFonts.notoSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             const SizedBox(height: 12),
@@ -344,7 +344,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
         text,
         style: GoogleFonts.notoSans(
           fontSize: 14,
-          color: AppColors.textSecondary,
+          color: ModernColors.textSecondary,
         ),
       ),
     );
@@ -385,7 +385,7 @@ class _WithdrawalScreenState extends ConsumerState<WithdrawalScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('출금 요청이 완료되었습니다!'),
-                  backgroundColor: AppColors.success,
+                  backgroundColor: ModernColors.success,
                 ),
               );
             },

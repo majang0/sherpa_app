@@ -7,7 +7,7 @@ import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'dart:math' as math;
 
 // Core
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
 
@@ -160,14 +160,14 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
             boxShadow: [
               // 주요 그림자
               BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.08),
+                color: ModernColors.primary.withValues(alpha: 0.08),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
                 spreadRadius: 0,
               ),
               // 미세한 내부 그림자 효과
               BoxShadow(
-                color: AppColors.textLight.withValues(alpha: 0.05),
+                color: ModernColors.textTertiary.withValues(alpha: 0.05),
                 blurRadius: 12,
                 offset: const Offset(0, 2),
                 spreadRadius: 0,
@@ -188,7 +188,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                   ),
                   child: CustomPaint(
                     painter: MountainSilhouettePainter(
-                      color: AppColors.primary.withValues(alpha: 0.05),
+                      color: ModernColors.primary.withValues(alpha: 0.05),
                     ),
                   ),
                 ),
@@ -240,15 +240,15 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                                 colors: [
-                                  AppColors.primary,
-                                  AppColors.primaryDark,
+                                  ModernColors.primary,
+                                  ModernColors.primaryHover,
                                 ],
                               ),
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
                                   color:
-                                      AppColors.primary.withValues(alpha: 0.25),
+                                      ModernColors.primary.withValues(alpha: 0.25),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),
@@ -288,7 +288,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                             style: GoogleFonts.notoSans(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -300,10 +300,10 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                             ),
                             decoration: BoxDecoration(
                               color:
-                                  AppColors.primaryLight.withValues(alpha: 0.1),
+                                  ModernColors.primaryLight.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: AppColors.primary.withValues(alpha: 0.1),
+                                color: ModernColors.primary.withValues(alpha: 0.1),
                                 width: 1,
                               ),
                             ),
@@ -320,7 +320,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                                   style: GoogleFonts.notoSans(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
-                                    color: AppColors.primary,
+                                    color: ModernColors.primary,
                                   ),
                                 ),
                               ],
@@ -344,7 +344,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                             const Icon(
                               Icons.trending_up,
                               size: 14,
-                              color: AppColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -352,7 +352,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                               style: GoogleFonts.notoSans(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
-                                color: AppColors.textSecondary,
+                                color: ModernColors.textSecondary,
                               ),
                             ),
                           ],
@@ -362,7 +362,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                           style: GoogleFonts.notoSans(
                             fontSize: 13,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                       ],
@@ -374,7 +374,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                         Container(
                           height: 8,
                           decoration: BoxDecoration(
-                            color: AppColors.dividerLight,
+                            color: ModernColors.borderLight,
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
@@ -389,14 +389,14 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
                                     colors: [
-                                      AppColors.primary,
-                                      AppColors.primaryLight,
+                                      ModernColors.primary,
+                                      ModernColors.primaryLight,
                                     ],
                                   ),
                                   borderRadius: BorderRadius.circular(4),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppColors.primary
+                                      color: ModernColors.primary
                                           .withValues(alpha: 0.3),
                                       blurRadius: 4,
                                       offset: const Offset(0, 1),
@@ -418,7 +418,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.primary,
+                            color: ModernColors.primary,
                           ),
                         ),
                         if (progress.progress > 0.8)
@@ -427,7 +427,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                                 horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color:
-                                  AppColors.warningLight.withValues(alpha: 0.1),
+                                  ModernColors.warningLight.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -435,7 +435,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                               style: GoogleFonts.notoSans(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.warning,
+                                color: ModernColors.warning,
                               ),
                             ),
                           ),
@@ -471,13 +471,13 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.primary.withValues(alpha: 0.05),
-                  AppColors.primaryLight.withValues(alpha: 0.03),
+                  ModernColors.primary.withValues(alpha: 0.05),
+                  ModernColors.primaryLight.withValues(alpha: 0.03),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.1),
+                color: ModernColors.primary.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -496,7 +496,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.1),
+                          color: ModernColors.primary.withValues(alpha: 0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -514,7 +514,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                                   0, -2 + _mountainFloatAnimation.value * 2),
                               child: Icon(
                                 Icons.terrain,
-                                color: AppColors.primary.withValues(alpha: 0.2),
+                                color: ModernColors.primary.withValues(alpha: 0.2),
                                 size: 35,
                               ),
                             );
@@ -540,7 +540,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                   _getClimbingMessage(progress),
                   style: GoogleFonts.notoSans(
                     fontSize: 13,
-                    color: AppColors.primary,
+                    color: ModernColors.primary,
                     fontWeight: FontWeight.w600,
                     height: 1.2,
                   ),
@@ -561,9 +561,9 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.divider.withValues(alpha: 0),
-            AppColors.divider,
-            AppColors.divider.withValues(alpha: 0),
+            ModernColors.border.withValues(alpha: 0),
+            ModernColors.border,
+            ModernColors.border.withValues(alpha: 0),
           ],
         ),
       ),
@@ -651,7 +651,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
               const Icon(
                 Icons.hiking,
                 size: 16,
-                color: AppColors.primary,
+                color: ModernColors.primary,
               ),
               const SizedBox(width: 6),
               Text(
@@ -659,7 +659,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -675,7 +675,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                     ? '+${powerBonus.toStringAsFixed(0)}%'
                     : '0%',
                 label: '등반력 강화',
-                color: AppColors.primary,
+                color: ModernColors.primary,
                 description: powerBonus > 0 ? '뱃지 효과' : '효과 없음',
               ),
               _buildClimbingStatItem(
@@ -684,7 +684,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                     ? '-${totalTimeReduction.toStringAsFixed(1)}%'
                     : '0%',
                 label: '소요시간 감소',
-                color: AppColors.success,
+                color: ModernColors.success,
                 description: _getTimeReductionDescription(
                     socialityTimeReduction, badgeTimeReduction),
               ),
@@ -694,7 +694,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
                     ? '+${totalSuccessBonus.toStringAsFixed(1)}%'
                     : '0%',
                 label: '성공률 증가',
-                color: AppColors.warning,
+                color: ModernColors.warning,
                 description: _getSuccessRateDescription(
                     willpowerBonus, badgeSuccessBonus),
               ),
@@ -779,7 +779,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
           label,
           style: GoogleFonts.notoSans(
             fontSize: 12,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -788,7 +788,7 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
           description,
           style: GoogleFonts.notoSans(
             fontSize: 10,
-            color: AppColors.textSecondary,
+            color: ModernColors.textSecondary,
             fontWeight: FontWeight.w400,
           ),
         ),

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 // Core
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../../../../core/constants/sherpi_emotions.dart';
 
 // Shared
@@ -101,7 +101,7 @@ class _SherpiMessageHistoryScreenState
             style: GoogleFonts.notoSans(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -109,7 +109,7 @@ class _SherpiMessageHistoryScreenState
             '셰르피가 곧 대화를 시작할 거예요!',
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: AppColors.textSecondary.withValues(alpha: 0.7),
+              color: ModernColors.textSecondary.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -133,9 +133,9 @@ class _SherpiMessageHistoryScreenState
             height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: ModernColors.primary.withValues(alpha: 0.1),
               border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.2),
+                color: ModernColors.primary.withValues(alpha: 0.2),
                 width: 1.5,
               ),
             ),
@@ -158,7 +158,7 @@ class _SherpiMessageHistoryScreenState
                   _formatTime(message.timestamp),
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: AppColors.textSecondary.withValues(alpha: 0.6),
+                    color: ModernColors.textSecondary.withValues(alpha: 0.6),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -189,7 +189,7 @@ class _SherpiMessageHistoryScreenState
                     style: GoogleFonts.notoSans(
                       fontSize: 15,
                       height: 1.5,
-                      color: AppColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                 ),

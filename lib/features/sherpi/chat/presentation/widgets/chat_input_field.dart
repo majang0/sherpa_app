@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // Core
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 
 /// ⌨️ 채팅 입력창 위젯
 ///
@@ -160,7 +160,7 @@ class _ChatInputFieldState extends State<ChatInputField>
                       borderRadius: BorderRadius.circular(24),
                       border: Border.all(
                         color: _focusNode.hasFocus
-                            ? AppColors.primary.withValues(alpha: 0.5)
+                            ? ModernColors.primary.withValues(alpha: 0.5)
                             : Colors.grey.shade200,
                       ),
                     ),
@@ -173,7 +173,7 @@ class _ChatInputFieldState extends State<ChatInputField>
                       onSubmitted: (_) => _sendMessage(),
                       style: GoogleFonts.notoSans(
                         fontSize: 15,
-                        color: AppColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                       decoration: InputDecoration(
                         hintText: widget.placeholder ?? '셰르피에게 말해보세요...',
@@ -196,7 +196,7 @@ class _ChatInputFieldState extends State<ChatInputField>
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.primary,
+                                      ModernColors.primary,
                                     ),
                                   ),
                                 ),
@@ -221,14 +221,14 @@ class _ChatInputFieldState extends State<ChatInputField>
                         decoration: BoxDecoration(
                           color:
                               _hasText && widget.isEnabled && !widget.isLoading
-                                  ? AppColors.primary
+                                  ? ModernColors.primary
                                   : Colors.grey.shade300,
                           shape: BoxShape.circle,
                           boxShadow:
                               _hasText && widget.isEnabled && !widget.isLoading
                                   ? [
                                       BoxShadow(
-                                        color: AppColors.primary
+                                        color: ModernColors.primary
                                             .withValues(alpha: 0.3),
                                         blurRadius: 8,
                                         offset: const Offset(0, 2),
@@ -314,7 +314,7 @@ class _ChatInputFieldState extends State<ChatInputField>
                             const Icon(
                               Icons.lightbulb_outline,
                               size: 16,
-                              color: AppColors.primary,
+                              color: ModernColors.primary,
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -322,7 +322,7 @@ class _ChatInputFieldState extends State<ChatInputField>
                                 suggestion,
                                 style: GoogleFonts.notoSans(
                                   fontSize: 14,
-                                  color: AppColors.textPrimary,
+                                  color: ModernColors.textPrimary,
                                   fontWeight: FontWeight.w400,
                                 ),
                                 maxLines: 1,

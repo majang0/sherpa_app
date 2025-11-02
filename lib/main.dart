@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Core
 import 'main_navigation_screen.dart';
-import 'core/constants/app_colors.dart';
+import 'core/theme/modern_colors.dart';
 
 // Providers
 import 'shared/providers/global_sherpi_provider.dart';
@@ -102,8 +102,8 @@ class MyApp extends ConsumerWidget {
       ],
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        primaryColor: AppColors.primary,
-        scaffoldBackgroundColor: AppColors.background,
+        primaryColor: ModernColors.primary,
+        scaffoldBackgroundColor: ModernColors.background,
         fontFamily: 'NotoSans',
       ),
       // ✅ 전역 셰르피 오버레이를 위한 builder 추가

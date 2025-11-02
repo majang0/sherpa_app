@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
@@ -261,12 +261,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -285,12 +285,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.analytics_outlined,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 20,
                 ),
               ),
@@ -300,7 +300,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -315,7 +315,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   '운동 시간',
                   '${_currentExercise.durationMinutes}분',
                   Icons.timer_outlined,
-                  RecordColors.primary,
+                  ModernColors.primary,
                 ),
               ),
               Container(
@@ -329,7 +329,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   '강도',
                   _getIntensityLabel(_currentExercise.intensity),
                   Icons.fitness_center,
-                  RecordColors.primary,
+                  ModernColors.primary,
                 ),
               ),
             ],
@@ -348,7 +348,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               children: [
                 const Icon(
                   Icons.calculate_outlined,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 18,
                 ),
                 const SizedBox(width: 8),
@@ -357,7 +357,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -390,7 +390,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           style: GoogleFonts.notoSans(
             fontSize: 20,
             fontWeight: FontWeight.w700,
-            color: RecordColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
         const SizedBox(height: 4),
@@ -399,7 +399,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           style: GoogleFonts.notoSans(
             fontSize: 12,
             fontWeight: FontWeight.w500,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
       ],
@@ -416,12 +416,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -455,7 +455,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -510,7 +510,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: RecordColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                         ],
@@ -549,7 +549,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                               style: GoogleFonts.notoSans(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: RecordColors.textSecondary,
+                                color: ModernColors.textSecondary,
                               ),
                             ),
                           ],
@@ -587,7 +587,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                               style: GoogleFonts.notoSans(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: RecordColors.textSecondary,
+                                color: ModernColors.textSecondary,
                               ),
                             ),
                           ],
@@ -608,7 +608,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     children: [
                       const Icon(
                         Icons.schedule,
-                        color: RecordColors.primary,
+                        color: ModernColors.primary,
                         size: 20,
                       ),
                       const SizedBox(width: 12),
@@ -617,7 +617,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: RecordColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                       ),
                     ],
@@ -644,7 +644,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: RecordColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ),
@@ -655,7 +655,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: RecordColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
           ),
@@ -676,12 +676,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -700,12 +700,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.emoji_events_outlined,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 20,
                 ),
               ),
@@ -715,7 +715,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -730,13 +730,13 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  RecordColors.primary.withValues(alpha: 0.05),
-                  RecordColors.primary.withValues(alpha: 0.02),
+                  ModernColors.primary.withValues(alpha: 0.05),
+                  ModernColors.primary.withValues(alpha: 0.02),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: RecordColors.primary.withValues(alpha: 0.1),
+                color: ModernColors.primary.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -748,7 +748,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: RecordColors.primary.withValues(alpha: 0.1),
+                        color: ModernColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Text(
@@ -765,7 +765,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 36,
                             fontWeight: FontWeight.w800,
-                            color: RecordColors.primary,
+                            color: ModernColors.primary,
                           ),
                         ),
                         Text(
@@ -773,7 +773,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -785,7 +785,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 Container(
                   height: 8,
                   decoration: BoxDecoration(
-                    color: RecordColors.primary.withValues(alpha: 0.1),
+                    color: ModernColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: FractionallySizedBox(
@@ -793,7 +793,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     widthFactor: achievementScore / 10,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: RecordColors.primary,
+                        color: ModernColors.primary,
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -815,12 +815,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -839,12 +839,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.photo_camera,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 20,
                 ),
               ),
@@ -854,7 +854,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -924,7 +924,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     decoration: BoxDecoration(
                       color: Colors.grey.shade50,
                       border: Border.all(
-                        color: RecordColors.primary.withValues(alpha: 0.2),
+                        color: ModernColors.primary.withValues(alpha: 0.2),
                         width: 2,
                         style: BorderStyle.solid,
                       ),
@@ -936,7 +936,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                         Icon(
                           Icons.add_a_photo_outlined,
                           size: 48,
-                          color: RecordColors.primary.withValues(alpha: 0.6),
+                          color: ModernColors.primary.withValues(alpha: 0.6),
                         ),
                         const SizedBox(height: 12),
                         Text(
@@ -944,7 +944,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -953,7 +953,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -973,12 +973,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -995,14 +995,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: _currentExercise.isShared
-                  ? RecordColors.primary.withValues(alpha: 0.1)
+                  ? ModernColors.primary.withValues(alpha: 0.1)
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               _currentExercise.isShared ? Icons.group : Icons.lock,
               color: _currentExercise.isShared
-                  ? RecordColors.primary
+                  ? ModernColors.primary
                   : Colors.grey.shade600,
               size: 20,
             ),
@@ -1017,7 +1017,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -1028,7 +1028,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -1038,7 +1038,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: _currentExercise.isShared
-                  ? RecordColors.primary.withValues(alpha: 0.1)
+                  ? ModernColors.primary.withValues(alpha: 0.1)
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1048,7 +1048,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: _currentExercise.isShared
-                    ? RecordColors.primary
+                    ? ModernColors.primary
                     : Colors.grey.shade600,
               ),
             ),
@@ -1066,12 +1066,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: RecordColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.primary.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: RecordColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -1090,12 +1090,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: RecordColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.book,
-                  color: RecordColors.primary,
+                  color: ModernColors.primary,
                   size: 20,
                 ),
               ),
@@ -1105,7 +1105,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -1123,7 +1123,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               style: GoogleFonts.notoSans(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: RecordColors.textPrimary,
+                color: ModernColors.textPrimary,
                 height: 1.5,
               ),
             ),
@@ -1142,7 +1142,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             child: SherpaButton(
               text: '수정하기',
               onPressed: _editExercise,
-              backgroundColor: RecordColors.primary,
+              backgroundColor: ModernColors.primary,
               height: 56,
             ),
           ),
@@ -1151,7 +1151,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             child: SherpaButton(
               text: '삭제하기',
               onPressed: _showDeleteDialog,
-              backgroundColor: RecordColors.error,
+              backgroundColor: ModernColors.error,
               height: 56,
             ),
           ),
@@ -1189,7 +1189,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             children: [
               const Icon(
                 Icons.warning_amber_rounded,
-                color: RecordColors.warning,
+                color: ModernColors.warning,
                 size: 24,
               ),
               const SizedBox(width: 12),
@@ -1218,14 +1218,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: RecordColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
             ),
             SherpaButton(
               text: '삭제',
               onPressed: _deleteExercise,
-              backgroundColor: RecordColors.error,
+              backgroundColor: ModernColors.error,
               height: 40,
               width: 80,
             ),
@@ -1260,7 +1260,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 ),
               ],
             ),
-            backgroundColor: RecordColors.success,
+            backgroundColor: ModernColors.success,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -1288,7 +1288,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 ),
               ],
             ),
-            backgroundColor: RecordColors.error,
+            backgroundColor: ModernColors.error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
@@ -324,7 +324,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -376,7 +376,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 Text(
@@ -408,13 +408,13 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   hintStyle: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textLight,
+                    color: ModernColors.textTertiary,
                   ),
                 ),
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ),
@@ -463,7 +463,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 Text(
@@ -495,13 +495,13 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   hintStyle: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textLight,
+                    color: ModernColors.textTertiary,
                   ),
                 ),
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ),
@@ -550,7 +550,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -584,7 +584,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                                 style: GoogleFonts.notoSans(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
-                                  color: RecordColors.textPrimary,
+                                  color: ModernColors.textPrimary,
                                 ),
                               ),
                             ],
@@ -600,7 +600,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ),
@@ -649,7 +649,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const Spacer(),
@@ -805,7 +805,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const Spacer(),
@@ -900,7 +900,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -909,7 +909,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -935,14 +935,14 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   hintStyle: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textLight,
+                    color: ModernColors.textTertiary,
                   ),
                   counterText: '',
                 ),
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.5,
                 ),
               ),
@@ -992,7 +992,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -1025,7 +1025,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -1033,7 +1033,7 @@ class _MovieAddScreenState extends ConsumerState<MovieAddScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],

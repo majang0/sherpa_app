@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../shared/widgets/sherpa_card.dart';
 import '../../../../shared/providers/global_point_provider.dart';
@@ -16,7 +16,7 @@ class CommunityScreen extends ConsumerWidget {
     final user = ref.watch(globalUserProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: ModernColors.background,
       appBar: const SherpaCleanAppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
@@ -43,15 +43,15 @@ class CommunityScreen extends ConsumerWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.primary,
-            AppColors.primary.withValues(alpha: 0.85),
+            ModernColors.primary,
+            ModernColors.primary.withValues(alpha: 0.85),
             const Color(0xFF6366F1),
           ],
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.25),
+            color: ModernColors.primary.withValues(alpha: 0.25),
             blurRadius: 24,
             offset: const Offset(0, 8),
             spreadRadius: 0,
@@ -201,7 +201,7 @@ class CommunityScreen extends ConsumerWidget {
             style: GoogleFonts.notoSans(
               fontSize: 22,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
               letterSpacing: -0.3,
             ),
           ),
@@ -283,7 +283,7 @@ class CommunityScreen extends ConsumerWidget {
                           style: GoogleFonts.notoSans(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
+                            color: ModernColors.textPrimary,
                             letterSpacing: -0.3,
                           ),
                         ),
@@ -327,7 +327,7 @@ class CommunityScreen extends ConsumerWidget {
                 description,
                 style: GoogleFonts.notoSans(
                   fontSize: 15,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                   height: 1.5,
                 ),
               ),
@@ -380,12 +380,12 @@ class CommunityScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.08),
+                      color: ModernColors.primary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
                       Icons.timeline,
-                      color: AppColors.primary,
+                      color: ModernColors.primary,
                       size: 24,
                     ),
                   ),
@@ -399,7 +399,7 @@ class CommunityScreen extends ConsumerWidget {
                           style: GoogleFonts.notoSans(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
+                            color: ModernColors.textPrimary,
                             letterSpacing: -0.3,
                           ),
                         ),
@@ -408,7 +408,7 @@ class CommunityScreen extends ConsumerWidget {
                           '열심히 개발하고 있어요!',
                           style: GoogleFonts.notoSans(
                             fontSize: 13,
-                            color: AppColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -418,7 +418,7 @@ class CommunityScreen extends ConsumerWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.08),
+                      color: ModernColors.primary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -426,7 +426,7 @@ class CommunityScreen extends ConsumerWidget {
                       style: GoogleFonts.notoSans(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.primary,
+                        color: ModernColors.primary,
                       ),
                     ),
                   ),
@@ -438,7 +438,7 @@ class CommunityScreen extends ConsumerWidget {
               Container(
                 height: 8,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.08),
+                  color: ModernColors.primary.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: FractionallySizedBox(
@@ -448,8 +448,8 @@ class CommunityScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.primary,
-                          AppColors.primary.withValues(alpha: 0.8),
+                          ModernColors.primary,
+                          ModernColors.primary.withValues(alpha: 0.8),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(4),
@@ -475,17 +475,17 @@ class CommunityScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.success.withValues(alpha: 0.06),
+                  color: ModernColors.success.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: AppColors.success.withValues(alpha: 0.15),
+                    color: ModernColors.success.withValues(alpha: 0.15),
                   ),
                 ),
                 child: Row(
                   children: [
                     const Icon(
                       Icons.notifications_active,
-                      color: AppColors.success,
+                      color: ModernColors.success,
                       size: 18,
                     ),
                     const SizedBox(width: 12),
@@ -495,7 +495,7 @@ class CommunityScreen extends ConsumerWidget {
                         style: GoogleFonts.notoSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.success,
+                          color: ModernColors.success,
                         ),
                       ),
                     ),
@@ -518,8 +518,8 @@ class CommunityScreen extends ConsumerWidget {
             height: 28,
             decoration: BoxDecoration(
               color: isCompleted
-                  ? AppColors.primary
-                  : AppColors.textSecondary.withValues(alpha: 0.15),
+                  ? ModernColors.primary
+                  : ModernColors.textSecondary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(14),
             ),
             child: isCompleted
@@ -533,7 +533,7 @@ class CommunityScreen extends ConsumerWidget {
                     height: 10,
                     margin: const EdgeInsets.all(9),
                     decoration: BoxDecoration(
-                      color: AppColors.textSecondary.withValues(alpha: 0.4),
+                      color: ModernColors.textSecondary.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(5),
                     ),
                   ),
@@ -544,7 +544,7 @@ class CommunityScreen extends ConsumerWidget {
             style: GoogleFonts.notoSans(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: isCompleted ? AppColors.primary : AppColors.textSecondary,
+              color: isCompleted ? ModernColors.primary : ModernColors.textSecondary,
             ),
           ),
         ],

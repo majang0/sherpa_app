@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../presentation/screens/movie_detail_screen.dart';
 import '../presentation/screens/movie_edit_screen.dart';
 import '../presentation/screens/movie_add_screen.dart';
@@ -232,7 +232,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
-                      color: RecordColors.textPrimary,
+                      color: ModernColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -241,7 +241,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: RecordColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -319,7 +319,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: RecordColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ),
@@ -409,8 +409,8 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     color: isCurrentMonth
                         ? (isToday
                             ? const Color(0xFFEF4444)
-                            : RecordColors.textPrimary)
-                        : RecordColors.textLight,
+                            : ModernColors.textPrimary)
+                        : ModernColors.textTertiary,
                   ),
                 ),
               ),
@@ -484,7 +484,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
             style: GoogleFonts.notoSans(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 12),
@@ -509,7 +509,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
-                      color: RecordColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -566,7 +566,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                 height: 4,
                 margin: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: RecordColors.textLight,
+                  color: ModernColors.textTertiary,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -600,7 +600,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                             style: GoogleFonts.notoSans(
                               fontSize: 20,
                               fontWeight: FontWeight.w800,
-                              color: RecordColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           Text(
@@ -608,7 +608,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                             style: GoogleFonts.notoSans(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: RecordColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                         ],
@@ -690,7 +690,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                 height: 4,
                 margin: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: RecordColors.textLight,
+                  color: ModernColors.textTertiary,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -723,7 +723,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                             style: GoogleFonts.notoSans(
                               fontSize: 20,
                               fontWeight: FontWeight.w800,
-                              color: RecordColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           Text(
@@ -731,7 +731,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                             style: GoogleFonts.notoSans(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: RecordColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                         ],
@@ -813,7 +813,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                 height: 4,
                 margin: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: RecordColors.textLight,
+                  color: ModernColors.textTertiary,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -847,7 +847,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                             style: GoogleFonts.notoSans(
                               fontSize: 20,
                               fontWeight: FontWeight.w800,
-                              color: RecordColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           Text(
@@ -855,7 +855,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                             style: GoogleFonts.notoSans(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: RecordColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                         ],
@@ -990,7 +990,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -1000,7 +1000,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     height: 1.4,
                   ),
                   textAlign: TextAlign.center,
@@ -1016,7 +1016,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: RecordColors.textLight.withValues(alpha: 0.1),
+                color: ModernColors.textTertiary.withValues(alpha: 0.1),
                 width: 1,
               ),
               boxShadow: [
@@ -1050,7 +1050,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                   ],
@@ -1076,7 +1076,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                               style: GoogleFonts.notoSans(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
-                                color: RecordColors.textSecondary,
+                                color: ModernColors.textSecondary,
                                 height: 1.4,
                               ),
                             ),
@@ -1137,7 +1137,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
-                            color: RecordColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -1150,7 +1150,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                               style: GoogleFonts.notoSans(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
-                                color: RecordColors.textSecondary,
+                                color: ModernColors.textSecondary,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -1186,7 +1186,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   movie.review!,
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                     height: 1.5,
                   ),
                   maxLines: 3,
@@ -1199,7 +1199,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                   const Icon(
                     Icons.access_time,
                     size: 14,
-                    color: RecordColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                   const SizedBox(width: 4),
                   Text(
@@ -1207,7 +1207,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: RecordColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                   const Spacer(),
@@ -1215,7 +1215,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     const Icon(
                       Icons.share,
                       size: 14,
-                      color: RecordColors.primary,
+                      color: ModernColors.primary,
                     ),
                 ],
               ),
@@ -1387,7 +1387,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                             style: GoogleFonts.notoSans(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: RecordColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -1400,7 +1400,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                                 style: GoogleFonts.notoSans(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w500,
-                                  color: RecordColors.textSecondary,
+                                  color: ModernColors.textSecondary,
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -1431,7 +1431,7 @@ class _MovieFullViewWidgetState extends ConsumerState<MovieFullViewWidget>
                     ),
                     const Icon(
                       Icons.chevron_right,
-                      color: RecordColors.textLight,
+                      color: ModernColors.textTertiary,
                       size: 20,
                     ),
                   ],

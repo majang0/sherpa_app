@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../core/constants/meeting_categories.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
@@ -261,7 +261,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -362,7 +362,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -435,7 +435,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -570,7 +570,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -592,7 +592,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.6,
                 ),
               ),
@@ -616,7 +616,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
           style: GoogleFonts.notoSans(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
         const Spacer(),
@@ -625,7 +625,7 @@ class _MeetingLogDetailScreenState extends ConsumerState<MeetingLogDetailScreen>
           style: GoogleFonts.notoSans(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: RecordColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
       ],

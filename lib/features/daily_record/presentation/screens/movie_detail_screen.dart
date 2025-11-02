@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
@@ -281,7 +281,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -402,7 +402,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -477,7 +477,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -566,7 +566,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
@@ -620,7 +620,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -642,7 +642,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
                 style: GoogleFonts.notoSans(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                   height: 1.6,
                 ),
               ),
@@ -666,7 +666,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
           style: GoogleFonts.notoSans(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: RecordColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
         const Spacer(),
@@ -676,7 +676,7 @@ class _MovieDetailScreenState extends ConsumerState<MovieDetailScreen>
             style: GoogleFonts.notoSans(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: RecordColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
             textAlign: TextAlign.end,
             overflow: TextOverflow.ellipsis,
@@ -926,7 +926,7 @@ ${widget.movie.review ?? ''}
                 style: GoogleFonts.notoSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
             ],
@@ -940,7 +940,7 @@ ${widget.movie.review ?? ''}
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: RecordColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 12),
@@ -985,7 +985,7 @@ ${widget.movie.review ?? ''}
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: RecordColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
             ),

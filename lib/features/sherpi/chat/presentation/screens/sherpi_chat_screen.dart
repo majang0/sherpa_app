@@ -18,7 +18,7 @@ import '../widgets/chat_input_field.dart';
 // Feedback collection widget import removed
 
 // Core
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
 /// 💬 셰르피 채팅 화면
@@ -253,7 +253,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
       case ConversationContext.crisis:
         return Colors.red.shade400;
       default:
-        return AppColors.primary;
+        return ModernColors.primary;
     }
   }
 
@@ -375,9 +375,9 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
         ];
       default:
         return [
-          AppColors.primary,
-          AppColors.primary.withValues(alpha: 0.8),
-          AppColors.primary.withValues(alpha: 0.6),
+          ModernColors.primary,
+          ModernColors.primary.withValues(alpha: 0.8),
+          ModernColors.primary.withValues(alpha: 0.6),
         ];
     }
   }
@@ -470,7 +470,7 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
       child: FloatingActionButton.small(
         onPressed: () => _scrollToBottom(),
         backgroundColor: Colors.white,
-        foregroundColor: AppColors.primary,
+        foregroundColor: ModernColors.primary,
         elevation: 4,
         child: const Icon(Icons.keyboard_arrow_down),
       ).animate().slideY(begin: 1, end: 0, duration: 300.ms).fade(),
@@ -735,12 +735,12 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
     Color? textColor,
   }) {
     return ListTile(
-      leading: Icon(icon, color: textColor ?? AppColors.textPrimary),
+      leading: Icon(icon, color: textColor ?? ModernColors.textPrimary),
       title: Text(
         title,
         style: GoogleFonts.notoSans(
           fontWeight: FontWeight.w500,
-          color: textColor ?? AppColors.textPrimary,
+          color: textColor ?? ModernColors.textPrimary,
         ),
       ),
       onTap: onTap,

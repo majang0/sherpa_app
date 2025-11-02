@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/record_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../presentation/screens/meeting_log_detail_screen.dart';
 import '../../../shared/providers/global_user_provider.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
@@ -262,7 +262,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -362,7 +362,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 20,
                         fontWeight: FontWeight.w800,
-                        color: RecordColors.textPrimary,
+                        color: ModernColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -371,7 +371,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -472,7 +472,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: RecordColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -481,7 +481,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: RecordColors.textLight,
+                          color: ModernColors.textTertiary,
                         ),
                       ),
                     ],
@@ -569,7 +569,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: RecordColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ),
@@ -673,7 +673,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                 : (hasMeeting
                     ? const Color(0xFF8B5CF6).withValues(alpha: 0.3)
                     : (isCurrentMonth
-                        ? RecordColors.textLight.withValues(alpha: 0.1)
+                        ? ModernColors.textTertiary.withValues(alpha: 0.1)
                         : Colors.transparent)),
             width: 1.5,
           ),
@@ -704,10 +704,10 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                           ? (isToday
                               ? Colors.white
                               : (isFuture
-                                  ? RecordColors.textLight
+                                  ? ModernColors.textTertiary
                                       .withValues(alpha: 0.4)
-                                  : RecordColors.textPrimary))
-                          : RecordColors.textLight.withValues(alpha: 0.25),
+                                  : ModernColors.textPrimary))
+                          : ModernColors.textTertiary.withValues(alpha: 0.25),
                     ),
                   ),
                 ),
@@ -785,7 +785,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                 height: 4,
                 margin: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: RecordColors.textLight,
+                  color: ModernColors.textTertiary,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -819,7 +819,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                             style: GoogleFonts.notoSans(
                               fontSize: 20,
                               fontWeight: FontWeight.w800,
-                              color: RecordColors.textPrimary,
+                              color: ModernColors.textPrimary,
                             ),
                           ),
                           Text(
@@ -827,7 +827,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                             style: GoogleFonts.notoSans(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: RecordColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                         ],
@@ -905,7 +905,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                                       style: GoogleFonts.notoSans(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
-                                        color: RecordColors.textPrimary,
+                                        color: ModernColors.textPrimary,
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -918,7 +918,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                                           style: GoogleFonts.notoSans(
                                             fontSize: 11,
                                             fontWeight: FontWeight.w500,
-                                            color: RecordColors.textSecondary,
+                                            color: ModernColors.textSecondary,
                                           ),
                                         ),
                                         const SizedBox(width: 8),
@@ -983,7 +983,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                               // 화살표
                               const Icon(
                                 Icons.chevron_right,
-                                color: RecordColors.textLight,
+                                color: ModernColors.textTertiary,
                                 size: 20,
                               ),
                             ],
@@ -1138,7 +1138,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: RecordColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
@@ -1174,7 +1174,7 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 11,
                             fontWeight: FontWeight.w500,
-                            color: RecordColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                       ],
