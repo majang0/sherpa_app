@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 // ✅ 글로벌 데이터 시스템 Import
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 
 class LevelBadgeWidget extends ConsumerWidget {
   final GlobalUser user;
@@ -31,11 +31,11 @@ class LevelBadgeWidget extends ConsumerWidget {
           vertical: isCompact ? 4 : 6,
         ),
         decoration: BoxDecoration(
-          gradient: AppColors.primaryGradient,
+          gradient: ModernColors.primaryGradient,
           borderRadius: BorderRadius.circular(isCompact ? 12 : 16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.3),
+              color: ModernColors.primary.withValues(alpha: 0.3),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),

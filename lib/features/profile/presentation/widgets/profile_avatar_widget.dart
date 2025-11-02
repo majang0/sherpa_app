@@ -6,7 +6,7 @@ import 'dart:io';
 // ✅ 글로벌 데이터 시스템 Import
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 
 class ProfileAvatarWidget extends ConsumerWidget {
   final GlobalUser user;
@@ -33,7 +33,7 @@ class ProfileAvatarWidget extends ConsumerWidget {
           // 메인 아바타 - sherpa_clean_app_bar와 동일한 방식
           CircleAvatar(
             radius: size / 2,
-            backgroundColor: AppColors.primary,
+            backgroundColor: ModernColors.primary,
             backgroundImage: _getProfileImageProvider(),
             child: _getProfileImageProvider() == null
                 ? _buildDefaultAvatar()
@@ -55,7 +55,7 @@ class ProfileAvatarWidget extends ConsumerWidget {
                 ),
                 child: CircleAvatar(
                   radius: (size * 0.35 - 4) / 2,
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: ModernColors.primary,
                   child: Text(
                     '${user.level}', // ✅ GlobalUser.level 사용
                     style: GoogleFonts.notoSans(
@@ -83,7 +83,7 @@ class ProfileAvatarWidget extends ConsumerWidget {
                 ),
                 child: CircleAvatar(
                   radius: (size * 0.2 - 2) / 2,
-                  backgroundColor: AppColors.success,
+                  backgroundColor: ModernColors.success,
                 ),
               ),
             ),

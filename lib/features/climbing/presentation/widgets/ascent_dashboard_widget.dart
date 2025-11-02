@@ -14,7 +14,7 @@ import '../../../../core/constants/game_constants.dart';
 import '../../../../core/constants/mountain_data.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/models/mountain.dart';
 
 class AscentDashboardWidget extends ConsumerStatefulWidget {
@@ -396,15 +396,15 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withValues(alpha: 0.1),
-            AppColors.primaryLight.withValues(alpha: 0.05),
+            ModernColors.primary.withValues(alpha: 0.1),
+            ModernColors.primary.withValues(alpha: 0.05),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.2),
+          color: ModernColors.primary.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -415,11 +415,11 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
             width: 64,
             height: 64,
             decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
+              gradient: ModernColors.primaryGradient,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.3),
+                  color: ModernColors.primary.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
                 ),
@@ -441,19 +441,19 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    _buildStatChip('Lv.${user.level}', AppColors.primary),
+                    _buildStatChip('Lv.${user.level}', ModernColors.primary),
                     const SizedBox(width: 8),
                     Text(
                       titleData.title,
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -469,14 +469,14 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               Row(
                 children: [
                   const Icon(Icons.flash_on,
-                      color: AppColors.primary, size: 20),
+                      color: ModernColors.primary, size: 20),
                   const SizedBox(width: 4),
                   Text(
                     '${userPower.toInt()}',
                     style: GoogleFonts.notoSans(
                       fontSize: 24,
                       fontWeight: FontWeight.w800,
-                      color: AppColors.primary,
+                      color: ModernColors.primary,
                     ),
                   ),
                 ],
@@ -485,7 +485,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                 '등반력',
                 style: GoogleFonts.notoSans(
                   fontSize: 12,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
             ],
@@ -508,14 +508,14 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         // 섹션 타이틀
         Row(
           children: [
-            const Icon(Icons.map, color: AppColors.primary, size: 24),
+            const Icon(Icons.map, color: ModernColors.primary, size: 24),
             const SizedBox(width: 8),
             Text(
               '등반 계획', // 🔧 수정: 원정 -> 등반
               style: GoogleFonts.notoSans(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
             const Spacer(),
@@ -523,7 +523,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               '추천 등반지 ${mountains.length}개', // 🔧 수정: 원정지 -> 등반지
               style: GoogleFonts.notoSans(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
               ),
             ),
           ],
@@ -539,7 +539,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                     '추천 등반지가 없습니다', // 🔧 수정: 원정지 -> 등반지
                     style: GoogleFonts.notoSans(
                       fontSize: 14,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 )
@@ -674,7 +674,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                           style: GoogleFonts.notoSans(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.textPrimary,
+                            color: ModernColors.textPrimary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -683,7 +683,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                           mountain.region,
                           style: GoogleFonts.notoSans(
                             fontSize: 11,
-                            color: AppColors.textSecondary,
+                            color: ModernColors.textSecondary,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -706,15 +706,15 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                             Row(
                               children: [
                                 const Icon(Icons.timer,
-                                    size: 12, color: AppColors.textSecondary),
+                                    size: 12, color: ModernColors.textSecondary),
                                 const SizedBox(width: 4),
                                 Text(
                                   _formatDuration(originalTime),
                                   style: GoogleFonts.notoSans(
                                     fontSize: 11,
                                     color: timeReduction
-                                        ? AppColors.textLight
-                                        : AppColors.textSecondary,
+                                        ? ModernColors.inactive
+                                        : ModernColors.textSecondary,
                                     decoration: timeReduction
                                         ? TextDecoration.lineThrough
                                         : null,
@@ -727,7 +727,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                                     style: GoogleFonts.notoSans(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.success,
+                                      color: ModernColors.success,
                                     ),
                                   ),
                                 ],
@@ -738,7 +738,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                                 '사교성 효과 -$reductionPercent%',
                                 style: GoogleFonts.notoSans(
                                   fontSize: 9,
-                                  color: AppColors.success,
+                                  color: ModernColors.success,
                                 ),
                               ),
                           ],
@@ -750,7 +750,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 6),
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.05),
+                            color: ModernColors.primary.withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -784,7 +784,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                   margin: const EdgeInsets.all(12),
                   height: 36,
                   decoration: BoxDecoration(
-                    gradient: canClimb ? AppColors.primaryGradient : null,
+                    gradient: canClimb ? ModernColors.primaryGradient : null,
                     color: canClimb ? null : Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -840,7 +840,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           style: GoogleFonts.notoSans(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
       ],
@@ -878,8 +878,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.primary.withValues(alpha: 0.9),
-            AppColors.primaryDark.withValues(alpha: 0.9),
+            ModernColors.primary.withValues(alpha: 0.9),
+            ModernColors.primaryHover.withValues(alpha: 0.9),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -887,7 +887,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.3),
+            color: ModernColors.primary.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -1178,10 +1178,10 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.05),
+        color: ModernColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.1),
+          color: ModernColors.primary.withValues(alpha: 0.1),
         ),
       ),
       child: Row(
@@ -1190,12 +1190,12 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.1),
+              color: ModernColors.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(
               Icons.loop,
-              color: AppColors.primary,
+              color: ModernColors.primary,
               size: 24,
             ),
           ),
@@ -1209,14 +1209,14 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 Text(
                   '등반 완료 후 자동으로 다음 등반 시작', // 🔧 수정: 원정 -> 등반
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -1228,7 +1228,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               setState(() => _isAutoClimbEnabled = value);
               HapticFeedbackManager.lightImpact();
             },
-            activeColor: AppColors.primary,
+            activeColor: ModernColors.primary,
           ),
         ],
       ),
@@ -1246,14 +1246,14 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
       children: [
         Row(
           children: [
-            const Icon(Icons.history, color: AppColors.primary, size: 20),
+            const Icon(Icons.history, color: ModernColors.primary, size: 20),
             const SizedBox(width: 8),
             Text(
               '최근 등반 기록', // 🔧 수정: 원정 -> 등반
               style: GoogleFonts.notoSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
               ),
             ),
           ],
@@ -1266,7 +1266,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
 
   Widget _buildRecordItem(ClimbingRecord record) {
     final isSuccess = record.isSuccess;
-    final statusColor = isSuccess ? AppColors.success : AppColors.error;
+    final statusColor = isSuccess ? ModernColors.success : ModernColors.error;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -1303,14 +1303,14 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 Text(
                   'Lv.${record.difficulty} • ${record.formattedDuration}',
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
               ],
@@ -1319,10 +1319,10 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           if (record.rewards.hasRewards) ...[
             if (record.rewards.experience > 0)
               _buildRewardChip(
-                  '+${record.rewards.experience.toInt()} XP', AppColors.quest),
+                  '+${record.rewards.experience.toInt()} XP', ModernColors.quest),
             const SizedBox(width: 4),
             if (record.rewards.points > 0)
-              _buildRewardChip('+${record.rewards.points} P', AppColors.point),
+              _buildRewardChip('+${record.rewards.points} P', ModernColors.success),
           ],
         ],
       ),
@@ -1350,14 +1350,14 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: (isSuccess ? AppColors.success : AppColors.error)
+                        color: (isSuccess ? ModernColors.success : ModernColors.error)
                             .withValues(alpha: 0.3),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
                     ],
                     border: Border.all(
-                      color: (isSuccess ? AppColors.success : AppColors.error)
+                      color: (isSuccess ? ModernColors.success : ModernColors.error)
                           .withValues(alpha: 0.3),
                       width: 2,
                     ),
@@ -1378,8 +1378,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                               fontSize: 20,
                               fontWeight: FontWeight.w800,
                               color: isSuccess
-                                  ? AppColors.success
-                                  : AppColors.error,
+                                  ? ModernColors.success
+                                  : ModernColors.error,
                             ),
                           ),
                         ],
@@ -1420,7 +1420,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           style: GoogleFonts.notoSans(
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary,
+            color: ModernColors.textPrimary,
           ),
         ),
       ],
@@ -1450,10 +1450,10 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
   Widget _buildPowerComparison(double userPower, double requiredPower) {
     final ratio = userPower / requiredPower;
     final color = ratio >= 1.0
-        ? AppColors.success
+        ? ModernColors.success
         : ratio >= 0.7
-            ? AppColors.warning
-            : AppColors.error;
+            ? ModernColors.warning
+            : ModernColors.error;
 
     return Row(
       children: [
@@ -1528,9 +1528,9 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
   }
 
   Color _getSuccessColor(double probability) {
-    if (probability >= 0.7) return AppColors.success;
-    if (probability >= 0.5) return AppColors.warning;
-    return AppColors.error;
+    if (probability >= 0.7) return ModernColors.success;
+    if (probability >= 0.5) return ModernColors.warning;
+    return ModernColors.error;
   }
 
   void _startClimbing(Mountain mountain) {

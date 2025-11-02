@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../core/constants/app_colors.dart';
+import '../../core/theme/modern_colors.dart';
 import '../../core/constants/sherpi_emotions.dart';
 import '../models/sherpi_relationship_model.dart';
 import '../../features/sherpi/relationship/providers/relationship_provider.dart';
@@ -175,7 +175,7 @@ class _SherpiPersonalizationDialogState
                 ),
                 // 글로우 효과 (오버레이용 더 강한 효과)
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.12),
+                  color: ModernColors.primary.withValues(alpha: 0.12),
                   blurRadius: 60,
                   offset: const Offset(0, 16),
                 ),
@@ -200,7 +200,7 @@ class _SherpiPersonalizationDialogState
                               center: Alignment.topCenter,
                               radius: 1.2 + (_glowController.value * 0.3),
                               colors: [
-                                AppColors.primary.withValues(
+                                ModernColors.primary.withValues(
                                     alpha:
                                         0.08 + (_glowController.value * 0.04)),
                                 Colors.purple.withValues(
@@ -378,7 +378,7 @@ class _SherpiPersonalizationDialogState
               style: GoogleFonts.notoSans(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
                 letterSpacing: -0.8,
               ),
             ),
@@ -722,8 +722,8 @@ class _SherpiPersonalizationDialogState
                       gradient: _hasChanges
                           ? LinearGradient(
                               colors: [
-                                AppColors.primary,
-                                AppColors.primary.withValues(alpha: 0.8),
+                                ModernColors.primary,
+                                ModernColors.primary.withValues(alpha: 0.8),
                                 Colors.purple.shade400,
                               ],
                               begin: Alignment.topLeft,
@@ -740,7 +740,7 @@ class _SherpiPersonalizationDialogState
                       boxShadow: _hasChanges
                           ? [
                               BoxShadow(
-                                color: AppColors.primary.withValues(
+                                color: ModernColors.primary.withValues(
                                     alpha: 0.4 + (_glowController.value * 0.2)),
                                 blurRadius: 16 + (_glowController.value * 8),
                                 offset: const Offset(0, 6),
@@ -952,7 +952,7 @@ class _SherpiPersonalizationDialogState
               style: GoogleFonts.notoSans(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
                 letterSpacing: -0.5,
               ),
               textAlign: TextAlign.center,
@@ -966,7 +966,7 @@ class _SherpiPersonalizationDialogState
               style: GoogleFonts.notoSans(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
-                color: AppColors.textSecondary,
+                color: ModernColors.textSecondary,
                 letterSpacing: -0.2,
                 height: 1.5,
               ),
@@ -1006,7 +1006,7 @@ class _SherpiPersonalizationDialogState
                           style: GoogleFonts.notoSans(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textSecondary,
+                            color: ModernColors.textSecondary,
                             letterSpacing: -0.3,
                           ),
                         ),
@@ -1261,7 +1261,7 @@ class _SherpiPersonalizationDialogState
               ),
             ],
           ),
-          backgroundColor: AppColors.primary,
+          backgroundColor: ModernColors.primary,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

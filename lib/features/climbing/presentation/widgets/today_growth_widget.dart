@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 
 // 오늘의 등반 성장 데이터 모델
@@ -140,20 +140,20 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.08),
+                    color: ModernColors.primary.withValues(alpha: 0.08),
                     blurRadius: 24,
                     offset: const Offset(0, 8),
                     spreadRadius: 0,
                   ),
                   BoxShadow(
-                    color: AppColors.textLight.withValues(alpha: 0.05),
+                    color: ModernColors.inactive.withValues(alpha: 0.05),
                     blurRadius: 12,
                     offset: const Offset(0, 2),
                     spreadRadius: 0,
                   ),
                 ],
                 border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -186,14 +186,14 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.primary,
-                  AppColors.primaryDark,
+                  ModernColors.primary,
+                  ModernColors.primaryHover,
                 ],
               ),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.25),
+                  color: ModernColors.primary.withValues(alpha: 0.25),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -224,7 +224,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -234,10 +234,10 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryLight.withValues(alpha: 0.1),
+                    color: ModernColors.primaryLight.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: AppColors.primary.withValues(alpha: 0.1),
+                      color: ModernColors.primary.withValues(alpha: 0.1),
                       width: 1,
                     ),
                   ),
@@ -247,7 +247,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                       const Icon(
                         Icons.trending_up,
                         size: 14,
-                        color: AppColors.primary,
+                        color: ModernColors.primary,
                       ),
                       const SizedBox(width: 6),
                       Text(
@@ -255,7 +255,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.primary,
+                          color: ModernColors.primary,
                         ),
                       ),
                     ],
@@ -274,10 +274,10 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.background.withValues(alpha: 0.5),
+        color: ModernColors.background.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.divider,
+          color: ModernColors.border,
           width: 1,
         ),
       ),
@@ -295,11 +295,11 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                       width: 12,
                       height: 12,
                       decoration: BoxDecoration(
-                        color: AppColors.success,
+                        color: ModernColors.success,
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.success.withValues(alpha: 0.5),
+                            color: ModernColors.success.withValues(alpha: 0.5),
                             blurRadius: 8,
                             spreadRadius: 2,
                           ),
@@ -315,7 +315,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                 style: GoogleFonts.notoSans(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.success,
+                  color: ModernColors.success,
                 ),
               ),
             ],
@@ -326,7 +326,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
             style: GoogleFonts.notoSans(
               fontSize: 16,
               fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 12),
@@ -336,7 +336,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
               Container(
                 height: 8,
                 decoration: BoxDecoration(
-                  color: AppColors.divider,
+                  color: ModernColors.border,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -349,14 +349,14 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
-                      AppColors.primary,
-                      AppColors.primaryLight,
+                      ModernColors.primary,
+                      ModernColors.primaryLight,
                     ],
                   ),
                   borderRadius: BorderRadius.circular(4),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.3),
+                      color: ModernColors.primary.withValues(alpha: 0.3),
                       blurRadius: 4,
                       offset: const Offset(0, 1),
                     ),
@@ -371,7 +371,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: AppColors.primary,
+              color: ModernColors.primary,
             ),
           ),
         ],
@@ -385,25 +385,25 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
         'icon': '🏔️',
         'value': data.todayClimbingCount,
         'label': '등반 시도',
-        'color': AppColors.primary,
+        'color': ModernColors.primary,
       },
       {
         'icon': '🎯',
         'value': data.successfulClimbs,
         'label': '성공 등반',
-        'color': AppColors.success,
+        'color': ModernColors.success,
       },
       {
         'icon': '⭐',
         'value': data.totalExpGained.toInt(),
         'label': '획득 경험치',
-        'color': AppColors.warning,
+        'color': ModernColors.warning,
       },
       {
         'icon': '💎',
         'value': data.totalPointsEarned,
         'label': '획득 포인트',
-        'color': AppColors.accent,
+        'color': ModernColors.accent,
       },
     ];
 
@@ -424,7 +424,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                       gradient: LinearGradient(
                         colors: [
                           Colors.transparent,
-                          AppColors.primary.withValues(alpha: 0.2),
+                          ModernColors.primary.withValues(alpha: 0.2),
                         ],
                       ),
                     ),
@@ -434,7 +434,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Icon(
                     Icons.star,
-                    color: AppColors.primary.withValues(alpha: 0.3),
+                    color: ModernColors.primary.withValues(alpha: 0.3),
                     size: 16,
                   ),
                 ),
@@ -444,7 +444,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.primary.withValues(alpha: 0.2),
+                          ModernColors.primary.withValues(alpha: 0.2),
                           Colors.transparent,
                         ],
                       ),
@@ -477,10 +477,10 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       decoration: BoxDecoration(
-        color: AppColors.background.withValues(alpha: 0.5),
+        color: ModernColors.background.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppColors.divider,
+          color: ModernColors.border,
           width: 1,
         ),
       ),
@@ -526,7 +526,7 @@ class _TodayGrowthWidgetState extends ConsumerState<TodayGrowthWidget>
             style: GoogleFonts.notoSans(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),

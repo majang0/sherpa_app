@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_user_title_provider.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_card.dart';
 import 'profile_avatar_widget.dart';
 import 'level_badge_widget.dart';
@@ -56,7 +56,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -71,7 +71,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
             onPressed: onSettingsTap,
             icon: const Icon(
               Icons.settings,
-              color: AppColors.textSecondary,
+              color: ModernColors.textSecondary,
               size: 20,
             ),
           ),
@@ -87,8 +87,8 @@ class ProfileHeaderWidget extends ConsumerWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppColors.primary.withValues(alpha: 0.1),
-              AppColors.background,
+              ModernColors.primary.withValues(alpha: 0.1),
+              ModernColors.background,
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -117,7 +117,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
                               style: GoogleFonts.notoSans(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.textPrimary,
+                                color: ModernColors.textPrimary,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -126,7 +126,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
                             onPressed: onSettingsTap,
                             icon: const Icon(
                               Icons.settings,
-                              color: AppColors.textSecondary,
+                              color: ModernColors.textSecondary,
                             ),
                           ),
                         ],
@@ -136,7 +136,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
                         userTitle.title, // ✅ 실제 칭호 데이터 사용
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
-                          color: AppColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -171,7 +171,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
             '총 XP',
             '${user.experience.toInt()}', // ✅ 실제 경험치 데이터
             Icons.star,
-            AppColors.warning,
+            ModernColors.warning,
           ),
         ),
         Expanded(
@@ -179,7 +179,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
             '연속 접속',
             '${user.dailyRecords.consecutiveDays}일', // ✅ 실제 연속 접속일 데이터
             Icons.calendar_today,
-            AppColors.primary,
+            ModernColors.primary,
           ),
         ),
         Expanded(
@@ -187,7 +187,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
             '보유 뱃지',
             '${user.ownedBadgeIds.length}개', // ✅ 실제 뱃지 개수
             Icons.emoji_events,
-            AppColors.success,
+            ModernColors.success,
           ),
         ),
       ],
@@ -220,7 +220,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
           label,
           style: GoogleFonts.notoSans(
             fontSize: 10,
-            color: AppColors.textSecondary,
+            color: ModernColors.textSecondary,
           ),
         ),
       ],
@@ -231,7 +231,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.05),
+        color: ModernColors.primary.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -242,7 +242,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
@@ -260,7 +260,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: AppColors.primary.withValues(alpha: 0.2),
+                        color: ModernColors.primary.withValues(alpha: 0.2),
                       ),
                     ),
                     child: const Text(
@@ -278,7 +278,7 @@ class ProfileHeaderWidget extends ConsumerWidget {
                 '외 ${user.ownedBadgeIds.length - 5}개',
                 style: GoogleFonts.notoSans(
                   fontSize: 10,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
               ),
             ),

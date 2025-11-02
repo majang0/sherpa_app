@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../../shared/models/global_user_model.dart';
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 
 /// 산 경로 비주얼 위젯
 /// 목표를 산으로, 진행 상황을 등반 경로로 시각화
@@ -118,7 +118,7 @@ class MountainPathWidget extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.3),
+              color: ModernColors.primary.withValues(alpha: 0.3),
               blurRadius: 12,
               spreadRadius: 2,
             ),
@@ -237,7 +237,7 @@ class MountainPathWidget extends StatelessWidget {
                       widthFactor: progress / 100,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: isCompleted ? Colors.green : AppColors.primary,
+                          color: isCompleted ? Colors.green : ModernColors.primary,
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -312,7 +312,7 @@ class MountainPathWidget extends StatelessWidget {
       case 'social':
         return Colors.orange;
       default:
-        return AppColors.primary;
+        return ModernColors.primary;
     }
   }
 
@@ -347,7 +347,7 @@ class MountainPathPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // 배경 산 실루엣 그리기
     final backgroundPaint = Paint()
-      ..color = AppColors.primary.withValues(alpha: 0.03)
+      ..color = ModernColors.primary.withValues(alpha: 0.03)
       ..style = PaintingStyle.fill;
 
     final backgroundPath = Path();
@@ -366,13 +366,13 @@ class MountainPathPainter extends CustomPainter {
     if (goals.isEmpty) return;
 
     final pathPaint = Paint()
-      ..color = AppColors.primary.withValues(alpha: 0.5)
+      ..color = ModernColors.primary.withValues(alpha: 0.5)
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
     final dottedPaint = Paint()
-      ..color = AppColors.primary.withValues(alpha: 0.2)
+      ..color = ModernColors.primary.withValues(alpha: 0.2)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -436,7 +436,7 @@ class MountainPathPainter extends CustomPainter {
 
     // 베이스 캠프 그리기
     final baseCampPaint = Paint()
-      ..color = AppColors.primary
+      ..color = ModernColors.primary
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(const Offset(0, 8), 8, baseCampPaint);

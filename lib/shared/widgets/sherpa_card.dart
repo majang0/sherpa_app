@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/theme/modern_colors.dart';
 
 class SherpaCard extends StatelessWidget {
   final Widget child;
@@ -30,7 +30,7 @@ class SherpaCard extends StatelessWidget {
           borderRadius: borderRadius ?? BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.textLight.withValues(
+              color: ModernColors.gray200.withValues(
                   alpha: elevation != null
                       ? (elevation! / 20)
                       : 0.08), // ✅ elevation에 따른 그림자 조절
@@ -39,13 +39,13 @@ class SherpaCard extends StatelessWidget {
             ),
             if ((elevation ?? 8) > 10) // ✅ 높은 elevation일 때 추가 그림자
               BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.05),
+                color: ModernColors.primary.withValues(alpha: 0.05),
                 blurRadius: (elevation ?? 8) * 1.5,
                 offset: Offset(0, (elevation ?? 8) / 2),
               ),
           ],
           border: Border.all(
-            color: AppColors.textLight.withValues(alpha: 0.05), // ✅ 미세한 테두리 추가
+            color: ModernColors.border.withValues(alpha: 0.05), // ✅ 미세한 테두리 추가
             width: 0.5,
           ),
         ),

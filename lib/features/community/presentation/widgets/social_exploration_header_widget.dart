@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 
 /// 📱 소셜 탐험 헤더 위젯
@@ -23,7 +23,7 @@ class SocialExplorationHeaderWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppColors.accentGradient,
+        gradient: ModernColors.primaryGradient,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(

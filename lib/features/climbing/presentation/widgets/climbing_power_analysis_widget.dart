@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_card.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
@@ -340,7 +340,7 @@ class _ClimbingPowerAnalysisWidgetState
                   gradient: RadialGradient(
                     colors: [
                       const Color(0xFFFFD700).withValues(alpha: 0.4),
-                      AppColors.primary.withValues(alpha: 0.3),
+                      ModernColors.primary.withValues(alpha: 0.3),
                     ],
                   ),
                   border: Border.all(
@@ -351,7 +351,7 @@ class _ClimbingPowerAnalysisWidgetState
                 child: Center(
                   child: Icon(
                     Icons.auto_graph_rounded,
-                    color: AppColors.primaryDark,
+                    color: ModernColors.primaryHover,
                     size: sizes.iconSize,
                   ),
                 ),
@@ -366,7 +366,7 @@ class _ClimbingPowerAnalysisWidgetState
                       style: GoogleFonts.notoSans(
                         fontSize: sizes.titleFont,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.primaryDark,
+                        color: ModernColors.primaryHover,
                         shadows: [
                           Shadow(
                             color:
@@ -380,7 +380,7 @@ class _ClimbingPowerAnalysisWidgetState
                       '위대한 여정을 향하여',
                       style: GoogleFonts.notoSans(
                         fontSize: sizes.bodyFont,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -400,14 +400,14 @@ class _ClimbingPowerAnalysisWidgetState
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [
-                        AppColors.primary,
-                        AppColors.primaryDark,
+                        ModernColors.primary,
+                        ModernColors.primaryHover,
                       ],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.3),
+                        color: ModernColors.primary.withValues(alpha: 0.3),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -517,7 +517,7 @@ class _ClimbingPowerAnalysisWidgetState
                                 style: GoogleFonts.notoSans(
                                   fontSize: sizes.powerNumberSize,
                                   fontWeight: FontWeight.w900,
-                                  color: AppColors.primaryDark,
+                                  color: ModernColors.primaryHover,
                                   shadows: [
                                     Shadow(
                                       color: const Color(0xFFFFD700)
@@ -534,7 +534,7 @@ class _ClimbingPowerAnalysisWidgetState
                             style: GoogleFonts.notoSans(
                               fontSize: sizes.bodyFont,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.textSecondary,
+                              color: ModernColors.textSecondary,
                               letterSpacing: 1.5,
                             ),
                           ),
@@ -604,7 +604,7 @@ class _ClimbingPowerAnalysisWidgetState
             style: GoogleFonts.notoSans(
               fontSize: sizes.subtitleFont,
               fontWeight: FontWeight.w700,
-              color: AppColors.primaryDark,
+              color: ModernColors.primaryHover,
             ),
           ),
         ),
@@ -698,7 +698,7 @@ class _ClimbingPowerAnalysisWidgetState
                 style: GoogleFonts.notoSans(
                   fontSize: sizes.bodyFont,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
@@ -720,7 +720,7 @@ class _ClimbingPowerAnalysisWidgetState
                     fontWeight: FontWeight.w800,
                     color: (card['value'] as double) > 0
                         ? card['color'] as Color
-                        : AppColors.textSecondary,
+                        : ModernColors.textSecondary,
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -781,7 +781,7 @@ class _ClimbingPowerAnalysisWidgetState
             style: GoogleFonts.notoSans(
               fontSize: sizes.subtitleFont,
               fontWeight: FontWeight.w700,
-              color: AppColors.primaryDark,
+              color: ModernColors.primaryHover,
             ),
           ),
         ),
@@ -847,12 +847,12 @@ class _ClimbingPowerAnalysisWidgetState
         color: Colors.white.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.3),
+          color: ModernColors.primary.withValues(alpha: 0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.primary.withValues(alpha: 0.1),
             blurRadius: 3,
             offset: const Offset(0, 2),
           ),
@@ -875,7 +875,7 @@ class _ClimbingPowerAnalysisWidgetState
                 style: GoogleFonts.notoSans(
                   fontSize: sizes.bodyFont,
                   fontWeight: FontWeight.w800,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
@@ -890,7 +890,7 @@ class _ClimbingPowerAnalysisWidgetState
                 stat['label'] as String,
                 style: GoogleFonts.notoSans(
                   fontSize: sizes.captionFont,
-                  color: AppColors.textSecondary,
+                  color: ModernColors.textSecondary,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
@@ -980,7 +980,7 @@ class _ClimbingPowerAnalysisWidgetState
                 style: GoogleFonts.notoSans(
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
-                  color: AppColors.primaryDark,
+                  color: ModernColors.primaryHover,
                 ),
               ),
             ),
@@ -1007,7 +1007,7 @@ class _ClimbingPowerAnalysisWidgetState
                       '현재 값: ',
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                     Text(
@@ -1029,7 +1029,7 @@ class _ClimbingPowerAnalysisWidgetState
                 style: GoogleFonts.notoSans(
                   fontSize: 14,
                   height: 1.5,
-                  color: AppColors.textPrimary,
+                  color: ModernColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 12),
@@ -1037,17 +1037,17 @@ class _ClimbingPowerAnalysisWidgetState
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.05),
+                  color: ModernColors.primary.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                      color: AppColors.primary.withValues(alpha: 0.2)),
+                      color: ModernColors.primary.withValues(alpha: 0.2)),
                 ),
                 child: Text(
                   formula,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
+                    color: ModernColors.primary,
                     fontFamily: 'monospace',
                   ),
                   textAlign: TextAlign.center,
@@ -1129,7 +1129,7 @@ class _ClimbingPowerAnalysisWidgetState
                 gradient: RadialGradient(
                   colors: [
                     const Color(0xFFFFD700).withValues(alpha: 0.8),
-                    AppColors.primary.withValues(alpha: 0.4),
+                    ModernColors.primary.withValues(alpha: 0.4),
                   ],
                 ),
                 shape: BoxShape.circle,
@@ -1144,7 +1144,7 @@ class _ClimbingPowerAnalysisWidgetState
               ),
               child: const Center(
                 child: Icon(Icons.history_edu_rounded,
-                    color: AppColors.primaryDark, size: 20),
+                    color: ModernColors.primaryHover, size: 20),
               ),
             ),
             const SizedBox(width: 12),
@@ -1153,7 +1153,7 @@ class _ClimbingPowerAnalysisWidgetState
               style: GoogleFonts.notoSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
-                color: AppColors.primaryDark,
+                color: ModernColors.primaryHover,
               ),
             ),
           ],
@@ -1179,8 +1179,8 @@ class _ClimbingPowerAnalysisWidgetState
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: (session['success'] == true)
-                        ? AppColors.success.withValues(alpha: 0.5)
-                        : AppColors.error.withValues(alpha: 0.5),
+                        ? ModernColors.success.withValues(alpha: 0.5)
+                        : ModernColors.error.withValues(alpha: 0.5),
                     width: 1,
                   ),
                 ),
@@ -1192,8 +1192,8 @@ class _ClimbingPowerAnalysisWidgetState
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: (session['success'] == true)
-                            ? AppColors.success
-                            : AppColors.error,
+                            ? ModernColors.success
+                            : ModernColors.error,
                       ),
                       child: Center(
                         child: Icon(
@@ -1215,7 +1215,7 @@ class _ClimbingPowerAnalysisWidgetState
                             style: GoogleFonts.notoSans(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.primaryDark,
+                              color: ModernColors.primaryHover,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -1227,8 +1227,8 @@ class _ClimbingPowerAnalysisWidgetState
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
                                   color: (session['success'] == true)
-                                      ? AppColors.success
-                                      : AppColors.error,
+                                      ? ModernColors.success
+                                      : ModernColors.error,
                                 ),
                               ),
                               const SizedBox(width: 6),
@@ -1237,7 +1237,7 @@ class _ClimbingPowerAnalysisWidgetState
                                 style: GoogleFonts.notoSans(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.warning,
+                                  color: ModernColors.warning,
                                 ),
                               ),
                               const SizedBox(width: 6),
@@ -1246,7 +1246,7 @@ class _ClimbingPowerAnalysisWidgetState
                                 style: GoogleFonts.notoSans(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.accent,
+                                  color: ModernColors.accent,
                                 ),
                               ),
                             ],
@@ -1264,7 +1264,7 @@ class _ClimbingPowerAnalysisWidgetState
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             style: TextButton.styleFrom(
-              backgroundColor: AppColors.primary,
+              backgroundColor: ModernColors.primary,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)),

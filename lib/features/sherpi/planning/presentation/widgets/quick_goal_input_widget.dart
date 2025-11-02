@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../../../../shared/providers/global_user_provider.dart';
 import '../../../../../shared/models/global_user_model.dart';
 import '../../../../../shared/utils/haptic_feedback_manager.dart';
@@ -121,7 +121,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                 ),
                 prefixIcon: const Icon(
                   Icons.flag_outlined,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                 ),
                 suffixIcon: _controller.text.isNotEmpty
                     ? IconButton(
@@ -149,13 +149,13 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.primary.withValues(alpha: 0.05),
-                      AppColors.primary.withValues(alpha: 0.02),
+                      ModernColors.primary.withValues(alpha: 0.05),
+                      ModernColors.primary.withValues(alpha: 0.02),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: AppColors.primary.withValues(alpha: 0.1),
+                    color: ModernColors.primary.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Row(
@@ -163,7 +163,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                     Icon(
                       Icons.lightbulb_outline,
                       size: 14,
-                      color: AppColors.primary.withValues(alpha: 0.7),
+                      color: ModernColors.primary.withValues(alpha: 0.7),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
@@ -171,7 +171,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
                         aiHint,
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
-                          color: AppColors.primary.withValues(alpha: 0.8),
+                          color: ModernColors.primary.withValues(alpha: 0.8),
                         ),
                       ),
                     ),
@@ -268,7 +268,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
               child: ElevatedButton(
                 onPressed: _controller.text.isNotEmpty ? _createGoal : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: ModernColors.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
@@ -350,12 +350,12 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppColors.primary.withValues(alpha: 0.15)
+              ? ModernColors.primary.withValues(alpha: 0.15)
               : Colors.grey[100],
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected
-                ? AppColors.primary.withValues(alpha: 0.3)
+                ? ModernColors.primary.withValues(alpha: 0.3)
                 : Colors.transparent,
             width: 1.5,
           ),
@@ -364,7 +364,7 @@ class _QuickGoalInputWidgetState extends ConsumerState<QuickGoalInputWidget> {
           label,
           style: GoogleFonts.notoSans(
             fontSize: 13,
-            color: isSelected ? AppColors.primary : Colors.grey[600],
+            color: isSelected ? ModernColors.primary : Colors.grey[600],
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),

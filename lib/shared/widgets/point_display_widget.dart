@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/theme/modern_colors.dart';
 import '../providers/global_point_provider.dart';
 
 class PointDisplayWidget extends ConsumerWidget {
@@ -30,11 +30,11 @@ class PointDisplayWidget extends ConsumerWidget {
           vertical: isCompact ? 4 : 6,
         ),
         decoration: BoxDecoration(
-          gradient: AppColors.accentGradient,
+          gradient: ModernColors.primaryGradient,
           borderRadius: BorderRadius.circular(isCompact ? 12 : 16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.accent
+              color: ModernColors.accent
                   .withValues(alpha: isCompact ? 0.2 : 0.3), // ✅ 그림자 조절
               blurRadius: isCompact ? 4 : 6,
               offset: const Offset(0, 2),

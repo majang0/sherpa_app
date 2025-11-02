@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
 
 // ✅ 글로벌 데이터 시스템 Import
-import '../../core/constants/app_colors.dart';
 import '../../core/theme/modern_colors.dart';
 import '../providers/global_user_provider.dart';
 import '../providers/global_point_provider.dart';
@@ -118,7 +117,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
               // 프로필 아바타 (이미지 지원 추가)
               CircleAvatar(
                 radius: 20,
-                backgroundColor: AppColors.primary,
+                backgroundColor: ModernColors.primary,
                 backgroundImage: _getProfileImage(user.profileImageUrl),
                 child: _getProfileImage(user.profileImageUrl) == null
                     ? Text(
@@ -143,12 +142,12 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                       width: 12,
                       height: 12,
                       decoration: BoxDecoration(
-                        color: AppColors.success,
+                        color: ModernColors.success,
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white, width: 2),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.success
+                            color: ModernColors.success
                                 .withValues(alpha: _pulseAnimation.value),
                             blurRadius: 8,
                             spreadRadius: 2,
@@ -202,11 +201,11 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    gradient: AppColors.primaryGradient,
+                    gradient: ModernColors.primaryGradient,
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.3),
+                        color: ModernColors.primary.withValues(alpha: 0.3),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -283,11 +282,11 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                         width: 10,
                         height: 10,
                         decoration: BoxDecoration(
-                          color: AppColors.error,
+                          color: ModernColors.error,
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.error.withValues(
+                              color: ModernColors.error.withValues(
                                   alpha: _notificationAnimation.value),
                               blurRadius: 6,
                               spreadRadius: 1,
@@ -321,8 +320,8 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.accent,
-                    AppColors.accent.withValues(alpha: 0.8),
+                    ModernColors.accent,
+                    ModernColors.accent.withValues(alpha: 0.8),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -330,7 +329,7 @@ class _SherpaCleanAppBarState extends ConsumerState<SherpaCleanAppBar>
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.accent.withValues(alpha: 0.3),
+                    color: ModernColors.accent.withValues(alpha: 0.3),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),

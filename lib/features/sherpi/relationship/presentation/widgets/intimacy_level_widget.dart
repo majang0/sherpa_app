@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../providers/relationship_provider.dart';
 
 /// 💝 친밀도 레벨 표시 위젯
@@ -93,7 +93,7 @@ class IntimacyLevelWidget extends ConsumerWidget {
                   style: GoogleFonts.notoSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
 
@@ -129,7 +129,7 @@ class IntimacyLevelWidget extends ConsumerWidget {
                         style: GoogleFonts.notoSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.textSecondary,
+                          color: ModernColors.textSecondary,
                         ),
                       ),
                     ],
@@ -145,7 +145,7 @@ class IntimacyLevelWidget extends ConsumerWidget {
                     '함께한 ${stats['daysTogether']}일 • ${stats['totalInteractions']}번의 만남',
                     style: GoogleFonts.notoSans(
                       fontSize: 11,
-                      color: AppColors.textLight,
+                      color: ModernColors.inactive,
                     ),
                   ),
                 ],
@@ -168,7 +168,7 @@ class IntimacyLevelWidget extends ConsumerWidget {
                   relationship.emotionalSyncDescription,
                   style: GoogleFonts.notoSans(
                     fontSize: 10,
-                    color: AppColors.textLight,
+                    color: ModernColors.inactive,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -206,7 +206,7 @@ class IntimacyLevelWidget extends ConsumerWidget {
       case 10:
         return Colors.deepPurple.shade600;
       default:
-        return AppColors.primary;
+        return ModernColors.primary;
     }
   }
 
@@ -266,7 +266,7 @@ class CompactIntimacyWidget extends ConsumerWidget {
             style: GoogleFonts.notoSans(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
             ),
           ),
         ],

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 
 // Core
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 
 // Shared Providers
 import '../../../../shared/providers/global_user_provider.dart';
@@ -76,7 +76,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.08),
+            color: ModernColors.primary.withValues(alpha: 0.08),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -96,14 +96,14 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
                 Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
+                    color: ModernColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -111,7 +111,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                      color: ModernColors.primary,
                     ),
                   ),
                 ),
@@ -144,7 +144,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(
-              color: AppColors.surface,
+              color: ModernColors.surface,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(24),
                 bottomRight: Radius.circular(24),
@@ -155,7 +155,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                 const Icon(
                   Icons.insights,
                   size: 16,
-                  color: AppColors.primary,
+                  color: ModernColors.primary,
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -163,7 +163,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                     _getInsightMessage(user, climbingStats),
                     style: GoogleFonts.notoSans(
                       fontSize: 13,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -196,7 +196,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                     '종합',
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                   AnimatedBuilder(
@@ -213,7 +213,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 28,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.primary,
+                          color: ModernColors.primary,
                         ),
                       );
                     },
@@ -222,7 +222,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                     '평균 능력치',
                     style: GoogleFonts.notoSans(
                       fontSize: 11,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                 ],
@@ -244,7 +244,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
           value: userPower.toStringAsFixed(0),
           trend: '+${(userPower * 0.12).toStringAsFixed(0)}',
           trendPositive: true,
-          color: AppColors.primary,
+          color: ModernColors.primary,
         ),
         const SizedBox(height: 12),
         _buildStatItem(
@@ -253,7 +253,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
           value: '${(stats.successRate * 100).toStringAsFixed(0)}%',
           trend: stats.successRate > 0.7 ? '우수' : '양호',
           trendPositive: stats.successRate > 0.5,
-          color: AppColors.success,
+          color: ModernColors.success,
         ),
         const SizedBox(height: 12),
         _buildStatItem(
@@ -262,7 +262,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
           value: '${(user.experience / 1000).toStringAsFixed(1)}K',
           trend: '레벨 ${user.level}',
           trendPositive: true,
-          color: AppColors.warning,
+          color: ModernColors.warning,
         ),
       ],
     );
@@ -303,7 +303,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                     label,
                     style: GoogleFonts.notoSans(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color: ModernColors.textSecondary,
                     ),
                   ),
                   Row(
@@ -313,7 +313,7 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
+                          color: ModernColors.textPrimary,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -322,8 +322,8 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                             horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: (trendPositive
-                                  ? AppColors.success
-                                  : AppColors.error)
+                                  ? ModernColors.success
+                                  : ModernColors.error)
                               .withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
@@ -333,8 +333,8 @@ class _GrowthInsightsWidgetState extends ConsumerState<GrowthInsightsWidget>
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
                             color: trendPositive
-                                ? AppColors.success
-                                : AppColors.error,
+                                ? ModernColors.success
+                                : ModernColors.error,
                           ),
                         ),
                       ),
@@ -383,7 +383,7 @@ class RadialChartPainter extends CustomPainter {
 
     // 배경 원
     final backgroundPaint = Paint()
-      ..color = AppColors.divider
+      ..color = ModernColors.border
       ..style = PaintingStyle.stroke
       ..strokeWidth = 8;
 
@@ -391,11 +391,11 @@ class RadialChartPainter extends CustomPainter {
 
     // 능력치별 아크
     final statData = [
-      {'value': stats.stamina, 'color': AppColors.exercise},
-      {'value': stats.knowledge, 'color': AppColors.reading},
-      {'value': stats.technique, 'color': AppColors.primary},
-      {'value': stats.sociality, 'color': AppColors.meeting},
-      {'value': stats.willpower, 'color': AppColors.warning},
+      {'value': stats.stamina, 'color': ModernColors.exercise},
+      {'value': stats.knowledge, 'color': ModernColors.reading},
+      {'value': stats.technique, 'color': ModernColors.primary},
+      {'value': stats.sociality, 'color': ModernColors.meeting},
+      {'value': stats.willpower, 'color': ModernColors.warning},
     ];
 
     double startAngle = -math.pi / 2;

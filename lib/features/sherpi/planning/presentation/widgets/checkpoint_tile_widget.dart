@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/theme/modern_colors.dart';
 import '../../../../../shared/utils/haptic_feedback_manager.dart';
 
 /// 체크포인트 타일 위젯
@@ -175,7 +175,7 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                         decoration: BoxDecoration(
                           color: isCompleted
                               ? Colors.green.withValues(alpha: 0.1)
-                              : AppColors.primary.withValues(alpha: 0.1),
+                              : ModernColors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -185,7 +185,7 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
                               size: 14,
                               color: isCompleted
                                   ? Colors.green
-                                  : AppColors.primary,
+                                  : ModernColors.primary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -237,7 +237,7 @@ class _CheckpointTileWidgetState extends State<CheckpointTileWidget>
       case 'social':
         return Colors.orange[400]!;
       default:
-        return AppColors.primary;
+        return ModernColors.primary;
     }
   }
 

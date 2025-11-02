@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'dart:math' as math;
 import 'dart:ui';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../../shared/providers/global_user_provider.dart';
 import '../../../../shared/providers/global_game_provider.dart';
@@ -78,7 +78,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.08),
+                  color: ModernColors.primary.withValues(alpha: 0.08),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -88,7 +88,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.primary.withValues(alpha: 0.1),
                   width: 1,
                 ),
               ),
@@ -116,7 +116,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                               gradient: LinearGradient(
                                 colors: [
                                   Colors.transparent,
-                                  AppColors.primary.withValues(alpha: 0.2),
+                                  ModernColors.primary.withValues(alpha: 0.2),
                                 ],
                               ),
                             ),
@@ -126,7 +126,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Icon(
                             Icons.star,
-                            color: AppColors.primary.withValues(alpha: 0.3),
+                            color: ModernColors.primary.withValues(alpha: 0.3),
                             size: 16,
                           ),
                         ),
@@ -136,7 +136,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  AppColors.primary.withValues(alpha: 0.2),
+                                  ModernColors.primary.withValues(alpha: 0.2),
                                   Colors.transparent,
                                 ],
                               ),
@@ -168,7 +168,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary
+                          color: ModernColors.primary
                               .withValues(alpha: 0.05 * _glowController.value),
                           blurRadius: 30,
                           spreadRadius: 5,
@@ -200,7 +200,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 18,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.textPrimary,
+                    color: ModernColors.textPrimary,
                     letterSpacing: -0.5,
                   ),
                 ),
@@ -210,7 +210,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                   style: GoogleFonts.notoSans(
                     fontSize: 10,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     letterSpacing: 2,
                   ),
                 ),
@@ -225,19 +225,19 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.primary.withValues(alpha: 0.1),
-                  AppColors.primary.withValues(alpha: 0.05),
+                  ModernColors.primary.withValues(alpha: 0.1),
+                  ModernColors.primary.withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.2),
+                color: ModernColors.primary.withValues(alpha: 0.2),
                 width: 1,
               ),
             ),
             child: const Icon(
               Icons.insights_rounded,
-              color: AppColors.primary,
+              color: ModernColors.primary,
               size: 20,
             ),
           ),
@@ -267,10 +267,10 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
       height: 200,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.background.withValues(alpha: 0.5),
+        color: ModernColors.background.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.1),
+          color: ModernColors.primary.withValues(alpha: 0.1),
           width: 1,
         ),
       ),
@@ -304,7 +304,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                 // 배경 가이드 (최대값 기준)
                 RadarDataSet(
                   fillColor: Colors.transparent,
-                  borderColor: AppColors.divider,
+                  borderColor: ModernColors.border,
                   borderWidth: 1,
                   entryRadius: 0,
                   dataEntries: List.generate(
@@ -313,7 +313,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                 // 중간 가이드 (최대값의 50%)
                 RadarDataSet(
                   fillColor: Colors.transparent,
-                  borderColor: AppColors.divider.withValues(alpha: 0.5),
+                  borderColor: ModernColors.border.withValues(alpha: 0.5),
                   borderWidth: 0.5,
                   entryRadius: 0,
                   dataEntries: List.generate(
@@ -321,8 +321,8 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                 ),
                 // 실제 데이터
                 RadarDataSet(
-                  fillColor: AppColors.primary.withValues(alpha: 0.15),
-                  borderColor: AppColors.primary,
+                  fillColor: ModernColors.primary.withValues(alpha: 0.15),
+                  borderColor: ModernColors.primary,
                   borderWidth: 2,
                   entryRadius: 4,
                   dataEntries: values
@@ -334,10 +334,10 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
               radarBackgroundColor: Colors.transparent,
               borderData: FlBorderData(show: false),
               radarBorderData: BorderSide(
-                  color: AppColors.divider.withValues(alpha: 0.5), width: 1),
+                  color: ModernColors.border.withValues(alpha: 0.5), width: 1),
               titlePositionPercentageOffset: 0.15,
               titleTextStyle: GoogleFonts.notoSans(
-                color: AppColors.textPrimary,
+                color: ModernColors.textPrimary,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),
@@ -351,7 +351,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
               ticksTextStyle: const TextStyle(fontSize: 0),
               tickBorderData: const BorderSide(color: Colors.transparent),
               gridBorderData: BorderSide(
-                color: AppColors.divider.withValues(alpha: 0.3),
+                color: ModernColors.border.withValues(alpha: 0.3),
                 width: 0.5,
               ),
               radarShape: RadarShape.polygon,
@@ -414,10 +414,10 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                       Container(
                         height: 60,
                         decoration: BoxDecoration(
-                          color: AppColors.background.withValues(alpha: 0.5),
+                          color: ModernColors.background.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: AppColors.divider,
+                            color: ModernColors.border,
                             width: 1,
                           ),
                         ),
@@ -507,7 +507,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                     style: GoogleFonts.notoSans(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,
-                                      color: AppColors.textPrimary,
+                                      color: ModernColors.textPrimary,
                                     ),
                                   ),
                                   Text(
@@ -540,7 +540,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                   style: GoogleFonts.notoSans(
                                     fontSize: 8,
                                     fontWeight: FontWeight.w500,
-                                    color: AppColors.textSecondary,
+                                    color: ModernColors.textSecondary,
                                     letterSpacing: 1,
                                   ),
                                 ),
@@ -565,11 +565,11 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
     if (grade.contains('전문가')) {
       return const Color(0xFF9C27B0); // 보라색 (전설)
     } else if (grade.contains('고급')) {
-      return AppColors.success; // 초록색 (고급)
+      return ModernColors.success; // 초록색 (고급)
     } else if (grade.contains('중급')) {
-      return AppColors.warning; // 주황색 (중급)
+      return ModernColors.warning; // 주황색 (중급)
     } else {
-      return AppColors.textSecondary; // 회색 (초급)
+      return ModernColors.textSecondary; // 회색 (초급)
     }
   }
 
@@ -592,7 +592,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
           ],
         ),
         duration: const Duration(seconds: 1),
-        backgroundColor: AppColors.primary,
+        backgroundColor: ModernColors.primary,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         margin: const EdgeInsets.all(16),
@@ -709,7 +709,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                                   style: GoogleFonts.notoSans(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w800,
-                                    color: AppColors.textPrimary,
+                                    color: ModernColors.textPrimary,
                                     letterSpacing: -0.5,
                                   ),
                                 ),
@@ -796,21 +796,21 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                             '핵심 역할',
                             statDetails['role'],
                             Icons.star_rounded,
-                            AppColors.warning,
+                            ModernColors.warning,
                           ),
                           const SizedBox(height: 16),
                           _buildRPGInfoSection(
                             '성장 방법',
                             statDetails['growth'],
                             Icons.trending_up_rounded,
-                            AppColors.success,
+                            ModernColors.success,
                           ),
                           const SizedBox(height: 16),
                           _buildRPGInfoSection(
                             '등반에서의 의미',
                             statDetails['meaning'],
                             Icons.terrain_rounded,
-                            AppColors.primary,
+                            ModernColors.primary,
                           ),
                         ],
                       ),
@@ -884,7 +884,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
                       ),
                       child: const Icon(
                         Icons.close,
-                        color: AppColors.textSecondary,
+                        color: ModernColors.textSecondary,
                         size: 18,
                       ),
                     ),
@@ -950,7 +950,7 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
             style: GoogleFonts.notoSans(
               fontSize: 13,
               height: 1.6,
-              color: AppColors.textPrimary,
+              color: ModernColors.textPrimary,
               fontWeight: FontWeight.w500,
             ),
           ),

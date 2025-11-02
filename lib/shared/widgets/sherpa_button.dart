@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../core/constants/app_colors.dart';
+import '../../core/theme/modern_colors.dart';
 import '../../core/constants/app_sizes.dart';
 
 class SherpaButton extends StatelessWidget {
@@ -37,15 +37,15 @@ class SherpaButton extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: enabled ? gradient : null,
         color: enabled
-            ? (backgroundColor ?? AppColors.primary)
-            : AppColors.textLight,
+            ? (backgroundColor ?? ModernColors.primary)
+            : ModernColors.inactive,
         borderRadius: BorderRadius.circular(AppSizes.radiusL),
         boxShadow: enabled
             ? [
                 BoxShadow(
                   color: (gradient?.colors.first ??
                           backgroundColor ??
-                          AppColors.primary)
+                          ModernColors.primary)
                       .withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
@@ -74,7 +74,7 @@ class SherpaButton extends StatelessWidget {
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: textColor ??
-                          (enabled ? Colors.white : AppColors.textSecondary),
+                          (enabled ? Colors.white : ModernColors.textSecondary),
                     ),
                   ),
           ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/game_constants.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/models/user_level_progress.dart';
@@ -63,11 +63,11 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: ModernColors.surface,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.primary.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -88,20 +88,20 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                         style: GoogleFonts.notoSans(
                             fontSize: 24,
                             fontWeight: FontWeight.w900,
-                            color: AppColors.textPrimary,
+                            color: ModernColors.textPrimary,
                             letterSpacing: -0.5)),
                     const SizedBox(height: 4),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.1),
+                          color: ModernColors.primary.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12)),
                       // ✅ 글로벌 데이터 기반 칭호 표시 (메모리[8-9] 등반 배지 시스템)
                       child: Text(userTitleText,
                           style: GoogleFonts.notoSans(
                               fontSize: 14,
-                              color: AppColors.primaryDark,
+                              color: ModernColors.primaryHover,
                               fontWeight: FontWeight.w700)),
                     ),
                   ],
@@ -154,10 +154,10 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
           height: 84,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: AppColors.primaryGradient,
+            gradient: ModernColors.primaryGradient,
             boxShadow: [
               BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.3),
+                  color: ModernColors.primary.withValues(alpha: 0.3),
                   blurRadius: 12,
                   spreadRadius: 1)
             ],
@@ -170,7 +170,7 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                 child: Text('👨‍🎓',
                     style: TextStyle(fontSize: 42, shadows: [
                       Shadow(
-                          color: AppColors.primary.withValues(alpha: 0.2),
+                          color: ModernColors.primary.withValues(alpha: 0.2),
                           blurRadius: 4)
                     ]))),
           ),
@@ -181,11 +181,11 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              gradient: AppColors.accentGradient,
+              gradient: ModernColors.primaryGradient,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                    color: AppColors.accent.withValues(alpha: 0.5),
+                    color: ModernColors.accent.withValues(alpha: 0.5),
                     blurRadius: 8,
                     spreadRadius: 1)
               ],
@@ -215,13 +215,13 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                 style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textSecondary)),
+                    color: ModernColors.textSecondary)),
             Text(
                 '${progressData.currentLevelExp} / ${progressData.requiredExpForNextLevel} XP',
                 style: GoogleFonts.notoSans(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.primary)),
+                    color: ModernColors.primary)),
           ],
         ),
         const SizedBox(height: 8),
@@ -240,8 +240,8 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                   height: 14,
                   decoration: BoxDecoration(
                     gradient: isNearLevelUp
-                        ? AppColors.accentGradient
-                        : AppColors.primaryGradient,
+                        ? ModernColors.primaryGradient
+                        : ModernColors.primaryGradient,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 );
@@ -258,13 +258,13 @@ class _UserLevelCardWidgetState extends ConsumerState<UserLevelCardWidget>
                   style: GoogleFonts.notoSans(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.accentDark)),
+                      color: ModernColors.accentHover)),
             if (isNearLevelUp) const Spacer(),
             Text(
                 '다음 레벨까지 ${progressData.requiredExpForNextLevel - progressData.currentLevelExp} XP',
                 style: GoogleFonts.notoSans(
                     fontSize: 12,
-                    color: AppColors.textSecondary,
+                    color: ModernColors.textSecondary,
                     fontWeight: FontWeight.w500)),
           ],
         ),
