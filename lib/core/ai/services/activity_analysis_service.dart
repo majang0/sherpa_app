@@ -31,9 +31,9 @@ class ActivityAnalysisService {
       final apiKey = ApiConfig.openAIApiKey;
 
       // 모든 플랫폼에서 동일하게 처리 (Dio 제거)
+      // baseUrl 제거 - openai_dart 패키지의 기본 설정 사용
       _client = OpenAIClient(
         apiKey: apiKey,
-        baseUrl: 'https://api.openai.com/v1',
       );
     } catch (e) {
       rethrow;
@@ -235,6 +235,9 @@ ${previousExercise != null ? '''
     try {
       analysisLogger.d('OpenAI API 호출 시작...');
       analysisLogger.d('프롬프트 길이: ${prompt.length}자');
+      analysisLogger.d('🔍 디버그: API 키 길이 = ${ApiConfig.openAIApiKey.length}');
+      analysisLogger.d('🔍 디버그: API 키 앞 10자 = ${ApiConfig.openAIApiKey.substring(0, 10)}...');
+      analysisLogger.d('🔍 디버그: _client runtimeType = ${_client.runtimeType}');
 
       // 프롬프트를 500자씩 나눠서 출력
       analysisLogger.t('=====프롬프트 시작=====');

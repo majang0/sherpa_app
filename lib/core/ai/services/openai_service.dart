@@ -25,9 +25,9 @@ class OpenAIService {
     try {
       final apiKey = ApiConfig.openAIApiKey;
 
+      // baseUrl 제거 - openai_dart 패키지의 기본 설정 사용
       _client = OpenAIClient(
         apiKey: apiKey,
-        baseUrl: 'https://api.openai.com/v1',
       );
 
       aiLogger.i('OpenAI GPT-5 서비스 초기화 성공');
