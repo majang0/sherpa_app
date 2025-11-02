@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/models/global_user_model.dart';
-import '../../../../shared/utils/haptic_feedback_manager.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
 import 'reading_record_screen.dart';
 
 class ReadingDetailScreen extends ConsumerStatefulWidget {

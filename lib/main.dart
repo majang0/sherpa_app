@@ -34,7 +34,7 @@ import 'features/daily_record/presentation/screens/exercise_selection_screen.dar
 import 'features/daily_record/presentation/screens/exercise_dashboard_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_detail_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_edit_screen.dart';
-import 'features/daily_record/presentation/screens/reading_record_screen.dart';
+import 'features/activities_reading/presentation/screens/reading_record_screen.dart';
 import 'features/activities_focus/presentation/screens/focus_timer_record_screen.dart';
 import 'shared/widgets/dialogs/analysis_pages/diary_analysis_page.dart';
 

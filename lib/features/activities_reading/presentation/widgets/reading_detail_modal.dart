@@ -1,9 +1,9 @@
 // lib/features/daily_record/widgets/reading_detail_modal.dart
 
 import 'package:flutter/material.dart';
-import '../presentation/screens/reading_detail_screen.dart';
-import '../../../shared/models/global_user_model.dart';
-import '../../../shared/utils/haptic_feedback_manager.dart';
+import 'package:sherpa_app/features/activities_reading/presentation/screens/reading_detail_screen.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
 
 class ReadingDetailModal extends StatelessWidget {
   final ReadingLog readingLog;
