@@ -25,7 +25,6 @@ import '../../../../shared/providers/global_meeting_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../models/available_meeting_model.dart';
-import '../../utils/meeting_image_utils.dart';
 import '../../../../shared/utils/meeting_image_manager.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_2025.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_list_2025.dart';
@@ -75,7 +74,6 @@ class _NewMeetingDiscoveryScreenState
 
   // 성능 최적화
   Timer? _searchDebouncer;
-  final Map<String, String?> _imagePathCache = {}; // 이미지 경로 캐시
 
   // 필터링된 모임 리스트
   List<AvailableMeeting> _filteredMeetings = [];
@@ -530,98 +528,6 @@ class _NewMeetingDiscoveryScreenState
   }
 
   /// 최적화된 인기 모임 카드 (이전 버전 - 호환성을 위해 유지)
-  Widget _buildOptimizedPopularCard(
-      AvailableMeeting meeting, String? imagePath, int index) {
-    return GestureDetector(
-      onTap: () => _handleMeetingTap(meeting),
-      child: Container(
-        width: 200,
-        margin: const EdgeInsets.only(right: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Stack(
-          children: [
-            // 배경 이미지 - 실제 모임 이미지 또는 이모지
-            Positioned.fill(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: imagePath != null
-                    ? _buildRealImageWidget(imagePath)
-                    : _buildEmojiPlaceholderWidget(meeting),
-              ),
-            ),
-
-            // 그라데이션 오버레이
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.7),
-                  ],
-                ),
-              ),
-            ),
-            // 콘텐츠
-            Positioned(
-              bottom: 16,
-              left: 16,
-              right: 16,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    meeting.title,
-                    style: GoogleFonts.notoSans(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    meeting.location,
-                    style: GoogleFonts.notoSans(
-                      fontSize: 12,
-                      color: Colors.white.withValues(alpha: 0.8),
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-            // 카테고리 뱃지
-            Positioned(
-              top: 12,
-              left: 12,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: meeting.category.color,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  meeting.category.displayName,
-                  style: GoogleFonts.notoSans(
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   /// 나에게 딱 맞는 모임 섹션 (MeetingCard2025 컴포넌트 사용)
   Widget _buildPerfectMatchMeetingsSection(GlobalUser user) {
@@ -673,26 +579,6 @@ class _NewMeetingDiscoveryScreenState
   }
 
   // 매치 이유 생성
-  String _getMatchReason(AvailableMeeting meeting, GlobalUser user) {
-    final stats = user.stats;
-
-    switch (meeting.category) {
-      case MeetingCategory.exercise:
-        return stats.stamina >= 3 ? '체력 레벨이 높아요!' : '체력 향상에 도움될 거예요';
-      case MeetingCategory.study:
-        return stats.knowledge >= 3 ? '지식 수준이 비슷해요!' : '새로운 지식을 얻을 수 있어요';
-      case MeetingCategory.networking:
-        return stats.sociality >= 3 ? '사교성이 뛰어나세요!' : '인맥 확장 기회예요';
-      case MeetingCategory.reading:
-        return '독서 습관에 도움될 거예요';
-      case MeetingCategory.culture:
-        return '문화 생활을 즐기실 것 같아요';
-      case MeetingCategory.outdoor:
-        return '야외 활동을 좋아하실 것 같아요';
-      default:
-        return '새로운 경험이 될 거예요';
-    }
-  }
 
   /// 카테고리 선택, 검색, 필터 섹션
   Widget _buildCategoryAndSearchSection() {
@@ -1638,76 +1524,12 @@ class _NewMeetingDiscoveryScreenState
   // ==================== 유틸리티 메서드들 ====================
 
   /// 실제 모임 데이터에서 이미지 경로 가져오기 (비동기)
-  Future<String?> _getImagePathForMeeting(AvailableMeeting meeting) async {
-    // 캐시에서 먼저 확인
-    final cacheKey = meeting.id;
-    if (_imagePathCache.containsKey(cacheKey)) {
-      return _imagePathCache[cacheKey];
-    }
-
-    String? imagePath;
-
-    // 실제 이미지가 있으면 해당 이미지 사용
-    if (meeting.hasImages && meeting.imageFileNames.isNotEmpty) {
-      final firstImage = meeting.imageFileNames.first;
-
-      // asset: 플래그로 시작하면 assets 폴더 경로 반환
-      if (firstImage.startsWith('asset:')) {
-        imagePath = 'assets/images/meeting/${firstImage.substring(6)}';
-      } else {
-        // 일반 이미지 파일은 MeetingImageUtils를 사용하여 전체 경로 가져오기
-        final imageFile =
-            await MeetingImageUtils.getMeetingImageFile(firstImage);
-        imagePath = imageFile?.path;
-      }
-    }
-
-    // 캐시에 저장
-    _imagePathCache[cacheKey] = imagePath;
-    return imagePath;
-  }
 
   /// 실제 이미지 위젯 생성 (캐시 사용)
-  Widget _buildRealImageWidget(String imagePath) {
-    final cacheManager = MeetingImageCacheManager();
-    return cacheManager.getCachedImage(
-      imagePath,
-      fit: BoxFit.cover,
-      errorWidget: _buildEmojiPlaceholderWidget(null),
-    );
-  }
 
   /// 동적 이미지 경로인지 확인
-  bool _isDynamicImagePath(String path) {
-    return !path.startsWith('assets/') &&
-        (path.contains('/') || path.endsWith('.jpg') || path.endsWith('.png'));
-  }
 
   /// 이모지 플레이스홀더 위젯
-  Widget _buildEmojiPlaceholderWidget(AvailableMeeting? meeting) {
-    // meeting이 null이면 기본 캬러 사용
-    final categoryColor = meeting?.category.color ?? ModernColors.primary;
-    final categoryEmoji = meeting?.category.emoji ?? '👥';
-
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            categoryColor.withValues(alpha: 0.8),
-            categoryColor.withValues(alpha: 0.6),
-          ],
-        ),
-      ),
-      child: Center(
-        child: Text(
-          categoryEmoji,
-          style: const TextStyle(fontSize: 48),
-        ),
-      ),
-    );
-  }
 
   List<AvailableMeeting> _applyFilters(List<AvailableMeeting> meetings) {
     var filtered = meetings;
@@ -1862,15 +1684,6 @@ class _NewMeetingDiscoveryScreenState
     return filtered;
   }
 
-  void _refreshRecommendations() {
-    setState(() {});
-    HapticFeedback.lightImpact();
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: SherpiContext.encouragement,
-          customDialogue: '새로운 추천 모임을 불러왔어요! ✨',
-          emotion: SherpiEmotion.cheering,
-        );
-  }
 
   void _handleMeetingTap(AvailableMeeting meeting) {
     HapticFeedback.lightImpact();
