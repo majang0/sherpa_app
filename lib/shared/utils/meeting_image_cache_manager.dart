@@ -207,7 +207,6 @@ class MeetingImageCacheManager {
         _cacheTimestamps[imagePath] = DateTime.now();
       }
     } catch (e) {
-      debugPrint('Failed to preload image: $imagePath - $e');
     }
   }
 

@@ -40,7 +40,6 @@ class PeerReviewNotifier extends StateNotifier<List<PeerReview>> {
           .map((json) => PeerReview.fromJson(json as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      print('❌ PeerReview 로드 실패: $e');
       state = [];
     }
   }
@@ -52,7 +51,6 @@ class PeerReviewNotifier extends StateNotifier<List<PeerReview>> {
       final jsonString = jsonEncode(jsonList);
       await _prefs.setString(_storageKey, jsonString);
     } catch (e) {
-      print('❌ PeerReview 저장 실패: $e');
     }
   }
 
@@ -78,7 +76,6 @@ class PeerReviewNotifier extends StateNotifier<List<PeerReview>> {
           review.revieweeId == revieweeId);
 
       if (isDuplicate) {
-        print('⚠️ 이미 평가를 완료했습니다.');
         return false;
       }
 
@@ -100,12 +97,9 @@ class PeerReviewNotifier extends StateNotifier<List<PeerReview>> {
           .read(globalPointProvider.notifier)
           .addPoints(100, '동료 평가 완료');
 
-      print('✅ 동료 평가 완료: ${newReview.id}');
-      print('💰 +100 Point 지급');
 
       return true;
     } catch (e) {
-      print('❌ 평가 추가 실패: $e');
       return false;
     }
   }
@@ -168,6 +162,5 @@ class PeerReviewNotifier extends StateNotifier<List<PeerReview>> {
   Future<void> clearAllReviews() async {
     state = [];
     await _prefs.remove(_storageKey);
-    print('🗑️ 모든 평가 삭제 완료');
   }
 }

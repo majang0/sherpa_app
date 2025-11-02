@@ -120,12 +120,10 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             _isLoading = false;
           });
         }
-        LoggerService.instance.d('💾 캐시에서 종합 운동 분석 즉시 로드 완료');
         return;
       }
 
       // 캐시가 없는 경우에만 생성 (보통 발생하지 않음 - 운동 완료 시 이미 생성됨)
-      LoggerService.instance.w('⚠️ 캐시 없음 - 운동 분석 새로 생성 중...');
       final analysis = await _analysisService.analyzeExerciseComprehensive(
         todayExercise: widget.todayData!,
         previousExercise: widget.previousData,
@@ -139,7 +137,6 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
         });
       }
     } catch (e) {
-      LoggerService.instance.d('❌ 운동 분석 로드 실패: $e');
       if (mounted) {
         setState(() => _isLoading = false);
       }

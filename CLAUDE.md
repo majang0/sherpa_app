@@ -16,6 +16,51 @@ Sherpa App (셰르파) is a Flutter-based mobile application that gamifies perso
 
 ---
 
+## 📋 Table of Contents
+
+1. [📱 Overview](#-overview)
+2. [🚀 Quick Start](#-quick-start)
+3. [🏗️ Architecture](#-architecture)
+   - [Directory Structure](#directory-structure)
+   - [State Management (Riverpod 2.4.9)](#state-management-riverpod-249)
+   - [Navigation](#navigation)
+4. [💡 Core Features](#-core-features)
+   - [Meeting System](#meeting-system)
+   - [Quest System](#quest-system)
+   - [Gamification](#gamification)
+   - [Activity Completion Flow](#activity-completion-flow)
+5. [🎨 UI/UX Patterns](#-uiux-patterns)
+   - [Design Philosophy](#design-philosophy-2025-material-design-3)
+   - [Color System](#color-system)
+   - [Common Widgets](#common-widgets)
+   - [Sherpi AI Companion](#sherpi-ai-companion)
+6. [🧠 AI System Architecture](#-ai-system-architecture)
+   - [Architecture Overview](#architecture-overview-issue-7-2025-11-02)
+   - [AI Provider](#ai-provider)
+   - [When AI is Used](#when-ai-is-used)
+   - [AI Features](#ai-features)
+   - [AI Caching System](#ai-caching-system)
+   - [Fallback Mechanism](#fallback-mechanism)
+   - [Key Files](#key-files-consolidated-architecture)
+7. [🤖 Automated Validation (Agents)](#-automated-validation-agents)
+   - [Active Agents](#active-agents-6개)
+   - [Agent Trigger Patterns](#agent-trigger-patterns)
+8. [🎓 SKILL System](#-skill-system-manual-deep-analysis)
+9. [⚠️ Important Notes](#-important-notes)
+10. [📦 Key Dependencies](#-key-dependencies)
+11. [🔧 Development Workflow](#-development-workflow)
+    - [Adding New Features](#adding-new-features)
+    - [Common Tasks](#common-tasks)
+    - [Testing Checklist](#testing-checklist)
+12. [🚫 Things NOT to Do](#-things-not-to-do)
+13. [🔒 Protected Areas](#-protected-areas)
+14. [🔗 Additional Resources](#-additional-resources)
+    - [Quick References](#quick-references)
+    - [Environment Setup](#environment-setup)
+15. [📊 Document Metadata](#-document-metadata)
+
+---
+
 ## 🚀 Quick Start
 
 ### Essential Commands
@@ -108,10 +153,11 @@ ref.read(emotionAnalysisProvider);
 | **5-6** | questProviderV2, globalMeetingProvider | Features |
 | **7-9** | sherpiProvider, relationshipProvider, emotionAnalysisProvider | AI & Advanced |
 
-**⚠️ Note on Dependencies**:
-- Some providers have circular dependencies (e.g., `globalUserProvider` ↔ `questProviderV2`)
-- This is safe due to Riverpod's lazy loading - dependencies are resolved at runtime only when accessed
-- The initialization order ensures all providers are registered before any cross-references occur
+**⚠️ Why This Order Matters**:
+- 일부 Provider들은 서로를 참조합니다 (예: `globalUserProvider` ↔ `questProviderV2`)
+- **초기화 순서를 바꾸면 = 앱이 시작 시 크래시합니다** ("Provider not found" 에러)
+- Riverpod은 Provider를 미리 등록만 하고 실제 사용 시점에 연결하기 때문에, 1→9 순서로 먼저 등록하면 안전합니다
+- (Some providers reference each other. Changing the order = App crashes on startup with "Provider not found" errors. Riverpod registers providers first and connects them only when accessed, so registering in order 1→9 keeps it safe.)
 
 **Rules**:
 - ❌ **NEVER** change initialization order
@@ -311,6 +357,9 @@ SherpaCard(
 ---
 
 ### Sherpi AI Companion
+
+> **📖 Language Note**: Sherpa App의 주 사용 언어는 한국어입니다. 이 문서는 기술적 명확성을 위해 한/영을 혼용하며, 중요 개념은 양쪽 언어로 표기합니다.
+> (Primary app language is Korean. This documentation uses mixed Korean/English for technical clarity, with key concepts in both languages.)
 
 > 최신 Sherpi 시스템 레퍼런스: `docs/sherpi_system.md`
 
@@ -546,6 +595,32 @@ Sherpa App은 파일 저장 시 **자동 검증 Agent**를 실행합니다.
 **Utilities** (수동 호출):
 - **documentation-specialist**: 문서 생성 및 자연어 처리
 - **agent-creator**: 새 Agent 생성 (`"[도메인] 검증 에이전트 만들어줘"`)
+
+### Agent Trigger Patterns
+
+각 Agent가 자동으로 실행되는 파일 패턴과 트리거 조건:
+
+| Agent | 자동 트리거 | 파일 패턴 | 검증 항목 |
+|-------|-------------|-----------|-----------|
+| **routing-orchestrator** | 모든 사용자 요청 | N/A (수동 라우팅) | 복잡도 분석, 최적 Skill/Agent 추천 |
+| **ui-design-validator** | UI 파일 저장 시 | `lib/features/*/presentation/**/*.dart`<br>`lib/shared/widgets/*.dart` | ModernColors 사용, Sherpi 감정-맥락 일치, 접근성 (WCAG 2.1 AA) |
+| **state-management-guard** | Provider 파일 저장 시 | `lib/shared/providers/*_provider.dart`<br>`lib/features/*/providers/*.dart`<br>`lib/main.dart` | Provider 초기화 순서 (Level 0→1→2→3), questProviderV2 사용, 순환 의존성 |
+| **code-quality-validator** | 코드 파일 변경 시 | `lib/**/*.dart` (generated 제외) | 아키텍처 패턴, dead code, code smells, import 구조 |
+| **documentation-specialist** | 수동 호출 | N/A | 문서 품질, 자연어 처리, 기술 문서 작성 |
+| **agent-creator** | 수동 호출 | N/A | 새 Agent 생성, 검증 규칙 정의 |
+
+**트리거 예시**:
+```dart
+// ui-design-validator 자동 실행
+lib/features/home/presentation/screens/home_screen.dart 저장 시
+→ ModernColors 사용 확인
+→ Sherpi 감정과 맥락 일치 확인
+
+// state-management-guard 자동 실행
+lib/shared/providers/global_user_provider.dart 수정 시
+→ Provider 초기화 순서 검증
+→ questProviderV2 사용 확인 (questProvider 사용 금지)
+```
 
 ### ⚠️ Important
 

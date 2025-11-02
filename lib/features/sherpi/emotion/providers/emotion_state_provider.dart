@@ -133,7 +133,6 @@ class EmotionStateNotifier extends StateNotifier<EmotionStateManagement> {
       // 패턴 로드 및 트렌드 분석
       await _performTrendAnalysis();
     } catch (e) {
-      LoggerService.instance.d('감정 상태 로드 오류: $e');
     }
   }
 
@@ -160,7 +159,6 @@ class EmotionStateNotifier extends StateNotifier<EmotionStateManagement> {
         json.encode(state.userContext),
       );
     } catch (e) {
-      LoggerService.instance.d('감정 상태 저장 오류: $e');
     }
   }
 
@@ -318,13 +316,11 @@ class EmotionStateNotifier extends StateNotifier<EmotionStateManagement> {
   /// 🔔 낮은 웰빙 점수 알림
   void _notifyLowWellbeingScore() {
     // TODO: 실제 알림 시스템과 연동
-    LoggerService.instance.w('⚠️ 감정 웰빙 점수가 낮습니다. 관리가 필요합니다.');
   }
 
   /// 🎉 목표 달성 알림
   void _notifyGoalAchievement() {
     // TODO: 실제 알림 시스템과 연동
-    LoggerService.instance.d('🎉 감정 목표를 달성했습니다!');
   }
 
   /// 🎯 감정 목표 설정

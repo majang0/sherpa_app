@@ -830,7 +830,6 @@ class _PersonalizedGrowthDashboardWidgetState
     if (canClaimReward) {
       return GestureDetector(
         onTap: () {
-          LoggerService.instance.d('🎁 황금빛 보상 버튼 클릭됨 - 모든 목표 완료');
           HapticFeedbackManager.lightImpact();
 
           // 🎊 먼저 보상 처리를 실행

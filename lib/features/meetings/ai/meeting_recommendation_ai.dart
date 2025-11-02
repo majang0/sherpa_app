@@ -67,9 +67,7 @@ class MeetingRecommendationAI {
       _aiSource = OpenAIDialogueSource();
       // OpenAI doesn't need initialization
       // await _aiSource?.initialize();
-      debugPrint('🤖 AI 모임 추천 엔진 초기화 완료');
     } catch (e) {
-      debugPrint('⚠️ AI 초기화 실패, 폴백 모드로 동작: $e');
       _aiSource = null;
     }
   }
@@ -85,13 +83,11 @@ class MeetingRecommendationAI {
     try {
       // 1. 캐시 확인 (forceRefresh가 true면 캐시 무시)
       if (forceRefresh) {
-        debugPrint('🔄 캐시 강제 새로고침 요청');
         await clearCache(user.id);
       }
 
       // 2. 사용자 활동 분석
       final userPattern = _analyzer.analyzeUserActivity(user);
-      debugPrint('📊 사용자 활동 패턴 분석 완료');
 
       // 3. 참여 가능한 모임 필터링
       final availableMeetingsList = availableMeetings
@@ -99,7 +95,6 @@ class MeetingRecommendationAI {
           .toList();
 
       if (availableMeetingsList.isEmpty) {
-        debugPrint('⚠️ 참여 가능한 모임이 없음');
         return [];
       }
 
@@ -112,7 +107,6 @@ class MeetingRecommendationAI {
           meetingSetHash,
         );
         if (cached != null && cached.isNotEmpty) {
-          debugPrint('📦 캐시된 AI 추천 사용');
           return cached;
         }
       }
@@ -146,8 +140,6 @@ class MeetingRecommendationAI {
 
       return recommendations;
     } catch (e, stackTrace) {
-      debugPrint('❌ AI 추천 생성 실패: $e');
-      debugPrint('Stack trace: $stackTrace');
 
       // 에러 시 규칙 기반 폴백
       return _getEmergencyFallback(availableMeetings);
@@ -168,7 +160,6 @@ class MeetingRecommendationAI {
         sherpiInsights: sherpiInsights,
       );
 
-      debugPrint('🤖 AI에게 추천 요청 중... (${meetings.length}개 모임 중)');
 
       // OpenAI API 호출
       // Call OpenAI with the prompt directly
@@ -178,8 +169,6 @@ class MeetingRecommendationAI {
         {'meetingCount': meetings.length},
       );
 
-      debugPrint(
-          '✅ AI 응답 수신: ${response.substring(0, response.length > 100 ? 100 : response.length)}...');
 
       // 응답 파싱
       final parsedRecommendations = _promptBuilder.parseAIResponse(response);
@@ -214,7 +203,6 @@ class MeetingRecommendationAI {
 
       return recommendations;
     } catch (e) {
-      debugPrint('⚠️ AI 추천 생성 중 오류, 규칙 기반으로 전환: $e');
       return _getRuleBasedRecommendations(userPattern, meetings);
     }
   }
@@ -224,15 +212,6 @@ class MeetingRecommendationAI {
     UserActivityPattern userPattern,
     List<AvailableMeeting> meetings,
   ) {
-    debugPrint('📏 규칙 기반 추천 생성 중...');
-    debugPrint('📊 사용자 활동 패턴:');
-    debugPrint(
-        '  - 운동: ${userPattern.exercisePattern.mainTypes.join(", ")} (주 ${userPattern.exercisePattern.frequency}회)');
-    debugPrint(
-        '  - 독서: ${userPattern.readingPattern.mainCategories.join(", ")} (주 ${userPattern.readingPattern.booksPerWeek.toStringAsFixed(1)}권)');
-    debugPrint(
-        '  - 모임: ${userPattern.meetingPattern.preferredCategories.join(", ")} (주 ${userPattern.meetingPattern.averagePerWeek.toStringAsFixed(1)}회)');
-    debugPrint('📋 평가할 모임 ${meetings.length}개');
 
     // 각 모임에 대한 점수 계산
     final scoredMeetings = <MapEntry<AvailableMeeting, double>>[];
@@ -259,7 +238,6 @@ class MeetingRecommendationAI {
         String matchedActivity = '';
 
         for (var userActivity in userPattern.exercisePattern.mainTypes) {
-          debugPrint('  🔍 사용자 활동 확인: "$userActivity"');
 
           // 사용자 활동에 맞는 키워드 찾기 (대소문자 구분 없이)
           List<String> keywords = [];
@@ -275,9 +253,7 @@ class MeetingRecommendationAI {
           // 기본 키워드가 없으면 사용자 활동 자체를 키워드로 사용
           if (keywords.isEmpty) {
             keywords = [userActivity];
-            debugPrint('    ⚠️ 키워드 매핑 없음, 기본값 사용: $userActivity');
           } else {
-            debugPrint('    ✅ 키워드 찾음: ${keywords.take(3).join(", ")}...');
           }
 
           // 모임 제목/설명에서 키워드 매칭
@@ -289,7 +265,6 @@ class MeetingRecommendationAI {
                 descLower.contains(keyword.toLowerCase())) {
               exactMatch = true;
               matchedActivity = userActivity;
-              debugPrint('    🎯 매칭 성공! 키워드: "$keyword" in "${meeting.title}"');
               break;
             }
           }
@@ -300,12 +275,10 @@ class MeetingRecommendationAI {
         if (exactMatch) {
           score += 0.35; // 정확한 활동 매칭 시 큰 보너스
           keyPoints.add('🎯 $matchedActivity 활동 정확 매칭');
-          debugPrint('  ✅ ExactMatch=true, 보너스 +0.35');
         } else {
           // 같은 카테고리지만 다른 운동인 경우 작은 보너스 (페널티 제거)
           score += 0.05; // 같은 카테고리 보너스
           keyPoints.add('운동 카테고리 일치');
-          debugPrint('  ℹ️ ExactMatch=false, 카테고리 보너스 +0.05');
         }
       }
 
@@ -392,8 +365,6 @@ class MeetingRecommendationAI {
 
       // 디버깅용 로그 추가
       final finalScore = score;
-      debugPrint(
-          '📊 [모임] ${meeting.title}: ${finalScore.toStringAsFixed(2)}점 - ${keyPoints.join(", ")}');
 
       scoredMeetings.add(MapEntry(meeting, score));
     }
@@ -414,8 +385,6 @@ class MeetingRecommendationAI {
       // 다양성 체크: 같은 카테고리가 이미 2개 있으면 스킵
       final currentCategoryCount = categoryCount[meeting.category] ?? 0;
       if (currentCategoryCount >= 2) {
-        debugPrint(
-            '⚠️ [다양성] ${meeting.title} 스킵 - ${meeting.category.displayName} 카테고리 이미 2개');
         continue;
       }
 
@@ -442,7 +411,6 @@ class MeetingRecommendationAI {
       categoryCount[meeting.category] = currentCategoryCount + 1;
     }
 
-    debugPrint('✅ 최종 추천 ${recommendations.length}개 생성 완료');
 
     return recommendations;
   }
@@ -824,7 +792,6 @@ class MeetingRecommendationAI {
   List<AIRecommendedMeeting> _getEmergencyFallback(
     List<AvailableMeeting> meetings,
   ) {
-    debugPrint('🚨 긴급 폴백 모드');
 
     final available = meetings
         .where((m) => m.currentParticipants < m.maxParticipants)
@@ -864,12 +831,10 @@ class MeetingRecommendationAI {
       final cachedTime = DateTime.parse(cachedData['timestamp'] as String);
 
       if (DateTime.now().difference(cachedTime) > _cacheDuration) {
-        debugPrint('⏰ 캐시 만료됨');
         return null;
       }
 
       if (cachedData['meetingSetHash'] != meetingSetHash) {
-        debugPrint('📦 모임 목록이 변경되어 캐시 무효화');
         return null;
       }
 
@@ -890,7 +855,6 @@ class MeetingRecommendationAI {
         if (meetingId == null) continue;
         final meeting = meetingsById[meetingId];
         if (meeting == null) {
-          debugPrint('⚠️ 캐시된 추천 모임($meetingId)을 현재 목록에서 찾을 수 없음');
           continue;
         }
         restored.add(AIRecommendedMeeting.fromJson(entry, meeting));
@@ -902,7 +866,6 @@ class MeetingRecommendationAI {
 
       return restored;
     } catch (e) {
-      debugPrint('캐시 읽기 실패: $e');
       return null;
     }
   }
@@ -925,9 +888,7 @@ class MeetingRecommendationAI {
       };
 
       await prefs.setString(key, jsonEncode(cacheData));
-      debugPrint('💾 AI 추천 캐시 저장 완료');
     } catch (e) {
-      debugPrint('캐시 저장 실패: $e');
     }
   }
 
@@ -937,9 +898,7 @@ class MeetingRecommendationAI {
       final prefs = await SharedPreferences.getInstance();
       final key = '$_cacheKeyPrefix$userId';
       await prefs.remove(key);
-      debugPrint('🗑️ AI 추천 캐시 삭제됨');
     } catch (e) {
-      debugPrint('캐시 삭제 실패: $e');
     }
   }
 

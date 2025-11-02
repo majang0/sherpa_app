@@ -36,8 +36,6 @@ class UnifiedSherpiManager implements SherpiMessageManager {
   @override
   void setPersonalizationSettings(PersonalizationSettings settings) {
     _personalizationSettings = settings;
-    LoggerService.instance
-        .d('📝 개인화 설정 업데이트: ${settings.personalityType.displayName}');
   }
 
   /// 🎮 메인 메시지 가져오기
@@ -108,7 +106,6 @@ class UnifiedSherpiManager implements SherpiMessageManager {
         },
       );
     } catch (e) {
-      LoggerService.instance.e('❌ 정적 메시지 가져오기 실패', error: e);
       return _getFallbackMessage(context);
     }
   }
@@ -161,9 +158,7 @@ class UnifiedSherpiManager implements SherpiMessageManager {
   void enableAIForNextMessage() {
     if (_aiEnabled) {
       _useAIForNextMessage = true;
-      LoggerService.instance.i('🤖 다음 메시지에 AI 사용 활성화');
     } else {
-      LoggerService.instance.w('⚠️ AI가 비활성화되어 있어 AI를 사용할 수 없습니다');
     }
   }
 
@@ -180,7 +175,6 @@ class UnifiedSherpiManager implements SherpiMessageManager {
     }
 
     // AI 비활성화 시 정적 메시지 반환
-    LoggerService.instance.w('⚠️ AI 비활성화 - 정적 메시지 반환');
     return await getMessage(context, userContext, gameContext);
   }
 
@@ -204,6 +198,5 @@ class UnifiedSherpiManager implements SherpiMessageManager {
 
   /// 리소스 정리
   void dispose() {
-    LoggerService.instance.d('🧹 Unified Sherpi Manager 정리 완료');
   }
 }

@@ -253,14 +253,9 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         final lastRecord = records.last;
 
         // 디버그 로그 추가
-        LoggerService.instance.d('🎯 등반 완료 - 산: ${lastRecord.mountainName}');
-        LoggerService.instance.i('✅ 성공 여부: ${lastRecord.isSuccess}');
-        LoggerService.instance.d(
-            '🎁 보상 - XP: ${lastRecord.rewards.experience}, Points: ${lastRecord.rewards.points}');
 
         // 보상이 없는 경우 경고
         if (!lastRecord.rewards.hasRewards) {
-          LoggerService.instance.w('⚠️ 경고: 보상이 계산되지 않았습니다!');
         }
 
         _showCompletionAnimation(lastRecord.isSuccess);
@@ -1543,10 +1538,6 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
         : mountain.durationHours; // 실제 시간
 
     if (_debugMode) {
-      LoggerService.instance.d('🏔️ 등반 시작 - ${mountain.name}');
-      LoggerService.instance.d('📊 난이도: ${mountain.difficultyLevel}');
-      LoggerService.instance.d(
-          '⏱️ 원래 시간: ${mountain.durationHours}h → 테스트: ${(adjustedDuration * 3600).toInt()}초');
     }
 
     ref.read(globalUserProvider.notifier).startClimbing(

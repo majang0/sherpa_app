@@ -97,7 +97,6 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
             recentAnalyses.isNotEmpty ? recentAnalyses.first : null,
       );
     } catch (e) {
-      LoggerService.instance.d('🎭 감정 분석 데이터 로드 실패: $e');
     }
   }
 
@@ -117,7 +116,6 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
       // 감정 동기화 점수 저장
       await _prefs.setDouble(_syncScoreKey, state.emotionalSyncScore);
     } catch (e) {
-      LoggerService.instance.d('🎭 감정 분석 데이터 저장 실패: $e');
     }
   }
 
@@ -158,7 +156,6 @@ class EmotionAnalysisNotifier extends StateNotifier<EmotionAnalysisState> {
       await _saveData();
       return analysis;
     } catch (e) {
-      LoggerService.instance.d('🎭 감정 분석 실패: $e');
       state = state.copyWith(isAnalyzing: false);
       rethrow;
     }

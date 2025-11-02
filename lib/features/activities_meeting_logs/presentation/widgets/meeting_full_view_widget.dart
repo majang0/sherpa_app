@@ -80,12 +80,9 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
     final user = ref.watch(globalUserProvider);
     final meetingLogs = user.dailyRecords.meetingLogs;
 
-    LoggerService.instance
-        .d('📊 MeetingFullView: 모임 데이터 확인 - 총 ${meetingLogs.length}개');
     if (meetingLogs.isNotEmpty) {
       final dates =
           meetingLogs.map((m) => '${m.date.month}/${m.date.day}').join(', ');
-      LoggerService.instance.d('  모임 날짜: $dates');
     }
 
     // 선택된 월의 모임 로그 필터링
@@ -94,8 +91,6 @@ class _MeetingFullViewWidgetState extends ConsumerState<MeetingFullViewWidget>
           log.date.month == _selectedMonth.month;
     }).toList();
 
-    LoggerService.instance.d(
-        '📅 ${_selectedMonth.year}년 ${_selectedMonth.month}월 모임: ${monthlyLogs.length}개');
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),

@@ -83,10 +83,6 @@ class ActivityAnalysisService {
 
       return analysis;
     } catch (e) {
-      analysisLogger.e('analyzeExerciseComprehensive 에러 발생', error: e);
-      analysisLogger.e('  에러 타입: ${e.runtimeType}');
-      analysisLogger.e('  에러 메시지: $e');
-      analysisLogger.e('  스택 트레이스 확인 필요');
       return _getDefaultComprehensiveExerciseAnalysis(
           todayExercise, previousExercise, userName);
     }
@@ -284,7 +280,6 @@ ${previousExercise != null ? '''
 
       throw Exception('Empty response from OpenAI');
     } catch (e) {
-      analysisLogger.e('_callOpenAIForComprehensive 에러', error: e);
       rethrow;
     }
   }
@@ -319,26 +314,18 @@ ${previousExercise != null ? '''
     // 글자수 체크 (100-130자)
     for (var entry in sections.entries) {
       if (entry.value.length < 100) {
-        analysisLogger
-            .w('경고: ${entry.key}가 너무 짧습니다 (${entry.value.length}자 < 100자)');
       } else if (entry.value.length > 130) {
-        analysisLogger
-            .w('경고: ${entry.key}가 너무 깁니다 (${entry.value.length}자 > 130자)');
       }
     }
 
     // 기본 메시지 체크 (디버깅용)
     if (sections['comparison']!.contains('오늘도 함께 운동해서 기뻐요')) {
-      analysisLogger.w('경고: comparison이 기본 메시지입니다!');
     }
     if (sections['benefits']!.contains('몸도 마음도 상쾌해졌죠')) {
-      analysisLogger.w('경고: benefits가 기본 메시지입니다!');
     }
     if (sections['recommendation']!.contains('셰르피가 꼭 같이 할게요')) {
-      analysisLogger.w('경고: recommendation이 기본 메시지입니다!');
     }
     if (sections['encouragement']!.contains('내일도 셰르피가 옆에서 응원할게요')) {
-      analysisLogger.w('경고: encouragement가 기본 메시지입니다!');
     }
 
     return ComprehensiveExerciseAnalysis(
@@ -366,9 +353,7 @@ ${previousExercise != null ? '''
       };
 
       await prefs.setString(fullKey, jsonEncode(data));
-      analysisLogger.i('캐시 저장 완료');
     } catch (e) {
-      analysisLogger.e('캐시 저장 실패', error: e);
     }
   }
 
@@ -649,9 +634,6 @@ ${previousExercise != null ? '''
 
       return analysis;
     } catch (e) {
-      analysisLogger.e('analyzeReadingComprehensive 에러 발생', error: e);
-      analysisLogger.e('  에러 타입: ${e.runtimeType}');
-      analysisLogger.e('  에러 메시지: $e');
       return _getDefaultComprehensiveReadingAnalysis(
           todayReading, previousReading, userName);
     }
@@ -702,9 +684,6 @@ ${previousExercise != null ? '''
 
       return analysis;
     } catch (e) {
-      analysisLogger.e('analyzeDiaryComprehensive 에러 발생', error: e);
-      analysisLogger.e('  에러 타입: ${e.runtimeType}');
-      analysisLogger.e('  에러 메시지: $e');
       return _getDefaultComprehensiveDiaryAnalysis(
           currentMood, previousMood, userName);
     }
@@ -887,7 +866,7 @@ $previousBookInfo
             onTimeout: () => throw Exception('API 호출 타임아웃'),
           );
 
-      analysisLogger.i('OpenAI API 응답 수신 성공 (독서)');
+      analysisLogger.i('OpenAI API 응답 수신 성공');
       final responseText = chatCompletion.choices.firstOrNull?.message.content;
 
       if (responseText != null && responseText.isNotEmpty) {
@@ -896,7 +875,6 @@ $previousBookInfo
 
       throw Exception('Empty response from OpenAI');
     } catch (e) {
-      analysisLogger.e('_callOpenAIForReadingComprehensive 에러', error: e);
       rethrow;
     }
   }
@@ -940,8 +918,6 @@ $previousBookInfo
           }
         }
       } catch (e) {
-        analysisLogger.e('추천 도서 JSON 파싱 실패', error: e);
-        analysisLogger.e('원본 문자열: ${section4Match.group(1)?.trim()}');
         // 기본 추천 도서 제공
         recommendations = _getDefaultBookRecommendations();
       }
@@ -1004,9 +980,7 @@ $previousBookInfo
       };
 
       await prefs.setString(fullKey, jsonEncode(data));
-      analysisLogger.i('독서 분석 캐시 저장 완료');
     } catch (e) {
-      analysisLogger.e('독서 분석 캐시 저장 실패', error: e);
     }
   }
 
@@ -1039,7 +1013,6 @@ $previousBookInfo
         );
       }
     } catch (e) {
-      analysisLogger.e('독서 분석 캐시 읽기 실패', error: e);
     }
     return null;
   }
@@ -1189,7 +1162,6 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
 
       return chatCompletion.choices.first.message.content ?? '';
     } catch (e) {
-      analysisLogger.e('일기 API 호출 실패', error: e);
       rethrow;
     }
   }
@@ -1221,7 +1193,6 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
             '내일도 셰르피가 함께할게요. 오늘보다 더 나은 내일이 되도록, 작은 것부터 하나씩 함께 해나가요 🌟',
       );
     } catch (e) {
-      analysisLogger.w('일기 응답 파싱 실패, 기본값 사용', error: e);
       return ComprehensiveDiaryAnalysis(
         emotionTransition: '감정의 변화를 함께 지켜보고 있어요 💝',
         emotionalSupport:
@@ -1258,9 +1229,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       final fullKey = 'comprehensive_diary_$dateKey';
 
       await prefs.setString(fullKey, jsonEncode(analysis.toJson()));
-      analysisLogger.i('종합 일기 분석 캐시 저장 완료: $fullKey');
     } catch (e) {
-      analysisLogger.e('일기 분석 캐시 저장 실패', error: e);
     }
   }
 
@@ -1274,11 +1243,9 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       final cached = prefs.getString(fullKey);
       if (cached != null) {
         final json = jsonDecode(cached) as Map<String, dynamic>;
-        analysisLogger.i('종합 일기 분석 캐시 로드 성공');
         return ComprehensiveDiaryAnalysis.fromJson(json);
       }
     } catch (e) {
-      analysisLogger.e('일기 분석 캐시 로드 실패', error: e);
     }
     return null;
   }
@@ -1291,9 +1258,7 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       final fullKey = 'comprehensive_diary_$dateKey';
 
       await prefs.remove(fullKey);
-      analysisLogger.i('종합 일기 분석 캐시 삭제 완료');
     } catch (e) {
-      analysisLogger.e('일기 분석 캐시 삭제 실패', error: e);
     }
   }
 
@@ -1427,7 +1392,6 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
       if (!forceRegenerate) {
         final cached = await _getComprehensiveDayFromCache();
         if (cached != null) {
-          analysisLogger.i('종합 하루 분석 캐시에서 로드 완료');
           return cached;
         }
       }
@@ -1450,7 +1414,6 @@ ${previousMood != null ? '''• "${moodLabels[previousMood]}"에서 "$currentLab
 
       return analysis;
     } catch (e) {
-      analysisLogger.e('analyzeDayComprehensive 에러', error: e);
       return _getDefaultComprehensiveDayAnalysis(
         exerciseData,
         readingData,
@@ -1537,7 +1500,6 @@ JSON 형식으로만 응답하세요.''';
 
       return response.choices.first.message.content ?? '{}';
     } catch (e) {
-      analysisLogger.e('OpenAI API 호출 실패', error: e);
       rethrow;
     }
   }
@@ -1571,7 +1533,6 @@ JSON 형식으로만 응답하세요.''';
         scores: scores,
       );
     } catch (e) {
-      analysisLogger.e('응답 파싱 실패', error: e);
       rethrow;
     }
   }
@@ -1599,9 +1560,7 @@ JSON 형식으로만 응답하세요.''';
       };
 
       await prefs.setString(key, jsonEncode(data));
-      analysisLogger.i('종합 하루 분석 캐시 저장 완료');
     } catch (e) {
-      analysisLogger.e('캐시 저장 실패', error: e);
     }
   }
 
@@ -1629,7 +1588,6 @@ JSON 형식으로만 응답하세요.''';
         );
       }
     } catch (e) {
-      analysisLogger.e('캐시 읽기 실패', error: e);
     }
     return null;
   }

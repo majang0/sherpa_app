@@ -27,7 +27,6 @@ class MemoryManagementService {
       return memoriesList.map((data) => SharedMemory.fromJson(data)).toList()
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     } catch (e) {
-      LoggerService.instance.d('추억 로드 오류: $e');
       return [];
     }
   }
@@ -64,7 +63,6 @@ class MemoryManagementService {
       // 트리거 업데이트
       await _updateMemoryTriggers(memory);
     } catch (e) {
-      LoggerService.instance.d('추억 저장 오류: $e');
     }
   }
 
@@ -244,7 +242,6 @@ class MemoryManagementService {
           .map((data) => MemoryCollection.fromJson(data))
           .toList();
     } catch (e) {
-      LoggerService.instance.d('컬렉션 로드 오류: $e');
       return [];
     }
   }
@@ -266,7 +263,6 @@ class MemoryManagementService {
       final collectionsJson = collections.map((c) => c.toJson()).toList();
       await prefs.setString(_prefsKeyCollections, json.encode(collectionsJson));
     } catch (e) {
-      LoggerService.instance.d('컬렉션 저장 오류: $e');
     }
   }
 
@@ -359,7 +355,6 @@ class MemoryManagementService {
       final triggersData = triggers.map((t) => t.toJson()).toList();
       await prefs.setString(_prefsKeyTriggers, json.encode(triggersData));
     } catch (e) {
-      LoggerService.instance.d('트리거 업데이트 오류: $e');
     }
   }
 
@@ -403,7 +398,6 @@ class MemoryManagementService {
       return allMemories.where((m) => memoryIds.contains(m.id)).toList()
         ..sort((a, b) => b.relevanceScore.compareTo(a.relevanceScore));
     } catch (e) {
-      LoggerService.instance.d('트리거 기반 추억 로드 오류: $e');
       return [];
     }
   }
@@ -427,7 +421,6 @@ class MemoryManagementService {
         }
       }
     } catch (e) {
-      LoggerService.instance.d('추억 삭제 오류: $e');
     }
   }
 

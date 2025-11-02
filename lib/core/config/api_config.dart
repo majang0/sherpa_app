@@ -90,10 +90,6 @@ class ApiConfig {
 
   /// 🧪 API 키 상태를 디버그용으로 출력합니다.
   static void debugApiKeyStatus() {
-    LoggerService.instance.d('📊 AI API 키 상태:');
-    LoggerService.instance
-        .d('  - OpenAI: ${isOpenAIApiKeyValid ? '✅ 설정됨' : '❌ 미설정'}');
-    LoggerService.instance.d('  - 현재 사용: ${currentAIProvider.name}');
   }
 }
 

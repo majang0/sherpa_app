@@ -25,7 +25,6 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
         final Map<String, dynamic> json = jsonDecode(savedData);
         return SherpiRelationship.fromJson(json);
       } catch (e) {
-        LoggerService.instance.d('❌ 관계 데이터 로드 실패: $e');
       }
     }
 
@@ -42,7 +41,6 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
       final String jsonData = jsonEncode(relationship.toJson());
       await _prefs.setString(_storageKey, jsonData);
     } catch (e) {
-      LoggerService.instance.d('❌ 관계 데이터 저장 실패: $e');
     }
   }
 
@@ -202,8 +200,6 @@ class SherpiRelationshipNotifier extends StateNotifier<SherpiRelationship> {
   /// 🎨 Phase 2: 관계 정보 직접 업데이트 (개인화 설정 등)
   void updateRelationship(SherpiRelationship newRelationship) {
     state = newRelationship;
-    LoggerService.instance.d(
-        '🎨 관계 정보 직접 업데이트 완료: ${newRelationship.personalizationSettings.personalityType.displayName}');
   }
 
   /// 💭 특별한 순간 회상하기

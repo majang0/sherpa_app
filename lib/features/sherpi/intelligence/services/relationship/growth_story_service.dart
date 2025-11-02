@@ -212,7 +212,6 @@ class GrowthStoryService {
       return storyList.map((data) => GrowthStoryItem.fromJson(data)).toList()
         ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
     } catch (e) {
-      LoggerService.instance.d('성장 스토리 로드 오류: $e');
       return [];
     }
   }
@@ -251,7 +250,6 @@ class GrowthStoryService {
       // 관련 추억 생성
       await _createMemoryFromStoryItem(item);
     } catch (e) {
-      LoggerService.instance.d('성장 스토리 항목 추가 오류: $e');
     }
   }
 
@@ -271,7 +269,6 @@ class GrowthStoryService {
           .map((data) => MilestoneTracker.fromJson(data))
           .toList();
     } catch (e) {
-      LoggerService.instance.d('마일스톤 로드 오류: $e');
       return [];
     }
   }
@@ -284,7 +281,6 @@ class GrowthStoryService {
       final trackersJson = trackers.map((t) => t.toJson()).toList();
       await prefs.setString(_prefsKeyMilestones, json.encode(trackersJson));
     } catch (e) {
-      LoggerService.instance.d('마일스톤 저장 오류: $e');
     }
   }
 
@@ -312,7 +308,6 @@ class GrowthStoryService {
         await _onMilestoneAchieved(updatedTracker);
       }
     } catch (e) {
-      LoggerService.instance.d('마일스톤 진행률 업데이트 오류: $e');
     }
   }
 
@@ -380,7 +375,6 @@ class GrowthStoryService {
         recentHighlights: recentHighlights,
       );
     } catch (e) {
-      LoggerService.instance.d('성장 통계 계산 오류: $e');
       return const GrowthStats(
         totalStoryItems: 0,
         achievementCount: 0,
@@ -419,7 +413,6 @@ class GrowthStoryService {
         );
       }
     } catch (e) {
-      LoggerService.instance.d('활동 기반 스토리 생성 오류: $e');
     }
   }
 
@@ -450,7 +443,6 @@ class GrowthStoryService {
 
       await addGrowthStoryItem(storyItem);
     } catch (e) {
-      LoggerService.instance.d('성취 기반 스토리 생성 오류: $e');
     }
   }
 

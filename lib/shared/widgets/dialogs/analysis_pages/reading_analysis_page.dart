@@ -168,13 +168,11 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
         });
       } else {
         // 캐시가 없으면 기본 메시지 사용 (보통 발생하지 않음 - 독서 완료 시 이미 생성됨)
-        debugPrint('⚠️ 독서 분석 캐시 없음 - 기본 메시지 사용');
         setState(() {
           _isLoadingAnalysis = false;
         });
       }
     } catch (e) {
-      debugPrint('❌ 독서 분석 캐시 로드 실패: $e');
       setState(() {
         _isLoadingAnalysis = false;
       });

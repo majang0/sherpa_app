@@ -892,14 +892,12 @@ class _ProfileEditDialogState extends ConsumerState<_ProfileEditDialog> {
       String? finalImageUrl = oldProfileUrl;
       if (_isImageDeleted) {
         // 이미지 삭제 요청 (null을 전달하면 빈 문자열로 저장됨)
-        LoggerService.instance.d('프로필 이미지 삭제 요청');
         ref.read(globalUserProvider.notifier).updateProfileImage(null);
         finalImageUrl = null;
       } else if (_selectedImage != null) {
         // 새 이미지 선택된 경우
         // 실제 구현에서는 이미지를 서버에 업로드하고 URL을 받아와야 함
         // 현재는 로컬 파일 경로를 저장 (임시)
-        LoggerService.instance.d('새 프로필 이미지 설정: ${_selectedImage!.path}');
         ref
             .read(globalUserProvider.notifier)
             .updateProfileImage(_selectedImage!.path);

@@ -611,22 +611,16 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
     // 🎯 퀘스트 시스템 즉시 업데이트 (등반 성공하기 퀘스트 처리)
     // 등반 완료 후 바로 퀘스트 진행률을 체크하도록 트리거
-    LoggerService.instance.i('⛰️ [GlobalUser] 등반 완료: ${session.mountainName}');
-    LoggerService.instance.i('⛰️ [GlobalUser] 등반 성공 여부: $isSuccess');
-    LoggerService.instance
-        .i('⛰️ [GlobalUser] 등반 기록 추가됨 - 총 ${updatedClimbingLogs.length}개 기록');
 
     // 데이터 저장을 먼저 완료
     _saveUserData();
 
     // 등반 성공 시 퀘스트 시스템 업데이트
     if (isSuccess) {
-      LoggerService.instance.i('✅ [GlobalUser] 등반 성공! 퀘스트 시스템 업데이트 요청');
       // 퀘스트 시스템에 등반 성공을 알림 - state가 완전히 업데이트된 후 실행
       Future.microtask(() async {
         // state 업데이트가 완전히 적용되도록 더 긴 지연 시간 적용
         await Future.delayed(const Duration(seconds: 1));
-        LoggerService.instance.i('🔄 [GlobalUser] 퀘스트 시스템 동기화 시작');
 
         // 현재 상태를 직접 체크
         final currentUser = ref.read(globalUserProvider);
@@ -639,12 +633,9 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
               log.isSuccess;
         }).isNotEmpty;
 
-        LoggerService.instance
-            .i('🔍 [GlobalUser] 오늘 등반 성공 기록 확인: $todayClimbingSuccess');
 
         // 퀘스트 동기화
         await ref.read(questProviderV2.notifier).syncWithGlobalData();
-        LoggerService.instance.i('✅ [GlobalUser] 퀘스트 시스템 동기화 완료');
       });
     }
 
@@ -1960,15 +1951,6 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         enrichedUserContext['difficulty'] =
             additionalData?['difficulty'] ?? 'moderate';
         enrichedUserContext['calories'] = additionalData?['calories'] ?? 0;
-        LoggerService.instance.d(' Exercise data in handleActivityCompletion:');
-        LoggerService.instance
-            .i('  exerciseType: ${enrichedUserContext['exerciseType']}');
-        LoggerService.instance
-            .i('  duration: ${enrichedUserContext['duration']}');
-        LoggerService.instance
-            .i('  difficulty: ${enrichedUserContext['difficulty']}');
-        LoggerService.instance
-            .i('  calories: ${enrichedUserContext['calories']}');
         break;
       case 'reading':
         enrichedUserContext['bookTitle'] =
@@ -2136,16 +2118,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
               );
 
               // 🔍 디버그: 캐시 저장 확인
-              LoggerService.instance.i('===== 운동 분석 캐시 저장 완료 =====');
-              LoggerService.instance.i('📊 섹션 1 - 비교: ${analysis.comparison}');
-              LoggerService.instance.i('📊 섹션 2 - 효과: ${analysis.benefits}');
-              LoggerService.instance
-                  .i('📊 섹션 3 - 추천: ${analysis.recommendation}');
-              LoggerService.instance
-                  .i('📊 섹션 4 - 응원: ${analysis.encouragement}');
-              LoggerService.instance.i('=====================================');
             } catch (e) {
-              LoggerService.instance.i('❌ 운동 분석 생성 실패: $e');
             }
           }
           break;
@@ -2189,18 +2162,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
               );
 
               // 🔍 디버그: 캐시 저장 확인
-              LoggerService.instance.i('===== 독서 분석 캐시 저장 완료 =====');
-              LoggerService.instance
-                  .i('📊 섹션 1 - 이전 책 인사이트: ${analysis.previousInsight}');
-              LoggerService.instance
-                  .i('📊 섹션 2 - 오늘 책 인사이트: ${analysis.todayInsight}');
-              LoggerService.instance
-                  .i('📊 섹션 3 - 여정 응원: ${analysis.journeyEncouragement}');
-              LoggerService.instance
-                  .i('📊 섹션 4 - 추천 도서: ${analysis.recommendations.length}권');
-              LoggerService.instance.i('=====================================');
             } catch (e) {
-              LoggerService.instance.i('❌ 독서 분석 생성 실패: $e');
             }
           }
           break;
@@ -2238,18 +2200,7 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
               );
 
               // 🔍 디버그: 캐시 저장 확인
-              LoggerService.instance.i('===== 일기 분석 캐시 저장 완료 =====');
-              LoggerService.instance
-                  .i('📊 섹션 1 - 감정 전환: ${analysis.emotionTransition}');
-              LoggerService.instance
-                  .i('📊 섹션 2 - 감정적 지지: ${analysis.emotionalSupport}');
-              LoggerService.instance
-                  .i('📊 섹션 3 - 실질적 조언: ${analysis.practicalAdvice}');
-              LoggerService.instance
-                  .i('📊 섹션 4 - 내일의 희망: ${analysis.tomorrowHope}');
-              LoggerService.instance.i('=====================================');
             } catch (e) {
-              LoggerService.instance.i('❌ 일기 분석 생성 실패: $e');
             }
           }
           break;
@@ -2257,7 +2208,6 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
 
       // 종합 AI 분석 제거됨 - 리소스 최적화
     } catch (e) {
-      LoggerService.instance.i('❌ 백그라운드 분석 트리거 실패: $e');
     }
   }
 

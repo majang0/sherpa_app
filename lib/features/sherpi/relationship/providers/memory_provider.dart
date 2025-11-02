@@ -422,7 +422,6 @@ class MemoryNotifier extends StateNotifier<MemoryState> {
       state = state.copyWith(statistics: statistics);
     } catch (e) {
       // 통계 업데이트 실패는 치명적이지 않으므로 조용히 처리
-      LoggerService.instance.d('통계 업데이트 오류: $e');
     }
   }
 

@@ -365,7 +365,6 @@ class _ComprehensiveAnalysisPageState
         );
       }
     } catch (e) {
-      LoggerService.instance.d('종합 분석 로드 에러: $e');
       setState(() {
         _isLoading = false;
       });
@@ -397,7 +396,6 @@ class _ComprehensiveAnalysisPageState
         forceRegenerate: forceRefresh, // 강제 새로고침 옵션
       );
     } catch (e) {
-      LoggerService.instance.d('종합 분석 수행 중 에러: $e');
       // 에러 발생 시 기본 데이터 사용
       _analysisData = ComprehensiveDayAnalysis(
         dayTheme: '성실한 하루 ✨',

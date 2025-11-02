@@ -153,10 +153,8 @@ class _NewMeetingDiscoveryScreenState
       if (imagePaths.isNotEmpty) {
         final cacheManager = MeetingImageCacheManager();
         await cacheManager.preloadImages(imagePaths);
-        debugPrint('Preloaded ${imagePaths.length} popular meeting images');
       }
     } catch (e) {
-      debugPrint('Failed to preload images: $e');
     }
   }
 

@@ -389,8 +389,6 @@ class _UserStatsSummaryWidgetState extends ConsumerState<UserStatsSummaryWidget>
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
               onTap: () {
-                LoggerService.instance
-                    .d('🎯 능력치 터치됨: ${stat['name']}'); // 디버그 로그
                 HapticFeedbackManager.lightImpact();
                 _showRPGStatDetails(
                   context,

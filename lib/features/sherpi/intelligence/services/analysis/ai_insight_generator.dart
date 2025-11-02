@@ -23,9 +23,7 @@ class AiInsightGenerator {
   AiInsightGenerator({Ref? ref}) : _ref = ref {
     try {
       _openAISource = OpenAIDialogueSource();
-      LoggerService.instance.i('✅ OpenAI GPT-5 인사이트 생성기 초기화 완료');
     } catch (e) {
-      LoggerService.instance.d('❌ OpenAI 인사이트 생성기 초기화 실패: $e');
       rethrow;
     }
   }
@@ -48,13 +46,10 @@ class AiInsightGenerator {
                 'AI 분석 사용료',
               );
       if (result) {
-        LoggerService.instance.i('✅ 분석 포인트 차감 성공: ${ANALYSIS_COST}P');
       } else {
-        LoggerService.instance.d('❌ 분석 포인트 차감 실패: 포인트 부족');
       }
       return result;
     } catch (e) {
-      LoggerService.instance.d('❌ 포인트 차감 중 오류: $e');
       return false;
     }
   }
@@ -66,7 +61,6 @@ class AiInsightGenerator {
           .read(globalPointProvider.notifier)
           .refundPoints(ANALYSIS_COST, reason);
     } catch (e) {
-      LoggerService.instance.w('⚠️ 포인트 환불 중 오류: $e');
     }
   }
 

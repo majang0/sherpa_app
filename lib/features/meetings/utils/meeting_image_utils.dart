@@ -53,8 +53,6 @@ class MeetingImageUtils {
       final tempFile = tempFiles[i];
 
       if (!await tempFile.exists()) {
-        LoggerService.instance
-            .d('⚠️ Warning: Temporary file does not exist: ${tempFile.path}');
         continue;
       }
 
@@ -70,10 +68,7 @@ class MeetingImageUtils {
         await tempFile.copy(targetFile.path);
         savedFileNames.add(fileName);
 
-        LoggerService.instance
-            .d('✅ Image saved: $fileName (${await tempFile.length()} bytes)');
       } catch (e) {
-        LoggerService.instance.d('❌ Error saving image ${tempFile.path}: $e');
       }
     }
 
@@ -93,11 +88,9 @@ class MeetingImageUtils {
       if (await imageFile.exists()) {
         return imageFile;
       } else {
-        LoggerService.instance.d('⚠️ Warning: Image file not found: $fileName');
         return null;
       }
     } catch (e) {
-      LoggerService.instance.d('❌ Error loading image file $fileName: $e');
       return null;
     }
   }
@@ -121,8 +114,6 @@ class MeetingImageUtils {
           final imageData = await imageFile.readAsBytes();
           imageDataList.add(imageData);
         } catch (e) {
-          LoggerService.instance
-              .d('❌ Error reading image data from $fileName: $e');
         }
       }
     }
@@ -147,9 +138,7 @@ class MeetingImageUtils {
         try {
           await imageFile.delete();
           deletedCount++;
-          LoggerService.instance.d('🗑️ Deleted image: $fileName');
         } catch (e) {
-          LoggerService.instance.d('❌ Error deleting image $fileName: $e');
         }
       }
     }
@@ -175,8 +164,6 @@ class MeetingImageUtils {
         try {
           totalSize += await file.length();
         } catch (e) {
-          LoggerService.instance
-              .d('Warning: Could not get size of ${file.path}');
         }
       }
 
@@ -186,7 +173,6 @@ class MeetingImageUtils {
         'totalSizeMB': (totalSize / (1024 * 1024)).toStringAsFixed(2),
       };
     } catch (e) {
-      LoggerService.instance.d('❌ Error getting storage stats: $e');
       return {'count': 0, 'totalSize': 0, 'totalSizeMB': '0.00'};
     }
   }
@@ -212,18 +198,13 @@ class MeetingImageUtils {
           if (fileStat.modified.isBefore(cutoffDate)) {
             await file.delete();
             deletedCount++;
-            LoggerService.instance
-                .d('🧹 Cleaned up old image: ${path.basename(file.path)}');
           }
         } catch (e) {
-          LoggerService.instance
-              .d('Warning: Could not check/delete ${file.path}: $e');
         }
       }
 
       return deletedCount;
     } catch (e) {
-      LoggerService.instance.d('❌ Error during cleanup: $e');
       return 0;
     }
   }
@@ -269,8 +250,6 @@ class MeetingImageUtils {
 
       return matchingFiles;
     } catch (e) {
-      LoggerService.instance
-          .d('❌ Error finding images for meeting $meetingId: $e');
       return [];
     }
   }

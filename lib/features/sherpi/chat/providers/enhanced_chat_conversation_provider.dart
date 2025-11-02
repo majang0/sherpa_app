@@ -233,7 +233,6 @@ class EnhancedChatConversationNotifier
           .read(sherpiProvider.notifier)
           .changeEmotion(sherpiMessage.emotion ?? SherpiEmotion.happy);
     } catch (e) {
-      LoggerService.instance.d('❌ 셰르피 응답 생성 실패: $e');
       _addErrorMessage();
     }
   }
@@ -384,7 +383,6 @@ class EnhancedChatConversationNotifier
     String? comment,
   }) async {
     // 피드백 수집 (현재는 로그만 기록)
-    LoggerService.instance.d('피드백 수집: $messageId - 평점: $rating, 코멘트: $comment');
   }
 
   /// 📊 개인화 통계 조회
@@ -413,7 +411,6 @@ class EnhancedChatConversationNotifier
         await prefs.setStringList('sherpi_conversation_sessions', sessionList);
       }
     } catch (e) {
-      LoggerService.instance.d('❌ 대화 저장 실패: $e');
     }
   }
 
@@ -430,7 +427,6 @@ class EnhancedChatConversationNotifier
         state = ConversationState.fromJson(conversationData);
       }
     } catch (e) {
-      LoggerService.instance.d('❌ 대화 불러오기 실패: $e');
     }
   }
 
@@ -474,7 +470,6 @@ class EnhancedChatConversationNotifier
         }
       }
     } catch (e) {
-      LoggerService.instance.d('감정 분석 실패: $e');
     }
   }
 

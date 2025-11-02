@@ -49,7 +49,6 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
         _createInitialNotifications();
       }
     } catch (e) {
-      LoggerService.instance.d('알림 로드 실패: $e');
       state = [];
     }
   }
@@ -62,7 +61,6 @@ class NotificationNotifier extends StateNotifier<List<NotificationItem>> {
           jsonEncode(state.map((n) => n.toJson()).toList());
       await prefs.setString('notifications', notificationsJson);
     } catch (e) {
-      LoggerService.instance.d('알림 저장 실패: $e');
     }
   }
 

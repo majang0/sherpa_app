@@ -625,20 +625,8 @@ class _AnimatedRPGLevelCardState extends ConsumerState<AnimatedRPGLevelCard>
     double totalSuccessBonus = willpowerBonus + badgeSuccessBonus;
 
     // 디버그 출력 (개발 중에만 사용)
-    LoggerService.instance.d('=== 등반 능력 계산 디버그 ===');
-    LoggerService.instance.d(
-        '사용자 스탯 - 사교성: ${user.stats.sociality}, 의지: ${user.stats.willpower}');
-    LoggerService.instance.d('장착된 뱃지 수: ${equippedBadges.length}');
     for (final badge in equippedBadges) {
-      LoggerService.instance
-          .d('- ${badge.name}: ${badge.effectType} = ${badge.effectValue}%');
     }
-    LoggerService.instance.d('계산 결과:');
-    LoggerService.instance.d('- 등반력 보너스: $powerBonus%');
-    LoggerService.instance.d('- 시간 단축 (사교성): $socialityTimeReduction%');
-    LoggerService.instance.d('- 시간 단축 (뱃지): $badgeTimeReduction%');
-    LoggerService.instance.d('- 성공률 (의지): $willpowerBonus%');
-    LoggerService.instance.d('- 성공률 (뱃지): $badgeSuccessBonus%');
 
     return Container(
       padding: const EdgeInsets.all(20),
