@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/constants/sherpi_emotions.dart';
-import 'package:sherpa_app/shared/providers/peer_review_provider.dart';
-import 'package:sherpa_app/shared/providers/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/lazy_loaded/peer_review_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
 import 'package:sherpa_app/shared/widgets/sherpa_clean_app_bar.dart';
 import 'package:sherpa_app/shared/widgets/sherpa_button.dart';
 

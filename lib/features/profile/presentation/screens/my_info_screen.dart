@@ -7,9 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 // ✅ 글로벌 데이터 시스템 Import
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_user_title_provider.dart';
-import '../../../../shared/providers/notification_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_title_provider.dart';
+import 'package:sherpa_app/shared/providers/lazy_loaded/notification_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/models/notification_model.dart';
 import '../../../../core/theme/modern_colors.dart';

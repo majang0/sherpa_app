@@ -2,22 +2,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'dart:math' as math;
-import '../models/global_user_model.dart';
-import '../../features/daily_record/services/sample_data_generator.dart';
-import '../../features/daily_record/models/detailed_exercise_models.dart'
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/features/daily_record/services/sample_data_generator.dart';
+import 'package:sherpa_app/features/daily_record/models/detailed_exercise_models.dart'
     as detailed;
-import '../models/user_level_progress.dart';
-import '../models/point_system_model.dart';
-import '../models/global_badge_model.dart';
-import '../utils/calorie_calculator.dart';
-import 'global_sherpi_provider.dart';
-import '../../core/constants/sherpi_dialogues.dart';
-import '../../core/constants/game_constants.dart';
-import 'global_point_provider.dart';
-import 'global_game_provider.dart';
-import 'global_badge_provider.dart'; // 뱃지 Provider 추가
-import '../../features/quests/providers/quest_provider_v2.dart'; // 퀘스트 Provider 추가
-import 'notification_provider.dart'; // 알림 Provider 추가
+import 'package:sherpa_app/shared/models/user_level_progress.dart';
+import 'package:sherpa_app/shared/models/point_system_model.dart';
+import 'package:sherpa_app/shared/models/global_badge_model.dart';
+import 'package:sherpa_app/shared/utils/calorie_calculator.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
+import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
+import 'package:sherpa_app/core/constants/game_constants.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_0_foundation/global_game_provider.dart';
+import 'package:sherpa_app/shared/providers/lazy_loaded/global_badge_provider.dart'; // 뱃지 Provider 추가
+import 'package:sherpa_app/features/quests/providers/quest_provider_v2.dart'; // 퀘스트 Provider 추가
+import 'package:sherpa_app/shared/providers/lazy_loaded/notification_provider.dart'; // 알림 Provider 추가
 import 'package:sherpa_app/core/ai/services/activity_analysis_service.dart'; // 활동 분석 서비스 추가
 import 'package:sherpa_app/core/utils/logger_service.dart';
 

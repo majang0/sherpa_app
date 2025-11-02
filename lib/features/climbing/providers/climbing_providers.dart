@@ -4,8 +4,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // 🔄 글로벌 시스템 import
-import '../../../shared/providers/global_user_provider.dart';
-import '../../../shared/providers/global_badge_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/lazy_loaded/global_badge_provider.dart';
 import '../../../shared/models/global_badge_model.dart';
 
 // 🔄 기존 코드 호환성을 위한 Provider 별칭

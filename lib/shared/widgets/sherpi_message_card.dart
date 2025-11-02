@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 
 // Shared
-import '../providers/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
 
 /// 🎭 셰르피 메시지 카드 위젯
 ///

@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
-import '../../../../shared/providers/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'movie_edit_screen.dart';
 
 class MovieDetailScreen extends ConsumerStatefulWidget {

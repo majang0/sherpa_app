@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
 import '../../core/constants/sherpi_dialogues.dart';
 import '../../core/theme/modern_colors.dart';
 

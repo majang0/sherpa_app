@@ -18,8 +18,8 @@ import '../../features/sherpi/analysis/presentation/screens/analysis_result_scre
 import '../../features/sherpi/planning/presentation/screens/simple_planner_screen.dart';
 
 // Shared
-import '../providers/global_sherpi_provider.dart';
-import '../providers/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../features/sherpi/relationship/providers/relationship_provider.dart';
 import '../../features/sherpi/relationship/presentation/widgets/intimacy_level_widget.dart';
 import 'sherpi_relationship_growth_widget.dart';

@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../models/available_meeting_model.dart';
-import '../../../../shared/providers/global_meeting_provider.dart';
+import 'package:sherpa_app/shared/providers/level_2_features/global_meeting_provider.dart';
 
 /// 🌟 모임 만족도 평가 화면
 /// 모임 참여 후 후기 작성 및 최종 보상 획득

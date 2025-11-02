@@ -11,7 +11,7 @@ import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.
 
 // Providers
 import 'features/quests/providers/quest_provider_v2.dart';
-import 'shared/providers/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
 
 // Shared Widgets
 import 'shared/widgets/sherpa_clean_app_bar.dart';

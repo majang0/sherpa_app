@@ -5,7 +5,7 @@ import '../../../../../core/theme/modern_colors.dart';
 import '../../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../../shared/widgets/sherpa_card.dart';
 import '../../../../../shared/models/point_system_model.dart';
-import '../../../../../shared/providers/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
 
 class WithdrawalScreen extends ConsumerStatefulWidget {
   const WithdrawalScreen({super.key});

@@ -6,7 +6,7 @@ import 'package:sherpa_app/core/ai/sources/openai_dialogue_source.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/models/point_system_model.dart';
-import '../../../../shared/providers/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
 import 'user_data_analyzer.dart';
 
 /// 🤖 AI 기반 인사이트 생성기

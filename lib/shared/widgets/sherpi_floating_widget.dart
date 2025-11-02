@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
 import 'sherpi_widget.dart';
 
 // 플로팅 셰르피 위젯 - 화면 어디든 드래그 가능

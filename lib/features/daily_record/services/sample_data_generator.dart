@@ -2,7 +2,7 @@
 
 import 'dart:math' as math;
 import '../../../shared/models/global_user_model.dart';
-import '../../../shared/providers/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../../core/constants/mood_constants.dart';
 
 /// 14일간 샘플 데이터 생성 서비스

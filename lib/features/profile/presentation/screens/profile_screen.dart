@@ -3,15 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // ✅ 글로벌 데이터 시스템 Import
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_point_provider.dart';
-import '../../../../shared/providers/global_user_title_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_title_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
 // ✅ 챌린지 시스템 Import 추가
-import '../../../../shared/providers/global_challenge_provider.dart';
+import 'package:sherpa_app/shared/providers/lazy_loaded/global_challenge_provider.dart';
 import '../../../meetings/models/available_challenge_model.dart';
 
 // 새로운 위젯들 Import

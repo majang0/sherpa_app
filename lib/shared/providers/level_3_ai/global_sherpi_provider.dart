@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
-import '../../core/constants/sherpi_dialogues.dart';
+import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/managers/sherpi_message_manager.dart';
 import 'package:sherpa_app/core/ai/managers/unified_sherpi_manager.dart';
 import 'package:sherpa_app/shared/utils/sherpi_text_utils.dart';
 import 'package:sherpa_app/core/ai/services/real_data_connector.dart';
-import '../../features/sherpi/relationship/providers/relationship_provider.dart';
-import '../../features/sherpi/emotion/providers/emotion_analysis_provider.dart';
-import '../models/sherpi_message_history.dart';
-import '../models/sherpi_relationship_model.dart';
-import 'global_user_provider.dart'; // Phase 1: 실제 사용자 이름을 가져오기 위해 추가
+import 'package:sherpa_app/features/sherpi/relationship/providers/relationship_provider.dart';
+import 'package:sherpa_app/features/sherpi/emotion/providers/emotion_analysis_provider.dart';
+import 'package:sherpa_app/shared/models/sherpi_message_history.dart';
+import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart'; // Phase 1: 실제 사용자 이름을 가져오기 위해 추가
 
 enum SherpiDisplayMode {
   floating, // 우하단 플로팅 (기본)

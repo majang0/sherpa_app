@@ -8,13 +8,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'main_navigation_screen.dart';
 import 'core/theme/modern_colors.dart';
 
-// Providers
-import 'shared/providers/global_sherpi_provider.dart';
-import 'shared/providers/global_user_provider.dart';
-import 'shared/providers/global_point_provider.dart';
-import 'shared/providers/global_user_title_provider.dart';
-import 'shared/providers/global_game_provider.dart';
-import 'shared/providers/global_meeting_provider.dart';
+// Providers (Level-based organization)
+import 'shared/providers/level_0_foundation/global_game_provider.dart';
+import 'shared/providers/level_1_user_data/global_user_provider.dart';
+import 'shared/providers/level_1_user_data/global_point_provider.dart';
+import 'shared/providers/level_1_user_data/global_user_title_provider.dart';
+import 'shared/providers/level_2_features/global_meeting_provider.dart';
+import 'shared/providers/level_3_ai/global_sherpi_provider.dart';
 import 'features/quests/providers/quest_provider_v2.dart';
 import 'features/sherpi/relationship/providers/relationship_provider.dart';
 import 'features/sherpi/emotion/providers/emotion_analysis_provider.dart';
@@ -35,7 +35,7 @@ import 'features/daily_record/presentation/screens/exercise_dashboard_screen.dar
 import 'features/daily_record/presentation/screens/exercise_detail_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_edit_screen.dart';
 import 'features/daily_record/presentation/screens/reading_record_screen.dart';
-import 'features/daily_record/presentation/screens/focus_timer_record_screen.dart';
+import 'features/activities_focus/presentation/screens/focus_timer_record_screen.dart';
 import 'shared/widgets/dialogs/analysis_pages/diary_analysis_page.dart';
 
 // Screens - Shared

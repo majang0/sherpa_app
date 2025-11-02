@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
 import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_sherpi_provider.dart';
-import '../../../../shared/providers/global_user_title_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_title_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/models/user_level_progress.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
-import '../../../../shared/providers/global_challenge_provider.dart';
+import 'package:sherpa_app/shared/providers/lazy_loaded/global_challenge_provider.dart';
 import '../../models/available_challenge_model.dart';
 
 /// 🏆 챌린지 탐험 게시판 (Challenge Exploration Board)

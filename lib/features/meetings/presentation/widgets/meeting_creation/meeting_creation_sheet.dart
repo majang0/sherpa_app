@@ -8,9 +8,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../../core/theme/modern_colors.dart';
-import '../../../../../shared/providers/global_sherpi_provider.dart';
-import '../../../../../shared/providers/global_user_provider.dart';
-import '../../../../../shared/providers/global_meeting_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_2_features/global_meeting_provider.dart';
 import '../../../models/meeting_creation_model.dart';
 import '../../../providers/meeting_creation_provider.dart';
 import 'category_selector_step.dart';

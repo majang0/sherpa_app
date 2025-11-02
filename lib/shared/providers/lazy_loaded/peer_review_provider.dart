@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/main.dart';
 import 'package:sherpa_app/shared/models/peer_review_model.dart';
-import 'package:sherpa_app/shared/providers/global_point_provider.dart';
-import 'package:sherpa_app/shared/providers/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/models/point_system_model.dart';
 
 /// 동료 평가 Provider

@@ -10,7 +10,7 @@ import '../../../../shared/widgets/components/molecules/meeting_card_2025.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_list_2025.dart';
 import '../../../../shared/widgets/components/molecules/search_bar_2025.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
-import '../../../../shared/providers/global_meeting_provider.dart';
+import 'package:sherpa_app/shared/providers/level_2_features/global_meeting_provider.dart';
 
 /// 모임 전체보기 화면 - 한국 앱 UX 패턴 적용 (글로벌 데이터 연동)
 class MeetingListAllScreen extends ConsumerStatefulWidget {

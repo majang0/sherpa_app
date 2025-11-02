@@ -12,7 +12,7 @@ import '../models/conversation_state.dart';
 // Core
 import '../../../../core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/core/ai/managers/unified_sherpi_manager.dart';
-import '../../../../shared/providers/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
 
 // Emotion Recognition Integration
 import '../../emotion/providers/emotion_state_provider.dart';

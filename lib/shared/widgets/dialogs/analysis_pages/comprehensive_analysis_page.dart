@@ -8,8 +8,8 @@ import '../../../../core/theme/modern_colors.dart';
 import 'package:sherpa_app/core/ai/services/activity_analysis_service.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
 import '../../../models/point_system_model.dart';
-import '../../../providers/global_point_provider.dart';
-// import '../../../providers/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
+// import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 // import '../../../models/global_user_model.dart';
 
 /// 🌟 종합 분석 페이지 - 하루 전체를 아우르는 통찰력 있는 분석

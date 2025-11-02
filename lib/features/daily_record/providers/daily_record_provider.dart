@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../shared/providers/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 
 // 일일 기록은 글로벌 사용자 데이터에서 직접 관리됩니다.

@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 // ✅ 글로벌 데이터 시스템 Import
 import '../../../../shared/models/global_user_model.dart';
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_user_title_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_title_provider.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_card.dart';
 import 'profile_avatar_widget.dart';

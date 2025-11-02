@@ -7,7 +7,7 @@ import '../../../core/theme/modern_colors.dart';
 import '../../../core/constants/mood_constants.dart';
 import '../presentation/screens/diary_write_edit_screen.dart';
 import '../presentation/screens/diary_detail_screen.dart';
-import '../../../shared/providers/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 import '../../../shared/models/global_user_model.dart';
 

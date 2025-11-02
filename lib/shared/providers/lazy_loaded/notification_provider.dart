@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import '../models/notification_model.dart';
+import 'package:sherpa_app/shared/models/notification_model.dart';
 
 // 알림 상태 관리 Provider
 final notificationProvider =

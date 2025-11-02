@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
-import 'package:sherpa_app/shared/providers/global_point_provider.dart';
-import 'package:sherpa_app/shared/providers/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/models/point_system_model.dart';
 import 'package:sherpa_app/features/quests/models/quest_instance_model.dart';
 import 'package:sherpa_app/features/quests/providers/quest_provider_v2.dart';

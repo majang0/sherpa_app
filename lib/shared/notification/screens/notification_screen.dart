@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/modern_colors.dart';
-import '../../providers/notification_provider.dart';
+import 'package:sherpa_app/shared/providers/lazy_loaded/notification_provider.dart';
 import '../../models/notification_model.dart';
 import '../../widgets/notification_item_widget.dart';
 

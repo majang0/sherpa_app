@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import '../../features/home/models/community_model.dart';
-import 'global_point_provider.dart';
-import 'global_sherpi_provider.dart';
-import '../../core/constants/sherpi_dialogues.dart';
+import 'package:sherpa_app/features/home/models/community_model.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
+import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 
 /// 글로벌 커뮤니티 상태 관리 Provider
 final globalCommunityProvider =

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import '../models/point_system_model.dart';
+import 'package:sherpa_app/shared/models/point_system_model.dart';
 
 /// 포인트 데이터 모델 (기존 코드 호환성용)
 class PointData {

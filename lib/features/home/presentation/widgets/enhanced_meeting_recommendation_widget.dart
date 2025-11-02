@@ -11,7 +11,7 @@ import '../../../meetings/models/available_meeting_model.dart';
 import '../../../meetings/utils/meeting_image_utils.dart';
 
 // Shared Providers
-import '../../../../shared/providers/global_meeting_provider.dart';
+import 'package:sherpa_app/shared/providers/level_2_features/global_meeting_provider.dart';
 
 // Shared Widgets
 import '../../../../shared/widgets/components/molecules/participant_avatars_2025.dart';

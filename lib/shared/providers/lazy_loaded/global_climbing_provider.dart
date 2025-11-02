@@ -5,18 +5,18 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 // 모델 imports
-import '../models/climbing_models.dart';
-import '../models/mountain.dart';
-import '../../features/climbing/models/badge.dart';
+import 'package:sherpa_app/shared/models/climbing_models.dart';
+import 'package:sherpa_app/shared/models/mountain.dart';
+import 'package:sherpa_app/features/climbing/models/badge.dart';
 
 // 글로벌 Provider imports
-import 'global_user_provider.dart';
-import 'global_point_provider.dart';
-import 'global_game_provider.dart';
-import 'global_user_title_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_0_foundation/global_game_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_title_provider.dart';
 
 // 상수 imports
-import '../../core/constants/mountain_data.dart';
+import 'package:sherpa_app/core/constants/mountain_data.dart';
 
 /// 글로벌 등반 시스템 Provider
 final globalClimbingProvider =

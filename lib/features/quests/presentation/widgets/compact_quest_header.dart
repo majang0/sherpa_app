@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
 import '../../providers/quest_provider_v2.dart';
 import '../../models/quest_instance_model.dart';
 

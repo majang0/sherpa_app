@@ -3,7 +3,7 @@ import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
 import 'package:sherpa_app/shared/models/sherpi_relationship_model.dart';
 import 'package:sherpa_app/features/sherpi/emotion/providers/emotion_analysis_provider.dart';
 import 'package:sherpa_app/features/sherpi/relationship/providers/relationship_provider.dart';
-import 'package:sherpa_app/shared/providers/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
 
 class SherpiInsights {
   final SherpiPersonalityType personalityType;

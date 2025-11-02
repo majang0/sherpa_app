@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
 
-import '../../../../shared/providers/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
 import '../../models/available_meeting_model.dart';
 import '../../utils/meeting_animations.dart';
 import '../../utils/meeting_image_utils.dart';

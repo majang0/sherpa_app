@@ -6,8 +6,8 @@ import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/game_constants.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../../../shared/models/user_level_progress.dart';
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_user_title_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_title_provider.dart';
 
 class UserLevelCardWidget extends ConsumerStatefulWidget {
   const UserLevelCardWidget({super.key});

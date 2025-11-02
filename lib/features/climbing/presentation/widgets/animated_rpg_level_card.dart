@@ -12,9 +12,9 @@ import '../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../core/constants/sherpi_emotions.dart';
 
 // Shared Providers
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_user_title_provider.dart';
-import '../../../../shared/providers/global_badge_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_title_provider.dart';
+import 'package:sherpa_app/shared/providers/lazy_loaded/global_badge_provider.dart';
 
 // Shared Widgets
 import '../../../../shared/utils/haptic_feedback_manager.dart';

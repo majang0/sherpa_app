@@ -8,7 +8,7 @@ import '../../../../../core/theme/modern_colors.dart';
 import '../../../../../core/constants/sherpi_emotions.dart';
 
 // Shared
-import '../../../../../shared/providers/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
 import '../../../../../shared/models/sherpi_message_history.dart';
 import '../../../../../shared/widgets/sherpa_clean_app_bar.dart';
 

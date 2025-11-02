@@ -7,13 +7,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 import 'dart:math' as math;
-import '../../../../core/theme/modern_colors.dart';
-import '../../../../core/constants/sherpi_dialogues.dart'; // 셰르피 컨텍스트 + 감정 포함
-import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
-import '../../../../shared/utils/haptic_feedback_manager.dart';
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_sherpi_provider.dart'; // 셰르피 Provider 추가
-import '../../../../shared/providers/global_point_provider.dart'; // 포인트 Provider 추가
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/core/constants/sherpi_dialogues.dart'; // 셰르피 컨텍스트 + 감정 포함
+import 'package:sherpa_app/shared/widgets/sherpa_clean_app_bar.dart';
+import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart'; // 셰르피 Provider 추가
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart'; // 포인트 Provider 추가
 
 // 🎯 집중 유형 enum
 enum FocusType {

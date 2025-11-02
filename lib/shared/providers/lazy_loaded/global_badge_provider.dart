@@ -1,9 +1,9 @@
 // lib/shared/providers/global_badge_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/global_badge_model.dart';
-import '../constants/global_badge_data.dart';
-import 'global_user_provider.dart';
+import 'package:sherpa_app/shared/models/global_badge_model.dart';
+import 'package:sherpa_app/shared/constants/global_badge_data.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 
 /// 사용자가 장착한 뱃지 목록 Provider
 final globalEquippedBadgesProvider = Provider<List<GlobalBadge>>((ref) {

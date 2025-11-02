@@ -8,7 +8,7 @@ import '../presentation/screens/reading_record_screen.dart';
 import 'reading_full_view_widget.dart';
 import 'reading_detail_modal.dart';
 import '../utils/reading_utils.dart';
-import '../../../shared/providers/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
 

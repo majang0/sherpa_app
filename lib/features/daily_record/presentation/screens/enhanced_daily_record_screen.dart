@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/providers/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../widgets/simple_today_growth_widget.dart';
 import '../../widgets/step_analysis_widget.dart';
 import '../../widgets/focus_time_analysis_widget.dart';

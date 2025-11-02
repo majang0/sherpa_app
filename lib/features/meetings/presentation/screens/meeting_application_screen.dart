@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
 
 import '../../models/available_meeting_model.dart';
-import '../../../../shared/providers/global_meeting_provider.dart';
+import 'package:sherpa_app/shared/providers/level_2_features/global_meeting_provider.dart';
 
 /// 🎯 모임 신청 화면
 /// 포인트 결제 및 최종 참여 확정을 위한 화면

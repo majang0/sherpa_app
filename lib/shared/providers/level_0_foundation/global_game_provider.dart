@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math' as math;
-import '../models/global_badge_model.dart';
-import '../constants/global_badge_data.dart';
-import '../models/mountain.dart';
-import '../../core/constants/game_constants.dart';
-import '../../core/constants/mountain_data.dart';
+import 'package:sherpa_app/shared/models/global_badge_model.dart';
+import 'package:sherpa_app/shared/constants/global_badge_data.dart';
+import 'package:sherpa_app/shared/models/mountain.dart';
+import 'package:sherpa_app/core/constants/game_constants.dart';
+import 'package:sherpa_app/core/constants/mountain_data.dart';
 
 /// 게임 시스템 데이터 관리 Provider
 /// 게임 공식, 상수, 마스터 데이터 등 모든 사용자가 공유하는 게임 시스템

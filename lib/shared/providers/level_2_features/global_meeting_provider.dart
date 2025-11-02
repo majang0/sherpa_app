@@ -1,13 +1,13 @@
 // lib/shared/providers/global_meeting_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../features/meetings/models/available_meeting_model.dart';
-import '../models/global_user_model.dart';
-import 'global_user_provider.dart';
-import 'global_point_provider.dart';
-import 'global_sherpi_provider.dart';
-import '../../core/constants/sherpi_dialogues.dart';
-import 'notification_provider.dart';
+import 'package:sherpa_app/features/meetings/models/available_meeting_model.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
+import 'package:sherpa_app/core/constants/sherpi_dialogues.dart';
+import 'package:sherpa_app/shared/providers/lazy_loaded/notification_provider.dart';
 
 /// 🌍 글로벌 모임 관리 Provider
 /// 모든 모임 관련 데이터와 로직을 중앙에서 관리

@@ -16,8 +16,8 @@ import '../../../../shared/widgets/cached_meeting_image.dart';
 import '../../../../shared/utils/meeting_image_cache_manager.dart';
 
 // 📦 모델 및 프로바이더
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_meeting_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_2_features/global_meeting_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../models/available_meeting_model.dart';
 import '../../../../shared/utils/meeting_image_manager.dart';

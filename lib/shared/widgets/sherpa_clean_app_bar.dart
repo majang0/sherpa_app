@@ -6,10 +6,10 @@ import 'dart:io';
 
 // ✅ 글로벌 데이터 시스템 Import
 import '../../core/theme/modern_colors.dart';
-import '../providers/global_user_provider.dart';
-import '../providers/global_point_provider.dart';
-import '../providers/global_user_title_provider.dart';
-import '../providers/notification_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_title_provider.dart';
+import 'package:sherpa_app/shared/providers/lazy_loaded/notification_provider.dart';
 import '../widgets/notification_item_widget.dart';
 import '../../features/profile/presentation/screens/my_info_screen.dart';
 import '../../features/profile/shop/presentation/screens/enhanced_point_shop_screen.dart';

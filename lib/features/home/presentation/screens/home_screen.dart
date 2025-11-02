@@ -8,9 +8,9 @@ import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 
 // Shared Providers
-import '../../../../shared/providers/global_sherpi_provider.dart';
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
 import '../../../quests/providers/quest_provider_v2.dart';
 
 // Shared Widgets

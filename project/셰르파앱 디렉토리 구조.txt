@@ -1,0 +1,363 @@
+lib
+ ┣ core
+ ┃ ┣ ai
+ ┃ ┃ ┣ cache
+ ┃ ┃ ┃ ┗ ai_message_cache.dart
+ ┃ ┃ ┣ managers
+ ┃ ┃ ┃ ┣ sherpi_message_manager.dart
+ ┃ ┃ ┃ ┗ unified_sherpi_manager.dart
+ ┃ ┃ ┣ services
+ ┃ ┃ ┃ ┣ activity_analysis_service.dart
+ ┃ ┃ ┃ ┣ activity_data_collector.dart
+ ┃ ┃ ┃ ┣ activity_prompt_templates.dart
+ ┃ ┃ ┃ ┗ real_data_connector.dart
+ ┃ ┃ ┗ sources
+ ┃ ┃ ┃ ┗ openai_dialogue_source.dart
+ ┃ ┣ animation
+ ┃ ┃ ┗ micro_interactions.dart
+ ┃ ┣ config
+ ┃ ┃ ┗ api_config.dart
+ ┃ ┣ constants
+ ┃ ┃ ┣ app_sizes.dart
+ ┃ ┃ ┣ game_constants.dart
+ ┃ ┃ ┣ meeting_categories.dart
+ ┃ ┃ ┣ mood_constants.dart
+ ┃ ┃ ┣ mountain_data.dart
+ ┃ ┃ ┣ sherpi_dialogues.dart
+ ┃ ┃ ┗ sherpi_emotions.dart
+ ┃ ┣ theme
+ ┃ ┃ ┣ app_theme.dart
+ ┃ ┃ ┣ color_migration_guide.md
+ ┃ ┃ ┣ glass_neu_style_system.dart
+ ┃ ┃ ┗ modern_colors.dart
+ ┃ ┗ utils
+ ┃ ┃ ┣ exercise_calculator.dart
+ ┃ ┃ ┣ logger_service.dart
+ ┃ ┃ ┣ phase1_performance_benchmark.dart
+ ┃ ┃ ┗ sherpi_system_checker.dart
+ ┣ features
+ ┃ ┣ climbing
+ ┃ ┃ ┣ models
+ ┃ ┃ ┃ ┗ badge.dart
+ ┃ ┃ ┣ presentation
+ ┃ ┃ ┃ ┣ screens
+ ┃ ┃ ┃ ┃ ┗ climbing_screen.dart
+ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┣ animated_rpg_level_card.dart
+ ┃ ┃ ┃ ┃ ┣ ascent_dashboard_widget.dart
+ ┃ ┃ ┃ ┃ ┣ badge_management_widget.dart
+ ┃ ┃ ┃ ┃ ┣ climbing_power_analysis_widget.dart
+ ┃ ┃ ┃ ┃ ┣ today_growth_widget.dart
+ ┃ ┃ ┃ ┃ ┗ user_stats_summary_widget.dart
+ ┃ ┃ ┗ providers
+ ┃ ┃ ┃ ┗ climbing_providers.dart
+ ┃ ┣ community
+ ┃ ┃ ┗ presentation
+ ┃ ┃ ┃ ┣ screens
+ ┃ ┃ ┃ ┃ ┗ community_screen.dart
+ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┣ meeting_scope_tabs_widget.dart
+ ┃ ┃ ┃ ┃ ┗ social_exploration_header_widget.dart
+ ┃ ┣ daily_record
+ ┃ ┃ ┣ constants
+ ┃ ┃ ┣ models
+ ┃ ┃ ┃ ┣ detailed_exercise_models.dart
+ ┃ ┃ ┃ ┣ diary_model.dart
+ ┃ ┃ ┃ ┣ focus_timer_model.dart
+ ┃ ┃ ┃ ┗ record_models.dart
+ ┃ ┃ ┣ presentation
+ ┃ ┃ ┃ ┣ screens
+ ┃ ┃ ┃ ┃ ┣ diary_detail_screen.dart
+ ┃ ┃ ┃ ┃ ┣ diary_write_edit_screen.dart
+ ┃ ┃ ┃ ┃ ┣ enhanced_daily_record_screen.dart
+ ┃ ┃ ┃ ┃ ┣ exercise_dashboard_screen.dart
+ ┃ ┃ ┃ ┃ ┣ exercise_detail_screen.dart
+ ┃ ┃ ┃ ┃ ┣ exercise_edit_screen.dart
+ ┃ ┃ ┃ ┃ ┣ exercise_record_screen.dart
+ ┃ ┃ ┃ ┃ ┣ exercise_selection_screen.dart
+ ┃ ┃ ┃ ┃ ┣ focus_timer_record_screen.dart
+ ┃ ┃ ┃ ┃ ┣ meeting_edit_screen.dart
+ ┃ ┃ ┃ ┃ ┣ meeting_log_detail_screen.dart
+ ┃ ┃ ┃ ┃ ┣ movie_add_screen.dart
+ ┃ ┃ ┃ ┃ ┣ movie_detail_screen.dart
+ ┃ ┃ ┃ ┃ ┣ movie_edit_screen.dart
+ ┃ ┃ ┃ ┃ ┣ reading_detail_screen.dart
+ ┃ ┃ ┃ ┃ ┗ reading_record_screen.dart
+ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┗ unified_exercise_record_form.dart
+ ┃ ┃ ┣ providers
+ ┃ ┃ ┃ ┗ daily_record_provider.dart
+ ┃ ┃ ┣ services
+ ┃ ┃ ┃ ┗ sample_data_generator.dart
+ ┃ ┃ ┣ utils
+ ┃ ┃ ┃ ┗ reading_utils.dart
+ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┣ diary_full_view_widget.dart
+ ┃ ┃ ┃ ┣ enhanced_daily_quest_widget.dart
+ ┃ ┃ ┃ ┣ enhanced_diary_calendar_widget_v2.dart
+ ┃ ┃ ┃ ┣ enhanced_meeting_calendar_widget.dart
+ ┃ ┃ ┃ ┣ enhanced_reading_calendar_widget.dart
+ ┃ ┃ ┃ ┣ exercise_analysis_widget.dart
+ ┃ ┃ ┃ ┣ exercise_analytics_dashboard.dart
+ ┃ ┃ ┃ ┣ exercise_full_view_widget.dart
+ ┃ ┃ ┃ ┣ exercise_summary_widget.dart
+ ┃ ┃ ┃ ┣ focus_time_analysis_widget.dart
+ ┃ ┃ ┃ ┣ meeting_full_view_widget.dart
+ ┃ ┃ ┃ ┣ mood_selector.dart
+ ┃ ┃ ┃ ┣ movie_calendar_widget.dart
+ ┃ ┃ ┃ ┣ movie_full_view_widget.dart
+ ┃ ┃ ┃ ┣ reading_detail_modal.dart
+ ┃ ┃ ┃ ┣ reading_full_view_widget.dart
+ ┃ ┃ ┃ ┣ simple_today_growth_widget.dart
+ ┃ ┃ ┃ ┗ step_analysis_widget.dart
+ ┃ ┣ home
+ ┃ ┃ ┣ models
+ ┃ ┃ ┃ ┣ campus_integration_model.dart
+ ┃ ┃ ┃ ┣ community_model.dart
+ ┃ ┃ ┃ ┗ growth_synergy_model.dart
+ ┃ ┃ ┗ presentation
+ ┃ ┃ ┃ ┣ screens
+ ┃ ┃ ┃ ┃ ┗ home_screen.dart
+ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┣ all_goals_reward_modal.dart
+ ┃ ┃ ┃ ┃ ┣ compact_quest_widget.dart
+ ┃ ┃ ┃ ┃ ┣ enhanced_meeting_recommendation_widget.dart
+ ┃ ┃ ┃ ┃ ┣ friends_activity_feed_widget.dart
+ ┃ ┃ ┃ ┃ ┣ growth_insights_widget.dart
+ ┃ ┃ ┃ ┃ ┣ personalized_growth_dashboard_widget.dart
+ ┃ ┃ ┃ ┃ ┣ sherpi_personalized_meeting_widget.dart
+ ┃ ┃ ┃ ┃ ┣ university_guild_widget.dart
+ ┃ ┃ ┃ ┃ ┗ user_level_card_widget.dart
+ ┃ ┣ meetings
+ ┃ ┃ ┣ ai
+ ┃ ┃ ┃ ┣ models
+ ┃ ┃ ┃ ┃ ┣ ai_recommended_meeting.dart
+ ┃ ┃ ┃ ┃ ┗ user_activity_pattern.dart
+ ┃ ┃ ┃ ┣ meeting_recommendation_ai.dart
+ ┃ ┃ ┃ ┣ recommendation_prompt_builder.dart
+ ┃ ┃ ┃ ┗ user_activity_analyzer.dart
+ ┃ ┃ ┣ models
+ ┃ ┃ ┃ ┣ available_challenge_model.dart
+ ┃ ┃ ┃ ┣ available_meeting_model.dart
+ ┃ ┃ ┃ ┣ meeting_creation_model.dart
+ ┃ ┃ ┃ ┗ meeting_log_model.dart
+ ┃ ┃ ┣ presentation
+ ┃ ┃ ┃ ┣ screens
+ ┃ ┃ ┃ ┃ ┣ available_meeting_detail_screen.dart
+ ┃ ┃ ┃ ┃ ┣ challenge_index_screen.dart
+ ┃ ┃ ┃ ┃ ┣ meeting_application_screen.dart
+ ┃ ┃ ┃ ┃ ┣ meeting_list_all_screen.dart
+ ┃ ┃ ┃ ┃ ┣ meeting_review_screen.dart
+ ┃ ┃ ┃ ┃ ┣ meeting_success_screen.dart
+ ┃ ┃ ┃ ┃ ┣ meeting_tab_screen.dart
+ ┃ ┃ ┃ ┃ ┣ new_meeting_discovery_screen.dart
+ ┃ ┃ ┃ ┃ ┗ peer_review_screen.dart
+ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┣ ai
+ ┃ ┃ ┃ ┃ ┃ ┣ ai_analysis_loading_widget.dart
+ ┃ ┃ ┃ ┃ ┃ ┗ ai_recommendation_result_cards.dart
+ ┃ ┃ ┃ ┃ ┗ meeting_creation
+ ┃ ┃ ┃ ┃ ┃ ┣ category_selector_step.dart
+ ┃ ┃ ┃ ┃ ┃ ┣ datetime_picker_step.dart
+ ┃ ┃ ┃ ┃ ┃ ┣ details_form_step.dart
+ ┃ ┃ ┃ ┃ ┃ ┣ final_review_step.dart
+ ┃ ┃ ┃ ┃ ┃ ┗ meeting_creation_sheet.dart
+ ┃ ┃ ┣ providers
+ ┃ ┃ ┃ ┗ meeting_creation_provider.dart
+ ┃ ┃ ┗ utils
+ ┃ ┃ ┃ ┣ meeting_animations.dart
+ ┃ ┃ ┃ ┗ meeting_image_utils.dart
+ ┃ ┣ profile
+ ┃ ┃ ┣ presentation
+ ┃ ┃ ┃ ┣ screens
+ ┃ ┃ ┃ ┃ ┣ my_info_screen.dart
+ ┃ ┃ ┃ ┃ ┗ profile_screen.dart
+ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┣ challenge_list_item.dart
+ ┃ ┃ ┃ ┃ ┣ growth_summary_card.dart
+ ┃ ┃ ┃ ┃ ┣ level_badge_widget.dart
+ ┃ ┃ ┃ ┃ ┣ liquid_glass_profile_header.dart
+ ┃ ┃ ┃ ┃ ┣ profile_avatar_widget.dart
+ ┃ ┃ ┃ ┃ ┣ profile_header_widget.dart
+ ┃ ┃ ┃ ┃ ┗ representative_dashboard.dart
+ ┃ ┃ ┣ shop
+ ┃ ┃ ┃ ┗ presentation
+ ┃ ┃ ┃ ┃ ┗ screens
+ ┃ ┃ ┃ ┃ ┃ ┗ enhanced_point_shop_screen.dart
+ ┃ ┃ ┗ wallet
+ ┃ ┃ ┃ ┗ presentation
+ ┃ ┃ ┃ ┃ ┗ screens
+ ┃ ┃ ┃ ┃ ┃ ┗ withdrawal_screen.dart
+ ┃ ┣ quests
+ ┃ ┃ ┣ data
+ ┃ ┃ ┃ ┗ quest_templates_data.dart
+ ┃ ┃ ┣ models
+ ┃ ┃ ┃ ┣ quest_instance_model.dart
+ ┃ ┃ ┃ ┗ quest_template_model.dart
+ ┃ ┃ ┣ presentation
+ ┃ ┃ ┃ ┣ screens
+ ┃ ┃ ┃ ┃ ┗ quest_screen_redesigned.dart
+ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┣ compact_quest_header.dart
+ ┃ ┃ ┃ ┃ ┣ quest_card_v2_widget.dart
+ ┃ ┃ ┃ ┃ ┗ quest_completion_animation_widget.dart
+ ┃ ┃ ┣ providers
+ ┃ ┃ ┃ ┗ quest_provider_v2.dart
+ ┃ ┃ ┣ services
+ ┃ ┃ ┃ ┣ quest_generator_service.dart
+ ┃ ┃ ┃ ┗ quest_tracking_service.dart
+ ┃ ┃ ┗ utils
+ ┃ ┃ ┃ ┗ quest_condition_formatter.dart
+ ┃ ┗ sherpi
+ ┃ ┃ ┣ analysis
+ ┃ ┃ ┃ ┣ constants
+ ┃ ┃ ┃ ┃ ┗ analysis_constants.dart
+ ┃ ┃ ┃ ┣ presentation
+ ┃ ┃ ┃ ┃ ┗ screens
+ ┃ ┃ ┃ ┃ ┃ ┗ analysis_result_screen.dart
+ ┃ ┃ ┃ ┗ services
+ ┃ ┃ ┃ ┃ ┣ ai_insight_generator.dart
+ ┃ ┃ ┃ ┃ ┗ user_data_analyzer.dart
+ ┃ ┃ ┣ chat
+ ┃ ┃ ┃ ┣ models
+ ┃ ┃ ┃ ┃ ┣ chat_message.dart
+ ┃ ┃ ┃ ┃ ┗ conversation_state.dart
+ ┃ ┃ ┃ ┣ presentation
+ ┃ ┃ ┃ ┃ ┣ screens
+ ┃ ┃ ┃ ┃ ┃ ┣ sherpi_chat_screen.dart
+ ┃ ┃ ┃ ┃ ┃ ┗ sherpi_message_history_screen.dart
+ ┃ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┃ ┣ chat_input_field.dart
+ ┃ ┃ ┃ ┃ ┃ ┗ chat_message_bubble.dart
+ ┃ ┃ ┃ ┗ providers
+ ┃ ┃ ┃ ┃ ┗ enhanced_chat_conversation_provider.dart
+ ┃ ┃ ┣ constants
+ ┃ ┃ ┣ domain
+ ┃ ┃ ┃ ┣ models
+ ┃ ┃ ┃ ┃ ┗ sherpi_response.dart
+ ┃ ┃ ┃ ┣ services
+ ┃ ┃ ┃ ┃ ┗ sherpi_insight_repository.dart
+ ┃ ┃ ┃ ┗ value_objects
+ ┃ ┃ ┣ emotion
+ ┃ ┃ ┃ ┣ models
+ ┃ ┃ ┃ ┃ ┣ emotion_analysis_model.dart
+ ┃ ┃ ┃ ┃ ┗ emotion_state_model.dart
+ ┃ ┃ ┃ ┣ presentation
+ ┃ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┃ ┗ emotion_sync_indicator.dart
+ ┃ ┃ ┃ ┣ providers
+ ┃ ┃ ┃ ┃ ┣ emotion_analysis_provider.dart
+ ┃ ┃ ┃ ┃ ┗ emotion_state_provider.dart
+ ┃ ┃ ┃ ┗ services
+ ┃ ┃ ┃ ┃ ┣ behavior_emotion_analyzer.dart
+ ┃ ┃ ┃ ┃ ┣ emotion_adaptive_response_system.dart
+ ┃ ┃ ┃ ┃ ┣ emotion_analysis_service.dart
+ ┃ ┃ ┃ ┃ ┣ emotion_history_analyzer.dart
+ ┃ ┃ ┃ ┃ ┗ text_emotion_analyzer.dart
+ ┃ ┃ ┣ planning
+ ┃ ┃ ┃ ┗ presentation
+ ┃ ┃ ┃ ┃ ┣ screens
+ ┃ ┃ ┃ ┃ ┃ ┗ simple_planner_screen.dart
+ ┃ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┃ ┣ checkpoint_tile_widget.dart
+ ┃ ┃ ┃ ┃ ┃ ┣ mountain_path_widget.dart
+ ┃ ┃ ┃ ┃ ┃ ┗ quick_goal_input_widget.dart
+ ┃ ┃ ┗ relationship
+ ┃ ┃ ┃ ┣ models
+ ┃ ┃ ┃ ┃ ┣ relationship_stage_model.dart
+ ┃ ┃ ┃ ┃ ┗ shared_memory_model.dart
+ ┃ ┃ ┃ ┣ presentation
+ ┃ ┃ ┃ ┃ ┗ widgets
+ ┃ ┃ ┃ ┃ ┃ ┗ intimacy_level_widget.dart
+ ┃ ┃ ┃ ┣ providers
+ ┃ ┃ ┃ ┃ ┣ growth_story_provider.dart
+ ┃ ┃ ┃ ┃ ┣ memory_provider.dart
+ ┃ ┃ ┃ ┃ ┗ relationship_provider.dart
+ ┃ ┃ ┃ ┗ services
+ ┃ ┃ ┃ ┃ ┣ growth_story_service.dart
+ ┃ ┃ ┃ ┃ ┣ memory_creation_service.dart
+ ┃ ┃ ┃ ┃ ┗ memory_management_service.dart
+ ┣ shared
+ ┃ ┣ constants
+ ┃ ┃ ┗ global_badge_data.dart
+ ┃ ┣ models
+ ┃ ┃ ┣ achievement_model.dart
+ ┃ ┃ ┣ climbing_models.dart
+ ┃ ┃ ┣ global_badge_model.dart
+ ┃ ┃ ┣ global_user_model.dart
+ ┃ ┃ ┣ mountain.dart
+ ┃ ┃ ┣ notification_model.dart
+ ┃ ┃ ┣ peer_review_model.dart
+ ┃ ┃ ┣ point_system_model.dart
+ ┃ ┃ ┣ sherpi_message_history.dart
+ ┃ ┃ ┣ sherpi_relationship_model.dart
+ ┃ ┃ ┗ user_level_progress.dart
+ ┃ ┣ notification
+ ┃ ┃ ┗ screens
+ ┃ ┃ ┃ ┗ notification_screen.dart
+ ┃ ┣ presentation
+ ┃ ┃ ┗ screens
+ ┃ ┃ ┃ ┗ component_viewer_screen.dart
+ ┃ ┣ providers
+ ┃ ┃ ┣ achievement_provider.dart
+ ┃ ┃ ┣ global_ai_recommendation_provider.dart
+ ┃ ┃ ┣ global_badge_provider.dart
+ ┃ ┃ ┣ global_challenge_provider.dart
+ ┃ ┃ ┣ global_climbing_provider.dart
+ ┃ ┃ ┣ global_community_provider.dart
+ ┃ ┃ ┣ global_game_provider.dart
+ ┃ ┃ ┣ global_meeting_provider.dart
+ ┃ ┃ ┣ global_point_provider.dart
+ ┃ ┃ ┣ global_sherpi_provider.dart
+ ┃ ┃ ┣ global_user_provider.dart
+ ┃ ┃ ┣ global_user_title_provider.dart
+ ┃ ┃ ┣ notification_provider.dart
+ ┃ ┃ ┗ peer_review_provider.dart
+ ┃ ┣ utils
+ ┃ ┃ ┣ calorie_calculator.dart
+ ┃ ┃ ┣ exercise_utils.dart
+ ┃ ┃ ┣ haptic_feedback_manager.dart
+ ┃ ┃ ┣ meeting_image_cache_manager.dart
+ ┃ ┃ ┣ meeting_image_manager.dart
+ ┃ ┃ ┣ sherpi_text_utils.dart
+ ┃ ┃ ┗ ux_helpers.dart
+ ┃ ┗ widgets
+ ┃ ┃ ┣ components
+ ┃ ┃ ┃ ┣ atoms
+ ┃ ┃ ┃ ┃ ┗ sherpa_notification_badge_2025.dart
+ ┃ ┃ ┃ ┣ molecules
+ ┃ ┃ ┃ ┃ ┣ category_selector_2025.dart
+ ┃ ┃ ┃ ┃ ┣ meeting_card_2025.dart
+ ┃ ┃ ┃ ┃ ┣ meeting_card_list_2025.dart
+ ┃ ┃ ┃ ┃ ┣ participant_avatars_2025.dart
+ ┃ ┃ ┃ ┃ ┣ search_bar_2025.dart
+ ┃ ┃ ┃ ┃ ┣ sherpa_quick_filter_2025.dart
+ ┃ ┃ ┃ ┃ ┗ sherpa_smart_filter_2025.dart
+ ┃ ┃ ┃ ┗ components.dart
+ ┃ ┃ ┣ dialogs
+ ┃ ┃ ┃ ┣ analysis_pages
+ ┃ ┃ ┃ ┃ ┣ comprehensive_analysis_page.dart
+ ┃ ┃ ┃ ┃ ┣ diary_analysis_page.dart
+ ┃ ┃ ┃ ┃ ┣ exercise_analysis_page.dart
+ ┃ ┃ ┃ ┃ ┗ reading_analysis_page.dart
+ ┃ ┃ ┃ ┗ enhanced_today_analysis_dialog.dart
+ ┃ ┃ ┣ animated_number_widget.dart
+ ┃ ┃ ┣ animated_progress_widget.dart
+ ┃ ┃ ┣ cached_meeting_image.dart
+ ┃ ┃ ┣ daily_motivation_widget.dart
+ ┃ ┃ ┣ global_sherpi_widget.dart
+ ┃ ┃ ┣ notification_item_widget.dart
+ ┃ ┃ ┣ point_display_widget.dart
+ ┃ ┃ ┣ rotating_icon_widget.dart
+ ┃ ┃ ┣ sherpa_button.dart
+ ┃ ┃ ┣ sherpa_card.dart
+ ┃ ┃ ┣ sherpa_clean_app_bar.dart
+ ┃ ┃ ┣ sherpi_floating_widget.dart
+ ┃ ┃ ┣ sherpi_message_card.dart
+ ┃ ┃ ┣ sherpi_personalization_dialog.dart
+ ┃ ┃ ┣ sherpi_relationship_growth_widget.dart
+ ┃ ┃ ┗ sherpi_widget.dart
+ ┣ firebase_options.dart
+ ┣ main.dart
+ ┣ main_navigation_screen.dart
+ ┗ OPTIMIZATION_REPORT.md

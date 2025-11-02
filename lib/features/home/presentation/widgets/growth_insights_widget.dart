@@ -7,8 +7,8 @@ import 'dart:math' as math;
 import '../../../../core/theme/modern_colors.dart';
 
 // Shared Providers
-import '../../../../shared/providers/global_user_provider.dart';
-import '../../../../shared/providers/global_point_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
 
 // Shared Models
 import '../../../../shared/models/global_user_model.dart';

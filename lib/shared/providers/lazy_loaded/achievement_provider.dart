@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/achievement_model.dart';
-import '../../core/theme/modern_colors.dart';
+import 'package:sherpa_app/shared/models/achievement_model.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
 
 class AchievementNotifier extends StateNotifier<List<AchievementBadge>> {
   AchievementNotifier() : super(_getInitialAchievements());
