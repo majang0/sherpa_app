@@ -28,7 +28,7 @@ class EnhancedPointShopScreen extends ConsumerWidget {
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              gradient: ModernColors.accentGradient,
+              gradient: ModernColors.primaryGradient,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
