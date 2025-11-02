@@ -1005,63 +1005,6 @@ class _NewMeetingDiscoveryScreenState
 
   /// 단순화된 빠른 필터
 
-  Widget _buildQuickFilterChip(String label, String key, IconData icon) {
-    final isActive = _activeQuickFilters.contains(key) ||
-        (key == 'online' && _showOnlineOnly);
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (key == 'online') {
-            _showOnlineOnly = !_showOnlineOnly;
-          } else {
-            if (isActive) {
-              _activeQuickFilters.remove(key);
-            } else {
-              _activeQuickFilters.add(key);
-            }
-          }
-        });
-        HapticFeedback.lightImpact();
-        _updateFilteredMeetings();
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        decoration: BoxDecoration(
-          color: isActive
-              ? ModernColors.primary.withValues(alpha: 0.1)
-              : ModernColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isActive ? ModernColors.primary : ModernColors.borderLight,
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 16,
-              color:
-                  isActive ? ModernColors.primary : ModernColors.textSecondary,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: GoogleFonts.notoSans(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: isActive
-                    ? ModernColors.primary
-                    : ModernColors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   /// 쉽게 찾기 (빠른 필터) - 기존 메서드 유지
   Widget _buildQuickFiltersSection() {
@@ -1197,46 +1140,6 @@ class _NewMeetingDiscoveryScreenState
 
   /// 단순화된 확장 필터
 
-  Widget _buildSimpleFilterChip(String label, String key) {
-    final isActive = _selectedLocation == key || _selectedPriceRange == key;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          if (key.contains('k') || key == 'free') {
-            // 가격 필터
-            _selectedPriceRange = isActive ? null : key;
-          } else {
-            // 지역 필터
-            _selectedLocation = isActive ? null : key;
-          }
-          _updateFilteredMeetings();
-        });
-        HapticFeedback.lightImpact();
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: isActive
-              ? ModernColors.primary.withValues(alpha: 0.1)
-              : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isActive ? ModernColors.primary : ModernColors.borderLight,
-            width: 1,
-          ),
-        ),
-        child: Text(
-          label,
-          style: GoogleFonts.notoSans(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: isActive ? ModernColors.primary : ModernColors.textSecondary,
-          ),
-        ),
-      ),
-    );
-  }
 
   /// 확장 필터 섹션 (상세 필터)
   Widget _buildExpandedFilters() {
