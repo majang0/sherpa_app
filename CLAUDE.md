@@ -50,10 +50,28 @@ flutter test --coverage      # With coverage
 lib/
 ├── core/           # Constants, theme, utilities
 ├── features/       # Feature modules (self-contained)
+│   ├── activities_diary/       # Diary activity (6 files: 2 screens, 1 model, 3 widgets)
+│   ├── activities_exercise/    # Exercise activity (13 files: 5 screens, 1 model, 5 widgets + 2 shared utils)
+│   ├── activities_focus/       # Focus timer (3 files: 1 screen, 1 model, 1 widget)
+│   ├── activities_meeting_logs/# Meeting logs (3 files: 2 screens, 1 widget)
+│   ├── activities_movie/       # Movie activity (5 files: 3 screens, 2 widgets)
+│   ├── activities_reading/     # Reading activity (6 files: 2 screens, 3 widgets, 1 util)
+│   ├── daily_record/           # Daily record navigation hub (imports all activity widgets)
+│   ├── meetings/               # Meeting discovery & management
+│   ├── quests/                 # Quest system
+│   ├── sherpi/                 # AI companion
+│   └── ...                     # Other features
 ├── shared/         # Shared components, providers, models
 ├── main.dart       # Entry point, provider init, routes
 └── main_navigation_screen.dart  # Bottom navigation
 ```
+
+**Feature Architecture** (Phase 3 Refactoring - 2025-11-02):
+- **Activity Features**: 6 self-contained modules extracted from `daily_record`
+  - Each feature follows consistent structure: `models/`, `presentation/screens/`, `presentation/widgets/`, `utils/` (optional)
+  - Total: 36 files (34 migrated + 2 shared utils) with preserved git history
+- **Navigation Hub**: `daily_record/` serves as central navigation importing activity widgets
+- **Import Pattern**: All use absolute `package:sherpa_app/` paths (98% compliance per CLAUDE.md standards)
 
 ### State Management (Riverpod 2.4.9)
 
@@ -139,7 +157,7 @@ Navigator.pushNamed(context, '/', arguments: {
 });
 ```
 
-**Main Routes** (verified 2025-11-01):
+**Main Routes** (verified 2025-11-02):
 
 | Route | Arguments Schema | Example |
 |-------|-----------------|---------|
@@ -694,7 +712,7 @@ flutter build apk --dart-define=OPENAI_API_KEY=@secret@ --dart-define=GEMINI_API
 
 ## 📊 Document Metadata
 
-**Document Version**: 3.3.0
+**Document Version**: 3.4.0
 **Last Updated**: 2025-11-02
 **Maintained for**: Claude Code (claude.ai/code)
 **Review Cycle**: Monthly (recommended)
@@ -703,4 +721,5 @@ flutter build apk --dart-define=OPENAI_API_KEY=@secret@ --dart-define=GEMINI_API
 **Verification Status**: ✅ Simplified for practical code work guidance
 **AI System**: ✅ Verified dual-system architecture (static + GPT-5)
 **Color System**: ✅ ModernColors migration complete (Wave 5)
-**Accuracy**: 95% (core architecture + AI integration + color system documented)
+**Feature Architecture**: ✅ Phase 3 refactoring complete - 6 activity features extracted (36 files)
+**Accuracy**: 96% (core architecture + AI integration + color system + feature refactoring documented)
