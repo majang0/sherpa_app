@@ -30,303 +30,9 @@ import '../../../../shared/utils/meeting_image_manager.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_2025.dart';
 import '../../../../shared/widgets/components/molecules/meeting_card_list_2025.dart';
 
-/// 💡 Inlined meeting creation state (formerly meeting_creation_provider)
-class MeetingCreationData {
-  final MeetingCategory? selectedCategory;
-  final MeetingScope scope;
-  final bool isOnline;
-  final LatLng? location;
-  final String? locationName;
-  final String? detailedAddress;
-  final int minParticipants;
-  final int maxParticipants;
-  final MeetingType meetingType;
-  final double? price;
-  final bool isFirstComeFirstServed;
-  final List<File> photos;
-  final String title;
-  final String description;
-  final DateTime? dateTime;
-  final List<String> tags;
-  final List<String> requirements;
-  final List<String> preparationItems;
-
-  const MeetingCreationData({
-    this.selectedCategory,
-    this.scope = MeetingScope.public,
-    this.isOnline = true,
-    this.location,
-    this.locationName,
-    this.detailedAddress,
-    this.minParticipants = 2,
-    this.maxParticipants = 10,
-    this.meetingType = MeetingType.free,
-    this.price,
-    this.isFirstComeFirstServed = true,
-    this.photos = const [],
-    this.title = '',
-    this.description = '',
-    this.dateTime,
-    this.tags = const [],
-    this.requirements = const [],
-    this.preparationItems = const [],
-  });
-
-  MeetingCreationData copyWith({
-    MeetingCategory? selectedCategory,
-    MeetingScope? scope,
-    bool? isOnline,
-    LatLng? location,
-    String? locationName,
-    String? detailedAddress,
-    int? minParticipants,
-    int? maxParticipants,
-    MeetingType? meetingType,
-    double? price,
-    bool? isFirstComeFirstServed,
-    List<File>? photos,
-    String? title,
-    String? description,
-    DateTime? dateTime,
-    List<String>? tags,
-    List<String>? requirements,
-    List<String>? preparationItems,
-  }) {
-    return MeetingCreationData(
-      selectedCategory: selectedCategory ?? this.selectedCategory,
-      scope: scope ?? this.scope,
-      isOnline: isOnline ?? this.isOnline,
-      location: location ?? this.location,
-      locationName: locationName ?? this.locationName,
-      detailedAddress: detailedAddress ?? this.detailedAddress,
-      minParticipants: minParticipants ?? this.minParticipants,
-      maxParticipants: maxParticipants ?? this.maxParticipants,
-      meetingType: meetingType ?? this.meetingType,
-      price: price ?? this.price,
-      isFirstComeFirstServed:
-          isFirstComeFirstServed ?? this.isFirstComeFirstServed,
-      photos: photos ?? this.photos,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      dateTime: dateTime ?? this.dateTime,
-      tags: tags ?? this.tags,
-      requirements: requirements ?? this.requirements,
-      preparationItems: preparationItems ?? this.preparationItems,
-    );
-  }
-
-  bool isStep1Valid() => selectedCategory != null;
-
-  bool isStep2Valid() {
-    if (isOnline) return true;
-    return location != null && locationName?.isNotEmpty == true;
-  }
-
-  bool isStep3Valid() {
-    if (meetingType == MeetingType.paid) {
-      return price != null && price! >= 3000;
-    }
-    return minParticipants >= 2 &&
-        maxParticipants >= minParticipants &&
-        maxParticipants <= 50;
-  }
-
-  bool isStep4Valid() {
-    return title.isNotEmpty &&
-        title.length >= 5 &&
-        description.isNotEmpty &&
-        description.length >= 10 &&
-        dateTime != null;
-  }
-
-  bool isAllDataValid() {
-    return isStep1Valid() && isStep2Valid() && isStep3Valid() && isStep4Valid();
-  }
-
-  Future<AvailableMeeting> toAvailableMeeting({
-    required String hostId,
-    required String hostName,
-  }) async {
-    final meetingId = DateTime.now().millisecondsSinceEpoch.toString();
-
-    final savedImageFileNames = await MeetingImageUtils.saveMeetingImages(
-      tempFiles: photos,
-      meetingId: meetingId,
-    );
-
-    return AvailableMeeting(
-      id: meetingId,
-      title: title,
-      description: description,
-      category: selectedCategory!,
-      type: meetingType,
-      scope: scope,
-      dateTime: dateTime!,
-      location: isOnline ? '온라인' : (locationName ?? ''),
-      detailedLocation: detailedAddress ?? '',
-      maxParticipants: maxParticipants,
-      currentParticipants: 1,
-      price: meetingType == MeetingType.paid ? price : null,
-      hostName: hostName,
-      hostId: hostId,
-      tags: tags,
-      requirements: requirements,
-      preparationItems: preparationItems,
-      imageFileNames: savedImageFileNames,
-    );
-  }
-}
-
-class _MeetingCreationNotifier extends StateNotifier<MeetingCreationData> {
-  _MeetingCreationNotifier() : super(const MeetingCreationData());
-
-  void selectCategory(MeetingCategory category) {
-    state = state.copyWith(selectedCategory: category);
-  }
-
-  void setScope(MeetingScope scope) {
-    state = state.copyWith(scope: scope);
-  }
-
-  void setOnlineStatus(bool isOnline) {
-    state = state.copyWith(
-      isOnline: isOnline,
-      location: isOnline ? null : state.location,
-      locationName: isOnline ? null : state.locationName,
-      detailedAddress: isOnline ? null : state.detailedAddress,
-    );
-  }
-
-  void setLocation(
-    LatLng location,
-    String locationName, [
-    String? detailedAddress,
-  ]) {
-    state = state.copyWith(
-      location: location,
-      locationName: locationName,
-      detailedAddress: detailedAddress,
-    );
-  }
-
-  void setParticipants(int min, int max) {
-    state = state.copyWith(
-      minParticipants: min,
-      maxParticipants: max,
-    );
-  }
-
-  void setMeetingType(MeetingType type, [double? price]) {
-    state = state.copyWith(
-      meetingType: type,
-      price: type == MeetingType.paid ? (price ?? 3000) : null,
-    );
-  }
-
-  void setRegistrationMethod(bool isFirstComeFirstServed) {
-    state = state.copyWith(isFirstComeFirstServed: isFirstComeFirstServed);
-  }
-
-  void addPhoto(File photo) {
-    final photos = List<File>.from(state.photos);
-    if (photos.length < 5) {
-      photos.add(photo);
-      state = state.copyWith(photos: photos);
-    }
-  }
-
-  void removePhoto(int index) {
-    final photos = List<File>.from(state.photos);
-    if (index >= 0 && index < photos.length) {
-      photos.removeAt(index);
-      state = state.copyWith(photos: photos);
-    }
-  }
-
-  void setTitle(String title) {
-    state = state.copyWith(title: title);
-  }
-
-  void setDescription(String description) {
-    state = state.copyWith(description: description);
-  }
-
-  void setDateTime(DateTime dateTime) {
-    state = state.copyWith(dateTime: dateTime);
-  }
-
-  void addTag(String tag) {
-    final tags = List<String>.from(state.tags);
-    if (!tags.contains(tag) && tags.length < 10) {
-      tags.add(tag);
-      state = state.copyWith(tags: tags);
-    }
-  }
-
-  void removeTag(String tag) {
-    final tags = List<String>.from(state.tags)..remove(tag);
-    state = state.copyWith(tags: tags);
-  }
-
-  void addPreparationItem(String item) {
-    final items = List<String>.from(state.preparationItems);
-    if (!items.contains(item) && items.length < 10) {
-      items.add(item);
-      state = state.copyWith(preparationItems: items);
-    }
-  }
-
-  void removePreparationItem(String item) {
-    final items = List<String>.from(state.preparationItems)..remove(item);
-    state = state.copyWith(preparationItems: items);
-  }
-
-  void reset() {
-    state = const MeetingCreationData();
-  }
-
-  String? validateStep(int stepNumber) {
-    switch (stepNumber) {
-      case 1:
-        if (!state.isStep1Valid()) {
-          return '카테고리를 선택해주세요';
-        }
-        break;
-      case 2:
-        if (!state.isStep2Valid()) {
-          return state.isOnline ? null : '모임 장소를 설정해주세요';
-        }
-        break;
-      case 3:
-        if (!state.isStep3Valid()) {
-          if (state.meetingType == MeetingType.paid) {
-            return '참가비는 3000P 이상 설정해주세요';
-          }
-          return '참가자 인원을 올바르게 설정해주세요';
-        }
-        break;
-      case 4:
-        if (!state.isStep4Valid()) {
-          if (state.title.isEmpty || state.title.length < 5) {
-            return '모임 제목은 5글자 이상 입력해주세요';
-          }
-          if (state.description.isEmpty || state.description.length < 10) {
-            return '모임 설명은 10글자 이상 입력해주세요';
-          }
-          if (state.dateTime == null) {
-            return '모임 날짜와 시간을 설정해주세요';
-          }
-        }
-        break;
-    }
-    return null;
-  }
-}
-
-final _meetingCreationProvider = StateNotifierProvider.autoDispose<
-    _MeetingCreationNotifier, MeetingCreationData>(
-  (ref) => _MeetingCreationNotifier(),
-);
+// 🚀 모임 생성 모델 & 프로바이더 (분리됨)
+import '../../models/meeting_creation_model.dart';
+import '../../providers/meeting_creation_provider.dart';
 
 /// 🌟 새로운 모임 탐색 화면
 /// 사용자가 모임에 최대한 집중할 수 있도록 자연스럽고 부담 없는 흐름으로 구성
@@ -2775,7 +2481,7 @@ class _MeetingCreationSheetState extends ConsumerState<_MeetingCreationSheet>
 
   @override
   Widget build(BuildContext context) {
-    final creationData = ref.watch(_meetingCreationProvider);
+    final creationData = ref.watch(meetingCreationProvider);
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
@@ -2813,7 +2519,7 @@ class _MeetingCreationSheetState extends ConsumerState<_MeetingCreationSheet>
                   selectedCategory: creationData.selectedCategory,
                   onCategorySelected: (category) {
                     ref
-                        .read(_meetingCreationProvider.notifier)
+                        .read(meetingCreationProvider.notifier)
                         .selectCategory(category);
                     _goToNextStep();
                   },
@@ -2826,7 +2532,7 @@ class _MeetingCreationSheetState extends ConsumerState<_MeetingCreationSheet>
                   selectedDateTime: creationData.dateTime,
                   onDateTimeSelected: (dateTime) {
                     ref
-                        .read(_meetingCreationProvider.notifier)
+                        .read(meetingCreationProvider.notifier)
                         .setDateTime(dateTime);
                     _goToNextStep();
                   },
@@ -3103,7 +2809,7 @@ class _MeetingCreationSheetState extends ConsumerState<_MeetingCreationSheet>
   /// ✅ 모임 생성
   void _createMeeting() async {
     try {
-      final meetingData = ref.read(_meetingCreationProvider);
+      final meetingData = ref.read(meetingCreationProvider);
       final user = ref.read(globalUserProvider);
 
       // 데이터 유효성 검사
@@ -3136,7 +2842,7 @@ class _MeetingCreationSheetState extends ConsumerState<_MeetingCreationSheet>
             );
 
         // MeetingCreationData 초기화
-        ref.read(_meetingCreationProvider.notifier).reset();
+        ref.read(meetingCreationProvider.notifier).reset();
 
         // 다이얼로그 닫기
         if (mounted) Navigator.pop(context);
@@ -3413,7 +3119,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.read(_meetingCreationProvider.notifier);
+    final notifier = ref.read(meetingCreationProvider.notifier);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -3572,7 +3278,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   /// 🌍 공개범위 섹션
-  Widget _buildScopeSection(_MeetingCreationNotifier notifier) {
+  Widget _buildScopeSection(MeetingCreationNotifier notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -3617,7 +3323,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   /// 📍 장소 섹션
-  Widget _buildLocationSection(_MeetingCreationNotifier notifier) {
+  Widget _buildLocationSection(MeetingCreationNotifier notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -3701,7 +3407,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   /// 👥 참가 인원 섹션
-  Widget _buildParticipantsSection(_MeetingCreationNotifier notifier) {
+  Widget _buildParticipantsSection(MeetingCreationNotifier notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -3866,7 +3572,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   /// 💰 참가비 섹션
-  Widget _buildPriceSection(_MeetingCreationNotifier notifier) {
+  Widget _buildPriceSection(MeetingCreationNotifier notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -4158,7 +3864,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   /// 🏷️ 태그 섹션
-  Widget _buildTagsSection(_MeetingCreationNotifier notifier) {
+  Widget _buildTagsSection(MeetingCreationNotifier notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -4285,7 +3991,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   /// 🎒 준비물 섹션
-  Widget _buildPreparationSection(_MeetingCreationNotifier notifier) {
+  Widget _buildPreparationSection(MeetingCreationNotifier notifier) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -4448,7 +4154,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   // 태그 추가
-  void _addTag(String tag, _MeetingCreationNotifier notifier) {
+  void _addTag(String tag, MeetingCreationNotifier notifier) {
     final trimmedTag = tag.trim();
     if (trimmedTag.isNotEmpty &&
         _tags.length < 10 &&
@@ -4463,7 +4169,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   // 태그 제거
-  void _removeTag(String tag, _MeetingCreationNotifier notifier) {
+  void _removeTag(String tag, MeetingCreationNotifier notifier) {
     setState(() {
       _tags.remove(tag);
     });
@@ -4472,7 +4178,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   // 준비물 추가
-  void _addPreparationItem(String item, _MeetingCreationNotifier notifier) {
+  void _addPreparationItem(String item, MeetingCreationNotifier notifier) {
     final trimmedItem = item.trim();
     if (trimmedItem.isNotEmpty &&
         _preparationItems.length < 10 &&
@@ -4487,7 +4193,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   // 준비물 제거
-  void _removePreparationItem(String item, _MeetingCreationNotifier notifier) {
+  void _removePreparationItem(String item, MeetingCreationNotifier notifier) {
     setState(() {
       _preparationItems.remove(item);
     });
@@ -4496,8 +4202,8 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   /// 📷 이미지 업로드 섹션
-  Widget _buildImageUploadSection(_MeetingCreationNotifier notifier) {
-    final data = ref.watch(_meetingCreationProvider);
+  Widget _buildImageUploadSection(MeetingCreationNotifier notifier) {
+    final data = ref.watch(meetingCreationProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -4576,7 +4282,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   /// 빈 이미지 상태
-  Widget _buildEmptyImageState(_MeetingCreationNotifier notifier) {
+  Widget _buildEmptyImageState(MeetingCreationNotifier notifier) {
     return InkWell(
       onTap: () => _pickImage(notifier),
       borderRadius: BorderRadius.circular(12),
@@ -4615,7 +4321,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   /// 이미지 그리드
-  Widget _buildImageGrid(List<File> photos, _MeetingCreationNotifier notifier) {
+  Widget _buildImageGrid(List<File> photos, MeetingCreationNotifier notifier) {
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
@@ -4647,7 +4353,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   /// 이미지 추가 버튼
-  Widget _buildAddImageButton(_MeetingCreationNotifier notifier) {
+  Widget _buildAddImageButton(MeetingCreationNotifier notifier) {
     return InkWell(
       onTap: () => _pickImage(notifier),
       borderRadius: BorderRadius.circular(8),
@@ -4684,7 +4390,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
 
   /// 이미지 아이템
   Widget _buildImageItem(
-      File image, int index, _MeetingCreationNotifier notifier) {
+      File image, int index, MeetingCreationNotifier notifier) {
     return Stack(
       children: [
         // 이미지
@@ -4748,8 +4454,8 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   // 이미지 선택
-  Future<void> _pickImage(_MeetingCreationNotifier notifier) async {
-    final data = ref.read(_meetingCreationProvider);
+  Future<void> _pickImage(MeetingCreationNotifier notifier) async {
+    final data = ref.read(meetingCreationProvider);
 
     if (data.photos.length >= 5) {
       _showSnackBar('이미지는 최대 5개까지 업로드할 수 있습니다');
@@ -4775,7 +4481,7 @@ class _QuickDetailsFormState extends ConsumerState<_QuickDetailsForm> {
   }
 
   // 이미지 제거
-  void _removeImage(int index, _MeetingCreationNotifier notifier) {
+  void _removeImage(int index, MeetingCreationNotifier notifier) {
     notifier.removePhoto(index);
     HapticFeedback.lightImpact();
     _showSnackBar('이미지가 제거되었습니다');
