@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';
+import 'modern_colors.dart';
 
 /// 앱 전체에서 사용하는 테마 설정
 class AppTheme {
@@ -8,21 +8,21 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primary,
+        seedColor: ModernColors.primary,
         brightness: Brightness.light,
-        surface: AppColors.surface,
-        background: AppColors.background,
+        surface: ModernColors.surface,
+        background: ModernColors.background,
       ),
-      scaffoldBackgroundColor: AppColors.background,
+      scaffoldBackgroundColor: ModernColors.background,
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
-        foregroundColor: AppColors.textPrimary,
+        foregroundColor: ModernColors.textPrimary,
         elevation: 0,
         centerTitle: false,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: ModernColors.primary,
           foregroundColor: Colors.white,
           elevation: 2,
           shape: RoundedRectangleBorder(
@@ -54,7 +54,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primary,
+        seedColor: ModernColors.primary,
         brightness: Brightness.dark,
       ),
       scaffoldBackgroundColor: const Color(0xFF121212),
