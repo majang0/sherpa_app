@@ -1,7 +1,7 @@
 // lib/shared/utils/exercise_utils.dart
 
 import 'package:flutter/material.dart';
-import '../../features/daily_record/models/detailed_exercise_models.dart';
+import 'package:sherpa_app/features/activities_exercise/models/detailed_exercise_models.dart';
 import '../models/global_user_model.dart';
 
 /// Centralized utility class for exercise-related operations

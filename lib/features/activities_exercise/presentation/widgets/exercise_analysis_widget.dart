@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/theme/modern_colors.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 
 /// 운동 분석 위젯

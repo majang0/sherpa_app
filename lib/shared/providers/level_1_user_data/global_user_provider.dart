@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/features/daily_record/services/sample_data_generator.dart';
-import 'package:sherpa_app/features/daily_record/models/detailed_exercise_models.dart'
+import 'package:sherpa_app/features/activities_exercise/models/detailed_exercise_models.dart'
     as detailed;
 import 'package:sherpa_app/shared/models/user_level_progress.dart';
 import 'package:sherpa_app/shared/models/point_system_model.dart';
