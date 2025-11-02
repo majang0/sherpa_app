@@ -7,7 +7,7 @@ import '../../../core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../../shared/models/global_user_model.dart';
 import '../../../shared/utils/haptic_feedback_manager.dart';
-import '../presentation/screens/diary_write_edit_screen.dart';
+import 'package:sherpa_app/features/activities_diary/presentation/screens/diary_write_edit_screen.dart';
 import '../../home/presentation/widgets/all_goals_reward_modal.dart';
 
 class EnhancedDailyQuestWidget extends ConsumerStatefulWidget {

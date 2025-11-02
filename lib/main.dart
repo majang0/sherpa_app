@@ -28,7 +28,7 @@ import 'features/meetings/presentation/screens/meeting_list_all_screen.dart';
 
 // Screens - Daily Record
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
-import 'features/daily_record/presentation/screens/diary_write_edit_screen.dart';
+import 'features/activities_diary/presentation/screens/diary_write_edit_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_record_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_selection_screen.dart';
 import 'features/daily_record/presentation/screens/exercise_dashboard_screen.dart';

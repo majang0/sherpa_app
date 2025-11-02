@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/theme/modern_colors.dart';
-import '../models/diary_model.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/features/activities_diary/models/diary_model.dart';
 
 class MoodSelector extends StatefulWidget {
   final MoodType? selectedMood;
