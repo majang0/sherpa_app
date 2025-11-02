@@ -1,4 +1,4 @@
-// lib/features/daily_record/presentation/screens/diary_detail_screen.dart
+// lib/features/activities_diary/presentation/screens/diary_detail_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

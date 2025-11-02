@@ -1,4 +1,4 @@
-// lib/features/daily_record/models/detailed_exercise_models.dart
+// lib/features/activities_exercise/models/detailed_exercise_models.dart
 
 import 'package:flutter/material.dart';
 

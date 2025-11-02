@@ -1,4 +1,4 @@
-// lib/features/daily_record/widgets/exercise_summary_widget.dart
+// lib/features/activities_exercise/presentation/widgets/exercise_summary_widget.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,4 +1,4 @@
-// lib/features/daily_record/utils/reading_utils.dart
+// lib/features/activities_reading/utils/reading_utils.dart
 
 import 'package:flutter/material.dart';
 

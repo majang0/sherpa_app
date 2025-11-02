@@ -1,4 +1,4 @@
-// lib/features/daily_record/widgets/reading_full_view_widget.dart
+// lib/features/activities_reading/presentation/widgets/reading_full_view_widget.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

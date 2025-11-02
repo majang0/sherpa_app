@@ -1,4 +1,4 @@
-// lib/features/daily_record/presentation/screens/focus_timer_record_screen.dart
+// lib/features/activities_focus/presentation/screens/focus_timer_record_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';

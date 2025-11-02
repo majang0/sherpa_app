@@ -1,4 +1,4 @@
-// lib/features/daily_record/presentation/widgets/unified_exercise_record_form.dart
+// lib/features/activities_exercise/presentation/widgets/unified_exercise_record_form.dart
 
 import 'dart:io';
 import 'package:flutter/material.dart';

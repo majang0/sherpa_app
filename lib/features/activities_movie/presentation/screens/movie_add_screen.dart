@@ -1,4 +1,4 @@
-// lib/features/daily_record/presentation/screens/movie_add_screen.dart
+// lib/features/activities_movie/presentation/screens/movie_add_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

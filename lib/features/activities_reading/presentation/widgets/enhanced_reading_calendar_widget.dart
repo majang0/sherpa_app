@@ -1,4 +1,4 @@
-// lib/features/daily_record/widgets/enhanced_reading_calendar_widget.dart
+// lib/features/activities_reading/presentation/widgets/enhanced_reading_calendar_widget.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

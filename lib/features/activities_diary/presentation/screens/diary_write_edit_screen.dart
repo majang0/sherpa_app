@@ -1,4 +1,4 @@
-// lib/features/daily_record/presentation/screens/diary_write_edit_screen.dart
+// lib/features/activities_diary/presentation/screens/diary_write_edit_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

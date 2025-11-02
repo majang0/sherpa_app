@@ -1,4 +1,4 @@
-// lib/features/daily_record/widgets/enhanced_diary_calendar_widget_v2.dart
+// lib/features/activities_diary/presentation/widgets/enhanced_diary_calendar_widget_v2.dart
 
 import 'dart:ui';
 import 'package:flutter/material.dart';

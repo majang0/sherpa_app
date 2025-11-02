@@ -1,4 +1,4 @@
-// lib/features/daily_record/widgets/reading_detail_modal.dart
+// lib/features/activities_reading/presentation/widgets/reading_detail_modal.dart
 
 import 'package:flutter/material.dart';
 import 'package:sherpa_app/features/activities_reading/presentation/screens/reading_detail_screen.dart';

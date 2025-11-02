@@ -1,4 +1,4 @@
-// lib/features/daily_record/presentation/screens/exercise_edit_screen.dart
+// lib/features/activities_exercise/presentation/screens/exercise_edit_screen.dart
 
 import 'dart:io';
 import 'package:flutter/material.dart';

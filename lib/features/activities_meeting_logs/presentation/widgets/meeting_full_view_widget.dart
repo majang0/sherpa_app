@@ -1,4 +1,4 @@
-// lib/features/daily_record/widgets/meeting_full_view_widget.dart
+// lib/features/activities_meeting_logs/presentation/widgets/meeting_full_view_widget.dart
 
 import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
