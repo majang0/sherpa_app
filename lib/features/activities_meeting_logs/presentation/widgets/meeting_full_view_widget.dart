@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/theme/modern_colors.dart';
-import '../presentation/screens/meeting_log_detail_screen.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/features/activities_meeting_logs/presentation/screens/meeting_log_detail_screen.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
-import '../../../shared/utils/haptic_feedback_manager.dart';
-import '../../../core/constants/meeting_categories.dart';
-import '../../../shared/models/global_user_model.dart';
+import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
+import 'package:sherpa_app/core/constants/meeting_categories.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
 
 class MeetingFullViewWidget extends ConsumerStatefulWidget {
   const MeetingFullViewWidget({super.key});
