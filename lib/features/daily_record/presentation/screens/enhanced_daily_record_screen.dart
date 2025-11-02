@@ -6,12 +6,12 @@ import '../../../../core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../widgets/simple_today_growth_widget.dart';
 import '../../widgets/step_analysis_widget.dart';
-import '../../widgets/focus_time_analysis_widget.dart';
-import '../../widgets/enhanced_diary_calendar_widget_v2.dart';
+import 'package:sherpa_app/features/activities_focus/presentation/widgets/focus_time_analysis_widget.dart';
+import 'package:sherpa_app/features/activities_diary/presentation/widgets/enhanced_diary_calendar_widget_v2.dart';
 
-import '../../widgets/exercise_summary_widget.dart';
-import '../../widgets/enhanced_reading_calendar_widget.dart';
-import '../../widgets/movie_calendar_widget.dart';
+import 'package:sherpa_app/features/activities_exercise/presentation/widgets/exercise_summary_widget.dart';
+import 'package:sherpa_app/features/activities_reading/presentation/widgets/enhanced_reading_calendar_widget.dart';
+import 'package:sherpa_app/features/activities_movie/presentation/widgets/movie_calendar_widget.dart';
 import '../../widgets/enhanced_meeting_calendar_widget.dart';
 import '../../widgets/enhanced_daily_quest_widget.dart';
 import '../../../../shared/utils/haptic_feedback_manager.dart';
