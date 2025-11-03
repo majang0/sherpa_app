@@ -22,7 +22,6 @@ import '../widgets/sherpi_personalized_meeting_widget.dart';
 import '../widgets/enhanced_meeting_recommendation_widget.dart';
 import '../widgets/friends_activity_feed_widget.dart';
 import '../widgets/personalized_growth_dashboard_widget.dart';
-import '../widgets/university_guild_widget.dart';
 import '../widgets/growth_insights_widget.dart';
 // AI 테스트 위젯 import 제거됨 - 프로덕션 최적화
 
@@ -247,8 +246,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     EnhancedMeetingRecommendationWidget(),
                     SizedBox(height: 20),
                     FriendsActivityFeedWidget(),
-                    SizedBox(height: 20),
-                    UniversityGuildWidget(),
                   ],
                 ),
               ),

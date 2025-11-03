@@ -9,10 +9,8 @@ import '../../../../../core/theme/modern_colors.dart';
 // Shared
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
-import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
 import '../../../../../shared/models/global_user_model.dart';
 import '../../../../../shared/models/point_system_model.dart';
-import '../../../../../core/constants/sherpi_dialogues.dart';
 import '../../../../../shared/widgets/sherpa_clean_app_bar.dart';
 import '../../../../../shared/utils/haptic_feedback_manager.dart';
 
@@ -47,19 +45,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
       vsync: this,
     );
 
-    // 처음 진입시 셰르피 인사
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showWelcomeMessage();
-    });
-  }
-
-  void _showWelcomeMessage() {
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: SherpiContext.general,
-          customDialogue: '함께 목표를 달성해봐요! 어떤 산을 정복하고 싶으신가요? 🏔️',
-          emotion: SherpiEmotion.happy,
-          duration: const Duration(seconds: 3),
-        );
+    // 셰르피 환영 메시지 제거 (루틴 관리는 독립적으로 운영)
   }
 
   @override
@@ -72,7 +58,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: SherpaCleanAppBar(
-        title: '나의 등반 계획',
+        title: '루틴 관리',
         backgroundColor: Colors.transparent,
         actions: [
           // 진행률 배지
@@ -145,7 +131,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                '목표 관리',
+                                '루틴 관리',
                                 style: GoogleFonts.notoSans(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
@@ -293,7 +279,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                     child: Row(
                       children: [
                         Text(
-                          '🎯 내 목표',
+                          '🎯 내 루틴',
                           style: GoogleFonts.notoSans(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -319,7 +305,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                     child: goals.isEmpty
                         ? Center(
                             child: Text(
-                              '아직 설정한 목표가 없어요',
+                              '아직 설정한 루틴이 없어요',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.grey[500],
@@ -371,8 +357,8 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
         return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('목표 삭제'),
-            content: Text('${goal.title} 목표를 삭제하시겠어요?'),
+            title: const Text('루틴 삭제'),
+            content: Text('${goal.title} 루틴을 삭제하시겠어요?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
@@ -394,12 +380,11 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${goal.title} 목표가 삭제되었어요'),
-            action: SnackBarAction(
-              label: '되돌리기',
-              onPressed: () {
-                // 되돌리기 기능 (향후 구현)
-              },
+            content: Text('${goal.title} 루틴이 삭제되었어요'),
+            backgroundColor: Colors.grey[800],
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
         );
@@ -516,8 +501,60 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
                 ],
               ),
             ),
+
+            const SizedBox(width: 8),
+
+            // 삭제 버튼
+            IconButton(
+              icon: Icon(
+                Icons.delete_outline,
+                color: Colors.grey[400],
+                size: 20,
+              ),
+              onPressed: () => _confirmDeleteGoal(goal),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  // 루틴 삭제 확인 다이얼로그
+  void _confirmDeleteGoal(UserGoal goal) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('루틴 삭제'),
+        content: Text('${goal.title} 루틴을 삭제하시겠어요?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              ref.read(globalUserProvider.notifier).deleteGoal(goal.id);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('${goal.title} 루틴이 삭제되었어요'),
+                  backgroundColor: Colors.grey[800],
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              );
+            },
+            child: const Text(
+              '삭제',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -719,14 +756,6 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
           '새로운 목표 설정',
         );
 
-    // 셰르피 반응
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: SherpiContext.general,
-          customDialogue: '좋아요! "${goalData['title']}" 목표를 향해 함께 올라가봐요! 🚀',
-          emotion: SherpiEmotion.cheering,
-          duration: const Duration(seconds: 3),
-        );
-
     // 애니메이션 재생
     _animationController.forward().then((_) {
       _animationController.reverse();
@@ -784,13 +813,6 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
         }
       }
 
-      // 셰르피 축하 메시지
-      ref.read(sherpiProvider.notifier).showInstantMessage(
-            context: SherpiContext.general,
-            customDialogue: '체크포인트 도달! 조금만 더 올라가면 정상이에요! ⛰️',
-            emotion: SherpiEmotion.happy,
-            duration: const Duration(seconds: 2),
-          );
     }
   }
 
@@ -798,26 +820,7 @@ class _SimplePlannerScreenState extends ConsumerState<SimplePlannerScreen>
   void _onGoalTapped(String goalId) {
     // 목표 상세 보기 (향후 구현)
     HapticFeedbackManager.lightImpact();
-
-    final goal = ref.read(globalUserProvider).planningData?.goals.firstWhere(
-        (g) => g.id == goalId,
-        orElse: () => UserGoal(
-            id: '',
-            title: '',
-            category: '',
-            duration: 0,
-            createdAt: DateTime.now(),
-            progress: 0,
-            isActive: false));
-
-    if (goal != null && goal.id.isNotEmpty) {
-      ref.read(sherpiProvider.notifier).showInstantMessage(
-            context: SherpiContext.general,
-            customDialogue: '${goal.title} - 진행률: ${goal.progress.toInt()}%',
-            emotion: SherpiEmotion.guiding,
-            duration: const Duration(seconds: 2),
-          );
-    }
+    // 셰르피 반응 제거 - 루틴 관리는 독립적으로 운영
   }
 
   @override

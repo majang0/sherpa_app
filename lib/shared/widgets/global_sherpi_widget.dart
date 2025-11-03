@@ -192,6 +192,29 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
             ),
           ),
 
+          // 🎬 AI 생성 중 로딩 인디케이터
+          if (state.isGenerating)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.black.withValues(alpha: 0.3),
+                ),
+                child: Center(
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        Colors.white.withValues(alpha: 0.9),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
           // 메시지 알림 배지 (새로운 메시지가 있을 때만 표시)
           if (state.isVisible && state.dialogue.isNotEmpty)
             Positioned(
@@ -738,8 +761,8 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
                         _buildModernActionButton(
                           context,
                           icon: Icons.event_note_outlined,
-                          title: '계획하기',
-                          subtitle: '목표 달성을 위한 계획',
+                          title: '루틴 관리하기',
+                          subtitle: '목표 달성을 위한 루틴 관리',
                           gradient: LinearGradient(
                             colors: [
                               Colors.orange.shade400,
@@ -1352,13 +1375,75 @@ class _SherpiExpandedDialogState extends ConsumerState<SherpiExpandedDialog>
     );
   }
 
-  /// 격려 메시지 표시
+  /// 격려 메시지 표시 (AI 기반 개인화)
   void _showEncouragement(BuildContext context) {
     Navigator.of(context).pop();
 
-    // 격려 메시지 표시 (다이얼로그 버튼은 항상 새 메시지 생성)
+    // AI 활성화 (다음 메시지에 AI 사용)
+    ref.read(sherpiProvider.notifier).enableAIForNextMessage();
+
+    // 사용자 데이터 가져오기
+    final user = ref.read(globalUserProvider);
+
+    // 🔍 디버그: 사용자 데이터 확인
+    debugPrint('🔍 [격려하기] 사용자 데이터 확인:');
+    debugPrint('  - 이름: ${user.name}');
+    debugPrint('  - 레벨: ${user.level}');
+    debugPrint('  - 연속일: ${user.dailyRecords.consecutiveDays}');
+    debugPrint('  - 스탯: 체력=${user.stats.stamina}, 지식=${user.stats.knowledge}, 기술=${user.stats.technique}, 사교성=${user.stats.sociality}, 의지=${user.stats.willpower}');
+
+    // 가장 높은 스탯 찾기
+    final stats = {
+      '체력': user.stats.stamina,
+      '지식': user.stats.knowledge,
+      '기술': user.stats.technique,
+      '사교성': user.stats.sociality,
+      '의지': user.stats.willpower,
+    };
+    final strongestEntry = stats.entries.reduce(
+      (a, b) => a.value > b.value ? a : b,
+    );
+
+    debugPrint('  - 가장 강한 스탯: ${strongestEntry.key} (${strongestEntry.value}점)');
+
+    // 최근 성과 계산
+    final recentAchievements = <String>[];
+    if (user.dailyRecords.consecutiveDays >= 3) {
+      recentAchievements.add('${user.dailyRecords.consecutiveDays}일 연속 활동');
+    }
+    if (user.dailyRecords.totalMeetings > 0) {
+      recentAchievements.add('${user.dailyRecords.totalMeetings}회 모임 참여');
+    }
+    if (user.dailyRecords.successfulClimbings > 0) {
+      recentAchievements.add('${user.dailyRecords.successfulClimbings}회 등반 성공');
+    }
+
+    // 총 활동 횟수 계산
+    final totalActivities = user.dailyRecords.exerciseLogs.length +
+        user.dailyRecords.readingLogs.length +
+        user.dailyRecords.diaryLogs.length +
+        user.dailyRecords.meetingLogs.length +
+        user.dailyRecords.movieLogs.length;
+
+    // 풍부한 gameContext 생성
+    final enrichedGameContext = {
+      'userName': user.name,
+      'level': user.level,
+      'consecutiveDays': user.dailyRecords.consecutiveDays,
+      'totalActivities': totalActivities,
+      'strongestStat': strongestEntry.key,
+      'strongestStatValue': strongestEntry.value.toInt(),
+      'recentAchievements': recentAchievements,
+      'climbingSuccessRate': user.dailyRecords.climbingSuccessRate,
+    };
+
+    debugPrint('📤 [격려하기] AI에게 전달할 gameContext:');
+    debugPrint('  $enrichedGameContext');
+
+    // AI 기반 격려 메시지 표시
     ref.read(sherpiProvider.notifier).showMessage(
           context: SherpiContext.encouragement,
+          gameContext: enrichedGameContext, // 사용자 데이터 전달
           duration: const Duration(seconds: 5),
           forceShow: true, // 다이얼로그 액션 버튼은 항상 표시
         );

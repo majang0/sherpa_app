@@ -24,38 +24,46 @@ class SherpiState {
   final SherpiEmotion emotion;
   final String dialogue;
   final bool isVisible;
+  final bool isGenerating; // AI 메시지 생성 중 여부
   final SherpiDisplayMode displayMode;
   final DateTime? lastShownTime;
   final SherpiContext? currentContext;
   final Map<String, dynamic>? metadata;
+  final List<String> recentMessages; // 최근 생성된 메시지 (중복 방지용)
 
   const SherpiState({
     this.emotion = SherpiEmotion.defaults, // 기본 감정으로 변경
     this.dialogue = '', // 빈 메시지로 시작
     this.isVisible = false, // 초기에는 숨김 상태
+    this.isGenerating = false, // 초기에는 생성 중 아님
     this.displayMode = SherpiDisplayMode.floating,
     this.lastShownTime,
     this.currentContext, // 기본값 없음
     this.metadata,
+    this.recentMessages = const [], // 초기에는 빈 리스트
   });
 
   SherpiState copyWith({
     SherpiEmotion? emotion,
     String? dialogue,
     bool? isVisible,
+    bool? isGenerating,
     SherpiDisplayMode? displayMode,
     DateTime? lastShownTime,
     SherpiContext? currentContext,
     Map<String, dynamic>? metadata,
+    List<String>? recentMessages,
   }) {
     return SherpiState(
       emotion: emotion ?? this.emotion,
       dialogue: dialogue ?? this.dialogue,
       isVisible: isVisible ?? this.isVisible,
+      isGenerating: isGenerating ?? this.isGenerating,
       displayMode: displayMode ?? this.displayMode,
       lastShownTime: lastShownTime ?? this.lastShownTime,
       currentContext: currentContext ?? this.currentContext,
       metadata: metadata ?? this.metadata,
+      recentMessages: recentMessages ?? this.recentMessages,
     );
   }
 
@@ -130,6 +138,7 @@ class SherpiState {
       'emotion': emotion.name,
       'dialogue': dialogue,
       'isVisible': isVisible,
+      'isGenerating': isGenerating,
       'lastShownTime': lastShownTime?.toIso8601String(),
       'currentContext': currentContext?.name,
       'metadata': metadata ?? {},
@@ -144,6 +153,7 @@ class SherpiState {
       ),
       dialogue: json['dialogue'] ?? '',
       isVisible: json['isVisible'] ?? false,
+      isGenerating: json['isGenerating'] ?? false,
       lastShownTime: json['lastShownTime'] != null
           ? DateTime.parse(json['lastShownTime'])
           : null,
@@ -262,6 +272,11 @@ class SherpiNotifier extends StateNotifier<SherpiState> {
     super.dispose();
   }
 
+  /// AI 기반 격려 메시지 활성화 (다음 메시지에 AI 사용)
+  void enableAIForNextMessage() {
+    _messageManager.enableAIForNextMessage();
+  }
+
   // ✅ 초기화 메서드 추가
   /*
 void initializeSherpi() {
@@ -323,13 +338,38 @@ void initializeSherpi() {
         context: context,
         additionalData: userContext,
       );
-      final realGameContext = _dataConnector.buildRealGameContext();
+
+      // ✅ gameContext가 전달되었으면 그것을 우선 사용 (레벨, 스탯 등 포함)
+      final realGameContext = gameContext ?? _dataConnector.buildRealGameContext();
+
+      // 🔍 디버그: 최종 전달 데이터 확인
+      debugPrint('🔍 [SherpiProvider] 최종 전달 데이터:');
+      debugPrint('  - gameContext 전달됨: ${gameContext != null}');
+      if (gameContext != null) {
+        debugPrint('  - level: ${gameContext['level']}');
+        debugPrint('  - strongestStat: ${gameContext['strongestStat']}');
+        debugPrint('  - strongestStatValue: ${gameContext['strongestStatValue']}');
+        debugPrint('  - consecutiveDays: ${gameContext['consecutiveDays']}');
+      }
+      debugPrint('  - realGameContext: $realGameContext');
+
+      // 🎬 AI 메시지 생성 시작 - 로딩 상태 표시
+      state = state.copyWith(isGenerating: true);
+
+      // 📝 최근 메시지를 gameContext에 추가 (중복 방지용)
+      final gameContextWithHistory = {
+        ...realGameContext,
+        'recentMessages': state.recentMessages, // 최근 생성된 메시지들
+      };
 
       final sherpiResponse = await _messageManager.getMessage(
         context,
         realUserContext,
-        realGameContext,
+        gameContextWithHistory,
       );
+
+      // 🎬 AI 메시지 생성 완료 - 로딩 상태 해제
+      state = state.copyWith(isGenerating: false);
 
       final metadata = {
         'context': context.name,
@@ -356,13 +396,21 @@ void initializeSherpi() {
       final isNewMessage = state.dialogue != sherpiResponse.message;
       final shouldShowNotification = forceShow || isNewMessage;
 
+      // 📝 최근 메시지 히스토리 업데이트 (최대 3개 유지)
+      final updatedRecentMessages = [
+        sherpiResponse.message,
+        ...state.recentMessages,
+      ].take(3).toList(); // 최신 3개만 유지
+
       state = state.copyWith(
         emotion: selectedEmotion,
         dialogue: sherpiResponse.message,
         isVisible: shouldShowNotification, // 새로운 메시지이거나 강제 표시일 때만 알림
+        isGenerating: false, // 최종 상태에서도 로딩 해제 확인
         lastShownTime: DateTime.now(),
         currentContext: context,
         metadata: enhancedMetadata,
+        recentMessages: updatedRecentMessages, // 히스토리 업데이트
       );
 
       // 디버그 로그
@@ -403,6 +451,7 @@ void initializeSherpi() {
       _isShowingMessage = false;
     } catch (e) {
       _isShowingMessage = false; // 🚨 예외 발생 시에도 락 해제
+      state = state.copyWith(isGenerating: false); // 🎬 로딩 상태 해제
       _showFallbackMessage(context, emotion);
     }
   }
