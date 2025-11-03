@@ -97,17 +97,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
     _willpowerPulseController.repeat(reverse: true);
     _floatController.repeat(reverse: true);
 
-    // 🚫 챌린지 탭 진입 시 셰르피 메시지 제거 - 단순 화면 진입은 조용히 처리
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   ref.read(sherpiProvider.notifier).showMessage(
-    //     context: SherpiContext.welcome,
-    //     emotion: SherpiEmotion.cheering,
-    //     userContext: {
-    //       'screen': 'challenge_exploration',
-    //       'feature': 'challenge_board'
-    //     },
-    //   );
-    // });
+    // Note: 챌린지 탭 진입 시 셰르피 자동 메시지 제거됨 (UX 개선)
   }
 
   @override

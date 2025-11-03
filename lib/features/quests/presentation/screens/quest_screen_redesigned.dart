@@ -15,6 +15,9 @@ import '../../providers/quest_provider_v2.dart';
 import '../widgets/compact_quest_header.dart';
 import '../widgets/quest_card_v2_widget.dart';
 import '../widgets/quest_completion_animation_widget.dart';
+import '../../../../shared/widgets/sherpa_empty_state.dart';
+import '../../../../shared/widgets/sherpa_error_state.dart';
+import '../../../../shared/widgets/sherpa_loading_state.dart';
 
 /// 🎮 셰르피 중심의 게이미피케이션 퀘스트 화면 (완전 재설계)
 ///
@@ -1276,153 +1279,29 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
     });
   }
 
-  /// 🔄 로딩 상태 (ModernColors 적용)
+  /// 🔄 로딩 상태 (공통 위젯 사용)
   Widget _buildLoadingState() {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(40),
-            decoration: BoxDecoration(
-              color: ModernColors.surface,
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: ModernColors.softShadow(
-                  primaryColor: ModernColors.modernPrimary),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: const BoxDecoration(
-                    gradient: ModernColors.primaryGradient,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.auto_stories,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  '✨ 새로운 모험 준비 중...',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: ModernColors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '셰르피가 특별한 퀘스트를 준비하고 있어요!',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    color: ModernColors.textSecondary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 24),
-                const SizedBox(
-                  width: double.infinity,
-                  child: LinearProgressIndicator(
-                    backgroundColor: ModernColors.inactive,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        ModernColors.modernPrimary),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return const SherpaLoadingState(
+      title: '✨ 새로운 모험 준비 중...',
+      subtitle: '셰르피가 특별한 퀘스트를 준비하고 있어요!',
+      icon: Icons.auto_stories,
+      accentColor: ModernColors.modernPrimary,
     );
   }
 
-  /// ❌ 에러 상태 (ModernColors 적용)
+  /// ❌ 에러 상태 (공통 위젯 사용)
   Widget _buildErrorState(String error) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.all(24),
-        padding: const EdgeInsets.all(40),
-        decoration: BoxDecoration(
-          color: ModernColors.surface,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow:
-              ModernColors.softShadow(primaryColor: ModernColors.modernError),
-          border: Border.all(
-            color: ModernColors.modernError.withValues(alpha: 0.2),
-            width: 2,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: ModernColors.modernError.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.error_outline_rounded,
-                size: 48,
-                color: ModernColors.modernError,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              '퀘스트를 불러올 수 없어요',
-              style: GoogleFonts.notoSans(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: ModernColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '잠시 후 다시 시도해주세요',
-              style: GoogleFonts.notoSans(
-                fontSize: 16,
-                color: ModernColors.textSecondary,
-                height: 1.4,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              onPressed: () {
-                HapticFeedbackManager.mediumImpact();
-                ref.read(questProviderV2.notifier).refresh();
-              },
-              icon: const Icon(Icons.refresh_rounded, size: 20),
-              label: Text(
-                '다시 시도',
-                style: GoogleFonts.notoSans(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ModernColors.modernPrimary,
-                foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-              ),
-            ),
-          ],
-        ),
-      ),
+    return SherpaErrorState(
+      title: '퀘스트를 불러올 수 없어요',
+      subtitle: '잠시 후 다시 시도해주세요',
+      onRetry: () {
+        HapticFeedbackManager.mediumImpact();
+        ref.read(questProviderV2.notifier).refresh();
+      },
     );
   }
 
-  /// 📭 빈 상태 컨텐츠 (ModernColors 적용)
+  /// 📭 빈 상태 컨텐츠 (SherpaEmptyState 위젯 사용)
   Widget _buildEmptyStateContent() {
     String emoji;
     String title;
@@ -1447,97 +1326,53 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
         break;
     }
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 40),
-      child: Center(
-          child: Container(
-        margin: const EdgeInsets.all(20),
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: ModernColors.surface,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: ModernColors.softShadow(primaryColor: categoryColor),
-          border: Border.all(
-            color: categoryColor.withValues(alpha: 0.2),
-            width: 2,
+    return SherpaEmptyState(
+      emoji: emoji,
+      title: title,
+      subtitle: subtitle,
+      accentColor: categoryColor,
+      actionButton: _selectedCategory == QuestTypeV2.premium
+          ? _buildPremiumUnlockButton()
+          : null,
+    );
+  }
+
+  /// 🔓 프리미엄 퀘스트 잠금 해제 버튼
+  Widget _buildPremiumUnlockButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          HapticFeedbackManager.lightImpact();
+          _showPremiumPurchaseDialog();
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: ModernColors.reward,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
+          elevation: 0,
         ),
-        child: Column(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 단순한 이모지
-            Text(
-              emoji,
-              style: const TextStyle(fontSize: 80),
-            ),
-
-            const SizedBox(height: 24),
-
-            Text(
-              title,
-              style: GoogleFonts.notoSans(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: ModernColors.textPrimary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 12),
-
-            Text(
-              subtitle,
-              style: GoogleFonts.notoSans(
-                fontSize: 16,
-                color: ModernColors.textSecondary,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            if (_selectedCategory == QuestTypeV2.premium) ...[
-              const SizedBox(height: 32),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    HapticFeedbackManager.lightImpact();
-                    _showPremiumPurchaseDialog();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: ModernColors.reward,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.star_rounded, size: 20),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Text(
-                          '프리미엄 퀘스트 잠금 해제 (2000P)',
-                          style: GoogleFonts.notoSans(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ),
-                    ],
-                  ),
+            const Icon(Icons.star_rounded, size: 20),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                '프리미엄 퀘스트 잠금 해제 (2000P)',
+                style: GoogleFonts.notoSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
                 ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
-            ],
+            ),
           ],
         ),
-      ),
       ),
     );
   }
