@@ -369,29 +369,29 @@ class _GlobalSherpiWidgetState extends ConsumerState<GlobalSherpiWidget>
     }
   }
 
-  /// 친밀도 레벨별 색상 반환
+  /// 친밀도 레벨별 색상 반환 (ModernColors 기반)
   Color _getIntimacyLevelColor(int level) {
     switch (level) {
       case 1:
-        return Colors.grey.shade400;
+        return ModernColors.inactive; // 회색 - 낯선 사람
       case 2:
-        return Colors.blue.shade300;
+        return ModernColors.calmPastel; // 연한 파랑 - 알아가기
       case 3:
-        return Colors.green.shade400;
+        return ModernColors.calmLight; // 파랑 - 친근한 지인
       case 4:
-        return Colors.orange.shade400;
+        return ModernColors.thoughtPastel; // 연한 보라 - 편한 친구
       case 5:
-        return Colors.purple.shade400;
+        return ModernColors.thoughtLight; // 보라 - 절친
       case 6:
-        return Colors.pink.shade400;
+        return ModernColors.thoughtMedium; // 진한 보라 - 연인
       case 7:
-        return Colors.red.shade400;
+        return ModernColors.joyLight; // 분홍 - 운명
       case 8:
-        return Colors.indigo.shade500;
+        return ModernColors.joyMedium; // 진한 분홍 - 영혼의 파트너
       case 9:
-        return Colors.amber.shade500;
+        return ModernColors.joyBright; // 밝은 오렌지 - 전설적 인연
       case 10:
-        return Colors.deepPurple.shade600;
+        return ModernColors.modernAccent; // 보라빛 악센트 - 우주적 연결
       default:
         return ModernColors.primary;
     }

@@ -1087,11 +1087,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
                     '깊은 수면 ${sleepData['deepSleep']}',
                     '${sleepData['recommendation']}'
                   ],
-                  progress: math.min(
-                      double.parse(sleepData['qualityImprovement']
-                              .replaceAll('%', '')) /
-                          40.0,
-                      1.0),
+                  // ⚠️ FIX: AI 데이터 파싱 안전 처리 (음수/에러 방지)
+                  progress:
+                      _parseSafeProgress(sleepData['qualityImprovement'], 40.0),
                   index: 1,
                 ),
 
@@ -1359,7 +1357,31 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
   }
 
   // ============ 헬퍼 메서드들 ============
-  // 사용하지 않는 의학적 계산 메서드들 제거됨
+
+  /// AI 데이터에서 progress 값을 안전하게 파싱 (음수/에러 방지)
+  double _parseSafeProgress(dynamic value, double divisor) {
+    try {
+      if (value == null) return 0.0;
+
+      // String인 경우 '%' 제거 후 파싱
+      if (value is String) {
+        final cleanValue = value.replaceAll('%', '').trim();
+        final parsed = double.tryParse(cleanValue) ?? 0.0;
+        // 음수 방지 및 0-1 범위로 제한
+        return (parsed / divisor).clamp(0.0, 1.0);
+      }
+
+      // 숫자인 경우 직접 계산
+      if (value is num) {
+        return (value.toDouble() / divisor).clamp(0.0, 1.0);
+      }
+
+      return 0.0;
+    } catch (e) {
+      LoggerService.instance.e('Progress 파싱 에러', error: e);
+      return 0.0; // 에러 시 기본값
+    }
+  }
 
   // ============ 헬퍼 위젯들 ============
 
@@ -1454,6 +1476,9 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
     required double progress,
     required int index,
   }) {
+    // ⚠️ FIX: progress 값을 0-1 범위로 제한 (음수 방지)
+    final safeProgress = progress.clamp(0.0, 1.0);
+
     return Container(
       padding: const EdgeInsets.all(12), // Reduced from 16 to 12
       decoration: BoxDecoration(
@@ -1531,7 +1556,7 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             ),
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
-              widthFactor: progress,
+              widthFactor: safeProgress, // ✅ FIX: 안전한 값 사용
               child: Container(
                 decoration: BoxDecoration(
                   color: ModernColors.exercise,

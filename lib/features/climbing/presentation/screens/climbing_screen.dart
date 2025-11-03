@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/climbing_power_analysis_widget.dart';
 import '../widgets/user_stats_summary_widget.dart';
-import '../widgets/today_growth_widget.dart';
 import '../widgets/badge_management_widget.dart';
 import '../widgets/animated_rpg_level_card.dart';
 import '../widgets/ascent_dashboard_widget.dart';
@@ -37,10 +36,6 @@ class _ClimbingScreenState extends ConsumerState<ClimbingScreen> {
 
             // 등반하기 대시보드 (스탯과 파워 분석 사이)
             AscentDashboardWidget(),
-            SizedBox(height: 16),
-
-            // 오늘의 성장
-            TodayGrowthWidget(),
             SizedBox(height: 16),
 
             // 클라이밍 파워 분석

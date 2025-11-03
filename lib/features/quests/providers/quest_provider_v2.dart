@@ -392,31 +392,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     await _saveQuests();
     state = AsyncValue.data(_allQuests);
 
-    // 🎯 셰르피 보상 메시지 (쉬운 퀘스트 제외)
-    final questDifficulty = quest.template.type == QuestTypeV2.daily
-        ? quest.template.dailyDifficulty
-        : quest.template.weeklyDifficulty;
-
-    // 쉬운 퀘스트나 탭 방문 퀘스트는 셰르피 메시지 없음
-    final isEasyQuest = (questDifficulty?.name == 'easy' ||
-        quest.template.weeklyDifficulty?.name == 'easy');
-    final isTabVisitQuest =
-        quest.trackingCondition.type == QuestTrackingType.tabVisit;
-
-    if (!isEasyQuest && !isTabVisitQuest) {
-      ref.read(sherpiProvider.notifier).showMessage(
-        context: SherpiContext.questComplete,
-        emotion: SherpiEmotion.cheering,
-        userContext: {
-          'questTitle': quest.title,
-          'experience': quest.rewards.experience.toInt(),
-          'points': quest.rewards.points.toInt(),
-          'statGranted': statGranted,
-          'statType': statGranted ? quest.rewards.statType : null,
-          'statIncrease': statGranted ? quest.rewards.statIncrease : null,
-        },
-      );
-    }
+    // 퀘스트 완료 시 셰르피 메시지 제거됨 (2025-11-03)
   }
 
   /// 글로벌 능력치 업데이트
@@ -446,56 +422,11 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     }
   }
 
-  /// 전체 완료 보너스 확인
+  /// 전체 완료 보너스 확인 (2025-11-03 수정: 자동 보상 지급 제거)
+  /// UI에서 "보상 받기" 버튼을 눌렀을 때만 보상이 지급되도록 변경
   Future<void> _checkCompletionBonus() async {
-    final pointNotifier = ref.read(globalPointProvider.notifier);
-    final userNotifier = ref.read(globalUserProvider.notifier);
-
-    // 일일 퀘스트 전체 완료 보너스
-    if (QuestGeneratorService.areAllDailyQuestsCompleted(_allQuests) &&
-        !await _isBonusAlreadyClaimed('daily_bonus_v2_today')) {
-      userNotifier
-          .addExperience(QuestCompletionBonus.dailyBonus.experienceBonus);
-      pointNotifier.addPoints(
-        QuestCompletionBonus.dailyBonus.pointsBonus.toInt(),
-        QuestCompletionBonus.dailyBonus.description,
-      );
-      await _markBonusAsClaimed('daily_bonus_v2_today');
-
-      // 셰르피 특별 메시지
-      ref.read(sherpiProvider.notifier).showMessage(
-        context: SherpiContext.achievement,
-        emotion: SherpiEmotion.cheering,
-        userContext: {
-          'achievement': '일일 퀘스트 전체 완료',
-          'bonus': QuestCompletionBonus.dailyBonus.pointsBonus.toInt(),
-          'xpBonus': QuestCompletionBonus.dailyBonus.experienceBonus.toInt(),
-        },
-      );
-    }
-
-    // 주간 퀘스트 전체 완료 보너스
-    if (QuestGeneratorService.areAllWeeklyQuestsCompleted(_allQuests) &&
-        !await _isBonusAlreadyClaimed('weekly_bonus_v2_this_week')) {
-      userNotifier
-          .addExperience(QuestCompletionBonus.weeklyBonus.experienceBonus);
-      pointNotifier.addPoints(
-        QuestCompletionBonus.weeklyBonus.pointsBonus.toInt(),
-        QuestCompletionBonus.weeklyBonus.description,
-      );
-      await _markBonusAsClaimed('weekly_bonus_v2_this_week');
-
-      // 셰르피 특별 메시지
-      ref.read(sherpiProvider.notifier).showMessage(
-        context: SherpiContext.achievement,
-        emotion: SherpiEmotion.cheering,
-        userContext: {
-          'achievement': '주간 퀘스트 전체 완료',
-          'bonus': QuestCompletionBonus.weeklyBonus.pointsBonus.toInt(),
-          'xpBonus': QuestCompletionBonus.weeklyBonus.experienceBonus.toInt(),
-        },
-      );
-    }
+    // 자동 보상 지급 제거됨
+    // UI의 _handleAllCompleteBonusClaim()에서만 보상 지급
   }
 
   // 💡 _showWelcomeSherpi 메서드는 홈 화면으로 이동하여 중복 호출 방지
