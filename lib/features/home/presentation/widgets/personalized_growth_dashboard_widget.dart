@@ -673,7 +673,7 @@ class _PersonalizedGrowthDashboardWidgetState
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         children: [
-          // 🎨 완료 보상 카드 (받기 버튼 제거된 버전)
+          // 🎨 완료 보상 카드 (클릭 시 기록 탭으로 이동)
           _buildRewardDisplayCard(),
           const SizedBox(height: 10),
 
@@ -812,16 +812,13 @@ class _PersonalizedGrowthDashboardWidgetState
             ),
           ),
 
-          // 🎁 조건부 컨텐츠 (보상 버튼일 때는 배지 숨김)
-          if (canClaimReward) ...[
-            const SizedBox(width: 8),
-            // 보상 버튼 상태에서는 화살표 아이콘 표시
-            const Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.white,
-              size: 14,
-            ),
-          ],
+          // 🎁 화살표 아이콘 (항상 표시 - 클릭 가능함을 시각적으로 전달)
+          const SizedBox(width: 8),
+          Icon(
+            Icons.arrow_forward_ios,
+            color: Colors.white,
+            size: canClaimReward ? 14 : 12,
+          ),
         ],
       ),
     );
@@ -866,11 +863,24 @@ class _PersonalizedGrowthDashboardWidgetState
         ),
       );
     } else {
-      // 🎨 일반 상태에서는 정적 카드로 표시
-      return AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-        child: cardContent,
+      // 🎨 일반 상태에서는 기록 탭으로 이동하는 클릭 가능한 카드
+      return GestureDetector(
+        onTap: () {
+          HapticFeedbackManager.lightImpact();
+          Navigator.pushNamed(
+            context,
+            '/',
+            arguments: {
+              'tabIndex': 2, // 퀘스트 탭
+              'subTabIndex': 1, // 기록 서브탭
+            },
+          );
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          child: cardContent,
+        ),
       );
     }
   }
