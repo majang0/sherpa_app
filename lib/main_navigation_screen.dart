@@ -90,6 +90,8 @@ class _MainNavigationScreenState extends ConsumerState<MainNavigationScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      // 🔄 탭 변경 시 subTabIndex 초기화 (다른 탭에 영향 방지)
+      _pendingSubTabIndex = null;
     });
 
     // 🎯 탭 방문 기록 (퀘스트 추적용) - 셰르피 메시지는 보상 수령 시에만
