@@ -8,6 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Models
 import '../models/chat_message.dart';
 import '../models/conversation_state.dart';
+import 'package:sherpa_app/features/sherpi/domain/models/sherpi_response.dart';
+
+// Services
+import '../services/sherpi_chat_service.dart';
 
 // Core
 import '../../../../core/constants/sherpi_dialogues.dart';
@@ -190,12 +194,48 @@ class EnhancedChatConversationNotifier
             adaptiveResponse['adaptation_metadata'] as Map<String, dynamic>;
       }
 
-      // 6. AI 응답 생성 (개인화 및 감정 컨텍스트 포함)
-      final sherpiResponse = await _smartManager.getMessage(
-        _mapToSherpiContext(conversationContext),
-        enhancedContext,
-        gameContext,
-      );
+      // 6. ✨ GPT-5 기반 AI 응답 생성
+      String responseMessage;
+      MessageSource responseSource;
+      Duration? generationDuration;
+
+      try {
+        final chatService = SherpiChatService(_ref);
+        final startTime = DateTime.now();
+
+        final aiResponse = await chatService.generateChatResponse(
+          conversationHistory: state.messages,
+          userContext: enhancedContext,
+          gameContext: gameContext,
+        );
+
+        generationDuration = DateTime.now().difference(startTime);
+
+        if (aiResponse != null && aiResponse.isNotEmpty) {
+          // ✅ GPT-5 응답 성공
+          responseMessage = aiResponse;
+          responseSource = MessageSource.aiRealtime;
+        } else {
+          // ⚠️ GPT-5 응답 실패 - Fallback to static
+          final sherpiResponse = await _smartManager.getMessage(
+            _mapToSherpiContext(conversationContext),
+            enhancedContext,
+            gameContext,
+          );
+          responseMessage = sherpiResponse.message;
+          responseSource = MessageSource.static;
+        }
+      } catch (e) {
+        // ❌ GPT-5 호출 실패 - Fallback to static
+        final sherpiResponse = await _smartManager.getMessage(
+          _mapToSherpiContext(conversationContext),
+          enhancedContext,
+          gameContext,
+        );
+        responseMessage = sherpiResponse.message;
+        responseSource = MessageSource.static;
+        generationDuration = null;
+      }
 
       // 7. 타이핑 표시 제거
       _hideTypingIndicator();
@@ -204,22 +244,19 @@ class EnhancedChatConversationNotifier
       final selectedEmotion = emotionState.currentEmotion != null
           ? _selectEmotionBasedOnUserEmotion(
               emotionState.currentEmotion!, conversationContext)
-          : _selectEmotionForResponse(
-              conversationContext, sherpiResponse.message);
+          : _selectEmotionForResponse(conversationContext, responseMessage);
 
       // 9. 셰르피 메시지 추가
       final sherpiMessage = ChatMessage(
         id: _generateMessageId(),
-        content: sherpiResponse.message,
+        content: responseMessage,
         sender: MessageSender.sherpi,
         timestamp: DateTime.now(),
         emotion: selectedEmotion,
-        type:
-            _determineMessageType(conversationContext, sherpiResponse.message),
+        type: _determineMessageType(conversationContext, responseMessage),
         metadata: {
-          'response_source': sherpiResponse.source.name,
-          'generation_duration_ms':
-              sherpiResponse.generationDuration?.inMilliseconds,
+          'response_source': responseSource.name,
+          'generation_duration_ms': generationDuration?.inMilliseconds,
           'conversation_context': conversationContext.name,
           'user_emotion': emotionState.currentEmotion?.type.id,
           'emotion_adaptation': emotionMetadata,
