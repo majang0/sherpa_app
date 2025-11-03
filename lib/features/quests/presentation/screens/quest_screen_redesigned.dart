@@ -503,6 +503,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
           // 빈 상태 또는 퀘스트 목록
           if (filteredQuests.isEmpty)
             SliverFillRemaining(
+              hasScrollBody: false,
               child: _buildEmptyStateContent(),
             )
           else
@@ -1446,8 +1447,10 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
         break;
     }
 
-    return Center(
-      child: Container(
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 40),
+      child: Center(
+          child: Container(
         margin: const EdgeInsets.all(20),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
@@ -1534,6 +1537,7 @@ class _QuestScreenRedesignedState extends ConsumerState<QuestScreenRedesigned>
             ],
           ],
         ),
+      ),
       ),
     );
   }

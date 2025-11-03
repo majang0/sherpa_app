@@ -1037,11 +1037,12 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
     required String subtitle,
   }) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(40),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
             Container(
               width: 120,
               height: 120,
@@ -1086,6 +1087,7 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -1194,12 +1196,6 @@ class _ChallengeIndexScreenState extends ConsumerState<ChallengeIndexScreen>
         ],
       ),
     );
-
-    ref.read(sherpiProvider.notifier).showInstantMessage(
-          context: SherpiContext.encouragement,
-          customDialogue: '${challenge.title} 챌린지에 관심이 있으시군요! 💪',
-          emotion: SherpiEmotion.thinking,
-        );
   }
 
   Widget _buildDetailItem(String label, String value) {
