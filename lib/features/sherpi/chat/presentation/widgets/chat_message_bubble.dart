@@ -180,8 +180,8 @@ class ChatMessageBubble extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 메시지 타입 표시
-          if (isSpecial) ...[
+          // 메시지 타입 표시 (타이핑 중일 때는 숨김)
+          if (isSpecial && !isTyping) ...[
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -318,10 +318,10 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
         ];
       default:
         return [
-          '오늘 하루는 어땠어?',
-          '요즘 기분이 어때?',
-          '조언이 필요해',
-          '함께 이야기하자',
+          '셰르파가 무슨 뜻이야?',
+          '등반하기 시스템이 뭐야?',
+          '이번 주 퀘스트 목록을 알려줘',
+          '내 현재 레벨은?',
         ];
     }
   }
@@ -450,12 +450,6 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
               onTap: () => _onMessageTap(message),
               onLongPress: () => _onMessageLongPress(message),
             ),
-
-            // 피드백 버튼 추가 (셰르피 메시지만)
-            if (message.isSherpiMessage &&
-                message.metadata?['is_typing'] != true &&
-                message.metadata?['is_error'] != true)
-              _buildFeedbackButtons(message),
           ],
         );
       },
@@ -475,154 +469,6 @@ class _SherpiChatScreenState extends ConsumerState<SherpiChatScreen>
         child: const Icon(Icons.keyboard_arrow_down),
       ).animate().slideY(begin: 1, end: 0, duration: 300.ms).fade(),
     );
-  }
-
-  /// 👍 피드백 버튼들
-  Widget _buildFeedbackButtons(ChatMessage message) {
-    return Container(
-      margin: const EdgeInsets.only(left: 44, top: 4, bottom: 8),
-      child: Row(
-        children: [
-          // 빠른 피드백 버튼들
-          _buildQuickFeedbackButton(
-            icon: Icons.thumb_up_outlined,
-            activeIcon: Icons.thumb_up,
-            label: '좋아요',
-            onTap: () => _addQuickFeedback(message, 5.0, '좋아요'),
-            color: Colors.green,
-          ),
-          const SizedBox(width: 8),
-          _buildQuickFeedbackButton(
-            icon: Icons.thumb_down_outlined,
-            activeIcon: Icons.thumb_down,
-            label: '별로예요',
-            onTap: () => _addQuickFeedback(message, 2.0, '별로예요'),
-            color: Colors.red,
-          ),
-          const SizedBox(width: 8),
-          _buildQuickFeedbackButton(
-            icon: Icons.comment_outlined,
-            activeIcon: Icons.comment,
-            label: '상세 피드백',
-            onTap: () => _showDetailedFeedback(message),
-            color: Colors.blue,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 🔘 빠른 피드백 버튼
-  Widget _buildQuickFeedbackButton({
-    required IconData icon,
-    required IconData activeIcon,
-    required String label,
-    required VoidCallback onTap,
-    required Color color,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.2),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: 14,
-              color: Colors.white.withValues(alpha: 0.8),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: GoogleFonts.notoSans(
-                fontSize: 11,
-                color: Colors.white.withValues(alpha: 0.8),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    ).animate().scale(
-          duration: const Duration(milliseconds: 150),
-          curve: Curves.easeOut,
-        );
-  }
-
-  /// ⚡ 빠른 피드백 추가
-  Future<void> _addQuickFeedback(
-      ChatMessage message, double rating, String comment) async {
-    try {
-      await ref
-          .read(enhancedChatConversationProvider.notifier)
-          .addMessageFeedback(
-            messageId: message.id,
-            rating: rating,
-            comment: comment,
-            // feedbackType 제거됨
-          );
-
-      // 성공 메시지 표시 (선택적)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('피드백 감사합니다! 💚'),
-          duration: const Duration(seconds: 2),
-          backgroundColor: Colors.green.shade600,
-        ),
-      );
-
-      // 햅틱 피드백
-      HapticFeedback.lightImpact();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('피드백 전송에 실패했습니다: $e'),
-          backgroundColor: Colors.red.shade600,
-        ),
-      );
-    }
-  }
-
-  /// 📝 상세 피드백 표시
-  void _showDetailedFeedback(ChatMessage message) {
-    // FeedbackDialog removed - show simple dialog instead
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('메시지 상세 피드백'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('메시지: ${message.content}'),
-            const SizedBox(height: 16),
-            const Text('이 메시지에 대한 피드백을 주셔서 감사합니다!'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('닫기'),
-          ),
-        ],
-      ),
-    ).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('피드백이 성공적으로 전송되었습니다! 💚'),
-          duration: Duration(seconds: 3),
-        ),
-      );
-    });
   }
 
   /// 📋 대화 메뉴
