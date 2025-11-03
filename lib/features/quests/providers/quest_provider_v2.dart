@@ -15,6 +15,22 @@ import '../../../shared/models/global_user_model.dart';
 import '../../../shared/models/point_system_model.dart';
 import '../../../core/constants/sherpi_dialogues.dart';
 
+/// SharedPreferences keys for quest system
+abstract class _QuestStorageKeys {
+  static const savedQuests = 'saved_quests_v2';
+  static const premiumActive = 'premium_quest_active_v2';
+  static const lastDailyGenerated = 'last_daily_generated_v2';
+  static const lastWeeklyGenerated = 'last_weekly_generated_v2';
+  static const lastPremiumGenerated = 'last_premium_generated_v2';
+  static const dailyBonusPrefix = 'daily_bonus_v2_';
+  static const weeklyBonusPrefix = 'weekly_bonus_v2_';
+  static const premiumBonusPrefix = 'premium_bonus_v2_';
+
+  // Bonus identifiers
+  static const dailyBonusToday = 'daily_bonus_v2_today';
+  static const weeklyBonusThisWeek = 'weekly_bonus_v2_this_week';
+}
+
 /// 새로운 퀘스트 시스템 Provider (V2)
 /// quest.md 기반의 완전히 새로운 퀘스트 시스템
 final questProviderV2 =
@@ -37,60 +53,95 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
   // SharedPreferences 동시 접근 방지용 락
   bool _isSaving = false;
 
-  QuestNotifierV2(this.ref) : super(const AsyncValue.loading()) {
-    _loadQuests();
-    _loadClaimedBonuses();
+  // syncWithGlobalData() 동시 실행 방지용 락
+  bool _isSyncing = false;
 
-    // 글로벌 유저 데이터 변경 감지
-    ref.listen(globalUserProvider, (previous, next) {
-      _onGlobalUserDataChanged(next);
-    });
+  // _loadQuests() 동시 실행 방지용 락
+  bool _isLoading = false;
+
+  // 🔒 DEBUG 모드 초기화는 앱 전체에서 한 번만 실행
+  static bool _hasInitializedDebugMode = false;
+
+  QuestNotifierV2(this.ref) : super(const AsyncValue.loading()) {
+    _initialize();
+  }
+
+  /// 퀘스트 Provider 초기화 (async 작업 순차 처리)
+  Future<void> _initialize() async {
+    try {
+      // 1. 글로벌 유저 데이터 변경 감지 시작 (초기화 전에 설정)
+      // ⚠️ CRITICAL: 리스너를 먼저 설정하여 초기화 중 발생하는 모든 변경사항 감지
+      ref.listen(globalUserProvider, (previous, next) {
+        _onGlobalUserDataChanged(next);
+      });
+
+      // 2. 기본 데이터 로드 (리스너 활성화 상태에서 순차적으로)
+      await _loadClaimedBonuses();
+      await _loadQuests();
+    } catch (e, stack) {
+      if (kDebugMode) {
+        print('Error: Quest provider initialization failed: $e\n$stack');
+      }
+      // state는 이미 AsyncValue.loading()이거나 error 상태
+    }
   }
 
   /// 퀘스트 데이터 로드
   Future<void> _loadQuests() async {
+    // 🔒 동시 실행 방지: 이미 로드 중이면 즉시 리턴
+    if (_isLoading) {
+      return;
+    }
+
+    _isLoading = true;
+
     try {
       final prefs = await SharedPreferences.getInstance();
 
-      // 🗑️ 개발 환경에서만 퀘스트 데이터 초기화
-      if (kDebugMode) {
-        await prefs.remove('saved_quests_v2');
-        await prefs.remove('premium_quest_active_v2');
-        await prefs.remove('last_daily_generated_v2');
-        await prefs.remove('last_weekly_generated_v2');
-        await prefs.remove('last_premium_generated_v2');
+      // 🗑️ 개발 환경에서만 퀘스트 데이터 초기화 (앱 전체에서 한 번만!)
+      if (kDebugMode && !_hasInitializedDebugMode) {
+        await prefs.remove(_QuestStorageKeys.savedQuests);
+        await prefs.remove(_QuestStorageKeys.premiumActive);
+        await prefs.remove(_QuestStorageKeys.lastDailyGenerated);
+        await prefs.remove(_QuestStorageKeys.lastWeeklyGenerated);
+        await prefs.remove(_QuestStorageKeys.lastPremiumGenerated);
 
         // 보너스 관련 키들도 초기화
         final allKeys = prefs.getKeys();
         for (final key in allKeys) {
-          if (key.contains('daily_bonus_v2_') ||
-              key.contains('weekly_bonus_v2_') ||
-              key.contains('premium_bonus_v2_')) {
+          if (key.contains(_QuestStorageKeys.dailyBonusPrefix) ||
+              key.contains(_QuestStorageKeys.weeklyBonusPrefix) ||
+              key.contains(_QuestStorageKeys.premiumBonusPrefix)) {
             await prefs.remove(key);
           }
         }
+
+        _hasInitializedDebugMode = true;
       }
 
       // 프리미엄 상태 로드
-      _isPremiumActive = prefs.getBool('premium_quest_active_v2') ?? false;
+      _isPremiumActive = prefs.getBool(_QuestStorageKeys.premiumActive) ?? false;
 
       // 퀘스트 생성 날짜 확인
-      final lastDailyGenerated = prefs.getString('last_daily_generated_v2');
-      final lastWeeklyGenerated = prefs.getString('last_weekly_generated_v2');
-      final lastPremiumGenerated = prefs.getString('last_premium_generated_v2');
+      final lastDailyGenerated = prefs.getString(_QuestStorageKeys.lastDailyGenerated);
+      final lastWeeklyGenerated = prefs.getString(_QuestStorageKeys.lastWeeklyGenerated);
+      final lastPremiumGenerated = prefs.getString(_QuestStorageKeys.lastPremiumGenerated);
 
       final today = DateTime.now();
       final todayString = '${today.year}-${today.month}-${today.day}';
-      final thisWeekString = _getMondayBasedWeekString(today); // 월요일 기준으로 변경
+      final thisWeekString = _getMondayBasedWeekString(today);
 
       // 저장된 퀘스트 로드
-      final savedQuests = prefs.getStringList('saved_quests_v2') ?? [];
+      final savedQuests = prefs.getStringList(_QuestStorageKeys.savedQuests) ?? [];
       if (savedQuests.isNotEmpty) {
         try {
           _allQuests = savedQuests
               .map((questJson) => QuestInstance.fromJson(jsonDecode(questJson)))
               .toList();
-        } catch (e) {
+        } catch (e, stack) {
+          if (kDebugMode) {
+            print('Warning: Failed to parse saved quests, resetting: $e');
+          }
           _allQuests = [];
         }
       } else {
@@ -103,21 +154,21 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       // 일일 퀘스트 생성 (매일)
       if (lastDailyGenerated != todayString) {
         _generateDailyQuests();
-        await prefs.setString('last_daily_generated_v2', todayString);
+        await prefs.setString(_QuestStorageKeys.lastDailyGenerated, todayString);
         needsUpdate = true;
       }
 
       // 주간 퀘스트 생성 (매주)
       if (lastWeeklyGenerated != thisWeekString) {
         _generateWeeklyQuests();
-        await prefs.setString('last_weekly_generated_v2', thisWeekString);
+        await prefs.setString(_QuestStorageKeys.lastWeeklyGenerated, thisWeekString);
         needsUpdate = true;
       }
 
       // 고급 퀘스트 생성 (매주, 프리미엄 유저만)
       if (_isPremiumActive && lastPremiumGenerated != thisWeekString) {
         _generatePremiumQuests();
-        await prefs.setString('last_premium_generated_v2', thisWeekString);
+        await prefs.setString(_QuestStorageKeys.lastPremiumGenerated, thisWeekString);
         needsUpdate = true;
       }
 
@@ -137,6 +188,9 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       state = AsyncValue.data(_allQuests);
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
+    } finally {
+      // 🔓 로딩 완료: 락 해제 (반드시 실행)
+      _isLoading = false;
     }
   }
 
@@ -182,45 +236,60 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     _allQuests.addAll(premiumQuests);
   }
 
+  /// Tracking data 생성 (중복 제거)
+  Future<Map<String, dynamic>> _buildTrackingData() async {
+    final globalUser = ref.read(globalUserProvider);
+    final pointData = ref.read(globalPointProvider);
+
+    // 일일 및 주간 포인트 획득량 계산
+    final dailyPointsEarned =
+        _calculateDailyPointsEarned(pointData.transactions);
+    final weeklyPointsEarned =
+        _calculateWeeklyPointsEarned(pointData.transactions);
+
+    final trackingData = QuestTrackingService.convertGlobalUserToTrackingData(
+      globalUser,
+      dailyPointsEarned: dailyPointsEarned,
+      weeklyPointsEarned: weeklyPointsEarned,
+    );
+
+    // 주간 데이터 추가 (안전하게)
+    try {
+      final weeklyData =
+          await QuestTrackingService.calculateWeeklyData(globalUser);
+      trackingData.addAll(weeklyData);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Warning: Weekly data calculation failed: $e');
+      }
+    }
+
+    // 탭 방문 정보 추가 (안전하게)
+    try {
+      final lastVisitedTab = await QuestTrackingService.getLastVisitedTab();
+      if (lastVisitedTab != null) {
+        trackingData['visitedTab'] = lastVisitedTab;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Warning: Tab visit data load failed: $e');
+      }
+    }
+
+    return trackingData;
+  }
+
   /// 글로벌 데이터와 동기화 (강화된 에러 처리)
   Future<void> syncWithGlobalData() async {
+    // 🔒 동시 실행 방지: 이미 동기화 중이면 즉시 리턴
+    if (_isSyncing) {
+      return;
+    }
+
+    _isSyncing = true;
+
     try {
-      final globalUser = ref.read(globalUserProvider);
-      final pointData = ref.read(globalPointProvider);
-
-      // 일일 및 주간 포인트 획득량 계산
-      final dailyPointsEarned =
-          _calculateDailyPointsEarned(pointData.transactions);
-      final weeklyPointsEarned =
-          _calculateWeeklyPointsEarned(pointData.transactions);
-
-      final trackingData = QuestTrackingService.convertGlobalUserToTrackingData(
-        globalUser,
-        dailyPointsEarned: dailyPointsEarned,
-        weeklyPointsEarned: weeklyPointsEarned,
-      );
-
-      // 주간 데이터 추가 (안전하게)
-      try {
-        final weeklyData =
-            await QuestTrackingService.calculateWeeklyData(globalUser);
-        trackingData.addAll(weeklyData);
-      } catch (e) {
-        // 주간 데이터 계산 실패 시 무시
-        // 주간 데이터 실패해도 계속 진행
-      }
-
-      // 탭 방문 정보 추가 (안전하게)
-      try {
-        final lastVisitedTab = await QuestTrackingService.getLastVisitedTab();
-        if (lastVisitedTab != null) {
-          trackingData['visitedTab'] = lastVisitedTab;
-        }
-      } catch (e) {
-        // 탭 방문 정보 로드 실패 시 무시
-        // 탭 정보 실패해도 계속 진행
-      }
-
+      final trackingData = await _buildTrackingData();
       _lastTrackingData = trackingData;
 
       // 모든 퀘스트의 진행률 업데이트 (안전하게)
@@ -235,9 +304,10 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
             _allQuests[i] = updatedQuest;
             anyUpdated = true;
           }
-        } catch (e) {
-          // 개별 퀘스트 업데이트 실패 시 무시
-          // 개별 퀘스트 실패해도 계속 진행
+        } catch (e, stack) {
+          if (kDebugMode) {
+            print('Warning: Quest update failed for quest ${_allQuests[i].id}: $e');
+          }
         }
       }
 
@@ -245,40 +315,37 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
         try {
           await _saveQuests();
           state = AsyncValue.data(_allQuests);
-        } catch (e) {
-          // 퀘스트 저장 실패 시 무시
-          // 저장 실패해도 메모리 상태는 업데이트된 상태 유지
+        } catch (e, stack) {
+          if (kDebugMode) {
+            print('Warning: Quest save failed (state updated in memory): $e');
+          }
           state = AsyncValue.data(_allQuests);
         }
       }
-    } catch (e) {
-      // 전체 동기화 실패 시에도 기존 상태 유지
-      // 전체 동기화 실패 시에도 기존 상태 유지 (에러 상태로 설정하지 않음)
+    } catch (e, stack) {
+      if (kDebugMode) {
+        print('Error: syncWithGlobalData failed: $e\n$stack');
+      }
+    } finally {
+      // 🔓 동기화 완료: 락 해제 (반드시 실행)
+      _isSyncing = false;
     }
   }
 
   /// 글로벌 유저 데이터 변경 시 호출
   void _onGlobalUserDataChanged(GlobalUser globalUser) {
-    // 비동기 처리를 안전하게 래핑
-    _handleGlobalUserDataChangeAsync(globalUser);
+    // 비동기 처리를 안전하게 래핑 (fire-and-forget 방지)
+    _handleGlobalUserDataChangeAsync(globalUser).catchError((error, stack) {
+      if (kDebugMode) {
+        print('Unhandled error in _onGlobalUserDataChanged: $error\n$stack');
+      }
+    });
   }
 
   /// 글로벌 유저 데이터 변경 처리 (비동기 안전)
   Future<void> _handleGlobalUserDataChangeAsync(GlobalUser globalUser) async {
     try {
-      final pointData = ref.read(globalPointProvider);
-
-      // 일일 및 주간 포인트 획득량 계산
-      final dailyPointsEarned =
-          _calculateDailyPointsEarned(pointData.transactions);
-      final weeklyPointsEarned =
-          _calculateWeeklyPointsEarned(pointData.transactions);
-
-      final trackingData = QuestTrackingService.convertGlobalUserToTrackingData(
-        globalUser,
-        dailyPointsEarned: dailyPointsEarned,
-        weeklyPointsEarned: weeklyPointsEarned,
-      );
+      final trackingData = await _buildTrackingData();
 
       // 변경된 데이터만 체크
       bool hasChanges = false;
@@ -291,12 +358,12 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
 
       if (hasChanges) {
         _lastTrackingData = trackingData;
-        await syncWithGlobalData(); // ✅ await 추가!
+        await syncWithGlobalData();
       }
-    } catch (e) {
-      // 에러 로깅만 하고 앱 크래시 방지
-      // 글로벌 데이터 동기화 에러 발생
-      // 상태를 에러로 설정하지 않고 기존 데이터 유지
+    } catch (e, stack) {
+      if (kDebugMode) {
+        print('Error in global user data change handler: $e\n$stack');
+      }
     }
   }
 
@@ -329,8 +396,10 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
               _allQuests[i] = updatedQuest;
               anyUpdated = true;
             }
-          } catch (e) {
-            // 탭 방문 퀘스트 업데이트 실패 시 무시
+          } catch (e, stack) {
+            if (kDebugMode) {
+              print('Warning: Tab visit quest update failed for ${quest.id}: $e');
+            }
           }
         }
       }
@@ -339,9 +408,10 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
         await _saveQuests();
         state = AsyncValue.data(_allQuests);
       }
-    } catch (e) {
-      // 탭 방문 기록 에러 발생
-      // 에러가 발생해도 앱이 멈추지 않도록 함
+    } catch (e, stack) {
+      if (kDebugMode) {
+        print('Warning: recordTabVisit failed: $e\n$stack');
+      }
     }
   }
 
@@ -417,8 +487,10 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
           userNotifier.increaseStats(deltaWillpower: increase);
           break;
       }
-    } catch (e) {
-      // 에러 무시 - 중요하지 않은 작업
+    } catch (e, stack) {
+      if (kDebugMode) {
+        print('Warning: Stats increase failed for quest: $e');
+      }
     }
   }
 
@@ -444,9 +516,11 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
       final prefs = await SharedPreferences.getInstance();
       final questJsonList =
           _allQuests.map((quest) => jsonEncode(quest.toJson())).toList();
-      await prefs.setStringList('saved_quests_v2', questJsonList);
-    } catch (e) {
-      // 퀘스트 저장 에러 발생
+      await prefs.setStringList(_QuestStorageKeys.savedQuests, questJsonList);
+    } catch (e, stack) {
+      if (kDebugMode) {
+        print('Error: Failed to save quests to SharedPreferences: $e\n$stack');
+      }
     } finally {
       _isSaving = false;
     }
@@ -459,11 +533,11 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
 
     String key;
     switch (bonusKey) {
-      case 'daily_bonus_v2_today':
-        key = 'daily_bonus_v2_${today.year}-${today.month}-${today.day}';
+      case _QuestStorageKeys.dailyBonusToday:
+        key = '${_QuestStorageKeys.dailyBonusPrefix}${today.year}-${today.month}-${today.day}';
         break;
-      case 'weekly_bonus_v2_this_week':
-        key = 'weekly_bonus_v2_${_getMondayBasedWeekString(today)}';
+      case _QuestStorageKeys.weeklyBonusThisWeek:
+        key = '${_QuestStorageKeys.weeklyBonusPrefix}${_getMondayBasedWeekString(today)}';
         break;
       default:
         key = bonusKey;
@@ -479,11 +553,11 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
 
     String key;
     switch (bonusKey) {
-      case 'daily_bonus_v2_today':
-        key = 'daily_bonus_v2_${today.year}-${today.month}-${today.day}';
+      case _QuestStorageKeys.dailyBonusToday:
+        key = '${_QuestStorageKeys.dailyBonusPrefix}${today.year}-${today.month}-${today.day}';
         break;
-      case 'weekly_bonus_v2_this_week':
-        key = 'weekly_bonus_v2_${_getMondayBasedWeekString(today)}';
+      case _QuestStorageKeys.weeklyBonusThisWeek:
+        key = '${_QuestStorageKeys.weeklyBonusPrefix}${_getMondayBasedWeekString(today)}';
         break;
       default:
         key = bonusKey;
@@ -512,15 +586,15 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
     final today = DateTime.now();
 
     // 일일 보너스 확인
-    final dailyKey = 'daily_bonus_v2_${today.year}-${today.month}-${today.day}';
+    final dailyKey = '${_QuestStorageKeys.dailyBonusPrefix}${today.year}-${today.month}-${today.day}';
     if (prefs.getBool(dailyKey) == true) {
-      _claimedBonuses.add('daily_bonus_v2_today');
+      _claimedBonuses.add(_QuestStorageKeys.dailyBonusToday);
     }
 
     // 주간 보너스 확인 (월요일 기준)
-    final weeklyKey = 'weekly_bonus_v2_${_getMondayBasedWeekString(today)}';
+    final weeklyKey = '${_QuestStorageKeys.weeklyBonusPrefix}${_getMondayBasedWeekString(today)}';
     if (prefs.getBool(weeklyKey) == true) {
-      _claimedBonuses.add('weekly_bonus_v2_today');
+      _claimedBonuses.add(_QuestStorageKeys.weeklyBonusThisWeek);
     }
   }
 
@@ -534,7 +608,7 @@ class QuestNotifierV2 extends StateNotifier<AsyncValue<List<QuestInstance>>> {
 
       _isPremiumActive = true;
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('premium_quest_active_v2', true);
+      await prefs.setBool(_QuestStorageKeys.premiumActive, true);
 
       // 프리미엄 퀘스트 즉시 생성
       _generatePremiumQuests();
