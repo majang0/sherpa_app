@@ -29,6 +29,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
+  late AnimationController _progressController;
+  late Animation<double> _progressAnimation;
   late ExerciseLog _currentExercise;
 
   @override
@@ -47,22 +49,40 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
       CurvedAnimation(parent: _fadeController, curve: Curves.easeOut),
     );
 
+    // Progress bar animation
+    _progressController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+
+    _progressAnimation = Tween<double>(begin: 0.0, end: 7.0 / 10).animate(
+      CurvedAnimation(parent: _progressController, curve: Curves.easeOutCubic),
+    );
+
     _fadeController.forward();
+
+    // Start progress animation after fade
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) {
+        _progressController.forward();
+      }
+    });
   }
 
   @override
   void dispose() {
     _fadeController.dispose();
+    _progressController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: ModernColors.surfaceElevated,
       appBar: SherpaCleanAppBar(
         title: '${_currentExercise.exerciseType} 상세',
-        backgroundColor: const Color(0xFFF8FAFC),
+        backgroundColor: ModernColors.surfaceElevated,
         actions: [
           IconButton(
             icon: const Icon(Icons.edit_outlined),
@@ -88,13 +108,6 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               _buildHeader().animate().slide(duration: 600.ms, delay: 100.ms),
 
               const SizedBox(height: 32),
-
-              // 운동 통계 카드
-              _buildStatsCard()
-                  .animate()
-                  .slide(duration: 600.ms, delay: 200.ms),
-
-              const SizedBox(height: 20),
 
               // 운동 세부 정보 카드
               _buildDetailsCard()
@@ -147,7 +160,6 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
   }
 
   Widget _buildHeader() {
-    final exerciseColor = _getExerciseColor(_currentExercise.exerciseType);
     final exerciseEmoji = _getExerciseEmoji(_currentExercise.exerciseType);
 
     return Container(
@@ -158,14 +170,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            exerciseColor,
-            exerciseColor.withValues(alpha: 0.8),
+            ModernColors.exercise,
+            ModernColors.exercise.withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: exerciseColor.withValues(alpha: 0.3),
+            color: ModernColors.exercise.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -253,7 +265,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
     );
   }
 
-  Widget _buildStatsCard() {
+  Widget _buildDetailsCard() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
@@ -261,12 +273,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -285,167 +297,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
-                  Icons.analytics_outlined,
-                  color: ModernColors.primary,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                '운동 통계',
-                style: GoogleFonts.notoSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: ModernColors.textPrimary,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          // 통계 그리드
-          Row(
-            children: [
-              Expanded(
-                child: _buildStatItem(
-                  '운동 시간',
-                  '${_currentExercise.durationMinutes}분',
-                  Icons.timer_outlined,
-                  ModernColors.primary,
-                ),
-              ),
-              Container(
-                width: 1,
-                height: 60,
-                color: Colors.grey.shade200,
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-              Expanded(
-                child: _buildStatItem(
-                  '강도',
-                  _getIntensityLabel(_currentExercise.intensity),
-                  Icons.fitness_center,
-                  ModernColors.primary,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-
-          // 추가 정보
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.calculate_outlined,
-                  color: ModernColors.primary,
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '예상 소모 칼로리: ${_calculateCalories()}kcal',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: ModernColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatItem(
-      String label, String value, IconData icon, Color color) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(
-            icon,
-            color: color,
-            size: 24,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          value,
-          style: GoogleFonts.notoSans(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: ModernColors.textPrimary,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: GoogleFonts.notoSans(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: ModernColors.textSecondary,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDetailsCard() {
-    final exerciseColor = _getExerciseColor(_currentExercise.exerciseType);
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: ModernColors.primary.withValues(alpha: 0.08),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: ModernColors.primary.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: exerciseColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
                   Icons.insights,
-                  color: exerciseColor,
+                  color: ModernColors.exercise,
                   size: 20,
                 ),
               ),
@@ -470,8 +327,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  exerciseColor.withValues(alpha: 0.1),
-                  exerciseColor.withValues(alpha: 0.05),
+                  ModernColors.exercise.withValues(alpha: 0.1),
+                  ModernColors.exercise.withValues(alpha: 0.05),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
@@ -483,7 +340,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: exerciseColor.withValues(alpha: 0.2),
+                        color: ModernColors.exercise.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
@@ -501,7 +358,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                             style: GoogleFonts.notoSans(
                               fontSize: 20,
                               fontWeight: FontWeight.w800,
-                              color: exerciseColor,
+                              color: ModernColors.exercise,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -608,7 +465,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     children: [
                       const Icon(
                         Icons.schedule,
-                        color: ModernColors.primary,
+                        color: ModernColors.exercise,
                         size: 20,
                       ),
                       const SizedBox(width: 12),
@@ -676,12 +533,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -700,12 +557,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.emoji_events_outlined,
-                  color: ModernColors.primary,
+                  color: ModernColors.exercise,
                   size: 20,
                 ),
               ),
@@ -730,13 +587,13 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  ModernColors.primary.withValues(alpha: 0.05),
-                  ModernColors.primary.withValues(alpha: 0.02),
+                  ModernColors.exercise.withValues(alpha: 0.05),
+                  ModernColors.exercise.withValues(alpha: 0.02),
                 ],
               ),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: ModernColors.primary.withValues(alpha: 0.1),
+                color: ModernColors.exercise.withValues(alpha: 0.1),
                 width: 1,
               ),
             ),
@@ -748,7 +605,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: ModernColors.primary.withValues(alpha: 0.1),
+                        color: ModernColors.exercise.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Text(
@@ -765,7 +622,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                           style: GoogleFonts.notoSans(
                             fontSize: 36,
                             fontWeight: FontWeight.w800,
-                            color: ModernColors.primary,
+                            color: ModernColors.exercise,
                           ),
                         ),
                         Text(
@@ -781,23 +638,40 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   ],
                 ),
                 const SizedBox(height: 16),
-                // Visual progress bar
-                Container(
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: ModernColors.primary.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: achievementScore / 10,
-                    child: Container(
+                // Visual progress bar with animation
+                AnimatedBuilder(
+                  animation: _progressAnimation,
+                  builder: (context, child) {
+                    return Container(
+                      height: 8,
                       decoration: BoxDecoration(
-                        color: ModernColors.primary,
+                        color: ModernColors.exercise.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
-                    ),
-                  ),
+                      child: FractionallySizedBox(
+                        alignment: Alignment.centerLeft,
+                        widthFactor: _progressAnimation.value,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                ModernColors.exercise,
+                                ModernColors.exercise.withValues(alpha: 0.8),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: ModernColors.exercise.withValues(alpha: 0.3),
+                                blurRadius: 4,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -815,12 +689,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -839,12 +713,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.photo_camera,
-                  color: ModernColors.primary,
+                  color: ModernColors.exercise,
                   size: 20,
                 ),
               ),
@@ -860,17 +734,48 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             ],
           ),
           const SizedBox(height: 20),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: _currentExercise.hasPhoto
-                ? (_currentExercise.imageUrl!.startsWith('http')
-                    ? Image.network(
-                        _currentExercise.imageUrl!,
-                        width: double.infinity,
-                        height: 200,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
+          GestureDetector(
+            onTap: _currentExercise.hasPhoto && _currentExercise.imageUrl!.startsWith('http')
+                ? () => _showFullScreenPhoto(context)
+                : null,
+            child: Hero(
+              tag: 'exercise_photo_${_currentExercise.id}',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: _currentExercise.hasPhoto
+                    ? (_currentExercise.imageUrl!.startsWith('http')
+                        ? Image.network(
+                            _currentExercise.imageUrl!,
+                            width: double.infinity,
+                            height: 200,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: double.infinity,
+                                height: 200,
+                                color: Colors.grey.shade100,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.broken_image,
+                                      size: 48,
+                                      color: Colors.grey.shade400,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      '사진을 불러올 수 없습니다',
+                                      style: GoogleFonts.notoSans(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          )
+                        : Container(
                             width: double.infinity,
                             height: 200,
                             color: Colors.grey.shade100,
@@ -878,13 +783,13 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
-                                  Icons.broken_image,
+                                  Icons.photo,
                                   size: 48,
                                   color: Colors.grey.shade400,
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  '사진을 불러올 수 없습니다',
+                                  '로컬 사진',
                                   style: GoogleFonts.notoSans(
                                     fontSize: 14,
                                     color: Colors.grey.shade600,
@@ -892,39 +797,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                                 ),
                               ],
                             ),
-                          );
-                        },
-                      )
+                          ))
                     : Container(
-                        width: double.infinity,
-                        height: 200,
-                        color: Colors.grey.shade100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.photo,
-                              size: 48,
-                              color: Colors.grey.shade400,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              '로컬 사진',
-                              style: GoogleFonts.notoSans(
-                                fontSize: 14,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ))
-                : Container(
                     width: double.infinity,
                     height: 200,
                     decoration: BoxDecoration(
                       color: Colors.grey.shade50,
                       border: Border.all(
-                        color: ModernColors.primary.withValues(alpha: 0.2),
+                        color: ModernColors.exercise.withValues(alpha: 0.2),
                         width: 2,
                         style: BorderStyle.solid,
                       ),
@@ -936,7 +816,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                         Icon(
                           Icons.add_a_photo_outlined,
                           size: 48,
-                          color: ModernColors.primary.withValues(alpha: 0.6),
+                          color: ModernColors.exercise.withValues(alpha: 0.6),
                         ),
                         const SizedBox(height: 12),
                         Text(
@@ -959,8 +839,56 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                       ],
                     ),
                   ),
+              ),
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showFullScreenPhoto(BuildContext context) {
+    HapticFeedbackManager.mediumImpact();
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.9),
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: Stack(
+          children: [
+            Center(
+              child: Hero(
+                tag: 'exercise_photo_${_currentExercise.id}',
+                child: InteractiveViewer(
+                  minScale: 0.5,
+                  maxScale: 4.0,
+                  child: Image.network(
+                    _currentExercise.imageUrl!,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 16,
+              right: 16,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.close, color: Colors.white),
+                  onPressed: () {
+                    HapticFeedbackManager.lightImpact();
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -973,12 +901,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -995,14 +923,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: _currentExercise.isShared
-                  ? ModernColors.primary.withValues(alpha: 0.1)
+                  ? ModernColors.exercise.withValues(alpha: 0.1)
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               _currentExercise.isShared ? Icons.group : Icons.lock,
               color: _currentExercise.isShared
-                  ? ModernColors.primary
+                  ? ModernColors.exercise
                   : Colors.grey.shade600,
               size: 20,
             ),
@@ -1038,7 +966,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: _currentExercise.isShared
-                  ? ModernColors.primary.withValues(alpha: 0.1)
+                  ? ModernColors.exercise.withValues(alpha: 0.1)
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(12),
             ),
@@ -1048,7 +976,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: _currentExercise.isShared
-                    ? ModernColors.primary
+                    ? ModernColors.exercise
                     : Colors.grey.shade600,
               ),
             ),
@@ -1066,12 +994,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: ModernColors.primary.withValues(alpha: 0.08),
+          color: ModernColors.exercise.withValues(alpha: 0.08),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.primary.withValues(alpha: 0.1),
+            color: ModernColors.exercise.withValues(alpha: 0.1),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -1090,12 +1018,12 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: ModernColors.primary.withValues(alpha: 0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(
                   Icons.book,
-                  color: ModernColors.primary,
+                  color: ModernColors.exercise,
                   size: 20,
                 ),
               ),
@@ -1142,7 +1070,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
             child: SherpaButton(
               text: '수정하기',
               onPressed: _editExercise,
-              backgroundColor: ModernColors.primary,
+              backgroundColor: ModernColors.exercise,
               height: 56,
             ),
           ),
@@ -1297,43 +1225,6 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           ),
         );
       }
-    }
-  }
-
-  Color _getExerciseColor(String exerciseType) {
-    switch (exerciseType) {
-      // 딥 블루 - 유산소 운동
-      case '걷기':
-      case '러닝':
-      case '수영':
-      case '자전거':
-        return const Color(0xFF2563EB);
-
-      // 미디엄 블루 - 근력/체조 운동
-      case '요가':
-      case '클라이밍':
-      case '필라테스':
-      case '헬스':
-        return const Color(0xFF3B82F6);
-
-      // 스카이 블루 - 라켓 스포츠
-      case '골프':
-      case '배드민턴':
-      case '테니스':
-        return const Color(0xFF0EA5E9);
-
-      // 라이트 블루 - 볼 스포츠
-      case '농구':
-      case '축구':
-        return const Color(0xFF60A5FA);
-
-      // 등산 - 인디고 블루
-      case '등산':
-        return const Color(0xFF4F46E5);
-
-      // 기타 - 기본 블루
-      default:
-        return const Color(0xFF2563EB);
     }
   }
 

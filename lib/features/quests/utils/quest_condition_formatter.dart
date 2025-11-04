@@ -277,6 +277,7 @@ class QuestConditionFormatter {
         return '이번 주 $number가지 다른 모임 참여하기';
       case 'differentmountains':
         return '이번 주 $number개 다른 산 등반하기';
+      case 'movielog':
       case 'movielogs':
         return '이번 주 영화 $number편 감상하기';
       case 'meetingreviews':
@@ -284,8 +285,6 @@ class QuestConditionFormatter {
       case 'meetinglog':
       case 'meetinglogs':
         return number == '1' ? '이번 주 모임 참여하기' : '이번 주 모임 $number회 참여하기';
-      case 'movielog':
-      // Removed duplicate 'movielogs' case - 'movielog' case already handles it
       case 'exerciseminutes':
         return '이번 주 총 $number분 운동하기';
       case 'focusminutes':
