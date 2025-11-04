@@ -224,13 +224,6 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.todayData == null) {
-      return Scaffold(
-        backgroundColor: ModernColors.background,
-        body: _buildNoDataState(),
-      );
-    }
-
     return Scaffold(
       backgroundColor: ModernColors.background,
       body: CustomScrollView(
@@ -241,40 +234,42 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
             child: _buildHeader(),
           ),
 
-          // 컨텐츠
+          // 컨텐츠 (조건부)
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // 1-2. 시각적 배지 섹션
-                  _buildBadgeSection(),
+            child: widget.todayData == null
+                ? _buildNoDataState()
+                : Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // 1-2. 시각적 배지 섹션
+                        _buildBadgeSection(),
 
-                  const SizedBox(height: 24),
+                        const SizedBox(height: 24),
 
-                  // 3. 비교 분석 섹션 (리디자인)
-                  _buildModernComparisonSection(),
+                        // 3. 비교 분석 섹션 (리디자인)
+                        _buildModernComparisonSection(),
 
-                  const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                  // 4. 오늘 운동의 장점 (리디자인)
-                  _buildModernBenefitsSection(),
+                        // 4. 오늘 운동의 장점 (리디자인)
+                        _buildModernBenefitsSection(),
 
-                  const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                  // 5. 셰르피의 추천 (리디자인)
-                  _buildModernRecommendationSection(),
+                        // 5. 셰르피의 추천 (리디자인)
+                        _buildModernRecommendationSection(),
 
-                  const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                  // 6. 응원의 말 (리디자인)
-                  _buildModernEncouragementSection(),
+                        // 6. 응원의 말 (리디자인)
+                        _buildModernEncouragementSection(),
 
-                  const SizedBox(height: 100),
-                ],
-              ),
-            ),
+                        const SizedBox(height: 100),
+                      ],
+                    ),
+                  ),
           ),
         ],
       ),
@@ -1900,46 +1895,31 @@ class _ExerciseAnalysisPageState extends State<ExerciseAnalysisPage>
 
   /// 데이터 없음 상태
   Widget _buildNoDataState() {
-    return Center(
+    return Container(
+      padding: const EdgeInsets.all(32),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // 셰르피 이미지 (애니메이션 추가)
-          Image.asset(
-            SherpiEmotion.thinking.imagePath,
-            width: 120,
-            height: 120,
-          )
-              .animate(
-                onPlay: (controller) => controller.repeat(),
-              )
-              .scale(
-                duration: const Duration(seconds: 2),
-                curve: Curves.easeInOut,
-                begin: const Offset(0.95, 0.95),
-                end: const Offset(1.05, 1.05),
-              ),
-
-          const SizedBox(height: 24),
-
+          Icon(
+            Icons.fitness_center_rounded,
+            size: 80,
+            color: ModernColors.exercise.withValues(alpha: 0.3),
+          ),
+          const SizedBox(height: 16),
           Text(
-            '아직 운동 기록이 없어요',
+            '오늘의 운동이 없어요',
             style: GoogleFonts.notoSans(
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: ModernColors.textPrimary,
+              color: ModernColors.textSecondary,
             ),
           ),
-
-          const SizedBox(height: 12),
-
+          const SizedBox(height: 8),
           Text(
-            '운동을 하고 기록을 남겨보세요.\n셰르피가 함께 운동 여정을 분석해드릴게요!',
-            textAlign: TextAlign.center,
+            '운동을 기록하고 분석을 받아보세요',
             style: GoogleFonts.notoSans(
               fontSize: 14,
-              color: ModernColors.textSecondary,
-              height: 1.5,
+              color: ModernColors.textTertiary,
             ),
           ),
         ],

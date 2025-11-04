@@ -119,26 +119,21 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
     final user = ref.read(globalUserProvider);
     if (user.dailyRecords.readingLogs.isEmpty) return;
 
-    final readingLogs = user.dailyRecords.readingLogs;
+    // 오늘 기록 찾기
+    final today = DateTime.now();
+    _todayReading = user.dailyRecords.readingLogs
+        .where((log) => _isSameDay(log.date, today))
+        .firstOrNull;  // ✅ Returns null when no today data
 
-    if (readingLogs.isNotEmpty) {
-      // 날짜순 정렬 (최신순)
-      final sortedLogs = List<ReadingLog>.from(readingLogs)
+    // 이전 기록 찾기 (오늘 이전의 가장 최근 기록)
+    if (_todayReading != null) {
+      final previousLogs = user.dailyRecords.readingLogs
+          .where((log) => log.date.isBefore(_todayReading!.date))
+          .toList()
         ..sort((a, b) => b.date.compareTo(a.date));
 
-      // 오늘 기록 찾기
-      final today = DateTime.now();
-      _todayReading = sortedLogs.firstWhere(
-        (log) => _isSameDay(log.date, today),
-        orElse: () => sortedLogs.first, // 오늘 기록이 없으면 가장 최근 기록
-      );
-
-      // 이전 기록 찾기
-      if (sortedLogs.length > 1) {
-        _previousReading = sortedLogs.firstWhere(
-          (log) => log.id != _todayReading?.id,
-          orElse: () => sortedLogs[1],
-        );
+      if (previousLogs.isNotEmpty) {
+        _previousReading = previousLogs.first;
       }
     }
   }
@@ -196,96 +191,82 @@ class _ReadingAnalysisPageState extends ConsumerState<ReadingAnalysisPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ModernColors.background,
-      body:
-          _todayReading == null ? _buildEmptyState() : _buildAnalysisContent(),
-    );
-  }
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          // 헤더
+          SliverToBoxAdapter(
+            child: _buildHeader(),
+          ),
 
-  /// 빈 상태 UI
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // 셰르피 이미지
-          Image.asset(
-            'assets/images/sherpi/sherpi_thinking.png',
-            width: 120,
-            height: 120,
-          )
-              .animate(
-                onPlay: (controller) => controller.repeat(),
-              )
-              .scale(
-                duration: const Duration(seconds: 2),
-                curve: Curves.easeInOut,
-                begin: const Offset(0.95, 0.95),
-                end: const Offset(1.05, 1.05),
+          // 컨텐츠 (조건부)
+          if (_todayReading == null)
+            SliverToBoxAdapter(
+              child: _buildEmptyState(),
+            )
+          else ...[
+            // 이전 책 섹션 (있는 경우)
+            if (_previousReading != null)
+              SliverToBoxAdapter(
+                child: _buildPreviousBookSection(),
               ),
 
-          const SizedBox(height: 24),
-
-          Text(
-            '아직 독서 기록이 없어요',
-            style: GoogleFonts.notoSans(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: ModernColors.textPrimary,
+            // 오늘 책 섹션
+            SliverToBoxAdapter(
+              child: _buildTodayBookSection(),
             ),
-          ),
 
-          const SizedBox(height: 12),
-
-          Text(
-            '책을 읽고 기록을 남겨보세요.\n셰르피가 함께 독서 여정을 분석해드릴게요!',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              color: ModernColors.textSecondary,
-              height: 1.5,
+            // 독서 여정 응원 섹션
+            SliverToBoxAdapter(
+              child: _buildJourneyEncouragementSection(),
             ),
-          ),
+
+            // 추천 도서 섹션
+            SliverToBoxAdapter(
+              child: _buildRecommendationsSection(),
+            ),
+
+            // 하단 여백
+            const SliverToBoxAdapter(
+              child: SizedBox(height: 100),
+            ),
+          ],
         ],
       ),
     );
   }
 
-  /// 분석 콘텐츠
-  Widget _buildAnalysisContent() {
-    return CustomScrollView(
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        // 헤더
-        SliverToBoxAdapter(
-          child: _buildHeader(),
-        ),
-
-        // 이전 책 섹션 (있는 경우)
-        if (_previousReading != null)
-          SliverToBoxAdapter(
-            child: _buildPreviousBookSection(),
+  /// 빈 상태 UI
+  Widget _buildEmptyState() {
+    return Container(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.menu_book_rounded,
+            size: 80,
+            color: ModernColors.reading.withValues(alpha: 0.3),
           ),
-
-        // 오늘 책 섹션
-        SliverToBoxAdapter(
-          child: _buildTodayBookSection(),
-        ),
-
-        // 독서 여정 응원 섹션
-        SliverToBoxAdapter(
-          child: _buildJourneyEncouragementSection(),
-        ),
-
-        // 추천 도서 섹션
-        SliverToBoxAdapter(
-          child: _buildRecommendationsSection(),
-        ),
-
-        // 하단 여백
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 100),
-        ),
-      ],
+          const SizedBox(height: 16),
+          Text(
+            '오늘의 독서가 없어요',
+            style: GoogleFonts.notoSans(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: ModernColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '독서를 기록하고 분석을 받아보세요',
+            style: GoogleFonts.notoSans(
+              fontSize: 14,
+              color: ModernColors.textTertiary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

@@ -30,8 +30,6 @@ class _EnhancedTodayAnalysisDialogState
   final ActivityAnalysisService _analysisService =
       ActivityAnalysisService.instance;
   final bool _isLoading = false; // 종합 분석 대기 없이 바로 열림
-  bool _hasAllActivities = false;
-  String _missingActivities = '';
 
   // 페이지 컨트롤러
   late PageController _pageController;
@@ -92,35 +90,17 @@ class _EnhancedTodayAnalysisDialogState
       final globalUser = ref.read(globalUserProvider);
       final todayRecord = globalUser.todayRecord;
 
-      // 모든 활동이 완료되었는지 확인
-      final hasExercise = todayRecord?.exerciseLog != null;
-      final hasReading = todayRecord?.readingLog != null;
-      final hasDiary = todayRecord?.diaryLog != null;
-
-      // TEMP: 개발 테스트를 위해 하나만 작성해도 열리도록 임시 수정
-      // 원래 조건: if (hasExercise && hasReading && hasDiary) {
-      // 임시 조건: 하나라도 작성되면 열림
-      if (hasExercise || hasReading || hasDiary) {
-        // TEMP: 개발 모드
-        _hasAllActivities = true;
-
-        // 오늘의 데이터 준비
-        _prepareActivityData(globalUser, todayRecord!);
-
-        // 애니메이션 시작
-        _pageIndicatorController.forward();
-      } else {
-        _hasAllActivities = false;
-
-        // 누락된 활동 목록 생성
-        List<String> missing = [];
-        if (!hasExercise) missing.add('운동');
-        if (!hasReading) missing.add('독서');
-        if (!hasDiary) missing.add('일기');
-        _missingActivities = missing.join(', ');
+      // ✅ 활동 완료 여부와 상관없이 항상 다이얼로그 열기
+      // 각 페이지에서 개별적으로 데이터 유무를 체크합니다
+      if (todayRecord != null) {
+        _prepareActivityData(globalUser, todayRecord);
       }
+
+      // 애니메이션 시작
+      _pageIndicatorController.forward();
     } catch (e) {
       // 에러 처리
+      debugPrint('분석 데이터 로드 중 오류: $e');
     }
   }
 
@@ -355,13 +335,11 @@ class _EnhancedTodayAnalysisDialogState
             Expanded(
               child: _isLoading
                   ? _buildLoadingState()
-                  : _hasAllActivities
-                      ? _buildPageViewContent()
-                      : _buildRequirementsMessage(),
+                  : _buildPageViewContent(),
             ),
 
-            // 페이지 인디케이터 (활동이 모두 완료된 경우에만)
-            if (!_isLoading && _hasAllActivities) _buildPageIndicator(),
+            // 페이지 인디케이터
+            if (!_isLoading) _buildPageIndicator(),
           ],
         ),
       ),
@@ -417,7 +395,7 @@ class _EnhancedTodayAnalysisDialogState
                     color: ModernColors.textPrimary,
                   ),
                 ),
-                if (!_isLoading && _hasAllActivities)
+                if (!_isLoading)
                   Text(
                     _getPageTitle(),
                     style: GoogleFonts.notoSans(
@@ -430,8 +408,8 @@ class _EnhancedTodayAnalysisDialogState
             ),
           ),
 
-          // 네비게이션 버튼 (활동이 모두 완료된 경우에만)
-          if (!_isLoading && _hasAllActivities) ...[
+          // 네비게이션 버튼
+          if (!_isLoading) ...[
             IconButton(
               onPressed: _currentPage > 0 ? _previousPage : null,
               icon: Icon(
@@ -655,106 +633,8 @@ class _EnhancedTodayAnalysisDialogState
     );
   }
 
-  /// 요구사항 메시지
-  Widget _buildRequirementsMessage() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // 셰르피 일러스트
-            Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    ModernColors.warning.withValues(alpha: 0.2),
-                    ModernColors.warning.withValues(alpha: 0.1),
-                  ],
-                ),
-              ),
-              child: Center(
-                child: Image.asset(
-                  SherpiEmotion.guiding.imagePath,
-                  width: 70,
-                  height: 70,
-                ),
-              ),
-            ).animate().scale(
-                  begin: const Offset(0, 0),
-                  end: const Offset(1, 1),
-                  duration: 600.ms,
-                  curve: Curves.elasticOut,
-                ),
-
-            const SizedBox(height: 32),
-
-            Text(
-              '모든 활동을 완료해주세요',
-              style: GoogleFonts.notoSans(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: ModernColors.textPrimary,
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            Text(
-              '오늘의 분석을 보려면\n아래 활동들을 완료해주세요',
-              style: GoogleFonts.notoSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: ModernColors.textSecondary,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-
-            const SizedBox(height: 24),
-
-            // 누락된 활동 표시
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 12,
-              ),
-              decoration: BoxDecoration(
-                color: ModernColors.warning.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: ModernColors.warning.withValues(alpha: 0.3),
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    Icons.assignment_late_rounded,
-                    color: ModernColors.warning,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '남은 활동: $_missingActivities',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: ModernColors.warning,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // ❌ REMOVED: _buildRequirementsMessage()
+  // 이제 comprehensive_analysis_page에서 개별적으로 처리합니다
 
   // 페이지 네비게이션
   void _previousPage() {

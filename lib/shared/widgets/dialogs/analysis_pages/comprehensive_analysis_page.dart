@@ -418,6 +418,13 @@ class _ComprehensiveAnalysisPageState
 
   @override
   Widget build(BuildContext context) {
+    // ✅ 세 개 중 하나라도 없으면 요구사항 메시지 표시
+    if (widget.exerciseData == null ||
+        widget.readingData == null ||
+        widget.diaryData == null) {
+      return _buildRequirementsMessage();
+    }
+
     if (_isLoading) {
       return _buildLoadingScreen();
     }
@@ -1222,5 +1229,113 @@ class _ComprehensiveAnalysisPageState
         .shimmer(
             duration: 2000.ms,
             color: ModernColors.primary.withValues(alpha: 0.1));
+  }
+
+  /// 요구사항 메시지 (세 개 중 하나라도 없을 때)
+  Widget _buildRequirementsMessage() {
+    // 누락된 활동 목록 생성
+    final missing = <String>[];
+    if (widget.exerciseData == null) missing.add('운동');
+    if (widget.readingData == null) missing.add('독서');
+    if (widget.diaryData == null) missing.add('일기');
+    final missingActivities = missing.join(', ');
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // 셰르피 일러스트
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    ModernColors.warning.withValues(alpha: 0.2),
+                    ModernColors.warning.withValues(alpha: 0.1),
+                  ],
+                ),
+              ),
+              child: Center(
+                child: Image.asset(
+                  SherpiEmotion.guiding.imagePath,
+                  width: 70,
+                  height: 70,
+                ),
+              ),
+            ).animate().scale(
+                  begin: const Offset(0, 0),
+                  end: const Offset(1, 1),
+                  duration: 600.ms,
+                  curve: Curves.elasticOut,
+                ),
+
+            const SizedBox(height: 32),
+
+            Text(
+              '모든 활동을 완료해주세요',
+              style: GoogleFonts.notoSans(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: ModernColors.textPrimary,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Text(
+              '종합 분석을 보려면\n아래 활동들을 완료해주세요',
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: ModernColors.textSecondary,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 24),
+
+            // 누락된 활동 표시
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 12,
+              ),
+              decoration: BoxDecoration(
+                color: ModernColors.warning.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: ModernColors.warning.withValues(alpha: 0.3),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.assignment_late_rounded,
+                    color: ModernColors.warning,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    '남은 활동: $missingActivities',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: ModernColors.warning,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
