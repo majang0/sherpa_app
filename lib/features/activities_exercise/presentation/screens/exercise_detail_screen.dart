@@ -7,7 +7,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
-import 'package:sherpa_app/shared/widgets/sherpa_clean_app_bar.dart';
 import 'package:sherpa_app/shared/widgets/sherpa_button.dart';
 import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
 import 'package:sherpa_app/shared/utils/calorie_calculator.dart';
@@ -79,81 +78,153 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ModernColors.surfaceElevated,
-      appBar: SherpaCleanAppBar(
-        title: '${_currentExercise.exerciseType} 상세',
-        backgroundColor: ModernColors.surfaceElevated,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit_outlined),
-            onPressed: _editExercise,
-            tooltip: '수정하기',
+      backgroundColor: const Color(0xFFF8FAFC),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.9),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline),
-            onPressed: _showDeleteDialog,
-            tooltip: '삭제하기',
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
+          ),
+        ),
+        actions: [
+          Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.9),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.edit_outlined,
+                  color: ModernColors.exercise, size: 20),
+              onPressed: _editExercise,
+              tooltip: '수정하기',
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.9),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.delete_outline,
+                  color: ModernColors.error, size: 20),
+              onPressed: _showDeleteDialog,
+              tooltip: '삭제하기',
+            ),
           ),
         ],
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
+        child: Stack(
+          children: [
+            // 배경 그라데이션 (오렌지 계열)
+            Container(
+              height: 280,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    ModernColors.exercise,
+                    ModernColors.exercise.withValues(alpha: 0.7),
+                  ],
+                ),
+              ),
+            ),
 
-              // 헤더 섹션 (exercise_record_screen.dart 패턴 사용)
-              _buildHeader().animate().slide(duration: 600.ms, delay: 100.ms),
+            // 메인 콘텐츠
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  const SizedBox(height: 120), // AppBar 공간
 
-              const SizedBox(height: 32),
+                  // 헤더 섹션
+                  _buildHeader()
+                      .animate()
+                      .slide(duration: 600.ms, delay: 100.ms),
 
-              // 운동 세부 정보 카드
-              _buildDetailsCard()
-                  .animate()
-                  .slide(duration: 600.ms, delay: 300.ms),
+                  const SizedBox(height: 32),
 
-              const SizedBox(height: 20),
+                  // 운동 세부 정보 카드
+                  _buildDetailsCard()
+                      .animate()
+                      .slide(duration: 600.ms, delay: 300.ms),
 
-              // 성취도 카드
-              _buildAchievementCard()
-                  .animate()
-                  .slide(duration: 600.ms, delay: 400.ms),
+                  const SizedBox(height: 20),
 
-              const SizedBox(height: 20),
+                  // 성취도 카드
+                  _buildAchievementCard()
+                      .animate()
+                      .slide(duration: 600.ms, delay: 400.ms),
 
-              // 사진 카드 (항상 표시)
-              _buildPhotoCard()
-                  .animate()
-                  .slide(duration: 600.ms, delay: 500.ms),
+                  const SizedBox(height: 20),
 
-              const SizedBox(height: 20),
+                  // 사진 카드 (항상 표시)
+                  _buildPhotoCard()
+                      .animate()
+                      .slide(duration: 600.ms, delay: 500.ms),
 
-              // 메모 카드 (메모가 있는 경우만)
-              if (_currentExercise.note != null &&
-                  _currentExercise.note!.isNotEmpty)
-                _buildNotesCard()
-                    .animate()
-                    .slide(duration: 600.ms, delay: 600.ms),
+                  const SizedBox(height: 20),
 
-              const SizedBox(height: 20),
+                  // 메모 카드 (메모가 있는 경우만)
+                  if (_currentExercise.note != null &&
+                      _currentExercise.note!.isNotEmpty)
+                    _buildNotesCard()
+                        .animate()
+                        .slide(duration: 600.ms, delay: 600.ms),
 
-              // 커뮤니티 공유 정보
-              _buildCommunityCard()
-                  .animate()
-                  .slide(duration: 600.ms, delay: 700.ms),
+                  const SizedBox(height: 20),
 
-              const SizedBox(height: 20),
+                  // 커뮤니티 공유 정보
+                  _buildCommunityCard()
+                      .animate()
+                      .slide(duration: 600.ms, delay: 700.ms),
 
-              // 액션 버튼들
-              _buildActionButtons()
-                  .animate()
-                  .slide(duration: 600.ms, delay: 800.ms),
+                  const SizedBox(height: 20),
 
-              const SizedBox(height: 40),
-            ],
-          ),
+                  // 액션 버튼들
+                  _buildActionButtons()
+                      .animate()
+                      .slide(duration: 600.ms, delay: 800.ms),
+
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -161,45 +232,58 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
 
   Widget _buildHeader() {
     final exerciseEmoji = _getExerciseEmoji(_currentExercise.exerciseType);
+    final weekdays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+    final weekday = weekdays[(_currentExercise.date.weekday - 1) % 7];
+    final dateStr =
+        '${_currentExercise.date.year}년 ${_currentExercise.date.month}월 ${_currentExercise.date.day}일';
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            ModernColors.exercise,
-            ModernColors.exercise.withValues(alpha: 0.8),
-          ],
-        ),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.exercise.withValues(alpha: 0.3),
+            color: ModernColors.exercise.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         children: [
+          // 제목과 아이콘
           Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.3),
-                    width: 2,
+                  gradient: LinearGradient(
+                    colors: [
+                      ModernColors.exercise,
+                      ModernColors.exercise.withValues(alpha: 0.8),
+                    ],
                   ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: ModernColors.exercise.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  exerciseEmoji,
-                  style: const TextStyle(fontSize: 32),
+                child: Center(
+                  child: Text(
+                    exerciseEmoji,
+                    style: const TextStyle(fontSize: 28),
+                  ),
                 ),
               ),
               const SizedBox(width: 20),
@@ -208,20 +292,20 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _currentExercise.exerciseType,
+                      '${_currentExercise.exerciseType} 상세',
                       style: GoogleFonts.notoSans(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: Colors.white,
+                        color: ModernColors.exercise,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _formatDate(_currentExercise.date),
+                      '운동 기록을 확인하세요',
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white.withValues(alpha: 0.9),
+                        color: ModernColors.textSecondary,
                       ),
                     ),
                   ],
@@ -229,32 +313,54 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
               ),
             ],
           ),
+
           const SizedBox(height: 24),
+
+          // 날짜 정보 - Borderless Design
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
-                width: 1,
+              gradient: LinearGradient(
+                colors: [
+                  ModernColors.exercise.withValues(alpha: 0.05),
+                  ModernColors.exercise.withValues(alpha: 0.08),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
               ),
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: ModernColors.exercise.withValues(alpha: 0.08),
+                  blurRadius: 12,
+                  offset: const Offset(0, 3),
+                ),
+              ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.info_outline,
-                  color: Colors.white.withValues(alpha: 0.9),
+                const Icon(
+                  Icons.calendar_today,
+                  color: ModernColors.exercise,
                   size: 18,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 Text(
-                  '운동 상세 정보',
+                  dateStr,
+                  style: GoogleFonts.notoSans(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: ModernColors.exercise,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  weekday,
                   style: GoogleFonts.notoSans(
                     fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white.withValues(alpha: 0.9),
+                    fontWeight: FontWeight.w500,
+                    color: ModernColors.exercise.withValues(alpha: 0.8),
                   ),
                 ),
               ],
@@ -389,7 +495,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                           children: [
                             const Icon(
                               Icons.local_fire_department,
-                              color: Color(0xFFEF4444),
+                              color: ModernColors.error,
                               size: 24,
                             ),
                             const SizedBox(height: 8),
@@ -398,7 +504,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                               style: GoogleFonts.notoSans(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w800,
-                                color: const Color(0xFFEF4444),
+                                color: ModernColors.error,
                               ),
                             ),
                             Text(
@@ -481,39 +587,6 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                   ),
                 ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80,
-            child: Text(
-              label,
-              style: GoogleFonts.notoSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: ModernColors.textSecondary,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              value,
-              style: GoogleFonts.notoSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: ModernColors.textPrimary,
-              ),
             ),
           ),
         ],
@@ -662,7 +735,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                             borderRadius: BorderRadius.circular(4),
                             boxShadow: [
                               BoxShadow(
-                                color: ModernColors.exercise.withValues(alpha: 0.3),
+                                color: ModernColors.exercise
+                                    .withValues(alpha: 0.3),
                                 blurRadius: 4,
                                 offset: const Offset(0, 1),
                               ),
@@ -735,7 +809,8 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
           ),
           const SizedBox(height: 20),
           GestureDetector(
-            onTap: _currentExercise.hasPhoto && _currentExercise.imageUrl!.startsWith('http')
+            onTap: _currentExercise.hasPhoto &&
+                    _currentExercise.imageUrl!.startsWith('http')
                 ? () => _showFullScreenPhoto(context)
                 : null,
             child: Hero(
@@ -799,46 +874,47 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
                             ),
                           ))
                     : Container(
-                    width: double.infinity,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade50,
-                      border: Border.all(
-                        color: ModernColors.exercise.withValues(alpha: 0.2),
-                        width: 2,
-                        style: BorderStyle.solid,
+                        width: double.infinity,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              ModernColors.exercise.withValues(alpha: 0.03),
+                              ModernColors.exercise.withValues(alpha: 0.05),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add_a_photo_outlined,
+                              size: 48,
+                              color:
+                                  ModernColors.exercise.withValues(alpha: 0.6),
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              '운동 사진이 없습니다',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: ModernColors.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '수정하기에서 사진을 추가해보세요',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: ModernColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_a_photo_outlined,
-                          size: 48,
-                          color: ModernColors.exercise.withValues(alpha: 0.6),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          '운동 사진이 없습니다',
-                          style: GoogleFonts.notoSans(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: ModernColors.textPrimary,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '수정하기에서 사진을 추가해보세요',
-                          style: GoogleFonts.notoSans(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: ModernColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
               ),
             ),
           ),
@@ -1272,20 +1348,14 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
       case 'high':
       case '높음':
       case 'vigorous':
-        return '힘듬';
+        return '힘듦';
       case 'very_high':
       case '매우높음':
       case 'extreme':
-        return '매우 힘듬';
+        return '매우 힘듦';
       default:
         return '적당함'; // 기본값을 한국어로 변경
     }
-  }
-
-  String _formatDate(DateTime date) {
-    final weekdays = ['일', '월', '화', '수', '목', '금', '토'];
-    final weekday = weekdays[date.weekday % 7];
-    return '${date.month}월 ${date.day}일 ($weekday)';
   }
 
   String _formatDateTime(DateTime date) {
@@ -1325,18 +1395,18 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen>
     switch (intensity.toLowerCase()) {
       case 'low':
       case '낮음':
-        return const Color(0xFF10B981);
+        return ModernColors.success;
       case 'medium':
       case '보통':
-        return const Color(0xFFF59E0B);
+        return ModernColors.warning;
       case 'high':
       case '높음':
-        return const Color(0xFFEF4444);
+        return ModernColors.error;
       case 'very_high':
       case '매우높음':
-        return const Color(0xFF8B5CF6);
+        return ModernColors.modernAccent;
       default:
-        return const Color(0xFFF59E0B);
+        return ModernColors.warning;
     }
   }
 
