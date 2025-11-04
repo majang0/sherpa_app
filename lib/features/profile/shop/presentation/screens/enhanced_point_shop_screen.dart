@@ -474,6 +474,7 @@ class ShopItem {
 }
 
 // === 포인트 통계 계산 메서드 ===
+// ✅ isEarned 속성으로 획득한 포인트만 필터링 (사용한 포인트 제외)
 int _getTodayPoints(PointData pointData) {
   final today = DateTime.now();
   return pointData.transactions
@@ -481,7 +482,7 @@ int _getTodayPoints(PointData pointData) {
           transaction.timestamp.year == today.year &&
           transaction.timestamp.month == today.month &&
           transaction.timestamp.day == today.day &&
-          transaction.amount > 0)
+          transaction.isEarned) // ✅ 획득한 포인트만
       .fold(0, (sum, transaction) => sum + transaction.amount.toInt());
 }
 
@@ -490,7 +491,8 @@ int _getWeeklyPoints(PointData pointData) {
   final weekStart = now.subtract(Duration(days: now.weekday - 1));
   return pointData.transactions
       .where((transaction) =>
-          transaction.timestamp.isAfter(weekStart) && transaction.amount > 0)
+          transaction.timestamp.isAfter(weekStart) &&
+          transaction.isEarned) // ✅ 획득한 포인트만
       .fold(0, (sum, transaction) => sum + transaction.amount.toInt());
 }
 
@@ -499,7 +501,8 @@ int _getMonthlyPoints(PointData pointData) {
   final monthStart = DateTime(now.year, now.month, 1);
   return pointData.transactions
       .where((transaction) =>
-          transaction.timestamp.isAfter(monthStart) && transaction.amount > 0)
+          transaction.timestamp.isAfter(monthStart) &&
+          transaction.isEarned) // ✅ 획득한 포인트만
       .fold(0, (sum, transaction) => sum + transaction.amount.toInt());
 }
 

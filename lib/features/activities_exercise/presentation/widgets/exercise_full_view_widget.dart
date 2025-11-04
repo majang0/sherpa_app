@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/shared/utils/exercise_utils.dart';
 import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
 
 class ExerciseFullViewWidget extends ConsumerStatefulWidget {
@@ -481,7 +482,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
               children: [
                 if (value != null) ...[
                   Text(
-                    _getExerciseEmoji(value),
+                    ExerciseUtils.getExerciseEmoji(value),
                     style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(width: 6),
@@ -505,7 +506,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
               decoration: BoxDecoration(
                 color: value != null
-                    ? _getExerciseColor(value)
+                    ? ExerciseUtils.getExerciseColor(value)
                     : ModernColors.exercise,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
@@ -798,7 +799,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                 itemBuilder: (context, index) {
                   final exercise = exercises[index];
                   final exerciseColor =
-                      _getExerciseColor(exercise.exerciseType);
+                      ExerciseUtils.getExerciseColor(exercise.exerciseType);
 
                   return Container(
                     margin: const EdgeInsets.only(bottom: 12),
@@ -856,7 +857,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                                 ),
                                 child: Center(
                                   child: Text(
-                                    _getExerciseEmoji(exercise.exerciseType),
+                                    ExerciseUtils.getExerciseEmoji(exercise.exerciseType),
                                     style: const TextStyle(fontSize: 20),
                                   ),
                                 ),
@@ -988,78 +989,6 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
 
   bool _isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
-  }
-
-  Color _getExerciseColor(String exerciseType) {
-    switch (exerciseType) {
-      // 초록색 - 자연적인 운동
-      case '걷기':
-      case '등산':
-      case '러닝':
-      case '수영':
-      case '자전거':
-        return ModernColors.reading;
-
-      // 보라색 - 몸과 소통하는 운동
-      case '요가':
-      case '클라이밍':
-      case '필라테스':
-        return ModernColors.modernAccent;
-
-      // 검은색 - 묵직한 쇠질 느낌
-      case '헬스':
-        return ModernColors.gray800;
-
-      // 노란색 - 밝은 느낌
-      case '골프':
-      case '배드민턴':
-      case '테니스':
-        return ModernColors.quest;
-
-      // 빨간색 - 타오르는 열정
-      case '농구':
-      case '축구':
-        return ModernColors.error;
-
-      // 주황색 - 기타
-      default:
-        return ModernColors.exercise;
-    }
-  }
-
-  String _getExerciseEmoji(String exerciseType) {
-    switch (exerciseType) {
-      case '러닝':
-        return '🏃';
-      case '걷기':
-        return '🚶';
-      case '자전거':
-        return '🚴';
-      case '수영':
-        return '🏊';
-      case '요가':
-        return '🧘';
-      case '헬스':
-        return '🏋️';
-      case '필라테스':
-        return '🤸';
-      case '테니스':
-        return '🎾';
-      case '축구':
-        return '⚽';
-      case '농구':
-        return '🏀';
-      case '클라이밍':
-        return '🧗';
-      case '등산':
-        return '🥾';
-      case '배드민턴':
-        return '🏸';
-      case '골프':
-        return '⛳';
-      default:
-        return '💪';
-    }
   }
 
   String _getMonthMessage(List<ExerciseLog> monthlyLogs) {
@@ -1243,11 +1172,11 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                   decoration: BoxDecoration(
                     color: isToday
                         ? Colors.white.withValues(alpha: 0.9)
-                        : _getExerciseColor(exercise.exerciseType),
+                        : ExerciseUtils.getExerciseColor(exercise.exerciseType),
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: _getExerciseColor(exercise.exerciseType)
+                        color: ExerciseUtils.getExerciseColor(exercise.exerciseType)
                             .withValues(alpha: 0.3),
                         blurRadius: 2,
                         offset: const Offset(0, 1),

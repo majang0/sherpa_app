@@ -385,7 +385,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
               children: [
                 if (value != null) ...[
                   Text(
-                    _getCategoryEmoji(value),
+                    readingLogs.firstWhere((log) => log.category == value).categoryEmoji,
                     style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(width: 6),
@@ -409,7 +409,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
               decoration: BoxDecoration(
                 color: value != null
-                    ? _getCategoryColor(value)
+                    ? readingLogs.firstWhere((log) => log.category == value).categoryColor
                     : ModernColors.reading,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
@@ -765,7 +765,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                   decoration: BoxDecoration(
                     color: dayReadings.length > 1
                         ? ModernColors.reading
-                        : _getCategoryColor(dayReadings.first.category),
+                        : dayReadings.first.categoryColor,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
@@ -779,7 +779,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                             ),
                           )
                         : Text(
-                            _getCategoryEmoji(dayReadings.first.category),
+                            dayReadings.first.categoryEmoji,
                             style: const TextStyle(fontSize: 8),
                           ),
                   ),
@@ -917,13 +917,13 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                           color: ModernColors.background,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: _getCategoryColor(log.category)
+                            color: log.categoryColor
                                 .withValues(alpha: 0.2),
                             width: 1,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: _getCategoryColor(log.category)
+                              color: log.categoryColor
                                   .withValues(alpha: 0.1),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
@@ -938,15 +938,15 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    _getCategoryColor(log.category),
-                                    _getCategoryColor(log.category)
+                                    log.categoryColor,
+                                    log.categoryColor
                                         .withValues(alpha: 0.8)
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: _getCategoryColor(log.category)
+                                    color: log.categoryColor
                                         .withValues(alpha: 0.3),
                                     blurRadius: 6,
                                     offset: const Offset(0, 2),
@@ -970,7 +970,7 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
                                     style: GoogleFonts.notoSans(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700,
-                                      color: _getCategoryColor(log.category),
+                                      color: log.categoryColor,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -1175,62 +1175,6 @@ class _ReadingFullViewWidgetState extends ConsumerState<ReadingFullViewWidget>
         ),
       ),
     );
-  }
-
-  Color _getCategoryColor(String category) {
-    switch (category) {
-      case '소설':
-        return const Color(0xFF6366F1); // 보라
-      case '자기계발':
-        return const Color(0xFFEC4899); // 분홍
-      case '경영':
-        return const Color(0xFF3B82F6); // 파랑
-      case '과학':
-        return const Color(0xFF10B981); // 초록
-      case '역사':
-        return const Color(0xFFF59E0B); // 주황
-      case '예술':
-        return const Color(0xFFEF4444); // 빨강
-      case '인문학':
-        return const Color(0xFF8B5CF6); // 보라
-      case '철학':
-        return const Color(0xFF64748B); // 회색
-      case '심리학':
-        return const Color(0xFF06B6D4); // 시안
-      case 'SF':
-        return const Color(0xFF6366F1); // 보라
-      case '기타':
-      default:
-        return const Color(0xFF94A3B8); // 회색
-    }
-  }
-
-  String _getCategoryEmoji(String category) {
-    switch (category) {
-      case '소설':
-        return '📚';
-      case '자기계발':
-        return '💡';
-      case '경영':
-        return '💼';
-      case '과학':
-        return '🔬';
-      case '역사':
-        return '📜';
-      case '예술':
-        return '🎨';
-      case '인문학':
-        return '📖';
-      case '철학':
-        return '🤔';
-      case '심리학':
-        return '🧠';
-      case 'SF':
-        return '🚀';
-      case '기타':
-      default:
-        return '📗';
-    }
   }
 
   String _getMonthMessage(List<ReadingLog> monthlyLogs) {

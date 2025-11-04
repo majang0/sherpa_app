@@ -127,7 +127,21 @@ class EnhancedChatConversationNotifier
 
   /// 📝 사용자 메시지 전송 (개인화 및 감정 인식 통합)
   Future<void> sendUserMessage(String content, {MessageType? type}) async {
-    if (content.trim().isEmpty) return;
+    // 🔒 입력 검증: 보안 및 품질 체크
+    final validationError = _validateUserInput(content);
+    if (validationError != null) {
+      // 검증 실패 시 에러 메시지 표시
+      final errorMessage = ChatMessage(
+        id: _generateMessageId(),
+        content: validationError,
+        sender: MessageSender.sherpi, // ✅ Fixed: Use sherpi sender
+        timestamp: DateTime.now(),
+        type: MessageType.system, // ✅ System message type for errors
+        metadata: {'is_error': true},
+      );
+      state = state.addMessage(errorMessage);
+      return;
+    }
 
     // 사용자 메시지 추가
     final userMessage = ChatMessage(
@@ -145,6 +159,52 @@ class EnhancedChatConversationNotifier
 
     // 셰르피 응답 생성
     await _generateSherpiResponse(userMessage);
+  }
+
+  /// 🔒 사용자 입력 검증 (보안 및 품질)
+  ///
+  /// Returns: 에러 메시지 또는 null (검증 성공)
+  String? _validateUserInput(String content) {
+    final trimmed = content.trim();
+
+    // 1. 빈 문자열 체크
+    if (trimmed.isEmpty) {
+      return null; // 조용히 무시 (에러 메시지 없음)
+    }
+
+    // 2. 길이 제한 (최대 1000자)
+    if (trimmed.length > 1000) {
+      return '⚠️ 메시지가 너무 길어요. 1000자 이내로 작성해주세요. (현재: ${trimmed.length}자)';
+    }
+
+    // 3. 최소 길이 (1자)
+    if (trimmed.length < 1) {
+      return null; // 조용히 무시
+    }
+
+    // 4. Prompt injection 패턴 감지
+    final dangerousPatterns = [
+      RegExp(r'ignore\s+(previous|all|above)\s+instructions?', caseSensitive: false),
+      RegExp(r'you\s+are\s+(now|a)\s+', caseSensitive: false),
+      RegExp(r'system\s*:\s*', caseSensitive: false),
+      RegExp(r'<\s*system\s*>', caseSensitive: false),
+      RegExp(r'</?\s*prompt\s*>', caseSensitive: false),
+    ];
+
+    for (final pattern in dangerousPatterns) {
+      if (pattern.hasMatch(trimmed)) {
+        aiLogger.w('🚨 Prompt injection 시도 감지: ${trimmed.substring(0, min(50, trimmed.length))}');
+        return '⚠️ 안전하지 않은 입력이 감지되었어요. 다른 방식으로 말씀해주세요.';
+      }
+    }
+
+    // 5. 과도한 반복 문자 감지 (스팸 방지)
+    final repeatedChars = RegExp(r'(.)\1{20,}'); // 같은 문자 20번 이상
+    if (repeatedChars.hasMatch(trimmed)) {
+      return '⚠️ 반복되는 문자가 너무 많아요. 자연스러운 문장으로 작성해주세요.';
+    }
+
+    return null; // 검증 통과
   }
 
   /// 🤖 셰르피 응답 생성

@@ -3,11 +3,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:openai_dart/openai_dart.dart';
 import 'package:sherpa_app/core/ai/services/openai_service.dart';
+import 'package:sherpa_app/core/ai/utils/sherpi_context_builder.dart';
 import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:sherpa_app/features/sherpi/chat/models/chat_message.dart';
-import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
-import 'package:sherpa_app/features/quests/providers/quest_provider_v2.dart';
-import 'package:sherpa_app/features/sherpi/relationship/providers/relationship_provider.dart';
 
 /// 🤖 셰르피 채팅 서비스
 ///
@@ -64,72 +62,26 @@ class SherpiChatService {
 
   /// 📊 Sherpa App 맥락 수집
   ///
-  /// 사용자 데이터, 퀘스트, 친밀도 등 앱 전반의 정보를 수집합니다.
+  /// 🏗️ SherpiContextBuilder를 사용한 통합 Context 빌딩
   Future<Map<String, dynamic>> _buildSherpaAppContext() async {
     try {
-      // Level 1: 사용자 기본 정보
-      final user = _ref.read(globalUserProvider);
+      // 🏗️ SherpiContextBuilder로 통합 Context 생성
+      final contextBuilder = SherpiContextBuilder(_ref);
+      final context = await contextBuilder.buildGameContext(
+        includePersonalization: false, // 채팅에서는 불필요
+        includeQuests: true,
+        includeRelationship: true,
+      );
 
-      // Level 2: 퀘스트 정보
-      final questStateAsync = _ref.read(questProviderV2);
-      final allQuests = questStateAsync.value ?? [];
-
-      // Level 3: 셰르피 관계 정보
-      final relationship = _ref.read(relationshipProvider);
-
-      // 오늘 완료한 활동 수집
-      final todayActivities = <String>[];
-      final today = DateTime.now();
-
-      // 운동 기록
-      final todayExercise = user.dailyRecords.exerciseLogs.where((log) {
-        return log.date.year == today.year &&
-            log.date.month == today.month &&
-            log.date.day == today.day;
-      }).length;
-      if (todayExercise > 0) {
-        todayActivities.add('운동 $todayExercise회');
-      }
-
-      // 독서 기록
-      final todayReading = user.dailyRecords.readingLogs.where((log) {
-        return log.date.year == today.year &&
-            log.date.month == today.month &&
-            log.date.day == today.day;
-      }).length;
-      if (todayReading > 0) {
-        todayActivities.add('독서 $todayReading회');
-      }
-
-      // 일기 기록
-      final todayDiary = user.dailyRecords.diaryLogs.where((log) {
-        return log.date.year == today.year &&
-            log.date.month == today.month &&
-            log.date.day == today.day;
-      }).length;
-      if (todayDiary > 0) {
-        todayActivities.add('일기 $todayDiary회');
-      }
-
-      // 진행 중인 퀘스트 (데일리 + 위클리)
-      final activeQuests = <String>[];
-      for (final quest in allQuests) {
-        if (!quest.isCompleted) {
-          activeQuests.add(
-              '${quest.title} (${quest.currentProgress}/${quest.targetProgress})');
-        }
-      }
-
+      // 채팅 서비스에 맞게 필드 매핑
       return {
-        'userName': user.name,
-        'currentLevel': user.level,
-        'totalXP': user.experience,
-        'todayActivities':
-            todayActivities.isEmpty ? '없음' : todayActivities.join(', '),
-        'activeQuests':
-            activeQuests.isEmpty ? '없음' : activeQuests.take(3).join(', '),
-        'intimacyLevel': relationship.intimacyLevel,
-        'badgeCount': user.equippedBadgeIds.length + user.ownedBadgeIds.length,
+        'userName': context['userName'],
+        'currentLevel': context['currentLevel'],
+        'totalXP': context['totalXP'],
+        'todayActivities': context['todayActivities'],
+        'activeQuests': context['activeQuests'],
+        'intimacyLevel': context['intimacyLevel'],
+        'badgeCount': context['badgeCount'],
       };
     } catch (e) {
       aiLogger.e('Sherpa App 맥락 수집 실패', error: e);
