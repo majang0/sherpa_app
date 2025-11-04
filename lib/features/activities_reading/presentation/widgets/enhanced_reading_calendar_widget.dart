@@ -224,9 +224,12 @@ class _EnhancedReadingCalendarWidgetState
         DateTime(weekStart.year, weekStart.month, weekStart.day);
     final weekEndExclusive = weekStartDate.add(const Duration(days: 7));
 
-    final todayReadings =
-        readingLogs.where((log) => ReadingUtils.isSameDay(log.date, now)).toList();
+    // 이번 달 독서 기록
+    final thisMonthReadings = readingLogs.where((log) {
+      return log.date.year == now.year && log.date.month == now.month;
+    }).toList();
 
+    // 이번 주 독서 기록
     final thisWeekReadings = readingLogs.where((log) {
       final logDate = DateTime(log.date.year, log.date.month, log.date.day);
       final isOnOrAfterStart = !logDate.isBefore(weekStartDate);
@@ -234,9 +237,9 @@ class _EnhancedReadingCalendarWidgetState
       return isOnOrAfterStart && isBeforeEnd;
     }).toList();
 
-    final todayTotalPages =
-        todayReadings.fold<int>(0, (sum, log) => sum + log.pages);
-    final weeklyReadingCount = thisWeekReadings.length;
+    final monthlyReadingCount = thisMonthReadings.length;
+    final weeklyTotalPages =
+        thisWeekReadings.fold<int>(0, (sum, log) => sum + log.pages);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -256,8 +259,8 @@ class _EnhancedReadingCalendarWidgetState
           Expanded(
             child: _buildStatItem(
               '📖',
-              '$weeklyReadingCount회',
-              '이번주 독서',
+              '$monthlyReadingCount회',
+              '이번 달 독서',
             ),
           ),
           Container(
@@ -268,8 +271,8 @@ class _EnhancedReadingCalendarWidgetState
           Expanded(
             child: _buildStatItem(
               '📄',
-              '${todayTotalPages}페이지',
-              '오늘 읽은 양',
+              '$weeklyTotalPages페이지',
+              '주간 독서량',
             ),
           ),
         ],

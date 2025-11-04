@@ -10,7 +10,6 @@ import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
 import 'package:sherpa_app/features/activities_diary/presentation/screens/diary_write_edit_screen.dart';
 import 'package:sherpa_app/features/activities_diary/presentation/screens/diary_detail_screen.dart';
-import 'package:sherpa_app/shared/widgets/dialogs/analysis_pages/diary_analysis_page.dart';
 import 'diary_full_view_widget.dart';
 
 class EnhancedDiaryCalendarWidget extends ConsumerStatefulWidget {
@@ -638,113 +637,47 @@ class _EnhancedDiaryCalendarWidgetState
   }
 
   Widget _buildActionButtons() {
-    final user = ref.watch(globalUserProvider);
-    final hasDiaryLogs = user.dailyRecords.diaryLogs.isNotEmpty;
-
-    return Row(
-      children: [
-        // 일기 작성 버튼
-        Expanded(
-          child: Container(
-            height: 44,
-            decoration: BoxDecoration(
-              color: ModernColors.diary,
-              borderRadius: BorderRadius.circular(14),
-              boxShadow: ModernColors.getContextShadow('diary', level: 4),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  HapticFeedbackManager.mediumImpact();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DiaryWriteEditScreen(),
-                    ),
-                  );
-                },
-                borderRadius: BorderRadius.circular(14),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.edit_rounded,
-                          size: 18, color: Colors.white),
-                      const SizedBox(width: 6),
-                      Text(
-                        '일기 작성',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          letterSpacing: -0.3,
-                        ),
-                      ),
-                    ],
+    return Container(
+      width: double.infinity,
+      height: 44,
+      decoration: BoxDecoration(
+        color: ModernColors.diary,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: ModernColors.getContextShadow('diary', level: 4),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            HapticFeedbackManager.mediumImpact();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DiaryWriteEditScreen(),
+              ),
+            );
+          },
+          borderRadius: BorderRadius.circular(14),
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.edit_rounded, size: 18, color: Colors.white),
+                const SizedBox(width: 6),
+                Text(
+                  '일기 작성',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: -0.3,
                   ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
-
-        // 일기가 있을 때만 분석 버튼 표시
-        if (hasDiaryLogs) ...[
-          const SizedBox(width: 8),
-          Expanded(
-            child: Container(
-              height: 44,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    ModernColors.diaryAccent.withValues(alpha: 0.8),
-                    ModernColors.diary.withValues(alpha: 0.6),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: ModernColors.getContextShadow('diary', level: 3),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    HapticFeedbackManager.mediumImpact();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DiaryAnalysisPage(),
-                      ),
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(14),
-                  child: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.insights_rounded,
-                            size: 18, color: Colors.white),
-                        const SizedBox(width: 6),
-                        Text(
-                          '감정 분석',
-                          style: GoogleFonts.notoSans(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            letterSpacing: -0.3,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ],
+      ),
     );
   }
 

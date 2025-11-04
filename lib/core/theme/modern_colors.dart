@@ -148,7 +148,7 @@ class ModernColors {
   static const Color pressOverlay = Color(0x1560A5FA); // press 효과용 (8% opacity)
 
   /// 💪 운동 - 활기찬 오렌지
-  static const Color exercise = Color(0xFFFF6B35);
+  static const Color exercise = Color(0xFFF97316); // 주황빛 운동 색상
   static const Color exerciseLight = Color(0xFFFFF3E0);
 
   /// 🌸 운동 페이지용 부드러운 배경색 (Soft Flow Design)

@@ -85,7 +85,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
     }).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: ModernColors.background,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -122,8 +122,8 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    const Color(0xFFF97316),
-                    const Color(0xFFF97316).withValues(alpha: 0.7),
+                    ModernColors.exercise,
+                    ModernColors.exercise.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -145,10 +145,10 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                   const SizedBox(height: 24),
 
                   // 필터 섹션
-                  if (exerciseLogs.isNotEmpty)
+                  if (monthlyLogs.isNotEmpty)
                     ScaleTransition(
                       scale: _scaleAnimation,
-                      child: _buildFilterSection(exerciseLogs),
+                      child: _buildFilterSection(monthlyLogs),
                     ),
 
                   const SizedBox(height: 20),
@@ -179,10 +179,6 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
   }
 
   Widget _buildHeader(List<ExerciseLog> monthlyLogs) {
-    final user = ref.watch(globalUserProvider);
-    final totalExercises = user.dailyRecords.exerciseLogs.length;
-    final monthlyCount = monthlyLogs.length;
-
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(28),
@@ -191,7 +187,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFF97316).withValues(alpha: 0.2),
+            color: ModernColors.exercise.withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -212,14 +208,14 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
-                      Color(0xFFF97316),
+                      ModernColors.exercise,
                       Color(0xFFEA580C),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFF97316).withValues(alpha: 0.3),
+                      color: ModernColors.exercise.withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -241,7 +237,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                       style: GoogleFonts.notoSans(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
-                        color: const Color(0xFFF97316),
+                        color: ModernColors.exercise,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -258,40 +254,6 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
               ),
             ],
           ),
-
-          const SizedBox(height: 24),
-
-          // 통계 정보
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF97316).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: const Color(0xFFF97316).withValues(alpha: 0.2),
-                width: 1,
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.calendar_month,
-                  color: Color(0xFFF97316),
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '${_selectedMonth.year}년 ${_selectedMonth.month}월 • $monthlyCount개 운동 • 총 $totalExercises개',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFFF97316),
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -301,7 +263,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF97316).withValues(alpha: 0.05),
+        color: ModernColors.exercise.withValues(alpha: 0.05),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -310,14 +272,14 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
       child: Row(
         children: [
           Container(
-            width: 36,
-            height: 36,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFF97316).withValues(alpha: 0.2),
+                  color: ModernColors.exercise.withValues(alpha: 0.2),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -334,7 +296,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
               padding: EdgeInsets.zero,
               icon: const Icon(
                 Icons.chevron_left_rounded,
-                color: Color(0xFFF97316),
+                color: ModernColors.exercise,
                 size: 20,
               ),
             ),
@@ -364,14 +326,14 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
             ),
           ),
           Container(
-            width: 36,
-            height: 36,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFFF97316).withValues(alpha: 0.2),
+                  color: ModernColors.exercise.withValues(alpha: 0.2),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -388,7 +350,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
               padding: EdgeInsets.zero,
               icon: const Icon(
                 Icons.chevron_right_rounded,
-                color: Color(0xFFF97316),
+                color: ModernColors.exercise,
                 size: 20,
               ),
             ),
@@ -440,12 +402,12 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF97316).withValues(alpha: 0.1),
+                    color: ModernColors.exercise.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
                     Icons.filter_alt,
-                    color: Color(0xFFF97316),
+                    color: ModernColors.exercise,
                     size: 18,
                   ),
                 ),
@@ -496,18 +458,18 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: isSelected ? const Color(0xFFF97316) : Colors.white,
+              color: isSelected ? ModernColors.exercise : Colors.white,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(
                 color: isSelected
-                    ? const Color(0xFFF97316)
-                    : const Color(0xFFF97316).withValues(alpha: 0.3),
+                    ? ModernColors.exercise
+                    : ModernColors.exercise.withValues(alpha: 0.3),
                 width: 1.5,
               ),
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: const Color(0xFFF97316).withValues(alpha: 0.3),
+                        color: ModernColors.exercise.withValues(alpha: 0.3),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -544,7 +506,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
               decoration: BoxDecoration(
                 color: value != null
                     ? _getExerciseColor(value)
-                    : const Color(0xFFF97316),
+                    : ModernColors.exercise,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: Colors.white,
@@ -578,7 +540,6 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
     }
 
     final firstDay = DateTime(_selectedMonth.year, _selectedMonth.month, 1);
-    final lastDay = DateTime(_selectedMonth.year, _selectedMonth.month + 1, 0);
     final startDate = firstDay.subtract(Duration(days: firstDay.weekday % 7));
 
     return Container(
@@ -694,7 +655,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFF97316).withValues(alpha: 0.4),
+            color: ModernColors.exercise.withValues(alpha: 0.4),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
@@ -710,7 +671,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
           );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFF97316),
+          backgroundColor: ModernColors.exercise,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
@@ -776,12 +737,12 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFFF97316), Color(0xFFEA580C)],
+                        colors: [ModernColors.exercise, Color(0xFFEA580C)],
                       ),
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFF97316).withValues(alpha: 0.3),
+                          color: ModernColors.exercise.withValues(alpha: 0.3),
                           blurRadius: 8,
                           offset: const Offset(0, 4),
                         ),
@@ -958,6 +919,66 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
               ),
             ),
 
+            const SizedBox(height: 16),
+
+            // 운동 기록 추가하기 버튼
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 24),
+              width: double.infinity,
+              height: 52,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: ModernColors.exercise.withValues(alpha: 0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // 모달 닫기
+                  HapticFeedbackManager.mediumImpact();
+                  Navigator.pushNamed(
+                    context,
+                    '/exercise_selection',
+                    arguments: day,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: ModernColors.exercise,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Icon(Icons.add, size: 18),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      '운동 기록 추가하기',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             const SizedBox(height: 24),
           ],
         ),
@@ -977,32 +998,32 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
       case '러닝':
       case '수영':
       case '자전거':
-        return const Color(0xFF059669);
+        return ModernColors.reading;
 
       // 보라색 - 몸과 소통하는 운동
       case '요가':
       case '클라이밍':
       case '필라테스':
-        return const Color(0xFF8B5CF6);
+        return ModernColors.modernAccent;
 
       // 검은색 - 묵직한 쇠질 느낌
       case '헬스':
-        return const Color(0xFF1F2937);
+        return ModernColors.gray800;
 
       // 노란색 - 밝은 느낌
       case '골프':
       case '배드민턴':
       case '테니스':
-        return const Color(0xFFFBBF24);
+        return ModernColors.quest;
 
       // 빨간색 - 타오르는 열정
       case '농구':
       case '축구':
-        return const Color(0xFFEF4444);
+        return ModernColors.error;
 
       // 주황색 - 기타
       default:
-        return const Color(0xFFF97316);
+        return ModernColors.exercise;
     }
   }
 
@@ -1082,23 +1103,38 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
     final hasExercise = dayExercises.isNotEmpty;
     final isFuture =
         date.isAfter(DateTime.now().subtract(const Duration(hours: 1)));
-    final isClickable = isCurrentMonth && hasExercise;
+    // 운동 기록이 있거나, 현재 월의 과거/오늘 날짜면 클릭 가능
+    final isClickable = isCurrentMonth && !isFuture;
 
     return GestureDetector(
-      onTap:
-          isClickable ? () => _showDayExercisesModal(date, dayExercises) : null,
+      onTap: isClickable
+          ? () {
+              if (hasExercise) {
+                // 운동 기록이 있으면 상세 모달 표시
+                _showDayExercisesModal(date, dayExercises);
+              } else {
+                // 운동 기록이 없으면 바로 운동 선택 화면으로 이동
+                HapticFeedbackManager.mediumImpact();
+                Navigator.pushNamed(
+                  context,
+                  '/exercise_selection',
+                  arguments: date,
+                );
+              }
+            }
+          : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         height: 48,
         decoration: BoxDecoration(
           gradient: isToday
               ? const LinearGradient(
-                  colors: [Color(0xFFF97316), Color(0xFFEA580C)],
+                  colors: [ModernColors.exercise, Color(0xFFEA580C)],
                 )
               : null,
           color: !isToday
               ? (hasExercise
-                  ? const Color(0xFFF97316).withValues(alpha: 0.1)
+                  ? ModernColors.exercise.withValues(alpha: 0.1)
                   : (isFuture
                       ? Colors.grey.shade200.withValues(alpha: 0.5)
                       : (isCurrentMonth
@@ -1110,16 +1146,18 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
             color: isToday
                 ? Colors.transparent
                 : (hasExercise
-                    ? const Color(0xFFF97316).withValues(alpha: 0.3)
-                    : (isCurrentMonth
-                        ? ModernColors.textTertiary.withValues(alpha: 0.1)
-                        : Colors.transparent)),
+                    ? ModernColors.exercise.withValues(alpha: 0.3)
+                    : (isCurrentMonth && !isFuture
+                        ? ModernColors.exercise.withValues(alpha: 0.15)
+                        : (isCurrentMonth
+                            ? ModernColors.textTertiary.withValues(alpha: 0.1)
+                            : Colors.transparent))),
             width: 1.5,
           ),
           boxShadow: hasExercise || isToday
               ? [
                   BoxShadow(
-                    color: const Color(0xFFF97316).withValues(alpha: 0.15),
+                    color: ModernColors.exercise.withValues(alpha: 0.15),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),
@@ -1144,7 +1182,7 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                           ? (isToday
                               ? Colors.white
                               : (hasExercise
-                                  ? const Color(0xFFF97316)
+                                  ? ModernColors.exercise
                                   : ModernColors.textPrimary))
                           : ModernColors.textTertiary,
                     ),
@@ -1152,13 +1190,28 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                 ),
               ),
 
-              // 운동 도트 표시 (하단)
+              // 운동 도트 표시 (하단) 또는 + 버튼
               if (hasExercise) ...[
                 Expanded(
                   flex: 1,
                   child: Container(
                     alignment: Alignment.center,
                     child: _buildExerciseDots(dayExercises, isToday),
+                  ),
+                ),
+              ] else if (isCurrentMonth && !isFuture) ...[
+                // 운동 기록이 없고 클릭 가능한 날짜에 + 버튼 표시
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.add_circle_outline,
+                      size: 12,
+                      color: isToday
+                          ? Colors.white.withValues(alpha: 0.9)
+                          : ModernColors.exercise.withValues(alpha: 0.6),
+                    ),
                   ),
                 ),
               ] else ...[

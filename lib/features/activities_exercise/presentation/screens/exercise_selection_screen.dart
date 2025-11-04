@@ -30,7 +30,7 @@ class _ExerciseSelectionScreenState
   late Animation<Offset> _slideAnimation;
   late Animation<double> _scaleAnimation;
 
-  // 운동 종목 데이터
+  // 운동 종목 데이터 (색상별 분류 - 캘린더 구분용)
   final List<Map<String, String>> _exercises = [
     {'name': '헬스', 'emoji': '💪', 'color': '0xFF1F2937'}, // 검은색 - 묵직한 쇠질 느낌
     {'name': '러닝', 'emoji': '🏃‍♂️', 'color': '0xFF059669'}, // 초록색 - 자연적인 운동
@@ -107,50 +107,70 @@ class _ExerciseSelectionScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: ModernColors.background,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(Icons.arrow_back_ios_new,
-              color: Colors.black87, size: 20),
-        ),
-        centerTitle: true,
-        title: Text(
-          '운동 종목 선택',
-          style: GoogleFonts.notoSans(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            color: ModernColors.textPrimary,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: ModernColors.surface.withValues(alpha: 0.9),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: ModernColors.getElevationShadow(2),
+          ),
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
           ),
         ),
       ),
       body: FadeTransition(
         opacity: _fadeAnimation,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-
-              // 헤더 섹션
-              SlideTransition(
-                position: _slideAnimation,
-                child: _buildHeader(),
+        child: Stack(
+          children: [
+            // 배경 그라데이션 (오렌지 계열)
+            Container(
+              height: 280,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    ModernColors.exercise,
+                    ModernColors.exercise.withValues(alpha: 0.7),
+                  ],
+                ),
               ),
+            ),
 
-              const SizedBox(height: 32),
+            // 메인 콘텐츠
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  const SizedBox(height: 100),
 
-              // 운동 목록
-              ScaleTransition(
-                scale: _scaleAnimation,
-                child: _buildExerciseList(),
+                  // 헤더 섹션
+                  SlideTransition(
+                    position: _slideAnimation,
+                    child: _buildHeader(),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // 운동 목록
+                  ScaleTransition(
+                    scale: _scaleAnimation,
+                    child: _buildExerciseList(),
+                  ),
+
+                  const SizedBox(height: 40),
+                ],
               ),
-
-              const SizedBox(height: 40),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -158,63 +178,125 @@ class _ExerciseSelectionScreenState
 
   Widget _buildHeader() {
     final targetDate = widget.selectedDate;
-    final dateStr = '${targetDate.month}월 ${targetDate.day}일';
-    final weekdays = ['월', '화', '수', '목', '금', '토', '일'];
-    final weekday = weekdays[targetDate.weekday - 1];
+    final weekdays = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
+    final weekday = weekdays[(targetDate.weekday - 1) % 7];
+    final dateStr = '${targetDate.year}년 ${targetDate.month}월 ${targetDate.day}일';
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: ModernColors.textTertiary.withValues(alpha: 0.1),
-          width: 1,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: ModernColors.premiumShadow(
+          primaryColor: ModernColors.exercise,
+          lightColor: ModernColors.exerciseLight,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
-      child: Row(
+      child: Column(
         children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF97316).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(
-              Icons.fitness_center,
-              color: Color(0xFFF97316),
-              size: 24,
-            ),
+          // 제목과 아이콘
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      ModernColors.exercise,
+                      ModernColors.exercise.withValues(alpha: 0.8),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: ModernColors.exercise.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.fitness_center,
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '운동 종목 선택',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: ModernColors.exercise,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '어떤 운동을 하셨나요?',
+                      style: GoogleFonts.notoSans(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: ModernColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+
+          const SizedBox(height: 24),
+
+          // 날짜 정보 - Borderless Design
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  ModernColors.exercise.withValues(alpha: 0.05),
+                  ModernColors.exercise.withValues(alpha: 0.08),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: [
+                BoxShadow(
+                  color: ModernColors.exercise.withValues(alpha: 0.08),
+                  blurRadius: 12,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const Icon(
+                  Icons.calendar_today,
+                  color: ModernColors.exercise,
+                  size: 18,
+                ),
+                const SizedBox(width: 10),
                 Text(
-                  '오늘의 운동을 선택해주세요',
+                  dateStr,
                   style: GoogleFonts.notoSans(
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: ModernColors.textPrimary,
+                    color: ModernColors.exercise,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(width: 6),
                 Text(
-                  '$dateStr ($weekday)',
+                  weekday,
                   style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: ModernColors.textSecondary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: ModernColors.exercise,
                   ),
                 ),
               ],
@@ -261,7 +343,7 @@ class _ExerciseSelectionScreenState
   }
 
   Widget _buildExerciseItem(
-      String name, String emoji, Color color, bool isLast) {
+      String name, String emoji, Color categoryColor, bool isLast) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -297,16 +379,16 @@ class _ExerciseSelectionScreenState
             children: [
               // 운동 이모지
               Container(
-                width: 44,
-                height: 44,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF97316).withValues(alpha: 0.1),
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
                   child: Text(
                     emoji,
-                    style: const TextStyle(fontSize: 22),
+                    style: const TextStyle(fontSize: 24),
                   ),
                 ),
               ),
@@ -325,12 +407,12 @@ class _ExerciseSelectionScreenState
                 ),
               ),
 
-              // 색상 동그라미
+              // 색상 동그라미 (캘린더 구분용)
               Container(
                 width: 12,
                 height: 12,
                 decoration: BoxDecoration(
-                  color: color,
+                  color: categoryColor,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -340,7 +422,7 @@ class _ExerciseSelectionScreenState
               // 화살표 아이콘
               const Icon(
                 Icons.chevron_right,
-                color: ModernColors.textTertiary,
+                color: ModernColors.exercise,
                 size: 20,
               ),
             ],
