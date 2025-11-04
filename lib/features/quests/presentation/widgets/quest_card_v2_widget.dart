@@ -702,6 +702,14 @@ class _QuestCardV2WidgetState extends ConsumerState<QuestCardV2Widget> {
         conditionName = '영화 감상';
         progressText = '$currentValue/$targetValue편';
         break;
+      case 'differentExerciseTypes':
+        conditionName = '운동 종류';
+        progressText = '$currentValue/$targetValue가지';
+        break;
+      case 'exerciseMinutes':
+        conditionName = '운동 시간';
+        progressText = '$currentValue/$targetValue분';
+        break;
       default:
         conditionName = dataKey;
         progressText = '$currentValue/$targetValue';

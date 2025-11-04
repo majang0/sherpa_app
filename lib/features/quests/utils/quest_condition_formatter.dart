@@ -645,6 +645,13 @@ class QuestConditionFormatter {
           return '$value분 집중하기';
         case 'steps':
           return '${_formatNumber(int.tryParse(value) ?? 0)}보 걷기';
+
+        // 언더스코어 버전 (template에서 사용)
+        case 'weekly_readingPages':
+          return '이번 주 독서 ${_formatNumber(int.tryParse(value) ?? 0)}페이지 달성하기';
+        case 'weekly_movieLogs':
+          return '이번 주 영화 $value편 달성하기';
+
         default:
           return '$key $value회 달성';
       }
@@ -685,6 +692,10 @@ class QuestConditionFormatter {
         return '집중 목표 달성하기';
       case 'ClimbingRecord.isSuccess':
         return '등반 성공하기';
+      case 'todayClimbingSuccess':
+        return '등반 1회 성공하기';
+      case 'todayFocusMinutes':
+        return '오늘 $target분 집중하기';
       case 'ReadingLog.pages':
         return '$target페이지 읽기';
       case 'dailyPointsEarned':
@@ -762,6 +773,8 @@ class QuestConditionFormatter {
           naturalDesc = naturalDesc.replaceAll('MeetingLog', '모임 참여');
           naturalDesc =
               naturalDesc.replaceAll('ClimbingRecord.isSuccess', '등반 성공');
+          naturalDesc =
+              naturalDesc.replaceAll('todayClimbingSuccess', '등반 1회 성공');
           naturalDesc = naturalDesc.replaceAll('ReadingLog.pages', '독서 페이지');
           naturalDesc = naturalDesc.replaceAll(
               'dailyRecords.todayFocusMinutes', '오늘 집중 시간');
@@ -830,6 +843,25 @@ class QuestConditionFormatter {
         return '이번 주 $target개 다른 모임 참여하기';
       case 'meetingReviews':
         return '이번 주 모임 후기 $target개 작성하기';
+      case 'perfectDays':
+        return '$target일 이상 오늘의 목표 달성하기';
+      case 'allActivitiesDays':
+        return '$target일간 모든 활동 완료하기';
+
+      // 프리미엄 퀘스트용 한국어 케이스들
+      case '연속등반성공':
+        return '$target일 연속 등반 성공하기';
+      case '연속일일퀘스트완료':
+        return '$target일 연속 일일 퀘스트 완료하기';
+      case '모든주간퀘스트완료':
+        return '모든 주간 퀘스트 완료하기';
+      case '모임주최성공':
+        return '참여자가 있는 모임 $target회 주최하기';
+      case '30일챌린지첫주':
+        return '30일 챌린지 첫 주 완료하기';
+      case '모든카테고리퀘스트완료':
+        return '모든 카테고리 퀘스트 완료하기';
+
       default:
         return '이번 주 $dataType $target회 달성';
     }
@@ -879,6 +911,14 @@ class QuestConditionFormatter {
           return '모든 카테고리 퀘스트 완료하기';
         case '모든주간퀘스트완료':
           return '모든 주간 퀘스트 완료하기';
+
+        // 언더스코어 버전 (template에서 사용)
+        case 'weekly_readingPages':
+          return '이번 주 독서 ${_formatNumber(value)}페이지 달성하기';
+        case 'weekly_movieLogs':
+          return '이번 주 영화 $value편 달성하기';
+
+        // camelCase 버전 (호환성)
         case 'weeklyReadingPages':
           return '이번 주 ${_formatNumber(value)}페이지 읽기';
         case 'weeklyMovieLogs':
