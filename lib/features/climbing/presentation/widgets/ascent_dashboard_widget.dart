@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sherpa_app/core/utils/logger_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
@@ -55,7 +54,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
   bool _showSuccessAnimation = false;
   ClimbingRewards? _lastRewards;
   bool? _lastClimbSuccess;
-  String _selectedMountainId = '';
+  final _selectedMountainIdNotifier = ValueNotifier<String>(''); // ✅ ValueNotifier로 변경
   bool _showSherpiMessage = false;
   int _sherpiMessageIndex = 0;
   Mountain? _lastClimbedMountain; // 🔧 추가: 마지막 등반한 산 저장
@@ -151,6 +150,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
 
   @override
   void dispose() {
+    _selectedMountainIdNotifier.dispose(); // ✅ ValueNotifier cleanup
     _basecampController.dispose();
     _climbingProgressController.dispose();
     _sherpiFloatController.dispose();
@@ -181,7 +181,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     final startTime = session.startTime;
     final durationMs = (session.durationHours * 3600 * 1000).round();
 
-    _progressTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    _progressTimer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
       final currentSession =
           ref.read(globalUserProvider).currentClimbingSession;
       if (currentSession == null || !currentSession.isActive) {
@@ -330,9 +330,27 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
 
   @override
   Widget build(BuildContext context) {
-    final globalUser = ref.watch(globalUserProvider);
-    final session = globalUser.currentClimbingSession;
-    final isClimbing = session?.isActive == true;
+    // ✅ Selective watching - 필요한 필드만 감시
+    final currentSession = ref.watch(
+      globalUserProvider.select((user) => user.currentClimbingSession),
+    );
+    final isClimbing = currentSession?.isActive ?? false;
+
+    final userName = ref.watch(
+      globalUserProvider.select((user) => user.name),
+    );
+
+    final userLevel = ref.watch(
+      globalUserProvider.select((user) => user.level),
+    );
+
+    final climbingLogs = ref.watch(
+      globalUserProvider.select((user) => user.dailyRecords.climbingLogs),
+    );
+
+    final userStats = ref.watch(
+      globalUserProvider.select((user) => user.stats),
+    );
 
     return FadeTransition(
       opacity: _basecampFadeIn,
@@ -344,15 +362,21 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 헤더: 베이스캠프 타이틀
-                _buildBasecampHeader(globalUser),
+                _buildBasecampHeader(
+                  userName: userName,
+                  userLevel: userLevel,
+                ),
                 const SizedBox(height: 24),
 
                 // 메인 콘텐츠: 상태에 따라 다른 UI
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 600),
                   child: isClimbing
-                      ? _buildClimbingMonitor(session!)
-                      : _buildExpeditionPlanning(),
+                      ? _buildClimbingMonitor(currentSession!)
+                      : _buildExpeditionPlanning(
+                          userLevel: userLevel,
+                          userStats: userStats,
+                        ),
                 ),
 
                 const SizedBox(height: 20),
@@ -363,7 +387,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                 const SizedBox(height: 24),
 
                 // 등반 기록
-                _buildClimbingRecords(globalUser),
+                _buildClimbingRecords(climbingLogs),
               ],
             ),
           ),
@@ -382,7 +406,10 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     );
   }
 
-  Widget _buildBasecampHeader(GlobalUser user) {
+  Widget _buildBasecampHeader({
+    required String userName,
+    required int userLevel,
+  }) {
     final titleData = ref.watch(globalUserTitleProvider);
     final userPower = ref.watch(userClimbingPowerProvider);
 
@@ -432,7 +459,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${user.name}의 베이스캠프',
+                  '$userName의 베이스캠프',
                   style: GoogleFonts.notoSans(
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
@@ -442,7 +469,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    _buildStatChip('Lv.${user.level}', ModernColors.primary),
+                    _buildStatChip('Lv.$userLevel', ModernColors.primary),
                     const SizedBox(width: 8),
                     Text(
                       titleData.title,
@@ -490,10 +517,12 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     );
   }
 
-  Widget _buildExpeditionPlanning() {
+  Widget _buildExpeditionPlanning({
+    required int userLevel,
+    required GlobalStats userStats,
+  }) {
     final userPower = ref.watch(userClimbingPowerProvider);
     final mountains = MountainData.getRecommendedMountainsByPower(userPower);
-    final user = ref.watch(globalUserProvider);
     final badges = ref.watch(globalEquippedBadgesProvider);
 
     return Column(
@@ -546,7 +575,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                   itemBuilder: (context, index) {
                     final mountain = mountains[index];
                     return _buildMountainCard(
-                        mountain, userPower, user, badges);
+                        mountain, userPower, userLevel, userStats, badges);
                   },
                 ),
         ),
@@ -554,39 +583,48 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     );
   }
 
-  Widget _buildMountainCard(Mountain mountain, double userPower,
-      GlobalUser user, List<GlobalBadge> badges) {
+  Widget _buildMountainCard(
+    Mountain mountain,
+    double userPower,
+    int userLevel,
+    GlobalStats userStats,
+    List<GlobalBadge> badges,
+  ) {
     final successProb = GameConstants.calculateSuccessProbability(
       userPower: userPower,
       mountainPower: mountain.requiredPower,
-      willpower: user.stats.willpower,
+      willpower: userStats.willpower,
       equippedBadges: badges,
     );
 
     final canClimb = userPower >= mountain.requiredPower * 0.5;
-    final isSelected = _selectedMountainId == mountain.id.toString();
     final difficultyColor = _getDifficultyColor(mountain.difficultyLevel);
 
     // 🔧 추가: 사교성에 따른 시간 단축 계산
     final originalTime = mountain.durationHours;
     final adjustedTime = GameConstants.calculateAdjustedClimbingTime(
       originalTime,
-      user.stats.sociality,
+      userStats.sociality,
     );
     final timeReduction = originalTime > adjustedTime;
     final reductionPercent = timeReduction
         ? ((originalTime - adjustedTime) / originalTime * 100).round()
         : 0;
 
-    return MouseRegion(
-      onEnter: (_) =>
-          setState(() => _selectedMountainId = mountain.id.toString()),
-      onExit: (_) => setState(() => _selectedMountainId = ''),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 200,
-        margin: const EdgeInsets.only(right: 12),
-        transform: Matrix4.identity()..translate(0.0, isSelected ? -8.0 : 0.0),
+    // ✅ ValueListenableBuilder로 감싸서 setState() 제거
+    return ValueListenableBuilder<String>(
+      valueListenable: _selectedMountainIdNotifier,
+      builder: (context, selectedId, child) {
+        final isSelected = selectedId == mountain.id.toString();
+
+        return MouseRegion(
+          onEnter: (_) => _selectedMountainIdNotifier.value = mountain.id.toString(),
+          onExit: (_) => _selectedMountainIdNotifier.value = '',
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: 200,
+            margin: const EdgeInsets.only(right: 12),
+            transform: Matrix4.identity()..translate(0.0, isSelected ? -8.0 : 0.0),
         child: GestureDetector(
           onTap: canClimb ? () => _startClimbing(mountain) : null,
           child: Container(
@@ -756,7 +794,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                                   GameConstants.calculateDisplayXp(
                                     mountain.difficultyLevel,
                                     mountain.durationHours,
-                                    playerLevel: user.level,
+                                    playerLevel: userLevel,
                                   ).toInt()),
                               const SizedBox(width: 16),
                               _buildMiniReward(
@@ -764,7 +802,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
                                   GameConstants.calculateDisplayPoints(
                                     mountain.difficultyLevel,
                                     mountain.durationHours,
-                                    playerLevel: user.level,
+                                    playerLevel: userLevel,
                                   )),
                             ],
                           ),
@@ -807,6 +845,8 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
           ),
         ),
       ),
+        ); // ✅ Close builder
+      }, // ✅ Close ValueListenableBuilder
     );
   }
 
@@ -864,7 +904,7 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
 
   Widget _buildClimbingMonitor(ClimbingSession session) {
     final mountain =
-        ref.watch(globalGameProvider).getMountainById(session.mountainId);
+        ref.read(globalGameProvider).getMountainById(session.mountainId);
     if (mountain == null) return const SizedBox();
 
     return Container(
@@ -1230,11 +1270,10 @@ class _AscentDashboardWidgetState extends ConsumerState<AscentDashboardWidget>
     );
   }
 
-  Widget _buildClimbingRecords(GlobalUser user) {
-    final records = user.dailyRecords.climbingLogs;
-    if (records.isEmpty) return const SizedBox();
+  Widget _buildClimbingRecords(List<ClimbingRecord> climbingLogs) {
+    if (climbingLogs.isEmpty) return const SizedBox();
 
-    final recentRecords = records.reversed.take(3).toList();
+    final recentRecords = climbingLogs.reversed.take(3).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1592,7 +1631,10 @@ class MountainSilhouettePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(MountainSilhouettePainter oldDelegate) {
+    // ✅ Only repaint when color changes
+    return color != oldDelegate.color;
+  }
 }
 
 class ClimbingPathPainter extends CustomPainter {
@@ -1636,5 +1678,8 @@ class ClimbingPathPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(ClimbingPathPainter oldDelegate) {
+    // ✅ Only repaint when progress or color actually changes
+    return progress != oldDelegate.progress || color != oldDelegate.color;
+  }
 }
