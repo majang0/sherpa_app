@@ -114,9 +114,6 @@ class GoalCardWidget extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
-                // 원형 진행률 표시
-                _buildCircularProgress(),
               ],
             ),
             const SizedBox(height: 16),
@@ -128,44 +125,9 @@ class GoalCardWidget extends ConsumerWidget {
     );
   }
 
-  /// 원형 진행률 표시
-  Widget _buildCircularProgress() {
-    // 목표 달성 여부에 따라 진행률 계산 (간단히 0% or 100%)
-    final progress = (goal.isAchieved ?? false) ? 1.0 : 0.0;
-
-    return SizedBox(
-      width: 44,
-      height: 44,
-      child: Stack(
-        children: [
-          // 원형 프로그레스
-          CircularProgressIndicator(
-            value: progress,
-            strokeWidth: 3,
-            backgroundColor: Colors.black.withValues(alpha: 0.08),
-            valueColor: AlwaysStoppedAnimation(
-              _getCategoryColor(),
-            ),
-          ),
-          // 가운데 퍼센트
-          Center(
-            child: Text(
-              '${(progress * 100).toInt()}%',
-              style: GoogleFonts.notoSans(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: _getCategoryColor(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   /// 진행률 바
   Widget _buildProgressBar() {
-    final progress = (goal.isAchieved ?? false) ? 1.0 : 0.0;
+    final progress = goal.isAchieved ? 1.0 : 0.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

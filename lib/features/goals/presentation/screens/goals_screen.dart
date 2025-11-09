@@ -12,16 +12,13 @@ import '../widgets/goal_card_widget.dart';
 import '../widgets/goal_modal_widget.dart';
 import '../widgets/previous_goals_widget.dart';
 import '../widgets/user_info_modal_widget.dart';
-import '../widgets/goal_hero_widget.dart';
-import '../widgets/ai_analysis_modal_widget.dart';
 
-/// 목표 화면 (2025 Complete Redesign)
+/// 목표 화면 (Simple Clean Design)
 ///
-/// 새로운 레이아웃:
-/// 1. Compact Header - 사용자 인사 + 아이콘 버튼들
-/// 2. Hero Section - 현재 목표 시각화 (280px Glassmorphism 카드)
-/// 3. Goal List - Glassmorphism Goal Cards
-/// 4. Gradient FAB - 새 목표 추가
+/// 레이아웃:
+/// 1. Header - 뒤로가기 + 사용자 정보 + 이전 기록 버튼
+/// 2. Goal List - Glassmorphism Goal Cards
+/// 3. Gradient FAB - 새 목표 추가
 class GoalsScreen extends ConsumerWidget {
   const GoalsScreen({super.key});
 
@@ -29,16 +26,6 @@ class GoalsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(globalUserProvider);
     final goals = ref.watch(goalProvider);
-
-    // Calculate goal statistics
-    final now = DateTime.now();
-    final achievedGoals =
-        goals.where((g) => g.completedAt != null && (g.isAchieved ?? false)).length;
-    final inProgressGoals = goals
-        .where((g) => g.completedAt == null && g.date.isAfter(now))
-        .length;
-    final upcomingGoals =
-        goals.where((g) => g.completedAt == null && g.date.isAfter(now)).length;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -56,26 +43,9 @@ class GoalsScreen extends ConsumerWidget {
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(),
           slivers: [
-            // Compact Header
+            // Header - 뒤로가기 + 사용자 정보 + 이전 기록 버튼
             SliverToBoxAdapter(
-              child: _buildCompactHeader(context, user, ref),
-            ),
-
-            // Hero Section - 현재 목표 시각화
-            SliverToBoxAdapter(
-              child: GoalHeroWidget(
-                activeGoalsCount: goals.length,
-                achievedCount: achievedGoals,
-                inProgressCount: inProgressGoals,
-                upcomingCount: upcomingGoals,
-                totalCount: goals.length,
-                completionRate: goals.isEmpty ? 0.0 : achievedGoals / goals.length,
-                onAIAnalysisTap: () => _showAIAnalysis(context, ref),
-              )
-                  .animate()
-                  .fadeIn(duration: 600.ms, curve: Curves.easeOut)
-                  .slideY(begin: 0.1, end: 0, duration: 500.ms, curve: Curves.easeOutCubic)
-                  .scale(begin: const Offset(0.95, 0.95), duration: 500.ms),
+              child: _buildSimpleHeader(context, user, ref),
             ),
 
             // Section Header
@@ -125,54 +95,32 @@ class GoalsScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: _buildGradientFAB(context, ref),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
-  /// Compact Header - 사용자 인사 + 아이콘 버튼들
-  Widget _buildCompactHeader(BuildContext context, GlobalUser user, WidgetRef ref) {
+  /// Simple Header - 뒤로가기 버튼만
+  Widget _buildSimpleHeader(BuildContext context, GlobalUser user, WidgetRef ref) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 44, 20, 16),
+      padding: const EdgeInsets.fromLTRB(16, 44, 16, 16),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // 왼쪽: 사용자 인사
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${user.name}님의',
-                style: GoogleFonts.notoSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: ModernColors.textSecondary.withValues(alpha: 0.8),
-                  letterSpacing: -0.2,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                '목표 대시보드',
-                style: GoogleFonts.notoSans(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w800,
-                  color: ModernColors.textPrimary,
-                  letterSpacing: -0.5,
-                ),
-              ),
-            ],
+          // 뒤로가기 버튼
+          _buildHeaderButton(
+            icon: Icons.arrow_back_ios_new,
+            onTap: () => Navigator.pop(context),
           ),
-          // 오른쪽: 아이콘 버튼들
-          Row(
-            children: [
-              _buildHeaderIcon(
-                Icons.person_outline,
-                onTap: () => _showUserInfoModal(context, user),
-              ),
-              const SizedBox(width: 8),
-              _buildHeaderIcon(
-                Icons.history,
-                onTap: () => _showPreviousGoals(context, ref),
-              ),
-            ],
+          const Spacer(),
+          // 사용자 정보 버튼
+          _buildHeaderButton(
+            icon: Icons.person_outline,
+            onTap: () => _showUserInfoModal(context, user),
+          ),
+          const SizedBox(width: 8),
+          // 이전 기록 버튼
+          _buildHeaderButton(
+            icon: Icons.history,
+            onTap: () => _showPreviousGoals(context, ref),
           ),
         ],
       ),
@@ -182,8 +130,8 @@ class GoalsScreen extends ConsumerWidget {
         .slideY(begin: -0.2, end: 0, duration: 400.ms, curve: Curves.easeOut);
   }
 
-  /// Header Icon Button - Glassmorphism style
-  Widget _buildHeaderIcon(IconData icon, {required VoidCallback onTap}) {
+  /// Header Button - Glassmorphism style
+  Widget _buildHeaderButton({required IconData icon, required VoidCallback onTap}) {
     return MicroInteractions.tapResponse(
       onTap: onTap,
       scaleDownTo: 0.95,
@@ -200,7 +148,7 @@ class GoalsScreen extends ConsumerWidget {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: Colors.white.withValues(alpha: 0.3),
             width: 1,
@@ -220,12 +168,13 @@ class GoalsScreen extends ConsumerWidget {
         ),
         child: Icon(
           icon,
-          size: 22,
+          size: 20,
           color: ModernColors.primary.withValues(alpha: 0.8),
         ),
       ),
     );
   }
+
 
   /// Section Header - "나의 목표"
   Widget _buildSectionHeader(int goalCount) {
@@ -419,66 +368,62 @@ class GoalsScreen extends ConsumerWidget {
 
   /// Gradient FAB - 새 목표 추가
   Widget _buildGradientFAB(BuildContext context, WidgetRef ref) {
-    return FloatingActionButton.extended(
-      onPressed: () => _showAddGoalModal(context, ref),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      label: MicroInteractions.tapResponse(
-        onTap: () => _showAddGoalModal(context, ref),
-        scaleDownTo: 0.97,
-        enableHaptic: true,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                ModernColors.climbing,
-                ModernColors.climbing.withValues(alpha: 0.85),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.2),
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: ModernColors.climbing.withValues(alpha: 0.4),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 30,
-                offset: const Offset(0, 12),
-              ),
+    return MicroInteractions.tapResponse(
+      onTap: () => _showAddGoalModal(context, ref),
+      scaleDownTo: 0.97,
+      enableHaptic: true,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              ModernColors.climbing,
+              ModernColors.climbing.withValues(alpha: 0.85),
             ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          child: Row(
-            children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.25),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.add, color: Colors.white, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                '새 목표',
-                style: GoogleFonts.notoSans(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  letterSpacing: -0.3,
-                ),
-              ),
-            ],
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.2),
+            width: 1,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: ModernColors.climbing.withValues(alpha: 0.4),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 30,
+              offset: const Offset(0, 12),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.25),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.add, color: Colors.white, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              '새 목표',
+              style: GoogleFonts.notoSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                letterSpacing: -0.3,
+              ),
+            ),
+          ],
         ),
       ),
     )
@@ -504,16 +449,6 @@ class GoalsScreen extends ConsumerWidget {
       MaterialPageRoute(
         builder: (context) => const PreviousGoalsWidget(),
       ),
-    );
-  }
-
-  /// Show AI Analysis Modal
-  void _showAIAnalysis(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const AIAnalysisModalWidget(isGoalsScreen: true),
     );
   }
 
