@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
-import '../../../../shared/widgets/sherpa_card.dart';
-import '../../models/goal_model.dart';
-import '../../providers/goal_provider.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/shared/widgets/sherpa_clean_app_bar.dart';
+import 'package:sherpa_app/shared/widgets/sherpa_card.dart';
+import 'package:sherpa_app/features/goals/models/goal_model.dart';
+import 'package:sherpa_app/features/goals/providers/goal_provider.dart';
 
 /// 이전 목표 화면
 ///
@@ -75,7 +75,7 @@ class _PreviousGoalsWidgetState extends ConsumerState<PreviousGoalsWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ModernColors.background,
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '이전 목표',
         backgroundColor: ModernColors.background,
       ),

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
-import '../models/routine_model.dart';
+import 'package:sherpa_app/features/goals/models/routine_model.dart';
 
 /// 루틴 Provider
 ///
@@ -49,7 +49,7 @@ class RoutineNotifier extends StateNotifier<List<RoutineModel>> {
 
   /// AI goal.txt 기반 샘플 데이터 초기화
   Future<void> _initializeSampleData() async {
-    final uuid = const Uuid();
+    const uuid = Uuid();
     final now = DateTime.now();
 
     // ==================== 이전 루틴 (완료된 루틴) ====================

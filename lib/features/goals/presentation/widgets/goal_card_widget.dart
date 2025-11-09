@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/theme/modern_colors.dart';
-import '../../../../core/animation/micro_interactions.dart';
-import '../../models/goal_model.dart';
-import 'goal_modal_widget.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/core/animation/micro_interactions.dart';
+import 'package:sherpa_app/features/goals/models/goal_model.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/goal_modal_widget.dart';
 
 /// 목표 카드 위젯 (2025 Complete Redesign)
 ///

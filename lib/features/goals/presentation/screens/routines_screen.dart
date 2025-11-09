@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/providers/level_1_user_data/global_user_provider.dart';
-import '../../../../shared/models/global_user_model.dart';
-import '../../providers/routine_provider.dart';
-import '../../models/routine_model.dart';
-import '../widgets/routine_card_widget.dart';
-import '../widgets/routine_modal_widget.dart';
-import '../widgets/previous_routines_widget.dart';
-import '../widgets/user_info_modal_widget.dart';
-import '../widgets/action_buttons_section_widget.dart';
-import '../widgets/gamification_section_widget.dart';
-import '../widgets/ai_analysis_modal_widget.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/features/goals/providers/routine_provider.dart';
+import 'package:sherpa_app/features/goals/models/routine_model.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/routine_card_widget.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/routine_modal_widget.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/previous_routines_widget.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/user_info_modal_widget.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/action_buttons_section_widget.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/gamification_section_widget.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/ai_analysis_modal_widget.dart';
 
 /// 루틴 화면 (2025 Material Design 3 Redesign)
 ///
@@ -71,7 +71,7 @@ class RoutinesScreen extends ConsumerWidget {
                     completedRoutines, todayRoutines.length, completionRate),
 
                 // Gamification Section (NEW!)
-                GamificationSectionWidget(
+                const GamificationSectionWidget(
                   currentStreak: 7, // TODO: Calculate from routine data
                   longestStreak: 21,
                   averageStreak: 14,

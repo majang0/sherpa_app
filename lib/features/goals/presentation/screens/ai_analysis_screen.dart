@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
-import '../../../../shared/widgets/sherpa_button.dart';
-import '../../../../shared/providers/level_1_user_data/global_point_provider.dart';
-import '../../models/achievement_analysis_model.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/shared/widgets/sherpa_clean_app_bar.dart';
+import 'package:sherpa_app/shared/widgets/sherpa_button.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
+import 'package:sherpa_app/features/goals/models/achievement_analysis_model.dart';
 
 /// AI 분석 화면
 ///
@@ -29,7 +29,7 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen> {
 
     return Scaffold(
       backgroundColor: ModernColors.background,
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '셰르피 분석',
         backgroundColor: ModernColors.background,
       ),

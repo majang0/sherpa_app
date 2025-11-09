@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/theme/modern_colors.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
 
 /// Gamification Section Widget
 ///

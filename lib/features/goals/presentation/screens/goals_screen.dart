@@ -3,15 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../../../core/theme/modern_colors.dart';
-import '../../../../core/animation/micro_interactions.dart';
-import '../../../../shared/providers/level_1_user_data/global_user_provider.dart';
-import '../../../../shared/models/global_user_model.dart';
-import '../../providers/goal_provider.dart';
-import '../widgets/goal_card_widget.dart';
-import '../widgets/goal_modal_widget.dart';
-import '../widgets/previous_goals_widget.dart';
-import '../widgets/user_info_modal_widget.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/core/animation/micro_interactions.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/features/goals/providers/goal_provider.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/goal_card_widget.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/goal_modal_widget.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/previous_goals_widget.dart';
+import 'package:sherpa_app/features/goals/presentation/widgets/user_info_modal_widget.dart';
 
 /// 목표 화면 (Simple Clean Design)
 ///
@@ -30,12 +30,12 @@ class GoalsScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              const Color(0xFFF5F9FF), // Light blue
+              Color(0xFFF5F9FF), // Light blue
               Colors.white,
             ],
           ),
@@ -189,7 +189,7 @@ class GoalsScreen extends ConsumerWidget {
                 width: 4,
                 height: 20,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [
                       ModernColors.climbing,
                       ModernColors.success,
@@ -273,7 +273,7 @@ class GoalsScreen extends ConsumerWidget {
               ),
               shape: BoxShape.circle,
             ),
-            child: Icon(
+            child: const Icon(
               Icons.flag_outlined,
               size: 64,
               color: ModernColors.climbing,

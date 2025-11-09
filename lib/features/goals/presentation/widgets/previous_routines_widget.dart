@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/widgets/sherpa_clean_app_bar.dart';
-import '../../../../shared/widgets/sherpa_card.dart';
-import '../../models/routine_model.dart';
-import '../../providers/routine_provider.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/shared/widgets/sherpa_clean_app_bar.dart';
+import 'package:sherpa_app/shared/widgets/sherpa_card.dart';
+import 'package:sherpa_app/features/goals/models/routine_model.dart';
+import 'package:sherpa_app/features/goals/providers/routine_provider.dart';
 
 /// 완료한 루틴 화면
 ///
@@ -80,7 +80,7 @@ class _PreviousRoutinesWidgetState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ModernColors.background,
-      appBar: SherpaCleanAppBar(
+      appBar: const SherpaCleanAppBar(
         title: '완료한 루틴',
         backgroundColor: ModernColors.background,
       ),

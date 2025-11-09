@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/widgets/sherpa_button.dart';
-import '../../models/routine_model.dart';
-import '../../providers/routine_provider.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/shared/widgets/sherpa_button.dart';
+import 'package:sherpa_app/features/goals/models/routine_model.dart';
+import 'package:sherpa_app/features/goals/providers/routine_provider.dart';
 
 /// 루틴 모달 위젯
 ///

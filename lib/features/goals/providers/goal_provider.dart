@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
-import '../models/goal_model.dart';
+import 'package:sherpa_app/features/goals/models/goal_model.dart';
 
 /// 목표 Provider
 ///
@@ -49,7 +49,7 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
 
   /// AI goal.txt 기반 샘플 데이터 초기화
   Future<void> _initializeSampleData() async {
-    final uuid = const Uuid();
+    const uuid = Uuid();
     final now = DateTime.now();
 
     // ==================== 이전 목표 (완료된 목표) ====================

@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/theme/modern_colors.dart';
-import '../../../../shared/models/global_user_model.dart';
-import '../../../../shared/providers/level_1_user_data/global_user_provider.dart';
+import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 
 /// 사용자 상세 정보 입력/편집 모달 위젯
 ///
@@ -125,10 +125,10 @@ class _UserInfoModalWidgetState extends ConsumerState<UserInfoModalWidget> {
 
     // 성공 스낵바
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('사용자 정보가 저장되었습니다'),
+      const SnackBar(
+        content: Text('사용자 정보가 저장되었습니다'),
         backgroundColor: ModernColors.quest,
-        duration: const Duration(seconds: 2),
+        duration: Duration(seconds: 2),
       ),
     );
   }
@@ -443,28 +443,28 @@ class _UserInfoModalWidgetState extends ConsumerState<UserInfoModalWidget> {
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: ModernColors.gray300,
                 width: 1,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: ModernColors.gray300,
                 width: 1,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: ModernColors.quest,
                 width: 2,
               ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: ModernColors.error,
                 width: 2,
               ),
@@ -543,14 +543,14 @@ class _UserInfoModalWidgetState extends ConsumerState<UserInfoModalWidget> {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: ModernColors.gray300,
                             width: 1,
                           ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: ModernColors.gray300,
                             width: 1,
                           ),
