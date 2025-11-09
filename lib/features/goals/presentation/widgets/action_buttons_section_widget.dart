@@ -5,8 +5,8 @@ import '../../../../core/theme/modern_colors.dart';
 
 /// Action Buttons Section Widget
 ///
-/// IconButton을 매력적인 카드로 변환: 사용자 정보, 이전 기록, AI 분석
-/// 2025 Material Design 3: Icon + Label, Gradients, Premium shadows
+/// 2025 Material Design 3: Clean buttons with solid colors
+/// NO gradients, NO multiple shadows, flat design principles
 class ActionButtonsSectionWidget extends StatelessWidget {
   final VoidCallback onUserInfoTap;
   final VoidCallback onHistoryTap;
@@ -25,136 +25,142 @@ class ActionButtonsSectionWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
-          // 1. User Info Action
-          _buildActionCard(
+          // 1. User Info Action (Outlined)
+          _buildOutlinedButton(
             icon: Icons.person_outline,
-            gradient: LinearGradient(
-              colors: [
-                ModernColors.climbing,
-                ModernColors.climbing.withValues(alpha: 0.8),
-              ],
-            ),
             label: '내 정보',
+            color: ModernColors.climbing,
             onTap: onUserInfoTap,
-            flex: 2,
           ),
           const SizedBox(width: 12),
 
-          // 2. History Action
-          _buildActionCard(
+          // 2. History Action (Outlined)
+          _buildOutlinedButton(
             icon: Icons.history,
-            gradient: LinearGradient(
-              colors: [
-                ModernColors.meeting,
-                ModernColors.meeting.withValues(alpha: 0.8),
-              ],
-            ),
             label: '이전 기록',
+            color: ModernColors.meeting,
             onTap: onHistoryTap,
-            flex: 2,
           ),
           const SizedBox(width: 12),
 
-          // 3. AI Analysis Action (NEW!)
-          _buildActionCard(
+          // 3. AI Analysis Action (Primary)
+          _buildPrimaryButton(
             icon: Icons.psychology_outlined,
-            gradient: LinearGradient(
-              colors: [
-                ModernColors.diary,
-                ModernColors.diary.withValues(alpha: 0.8),
-              ],
-            ),
             label: 'AI 분석',
             sublabel: '30P',
+            color: ModernColors.climbing,
             onTap: onAIAnalysisTap,
-            flex: 3,
-            isPremium: true,
           ),
         ],
       ),
     );
   }
 
-  /// Action Card Helper
-  Widget _buildActionCard({
+  /// Primary Elevated Button - 2025 Material Design 3
+  /// Solid color, single shadow, no gradients
+  Widget _buildPrimaryButton({
     required IconData icon,
-    required LinearGradient gradient,
     required String label,
     String? sublabel,
+    required Color color,
     required VoidCallback onTap,
-    int flex = 1,
-    bool isPremium = false,
   }) {
     return Expanded(
-      flex: flex,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: gradient,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: gradient.colors.first.withValues(alpha: 0.4),
-                blurRadius: 16,
-                offset: const Offset(0, 8),
-              ),
-              BoxShadow(
-                color: gradient.colors.last.withValues(alpha: 0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Icon(icon, color: Colors.white, size: 28),
-                  if (isPremium)
-                    Positioned(
-                      right: -4,
-                      top: -4,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: ModernColors.joyBright,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.auto_awesome,
-                          size: 12,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: GoogleFonts.notoSans(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              if (sublabel != null) ...[
-                const SizedBox(height: 2),
-                Text(
-                  sublabel,
-                  style: GoogleFonts.notoSans(
-                    fontSize: 10,
-                    color: Colors.white.withValues(alpha: 0.8),
-                  ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
               ],
-            ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: Colors.white, size: 24),
+                const SizedBox(height: 6),
+                Text(
+                  label,
+                  style: GoogleFonts.notoSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                if (sublabel != null) ...[
+                  const SizedBox(height: 2),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      sublabel,
+                      style: GoogleFonts.notoSans(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Outlined Button - 2025 Material Design 3
+  /// Clean outline, no fills, no shadows
+  Widget _buildOutlinedButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: color, width: 1.5),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: color, size: 24),
+                const SizedBox(height: 6),
+                Text(
+                  label,
+                  style: GoogleFonts.notoSans(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: color,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),

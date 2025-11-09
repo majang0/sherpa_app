@@ -1,13 +1,16 @@
 // lib/features/activities_exercise/presentation/widgets/exercise_full_view_widget.dart
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/shared/utils/exercise_utils.dart';
 import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
+import 'package:sherpa_app/features/activities_exercise/models/detailed_exercise_models.dart';
 
 class ExerciseFullViewWidget extends ConsumerStatefulWidget {
   const ExerciseFullViewWidget({super.key});
@@ -806,14 +809,38 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          // Navigate to exercise detail screen
-                          Navigator.pushNamed(
-                            context,
-                            '/exercise_detail',
-                            arguments: exercise,
-                          );
+                        onTap: () async {
+                          // Navigate to appropriate detail screen
+                          if (exercise.exerciseType == '러닝') {
+                            // Load RunningRecord from SharedPreferences BEFORE closing modal
+                            final runningRecord =
+                                await _loadRunningRecord(exercise.id);
+
+                            if (!context.mounted) return;
+                            Navigator.pop(context);
+
+                            if (runningRecord != null) {
+                              Navigator.pushNamed(
+                                context,
+                                '/running_detail',
+                                arguments: runningRecord,
+                              );
+                            } else {
+                              // Fallback to general exercise detail
+                              Navigator.pushNamed(
+                                context,
+                                '/exercise_detail',
+                                arguments: exercise,
+                              );
+                            }
+                          } else {
+                            Navigator.pop(context);
+                            Navigator.pushNamed(
+                              context,
+                              '/exercise_detail',
+                              arguments: exercise,
+                            );
+                          }
                         },
                         borderRadius: BorderRadius.circular(16),
                         child: Container(
@@ -1230,5 +1257,24 @@ class _ExerciseFullViewWidgetState extends ConsumerState<ExerciseFullViewWidget>
           ),
       ],
     );
+  }
+
+  /// Load RunningRecord from SharedPreferences
+  Future<RunningRecord?> _loadRunningRecord(String id) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final runningRecordsJson = prefs.getString('running_records') ?? '{}';
+      final runningRecords = Map<String, dynamic>.from(
+        jsonDecode(runningRecordsJson) as Map,
+      );
+
+      if (runningRecords.containsKey(id)) {
+        return RunningRecord.fromJson(runningRecords[id]);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Failed to load RunningRecord: $e');
+      return null;
+    }
   }
 }

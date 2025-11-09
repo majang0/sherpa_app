@@ -1,4 +1,4 @@
-// lib/features/activities_exercise/presentation/widgets/running_record_form.dart
+// lib/features/activities_exercise/presentation/screens/running_edit_screen.dart
 
 import 'dart:io';
 import 'dart:convert';
@@ -6,34 +6,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import '../../models/detailed_exercise_models.dart';
-import '../../services/running_image_analyzer.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
-import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
-import 'package:sherpa_app/shared/utils/exercise_utils.dart';
-import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/widgets/sherpa_button.dart';
+import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
+import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 
-class RunningRecordForm extends ConsumerStatefulWidget {
-  final DateTime selectedDate;
-  final Function(bool)? onFormValidityChanged;
+class RunningEditScreen extends ConsumerStatefulWidget {
+  final RunningRecord runningRecord;
 
-  const RunningRecordForm({
+  const RunningEditScreen({
     super.key,
-    required this.selectedDate,
-    this.onFormValidityChanged,
+    required this.runningRecord,
   });
 
   @override
-  ConsumerState<RunningRecordForm> createState() => RunningRecordFormState();
+  ConsumerState<RunningEditScreen> createState() => _RunningEditScreenState();
 }
 
-// public으로 변경하여 GlobalKey에서 접근 가능하도록 함
-class RunningRecordFormState extends ConsumerState<RunningRecordForm>
+class _RunningEditScreenState extends ConsumerState<RunningEditScreen>
     with TickerProviderStateMixin {
   late AnimationController _scaleController;
   late Animation<double> _scaleAnimation;
@@ -46,30 +41,28 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
   final TextEditingController _minutesController = TextEditingController();
   final TextEditingController _secondsController = TextEditingController();
 
-  // Form state
-  double? _distanceKm; // 거리 (km)
-  int? _paceMinutes; // 1km당 페이스 (분)
-  int? _paceSeconds; // 1km당 페이스 (초)
-  int? _totalHours; // 총 시간 (시)
-  int? _totalMinutes; // 총 시간 (분)
-  int? _totalSeconds; // 총 시간 (초)
+  // Form state - initialized with existing data
+  late double _distanceKm;
+  late int _paceMinutes;
+  late int _paceSeconds;
+  late int _totalHours;
+  late int _totalMinutes;
+  late int _totalSeconds;
 
-  DifficultyLevel? _selectedDifficulty; // 체감 난이도
-  double? _achievementScore; // 운동 성취도 (1-10)
+  DifficultyLevel? _selectedDifficulty;
+  double _achievementScore = 7.0; // 운동 성취도 (1-10)
   bool _isShared = false;
-  bool _isSubmitting = false; // 제출 중 상태
+  bool _isSubmitting = false;
   File? _selectedImage;
 
-  // AI 분석 상태
-  bool _isAnalyzing = false;
-  String? _analysisError;
-
   final ImagePicker _imagePicker = ImagePicker();
-  final RunningImageAnalyzer _imageAnalyzer = RunningImageAnalyzer();
 
   @override
   void initState() {
     super.initState();
+
+    // Initialize form with existing running data
+    _initializeFormData();
 
     _scaleController = AnimationController(
       duration: const Duration(milliseconds: 1200),
@@ -83,36 +76,34 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
     Future.delayed(const Duration(milliseconds: 200), () {
       _scaleController.forward();
     });
-
-    // 초기 폼 유효성 상태 전달
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkFormValidity();
-    });
-
-    // TextField 리스너 추가
-    _distanceController.addListener(_updateDistanceFromText);
   }
 
-  void _updateDistanceFromText() {
-    final text = _distanceController.text;
-    if (text.isNotEmpty) {
-      final parsed = double.tryParse(text);
-      if (parsed != null && parsed != _distanceKm) {
-        setState(() {
-          _distanceKm = parsed;
-        });
-        _checkFormValidity();
-      }
-    }
-  }
+  void _initializeFormData() {
+    // 거리
+    _distanceKm = widget.runningRecord.distanceKm;
+    _distanceController.text = _distanceKm.toString();
 
-  void _checkFormValidity() {
-    final bool isValid = _distanceKm != null &&
-        _paceMinutes != null &&
-        _paceSeconds != null &&
-        (_totalHours != null || _totalMinutes != null || _totalSeconds != null);
+    // 페이스 (averagePace는 분 단위의 double)
+    _paceMinutes = widget.runningRecord.averagePace.floor();
+    _paceSeconds = ((widget.runningRecord.averagePace - _paceMinutes) * 60).round();
+    _paceMinController.text = _paceMinutes.toString();
+    _paceSecController.text = _paceSeconds.toString();
 
-    widget.onFormValidityChanged?.call(isValid);
+    // 총 시간 (durationMinutes를 시:분:초로 변환)
+    final totalMinutes = widget.runningRecord.durationMinutes;
+    _totalHours = totalMinutes ~/ 60;
+    _totalMinutes = totalMinutes % 60;
+    _totalSeconds = 0; // ExerciseLog는 분 단위만 저장하므로 초는 0
+    _hoursController.text = _totalHours.toString();
+    _minutesController.text = _totalMinutes.toString();
+    _secondsController.text = _totalSeconds.toString();
+
+    // 난이도
+    _selectedDifficulty = widget.runningRecord.difficulty;
+
+    // 운동 일기
+    _detailsController.text = widget.runningRecord.note ?? '';
+    _isShared = widget.runningRecord.isShared;
   }
 
   @override
@@ -130,215 +121,284 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
 
   @override
   Widget build(BuildContext context) {
-    return ScaleTransition(
-      scale: _scaleAnimation,
-      child: Column(
+    return Scaffold(
+      backgroundColor: const Color(0xFFF8FAFC),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Container(
+          margin: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.9),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back_ios_new,
+                color: Colors.black87, size: 20),
+          ),
+        ),
+        actions: [
+          if (_canSubmit())
+            Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.9),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: _isSubmitting ? null : _updateRunning,
+                child: Text(
+                  '수정',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: _isSubmitting
+                        ? ModernColors.textTertiary
+                        : ModernColors.exercise,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+      body: ScaleTransition(
+        scale: _scaleAnimation,
+        child: Stack(
+          children: [
+            // 배경 그라데이션 (오렌지 계열)
+            Container(
+              height: 280,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    ModernColors.exercise,
+                    ModernColors.exercise.withValues(alpha: 0.7),
+                  ],
+                ),
+              ),
+            ),
+
+            // 메인 콘텐츠
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  const SizedBox(height: 120), // AppBar 공간
+
+                  // 헤더 섹션
+                  _buildHeader()
+                      .animate()
+                      .slide(duration: 600.ms, delay: 100.ms),
+
+                  const SizedBox(height: 32),
+
+                  // 편집 폼
+                  _buildEditForm(),
+
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: ModernColors.exercise.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Row(
         children: [
-          // AI 분석 버튼 섹션
-          _buildAIAnalysisSection()
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 50.ms),
-          const SizedBox(height: 24),
-
-          // 거리 입력
-          _buildDistanceSection()
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 100.ms),
-          const SizedBox(height: 24),
-
-          // 페이스 입력
-          _buildPaceSection()
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 150.ms),
-          const SizedBox(height: 24),
-
-          // 총 시간 입력
-          _buildTotalTimeSection()
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 200.ms),
-          const SizedBox(height: 24),
-
-          // 난이도 선택
-          _buildDifficultySection()
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 250.ms),
-          const SizedBox(height: 24),
-
-          // 운동 일기 (성취도 + 일기)
-          _buildWorkoutDiarySection()
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 300.ms),
-          const SizedBox(height: 24),
-
-          // 사진 업로드
-          _buildPhotoSection()
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 350.ms),
-          const SizedBox(height: 24),
-
-          // 커뮤니티 공유
-          _buildShareToggle()
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 400.ms),
-          const SizedBox(height: 32),
-
-          // 완료 버튼
-          _buildSubmitButton()
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 450.ms),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: ModernColors.exerciseLight,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: ModernColors.exercise.withValues(alpha: 0.2),
+                width: 2,
+              ),
+            ),
+            child: const Text(
+              '🏃',
+              style: TextStyle(fontSize: 32),
+            ),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '러닝 기록 수정',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    color: ModernColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  _formatDate(widget.runningRecord.date),
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: ModernColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // ==================== AI 분석 섹션 ====================
+  Widget _buildEditForm() {
+    return Column(
+      children: [
+        // Quick summary card
+        _buildQuickSummaryCard()
+            .animate()
+            .fadeIn(duration: 600.ms, delay: 50.ms),
+        const SizedBox(height: 24),
+        _buildDistanceSection()
+            .animate()
+            .fadeIn(duration: 600.ms, delay: 100.ms),
+        const SizedBox(height: 24),
+        _buildPaceSection()
+            .animate()
+            .fadeIn(duration: 600.ms, delay: 150.ms),
+        const SizedBox(height: 24),
+        _buildTotalTimeSection()
+            .animate()
+            .fadeIn(duration: 600.ms, delay: 200.ms),
+        const SizedBox(height: 24),
+        _buildDifficultySection()
+            .animate()
+            .fadeIn(duration: 600.ms, delay: 250.ms),
+        const SizedBox(height: 24),
+        _buildWorkoutDiarySection()
+            .animate()
+            .fadeIn(duration: 600.ms, delay: 300.ms),
+        const SizedBox(height: 24),
+        _buildPhotoSection().animate().fadeIn(duration: 600.ms, delay: 350.ms),
+        const SizedBox(height: 24),
+        _buildShareToggle().animate().fadeIn(duration: 600.ms, delay: 400.ms),
+        const SizedBox(height: 32),
+        _buildSubmitButton().animate().fadeIn(duration: 600.ms, delay: 450.ms),
+      ],
+    );
+  }
 
-  Widget _buildAIAnalysisSection() {
+  Widget _buildQuickSummaryCard() {
+    const exerciseColor = ModernColors.exercise;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: exerciseColor.withValues(alpha: 0.2)),
         boxShadow: [
-          // Subtle elevation shadow (Material Design 3)
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: ModernColors.exercise.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: const Icon(
-                  Icons.auto_awesome,
-                  color: ModernColors.exercise,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'AI 자동 입력',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: ModernColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '나이키런 스크린샷으로 자동 입력',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: ModernColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Semantics(
-                label: '러닝 기록 스크린샷 업로드',
-                button: true,
-                hint: '나이키런이나 스트라바 앱의 러닝 기록 스크린샷을 선택하면 자동으로 데이터를 입력합니다',
-                enabled: !_isAnalyzing,
-                child: IconButton(
-                  onPressed: _isAnalyzing ? null : _analyzeRunningImage,
-                  icon: Icon(
-                    Icons.camera_alt_outlined,
-                    color: _isAnalyzing
-                        ? ModernColors.textTertiary
-                        : ModernColors.exercise,
-                    size: 24,
-                  ),
-                  tooltip: '스크린샷 분석',
-                ),
-              ),
-            ],
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: exerciseColor.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.directions_run,
+              color: exerciseColor,
+              size: 24,
+            ),
           ),
-          if (_isAnalyzing) ...[
-            const SizedBox(height: 16),
-            Row(
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(ModernColors.exercise),
+                Text(
+                  '현재 설정',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: ModernColors.textSecondary,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(height: 4),
                 Text(
-                  'AI가 데이터를 분석 중입니다...',
+                  '${_distanceKm.toStringAsFixed(1)}km · ${_paceMinutes}\'${_paceSeconds.toString().padLeft(2, '0')}"',
                   style: GoogleFonts.notoSans(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: ModernColors.exercise,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: ModernColors.textPrimary,
                   ),
                 ),
               ],
             ),
-          ],
-          if (_analysisError != null) ...[
-            const SizedBox(height: 16),
+          ),
+          if (_selectedDifficulty != null)
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.red.shade50,
+                color: _selectedDifficulty!.color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.red.shade200,
-                  width: 1,
+              ),
+              child: Text(
+                _selectedDifficulty!.label,
+                style: GoogleFonts.notoSans(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: _selectedDifficulty!.color,
                 ),
               ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    color: Colors.red.shade600,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      _analysisError!,
-                      style: GoogleFonts.notoSans(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.red.shade600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ),
-          ],
         ],
       ),
     );
   }
-
-  // ==================== 거리 입력 섹션 ====================
 
   Widget _buildDistanceSection() {
     return Container(
@@ -378,7 +438,7 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
               ),
               const SizedBox(width: 12),
               Text(
-                '거리 (필수)',
+                '거리 조정',
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -421,6 +481,13 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             ),
+            onChanged: (value) {
+              if (value.isNotEmpty) {
+                setState(() {
+                  _distanceKm = double.tryParse(value) ?? _distanceKm;
+                });
+              }
+            },
           ),
           const SizedBox(height: 16),
 
@@ -440,22 +507,16 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
   }
 
   Widget _buildDistancePreset(double km, String label) {
-    final isSelected = _distanceKm == km;
-    return Semantics(
-      label: '$label 거리 선택',
-      button: true,
-      hint: '$km 킬로미터로 자동 입력됩니다',
-      selected: isSelected,
-      child: GestureDetector(
-        onTap: () {
-          HapticFeedbackManager.lightImpact();
-          setState(() {
-            _distanceKm = km;
-            _distanceController.text = km.toString();
-          });
-          _checkFormValidity();
-        },
-        child: Container(
+    final isSelected = (_distanceKm - km).abs() < 0.01;
+    return GestureDetector(
+      onTap: () {
+        HapticFeedbackManager.lightImpact();
+        setState(() {
+          _distanceKm = km;
+          _distanceController.text = km.toString();
+        });
+      },
+      child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? ModernColors.exercise : Colors.grey.shade100,
@@ -485,11 +546,8 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
           ],
         ),
       ),
-      ),
     );
   }
-
-  // ==================== 페이스 입력 섹션 ====================
 
   Widget _buildPaceSection() {
     return Container(
@@ -529,7 +587,7 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
               ),
               const SizedBox(width: 12),
               Text(
-                '1km당 페이스 (필수)',
+                '1km당 페이스',
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -573,9 +631,8 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                   onChanged: (value) {
                     if (value.isNotEmpty) {
                       setState(() {
-                        _paceMinutes = int.tryParse(value);
+                        _paceMinutes = int.tryParse(value) ?? _paceMinutes;
                       });
-                      _checkFormValidity();
                     }
                   },
                 ),
@@ -617,9 +674,8 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                   onChanged: (value) {
                     if (value.isNotEmpty) {
                       setState(() {
-                        _paceSeconds = int.tryParse(value);
+                        _paceSeconds = int.tryParse(value) ?? _paceSeconds;
                       });
-                      _checkFormValidity();
                     }
                   },
                 ),
@@ -649,8 +705,6 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
       ),
     );
   }
-
-  // ==================== 총 시간 입력 섹션 ====================
 
   Widget _buildTotalTimeSection() {
     return Container(
@@ -690,7 +744,7 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
               ),
               const SizedBox(width: 12),
               Text(
-                '총 소요시간 (필수)',
+                '총 소요시간',
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -736,9 +790,8 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                       onChanged: (value) {
                         if (value.isNotEmpty) {
                           setState(() {
-                            _totalHours = int.tryParse(value);
+                            _totalHours = int.tryParse(value) ?? _totalHours;
                           });
-                          _checkFormValidity();
                         }
                       },
                     ),
@@ -796,9 +849,8 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                       onChanged: (value) {
                         if (value.isNotEmpty) {
                           setState(() {
-                            _totalMinutes = int.tryParse(value);
+                            _totalMinutes = int.tryParse(value) ?? _totalMinutes;
                           });
-                          _checkFormValidity();
                         }
                       },
                     ),
@@ -856,9 +908,8 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                       onChanged: (value) {
                         if (value.isNotEmpty) {
                           setState(() {
-                            _totalSeconds = int.tryParse(value);
+                            _totalSeconds = int.tryParse(value) ?? _totalSeconds;
                           });
-                          _checkFormValidity();
                         }
                       },
                     ),
@@ -891,8 +942,6 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
       ),
     );
   }
-
-  // ==================== 난이도 선택 섹션 ====================
 
   Widget _buildDifficultySection() {
     return Container(
@@ -939,6 +988,22 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                   color: ModernColors.textPrimary,
                 ),
               ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: ModernColors.exercise.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '선택',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: ModernColors.exercise,
+                  ),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 20),
@@ -958,26 +1023,25 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                       setState(() {
                         _selectedDifficulty = difficulty;
                       });
-                      _checkFormValidity();
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? ModernColors.exercise
+                            ? difficulty.color
                             : Colors.grey.shade50,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: isSelected
-                              ? ModernColors.exercise
-                              : ModernColors.exercise.withValues(alpha: 0.1),
+                              ? difficulty.color
+                              : difficulty.color.withValues(alpha: 0.1),
                           width: isSelected ? 2 : 1,
                         ),
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: ModernColors.exercise
+                                  color: difficulty.color
                                       .withValues(alpha: 0.3),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
@@ -988,7 +1052,7 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                       child: Column(
                         children: [
                           Icon(
-                            ExerciseUtils.getDifficultyIcon(difficulty),
+                            _getDifficultyIcon(difficulty),
                             color: isSelected
                                 ? Colors.white
                                 : Colors.grey.shade600,
@@ -1018,7 +1082,18 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
     );
   }
 
-  // ==================== 운동 일기 섹션 ====================
+  IconData _getDifficultyIcon(DifficultyLevel difficulty) {
+    switch (difficulty) {
+      case DifficultyLevel.easy:
+        return Icons.spa;
+      case DifficultyLevel.moderate:
+        return Icons.directions_walk;
+      case DifficultyLevel.hard:
+        return Icons.directions_run;
+      case DifficultyLevel.veryHard:
+        return Icons.whatshot;
+    }
+  }
 
   Widget _buildWorkoutDiarySection() {
     return Container(
@@ -1134,15 +1209,11 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: _achievementScore != null
-                            ? ModernColors.exercise
-                            : Colors.grey.shade400,
+                        color: ModernColors.exercise,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        _achievementScore != null
-                            ? '${_achievementScore!.toInt()}/10'
-                            : '?/10',
+                        '${_achievementScore.toInt()}/10',
                         style: GoogleFonts.notoSans(
                           fontSize: 14,
                           fontWeight: FontWeight.w800,
@@ -1167,7 +1238,7 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                         const RoundSliderOverlayShape(overlayRadius: 20.0),
                   ),
                   child: Slider(
-                    value: _achievementScore ?? 1.0,
+                    value: _achievementScore,
                     min: 1,
                     max: 10,
                     divisions: 9,
@@ -1181,15 +1252,11 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  _achievementScore != null
-                      ? _getAchievementLabel(_achievementScore!)
-                      : '만족도를 선택해주세요',
+                  _getAchievementLabel(_achievementScore),
                   style: GoogleFonts.notoSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: _achievementScore != null
-                        ? ModernColors.textSecondary
-                        : Colors.grey.shade500,
+                    color: ModernColors.textSecondary,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -1252,8 +1319,6 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
     return '다음엔 더 잘할 수 있어요! 💫';
   }
 
-  // ==================== 사진 업로드 섹션 ====================
-
   Widget _buildPhotoSection() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -1292,7 +1357,7 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
               ),
               const SizedBox(width: 12),
               Text(
-                '사진 업로드',
+                '사진',
                 style: GoogleFonts.notoSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -1318,7 +1383,7 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
             ],
           ),
           const SizedBox(height: 16),
-          if (_selectedImage == null) ...[
+          if (_selectedImage == null && !widget.runningRecord.hasPhoto) ...[
             GestureDetector(
               onTap: _pickImage,
               child: Container(
@@ -1359,12 +1424,25 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.file(
-                    _selectedImage!,
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                  child: _selectedImage != null
+                      ? Image.file(
+                          _selectedImage!,
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          height: 200,
+                          width: double.infinity,
+                          color: Colors.grey.shade200,
+                          child: Center(
+                            child: Icon(
+                              Icons.photo,
+                              size: 48,
+                              color: Colors.grey.shade400,
+                            ),
+                          ),
+                        ),
                 ),
                 Positioned(
                   top: 8,
@@ -1396,8 +1474,6 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
       ),
     );
   }
-
-  // ==================== 커뮤니티 공유 섹션 ====================
 
   Widget _buildShareToggle() {
     return Container(
@@ -1472,116 +1548,148 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
     );
   }
 
-  // ==================== 완료 버튼 ====================
-
   Widget _buildSubmitButton() {
-    // 필수 항목: 거리, 페이스, 총 시간 (체감 난이도는 선택사항)
-    final bool isFormValid = _distanceKm != null &&
-        _paceMinutes != null &&
-        _paceSeconds != null &&
-        (_totalHours != null || _totalMinutes != null || _totalSeconds != null);
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: SherpaButton(
-        text: isFormValid ? '러닝 기록 완료' : '필수 항목을 모두 입력해주세요',
-        onPressed:
-            (_isSubmitting || !isFormValid) ? null : _submitRunningRecord,
-        backgroundColor:
-            isFormValid ? ModernColors.exercise : Colors.grey.shade400,
+        text: '수정 완료',
+        onPressed: _isSubmitting ? null : _submitEditedRunning,
+        backgroundColor: ModernColors.exercise,
         height: 56,
         isLoading: _isSubmitting,
       ),
     );
   }
 
-  // ==================== AI 분석 로직 ====================
-
-  Future<void> _analyzeRunningImage() async {
-    HapticFeedbackManager.lightImpact();
-
-    // 이미지 선택
-    final pickedFile = await _imagePicker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1920,
-      maxHeight: 1920,
-      imageQuality: 85,
-    );
-
-    if (pickedFile == null) return;
-
+  Future<void> _submitEditedRunning() async {
     setState(() {
-      _isAnalyzing = true;
-      _analysisError = null;
+      _isSubmitting = true;
     });
 
+    HapticFeedbackManager.heavyImpact();
+
     try {
-      final imageFile = File(pickedFile.path);
+      // RunningRecord 업데이트
+      final updatedRunningRecord = RunningRecord(
+        id: widget.runningRecord.id,
+        date: widget.runningRecord.date,
+        durationMinutes: (_totalHours * 60) + _totalMinutes,
+        location: widget.runningRecord.location,
+        distanceKm: _distanceKm,
+        difficulty: _selectedDifficulty,
+        averagePace: _paceMinutes + (_paceSeconds / 60.0),
+        note:
+            _detailsController.text.isNotEmpty ? _detailsController.text : null,
+        isShared: _isShared,
+        imageUrl: _selectedImage?.path ?? widget.runningRecord.imageUrl,
+      );
 
-      // AI 분석 실행
-      final runningData = await _imageAnalyzer.analyzeRunningImage(imageFile);
+      // ExerciseLog으로 변환하여 저장
+      final exerciseLog = ExerciseLog(
+        id: updatedRunningRecord.id,
+        date: updatedRunningRecord.date,
+        exerciseType: '러닝',
+        durationMinutes: updatedRunningRecord.durationMinutes,
+        intensity: _difficultyToIntensity(_selectedDifficulty),
+        note: updatedRunningRecord.note,
+        imageUrl: updatedRunningRecord.imageUrl,
+        isShared: updatedRunningRecord.isShared,
+      );
 
-      if (runningData != null) {
-        // 성공: 데이터를 폼에 자동 입력
-        setState(() {
-          _distanceKm = runningData.distanceKm;
-          _paceMinutes = runningData.paceMinutes;
-          _paceSeconds = runningData.paceSeconds;
-          _totalHours = runningData.totalHours;
-          _totalMinutes = runningData.totalMinutes;
-          _totalSeconds = runningData.totalSeconds;
+      // Update the exercise record in global user provider
+      final globalUserNotifier = ref.read(globalUserProvider.notifier);
+      await globalUserNotifier.updateExerciseRecord(exerciseLog);
 
-          // TextField 업데이트
-          _distanceController.text = runningData.distanceKm.toString();
-          _paceMinController.text = runningData.paceMinutes.toString();
-          _paceSecController.text = runningData.paceSeconds.toString();
-          _hoursController.text = runningData.totalHours.toString();
-          _minutesController.text = runningData.totalMinutes.toString();
-          _secondsController.text = runningData.totalSeconds.toString();
+      // Save RunningRecord to SharedPreferences
+      await _updateRunningRecord(updatedRunningRecord);
 
-          _isAnalyzing = false;
-        });
-
-        _checkFormValidity();
-
-        // 성공 메시지
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.white),
-                  const SizedBox(width: 12),
-                  Text(
-                    'AI 분석 완료! 데이터를 확인해주세요',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
+      // Show success animation and navigate back
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 12),
+                Text(
+                  '러닝 기록이 수정되었습니다!',
+                  style: GoogleFonts.notoSans(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
-              ),
-              backgroundColor: ModernColors.exercise,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              margin: const EdgeInsets.all(20),
+                ),
+              ],
             ),
-          );
-        }
-      } else {
-        // 실패: 에러 메시지 표시
-        setState(() {
-          _isAnalyzing = false;
-          _analysisError = '데이터를 읽을 수 없습니다. 수동으로 입력해주세요.';
-        });
+            backgroundColor: ModernColors.success,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(20),
+          ),
+        );
+
+        Navigator.pop(context, updatedRunningRecord);
       }
     } catch (e) {
-      setState(() {
-        _isAnalyzing = false;
-        _analysisError = '분석 중 오류가 발생했습니다. 다시 시도해주세요.';
-      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '수정 중 오류가 발생했습니다: $e',
+              style: GoogleFonts.notoSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            backgroundColor: ModernColors.error,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            margin: const EdgeInsets.all(20),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
+  }
+
+  bool _canSubmit() {
+    return _distanceKm > 0 &&
+        _paceMinutes > 0 &&
+        (_totalHours > 0 || _totalMinutes > 0);
+  }
+
+  void _updateRunning() {
+    _submitEditedRunning();
+  }
+
+  String _formatDate(DateTime date) {
+    final weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    final weekday = weekdays[date.weekday % 7];
+    return '${date.month}월 ${date.day}일 ($weekday)';
+  }
+
+  String _difficultyToIntensity(DifficultyLevel? difficulty) {
+    if (difficulty == null) {
+      return 'medium';
+    }
+
+    switch (difficulty) {
+      case DifficultyLevel.easy:
+        return 'low';
+      case DifficultyLevel.moderate:
+        return 'medium';
+      case DifficultyLevel.hard:
+        return 'high';
+      case DifficultyLevel.veryHard:
+        return 'high';
     }
   }
 
@@ -1667,149 +1775,8 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
     );
   }
 
-  // ==================== 데이터 저장 로직 ====================
-
-  // 외부에서 호출 가능한 submit 메서드
-  Future<void> submitRunningRecord() async {
-    return _submitRunningRecord();
-  }
-
-  Future<void> _submitRunningRecord() async {
-    // null 체크
-    if (_distanceKm == null ||
-        _paceMinutes == null ||
-        _paceSeconds == null) {
-      return;
-    }
-
-    // 시간 계산
-    final totalHours = _totalHours ?? 0;
-    final totalMinutes = _totalMinutes ?? 0;
-    final totalSeconds = _totalSeconds ?? 0;
-
-    if (totalHours == 0 && totalMinutes == 0 && totalSeconds == 0) {
-      return; // 시간이 입력되지 않음
-    }
-
-    setState(() {
-      _isSubmitting = true;
-    });
-
-    HapticFeedbackManager.heavyImpact();
-
-    try {
-      // RunningRecord 생성
-      final runningRecord = RunningRecord(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        date: widget.selectedDate,
-        durationMinutes: (totalHours * 60) + totalMinutes,
-        location: '기록됨', // 위치 정보 없음
-        distanceKm: _distanceKm!,
-        difficulty: _selectedDifficulty, // 선택하지 않으면 null
-        averagePace: _paceMinutes! + (_paceSeconds! / 60.0),
-        note: _detailsController.text.isEmpty ? null : _detailsController.text,
-        isShared: _isShared,
-        imageUrl: _selectedImage != null
-            ? 'local_image_${DateTime.now().millisecondsSinceEpoch}'
-            : null,
-      );
-
-      // ExerciseLog으로 변환하여 저장
-      final exerciseLog = ExerciseLog(
-        id: runningRecord.id,
-        date: runningRecord.date,
-        exerciseType: '러닝',
-        durationMinutes: runningRecord.durationMinutes,
-        intensity: _difficultyToIntensity(_selectedDifficulty), // null 허용
-        note: runningRecord.note,
-        imageUrl: runningRecord.imageUrl,
-        isShared: runningRecord.isShared,
-      );
-
-      // Add exercise to user's records
-      ref.read(globalUserProvider.notifier).addExerciseLog(exerciseLog);
-
-      // Save RunningRecord to SharedPreferences for detail view
-      await _saveRunningRecord(runningRecord);
-
-      // Show success animation and navigate back
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    '러닝 기록이 완료되었습니다! 🏃‍♂️',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: ModernColors.exercise,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(20),
-          ),
-        );
-
-        Navigator.pop(context);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '기록 중 오류가 발생했습니다: $e',
-              style: GoogleFonts.notoSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            backgroundColor: ModernColors.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(20),
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isSubmitting = false;
-        });
-      }
-    }
-  }
-
-  String _difficultyToIntensity(DifficultyLevel? difficulty) {
-    if (difficulty == null) {
-      return 'medium'; // 선택하지 않으면 기본 강도
-    }
-
-    switch (difficulty) {
-      case DifficultyLevel.easy:
-        return 'low';
-      case DifficultyLevel.moderate:
-        return 'medium';
-      case DifficultyLevel.hard:
-        return 'high';
-      case DifficultyLevel.veryHard:
-        return 'high';
-    }
-  }
-
-  /// Save RunningRecord to SharedPreferences for detail view
-  Future<void> _saveRunningRecord(RunningRecord record) async {
+  /// Update RunningRecord in SharedPreferences
+  Future<void> _updateRunningRecord(RunningRecord record) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final runningRecordsJson = prefs.getString('running_records') ?? '{}';
@@ -1817,13 +1784,13 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
         jsonDecode(runningRecordsJson) as Map,
       );
 
-      // Save with exercise log id as key
+      // Update with exercise log id as key
       runningRecords[record.id] = record.toJson();
 
       await prefs.setString('running_records', jsonEncode(runningRecords));
     } catch (e) {
       // Silent fail - not critical for main functionality
-      debugPrint('Failed to save RunningRecord: $e');
+      debugPrint('Failed to update RunningRecord: $e');
     }
   }
 }

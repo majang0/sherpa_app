@@ -36,6 +36,8 @@ import 'features/activities_exercise/presentation/screens/exercise_selection_scr
 import 'features/activities_exercise/presentation/screens/exercise_dashboard_screen.dart';
 import 'features/activities_exercise/presentation/screens/exercise_detail_screen.dart';
 import 'features/activities_exercise/presentation/screens/exercise_edit_screen.dart';
+import 'features/activities_exercise/presentation/screens/running_detail_screen.dart';
+import 'features/activities_exercise/presentation/screens/running_edit_screen.dart';
 import 'features/activities_reading/presentation/screens/reading_record_screen.dart';
 import 'features/activities_focus/presentation/screens/focus_timer_record_screen.dart';
 import 'shared/widgets/dialogs/analysis_pages/diary_analysis_page.dart';
@@ -54,6 +56,7 @@ import 'features/goals/presentation/screens/ai_analysis_screen.dart';
 // Models
 import 'features/meetings/models/available_meeting_model.dart';
 import 'shared/models/global_user_model.dart';
+import 'features/activities_exercise/models/detailed_exercise_models.dart';
 
 // SharedPreferences Provider 초기화
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
@@ -195,6 +198,16 @@ class MyApp extends ConsumerWidget {
           final exercise =
               ModalRoute.of(context)!.settings.arguments as ExerciseLog;
           return ExerciseEditScreen(exercise: exercise);
+        },
+        '/running_detail': (context) {
+          final runningRecord =
+              ModalRoute.of(context)!.settings.arguments as RunningRecord;
+          return RunningDetailScreen(runningRecord: runningRecord);
+        },
+        '/running_edit': (context) {
+          final runningRecord =
+              ModalRoute.of(context)!.settings.arguments as RunningRecord;
+          return RunningEditScreen(runningRecord: runningRecord);
         },
         '/reading_record': (context) => const ReadingRecordScreen(),
         '/focus_timer': (context) =>

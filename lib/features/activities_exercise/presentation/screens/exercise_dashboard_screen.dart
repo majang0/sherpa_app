@@ -1,10 +1,12 @@
 // lib/features/activities_exercise/presentation/screens/exercise_dashboard_screen.dart
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
@@ -12,6 +14,7 @@ import 'package:sherpa_app/shared/widgets/sherpa_clean_app_bar.dart';
 import 'package:sherpa_app/shared/widgets/sherpa_button.dart';
 import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
 import 'package:sherpa_app/shared/utils/calorie_calculator.dart';
+import 'package:sherpa_app/features/activities_exercise/models/detailed_exercise_models.dart';
 
 class ExerciseDashboardScreen extends ConsumerStatefulWidget {
   const ExerciseDashboardScreen({super.key});
@@ -843,13 +846,33 @@ class _ExerciseDashboardScreenState
         ],
       ),
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           HapticFeedbackManager.lightImpact();
-          Navigator.pushNamed(
-            context,
-            '/exercise_detail',
-            arguments: exercise,
-          );
+          // Navigate to appropriate detail screen
+          if (exercise.exerciseType == '러닝') {
+            // Load RunningRecord from SharedPreferences
+            final runningRecord = await _loadRunningRecord(exercise.id);
+            if (runningRecord != null) {
+              Navigator.pushNamed(
+                context,
+                '/running_detail',
+                arguments: runningRecord,
+              );
+            } else {
+              // Fallback to general exercise detail
+              Navigator.pushNamed(
+                context,
+                '/exercise_detail',
+                arguments: exercise,
+              );
+            }
+          } else {
+            Navigator.pushNamed(
+              context,
+              '/exercise_detail',
+              arguments: exercise,
+            );
+          }
         },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
@@ -1305,6 +1328,25 @@ class _ExerciseDashboardScreenState
       final weekdays = ['일', '월', '화', '수', '목', '금', '토'];
       final weekday = weekdays[date.weekday % 7];
       return '${date.month}/${date.day} ($weekday)';
+    }
+  }
+
+  /// Load RunningRecord from SharedPreferences
+  Future<RunningRecord?> _loadRunningRecord(String id) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final runningRecordsJson = prefs.getString('running_records') ?? '{}';
+      final runningRecords = Map<String, dynamic>.from(
+        jsonDecode(runningRecordsJson) as Map,
+      );
+
+      if (runningRecords.containsKey(id)) {
+        return RunningRecord.fromJson(runningRecords[id]);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Failed to load RunningRecord: $e');
+      return null;
     }
   }
 }

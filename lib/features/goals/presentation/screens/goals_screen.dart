@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../../core/theme/modern_colors.dart';
+import '../../../../core/animation/micro_interactions.dart';
 import '../../../../shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../providers/goal_provider.dart';
-import '../../providers/routine_provider.dart';
-import '../../models/goal_model.dart';
 import '../widgets/goal_card_widget.dart';
 import '../widgets/goal_modal_widget.dart';
 import '../widgets/previous_goals_widget.dart';
 import '../widgets/user_info_modal_widget.dart';
-import '../widgets/hero_header_widget.dart';
-import '../widgets/action_buttons_section_widget.dart';
-import '../widgets/statistics_overview_widget.dart';
+import '../widgets/goal_hero_widget.dart';
 import '../widgets/ai_analysis_modal_widget.dart';
 
-/// 목표 화면 (2025 Material Design 3 Redesign)
+/// 목표 화면 (2025 Complete Redesign)
 ///
-/// 사용자가 설정한 목표를 관리합니다.
-/// 2025 트렌드: Glass morphism, generous spacing, hero sections, statistics visualization
+/// 새로운 레이아웃:
+/// 1. Compact Header - 사용자 인사 + 아이콘 버튼들
+/// 2. Hero Section - 현재 목표 시각화 (280px Glassmorphism 카드)
+/// 3. Goal List - Glassmorphism Goal Cards
+/// 4. Gradient FAB - 새 목표 추가
 class GoalsScreen extends ConsumerWidget {
   const GoalsScreen({super.key});
 
@@ -28,9 +29,6 @@ class GoalsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(globalUserProvider);
     final goals = ref.watch(goalProvider);
-    final todayRoutines = ref.watch(todayRoutinesProvider);
-    final completedRoutines = ref.watch(todayCompletedCountProvider);
-    final completionRate = ref.watch(todayCompletionRateProvider);
 
     // Calculate goal statistics
     final now = DateTime.now();
@@ -43,188 +41,450 @@ class GoalsScreen extends ConsumerWidget {
         goals.where((g) => g.completedAt == null && g.date.isAfter(now)).length;
 
     return Scaffold(
-      backgroundColor: ModernColors.background,
-      body: CustomScrollView(
-        slivers: [
-          // App Bar
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 0,
-            backgroundColor: ModernColors.background,
-            elevation: 0,
-            title: Text(
-              '목표',
-              style: GoogleFonts.notoSans(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: ModernColors.textPrimary,
-              ),
-            ),
-            centerTitle: false,
-          ),
-
-          // Content
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Hero Header Section
-                HeroHeaderWidget(
-                  user: user,
-                  activeGoalsCount: goals.length,
-                  completedRoutines: completedRoutines,
-                  totalRoutines: todayRoutines.length,
-                  completionRate: completionRate,
-                ),
-
-                const SizedBox(height: 16),
-
-                // Action Buttons Section
-                ActionButtonsSectionWidget(
-                  onUserInfoTap: () => _showUserInfoModal(context, user),
-                  onHistoryTap: () => _showPreviousGoals(context, ref),
-                  onAIAnalysisTap: () => _showAIAnalysis(context, ref),
-                ),
-
-                const SizedBox(height: 4),
-
-                // Statistics Overview
-                if (goals.isNotEmpty)
-                  StatisticsOverviewWidget(
-                    achievedCount: achievedGoals,
-                    inProgressCount: inProgressGoals,
-                    upcomingCount: upcomingGoals,
-                    totalCount: goals.length,
-                  ),
-
-                // Goals List or Empty State
-                goals.isEmpty
-                    ? _buildEmptyState(context)
-                    : _buildGoalList(context, goals),
-
-                const SizedBox(height: 100), // Space for FAB
-              ],
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: _buildEnhancedFAB(context, ref),
-    );
-  }
-
-  /// Enhanced FAB with Gradient
-  Widget _buildEnhancedFAB(BuildContext context, WidgetRef ref) {
-    return FloatingActionButton.extended(
-      onPressed: () => _showAddGoalModal(context, ref),
       backgroundColor: Colors.transparent,
-      elevation: 0,
-      label: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
-              ModernColors.quest,
-              ModernColors.questLight.withValues(alpha: 0.8),
+              const Color(0xFFF5F9FF), // Light blue
+              Colors.white,
             ],
           ),
-          borderRadius: BorderRadius.circular(28),
+        ),
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            // Compact Header
+            SliverToBoxAdapter(
+              child: _buildCompactHeader(context, user, ref),
+            ),
+
+            // Hero Section - 현재 목표 시각화
+            SliverToBoxAdapter(
+              child: GoalHeroWidget(
+                activeGoalsCount: goals.length,
+                achievedCount: achievedGoals,
+                inProgressCount: inProgressGoals,
+                upcomingCount: upcomingGoals,
+                totalCount: goals.length,
+                completionRate: goals.isEmpty ? 0.0 : achievedGoals / goals.length,
+                onAIAnalysisTap: () => _showAIAnalysis(context, ref),
+              )
+                  .animate()
+                  .fadeIn(duration: 600.ms, curve: Curves.easeOut)
+                  .slideY(begin: 0.1, end: 0, duration: 500.ms, curve: Curves.easeOutCubic)
+                  .scale(begin: const Offset(0.95, 0.95), duration: 500.ms),
+            ),
+
+            // Section Header
+            if (goals.isNotEmpty)
+              SliverToBoxAdapter(
+                child: _buildSectionHeader(goals.length)
+                    .animate()
+                    .fadeIn(delay: 200.ms, duration: 400.ms)
+                    .slideX(begin: -0.05, end: 0, delay: 150.ms),
+              ),
+
+            // Goals List or Empty State
+            goals.isEmpty
+                ? SliverToBoxAdapter(
+                    child: _buildEmptyState(context, ref),
+                  )
+                : SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          final goal = goals[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: GoalCardWidget(goal: goal),
+                          )
+                              .animate()
+                              .fadeIn(
+                                  delay: (200 + (index * 100)).ms,
+                                  duration: 600.ms,
+                                  curve: Curves.easeOutCubic)
+                              .slideX(
+                                  begin: 0.05,
+                                  end: 0,
+                                  delay: (150 + (index * 80)).ms,
+                                  curve: Curves.easeOutQuart)
+                              .scale(
+                                  begin: const Offset(0.96, 0.96),
+                                  end: const Offset(1.0, 1.0),
+                                  delay: (150 + (index * 80)).ms);
+                        },
+                        childCount: goals.length,
+                      ),
+                    ),
+                  ),
+          ],
+        ),
+      ),
+      floatingActionButton: _buildGradientFAB(context, ref),
+    );
+  }
+
+  /// Compact Header - 사용자 인사 + 아이콘 버튼들
+  Widget _buildCompactHeader(BuildContext context, GlobalUser user, WidgetRef ref) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 44, 20, 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // 왼쪽: 사용자 인사
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${user.name}님의',
+                style: GoogleFonts.notoSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: ModernColors.textSecondary.withValues(alpha: 0.8),
+                  letterSpacing: -0.2,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                '목표 대시보드',
+                style: GoogleFonts.notoSans(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  color: ModernColors.textPrimary,
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ],
+          ),
+          // 오른쪽: 아이콘 버튼들
+          Row(
+            children: [
+              _buildHeaderIcon(
+                Icons.person_outline,
+                onTap: () => _showUserInfoModal(context, user),
+              ),
+              const SizedBox(width: 8),
+              _buildHeaderIcon(
+                Icons.history,
+                onTap: () => _showPreviousGoals(context, ref),
+              ),
+            ],
+          ),
+        ],
+      ),
+    )
+        .animate()
+        .fadeIn(duration: 400.ms)
+        .slideY(begin: -0.2, end: 0, duration: 400.ms, curve: Curves.easeOut);
+  }
+
+  /// Header Icon Button - Glassmorphism style
+  Widget _buildHeaderIcon(IconData icon, {required VoidCallback onTap}) {
+    return MicroInteractions.tapResponse(
+      onTap: onTap,
+      scaleDownTo: 0.95,
+      enableHaptic: true,
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.white.withValues(alpha: 0.9),
+              Colors.white.withValues(alpha: 0.7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.3),
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: ModernColors.quest.withValues(alpha: 0.4),
-              blurRadius: 16,
-              offset: const Offset(0, 8),
-            ),
-            BoxShadow(
-              color: ModernColors.questLight.withValues(alpha: 0.3),
-              blurRadius: 8,
+              color: ModernColors.primary.withValues(alpha: 0.08),
+              blurRadius: 12,
               offset: const Offset(0, 4),
             ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 20,
+              offset: const Offset(0, 6),
+            ),
           ],
         ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.3),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.add, color: Colors.white, size: 20),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              '목표 추가',
-              style: GoogleFonts.notoSans(
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-                letterSpacing: 0.5,
-              ),
-            ),
-          ],
+        child: Icon(
+          icon,
+          size: 22,
+          color: ModernColors.primary.withValues(alpha: 0.8),
         ),
       ),
     );
   }
 
-  /// Empty State
-  Widget _buildEmptyState(BuildContext context) {
+  /// Section Header - "나의 목표"
+  Widget _buildSectionHeader(int goalCount) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 60),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: ModernColors.quest.withValues(alpha: 0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.flag_outlined,
-                size: 60,
-                color: ModernColors.quest.withValues(alpha: 0.5),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              '아직 설정된 목표가 없어요',
-              style: GoogleFonts.notoSans(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: ModernColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '첫 목표를 추가해보세요!',
-              style: GoogleFonts.notoSans(
-                fontSize: 14,
-                color: ModernColors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Goal List
-  Widget _buildGoalList(BuildContext context, List<GoalModel> goals) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ...goals.map((goal) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: GoalCardWidget(goal: goal),
-              )),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 20,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      ModernColors.climbing,
+                      ModernColors.success,
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '나의 목표',
+                style: GoogleFonts.notoSans(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: ModernColors.textPrimary,
+                  letterSpacing: -0.3,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            '총 $goalCount개',
+            style: GoogleFonts.notoSans(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: ModernColors.textSecondary.withValues(alpha: 0.7),
+              letterSpacing: -0.1,
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  /// Empty State - 목표가 없을 때
+  Widget _buildEmptyState(BuildContext context, WidgetRef ref) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(24, 40, 24, 60),
+      padding: const EdgeInsets.all(40),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withValues(alpha: 0.9),
+            Colors.white.withValues(alpha: 0.7),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: ModernColors.climbing.withValues(alpha: 0.08),
+            blurRadius: 30,
+            offset: const Offset(0, 15),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 50,
+            offset: const Offset(0, 25),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // 아이콘
+          Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                colors: [
+                  ModernColors.climbing.withValues(alpha: 0.12),
+                  Colors.transparent,
+                ],
+              ),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.flag_outlined,
+              size: 64,
+              color: ModernColors.climbing,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            '첫 목표를 만들어보세요!',
+            style: GoogleFonts.notoSans(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: ModernColors.textPrimary,
+              letterSpacing: -0.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            '셰르피와 함께 목표를 달성하고\n성장하는 여정을 시작하세요',
+            style: GoogleFonts.notoSans(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              color: ModernColors.textSecondary.withValues(alpha: 0.8),
+              height: 1.5,
+              letterSpacing: -0.1,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+          // CTA 버튼
+          MicroInteractions.tapResponse(
+            onTap: () => _showAddGoalModal(context, ref),
+            scaleDownTo: 0.97,
+            enableHaptic: true,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    ModernColors.climbing,
+                    ModernColors.climbing.withValues(alpha: 0.85),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: ModernColors.climbing.withValues(alpha: 0.3),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 24,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.white,
+                    size: 22,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    '목표 만들기',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                      letterSpacing: -0.3,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    )
+        .animate()
+        .fadeIn(duration: 800.ms, curve: Curves.easeOut)
+        .scale(
+            begin: const Offset(0.95, 0.95),
+            duration: 600.ms,
+            curve: Curves.easeOutBack);
+  }
+
+  /// Gradient FAB - 새 목표 추가
+  Widget _buildGradientFAB(BuildContext context, WidgetRef ref) {
+    return FloatingActionButton.extended(
+      onPressed: () => _showAddGoalModal(context, ref),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      label: MicroInteractions.tapResponse(
+        onTap: () => _showAddGoalModal(context, ref),
+        scaleDownTo: 0.97,
+        enableHaptic: true,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                ModernColors.climbing,
+                ModernColors.climbing.withValues(alpha: 0.85),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.2),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: ModernColors.climbing.withValues(alpha: 0.4),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 30,
+                offset: const Offset(0, 12),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.25),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.add, color: Colors.white, size: 20),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                '새 목표',
+                style: GoogleFonts.notoSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  letterSpacing: -0.3,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    )
+        .animate(onPlay: (controller) => controller.repeat(reverse: true))
+        .shimmer(
+            duration: 2000.ms, color: Colors.white.withValues(alpha: 0.3));
   }
 
   /// Show User Info Modal

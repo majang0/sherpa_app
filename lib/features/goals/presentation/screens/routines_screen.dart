@@ -6,13 +6,11 @@ import '../../../../core/theme/modern_colors.dart';
 import '../../../../shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../../../shared/models/global_user_model.dart';
 import '../../providers/routine_provider.dart';
-import '../../providers/goal_provider.dart';
 import '../../models/routine_model.dart';
 import '../widgets/routine_card_widget.dart';
 import '../widgets/routine_modal_widget.dart';
 import '../widgets/previous_routines_widget.dart';
 import '../widgets/user_info_modal_widget.dart';
-import '../widgets/hero_header_widget.dart';
 import '../widgets/action_buttons_section_widget.dart';
 import '../widgets/gamification_section_widget.dart';
 import '../widgets/ai_analysis_modal_widget.dart';
@@ -27,7 +25,6 @@ class RoutinesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(globalUserProvider);
-    final goals = ref.watch(goalProvider);
     final todayRoutines = ref.watch(todayRoutinesProvider);
     final completedRoutines = ref.watch(todayCompletedCountProvider);
     final completionRate = ref.watch(todayCompletionRateProvider);
@@ -58,15 +55,6 @@ class RoutinesScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Hero Header Section
-                HeroHeaderWidget(
-                  user: user,
-                  activeGoalsCount: goals.length,
-                  completedRoutines: completedRoutines,
-                  totalRoutines: todayRoutines.length,
-                  completionRate: completionRate,
-                ),
-
                 const SizedBox(height: 16),
 
                 // Action Buttons Section
