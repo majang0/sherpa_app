@@ -197,22 +197,23 @@ class AvailableMeeting {
   }
 
   /// 능력치 보상 계산
+  /// 🔥 모든 모임은 반드시 사교성 능력치를 제공합니다
   Map<String, double> get statRewards {
     switch (category) {
       case MeetingCategory.all:
         return {'sociality': 0.2};
       case MeetingCategory.exercise:
-        return {'stamina': 0.3, 'willpower': 0.2};
+        return {'stamina': 0.3, 'sociality': 0.2};
       case MeetingCategory.study:
-        return {'knowledge': 0.4, 'technique': 0.1};
+        return {'knowledge': 0.3, 'sociality': 0.2};
       case MeetingCategory.reading:
-        return {'knowledge': 0.3, 'willpower': 0.2};
+        return {'knowledge': 0.3, 'sociality': 0.2};
       case MeetingCategory.networking:
         return {'sociality': 0.5};
       case MeetingCategory.culture:
         return {'knowledge': 0.2, 'sociality': 0.3};
       case MeetingCategory.outdoor:
-        return {'stamina': 0.3, 'technique': 0.2};
+        return {'stamina': 0.3, 'sociality': 0.2};
     }
   }
 

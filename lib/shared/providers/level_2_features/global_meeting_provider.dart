@@ -579,9 +579,8 @@ class GlobalMeetingNotifier extends StateNotifier<GlobalMeetingState> {
 
     userNotifier.addMeetingLog(meetingLog);
 
-    // 후기 완료 보너스
+    // 후기 완료 보너스 (경험치만 지급, 능력치는 모임 참여 시 이미 지급됨)
     userNotifier.addExperience(25.0);
-    userNotifier.increaseStats(deltaWillpower: 0.1);
 
     // 🔄 주간 퀘스트 시스템 업데이트 트리거 (핵심 수정!)
     // handleActivityCompletion이 자동으로 셰르피 메시지를 표시함
