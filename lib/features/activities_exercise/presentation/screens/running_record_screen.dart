@@ -1,35 +1,33 @@
-// lib/features/activities_exercise/presentation/screens/exercise_record_screen.dart
+// lib/features/activities_exercise/presentation/screens/running_record_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
-import '../widgets/unified_exercise_record_form.dart';
+import '../widgets/running_record_form.dart';
 
-class ExerciseRecordScreen extends ConsumerStatefulWidget {
-  final String exerciseType;
+class RunningRecordScreen extends ConsumerStatefulWidget {
   final DateTime selectedDate;
 
-  const ExerciseRecordScreen({
+  const RunningRecordScreen({
     super.key,
-    required this.exerciseType,
     required this.selectedDate,
   });
 
   @override
-  ConsumerState<ExerciseRecordScreen> createState() =>
-      _ExerciseRecordScreenState();
+  ConsumerState<RunningRecordScreen> createState() =>
+      _RunningRecordScreenState();
 }
 
-class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
+class _RunningRecordScreenState extends ConsumerState<RunningRecordScreen>
     with TickerProviderStateMixin {
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
 
   bool _canSubmit = false;
   bool _isSubmitting = false;
-  final GlobalKey<UnifiedExerciseRecordFormState> _formKey =
-      GlobalKey<UnifiedExerciseRecordFormState>();
+  final GlobalKey<RunningRecordFormState> _formKey =
+      GlobalKey<RunningRecordFormState>();
 
   @override
   void initState() {
@@ -56,7 +54,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: ModernColors.background,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -81,30 +79,37 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
           ),
         ),
         actions: [
+          // 완료 버튼
           if (_canSubmit)
-            Container(
-              margin: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.9),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: TextButton(
-                onPressed: _isSubmitting ? null : _submitExercise,
-                child: Text(
-                  '완료',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: _isSubmitting
-                        ? ModernColors.textTertiary
-                        : ModernColors.exercise,
+            Semantics(
+              label: '러닝 기록 저장',
+              button: true,
+              hint: '입력한 러닝 기록을 저장하고 이전 화면으로 돌아갑니다',
+              enabled: !_isSubmitting,
+              child: Container(
+                margin: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.9),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: TextButton(
+                  onPressed: _isSubmitting ? null : _submitRunning,
+                  child: Text(
+                    '완료',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: _isSubmitting
+                          ? ModernColors.textTertiary
+                          : ModernColors.exercise,
+                    ),
                   ),
                 ),
               ),
@@ -142,8 +147,16 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
 
                   const SizedBox(height: 32),
 
-                  // 선택된 운동에 맞는 폼 표시
-                  _buildExerciseForm(),
+                  // 러닝 전용 폼
+                  RunningRecordForm(
+                    key: _formKey,
+                    selectedDate: widget.selectedDate,
+                    onFormValidityChanged: (isValid) {
+                      setState(() {
+                        _canSubmit = isValid;
+                      });
+                    },
+                  ),
 
                   const SizedBox(height: 40),
                 ],
@@ -203,10 +216,10 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
                     ),
                   ],
                 ),
-                child: Center(
+                child: const Center(
                   child: Text(
-                    _getExerciseEmoji(widget.exerciseType),
-                    style: const TextStyle(fontSize: 28),
+                    '🏃‍♂️',
+                    style: TextStyle(fontSize: 28),
                   ),
                 ),
               ),
@@ -216,7 +229,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${widget.exerciseType} 기록하기',
+                      '러닝 기록하기',
                       style: GoogleFonts.notoSans(
                         fontSize: 22,
                         fontWeight: FontWeight.w800,
@@ -225,7 +238,7 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '오늘의 운동을 기록하세요',
+                      '오늘의 러닝을 기록하세요',
                       style: GoogleFonts.notoSans(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -296,151 +309,18 @@ class _ExerciseRecordScreenState extends ConsumerState<ExerciseRecordScreen>
   }
 
   // 완료 버튼 클릭 시 호출되는 메서드
-  Future<void> _submitExercise() async {
+  Future<void> _submitRunning() async {
     setState(() {
       _isSubmitting = true;
     });
 
     // GlobalKey를 통해 폼의 submit 메서드 호출
-    await _formKey.currentState?.submitExerciseRecord();
+    await _formKey.currentState?.submitRunningRecord();
 
     if (mounted) {
       setState(() {
         _isSubmitting = false;
       });
-    }
-  }
-
-  Widget _buildExerciseForm() {
-    // 모든 운동 타입에 대해 통합된 폼을 사용
-    return UnifiedExerciseRecordForm(
-      key: _formKey,
-      selectedDate: widget.selectedDate,
-      exerciseType: widget.exerciseType,
-      onFormValidityChanged: (isValid) {
-        setState(() {
-          _canSubmit = isValid;
-        });
-      },
-    );
-  }
-
-  Widget _buildUnsupportedExerciseForm() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      padding: const EdgeInsets.all(40),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          const Icon(
-            Icons.construction,
-            size: 64,
-            color: ModernColors.textSecondary,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '${widget.exerciseType} 기록 폼은 준비 중입니다',
-            style: GoogleFonts.notoSans(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: ModernColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '곧 업데이트 예정입니다',
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              color: ModernColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Color _getExerciseColor(String exerciseType) {
-    // 모든 운동 타입에 대해 통일된 오렌지 색상 사용
-    return ModernColors.exercise;
-  }
-
-  IconData _getExerciseIcon(String exerciseType) {
-    switch (exerciseType) {
-      case '러닝':
-        return Icons.directions_run;
-      case '걷기':
-        return Icons.directions_walk;
-      case '수영':
-        return Icons.pool;
-      case '자전거':
-        return Icons.directions_bike;
-      case '요가':
-        return Icons.self_improvement;
-      case '클라이밍':
-        return Icons.terrain;
-      case '필라테스':
-        return Icons.accessibility_new;
-      case '헬스':
-        return Icons.fitness_center;
-      case '골프':
-        return Icons.golf_course;
-      case '배드민턴':
-        return Icons.sports_tennis;
-      case '테니스':
-        return Icons.sports_tennis;
-      case '농구':
-        return Icons.sports_basketball;
-      case '축구':
-        return Icons.sports_soccer;
-      case '등산':
-        return Icons.landscape;
-      default:
-        return Icons.fitness_center;
-    }
-  }
-
-  String _getExerciseEmoji(String exerciseType) {
-    switch (exerciseType) {
-      case '헬스':
-        return '💪';
-      case '러닝':
-        return '🏃‍♂️';
-      case '등산':
-        return '🥾';
-      case '수영':
-        return '🏊‍♂️';
-      case '자전거':
-        return '🚴‍♂️';
-      case '요가':
-        return '🧘‍♀️';
-      case '필라테스':
-        return '🤸‍♀️';
-      case '클라이밍':
-        return '🧗‍♂️';
-      case '테니스':
-        return '🎾';
-      case '배드민턴':
-        return '🏸';
-      case '골프':
-        return '⛳';
-      case '축구':
-        return '⚽';
-      case '농구':
-        return '🏀';
-      case '걷기':
-        return '🚶‍♂️';
-      default:
-        return '💪';
     }
   }
 }

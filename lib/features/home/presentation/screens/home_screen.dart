@@ -23,6 +23,7 @@ import '../widgets/enhanced_meeting_recommendation_widget.dart';
 import '../widgets/friends_activity_feed_widget.dart';
 import '../widgets/personalized_growth_dashboard_widget.dart';
 import '../widgets/growth_insights_widget.dart';
+import '../widgets/goal_achievement_widget.dart'; // 목표 달성 위젯
 // AI 테스트 위젯 import 제거됨 - 프로덕션 최적화
 
 // Models
@@ -236,6 +237,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     PersonalizedGrowthDashboardWidget(),
                     SizedBox(height: 20),
                     GrowthInsightsWidget(),
+                    SizedBox(height: 20),
+                    GoalAchievementWidget(), // 목표 달성 위젯
                     SizedBox(height: 20),
                     CompactQuestWidget(),
                     SizedBox(height: 20),

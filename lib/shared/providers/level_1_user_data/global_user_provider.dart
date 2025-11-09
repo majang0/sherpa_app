@@ -265,6 +265,30 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
         'common_stamina', // 꾸준함의 증표 (경험치 +10%)
       ],
       dailyRecords: _createSampleDailyRecords(),
+      // ✅ 사용자 상세 정보 (AI goal.txt 데이터)
+      height: 174, // 키 174cm
+      weight: 64.0, // 몸무게 64kg
+      bodyFatRate: 5.0, // 체지방률 5%
+      muscleMass: 35.3, // 골격근량 35.3kg
+      birthYear: 1999, // 생년 1999
+      academicAchievements: const [
+        '18년도 1학기 4.43 / 23학점',
+        '18년도 2학기 4.5 / 21학점',
+        '19년도 1학기 4.44 / 20학점',
+        '19년도 2학기 4.5 / 21학점',
+        '24년도 1학기 4.41 / 20학점',
+        '24년도 2학기 3.96 / 13학점',
+        '25년도 1학기 4.25 / 12학점',
+      ],
+      competitionAwards: const [
+        '2025.05.30 창업 아이디어 경진대회 은상',
+        '2025.07.04 산업체 수요특화형 IOT 경진대회 대상',
+        '2025.09.05 전국 AI활용 아이디어 경진대회 최우수상',
+        '2025.10.15 영남이공대 창의적 종합설계 경진대회 대상',
+        '2025.11.07 영남이공대 컨소시엄 창의적 종합설계 경진대회 대상',
+      ],
+      certifications: const [],
+      languageScores: const [],
       planningData: UserPlanningData(
         goals: sampleGoals,
         completedGoals: [],
@@ -364,6 +388,32 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
   void updateProfileImage(String? imageUrl) {
     // null을 빈 문자열로 변환하여 copyWith가 확실히 값을 업데이트하도록 함
     state = state.copyWith(profileImageUrl: imageUrl ?? '');
+    _saveUserData();
+  }
+
+  /// 사용자 상세 정보 업데이트 (신체 정보, 학업 성적 등)
+  void updateUserInfo({
+    int? height,
+    double? weight,
+    double? bodyFatRate,
+    double? muscleMass,
+    int? birthYear,
+    List<String>? academicAchievements,
+    List<String>? competitionAwards,
+    List<String>? certifications,
+    List<String>? languageScores,
+  }) {
+    state = state.copyWith(
+      height: height,
+      weight: weight,
+      bodyFatRate: bodyFatRate,
+      muscleMass: muscleMass,
+      birthYear: birthYear,
+      academicAchievements: academicAchievements,
+      competitionAwards: competitionAwards,
+      certifications: certifications,
+      languageScores: languageScores,
+    );
     _saveUserData();
   }
 

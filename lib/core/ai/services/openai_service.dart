@@ -155,6 +155,69 @@ class OpenAIService {
     }
   }
 
+  /// 🎯 Vision API - 이미지 분석 (러닝 데이터 추출용)
+  ///
+  /// [imageBase64] - Base64 인코딩된 이미지
+  /// [systemPrompt] - 시스템 메시지 (분석 역할 정의)
+  /// [userPrompt] - 사용자 메시지 (분석 요청)
+  /// [maxTokens] - 최대 토큰 수 (기본 500)
+  ///
+  /// Returns: AI 응답 텍스트 또는 null (실패 시)
+  Future<String?> analyzeImage({
+    required String imageBase64,
+    required String systemPrompt,
+    required String userPrompt,
+    int maxTokens = 500,
+    double temperature = 0.3, // 낮은 temperature로 정확성 향상
+  }) async {
+    try {
+      // API 키 유효성 검사
+      if (!isApiKeyValid) {
+        aiLogger.w('OpenAI API 키가 유효하지 않음');
+        return null;
+      }
+
+      // Vision API 요청 (이미지 포함)
+      final chatCompletion = await _client.createChatCompletion(
+        request: CreateChatCompletionRequest(
+          model: ChatCompletionModel.modelId(currentModel),
+          messages: [
+            ChatCompletionMessage.system(content: systemPrompt),
+            ChatCompletionMessage.user(
+              content: ChatCompletionUserMessageContent.parts([
+                ChatCompletionMessageContentPart.text(text: userPrompt),
+                ChatCompletionMessageContentPart.image(
+                  imageUrl: ChatCompletionMessageImageUrl(
+                    url: 'data:image/jpeg;base64,$imageBase64',
+                  ),
+                ),
+              ]),
+            ),
+          ],
+          temperature: temperature,
+          maxTokens: maxTokens,
+        ),
+      );
+
+      // 응답 추출
+      final responseText = chatCompletion.choices.firstOrNull?.message.content;
+
+      if (responseText != null && responseText.isNotEmpty) {
+        aiLogger.i('OpenAI Vision API 분석 성공 (${responseText.length}자)');
+        return responseText;
+      } else {
+        aiLogger.w('OpenAI Vision API 응답이 비어있음');
+        return null;
+      }
+    } on HttpException catch (httpError) {
+      aiLogger.e('OpenAI Vision API HTTP 오류', error: httpError);
+      return null;
+    } catch (e) {
+      aiLogger.e('OpenAI Vision API 호출 실패', error: e);
+      return null;
+    }
+  }
+
   /// 리소스 정리
   void dispose() {
     // OpenAI 서비스 정리 완료

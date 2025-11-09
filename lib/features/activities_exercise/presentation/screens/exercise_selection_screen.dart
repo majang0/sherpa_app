@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
 import 'exercise_record_screen.dart';
+import 'running_record_screen.dart';
 
 class ExerciseSelectionScreen extends ConsumerStatefulWidget {
   final DateTime selectedDate;
@@ -349,15 +350,29 @@ class _ExerciseSelectionScreenState
       child: InkWell(
         onTap: () {
           HapticFeedbackManager.lightImpact();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ExerciseRecordScreen(
-                exerciseType: name,
-                selectedDate: widget.selectedDate,
+
+          // 러닝 선택 시 러닝 전용 화면으로 분기
+          if (name == '러닝') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RunningRecordScreen(
+                  selectedDate: widget.selectedDate,
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+            // 다른 운동은 기존 화면으로 이동
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ExerciseRecordScreen(
+                  exerciseType: name,
+                  selectedDate: widget.selectedDate,
+                ),
+              ),
+            );
+          }
         },
         borderRadius: BorderRadius.vertical(
           top: isLast ? Radius.zero : Radius.zero,

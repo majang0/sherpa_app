@@ -16,6 +16,8 @@ import 'shared/providers/level_1_user_data/global_user_title_provider.dart';
 import 'shared/providers/level_2_features/global_meeting_provider.dart';
 import 'shared/providers/level_3_ai/global_sherpi_provider.dart';
 import 'features/quests/providers/quest_provider_v2.dart';
+import 'features/goals/providers/goal_provider.dart'; // 목표 Provider
+import 'features/goals/providers/routine_provider.dart'; // 루틴 Provider
 import 'features/sherpi/relationship/providers/relationship_provider.dart';
 import 'features/sherpi/emotion/providers/emotion_analysis_provider.dart';
 
@@ -43,6 +45,11 @@ import 'shared/presentation/screens/component_viewer_screen.dart';
 
 // Screens - Sherpi Chat
 import 'features/sherpi/chat/presentation/screens/sherpi_message_history_screen.dart';
+
+// Screens - Goals Achievement
+import 'features/goals/presentation/screens/goals_screen.dart';
+import 'features/goals/presentation/screens/routines_screen.dart';
+import 'features/goals/presentation/screens/ai_analysis_screen.dart';
 
 // Models
 import 'features/meetings/models/available_meeting_model.dart';
@@ -197,6 +204,10 @@ class MyApp extends ConsumerWidget {
         '/component_viewer': (context) => const ComponentViewerScreen(),
         '/sherpi_message_history': (context) =>
             const SherpiMessageHistoryScreen(),
+        // ✅ 목표 달성 화면들 추가
+        '/goals': (context) => const GoalsScreen(),
+        '/routines': (context) => const RoutinesScreen(),
+        '/ai_analysis': (context) => const AiAnalysisScreen(),
       },
       initialRoute: '/',
       debugShowCheckedModeBanner: false,
@@ -206,11 +217,13 @@ class MyApp extends ConsumerWidget {
   /// 글로벌 Provider 초기화 메서드
   void _initializeGlobalProviders(WidgetRef ref) {
     try {
-      // ✅ 7개 글로벌 Provider 초기화 순서대로
+      // ✅ 11개 글로벌 Provider 초기화 순서대로
 
+      // Level 0: Foundation (1개)
       // 1. 게임 시스템 초기화 (기초 데이터)
       ref.read(globalGameProvider);
 
+      // Level 1: User Data (3개)
       // 2. 사용자 데이터 초기화
       ref.read(globalUserProvider);
 
@@ -220,19 +233,27 @@ class MyApp extends ConsumerWidget {
       // 4. 칭호 시스템 초기화
       ref.read(globalUserTitleProvider);
 
+      // Level 2: Features (4개)
       // 5. 퀘스트 시스템 V2 초기화
       ref.read(questProviderV2);
 
       // 6. 모임 시스템 초기화
       ref.read(globalMeetingProvider);
 
-      // 7. 셰르피 시스템 초기화
+      // 7. 목표 시스템 초기화
+      ref.read(goalProvider);
+
+      // 8. 루틴 시스템 초기화
+      ref.read(routineProvider);
+
+      // Level 3: AI & Advanced (3개)
+      // 9. 셰르피 시스템 초기화
       ref.read(sherpiProvider);
 
-      // 8. 셰르피 관계 시스템 초기화
+      // 10. 셰르피 관계 시스템 초기화
       ref.read(relationshipProvider);
 
-      // 9. 감정 분석 시스템 초기화
+      // 11. 감정 분석 시스템 초기화
       ref.read(emotionAnalysisProvider);
     } catch (e) {
       // 에러 무시 - 중요하지 않은 작업

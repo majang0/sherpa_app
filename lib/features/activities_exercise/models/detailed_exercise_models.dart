@@ -37,7 +37,7 @@ abstract class DetailedExerciseRecord {
 class RunningRecord extends DetailedExerciseRecord {
   final String location;
   final double distanceKm;
-  final DifficultyLevel difficulty;
+  final DifficultyLevel? difficulty; // 선택 사항
   final double averagePace; // 분/km
   final String? route;
   final int? elevationGain;
@@ -48,7 +48,7 @@ class RunningRecord extends DetailedExerciseRecord {
     required super.durationMinutes,
     required this.location,
     required this.distanceKm,
-    required this.difficulty,
+    this.difficulty, // 선택 사항
     required this.averagePace,
     this.route,
     this.elevationGain,
@@ -71,7 +71,7 @@ class RunningRecord extends DetailedExerciseRecord {
       'durationMinutes': durationMinutes,
       'location': location,
       'distanceKm': distanceKm,
-      'difficulty': difficulty.name,
+      'difficulty': difficulty?.name, // null 허용
       'averagePace': averagePace,
       'route': route,
       'elevationGain': elevationGain,
@@ -83,16 +83,21 @@ class RunningRecord extends DetailedExerciseRecord {
   }
 
   static RunningRecord fromJson(Map<String, dynamic> json) {
+    final difficultyStr = json['difficulty'] as String?;
+    final difficulty = difficultyStr != null
+        ? DifficultyLevel.values.firstWhere(
+            (d) => d.name == difficultyStr,
+            orElse: () => DifficultyLevel.moderate,
+          )
+        : null; // null 허용
+
     return RunningRecord(
       id: json['id'] ?? '',
       date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
       durationMinutes: json['durationMinutes'] ?? 0,
       location: json['location'] ?? '',
       distanceKm: (json['distanceKm'] ?? 0).toDouble(),
-      difficulty: DifficultyLevel.values.firstWhere(
-        (d) => d.name == json['difficulty'],
-        orElse: () => DifficultyLevel.moderate,
-      ),
+      difficulty: difficulty,
       averagePace: (json['averagePace'] ?? 0).toDouble(),
       route: json['route'],
       elevationGain: json['elevationGain'],

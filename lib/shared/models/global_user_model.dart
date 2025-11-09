@@ -16,6 +16,17 @@ class GlobalUser {
   final ClimbingSession? currentClimbingSession;
   final UserPlanningData? planningData;
 
+  // ==================== 사용자 상세 정보 (목표/루틴 시스템) ====================
+  final int? height; // 키 (cm)
+  final double? weight; // 몸무게 (kg)
+  final double? bodyFatRate; // 체지방률 (%)
+  final double? muscleMass; // 골격근량 (kg)
+  final int? birthYear; // 생년
+  final List<String> academicAchievements; // 학업 성적
+  final List<String> competitionAwards; // 대회 수상경력
+  final List<String> certifications; // 자격증
+  final List<String> languageScores; // 어학성적
+
   const GlobalUser({
     required this.id,
     required this.name,
@@ -28,6 +39,16 @@ class GlobalUser {
     required this.dailyRecords,
     this.currentClimbingSession,
     this.planningData,
+    // 사용자 상세 정보
+    this.height,
+    this.weight,
+    this.bodyFatRate,
+    this.muscleMass,
+    this.birthYear,
+    this.academicAchievements = const [],
+    this.competitionAwards = const [],
+    this.certifications = const [],
+    this.languageScores = const [],
   });
 
   String get title {
@@ -49,6 +70,15 @@ class GlobalUser {
     DailyRecordData? dailyRecords,
     ClimbingSession? currentClimbingSession,
     UserPlanningData? planningData,
+    int? height,
+    double? weight,
+    double? bodyFatRate,
+    double? muscleMass,
+    int? birthYear,
+    List<String>? academicAchievements,
+    List<String>? competitionAwards,
+    List<String>? certifications,
+    List<String>? languageScores,
   }) {
     return GlobalUser(
       id: id ?? this.id,
@@ -63,6 +93,15 @@ class GlobalUser {
       currentClimbingSession:
           currentClimbingSession ?? this.currentClimbingSession,
       planningData: planningData ?? this.planningData,
+      height: height ?? this.height,
+      weight: weight ?? this.weight,
+      bodyFatRate: bodyFatRate ?? this.bodyFatRate,
+      muscleMass: muscleMass ?? this.muscleMass,
+      birthYear: birthYear ?? this.birthYear,
+      academicAchievements: academicAchievements ?? this.academicAchievements,
+      competitionAwards: competitionAwards ?? this.competitionAwards,
+      certifications: certifications ?? this.certifications,
+      languageScores: languageScores ?? this.languageScores,
     );
   }
 
@@ -79,6 +118,15 @@ class GlobalUser {
       'dailyRecords': dailyRecords.toJson(),
       'currentClimbingSession': currentClimbingSession?.toJson(),
       'planningData': planningData?.toJson(),
+      'height': height,
+      'weight': weight,
+      'bodyFatRate': bodyFatRate,
+      'muscleMass': muscleMass,
+      'birthYear': birthYear,
+      'academicAchievements': academicAchievements,
+      'competitionAwards': competitionAwards,
+      'certifications': certifications,
+      'languageScores': languageScores,
     };
   }
 
@@ -99,6 +147,16 @@ class GlobalUser {
       planningData: json['planningData'] != null
           ? UserPlanningData.fromJson(json['planningData'])
           : null,
+      height: json['height'] as int?,
+      weight: json['weight']?.toDouble(),
+      bodyFatRate: json['bodyFatRate']?.toDouble(),
+      muscleMass: json['muscleMass']?.toDouble(),
+      birthYear: json['birthYear'] as int?,
+      academicAchievements:
+          List<String>.from(json['academicAchievements'] ?? []),
+      competitionAwards: List<String>.from(json['competitionAwards'] ?? []),
+      certifications: List<String>.from(json['certifications'] ?? []),
+      languageScores: List<String>.from(json['languageScores'] ?? []),
     );
   }
 }
