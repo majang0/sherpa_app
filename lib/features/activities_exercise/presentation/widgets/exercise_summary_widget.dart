@@ -1,16 +1,15 @@
 // lib/features/activities_exercise/presentation/widgets/exercise_summary_widget.dart
 
-import 'dart:convert';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math' as math;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
 import 'package:sherpa_app/features/activities_exercise/models/detailed_exercise_models.dart';
+import 'package:sherpa_app/features/activities_exercise/utils/running_record_helper.dart';
 import 'exercise_full_view_widget.dart';
 
 class ExerciseSummaryWidget extends ConsumerStatefulWidget {
@@ -1028,7 +1027,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                         if (exercise.exerciseType == '러닝') {
                           // Load RunningRecord from SharedPreferences BEFORE closing modal
                           final runningRecord =
-                              await _loadRunningRecord(exercise.id);
+                              await RunningRecordHelper.loadById(exercise.id);
 
                           if (!context.mounted) return;
                           Navigator.pop(context);
@@ -1092,7 +1091,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                         if (exercise.exerciseType == '러닝') {
                           // Load RunningRecord from SharedPreferences BEFORE closing modal
                           final runningRecord =
-                              await _loadRunningRecord(exercise.id);
+                              await RunningRecordHelper.loadById(exercise.id);
 
                           if (!context.mounted) return;
                           Navigator.pop(context);
@@ -1271,7 +1270,7 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
                         if (exercise.exerciseType == '러닝') {
                           // Load RunningRecord from SharedPreferences BEFORE closing modal
                           final runningRecord =
-                              await _loadRunningRecord(exercise.id);
+                              await RunningRecordHelper.loadById(exercise.id);
 
                           if (!context.mounted) return;
                           Navigator.pop(context);
@@ -2250,24 +2249,6 @@ class _ExerciseSummaryWidgetState extends ConsumerState<ExerciseSummaryWidget>
     }
   }
 
-  /// Load RunningRecord from SharedPreferences
-  Future<RunningRecord?> _loadRunningRecord(String id) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final runningRecordsJson = prefs.getString('running_records') ?? '{}';
-      final runningRecords = Map<String, dynamic>.from(
-        jsonDecode(runningRecordsJson) as Map,
-      );
-
-      if (runningRecords.containsKey(id)) {
-        return RunningRecord.fromJson(runningRecords[id]);
-      }
-      return null;
-    } catch (e) {
-      debugPrint('Failed to load RunningRecord: $e');
-      return null;
-    }
-  }
 }
 
 // 도넛 차트 페인터

@@ -1,20 +1,20 @@
 // lib/features/activities_exercise/presentation/widgets/running_record_form.dart
 
 import 'dart:io';
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import '../../models/detailed_exercise_models.dart';
 import '../../services/running_image_analyzer.dart';
+import '../../utils/running_record_helper.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
 import 'package:sherpa_app/shared/utils/exercise_utils.dart';
+import 'package:sherpa_app/shared/utils/snackbar_utils.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/widgets/sherpa_button.dart';
 
@@ -1546,29 +1546,7 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
 
         // 성공 메시지
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  const Icon(Icons.check_circle, color: Colors.white),
-                  const SizedBox(width: 12),
-                  Text(
-                    'AI 분석 완료! 데이터를 확인해주세요',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-              backgroundColor: ModernColors.exercise,
-              behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              margin: const EdgeInsets.all(20),
-            ),
-          );
+          SnackBarUtils.showInfo(context, 'AI 분석 완료! 데이터를 확인해주세요');
         }
       } else {
         // 실패: 에러 메시지 표시
@@ -1729,58 +1707,17 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
       // Add exercise to user's records
       ref.read(globalUserProvider.notifier).addExerciseLog(exerciseLog);
 
-      // Save RunningRecord to SharedPreferences for detail view
-      await _saveRunningRecord(runningRecord);
+      // Save RunningRecord to SharedPreferences for detail view - Using RunningRecordHelper
+      await RunningRecordHelper.saveRecord(runningRecord);
 
       // Show success animation and navigate back
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    '러닝 기록이 완료되었습니다! 🏃‍♂️',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: ModernColors.exercise,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(20),
-          ),
-        );
-
+        SnackBarUtils.showSuccess(context, '러닝 기록이 완료되었습니다! 🏃‍♂️');
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '기록 중 오류가 발생했습니다: $e',
-              style: GoogleFonts.notoSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            backgroundColor: ModernColors.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(20),
-          ),
-        );
+        SnackBarUtils.showError(context, '기록 중 오류가 발생했습니다.');
       }
     } finally {
       if (mounted) {
@@ -1808,22 +1745,4 @@ class RunningRecordFormState extends ConsumerState<RunningRecordForm>
     }
   }
 
-  /// Save RunningRecord to SharedPreferences for detail view
-  Future<void> _saveRunningRecord(RunningRecord record) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final runningRecordsJson = prefs.getString('running_records') ?? '{}';
-      final runningRecords = Map<String, dynamic>.from(
-        jsonDecode(runningRecordsJson) as Map,
-      );
-
-      // Save with exercise log id as key
-      runningRecords[record.id] = record.toJson();
-
-      await prefs.setString('running_records', jsonEncode(runningRecords));
-    } catch (e) {
-      // Silent fail - not critical for main functionality
-      debugPrint('Failed to save RunningRecord: $e');
-    }
-  }
 }

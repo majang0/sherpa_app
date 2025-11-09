@@ -1,16 +1,16 @@
 // lib/features/activities_exercise/presentation/screens/running_detail_screen.dart
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/widgets/sherpa_button.dart';
 import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
+import 'package:sherpa_app/shared/utils/snackbar_utils.dart';
+import 'package:sherpa_app/features/activities_exercise/utils/running_record_helper.dart';
 import '../../models/detailed_exercise_models.dart';
 import 'running_edit_screen.dart';
 
@@ -86,64 +86,81 @@ class _RunningDetailScreenState extends ConsumerState<RunningDetailScreen>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.9),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_new,
-                color: Colors.black87, size: 20),
+        leading: Semantics(
+          label: '뒤로 가기',
+          button: true,
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.9),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_back_ios_new,
+                  color: Colors.black87, size: 20),
+              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+            ),
           ),
         ),
         actions: [
-          Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.9),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.edit_outlined,
-                  color: ModernColors.exercise, size: 20),
-              onPressed: _editRunning,
-              tooltip: '수정하기',
+          Semantics(
+            label: '러닝 기록 수정',
+            button: true,
+            hint: '러닝 기록을 수정합니다',
+            child: Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.9),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.edit_outlined,
+                    color: ModernColors.exercise, size: 20),
+                onPressed: _editRunning,
+                tooltip: '수정하기',
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              ),
             ),
           ),
-          Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.9),
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.delete_outline,
-                  color: ModernColors.error, size: 20),
-              onPressed: _showDeleteDialog,
-              tooltip: '삭제하기',
+          Semantics(
+            label: '러닝 기록 삭제',
+            button: true,
+            hint: '러닝 기록을 삭제합니다',
+            child: Container(
+              margin: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.9),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.delete_outline,
+                    color: ModernColors.error, size: 20),
+                onPressed: _showDeleteDialog,
+                tooltip: '삭제하기',
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+              ),
             ),
           ),
         ],
@@ -1144,85 +1161,21 @@ class _RunningDetailScreenState extends ConsumerState<RunningDetailScreen>
       final globalUserNotifier = ref.read(globalUserProvider.notifier);
       await globalUserNotifier.deleteExerciseRecord(_currentRunning.id);
 
-      // RunningRecord 삭제 (SharedPreferences)
-      await _deleteRunningRecord(_currentRunning.id);
+      // RunningRecord 삭제 (SharedPreferences) - Using RunningRecordHelper
+      await RunningRecordHelper.deleteRecord(_currentRunning.id);
 
       if (mounted) {
         Navigator.pop(context); // 다이얼로그 닫기
         Navigator.pop(context); // 상세 화면 닫기
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.check_circle, color: Colors.white),
-                const SizedBox(width: 12),
-                Text(
-                  '러닝 기록이 삭제되었습니다.',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: ModernColors.success,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(20),
-          ),
-        );
+        SnackBarUtils.showSuccess(context, '러닝 기록이 삭제되었습니다.');
       }
     } catch (e) {
       if (mounted) {
         Navigator.pop(context); // 다이얼로그 닫기
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                const Icon(Icons.error, color: Colors.white),
-                const SizedBox(width: 12),
-                Text(
-                  '삭제 중 오류가 발생했습니다: $e',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: ModernColors.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.all(20),
-          ),
-        );
+        SnackBarUtils.showError(context, '삭제 중 오류가 발생했습니다.');
       }
-    }
-  }
-
-  /// SharedPreferences에서 RunningRecord 삭제
-  Future<void> _deleteRunningRecord(String id) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final runningRecordsJson = prefs.getString('running_records') ?? '{}';
-      final runningRecords = Map<String, dynamic>.from(
-        jsonDecode(runningRecordsJson) as Map,
-      );
-
-      // 해당 ID의 RunningRecord 삭제
-      runningRecords.remove(id);
-
-      // 업데이트된 맵 저장
-      await prefs.setString('running_records', jsonEncode(runningRecords));
-    } catch (e) {
-      debugPrint('Failed to delete RunningRecord: $e');
-      // SharedPreferences 삭제 실패는 심각한 오류가 아니므로 예외를 전파하지 않음
     }
   }
 }

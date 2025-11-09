@@ -1,12 +1,10 @@
 // lib/features/activities_exercise/presentation/screens/exercise_dashboard_screen.dart
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
@@ -15,6 +13,7 @@ import 'package:sherpa_app/shared/widgets/sherpa_button.dart';
 import 'package:sherpa_app/shared/utils/haptic_feedback_manager.dart';
 import 'package:sherpa_app/shared/utils/calorie_calculator.dart';
 import 'package:sherpa_app/features/activities_exercise/models/detailed_exercise_models.dart';
+import 'package:sherpa_app/features/activities_exercise/utils/running_record_helper.dart';
 
 class ExerciseDashboardScreen extends ConsumerStatefulWidget {
   const ExerciseDashboardScreen({super.key});
@@ -851,7 +850,7 @@ class _ExerciseDashboardScreenState
           // Navigate to appropriate detail screen
           if (exercise.exerciseType == '러닝') {
             // Load RunningRecord from SharedPreferences
-            final runningRecord = await _loadRunningRecord(exercise.id);
+            final runningRecord = await RunningRecordHelper.loadById(exercise.id);
             if (runningRecord != null) {
               Navigator.pushNamed(
                 context,
@@ -1331,22 +1330,4 @@ class _ExerciseDashboardScreenState
     }
   }
 
-  /// Load RunningRecord from SharedPreferences
-  Future<RunningRecord?> _loadRunningRecord(String id) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final runningRecordsJson = prefs.getString('running_records') ?? '{}';
-      final runningRecords = Map<String, dynamic>.from(
-        jsonDecode(runningRecordsJson) as Map,
-      );
-
-      if (runningRecords.containsKey(id)) {
-        return RunningRecord.fromJson(runningRecords[id]);
-      }
-      return null;
-    } catch (e) {
-      debugPrint('Failed to load RunningRecord: $e');
-      return null;
-    }
-  }
 }
