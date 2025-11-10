@@ -135,13 +135,13 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
 
     // ==================== 현재 목표 (진행 중인 목표) ====================
     final currentGoals = [
-      // 1. [대회] 2025.11.25 전국 창의적 종합설계 경진대회 대상
+      // 1. [대회] 2025.11.25 전국 창의적 종합설계 경진대회 TOP5
       GoalModel(
         id: uuid.v4(),
         category: GoalCategory.competition,
         date: DateTime(2025, 11, 25),
-        name: '전국 창의적 종합설계 경진대회 대상',
-        targetValue: '대상',
+        name: '전국 창의적 종합설계 경진대회 TOP5',
+        targetValue: '최우수상',
         createdAt: now,
       ),
       // 2. [대회] 2025.11.27 전국 FLOW 창업 경진대회 대상
