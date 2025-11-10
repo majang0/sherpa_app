@@ -28,6 +28,9 @@ import 'features/meetings/presentation/screens/meeting_success_screen.dart';
 import 'features/meetings/presentation/screens/meeting_review_screen.dart';
 import 'features/meetings/presentation/screens/meeting_list_all_screen.dart';
 
+// Services
+import 'features/daily_record/services/sample_data_generator.dart';
+
 // Screens - Daily Record
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
 import 'features/activities_diary/presentation/screens/diary_write_edit_screen.dart';
@@ -96,6 +99,10 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // ✅ 앱 시작 시 모든 글로벌 Provider 초기화
     _initializeGlobalProviders(ref);
+
+    // ✅ 샘플 러닝 기록 저장 (백그라운드에서 비동기 실행)
+    // ID 매칭을 위해 앱 시작 시마다 실행 (이미 저장된 데이터 덮어쓰기는 안전함)
+    Future.microtask(() => SampleDataGenerator.saveActualRunningRecords());
 
     return MaterialApp(
       title: 'Sherpa',

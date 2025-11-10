@@ -4,16 +4,50 @@ import 'dart:math' as math;
 import '../../../shared/models/global_user_model.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import '../../../core/constants/mood_constants.dart';
+import 'package:sherpa_app/features/activities_exercise/models/detailed_exercise_models.dart';
+import 'package:sherpa_app/features/activities_exercise/utils/running_record_helper.dart';
 
 /// 14일간 샘플 데이터 생성 서비스
 /// 앱 초기 사용자에게 풍부한 예시 데이터를 제공
 class SampleDataGenerator {
   static final _random = math.Random();
 
+  /// 실제 러닝 기록 데이터 (고정) - 사용자의 실제 러닝 기록
+  /// 형식: {날짜, 거리(km), 페이스분, 페이스초, 시간, 분, 초, 난이도}
+  static final List<Map<String, dynamic>> _actualRunningRecords = [
+    {'date': '2025-11-08', 'distance': 21.06, 'paceMin': 4, 'paceSec': 54, 'hours': 1, 'minutes': 43, 'seconds': 8, 'difficulty': 'veryHard'},
+    {'date': '2025-11-04', 'distance': 3.02, 'paceMin': 4, 'paceSec': 32, 'hours': 0, 'minutes': 13, 'seconds': 41, 'difficulty': 'hard'},
+    {'date': '2025-11-04', 'distance': 9.52, 'paceMin': 5, 'paceSec': 14, 'hours': 0, 'minutes': 49, 'seconds': 50, 'difficulty': 'moderate', 'index': 1},
+    {'date': '2025-11-02', 'distance': 15.01, 'paceMin': 4, 'paceSec': 42, 'hours': 1, 'minutes': 10, 'seconds': 32, 'difficulty': 'veryHard'},
+    {'date': '2025-11-01', 'distance': 3.02, 'paceMin': 4, 'paceSec': 49, 'hours': 0, 'minutes': 14, 'seconds': 33, 'difficulty': 'moderate'},
+    {'date': '2025-10-31', 'distance': 7.2, 'paceMin': 4, 'paceSec': 40, 'hours': 0, 'minutes': 33, 'seconds': 3, 'difficulty': 'moderate'},
+    {'date': '2025-10-28', 'distance': 9.46, 'paceMin': 4, 'paceSec': 52, 'hours': 0, 'minutes': 46, 'seconds': 1, 'difficulty': 'hard'},
+    {'date': '2025-10-26', 'distance': 21.36, 'paceMin': 5, 'paceSec': 15, 'hours': 1, 'minutes': 51, 'seconds': 49, 'difficulty': 'veryHard'},
+    {'date': '2025-10-23', 'distance': 10.55, 'paceMin': 4, 'paceSec': 24, 'hours': 0, 'minutes': 46, 'seconds': 20, 'difficulty': 'veryHard'},
+    {'date': '2025-10-22', 'distance': 6.62, 'paceMin': 5, 'paceSec': 20, 'hours': 0, 'minutes': 35, 'seconds': 14, 'difficulty': 'moderate'},
+    {'date': '2025-10-21', 'distance': 9.66, 'paceMin': 5, 'paceSec': 21, 'hours': 0, 'minutes': 51, 'seconds': 52, 'difficulty': 'moderate'},
+    {'date': '2025-10-21', 'distance': 8.13, 'paceMin': 5, 'paceSec': 19, 'hours': 0, 'minutes': 43, 'seconds': 12, 'difficulty': 'hard', 'index': 1},
+    {'date': '2025-10-16', 'distance': 10.55, 'paceMin': 4, 'paceSec': 39, 'hours': 0, 'minutes': 48, 'seconds': 26, 'difficulty': 'veryHard'},
+    {'date': '2025-10-15', 'distance': 6.24, 'paceMin': 5, 'paceSec': 8, 'hours': 0, 'minutes': 32, 'seconds': 2, 'difficulty': 'hard'},
+    {'date': '2025-10-14', 'distance': 3.04, 'paceMin': 4, 'paceSec': 51, 'hours': 0, 'minutes': 14, 'seconds': 44, 'difficulty': 'moderate'},
+    {'date': '2025-10-14', 'distance': 9.23, 'paceMin': 5, 'paceSec': 14, 'hours': 0, 'minutes': 48, 'seconds': 16, 'difficulty': 'hard', 'index': 1},
+    {'date': '2025-10-12', 'distance': 20.01, 'paceMin': 5, 'paceSec': 21, 'hours': 1, 'minutes': 46, 'seconds': 53, 'difficulty': 'hard'},
+    {'date': '2025-10-10', 'distance': 6.76, 'paceMin': 5, 'paceSec': 3, 'hours': 0, 'minutes': 34, 'seconds': 6, 'difficulty': 'hard'},
+    {'date': '2025-10-08', 'distance': 10.18, 'paceMin': 5, 'paceSec': 23, 'hours': 0, 'minutes': 54, 'seconds': 46, 'difficulty': 'hard'},
+    {'date': '2025-10-07', 'distance': 10.08, 'paceMin': 5, 'paceSec': 45, 'hours': 0, 'minutes': 57, 'seconds': 56, 'difficulty': 'moderate'},
+    {'date': '2025-10-05', 'distance': 6.3, 'paceMin': 5, 'paceSec': 13, 'hours': 0, 'minutes': 32, 'seconds': 48, 'difficulty': 'moderate'},
+    {'date': '2025-10-04', 'distance': 6.23, 'paceMin': 5, 'paceSec': 26, 'hours': 0, 'minutes': 33, 'seconds': 48, 'difficulty': 'hard'},
+    {'date': '2025-09-28', 'distance': 6.27, 'paceMin': 5, 'paceSec': 22, 'hours': 0, 'minutes': 33, 'seconds': 37, 'difficulty': 'hard'},
+    {'date': '2025-09-21', 'distance': 2.0, 'paceMin': 6, 'paceSec': 0, 'hours': 0, 'minutes': 12, 'seconds': 1, 'difficulty': 'moderate'},
+  ];
+
   /// 14일간의 완전한 샘플 데이터 생성
   static DailyRecordData generateSampleData() {
     final now = DateTime.now();
     final sampleLogs = _generateSampleLogs(now);
+
+    // 실제 러닝 기록을 RunningRecord로 저장 (비동기로 백그라운드에서 실행)
+    Future.microtask(() => _saveActualRunningRecords());
 
     // 오늘 날짜의 모든 데이터를 필터링하여 제거
     final today = DateTime.now();
@@ -32,8 +66,6 @@ class SampleDataGenerator {
     final filteredMovies = (sampleLogs['movies'] as List<MovieLog>)
         .where((log) => !_isSameDay(log.date, today))
         .toList();
-
-    final meetingCount = filteredMeetings.length;
 
     final result = DailyRecordData(
       todaySteps: _generateTodaySteps(),
@@ -69,56 +101,6 @@ class SampleDataGenerator {
   static int _generateConsecutiveDays() {
     // 0-15일 사이의 랜덤한 연속 달성일
     return _random.nextInt(16);
-  }
-
-  /// 실제 연속 달성일 계산 (과거 데이터 기반)
-  static int _calculateActualConsecutiveDays(Map<String, List> sampleLogs) {
-    final now = DateTime.now();
-    int consecutiveDays = 0;
-
-    // 어제부터 거꾸로 확인
-    for (int i = 1; i <= 30; i++) {
-      final checkDate = now.subtract(Duration(days: i));
-
-      // 해당 날짜에 모든 목표를 달성했는지 확인
-      if (_isAllGoalsCompletedOnDate(checkDate, sampleLogs)) {
-        consecutiveDays++;
-      } else {
-        break; // 연속 달성이 끊어진 지점
-      }
-    }
-
-    return consecutiveDays;
-  }
-
-  /// 특정 날짜에 모든 목표(5개)를 달성했는지 확인
-  static bool _isAllGoalsCompletedOnDate(
-      DateTime date, Map<String, List> sampleLogs) {
-    // 5개 목표: 걸음수(6000), 집중(30분), 독서(1페이지), 운동, 일기
-
-    // 1. 걸음수 - 6000 이상 (항상 달성으로 가정)
-    bool stepsCompleted = true;
-
-    // 2. 집중시간 - 30분 이상 (항상 달성으로 가정)
-    bool focusCompleted = true;
-
-    // 3. 독서 - 해당 날짜에 독서 로그 존재
-    final readings = sampleLogs['readings'] as List<ReadingLog>;
-    bool readingCompleted = readings.any((log) => _isSameDay(log.date, date));
-
-    // 4. 운동 - 해당 날짜에 운동 로그 존재
-    final exercises = sampleLogs['exercises'] as List<ExerciseLog>;
-    bool exerciseCompleted = exercises.any((log) => _isSameDay(log.date, date));
-
-    // 5. 일기 - 해당 날짜에 일기 로그 존재
-    final diaries = sampleLogs['diaries'] as List<DiaryLog>;
-    bool diaryCompleted = diaries.any((log) => _isSameDay(log.date, date));
-
-    return stepsCompleted &&
-        focusCompleted &&
-        readingCompleted &&
-        exerciseCompleted &&
-        diaryCompleted;
   }
 
   /// 날짜 비교 헬퍼 메서드
@@ -327,6 +309,15 @@ class SampleDataGenerator {
 
   /// 운동 로그 생성 (5개 주요 운동 타입 위주)
   static ExerciseLog _generateExerciseLog(DateTime date, int index) {
+    // 먼저 실제 러닝 기록이 있는지 확인
+    final actualRunning = _findActualRunningRecord(date, index);
+    if (actualRunning != null) {
+      return actualRunning;
+    }
+
+    // ✅ 날짜 문자열 생성 (ID 일관성을 위해)
+    final dateStr = '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
     // 5개 주요 운동 타입 (70% 확률)
     final primaryExerciseTypes = ['러닝', '클라이밍', '등산', '헬스', '배드민턴'];
 
@@ -389,7 +380,7 @@ class SampleDataGenerator {
     }
 
     return ExerciseLog(
-      id: 'exercise_${date.millisecondsSinceEpoch}_$index',
+      id: 'exercise_${dateStr}_$index', // ✅ 날짜 문자열 기반 ID (일관성)
       date: date.add(Duration(hours: 6 + index * 2)), // 시간대 분산
       exerciseType: exerciseType,
       durationMinutes: duration,
@@ -576,6 +567,11 @@ class SampleDataGenerator {
     }
   }
 
+  /// 실제 러닝 기록 저장 (public 메서드 - main.dart에서 호출용)
+  static Future<void> saveActualRunningRecords() async {
+    await _saveActualRunningRecords();
+  }
+
   /// 14일간 걸음수 데이터 생성 (기존 stepHistory Provider용)
   static List<DailyStepData> generate14DaysStepData() {
     final stepHistory = <DailyStepData>[];
@@ -609,5 +605,95 @@ class SampleDataGenerator {
     }
 
     return stepHistory;
+  }
+
+  /// 실제 러닝 기록을 RunningRecord로 저장
+  static Future<void> _saveActualRunningRecords() async {
+    for (final recordData in _actualRunningRecords) {
+      final dateStr = recordData['date'] as String;
+      final date = DateTime.parse(dateStr);
+      final recordIndex = recordData['index'] as int? ?? 0;
+
+      // ✅ 날짜 문자열 기반 ID (ExerciseLog와 완전히 동일한 형식)
+      final exerciseId = 'exercise_${dateStr}_$recordIndex';
+
+      // RunningRecord 생성
+      final runningRecord = RunningRecord(
+        id: exerciseId, // ✅ ExerciseLog와 동일한 ID
+        date: date,
+        durationMinutes: (recordData['hours'] as int) * 60 + (recordData['minutes'] as int),
+        location: '기록됨',
+        distanceKm: recordData['distance'] as double,
+        difficulty: _stringToDifficulty(recordData['difficulty'] as String),
+        averagePace: (recordData['paceMin'] as int) + ((recordData['paceSec'] as int) / 60.0),
+        note: null,
+        isShared: false,
+        imageUrl: null,
+      );
+
+      // SharedPreferences에 저장
+      await RunningRecordHelper.saveRecord(runningRecord);
+    }
+  }
+
+  /// 특정 날짜의 실제 러닝 기록을 찾아서 ExerciseLog로 반환
+  static ExerciseLog? _findActualRunningRecord(DateTime date, int index) {
+    // _actualRunningRecords에서 해당 날짜의 기록 찾기
+    final dateStr = '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+    for (final record in _actualRunningRecords) {
+      if (record['date'] == dateStr) {
+        final recordIndex = record['index'] as int? ?? 0;
+        if (recordIndex == index) {
+          // ExerciseLog로 변환
+          final totalMinutes = (record['hours'] as int) * 60 + (record['minutes'] as int);
+
+          // ✅ 날짜 문자열 기반 ID (시간 불일치 방지)
+          final exerciseId = 'exercise_${dateStr}_$index';
+
+          return ExerciseLog(
+            id: exerciseId,
+            date: date.add(Duration(hours: 6 + index * 2)),
+            exerciseType: '러닝',
+            durationMinutes: totalMinutes,
+            intensity: _difficultyToIntensity(record['difficulty'] as String),
+            note: null,
+          );
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /// 문자열 난이도를 DifficultyLevel로 변환
+  static DifficultyLevel _stringToDifficulty(String difficulty) {
+    switch (difficulty) {
+      case 'easy':
+        return DifficultyLevel.easy;
+      case 'moderate':
+        return DifficultyLevel.moderate;
+      case 'hard':
+        return DifficultyLevel.hard;
+      case 'veryHard':
+        return DifficultyLevel.veryHard;
+      default:
+        return DifficultyLevel.moderate;
+    }
+  }
+
+  /// 문자열 난이도를 intensity로 변환
+  static String _difficultyToIntensity(String difficulty) {
+    switch (difficulty) {
+      case 'easy':
+        return 'light';
+      case 'moderate':
+        return 'moderate';
+      case 'hard':
+      case 'veryHard':
+        return 'vigorous';
+      default:
+        return 'moderate';
+    }
   }
 }
