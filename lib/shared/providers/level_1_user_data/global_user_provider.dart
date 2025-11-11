@@ -271,21 +271,21 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
       bodyFatRate: 5.0, // 체지방률 5%
       muscleMass: 35.3, // 골격근량 35.3kg
       birthYear: 1999, // 생년 1999
-      academicAchievements: const [
-        '18년도 1학기 4.43 / 23학점',
-        '18년도 2학기 4.5 / 21학점',
-        '19년도 1학기 4.44 / 20학점',
-        '19년도 2학기 4.5 / 21학점',
-        '24년도 1학기 4.41 / 20학점',
-        '24년도 2학기 3.96 / 13학점',
-        '25년도 1학기 4.25 / 12학점',
+      academicAchievements: [
+        AcademicRecord(year: 2018, semester: 1, achievedGPA: 4.43, totalGPA: 4.5),
+        AcademicRecord(year: 2018, semester: 2, achievedGPA: 4.5, totalGPA: 4.5),
+        AcademicRecord(year: 2019, semester: 1, achievedGPA: 4.44, totalGPA: 4.5),
+        AcademicRecord(year: 2019, semester: 2, achievedGPA: 4.5, totalGPA: 4.5),
+        AcademicRecord(year: 2024, semester: 1, achievedGPA: 4.41, totalGPA: 4.5),
+        AcademicRecord(year: 2024, semester: 2, achievedGPA: 3.96, totalGPA: 4.5),
+        AcademicRecord(year: 2025, semester: 1, achievedGPA: 4.25, totalGPA: 4.5),
       ],
-      competitionAwards: const [
-        '2025.05.30 창업 아이디어 경진대회 은상',
-        '2025.07.04 산업체 수요특화형 IOT 경진대회 대상',
-        '2025.09.05 전국 AI활용 아이디어 경진대회 최우수상',
-        '2025.10.15 영남이공대 창의적 종합설계 경진대회 대상',
-        '2025.11.07 영남이공대 컨소시엄 창의적 종합설계 경진대회 대상',
+      competitionAwards: [
+        CompetitionAward(date: DateTime(2025, 5, 30), competitionName: '창업 아이디어 경진대회', awardGrade: '은상'),
+        CompetitionAward(date: DateTime(2025, 7, 4), competitionName: '산업체 수요특화형 IOT 경진대회', awardGrade: '대상'),
+        CompetitionAward(date: DateTime(2025, 9, 5), competitionName: '전국 AI활용 아이디어 경진대회', awardGrade: '최우수상'),
+        CompetitionAward(date: DateTime(2025, 10, 15), competitionName: '영남이공대 창의적 종합설계 경진대회', awardGrade: '대상'),
+        CompetitionAward(date: DateTime(2025, 11, 7), competitionName: '영남이공대 컨소시엄 창의적 종합설계 경진대회', awardGrade: '대상'),
       ],
       certifications: const [],
       languageScores: const [],
@@ -398,10 +398,10 @@ class GlobalUserNotifier extends StateNotifier<GlobalUser> {
     double? bodyFatRate,
     double? muscleMass,
     int? birthYear,
-    List<String>? academicAchievements,
-    List<String>? competitionAwards,
-    List<String>? certifications,
-    List<String>? languageScores,
+    List<AcademicRecord>? academicAchievements,
+    List<CompetitionAward>? competitionAwards,
+    List<Certification>? certifications,
+    List<LanguageScore>? languageScores,
   }) {
     state = state.copyWith(
       height: height,

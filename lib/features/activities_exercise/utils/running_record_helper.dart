@@ -118,4 +118,52 @@ class RunningRecordHelper {
       return false;
     }
   }
+
+  /// Clear all RunningRecords from SharedPreferences
+  ///
+  /// ⚠️ WARNING: This will delete ALL running records permanently!
+  /// Use this to reset corrupted/duplicate data.
+  static Future<void> clearAll() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_storageKey);
+      debugPrint('✅ All RunningRecords cleared from SharedPreferences');
+    } catch (e) {
+      debugPrint('❌ Failed to clear RunningRecords: $e');
+    }
+  }
+
+  /// Debug: Print statistics about stored RunningRecords
+  ///
+  /// Returns a map with count and total distance
+  static Future<Map<String, dynamic>> getStorageStats() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final runningRecordsJson = prefs.getString(_storageKey) ?? '{}';
+      final runningRecords = Map<String, dynamic>.from(
+        jsonDecode(runningRecordsJson) as Map,
+      );
+
+      final records = runningRecords.values
+          .map((json) => RunningRecord.fromJson(json as Map<String, dynamic>))
+          .toList();
+
+      final totalDistance =
+          records.fold<double>(0.0, (sum, r) => sum + r.distanceKm);
+      final count = records.length;
+
+      debugPrint('📊 RunningRecord Storage Stats:');
+      debugPrint('   Total records: $count');
+      debugPrint('   Total distance: ${totalDistance.toStringAsFixed(2)} km');
+
+      return {
+        'count': count,
+        'totalDistance': totalDistance,
+        'records': records,
+      };
+    } catch (e) {
+      debugPrint('❌ Failed to get storage stats: $e');
+      return {'count': 0, 'totalDistance': 0.0, 'records': []};
+    }
+  }
 }

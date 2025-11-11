@@ -184,17 +184,17 @@ class RoutineCardWidget extends ConsumerWidget {
   Color _getCategoryColor() {
     switch (routine.category) {
       case '운동':
-        return ModernColors.exercise;
+        return ModernColors.exercise; // 오렌지
       case '문화':
-        return ModernColors.quest;
+        return ModernColors.reading; // 그린
       case '학습':
-        return ModernColors.reading;
+        return ModernColors.primary; // 푸른색
       case '건강':
-        return ModernColors.focus;
+        return ModernColors.error; // 붉은색
       case '기타':
-        return ModernColors.meeting;
+        return ModernColors.meeting; // 시안
       default:
-        return ModernColors.quest;
+        return ModernColors.meeting;
     }
   }
 

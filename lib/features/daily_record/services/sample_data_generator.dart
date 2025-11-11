@@ -12,33 +12,253 @@ import 'package:sherpa_app/features/activities_exercise/utils/running_record_hel
 class SampleDataGenerator {
   static final _random = math.Random();
 
-  /// 실제 러닝 기록 데이터 (고정) - 사용자의 실제 러닝 기록
+  /// 실제 러닝 기록 데이터 (고정) - 샘플 데이터용
   /// 형식: {날짜, 거리(km), 페이스분, 페이스초, 시간, 분, 초, 난이도}
+  /// ✅ ExerciseLog로 표시되지만 RunningRecord로는 자동 저장 안됨
   static final List<Map<String, dynamic>> _actualRunningRecords = [
-    {'date': '2025-11-08', 'distance': 21.06, 'paceMin': 4, 'paceSec': 54, 'hours': 1, 'minutes': 43, 'seconds': 8, 'difficulty': 'veryHard'},
-    {'date': '2025-11-04', 'distance': 3.02, 'paceMin': 4, 'paceSec': 32, 'hours': 0, 'minutes': 13, 'seconds': 41, 'difficulty': 'hard'},
-    {'date': '2025-11-04', 'distance': 9.52, 'paceMin': 5, 'paceSec': 14, 'hours': 0, 'minutes': 49, 'seconds': 50, 'difficulty': 'moderate', 'index': 1},
-    {'date': '2025-11-02', 'distance': 15.01, 'paceMin': 4, 'paceSec': 42, 'hours': 1, 'minutes': 10, 'seconds': 32, 'difficulty': 'veryHard'},
-    {'date': '2025-11-01', 'distance': 3.02, 'paceMin': 4, 'paceSec': 49, 'hours': 0, 'minutes': 14, 'seconds': 33, 'difficulty': 'moderate'},
-    {'date': '2025-10-31', 'distance': 7.2, 'paceMin': 4, 'paceSec': 40, 'hours': 0, 'minutes': 33, 'seconds': 3, 'difficulty': 'moderate'},
-    {'date': '2025-10-28', 'distance': 9.46, 'paceMin': 4, 'paceSec': 52, 'hours': 0, 'minutes': 46, 'seconds': 1, 'difficulty': 'hard'},
-    {'date': '2025-10-26', 'distance': 21.36, 'paceMin': 5, 'paceSec': 15, 'hours': 1, 'minutes': 51, 'seconds': 49, 'difficulty': 'veryHard'},
-    {'date': '2025-10-23', 'distance': 10.55, 'paceMin': 4, 'paceSec': 24, 'hours': 0, 'minutes': 46, 'seconds': 20, 'difficulty': 'veryHard'},
-    {'date': '2025-10-22', 'distance': 6.62, 'paceMin': 5, 'paceSec': 20, 'hours': 0, 'minutes': 35, 'seconds': 14, 'difficulty': 'moderate'},
-    {'date': '2025-10-21', 'distance': 9.66, 'paceMin': 5, 'paceSec': 21, 'hours': 0, 'minutes': 51, 'seconds': 52, 'difficulty': 'moderate'},
-    {'date': '2025-10-21', 'distance': 8.13, 'paceMin': 5, 'paceSec': 19, 'hours': 0, 'minutes': 43, 'seconds': 12, 'difficulty': 'hard', 'index': 1},
-    {'date': '2025-10-16', 'distance': 10.55, 'paceMin': 4, 'paceSec': 39, 'hours': 0, 'minutes': 48, 'seconds': 26, 'difficulty': 'veryHard'},
-    {'date': '2025-10-15', 'distance': 6.24, 'paceMin': 5, 'paceSec': 8, 'hours': 0, 'minutes': 32, 'seconds': 2, 'difficulty': 'hard'},
-    {'date': '2025-10-14', 'distance': 3.04, 'paceMin': 4, 'paceSec': 51, 'hours': 0, 'minutes': 14, 'seconds': 44, 'difficulty': 'moderate'},
-    {'date': '2025-10-14', 'distance': 9.23, 'paceMin': 5, 'paceSec': 14, 'hours': 0, 'minutes': 48, 'seconds': 16, 'difficulty': 'hard', 'index': 1},
-    {'date': '2025-10-12', 'distance': 20.01, 'paceMin': 5, 'paceSec': 21, 'hours': 1, 'minutes': 46, 'seconds': 53, 'difficulty': 'hard'},
-    {'date': '2025-10-10', 'distance': 6.76, 'paceMin': 5, 'paceSec': 3, 'hours': 0, 'minutes': 34, 'seconds': 6, 'difficulty': 'hard'},
-    {'date': '2025-10-08', 'distance': 10.18, 'paceMin': 5, 'paceSec': 23, 'hours': 0, 'minutes': 54, 'seconds': 46, 'difficulty': 'hard'},
-    {'date': '2025-10-07', 'distance': 10.08, 'paceMin': 5, 'paceSec': 45, 'hours': 0, 'minutes': 57, 'seconds': 56, 'difficulty': 'moderate'},
-    {'date': '2025-10-05', 'distance': 6.3, 'paceMin': 5, 'paceSec': 13, 'hours': 0, 'minutes': 32, 'seconds': 48, 'difficulty': 'moderate'},
-    {'date': '2025-10-04', 'distance': 6.23, 'paceMin': 5, 'paceSec': 26, 'hours': 0, 'minutes': 33, 'seconds': 48, 'difficulty': 'hard'},
-    {'date': '2025-09-28', 'distance': 6.27, 'paceMin': 5, 'paceSec': 22, 'hours': 0, 'minutes': 33, 'seconds': 37, 'difficulty': 'hard'},
-    {'date': '2025-09-21', 'distance': 2.0, 'paceMin': 6, 'paceSec': 0, 'hours': 0, 'minutes': 12, 'seconds': 1, 'difficulty': 'moderate'},
+    {
+      'date': '2025-11-08',
+      'distance': 21.06,
+      'paceMin': 4,
+      'paceSec': 54,
+      'hours': 1,
+      'minutes': 43,
+      'seconds': 8,
+      'difficulty': 'veryHard'
+    },
+    {
+      'date': '2025-11-04',
+      'distance': 3.02,
+      'paceMin': 4,
+      'paceSec': 32,
+      'hours': 0,
+      'minutes': 13,
+      'seconds': 41,
+      'difficulty': 'hard'
+    },
+    {
+      'date': '2025-11-04',
+      'distance': 9.52,
+      'paceMin': 5,
+      'paceSec': 14,
+      'hours': 0,
+      'minutes': 49,
+      'seconds': 50,
+      'difficulty': 'moderate',
+      'index': 1
+    },
+    {
+      'date': '2025-11-02',
+      'distance': 15.01,
+      'paceMin': 4,
+      'paceSec': 42,
+      'hours': 1,
+      'minutes': 10,
+      'seconds': 32,
+      'difficulty': 'veryHard'
+    },
+    {
+      'date': '2025-11-01',
+      'distance': 3.02,
+      'paceMin': 4,
+      'paceSec': 49,
+      'hours': 0,
+      'minutes': 14,
+      'seconds': 33,
+      'difficulty': 'moderate'
+    },
+    {
+      'date': '2025-10-31',
+      'distance': 7.2,
+      'paceMin': 4,
+      'paceSec': 40,
+      'hours': 0,
+      'minutes': 33,
+      'seconds': 3,
+      'difficulty': 'moderate'
+    },
+    {
+      'date': '2025-10-28',
+      'distance': 9.46,
+      'paceMin': 4,
+      'paceSec': 52,
+      'hours': 0,
+      'minutes': 46,
+      'seconds': 1,
+      'difficulty': 'hard'
+    },
+    {
+      'date': '2025-10-26',
+      'distance': 21.36,
+      'paceMin': 5,
+      'paceSec': 15,
+      'hours': 1,
+      'minutes': 51,
+      'seconds': 49,
+      'difficulty': 'veryHard'
+    },
+    {
+      'date': '2025-10-23',
+      'distance': 10.55,
+      'paceMin': 4,
+      'paceSec': 24,
+      'hours': 0,
+      'minutes': 46,
+      'seconds': 20,
+      'difficulty': 'veryHard'
+    },
+    {
+      'date': '2025-10-22',
+      'distance': 6.62,
+      'paceMin': 5,
+      'paceSec': 20,
+      'hours': 0,
+      'minutes': 35,
+      'seconds': 14,
+      'difficulty': 'moderate'
+    },
+    {
+      'date': '2025-10-21',
+      'distance': 9.66,
+      'paceMin': 5,
+      'paceSec': 21,
+      'hours': 0,
+      'minutes': 51,
+      'seconds': 52,
+      'difficulty': 'moderate'
+    },
+    {
+      'date': '2025-10-21',
+      'distance': 8.13,
+      'paceMin': 5,
+      'paceSec': 19,
+      'hours': 0,
+      'minutes': 43,
+      'seconds': 12,
+      'difficulty': 'hard',
+      'index': 1
+    },
+    {
+      'date': '2025-10-16',
+      'distance': 10.55,
+      'paceMin': 4,
+      'paceSec': 39,
+      'hours': 0,
+      'minutes': 48,
+      'seconds': 26,
+      'difficulty': 'veryHard'
+    },
+    {
+      'date': '2025-10-15',
+      'distance': 6.24,
+      'paceMin': 5,
+      'paceSec': 8,
+      'hours': 0,
+      'minutes': 32,
+      'seconds': 2,
+      'difficulty': 'hard'
+    },
+    {
+      'date': '2025-10-14',
+      'distance': 3.04,
+      'paceMin': 4,
+      'paceSec': 51,
+      'hours': 0,
+      'minutes': 14,
+      'seconds': 44,
+      'difficulty': 'moderate'
+    },
+    {
+      'date': '2025-10-14',
+      'distance': 9.23,
+      'paceMin': 5,
+      'paceSec': 14,
+      'hours': 0,
+      'minutes': 48,
+      'seconds': 16,
+      'difficulty': 'hard',
+      'index': 1
+    },
+    {
+      'date': '2025-10-12',
+      'distance': 20.01,
+      'paceMin': 5,
+      'paceSec': 21,
+      'hours': 1,
+      'minutes': 46,
+      'seconds': 53,
+      'difficulty': 'hard'
+    },
+    {
+      'date': '2025-10-10',
+      'distance': 6.76,
+      'paceMin': 5,
+      'paceSec': 3,
+      'hours': 0,
+      'minutes': 34,
+      'seconds': 6,
+      'difficulty': 'hard'
+    },
+    {
+      'date': '2025-10-08',
+      'distance': 10.18,
+      'paceMin': 5,
+      'paceSec': 23,
+      'hours': 0,
+      'minutes': 54,
+      'seconds': 46,
+      'difficulty': 'hard'
+    },
+    {
+      'date': '2025-10-07',
+      'distance': 10.08,
+      'paceMin': 5,
+      'paceSec': 45,
+      'hours': 0,
+      'minutes': 57,
+      'seconds': 56,
+      'difficulty': 'moderate'
+    },
+    {
+      'date': '2025-10-05',
+      'distance': 6.3,
+      'paceMin': 5,
+      'paceSec': 13,
+      'hours': 0,
+      'minutes': 32,
+      'seconds': 48,
+      'difficulty': 'moderate'
+    },
+    {
+      'date': '2025-10-04',
+      'distance': 6.23,
+      'paceMin': 5,
+      'paceSec': 26,
+      'hours': 0,
+      'minutes': 33,
+      'seconds': 48,
+      'difficulty': 'hard'
+    },
+    {
+      'date': '2025-09-28',
+      'distance': 6.27,
+      'paceMin': 5,
+      'paceSec': 22,
+      'hours': 0,
+      'minutes': 33,
+      'seconds': 37,
+      'difficulty': 'hard'
+    },
+    {
+      'date': '2025-09-21',
+      'distance': 2.0,
+      'paceMin': 6,
+      'paceSec': 0,
+      'hours': 0,
+      'minutes': 12,
+      'seconds': 1,
+      'difficulty': 'moderate'
+    },
   ];
 
   /// 14일간의 완전한 샘플 데이터 생성
@@ -46,8 +266,8 @@ class SampleDataGenerator {
     final now = DateTime.now();
     final sampleLogs = _generateSampleLogs(now);
 
-    // 실제 러닝 기록을 RunningRecord로 저장 (비동기로 백그라운드에서 실행)
-    Future.microtask(() => _saveActualRunningRecords());
+    // ❌ 러닝 기록 샘플 데이터 생성 비활성화 (사용자가 직접 기록해야 AI 분석에 사용됨)
+    // Future.microtask(() => _saveActualRunningRecords());
 
     // 오늘 날짜의 모든 데이터를 필터링하여 제거
     final today = DateTime.now();
@@ -136,6 +356,30 @@ class SampleDataGenerator {
     final diaries = <DiaryLog>[];
     final movies = <MovieLog>[];
 
+    // ✅ 1단계: 저장해둔 실제 러닝 기록을 먼저 전부 추가 (무조건 100% 표시)
+    for (final record in _actualRunningRecords) {
+      final recordDate = DateTime.parse(record['date'] as String);
+      // 60일 범위 내에 있는지 확인
+      final daysDiff = now.difference(recordDate).inDays;
+      if (daysDiff >= 0 && daysDiff < 60) {
+        final totalMinutes =
+            (record['hours'] as int) * 60 + (record['minutes'] as int);
+        final index = record['index'] as int? ?? 0;
+        final dateStr = record['date'] as String;
+        final exerciseId = 'exercise_${dateStr}_$index';
+
+        exercises.add(ExerciseLog(
+          id: exerciseId,
+          date: recordDate.add(Duration(hours: 6 + index * 2)),
+          exerciseType: '러닝',
+          durationMinutes: totalMinutes,
+          intensity: _difficultyToIntensity(record['difficulty'] as String),
+          note: null,
+        ));
+      }
+    }
+
+    // ✅ 2단계: 나머지 랜덤 운동 추가 (러닝 제외)
     for (int i = 0; i < 60; i++) {
       final date = now.subtract(Duration(days: i));
 
@@ -151,10 +395,10 @@ class SampleDataGenerator {
         readings.add(_generateReadingLog(date));
       }
 
-      // 운동 데이터 - 랜덤 생성
+      // 운동 데이터 - 랜덤 생성 (러닝 제외)
       final exerciseCount = _getExerciseCountForDay(i);
       for (int k = 0; k < exerciseCount; k++) {
-        exercises.add(_generateExerciseLog(date, k));
+        exercises.add(_generateRandomExerciseLog(date, k));
       }
 
       // 일기 로그 - 랜덤 생성 (40% 확률)
@@ -284,7 +528,7 @@ class SampleDataGenerator {
 
   /// 날짜별 운동 개수 결정 (거의 매일 1-3개 운동)
   static int _getExerciseCountForDay(int dayIndex) {
-    // 특정 날짜에 더 많은 운동이 있도록 설정
+    // 특정 날짜에 더 많은 운동이 있도록 설정 (러닝은 별도로 추가되므로 제외)
     if (dayIndex == 0) return 0; // 오늘 - 샘플 데이터 생성 안함
     if (dayIndex == 2) return 3; // 2일 전 - 매우 활발한 날
     if (dayIndex == 5) return 3; // 5일 전 - 주말 운동
@@ -307,19 +551,14 @@ class SampleDataGenerator {
     return 0; // 10% 확률로 휴식일
   }
 
-  /// 운동 로그 생성 (5개 주요 운동 타입 위주)
-  static ExerciseLog _generateExerciseLog(DateTime date, int index) {
-    // 먼저 실제 러닝 기록이 있는지 확인
-    final actualRunning = _findActualRunningRecord(date, index);
-    if (actualRunning != null) {
-      return actualRunning;
-    }
-
+  /// 랜덤 운동 로그 생성 (러닝 제외 - 러닝은 _actualRunningRecords에서 직접 추가됨)
+  static ExerciseLog _generateRandomExerciseLog(DateTime date, int index) {
     // ✅ 날짜 문자열 생성 (ID 일관성을 위해)
-    final dateStr = '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+    final dateStr =
+        '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 
-    // 5개 주요 운동 타입 (70% 확률)
-    final primaryExerciseTypes = ['러닝', '클라이밍', '등산', '헬스', '배드민턴'];
+    // 4개 주요 운동 타입 (70% 확률) - ❌ '러닝' 제외 (사용자 직접 기록)
+    final primaryExerciseTypes = ['클라이밍', '등산', '헬스', '배드민턴'];
 
     // 기타 운동 타입 (30% 확률)
     final secondaryExerciseTypes = [
@@ -346,10 +585,6 @@ class SampleDataGenerator {
     String intensity;
 
     switch (exerciseType) {
-      case '러닝':
-        duration = 30 + _random.nextInt(61); // 30~90분
-        intensity = ['moderate', 'vigorous'][_random.nextInt(2)];
-        break;
       case '클라이밍':
         duration = 60 + _random.nextInt(61); // 60~120분
         intensity = ['moderate', 'vigorous'][_random.nextInt(2)];
@@ -567,10 +802,10 @@ class SampleDataGenerator {
     }
   }
 
-  /// 실제 러닝 기록 저장 (public 메서드 - main.dart에서 호출용)
-  static Future<void> saveActualRunningRecords() async {
-    await _saveActualRunningRecords();
-  }
+  // /// 실제 러닝 기록 저장 (public 메서드 - main.dart에서 호출용)
+  // static Future<void> saveActualRunningRecords() async {
+  //   await _saveActualRunningRecords();
+  // }
 
   /// 14일간 걸음수 데이터 생성 (기존 stepHistory Provider용)
   static List<DailyStepData> generate14DaysStepData() {
@@ -607,8 +842,10 @@ class SampleDataGenerator {
     return stepHistory;
   }
 
-  /// 실제 러닝 기록을 RunningRecord로 저장
-  static Future<void> _saveActualRunningRecords() async {
+  /// 실제 러닝 기록을 RunningRecord로 SharedPreferences에 저장
+  ///
+  /// ⚠️ 주의: 앱 시작 시 한 번만 호출해야 함 (중복 방지)
+  static Future<void> saveActualRunningRecords() async {
     for (final recordData in _actualRunningRecords) {
       final dateStr = recordData['date'] as String;
       final date = DateTime.parse(dateStr);
@@ -622,7 +859,7 @@ class SampleDataGenerator {
         id: exerciseId, // ✅ ExerciseLog와 동일한 ID
         date: date,
         durationMinutes: (recordData['hours'] as int) * 60 + (recordData['minutes'] as int),
-        location: '기록됨',
+        location: '샘플 데이터',
         distanceKm: recordData['distance'] as double,
         difficulty: _stringToDifficulty(recordData['difficulty'] as String),
         averagePace: (recordData['paceMin'] as int) + ((recordData['paceSec'] as int) / 60.0),
@@ -636,37 +873,7 @@ class SampleDataGenerator {
     }
   }
 
-  /// 특정 날짜의 실제 러닝 기록을 찾아서 ExerciseLog로 반환
-  static ExerciseLog? _findActualRunningRecord(DateTime date, int index) {
-    // _actualRunningRecords에서 해당 날짜의 기록 찾기
-    final dateStr = '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-
-    for (final record in _actualRunningRecords) {
-      if (record['date'] == dateStr) {
-        final recordIndex = record['index'] as int? ?? 0;
-        if (recordIndex == index) {
-          // ExerciseLog로 변환
-          final totalMinutes = (record['hours'] as int) * 60 + (record['minutes'] as int);
-
-          // ✅ 날짜 문자열 기반 ID (시간 불일치 방지)
-          final exerciseId = 'exercise_${dateStr}_$index';
-
-          return ExerciseLog(
-            id: exerciseId,
-            date: date.add(Duration(hours: 6 + index * 2)),
-            exerciseType: '러닝',
-            durationMinutes: totalMinutes,
-            intensity: _difficultyToIntensity(record['difficulty'] as String),
-            note: null,
-          );
-        }
-      }
-    }
-
-    return null;
-  }
-
-  /// 문자열 난이도를 DifficultyLevel로 변환
+  /// 문자열 난이도를 DifficultyLevel로 변환 (RunningRecord 저장 시 사용)
   static DifficultyLevel _stringToDifficulty(String difficulty) {
     switch (difficulty) {
       case 'easy':
@@ -682,7 +889,7 @@ class SampleDataGenerator {
     }
   }
 
-  /// 문자열 난이도를 intensity로 변환
+  /// 문자열 난이도를 intensity로 변환 (ExerciseLog 생성 시 사용)
   static String _difficultyToIntensity(String difficulty) {
     switch (difficulty) {
       case 'easy':

@@ -28,9 +28,6 @@ import 'features/meetings/presentation/screens/meeting_success_screen.dart';
 import 'features/meetings/presentation/screens/meeting_review_screen.dart';
 import 'features/meetings/presentation/screens/meeting_list_all_screen.dart';
 
-// Services
-import 'features/daily_record/services/sample_data_generator.dart';
-
 // Screens - Daily Record
 import 'features/daily_record/presentation/screens/enhanced_daily_record_screen.dart';
 import 'features/activities_diary/presentation/screens/diary_write_edit_screen.dart';
@@ -44,6 +41,10 @@ import 'features/activities_exercise/presentation/screens/running_edit_screen.da
 import 'features/activities_reading/presentation/screens/reading_record_screen.dart';
 import 'features/activities_focus/presentation/screens/focus_timer_record_screen.dart';
 import 'shared/widgets/dialogs/analysis_pages/diary_analysis_page.dart';
+
+// Services
+import 'features/daily_record/services/sample_data_generator.dart';
+import 'features/activities_exercise/utils/running_record_helper.dart';
 
 // Screens - Shared
 import 'shared/presentation/screens/component_viewer_screen.dart';
@@ -100,9 +101,8 @@ class MyApp extends ConsumerWidget {
     // ✅ 앱 시작 시 모든 글로벌 Provider 초기화
     _initializeGlobalProviders(ref);
 
-    // ✅ 샘플 러닝 기록 저장 (백그라운드에서 비동기 실행)
-    // ID 매칭을 위해 앱 시작 시마다 실행 (이미 저장된 데이터 덮어쓰기는 안전함)
-    Future.microtask(() => SampleDataGenerator.saveActualRunningRecords());
+    // ✅ 러닝 기록 샘플 데이터 초기화 및 저장 (한 번만 실행)
+    Future.microtask(() => _initializeSampleRunningData());
 
     return MaterialApp(
       title: 'Sherpa',
@@ -277,6 +277,30 @@ class MyApp extends ConsumerWidget {
       ref.read(emotionAnalysisProvider);
     } catch (e) {
       // 에러 무시 - 중요하지 않은 작업
+    }
+  }
+
+  /// 러닝 샘플 데이터를 SharedPreferences에 저장 (한 번만 실행)
+  ///
+  /// ⚠️ 목적: AI 분석이 정확한 데이터를 읽도록 RunningRecord 저장
+  /// - 기존 833km 오류 데이터 삭제
+  /// - 샘플 221.5km 데이터를 RunningRecord로 저장
+  Future<void> _initializeSampleRunningData() async {
+    try {
+      // 1. 기존 데이터 초기화 (833km 오류 데이터 제거)
+      await RunningRecordHelper.clearAll();
+      debugPrint('🗑️ Cleared old RunningRecord data from SharedPreferences');
+
+      // 2. 샘플 러닝 데이터 저장 (221.5km)
+      await SampleDataGenerator.saveActualRunningRecords();
+      debugPrint('💾 Saved sample running records to SharedPreferences');
+
+      // 3. 디버그: 저장된 데이터 확인
+      final stats = await RunningRecordHelper.getStorageStats();
+      debugPrint(
+          '✅ Sample running data initialized: ${stats['count']} records, ${stats['totalDistance']} km');
+    } catch (e) {
+      debugPrint('❌ Failed to initialize sample running data: $e');
     }
   }
 }

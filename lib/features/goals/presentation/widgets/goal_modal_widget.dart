@@ -132,13 +132,16 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
       ),
     )
         .animate()
-        .slideY(
-            begin: 0.3, end: 0, duration: 400.ms, curve: Curves.easeOutCubic)
+        .fadeIn(
+            duration: 350.ms,
+            curve: Curves.easeOutCubic,
+        )
         .scale(
-            begin: const Offset(0.95, 0.95),
+            begin: const Offset(0.92, 0.92),
             end: const Offset(1.0, 1.0),
-            duration: 350.ms)
-        .fadeIn(duration: 300.ms);
+            duration: 350.ms,
+            curve: Curves.easeOutCubic,
+        );
   }
 
   /// 드래그 핸들
@@ -237,8 +240,13 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
       ),
     )
         .animate()
-        .fadeIn(delay: 100.ms, duration: 400.ms)
-        .slideY(begin: -0.1, end: 0, delay: 50.ms);
+        .fadeIn(delay: 50.ms, duration: 250.ms, curve: Curves.easeOut)
+        .slideY(
+            begin: -0.05,
+            end: 0,
+            delay: 50.ms,
+            duration: 300.ms,
+            curve: Curves.easeOutCubic);
   }
 
   /// 카테고리 선택
@@ -288,9 +296,7 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
               onTap: () => setState(() => _selectedCategory = category),
               scaleDownTo: 0.96,
               enableHaptic: true,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeOutCubic,
+              child: Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 decoration: BoxDecoration(
@@ -365,13 +371,16 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
             )
                 .animate()
                 .fadeIn(
-                  delay: (100 + (index * 50)).ms,
-                  duration: 400.ms,
+                  delay: (50 + (index * 30)).ms,
+                  duration: 250.ms,
+                  curve: Curves.easeOut,
                 )
                 .slideX(
-                  begin: 0.05,
+                  begin: 0.02,
                   end: 0,
-                  delay: (80 + (index * 40)).ms,
+                  delay: (50 + (index * 30)).ms,
+                  duration: 250.ms,
+                  curve: Curves.easeOutCubic,
                 );
           }).toList(),
         ),
@@ -504,8 +513,13 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
           ),
         )
             .animate()
-            .fadeIn(delay: 250.ms, duration: 400.ms)
-            .slideX(begin: 0.05, end: 0, delay: 200.ms),
+            .fadeIn(delay: 150.ms, duration: 250.ms, curve: Curves.easeOut)
+            .slideX(
+                begin: 0.02,
+                end: 0,
+                delay: 150.ms,
+                duration: 300.ms,
+                curve: Curves.easeOutCubic),
       ],
     );
   }
@@ -524,8 +538,13 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
       },
     )
         .animate()
-        .fadeIn(delay: 350.ms, duration: 400.ms)
-        .slideX(begin: 0.05, end: 0, delay: 300.ms);
+        .fadeIn(delay: 200.ms, duration: 250.ms, curve: Curves.easeOut)
+        .slideX(
+            begin: 0.02,
+            end: 0,
+            delay: 200.ms,
+            duration: 300.ms,
+            curve: Curves.easeOutCubic);
   }
 
   /// 목표값 입력
@@ -542,8 +561,13 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
       },
     )
         .animate()
-        .fadeIn(delay: 400.ms, duration: 400.ms)
-        .slideX(begin: 0.05, end: 0, delay: 350.ms);
+        .fadeIn(delay: 250.ms, duration: 250.ms, curve: Curves.easeOut)
+        .slideX(
+            begin: 0.02,
+            end: 0,
+            delay: 250.ms,
+            duration: 300.ms,
+            curve: Curves.easeOutCubic);
   }
 
   /// 모던 텍스트 필드
@@ -735,8 +759,13 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
           ),
         )
             .animate()
-            .fadeIn(delay: 500.ms, duration: 400.ms)
-            .slideY(begin: 0.1, end: 0, delay: 450.ms),
+            .fadeIn(delay: 300.ms, duration: 250.ms, curve: Curves.easeOut)
+            .slideY(
+                begin: 0.05,
+                end: 0,
+                delay: 300.ms,
+                duration: 300.ms,
+                curve: Curves.easeOutCubic),
 
         // 삭제 버튼 (수정 모드일 때만)
         if (_isEditing) ...[
@@ -793,8 +822,13 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
             ),
           )
               .animate()
-              .fadeIn(delay: 550.ms, duration: 400.ms)
-              .slideY(begin: 0.1, end: 0, delay: 500.ms),
+              .fadeIn(delay: 350.ms, duration: 250.ms, curve: Curves.easeOut)
+              .slideY(
+                  begin: 0.05,
+                  end: 0,
+                  delay: 350.ms,
+                  duration: 300.ms,
+                  curve: Curves.easeOutCubic),
         ],
       ],
     );
@@ -1034,11 +1068,12 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
           ),
         )
             .animate()
+            .fadeIn(duration: 200.ms, curve: Curves.easeOut)
             .scale(
-                begin: const Offset(0.8, 0.8),
-                duration: 300.ms,
-                curve: Curves.easeOutBack)
-            .fadeIn(duration: 250.ms),
+                begin: const Offset(0.94, 0.94),
+                end: const Offset(1.0, 1.0),
+                duration: 250.ms,
+                curve: Curves.easeOutCubic),
       ),
     );
   }
@@ -1047,13 +1082,13 @@ class _GoalModalWidgetState extends ConsumerState<GoalModalWidget> {
   Color _getCategoryColor(String category) {
     switch (category) {
       case '운동':
-        return const Color(0xFFF97316); // Orange
+        return ModernColors.exercise;
       case '학습':
-        return const Color(0xFF3B82F6); // Blue
+        return ModernColors.reading;
       case '대회':
-        return const Color(0xFFF59E0B); // Amber
+        return ModernColors.climbing;
       case '자격증':
-        return const Color(0xFF8B5CF6); // Purple
+        return ModernColors.focus;
       default:
         return ModernColors.climbing;
     }

@@ -192,6 +192,12 @@ class ModernColors {
   static const Color rewardGradient1 = Color(0xFFFFD700); // 골드 그라데이션 시작
   static const Color rewardGradient2 = Color(0xFFFFA500); // 골드 그라데이션 끝
 
+  /// 🏆 완주(Perfect) 시스템 전용 색상 - 100% 달성 루틴
+  static const Color perfectGold = Color(0xFFFFD700); // 완주 골드
+  static const Color perfectOrange = Color(0xFFFFA500); // 완주 오렌지
+  static const Color perfectLight = Color(0xFFFFF8E1); // 완주 배경
+  static const Color perfectGlow = Color(0xFFFFE082); // 완주 글로우
+
   /// 💫 비활성화 상태 색상 시스템 (사용자 친화적)
   static const Color inactive = Color(0xFFE5E7EB); // 비활성 배경
   static const Color inactiveText = Color(0xFF9CA3AF); // 비활성 텍스트
@@ -245,6 +251,13 @@ class ModernColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [rewardGradient1, rewardGradient2],
+  );
+
+  /// 🏆 완주 그라데이션 - 100% 달성 전용
+  static const LinearGradient perfectGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [perfectGold, perfectOrange],
   );
 
   /// 💫 비활성화 그라데이션 - 부드러운 회색톤
@@ -358,7 +371,7 @@ class ModernColors {
   static List<BoxShadow> getContextShadow(String context, {int level = 1}) {
     final contextColor = getFunctionColor(context);
     final opacity =
-        getElevationShadow(level).first.color.opacity * 0.7; // 약간 더 subtle하게
+        getElevationShadow(level).first.color.a * 0.7; // 약간 더 subtle하게
 
     switch (level) {
       case 1:
@@ -739,6 +752,28 @@ class ModernColors {
           color: Colors.black.withValues(alpha: 0.1),
           blurRadius: 6,
           offset: const Offset(0, 2),
+          spreadRadius: 0,
+        ),
+      ];
+
+  /// 🏆 완주 프리미엄 그림자 - 100% 달성 전용 골든 효과
+  static List<BoxShadow> perfectShadow() => [
+        BoxShadow(
+          color: perfectGold.withValues(alpha: 0.4),
+          blurRadius: 24,
+          offset: const Offset(0, 10),
+          spreadRadius: 1,
+        ),
+        BoxShadow(
+          color: perfectOrange.withValues(alpha: 0.25),
+          blurRadius: 16,
+          offset: const Offset(0, 6),
+          spreadRadius: 0,
+        ),
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.12),
+          blurRadius: 8,
+          offset: const Offset(0, 3),
           spreadRadius: 0,
         ),
       ];

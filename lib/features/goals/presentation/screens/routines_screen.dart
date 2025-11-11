@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:sherpa_app/core/theme/modern_colors.dart';
+import 'package:sherpa_app/core/animation/micro_interactions.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
 import 'package:sherpa_app/features/goals/providers/routine_provider.dart';
@@ -11,9 +13,6 @@ import 'package:sherpa_app/features/goals/presentation/widgets/routine_card_widg
 import 'package:sherpa_app/features/goals/presentation/widgets/routine_modal_widget.dart';
 import 'package:sherpa_app/features/goals/presentation/widgets/previous_routines_widget.dart';
 import 'package:sherpa_app/features/goals/presentation/widgets/user_info_modal_widget.dart';
-import 'package:sherpa_app/features/goals/presentation/widgets/action_buttons_section_widget.dart';
-import 'package:sherpa_app/features/goals/presentation/widgets/gamification_section_widget.dart';
-import 'package:sherpa_app/features/goals/presentation/widgets/ai_analysis_modal_widget.dart';
 
 /// 루틴 화면 (2025 Material Design 3 Redesign)
 ///
@@ -30,72 +29,77 @@ class RoutinesScreen extends ConsumerWidget {
     final completionRate = ref.watch(todayCompletionRateProvider);
 
     return Scaffold(
-      backgroundColor: ModernColors.background,
-      body: CustomScrollView(
-        slivers: [
-          // App Bar
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 0,
-            backgroundColor: ModernColors.background,
-            elevation: 0,
-            title: Text(
-              '루틴',
-              style: GoogleFonts.notoSans(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: ModernColors.textPrimary,
-              ),
-            ),
-            centerTitle: false,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFFFF8F5), // Soft peach (routine theme)
+              Colors.white,
+            ],
           ),
+        ),
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            // Content
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 60), // Safe area top
 
-          // Content
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
+                  // Glassmorphic Header
+                  _buildGlassmorphicHeader(context, ref, user),
 
-                // Action Buttons Section
-                ActionButtonsSectionWidget(
-                  onUserInfoTap: () => _showUserInfoModal(context, user),
-                  onHistoryTap: () => _showPreviousRoutines(context, ref),
-                  onAIAnalysisTap: () => _showAIAnalysis(context, ref),
-                ),
+                  const SizedBox(height: 24),
 
-                const SizedBox(height: 4),
+                  // Today's Completion Header (Enhanced)
+                  _buildCompletionHeader(
+                      completedRoutines, todayRoutines.length, completionRate),
 
-                // Today's Completion Header (Enhanced)
-                _buildCompletionHeader(
-                    completedRoutines, todayRoutines.length, completionRate),
+                  const SizedBox(height: 16),
 
-                // Gamification Section (NEW!)
-                const GamificationSectionWidget(
-                  currentStreak: 7, // TODO: Calculate from routine data
-                  longestStreak: 21,
-                  averageStreak: 14,
-                  progressToNextLevel: 0.7,
-                  daysToNextLevel: 3,
-                ),
-
-                const SizedBox(height: 8),
-
-                // Section Title
+                // Section Header with Gradient Bar
                 if (todayRoutines.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      '오늘의 루틴',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: ModernColors.textPrimary,
-                      ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 4,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                ModernColors.success,
+                                ModernColors.climbing,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          '오늘의 루틴',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            color: ModernColors.textPrimary,
+                            letterSpacing: -0.5,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                  )
+                      .animate()
+                      .fadeIn(delay: 400.ms, duration: 600.ms, curve: Curves.easeOutCubic)
+                      .slideX(begin: -0.05, end: 0, delay: 350.ms, curve: Curves.easeOutQuart),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
 
                 // Routine List or Empty State
                 todayRoutines.isEmpty
@@ -108,7 +112,86 @@ class RoutinesScreen extends ConsumerWidget {
           ),
         ],
       ),
+      ),
       floatingActionButton: _buildEnhancedFAB(context, ref),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  /// Glassmorphic Header - 뒤로가기 + 사용자 정보 + 이전 기록
+  Widget _buildGlassmorphicHeader(
+      BuildContext context, WidgetRef ref, GlobalUser user) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          // 뒤로가기 버튼
+          _buildHeaderButton(
+            icon: Icons.arrow_back_ios_new,
+            onTap: () => Navigator.pop(context),
+          ),
+          const Spacer(),
+          // 사용자 정보 버튼
+          _buildHeaderButton(
+            icon: Icons.person_outline,
+            onTap: () => _showUserInfoModal(context, user),
+          ),
+          const SizedBox(width: 8),
+          // 이전 기록 버튼
+          _buildHeaderButton(
+            icon: Icons.history,
+            onTap: () => _showPreviousRoutines(context, ref),
+          ),
+        ],
+      ),
+    )
+        .animate()
+        .fadeIn(duration: 400.ms)
+        .slideY(begin: -0.2, end: 0, duration: 400.ms, curve: Curves.easeOut);
+  }
+
+  /// Header Button - Glassmorphism style
+  Widget _buildHeaderButton({required IconData icon, required VoidCallback onTap}) {
+    return MicroInteractions.tapResponse(
+      onTap: onTap,
+      scaleDownTo: 0.95,
+      enableHaptic: true,
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.white.withValues(alpha: 0.9),
+              Colors.white.withValues(alpha: 0.7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.3),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: ModernColors.success.withValues(alpha: 0.08),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 20,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Icon(
+          icon,
+          size: 20,
+          color: ModernColors.success.withValues(alpha: 0.8),
+        ),
+      ),
     );
   }
 
@@ -123,19 +206,19 @@ class RoutinesScreen extends ConsumerWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            ModernColors.meeting,
-            ModernColors.meeting.withValues(alpha: 0.8),
+            ModernColors.success,
+            ModernColors.success.withValues(alpha: 0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: ModernColors.meeting.withValues(alpha: 0.3),
+            color: ModernColors.success.withValues(alpha: 0.3),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
           BoxShadow(
-            color: ModernColors.meeting.withValues(alpha: 0.2),
+            color: ModernColors.success.withValues(alpha: 0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -197,43 +280,49 @@ class RoutinesScreen extends ConsumerWidget {
     );
   }
 
-  /// Enhanced FAB with Gradient
+  /// Enhanced FAB with Success Gradient and Shimmer
   Widget _buildEnhancedFAB(BuildContext context, WidgetRef ref) {
-    return FloatingActionButton.extended(
-      onPressed: () => _showAddRoutineModal(context, ref),
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      label: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    return MicroInteractions.tapResponse(
+      onTap: () => _showAddRoutineModal(context, ref),
+      scaleDownTo: 0.97,
+      enableHaptic: true,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         decoration: BoxDecoration(
           gradient: LinearGradient(
+            colors: [
+              ModernColors.success,
+              ModernColors.success.withValues(alpha: 0.85),
+            ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              ModernColors.meeting,
-              ModernColors.meeting.withValues(alpha: 0.8),
-            ],
           ),
           borderRadius: BorderRadius.circular(28),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.2),
+            width: 1,
+          ),
           boxShadow: [
             BoxShadow(
-              color: ModernColors.meeting.withValues(alpha: 0.4),
-              blurRadius: 16,
+              color: ModernColors.success.withValues(alpha: 0.4),
+              blurRadius: 20,
               offset: const Offset(0, 8),
             ),
             BoxShadow(
-              color: ModernColors.meeting.withValues(alpha: 0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 30,
+              offset: const Offset(0, 12),
             ),
           ],
         ),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(6),
+              width: 32,
+              height: 32,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.3),
+                color: Colors.white.withValues(alpha: 0.25),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.add, color: Colors.white, size: 20),
@@ -242,71 +331,146 @@ class RoutinesScreen extends ConsumerWidget {
             Text(
               '루틴 추가',
               style: GoogleFonts.notoSans(
-                fontSize: 15,
+                fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
-                letterSpacing: 0.5,
+                letterSpacing: -0.3,
               ),
             ),
           ],
         ),
       ),
-    );
+    )
+        .animate(onPlay: (controller) => controller.repeat(reverse: true))
+        .shimmer(
+          duration: 2000.ms,
+          color: Colors.white.withValues(alpha: 0.3),
+        );
   }
 
-  /// Empty State
+  /// Empty State with Glassmorphism
   Widget _buildEmptyState(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 60),
-      child: Center(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 60),
+      child: Container(
+        padding: const EdgeInsets.all(40),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.white.withValues(alpha: 0.9),
+              Colors.white.withValues(alpha: 0.7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.3),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: ModernColors.success.withValues(alpha: 0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 8),
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 40,
+              offset: const Offset(0, 12),
+            ),
+          ],
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: ModernColors.meeting.withValues(alpha: 0.1),
+                gradient: LinearGradient(
+                  colors: [
+                    ModernColors.success.withValues(alpha: 0.15),
+                    ModernColors.success.withValues(alpha: 0.05),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 shape: BoxShape.circle,
+                border: Border.all(
+                  color: ModernColors.success.withValues(alpha: 0.2),
+                  width: 2,
+                ),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.repeat_outlined,
-                size: 60,
-                color: ModernColors.meeting.withValues(alpha: 0.5),
+                size: 64,
+                color: ModernColors.success,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
             Text(
               '오늘 할 루틴이 없어요',
               style: GoogleFonts.notoSans(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
                 color: ModernColors.textPrimary,
+                letterSpacing: -0.5,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               '첫 루틴을 추가해보세요!',
               style: GoogleFonts.notoSans(
-                fontSize: 14,
+                fontSize: 15,
                 color: ModernColors.textSecondary,
+                height: 1.5,
               ),
             ),
           ],
         ),
       ),
-    );
+    )
+        .animate()
+        .fadeIn(duration: 800.ms, curve: Curves.easeOutCubic)
+        .scale(
+          begin: const Offset(0.9, 0.9),
+          end: const Offset(1.0, 1.0),
+          duration: 800.ms,
+          curve: Curves.easeOutBack,
+        );
   }
 
-  /// Routine List
+  /// Routine List with Staggered Animations
   Widget _buildRoutineList(BuildContext context, List<RoutineModel> routines) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          ...routines.map((routine) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: RoutineCardWidget(routine: routine),
-              )),
+          ...routines.asMap().entries.map((entry) {
+            final index = entry.key;
+            final routine = entry.value;
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: RoutineCardWidget(routine: routine)
+                  .animate()
+                  .fadeIn(
+                    delay: (200 + (index * 100)).ms,
+                    duration: 600.ms,
+                    curve: Curves.easeOutCubic,
+                  )
+                  .slideX(
+                    begin: 0.05,
+                    end: 0,
+                    delay: (150 + (index * 80)).ms,
+                    curve: Curves.easeOutQuart,
+                  )
+                  .scale(
+                    begin: const Offset(0.96, 0.96),
+                    end: const Offset(1.0, 1.0),
+                    delay: (150 + (index * 80)).ms,
+                  ),
+            );
+          }),
         ],
       ),
     );
@@ -314,31 +478,20 @@ class RoutinesScreen extends ConsumerWidget {
 
   /// Show User Info Modal
   void _showUserInfoModal(BuildContext context, GlobalUser user) {
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => UserInfoModalWidget(user: user),
+      barrierDismissible: true,
+      builder: (context) => UserInfoDialogWidget(user: user),
     );
   }
 
   /// Show Previous Routines
   void _showPreviousRoutines(BuildContext context, WidgetRef ref) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const PreviousRoutinesWidget(),
-      ),
-    );
-  }
-
-  /// Show AI Analysis Modal
-  void _showAIAnalysis(BuildContext context, WidgetRef ref) {
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const AIAnalysisModalWidget(isGoalsScreen: false),
+      barrierDismissible: true,
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      builder: (context) => const PreviousRoutinesDialog(),
     );
   }
 

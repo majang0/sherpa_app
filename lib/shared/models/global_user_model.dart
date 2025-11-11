@@ -22,10 +22,10 @@ class GlobalUser {
   final double? bodyFatRate; // 체지방률 (%)
   final double? muscleMass; // 골격근량 (kg)
   final int? birthYear; // 생년
-  final List<String> academicAchievements; // 학업 성적
-  final List<String> competitionAwards; // 대회 수상경력
-  final List<String> certifications; // 자격증
-  final List<String> languageScores; // 어학성적
+  final List<AcademicRecord> academicAchievements; // 학업 성적 (구조화)
+  final List<CompetitionAward> competitionAwards; // 대회 수상경력 (구조화)
+  final List<Certification> certifications; // 자격증 (구조화)
+  final List<LanguageScore> languageScores; // 어학성적 (구조화)
 
   const GlobalUser({
     required this.id,
@@ -75,10 +75,10 @@ class GlobalUser {
     double? bodyFatRate,
     double? muscleMass,
     int? birthYear,
-    List<String>? academicAchievements,
-    List<String>? competitionAwards,
-    List<String>? certifications,
-    List<String>? languageScores,
+    List<AcademicRecord>? academicAchievements,
+    List<CompetitionAward>? competitionAwards,
+    List<Certification>? certifications,
+    List<LanguageScore>? languageScores,
   }) {
     return GlobalUser(
       id: id ?? this.id,
@@ -123,10 +123,10 @@ class GlobalUser {
       'bodyFatRate': bodyFatRate,
       'muscleMass': muscleMass,
       'birthYear': birthYear,
-      'academicAchievements': academicAchievements,
-      'competitionAwards': competitionAwards,
-      'certifications': certifications,
-      'languageScores': languageScores,
+      'academicAchievements': academicAchievements.map((a) => a.toJson()).toList(),
+      'competitionAwards': competitionAwards.map((a) => a.toJson()).toList(),
+      'certifications': certifications.map((c) => c.toJson()).toList(),
+      'languageScores': languageScores.map((l) => l.toJson()).toList(),
     };
   }
 
@@ -152,11 +152,22 @@ class GlobalUser {
       bodyFatRate: json['bodyFatRate']?.toDouble(),
       muscleMass: json['muscleMass']?.toDouble(),
       birthYear: json['birthYear'] as int?,
-      academicAchievements:
-          List<String>.from(json['academicAchievements'] ?? []),
-      competitionAwards: List<String>.from(json['competitionAwards'] ?? []),
-      certifications: List<String>.from(json['certifications'] ?? []),
-      languageScores: List<String>.from(json['languageScores'] ?? []),
+      academicAchievements: (json['academicAchievements'] as List?)
+              ?.map((item) => AcademicRecord.fromJson(item))
+              .toList() ??
+          [],
+      competitionAwards: (json['competitionAwards'] as List?)
+              ?.map((item) => CompetitionAward.fromJson(item))
+              .toList() ??
+          [],
+      certifications: (json['certifications'] as List?)
+              ?.map((item) => Certification.fromJson(item))
+              .toList() ??
+          [],
+      languageScores: (json['languageScores'] as List?)
+              ?.map((item) => LanguageScore.fromJson(item))
+              .toList() ??
+          [],
     );
   }
 }
@@ -2057,5 +2068,177 @@ extension GlobalUserExtensions on GlobalUser {
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
+  }
+}
+
+// ==================== 사용자 상세 정보 구조화 모델들 ====================
+
+/// 학업 성적 기록
+class AcademicRecord {
+  final int year; // 년도
+  final int semester; // 학기 (1 or 2)
+  final double achievedGPA; // 평균 학점
+  final double totalGPA; // 총 학점
+
+  const AcademicRecord({
+    required this.year,
+    required this.semester,
+    required this.achievedGPA,
+    required this.totalGPA,
+  });
+
+  /// 표시용 텍스트
+  String get displayText => '$year-${semester}학기 $achievedGPA/$totalGPA';
+
+  Map<String, dynamic> toJson() {
+    return {
+      'year': year,
+      'semester': semester,
+      'achievedGPA': achievedGPA,
+      'totalGPA': totalGPA,
+    };
+  }
+
+  factory AcademicRecord.fromJson(Map<String, dynamic> json) {
+    return AcademicRecord(
+      year: json['year'] ?? 2024,
+      semester: json['semester'] ?? 1,
+      achievedGPA: (json['achievedGPA'] ?? 0.0).toDouble(),
+      totalGPA: (json['totalGPA'] ?? 4.5).toDouble(),
+    );
+  }
+}
+
+/// 대회 수상경력 기록
+class CompetitionAward {
+  final DateTime date; // 날짜
+  final String competitionName; // 대회 이름
+  final String awardGrade; // 상격 (대상, 금상, 은상, 동상 등)
+
+  const CompetitionAward({
+    required this.date,
+    required this.competitionName,
+    required this.awardGrade,
+  });
+
+  /// 표시용 텍스트
+  String get displayText {
+    final dateStr = '${date.year}.${date.month.toString().padLeft(2, '0')}';
+    return '$dateStr $competitionName $awardGrade';
+  }
+
+  /// 상격에 따른 이모지
+  String get awardEmoji {
+    switch (awardGrade) {
+      case '대상':
+      case '최우수상':
+        return '🥇';
+      case '금상':
+      case '우수상':
+        return '🥈';
+      case '은상':
+      case '장려상':
+        return '🥉';
+      case '동상':
+      case '입선':
+        return '🏅';
+      default:
+        return '🏆';
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date.toIso8601String(),
+      'competitionName': competitionName,
+      'awardGrade': awardGrade,
+    };
+  }
+
+  factory CompetitionAward.fromJson(Map<String, dynamic> json) {
+    return CompetitionAward(
+      date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
+      competitionName: json['competitionName'] ?? '',
+      awardGrade: json['awardGrade'] ?? '',
+    );
+  }
+}
+
+/// 자격증 기록
+class Certification {
+  final DateTime date; // 취득 날짜
+  final String certificationName; // 자격증 이름
+
+  const Certification({
+    required this.date,
+    required this.certificationName,
+  });
+
+  /// 표시용 텍스트
+  String get displayText {
+    final dateStr = '${date.year}.${date.month.toString().padLeft(2, '0')}';
+    return '$dateStr $certificationName';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date.toIso8601String(),
+      'certificationName': certificationName,
+    };
+  }
+
+  factory Certification.fromJson(Map<String, dynamic> json) {
+    return Certification(
+      date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
+      certificationName: json['certificationName'] ?? '',
+    );
+  }
+}
+
+/// 어학 성적 기록
+class LanguageScore {
+  final DateTime date; // 시험 날짜
+  final String testName; // 시험 이름 (TOEIC, TOEFL, IELTS 등)
+  final String scoreOrGrade; // 점수 또는 등급 ("900점", "Level 7" 등)
+
+  const LanguageScore({
+    required this.date,
+    required this.testName,
+    required this.scoreOrGrade,
+  });
+
+  /// 표시용 텍스트
+  String get displayText {
+    final dateStr = '${date.year}.${date.month.toString().padLeft(2, '0')}';
+    return '$dateStr $testName $scoreOrGrade';
+  }
+
+  /// 시험 종류에 따른 이모지
+  String get testEmoji {
+    final upperTestName = testName.toUpperCase();
+    if (upperTestName.contains('TOEIC')) return '🇺🇸';
+    if (upperTestName.contains('TOEFL')) return '🇺🇸';
+    if (upperTestName.contains('IELTS')) return '🇬🇧';
+    if (upperTestName.contains('JPT') || upperTestName.contains('JLPT')) return '🇯🇵';
+    if (upperTestName.contains('HSK')) return '🇨🇳';
+    if (upperTestName.contains('DELE')) return '🇪🇸';
+    if (upperTestName.contains('DELF') || upperTestName.contains('DALF')) return '🇫🇷';
+    return '🌐';
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date.toIso8601String(),
+      'testName': testName,
+      'scoreOrGrade': scoreOrGrade,
+    };
+  }
+
+  factory LanguageScore.fromJson(Map<String, dynamic> json) {
+    return LanguageScore(
+      date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
+      testName: json['testName'] ?? '',
+      scoreOrGrade: json['scoreOrGrade'] ?? '',
+    );
   }
 }
