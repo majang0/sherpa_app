@@ -7,6 +7,8 @@ import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/core/animation/micro_interactions.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/shared/widgets/glassmorphic_header_button.dart';
+import 'package:sherpa_app/shared/widgets/section_header.dart';
 import 'package:sherpa_app/features/goals/providers/goal_provider.dart';
 import 'package:sherpa_app/features/goals/presentation/widgets/goal_card_widget.dart';
 import 'package:sherpa_app/features/goals/presentation/widgets/goal_modal_widget.dart';
@@ -51,7 +53,15 @@ class GoalsScreen extends ConsumerWidget {
             // Section Header
             if (goals.isNotEmpty)
               SliverToBoxAdapter(
-                child: _buildSectionHeader(goals.length)
+                child: SectionHeader(
+                  title: '나의 목표',
+                  countText: '총 ${goals.length}개',
+                  primaryColor: ModernColors.climbing,
+                  secondaryColor: ModernColors.success,
+                  titleFontSize: 20,
+                  topPadding: 24,
+                  bottomPadding: 16,
+                )
                     .animate()
                     .fadeIn(delay: 200.ms, duration: 400.ms)
                     .slideX(begin: -0.05, end: 0, delay: 150.ms),
@@ -106,21 +116,33 @@ class GoalsScreen extends ConsumerWidget {
       child: Row(
         children: [
           // 뒤로가기 버튼
-          _buildHeaderButton(
-            icon: Icons.arrow_back_ios_new,
-            onTap: () => Navigator.pop(context),
+          Semantics(
+            label: '뒤로가기',
+            button: true,
+            child: GlassmorphicHeaderButton(
+              icon: Icons.arrow_back_ios_new,
+              onTap: () => Navigator.pop(context),
+            ),
           ),
           const Spacer(),
           // 사용자 정보 버튼
-          _buildHeaderButton(
-            icon: Icons.person_outline,
-            onTap: () => _showUserInfoModal(context, user),
+          Semantics(
+            label: '사용자 정보 보기',
+            button: true,
+            child: GlassmorphicHeaderButton(
+              icon: Icons.person_outline,
+              onTap: () => _showUserInfoModal(context, user),
+            ),
           ),
           const SizedBox(width: 8),
           // 이전 기록 버튼
-          _buildHeaderButton(
-            icon: Icons.history,
-            onTap: () => _showPreviousGoals(context, ref),
+          Semantics(
+            label: '이전 목표 기록 보기',
+            button: true,
+            child: GlassmorphicHeaderButton(
+              icon: Icons.history,
+              onTap: () => _showPreviousGoals(context, ref),
+            ),
           ),
         ],
       ),
@@ -130,101 +152,6 @@ class GoalsScreen extends ConsumerWidget {
         .slideY(begin: -0.2, end: 0, duration: 400.ms, curve: Curves.easeOut);
   }
 
-  /// Header Button - Glassmorphism style
-  Widget _buildHeaderButton({required IconData icon, required VoidCallback onTap}) {
-    return MicroInteractions.tapResponse(
-      onTap: onTap,
-      scaleDownTo: 0.95,
-      enableHaptic: true,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.white.withValues(alpha: 0.9),
-              Colors.white.withValues(alpha: 0.7),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.3),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: ModernColors.primary.withValues(alpha: 0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 20,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: ModernColors.primary.withValues(alpha: 0.8),
-        ),
-      ),
-    );
-  }
-
-
-  /// Section Header - "나의 목표"
-  Widget _buildSectionHeader(int goalCount) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 4,
-                height: 20,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      ModernColors.climbing,
-                      ModernColors.success,
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                '나의 목표',
-                style: GoogleFonts.notoSans(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: ModernColors.textPrimary,
-                  letterSpacing: -0.3,
-                ),
-              ),
-            ],
-          ),
-          Text(
-            '총 $goalCount개',
-            style: GoogleFonts.notoSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: ModernColors.textSecondary.withValues(alpha: 0.7),
-              letterSpacing: -0.1,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   /// Empty State - 목표가 없을 때
   Widget _buildEmptyState(BuildContext context, WidgetRef ref) {
@@ -304,10 +231,13 @@ class GoalsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 32),
           // CTA 버튼
-          MicroInteractions.tapResponse(
-            onTap: () => _showAddGoalModal(context, ref),
-            scaleDownTo: 0.97,
-            enableHaptic: true,
+          Semantics(
+            label: '첫 목표 만들기',
+            button: true,
+            child: MicroInteractions.tapResponse(
+              onTap: () => _showAddGoalModal(context, ref),
+              scaleDownTo: 0.97,
+              enableHaptic: true,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               decoration: BoxDecoration(
@@ -355,6 +285,7 @@ class GoalsScreen extends ConsumerWidget {
               ),
             ),
           ),
+          ),
         ],
       ),
     )
@@ -368,10 +299,13 @@ class GoalsScreen extends ConsumerWidget {
 
   /// Gradient FAB - 새 목표 추가
   Widget _buildGradientFAB(BuildContext context, WidgetRef ref) {
-    return MicroInteractions.tapResponse(
-      onTap: () => _showAddGoalModal(context, ref),
-      scaleDownTo: 0.97,
-      enableHaptic: true,
+    return Semantics(
+      label: '새 목표 추가하기',
+      button: true,
+      child: MicroInteractions.tapResponse(
+        onTap: () => _showAddGoalModal(context, ref),
+        scaleDownTo: 0.97,
+        enableHaptic: true,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         decoration: BoxDecoration(
@@ -426,6 +360,7 @@ class GoalsScreen extends ConsumerWidget {
           ],
         ),
       ),
+    ),
     )
         .animate(onPlay: (controller) => controller.repeat(reverse: true))
         .shimmer(

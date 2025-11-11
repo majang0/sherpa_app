@@ -8,6 +8,9 @@ import '../../../../core/theme/modern_colors.dart';
 import '../../../../core/animation/micro_interactions.dart';
 import '../../../../core/constants/sherpi_dialogues.dart';
 
+// Shared Widgets
+import '../../../../shared/widgets/section_header.dart';
+
 // Shared Providers
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
 import 'package:sherpa_app/shared/providers/level_3_ai/global_sherpi_provider.dart';
@@ -252,67 +255,41 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 섹션 헤더
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
-          child: Row(
-            children: [
-              Container(
-                width: 4,
-                height: 20,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      ModernColors.climbing,
-                      ModernColors.success,
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+        SectionHeader(
+          title: '다가오는 목표',
+          primaryColor: ModernColors.climbing,
+          secondaryColor: ModernColors.success,
+          titleFontSize: 18,
+          horizontalPadding: 20,
+          topPadding: 20,
+          bottomPadding: 12,
+          trailing: Semantics(
+            label: '목표 전체 보기',
+            button: true,
+            child: MicroInteractions.tapResponse(
+              onTap: () => Navigator.pushNamed(context, '/goals'),
+              scaleDownTo: 0.95,
+              enableHaptic: true,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '전체 보기',
+                    style: GoogleFonts.notoSans(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: ModernColors.modernPrimary,
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  '다가오는 목표',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    color: ModernColors.textPrimary,
-                    letterSpacing: -0.3,
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 12,
+                    color: ModernColors.modernPrimary,
                   ),
-                ),
+                ],
               ),
-              // 전체 보기 링크
-              Semantics(
-                label: '목표 전체 보기',
-                button: true,
-                child: MicroInteractions.tapResponse(
-                  onTap: () => Navigator.pushNamed(context, '/goals'),
-                  scaleDownTo: 0.95,
-                  enableHaptic: true,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '전체 보기',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: ModernColors.modernPrimary,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 12,
-                        color: ModernColors.modernPrimary,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         )
             .animate()
@@ -563,36 +540,17 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // 섹션 헤더
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-          child: Row(
+        SectionHeader(
+          title: '오늘의 루틴',
+          primaryColor: ModernColors.success,
+          secondaryColor: ModernColors.climbing,
+          titleFontSize: 18,
+          horizontalPadding: 20,
+          topPadding: 12,
+          bottomPadding: 12,
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 4,
-                height: 20,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      ModernColors.success,
-                      ModernColors.climbing,
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Text(
-                '오늘의 루틴',
-                style: GoogleFonts.notoSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: ModernColors.textPrimary,
-                  letterSpacing: -0.3,
-                ),
-              ),
-              const Spacer(),
               // 완료율 칩
               Container(
                 padding:

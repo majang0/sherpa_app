@@ -7,6 +7,7 @@ import 'dart:math' as math;
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/core/animation/micro_interactions.dart';
 import 'package:sherpa_app/core/constants/sherpi_emotions.dart';
+import 'package:sherpa_app/shared/widgets/section_header.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_point_provider.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/features/goals/providers/goal_provider.dart';
@@ -146,7 +147,15 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
 
         // Section Header
         SliverToBoxAdapter(
-          child: _buildSectionHeader()
+          child: SectionHeader(
+            title: '분석 카테고리',
+            primaryColor: ModernColors.primary,
+            secondaryColor: ModernColors.secondary,
+            titleFontSize: 18,
+            horizontalPadding: 20,
+            topPadding: 0,
+            bottomPadding: 12,
+          )
               .animate()
               .fadeIn(delay: 200.ms, duration: 400.ms)
               .slideX(begin: -0.05, end: 0, delay: 150.ms),
@@ -214,10 +223,13 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
       child: Row(
         children: [
           // 뒤로가기 버튼
-          MicroInteractions.tapResponse(
-            onTap: () => Navigator.pop(context),
-            scaleDownTo: 0.95,
-            enableHaptic: true,
+          Semantics(
+            label: '뒤로가기',
+            button: true,
+            child: MicroInteractions.tapResponse(
+              onTap: () => Navigator.pop(context),
+              scaleDownTo: 0.95,
+              enableHaptic: true,
             child: Container(
               width: 44,
               height: 44,
@@ -254,6 +266,7 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
                 color: ModernColors.primary.withValues(alpha: 0.8),
               ),
             ),
+          ),
           ),
         ],
       ),
@@ -424,42 +437,6 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
             curve: Curves.easeOutBack);
   }
 
-  /// Section Header - 블루톤
-  Widget _buildSectionHeader() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            height: 18,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  ModernColors.primary,
-                  ModernColors.secondary,
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            '분석 카테고리',
-            style: GoogleFonts.notoSans(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: ModernColors.textPrimary,
-              letterSpacing: -0.3,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   /// Compact Category Card - 압축된 레이아웃 (세련된 블루/회색 톤)
   Widget _buildCompactCategoryCard(
     String category,
@@ -470,14 +447,18 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
   ) {
     final isSelected = _selectedCategory == category;
 
-    return MicroInteractions.tapResponse(
-      onTap: () {
-        setState(() {
-          _selectedCategory = category;
-        });
-      },
-      scaleDownTo: 0.98,
-      enableHaptic: true,
+    return Semantics(
+      label: '$category 카테고리 ${isSelected ? "선택됨" : ""}',
+      button: true,
+      selected: isSelected,
+      child: MicroInteractions.tapResponse(
+        onTap: () {
+          setState(() {
+            _selectedCategory = category;
+          });
+        },
+        scaleDownTo: 0.98,
+        enableHaptic: true,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOutCubic,
@@ -605,6 +586,7 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
           ],
         ),
       ),
+    ),
     )
         .animate()
         .fadeIn(
@@ -634,10 +616,13 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
 
   /// 분석 시작 버튼 - 블루톤
   Widget _buildAnalysisButton(int totalPoints) {
-    return MicroInteractions.tapResponse(
-      onTap: () => _startAnalysis(totalPoints),
-      scaleDownTo: 0.97,
-      enableHaptic: true,
+    return Semantics(
+      label: '셰르피 AI 분석 시작하기, 30포인트 필요',
+      button: true,
+      child: MicroInteractions.tapResponse(
+        onTap: () => _startAnalysis(totalPoints),
+        scaleDownTo: 0.97,
+        enableHaptic: true,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -713,6 +698,7 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
           ],
         ),
       ),
+    ),
     )
         .animate(onPlay: (controller) => controller.repeat(reverse: true))
         .shimmer(
@@ -975,32 +961,11 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
                 const SizedBox(height: 20),
 
                 // Section Header
-                Row(
-                  children: [
-                    Container(
-                      width: 4,
-                      height: 18,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            ModernColors.primary,
-                            ModernColors.secondary,
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      '분석 내용',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: ModernColors.textPrimary,
-                        letterSpacing: -0.3,
-                      ),
-                    ),
-                  ],
+                SectionHeader(
+                  title: '분석 내용',
+                  primaryColor: ModernColors.primary,
+                  secondaryColor: ModernColors.secondary,
+                  titleFontSize: 18,
                 )
                     .animate()
                     .fadeIn(delay: 200.ms, duration: 400.ms)
@@ -1052,15 +1017,18 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
                 const SizedBox(height: 24),
 
                 // 다시 분석하기 버튼
-                MicroInteractions.tapResponse(
-                  onTap: () {
-                    setState(() {
-                      _analysisResult = null;
-                      _selectedCategory = null;
-                    });
-                  },
-                  scaleDownTo: 0.97,
-                  enableHaptic: true,
+                Semantics(
+                  label: '다시 분석하기',
+                  button: true,
+                  child: MicroInteractions.tapResponse(
+                    onTap: () {
+                      setState(() {
+                        _analysisResult = null;
+                        _selectedCategory = null;
+                      });
+                    },
+                    scaleDownTo: 0.97,
+                    enableHaptic: true,
                   child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 14),
@@ -1098,6 +1066,7 @@ class _AiAnalysisScreenState extends ConsumerState<AiAnalysisScreen>
                       ],
                     ),
                   ),
+                ),
                 )
                     .animate()
                     .fadeIn(delay: 400.ms, duration: 600.ms)

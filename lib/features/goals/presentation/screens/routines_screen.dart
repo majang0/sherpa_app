@@ -7,6 +7,8 @@ import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/core/animation/micro_interactions.dart';
 import 'package:sherpa_app/shared/providers/level_1_user_data/global_user_provider.dart';
 import 'package:sherpa_app/shared/models/global_user_model.dart';
+import 'package:sherpa_app/shared/widgets/glassmorphic_header_button.dart';
+import 'package:sherpa_app/shared/widgets/section_header.dart';
 import 'package:sherpa_app/features/goals/providers/routine_provider.dart';
 import 'package:sherpa_app/features/goals/models/routine_model.dart';
 import 'package:sherpa_app/features/goals/presentation/widgets/routine_card_widget.dart';
@@ -63,37 +65,12 @@ class RoutinesScreen extends ConsumerWidget {
 
                 // Section Header with Gradient Bar
                 if (todayRoutines.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 4,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [
-                                ModernColors.success,
-                                ModernColors.climbing,
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          '오늘의 루틴',
-                          style: GoogleFonts.notoSans(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w800,
-                            color: ModernColors.textPrimary,
-                            letterSpacing: -0.5,
-                          ),
-                        ),
-                      ],
-                    ),
+                  SectionHeader(
+                    title: '오늘의 루틴',
+                    primaryColor: ModernColors.success,
+                    secondaryColor: ModernColors.climbing,
+                    titleFontSize: 18,
+                    horizontalPadding: 16,
                   )
                       .animate()
                       .fadeIn(delay: 400.ms, duration: 600.ms, curve: Curves.easeOutCubic)
@@ -126,21 +103,33 @@ class RoutinesScreen extends ConsumerWidget {
       child: Row(
         children: [
           // 뒤로가기 버튼
-          _buildHeaderButton(
-            icon: Icons.arrow_back_ios_new,
-            onTap: () => Navigator.pop(context),
+          Semantics(
+            label: '뒤로가기',
+            button: true,
+            child: GlassmorphicHeaderButton(
+              icon: Icons.arrow_back_ios_new,
+              onTap: () => Navigator.pop(context),
+            ),
           ),
           const Spacer(),
           // 사용자 정보 버튼
-          _buildHeaderButton(
-            icon: Icons.person_outline,
-            onTap: () => _showUserInfoModal(context, user),
+          Semantics(
+            label: '사용자 정보 보기',
+            button: true,
+            child: GlassmorphicHeaderButton(
+              icon: Icons.person_outline,
+              onTap: () => _showUserInfoModal(context, user),
+            ),
           ),
           const SizedBox(width: 8),
           // 이전 기록 버튼
-          _buildHeaderButton(
-            icon: Icons.history,
-            onTap: () => _showPreviousRoutines(context, ref),
+          Semantics(
+            label: '이전 루틴 기록 보기',
+            button: true,
+            child: GlassmorphicHeaderButton(
+              icon: Icons.history,
+              onTap: () => _showPreviousRoutines(context, ref),
+            ),
           ),
         ],
       ),
@@ -148,51 +137,6 @@ class RoutinesScreen extends ConsumerWidget {
         .animate()
         .fadeIn(duration: 400.ms)
         .slideY(begin: -0.2, end: 0, duration: 400.ms, curve: Curves.easeOut);
-  }
-
-  /// Header Button - Glassmorphism style
-  Widget _buildHeaderButton({required IconData icon, required VoidCallback onTap}) {
-    return MicroInteractions.tapResponse(
-      onTap: onTap,
-      scaleDownTo: 0.95,
-      enableHaptic: true,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.white.withValues(alpha: 0.9),
-              Colors.white.withValues(alpha: 0.7),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.3),
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: ModernColors.success.withValues(alpha: 0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 20,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: ModernColors.success.withValues(alpha: 0.8),
-        ),
-      ),
-    );
   }
 
   /// Completion Header (Enhanced)
@@ -282,10 +226,13 @@ class RoutinesScreen extends ConsumerWidget {
 
   /// Enhanced FAB with Success Gradient and Shimmer
   Widget _buildEnhancedFAB(BuildContext context, WidgetRef ref) {
-    return MicroInteractions.tapResponse(
-      onTap: () => _showAddRoutineModal(context, ref),
-      scaleDownTo: 0.97,
-      enableHaptic: true,
+    return Semantics(
+      label: '새 루틴 추가하기',
+      button: true,
+      child: MicroInteractions.tapResponse(
+        onTap: () => _showAddRoutineModal(context, ref),
+        scaleDownTo: 0.97,
+        enableHaptic: true,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         decoration: BoxDecoration(
@@ -340,6 +287,7 @@ class RoutinesScreen extends ConsumerWidget {
           ],
         ),
       ),
+    ),
     )
         .animate(onPlay: (controller) => controller.repeat(reverse: true))
         .shimmer(
@@ -384,27 +332,30 @@ class RoutinesScreen extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    ModernColors.success.withValues(alpha: 0.15),
-                    ModernColors.success.withValues(alpha: 0.05),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+            Semantics(
+              label: '루틴 없음',
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      ModernColors.success.withValues(alpha: 0.15),
+                      ModernColors.success.withValues(alpha: 0.05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: ModernColors.success.withValues(alpha: 0.2),
+                    width: 2,
+                  ),
                 ),
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: ModernColors.success.withValues(alpha: 0.2),
-                  width: 2,
+                child: const Icon(
+                  Icons.repeat_outlined,
+                  size: 64,
+                  color: ModernColors.success,
                 ),
-              ),
-              child: const Icon(
-                Icons.repeat_outlined,
-                size: 64,
-                color: ModernColors.success,
               ),
             ),
             const SizedBox(height: 32),
