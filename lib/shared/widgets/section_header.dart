@@ -108,10 +108,7 @@ class SectionHeader extends StatelessWidget {
           ],
 
           // Trailing 위젯
-          if (trailing != null) ...[
-            if (countText == null) const Spacer(),
-            trailing!,
-          ],
+          if (trailing != null) trailing!,
         ],
       ),
     );
