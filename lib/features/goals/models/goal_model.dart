@@ -42,6 +42,9 @@ class GoalModel with _$GoalModel {
 
     /// 완료 일시 (달성 또는 미달성 처리된 시점)
     @Default(null) DateTime? completedAt,
+
+    /// 대표 목표 여부
+    @Default(false) bool isRepresentative,
   }) = _GoalModel;
 
   factory GoalModel.fromJson(Map<String, dynamic> json) =>

@@ -53,6 +53,9 @@ mixin _$GoalModel {
   /// 완료 일시 (달성 또는 미달성 처리된 시점)
   DateTime? get completedAt => throw _privateConstructorUsedError;
 
+  /// 대표 목표 여부
+  bool get isRepresentative => throw _privateConstructorUsedError;
+
   /// Serializes this GoalModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
@@ -79,7 +82,8 @@ abstract class $GoalModelCopyWith<$Res> {
       String? achievementDetails,
       String? reasonForResult,
       DateTime? createdAt,
-      DateTime? completedAt});
+      DateTime? completedAt,
+      bool isRepresentative});
 }
 
 /// @nodoc
@@ -108,6 +112,7 @@ class _$GoalModelCopyWithImpl<$Res, $Val extends GoalModel>
     Object? reasonForResult = freezed,
     Object? createdAt = freezed,
     Object? completedAt = freezed,
+    Object? isRepresentative = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -154,6 +159,10 @@ class _$GoalModelCopyWithImpl<$Res, $Val extends GoalModel>
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isRepresentative: null == isRepresentative
+          ? _value.isRepresentative
+          : isRepresentative // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -177,7 +186,8 @@ abstract class _$$GoalModelImplCopyWith<$Res>
       String? achievementDetails,
       String? reasonForResult,
       DateTime? createdAt,
-      DateTime? completedAt});
+      DateTime? completedAt,
+      bool isRepresentative});
 }
 
 /// @nodoc
@@ -204,6 +214,7 @@ class __$$GoalModelImplCopyWithImpl<$Res>
     Object? reasonForResult = freezed,
     Object? createdAt = freezed,
     Object? completedAt = freezed,
+    Object? isRepresentative = null,
   }) {
     return _then(_$GoalModelImpl(
       id: null == id
@@ -250,6 +261,10 @@ class __$$GoalModelImplCopyWithImpl<$Res>
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isRepresentative: null == isRepresentative
+          ? _value.isRepresentative
+          : isRepresentative // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -268,7 +283,8 @@ class _$GoalModelImpl implements _GoalModel {
       this.achievementDetails,
       this.reasonForResult,
       this.createdAt = null,
-      this.completedAt = null});
+      this.completedAt = null,
+      this.isRepresentative = false});
 
   factory _$GoalModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$GoalModelImplFromJson(json);
@@ -321,9 +337,14 @@ class _$GoalModelImpl implements _GoalModel {
   @JsonKey()
   final DateTime? completedAt;
 
+  /// 대표 목표 여부
+  @override
+  @JsonKey()
+  final bool isRepresentative;
+
   @override
   String toString() {
-    return 'GoalModel(id: $id, category: $category, date: $date, name: $name, targetValue: $targetValue, isAchieved: $isAchieved, achievementRate: $achievementRate, achievementDetails: $achievementDetails, reasonForResult: $reasonForResult, createdAt: $createdAt, completedAt: $completedAt)';
+    return 'GoalModel(id: $id, category: $category, date: $date, name: $name, targetValue: $targetValue, isAchieved: $isAchieved, achievementRate: $achievementRate, achievementDetails: $achievementDetails, reasonForResult: $reasonForResult, createdAt: $createdAt, completedAt: $completedAt, isRepresentative: $isRepresentative)';
   }
 
   @override
@@ -349,7 +370,9 @@ class _$GoalModelImpl implements _GoalModel {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.completedAt, completedAt) ||
-                other.completedAt == completedAt));
+                other.completedAt == completedAt) &&
+            (identical(other.isRepresentative, isRepresentative) ||
+                other.isRepresentative == isRepresentative));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -366,7 +389,8 @@ class _$GoalModelImpl implements _GoalModel {
       achievementDetails,
       reasonForResult,
       createdAt,
-      completedAt);
+      completedAt,
+      isRepresentative);
 
   /// Create a copy of GoalModel
   /// with the given fields replaced by the non-null parameter values.
@@ -396,7 +420,8 @@ abstract class _GoalModel implements GoalModel {
       final String? achievementDetails,
       final String? reasonForResult,
       final DateTime? createdAt,
-      final DateTime? completedAt}) = _$GoalModelImpl;
+      final DateTime? completedAt,
+      final bool isRepresentative}) = _$GoalModelImpl;
 
   factory _GoalModel.fromJson(Map<String, dynamic> json) =
       _$GoalModelImpl.fromJson;
@@ -444,6 +469,10 @@ abstract class _GoalModel implements GoalModel {
   /// 완료 일시 (달성 또는 미달성 처리된 시점)
   @override
   DateTime? get completedAt;
+
+  /// 대표 목표 여부
+  @override
+  bool get isRepresentative;
 
   /// Create a copy of GoalModel
   /// with the given fields replaced by the non-null parameter values.

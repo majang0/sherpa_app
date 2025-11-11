@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:sherpa_app/core/theme/modern_colors.dart';
 import 'package:sherpa_app/core/animation/micro_interactions.dart';
 import 'package:sherpa_app/features/goals/models/goal_model.dart';
+import 'package:sherpa_app/features/goals/providers/goal_provider.dart';
 import 'package:sherpa_app/features/goals/presentation/widgets/goal_modal_widget.dart';
 
 /// 목표 카드 위젯 (2025 Complete Redesign)
@@ -26,10 +28,30 @@ class GoalCardWidget extends ConsumerWidget {
       onTap: () => _showGoalDetail(context, ref),
       scaleDownTo: 0.98,
       enableHaptic: true,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          // Glassmorphism!
+      child: Stack(
+        children: [
+          // 기존 카드 콘텐츠
+          _buildCardContent(context),
+
+          // 대표 목표 배지 (우측 상단)
+          Positioned(
+            top: 12,
+            right: 12,
+            child: _buildRepresentativeBadge(ref),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 카드 콘텐츠
+  Widget _buildCardContent(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+          // Glassmorphism
           gradient: LinearGradient(
             colors: [
               Colors.white.withValues(alpha: 0.95),
@@ -40,87 +62,106 @@ class GoalCardWidget extends ConsumerWidget {
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.3),
-            width: 1,
+            color: goal.isRepresentative
+                ? Colors.amber
+                : Colors.white.withValues(alpha: 0.3),
+            width: goal.isRepresentative ? 2 : 1,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: _getCategoryColor().withValues(alpha: 0.12),
-              blurRadius: 24,
-              offset: const Offset(0, 10),
-            ),
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
-              blurRadius: 40,
-              offset: const Offset(0, 15),
-            ),
-          ],
+          boxShadow: goal.isRepresentative
+              ? [
+                  BoxShadow(
+                    color: Colors.amber.withValues(alpha: 0.25),
+                    blurRadius: 30,
+                    offset: const Offset(0, 12),
+                  ),
+                  BoxShadow(
+                    color: Colors.amber.withValues(alpha: 0.15),
+                    blurRadius: 50,
+                    offset: const Offset(0, 20),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.06),
+                    blurRadius: 60,
+                    offset: const Offset(0, 25),
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: _getCategoryColor().withValues(alpha: 0.12),
+                    blurRadius: 24,
+                    offset: const Offset(0, 10),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 40,
+                    offset: const Offset(0, 15),
+                  ),
+                ],
         ),
-        child: Column(
-          children: [
-            // 상단: 카테고리 아이콘 + 목표명 + 진행률
-            Row(
-              children: [
-                // 카테고리 아이콘 (그라데이션 배경!)
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    gradient: _getCategoryGradient(),
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: _getCategoryColor().withValues(alpha: 0.3),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    _getCategoryIcon(),
-                    color: Colors.white,
-                    size: 24,
-                  ),
+      child: Column(
+        children: [
+          // 상단: 카테고리 아이콘 + 목표명 + 진행률
+          Row(
+            children: [
+              // 카테고리 아이콘 (그라데이션 배경!)
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: _getCategoryGradient(),
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: _getCategoryColor().withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 목표명
-                      Text(
-                        goal.name,
-                        style: GoogleFonts.notoSans(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: ModernColors.textPrimary,
-                          height: 1.3,
-                          letterSpacing: -0.3,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 4),
-                      // D-Day
-                      Text(
-                        _getDDayText(),
-                        style: GoogleFonts.notoSans(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: _getDDayColor(),
-                          letterSpacing: -0.1,
-                        ),
-                      ),
-                    ],
-                  ),
+                child: Icon(
+                  _getCategoryIcon(),
+                  color: Colors.white,
+                  size: 24,
                 ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            // 하단: 진행률 바
-            _buildProgressBar(),
-          ],
-        ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 목표명
+                    Text(
+                      goal.name,
+                      style: GoogleFonts.notoSans(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: ModernColors.textPrimary,
+                        height: 1.3,
+                        letterSpacing: -0.3,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    // D-Day
+                    Text(
+                      _getDDayText(),
+                      style: GoogleFonts.notoSans(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: _getDDayColor(),
+                        letterSpacing: -0.1,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // 하단: 진행률 바
+          _buildProgressBar(),
+        ],
       ),
     );
   }
@@ -305,5 +346,77 @@ class GoalCardWidget extends ConsumerWidget {
       backgroundColor: Colors.transparent,
       builder: (context) => GoalModalWidget(goal: goal),
     );
+  }
+
+  /// 대표 목표 배지
+  Widget _buildRepresentativeBadge(WidgetRef ref) {
+    if (goal.isRepresentative) {
+      // 선택된 상태: 노란색 원형 배경 + 흰색 별
+      return MicroInteractions.tapResponse(
+        onTap: () => _toggleRepresentative(ref),
+        scaleDownTo: 0.95,
+        enableHaptic: true,
+        child: Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.amber,
+                Colors.amber.withValues(alpha: 0.85),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.amber.withValues(alpha: 0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const Icon(
+            Icons.star,
+            size: 24,
+            color: Colors.white,
+          ),
+        ),
+      );
+    } else {
+      // 미선택 상태: 회색 별
+      return Semantics(
+        label: '대표 목표로 설정',
+        button: true,
+        child: IconButton(
+          icon: Icon(
+            Icons.star_border,
+            size: 28,
+            color: ModernColors.textSecondary.withValues(alpha: 0.5),
+          ),
+          padding: const EdgeInsets.all(8),
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          splashColor: Colors.amber.withValues(alpha: 0.1),
+          highlightColor: Colors.amber.withValues(alpha: 0.05),
+          onPressed: () => _toggleRepresentative(ref),
+        ),
+      );
+    }
+  }
+
+  /// 대표 목표 토글
+  void _toggleRepresentative(WidgetRef ref) {
+    // Haptic Feedback
+    HapticFeedback.mediumImpact();
+
+    // Toggle logic
+    if (goal.isRepresentative) {
+      // 이미 대표 목표 → 해제
+      ref.read(goalProvider.notifier).setRepresentativeGoal(null);
+    } else {
+      // 미선택 → 대표 목표로 설정 (기존 대표 목표 자동 해제)
+      ref.read(goalProvider.notifier).setRepresentativeGoal(goal.id);
+    }
   }
 }

@@ -37,6 +37,9 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
         // 현재 목표만 필터링 (완료되지 않은 것들)
         state = goals.where((goal) => goal.completedAt == null).toList()
           ..sort((a, b) => a.date.compareTo(b.date)); // 날짜순 정렬
+
+        // 대표 목표 복원
+        await _restoreRepresentativeGoal();
       } else {
         // 데이터가 없으면 샘플 데이터 초기화
         await _initializeSampleData();
@@ -316,6 +319,75 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
   /// 리프레시 (재로드)
   Future<void> refresh() async {
     await _loadGoals();
+  }
+
+  /// 대표 목표 설정
+  ///
+  /// [goalId]가 null이면 모든 대표 목표 해제
+  /// [goalId]가 있으면 해당 목표만 대표 목표로 설정 (나머지 자동 해제)
+  Future<void> setRepresentativeGoal(String? goalId) async {
+    // Exclusive selection: 한 번에 하나만
+    state = state.map((goal) {
+      if (goalId == null) {
+        // 모두 해제
+        return goal.copyWith(isRepresentative: false);
+      } else if (goal.id == goalId) {
+        // 선택한 목표만 true
+        return goal.copyWith(isRepresentative: true);
+      } else {
+        // 나머지는 false
+        return goal.copyWith(isRepresentative: false);
+      }
+    }).toList();
+
+    // 저장
+    await _saveGoals();
+    await _saveRepresentativeGoalId(goalId);
+  }
+
+  /// 대표 목표 ID 저장
+  Future<void> _saveRepresentativeGoalId(String? goalId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (goalId != null) {
+        await prefs.setString('representative_goal_id', goalId);
+      } else {
+        await prefs.remove('representative_goal_id');
+      }
+    } catch (e) {
+      // 저장 실패 처리
+    }
+  }
+
+  /// 대표 목표 ID 로드
+  Future<String?> _loadRepresentativeGoalId() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString('representative_goal_id');
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /// 대표 목표 복원 (앱 재시작 시)
+  Future<void> _restoreRepresentativeGoal() async {
+    final representativeId = await _loadRepresentativeGoalId();
+
+    if (representativeId != null) {
+      final goalExists = state.any((goal) => goal.id == representativeId);
+
+      if (goalExists) {
+        // 해당 목표 복원
+        state = state.map((goal) {
+          return goal.copyWith(
+            isRepresentative: goal.id == representativeId,
+          );
+        }).toList();
+      } else {
+        // 목표가 삭제되었으면 ID 제거
+        await _saveRepresentativeGoalId(null);
+      }
+    }
   }
 }
 

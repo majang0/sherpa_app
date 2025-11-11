@@ -83,10 +83,19 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
     final completionRate = ref.watch(todayCompletionRateProvider);
     final totalPoints = ref.watch(globalTotalPointsProvider);
 
-    // 다가오는 목표 2개 (완료되지 않은 것 중 날짜가 가까운 순)
-    final upcomingGoals = goals.where((g) => !g.isAchieved).toList()
+    // 다가오는 목표 2개 (대표 목표 우선 + 날짜가 가까운 순)
+    final upcomingGoals = goals.where((g) => !g.isAchieved).toList();
+
+    // 대표 목표와 일반 목표 분리
+    final representativeGoal = upcomingGoals.where((g) => g.isRepresentative).toList();
+    final otherGoals = upcomingGoals.where((g) => !g.isRepresentative).toList()
       ..sort((a, b) => a.date.compareTo(b.date));
-    final topGoals = upcomingGoals.take(2).toList();
+
+    // 대표 목표(1개) + 나머지 최신 목표(1개)
+    final topGoals = <GoalModel>[
+      ...representativeGoal.take(1),
+      ...otherGoals.take(representativeGoal.isEmpty ? 2 : 1),
+    ];
 
     // 셰르피 감정
     final sherpiEmotion = _getSherpiEmotion(completionRate);
@@ -252,8 +261,8 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
-                      ModernColors.quest,
                       ModernColors.climbing,
+                      ModernColors.success,
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -289,14 +298,14 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
                         style: GoogleFonts.notoSans(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
-                          color: ModernColors.quest,
+                          color: ModernColors.modernPrimary,
                         ),
                       ),
                       const SizedBox(width: 4),
                       const Icon(
                         Icons.arrow_forward_ios,
                         size: 12,
-                        color: ModernColors.quest,
+                        color: ModernColors.modernPrimary,
                       ),
                     ],
                   ),
@@ -328,6 +337,7 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
   Widget _buildGoalPreviewCard(GoalModel goal, int index) {
     final dDay = _calculateDDay(goal.date);
     final categoryIcon = _getGoalCategoryIcon(goal.category);
+    final categoryColor = _getGoalCategoryColor(goal.category);
 
     return Semantics(
       label: '${goal.category} 목표: ${goal.name}',
@@ -354,7 +364,7 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
             ),
             boxShadow: [
               BoxShadow(
-                color: ModernColors.quest.withValues(alpha: 0.08),
+                color: categoryColor.withValues(alpha: 0.08),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -372,18 +382,27 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  gradient: RadialGradient(
+                  gradient: LinearGradient(
                     colors: [
-                      ModernColors.quest.withValues(alpha: 0.2),
-                      ModernColors.quest.withValues(alpha: 0.1),
+                      categoryColor,
+                      categoryColor.withValues(alpha: 0.8),
                     ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: categoryColor.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Icon(
                   categoryIcon,
                   size: 20,
-                  color: ModernColors.quest,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(width: 12),
@@ -393,17 +412,52 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 목표 이름
-                    Text(
-                      goal.name,
-                      style: GoogleFonts.notoSans(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: ModernColors.textPrimary,
-                        letterSpacing: -0.2,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                    // 목표 이름 (대표 목표 별 표시)
+                    Row(
+                      children: [
+                        // 대표 목표 별 아이콘
+                        if (goal.isRepresentative)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.amber,
+                                    Colors.amber.withValues(alpha: 0.85),
+                                  ],
+                                ),
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.amber.withValues(alpha: 0.3),
+                                    blurRadius: 6,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.star,
+                                size: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        Expanded(
+                          child: Text(
+                            goal.name,
+                            style: GoogleFonts.notoSans(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: ModernColors.textPrimary,
+                              letterSpacing: -0.2,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 4),
 
@@ -414,7 +468,7 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: ModernColors.quest.withValues(alpha: 0.15),
+                            color: categoryColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -422,7 +476,7 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
                             style: GoogleFonts.notoSans(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
-                              color: ModernColors.quest,
+                              color: categoryColor,
                               letterSpacing: -0.1,
                             ),
                           ),
@@ -1019,6 +1073,22 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
         return Icons.workspace_premium;
       default:
         return Icons.flag;
+    }
+  }
+
+  /// 목표 카테고리 색상 반환
+  Color _getGoalCategoryColor(String category) {
+    switch (category) {
+      case '운동':
+        return ModernColors.exercise;
+      case '학습':
+        return ModernColors.reading;
+      case '대회':
+        return ModernColors.climbing;
+      case '자격증':
+        return ModernColors.focus;
+      default:
+        return ModernColors.climbing;
     }
   }
 

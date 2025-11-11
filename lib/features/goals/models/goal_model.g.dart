@@ -23,6 +23,7 @@ _$GoalModelImpl _$$GoalModelImplFromJson(Map<String, dynamic> json) =>
       completedAt: json['completedAt'] == null
           ? null
           : DateTime.parse(json['completedAt'] as String),
+      isRepresentative: json['isRepresentative'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$GoalModelImplToJson(_$GoalModelImpl instance) =>
@@ -38,4 +39,5 @@ Map<String, dynamic> _$$GoalModelImplToJson(_$GoalModelImpl instance) =>
       'reasonForResult': instance.reasonForResult,
       'createdAt': instance.createdAt?.toIso8601String(),
       'completedAt': instance.completedAt?.toIso8601String(),
+      'isRepresentative': instance.isRepresentative,
     };

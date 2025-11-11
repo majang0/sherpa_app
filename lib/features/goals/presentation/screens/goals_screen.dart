@@ -434,21 +434,20 @@ class GoalsScreen extends ConsumerWidget {
 
   /// Show User Info Modal
   void _showUserInfoModal(BuildContext context, GlobalUser user) {
-    showModalBottomSheet(
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => UserInfoModalWidget(user: user),
+      barrierDismissible: true,
+      builder: (context) => UserInfoDialogWidget(user: user),
     );
   }
 
   /// Show Previous Goals
   void _showPreviousGoals(BuildContext context, WidgetRef ref) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const PreviousGoalsWidget(),
-      ),
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      builder: (context) => const PreviousGoalsDialog(),
     );
   }
 
