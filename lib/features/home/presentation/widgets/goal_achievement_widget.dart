@@ -20,6 +20,7 @@ import '../../../goals/providers/goal_provider.dart';
 import '../../../goals/providers/routine_provider.dart';
 import '../../../goals/models/goal_model.dart';
 import '../../../goals/models/routine_model.dart';
+import '../../../goals/utils/category_helpers.dart';
 
 /// 목표 달성하기 홈 위젯 (2025 Modern Redesign)
 ///
@@ -336,8 +337,8 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
   /// 개별 목표 미리보기 카드
   Widget _buildGoalPreviewCard(GoalModel goal, int index) {
     final dDay = _calculateDDay(goal.date);
-    final categoryIcon = _getGoalCategoryIcon(goal.category);
-    final categoryColor = _getGoalCategoryColor(goal.category);
+    final categoryIcon = GoalCategoryHelpers.getIcon(goal.category);
+    final categoryColor = GoalCategoryHelpers.getColor(goal.category);
 
     return Semantics(
       label: '${goal.category} 목표: ${goal.name}',
@@ -711,7 +712,7 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
   /// 개별 루틴 체크 아이템
   Widget _buildRoutineCheckItem(RoutineModel routine, int index) {
     final isChecked = routine.isCheckedToday();
-    final categoryIcon = _getRoutineCategoryIcon(routine.category);
+    final categoryIcon = RoutineCategoryHelpers.getIcon(routine.category);
 
     return Semantics(
       label: '${routine.name} ${isChecked ? "완료됨" : "미완료"}',
@@ -1058,55 +1059,5 @@ class _GoalAchievementWidgetState extends ConsumerState<GoalAchievementWidget> {
         ],
       ),
     );
-  }
-
-  /// 목표 카테고리 아이콘 반환
-  IconData _getGoalCategoryIcon(String category) {
-    switch (category) {
-      case '운동':
-        return Icons.fitness_center;
-      case '학습':
-        return Icons.school;
-      case '대회':
-        return Icons.emoji_events;
-      case '자격증':
-        return Icons.workspace_premium;
-      default:
-        return Icons.flag;
-    }
-  }
-
-  /// 목표 카테고리 색상 반환
-  Color _getGoalCategoryColor(String category) {
-    switch (category) {
-      case '운동':
-        return ModernColors.exercise;
-      case '학습':
-        return ModernColors.reading;
-      case '대회':
-        return ModernColors.climbing;
-      case '자격증':
-        return ModernColors.focus;
-      default:
-        return ModernColors.climbing;
-    }
-  }
-
-  /// 루틴 카테고리 아이콘 반환
-  IconData _getRoutineCategoryIcon(String category) {
-    switch (category) {
-      case '운동':
-        return Icons.fitness_center;
-      case '문화':
-        return Icons.palette;
-      case '학습':
-        return Icons.school;
-      case '건강':
-        return Icons.favorite;
-      case '기타':
-        return Icons.more_horiz;
-      default:
-        return Icons.circle;
-    }
   }
 }

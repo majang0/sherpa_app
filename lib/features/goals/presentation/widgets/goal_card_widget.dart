@@ -9,6 +9,7 @@ import 'package:sherpa_app/core/animation/micro_interactions.dart';
 import 'package:sherpa_app/features/goals/models/goal_model.dart';
 import 'package:sherpa_app/features/goals/providers/goal_provider.dart';
 import 'package:sherpa_app/features/goals/presentation/widgets/goal_modal_widget.dart';
+import 'package:sherpa_app/features/goals/utils/category_helpers.dart';
 
 /// 목표 카드 위젯 (2025 Complete Redesign)
 ///
@@ -87,7 +88,7 @@ class GoalCardWidget extends ConsumerWidget {
                 ]
               : [
                   BoxShadow(
-                    color: _getCategoryColor().withValues(alpha: 0.12),
+                    color: GoalCategoryHelpers.getColor(goal.category).withValues(alpha: 0.12),
                     blurRadius: 24,
                     offset: const Offset(0, 10),
                   ),
@@ -108,18 +109,18 @@ class GoalCardWidget extends ConsumerWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  gradient: _getCategoryGradient(),
+                  gradient: GoalCategoryHelpers.getGradient(goal.category),
                   borderRadius: BorderRadius.circular(14),
                   boxShadow: [
                     BoxShadow(
-                      color: _getCategoryColor().withValues(alpha: 0.3),
+                      color: GoalCategoryHelpers.getColor(goal.category).withValues(alpha: 0.3),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
                   ],
                 ),
                 child: Icon(
-                  _getCategoryIcon(),
+                  GoalCategoryHelpers.getIcon(goal.category),
                   color: Colors.white,
                   size: 24,
                 ),
@@ -189,7 +190,7 @@ class GoalCardWidget extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: _getCategoryLightColor(),
+                color: GoalCategoryHelpers.getLightColor(goal.category),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -197,7 +198,7 @@ class GoalCardWidget extends ConsumerWidget {
                 style: GoogleFonts.notoSans(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: _getCategoryColor(),
+                  color: GoalCategoryHelpers.getColor(goal.category),
                   letterSpacing: -0.1,
                 ),
               ),
@@ -222,8 +223,8 @@ class GoalCardWidget extends ConsumerWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          _getCategoryColor(),
-                          _getCategoryColor().withValues(alpha: 0.7),
+                          GoalCategoryHelpers.getColor(goal.category),
+                          GoalCategoryHelpers.getColor(goal.category).withValues(alpha: 0.7),
                         ],
                       ),
                     ),
@@ -273,68 +274,7 @@ class GoalCardWidget extends ConsumerWidget {
     } else if (diff <= 7) {
       return const Color(0xFFFF9800);
     } else {
-      return _getCategoryColor();
-    }
-  }
-
-  /// 카테고리 아이콘
-  IconData _getCategoryIcon() {
-    switch (goal.category) {
-      case '운동':
-        return Icons.fitness_center;
-      case '학습':
-        return Icons.menu_book;
-      case '대회':
-        return Icons.emoji_events;
-      case '자격증':
-        return Icons.workspace_premium;
-      default:
-        return Icons.flag;
-    }
-  }
-
-  /// 카테고리 그라데이션
-  LinearGradient _getCategoryGradient() {
-    final color = _getCategoryColor();
-    return LinearGradient(
-      colors: [
-        color,
-        color.withValues(alpha: 0.8),
-      ],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    );
-  }
-
-  /// Category Color - Solid colors from ModernColors
-  Color _getCategoryColor() {
-    switch (goal.category) {
-      case '운동':
-        return ModernColors.exercise;
-      case '학습':
-        return ModernColors.reading;
-      case '대회':
-        return ModernColors.climbing;
-      case '자격증':
-        return ModernColors.focus;
-      default:
-        return ModernColors.climbing;
-    }
-  }
-
-  /// Category Light Color - Solid light variants
-  Color _getCategoryLightColor() {
-    switch (goal.category) {
-      case '운동':
-        return const Color(0xFFE8F5E9); // Light green
-      case '학습':
-        return const Color(0xFFFFF3E0); // Light orange
-      case '대회':
-        return const Color(0xFFE3F2FD); // Light blue
-      case '자격증':
-        return const Color(0xFFF3E5F5); // Light purple
-      default:
-        return const Color(0xFFE3F2FD);
+      return GoalCategoryHelpers.getColor(goal.category);
     }
   }
 

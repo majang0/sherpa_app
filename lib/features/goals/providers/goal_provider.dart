@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart'; // debugPrint
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:sherpa_app/core/constants/storage_keys.dart';
 import 'package:sherpa_app/features/goals/models/goal_model.dart';
 
 /// 목표 Provider
@@ -15,9 +17,6 @@ final goalProvider =
 });
 
 class GoalNotifier extends StateNotifier<List<GoalModel>> {
-  static const String _storageKey = 'goals_list';
-  static const String _previousGoalsKey = 'previous_goals_list';
-
   GoalNotifier() : super([]) {
     _loadGoals();
   }
@@ -26,7 +25,7 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
   Future<void> _loadGoals() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final jsonString = prefs.getString(_storageKey);
+      final jsonString = prefs.getString(StorageKeys.goalsList);
 
       if (jsonString != null && jsonString.isNotEmpty) {
         final List<dynamic> jsonList = jsonDecode(jsonString);
@@ -44,7 +43,9 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
         // 데이터가 없으면 샘플 데이터 초기화
         await _initializeSampleData();
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint('❌ [GoalProvider] 목표 로드 실패: $e');
+      debugPrint('Stack trace: $stackTrace');
       // 로드 실패 시 빈 리스트 유지
       state = [];
     }
@@ -206,9 +207,10 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
       final jsonString = jsonEncode(
         state.map((goal) => goal.toJson()).toList(),
       );
-      await prefs.setString(_storageKey, jsonString);
-    } catch (e) {
-      // 저장 실패 처리 (에러 로깅 추가 가능)
+      await prefs.setString(StorageKeys.goalsList, jsonString);
+    } catch (e, stackTrace) {
+      debugPrint('❌ [GoalProvider] 목표 저장 실패: $e');
+      debugPrint('Stack trace: $stackTrace');
     }
   }
 
@@ -219,9 +221,10 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
       final jsonString = jsonEncode(
         previousGoals.map((goal) => goal.toJson()).toList(),
       );
-      await prefs.setString(_previousGoalsKey, jsonString);
-    } catch (e) {
-      // 저장 실패 처리
+      await prefs.setString(StorageKeys.previousGoalsList, jsonString);
+    } catch (e, stackTrace) {
+      debugPrint('❌ [GoalProvider] 이전 목표 저장 실패: $e');
+      debugPrint('Stack trace: $stackTrace');
     }
   }
 
@@ -229,7 +232,7 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
   Future<List<GoalModel>> loadPreviousGoals() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final jsonString = prefs.getString(_previousGoalsKey);
+      final jsonString = prefs.getString(StorageKeys.previousGoalsList);
 
       if (jsonString != null && jsonString.isNotEmpty) {
         final List<dynamic> jsonList = jsonDecode(jsonString);
@@ -238,8 +241,9 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
             .toList()
           ..sort((a, b) => b.date.compareTo(a.date)); // 최신순 정렬
       }
-    } catch (e) {
-      // 로드 실패
+    } catch (e, stackTrace) {
+      debugPrint('❌ [GoalProvider] 이전 목표 로드 실패: $e');
+      debugPrint('Stack trace: $stackTrace');
     }
     return [];
   }
@@ -350,12 +354,13 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
     try {
       final prefs = await SharedPreferences.getInstance();
       if (goalId != null) {
-        await prefs.setString('representative_goal_id', goalId);
+        await prefs.setString(StorageKeys.representativeGoalId, goalId);
       } else {
-        await prefs.remove('representative_goal_id');
+        await prefs.remove(StorageKeys.representativeGoalId);
       }
-    } catch (e) {
-      // 저장 실패 처리
+    } catch (e, stackTrace) {
+      debugPrint('❌ [GoalProvider] 대표 목표 ID 저장 실패: $e');
+      debugPrint('Stack trace: $stackTrace');
     }
   }
 
@@ -363,8 +368,10 @@ class GoalNotifier extends StateNotifier<List<GoalModel>> {
   Future<String?> _loadRepresentativeGoalId() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      return prefs.getString('representative_goal_id');
-    } catch (e) {
+      return prefs.getString(StorageKeys.representativeGoalId);
+    } catch (e, stackTrace) {
+      debugPrint('❌ [GoalProvider] 대표 목표 ID 로드 실패: $e');
+      debugPrint('Stack trace: $stackTrace');
       return null;
     }
   }
